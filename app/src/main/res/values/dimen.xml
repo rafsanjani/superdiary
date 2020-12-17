@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="height_row_half">28dp</dimen>
+    <dimen name="height_row">56dp</dimen>
+    <dimen name="space">16dp</dimen>
+    <dimen name="space_medium">12dp</dimen>
+    <dimen name="space_small">8dp</dimen>
+    <dimen name="elevation_bottom_sheet">8dp</dimen>
+</resources>

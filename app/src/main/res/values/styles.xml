@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.SuperDiary.Card" parent="@style/Widget.MaterialComponents.CardView">
+        <item name="shapeAppearanceOverlay">
+            @style/ShapeAppearance.SuperDiary.RoundedTopAndBottomLeft
+        </item>
+    </style>
+
+
+    <style name="Widget.SuperDiary.BottomSheet.Modal" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.SuperDiary.RoundedTopEnd
+        </item>
+        <item name="behavior_skipCollapsed">true</item>
+        <item name="cornerSizeTopRight">@dimen/height_row_half</item>
+        <item name="android:elevation">@dimen/elevation_bottom_sheet</item>
+        <item name="behavior_peekHeight">1000dp</item>
+    </style>
+
+    <style name="Widget.SuperDiary.NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@android:color/holo_red_light</item>
+    </style>
+
+    <style name="Widget.SuperDiary.PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?attr/colorControlNormal</item>
+    </style>
+</resources>

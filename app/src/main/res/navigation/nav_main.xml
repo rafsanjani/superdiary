@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/diaryListFragment">
+
+    <fragment
+        android:id="@+id/diaryListFragment"
+        android:name="com.foreverrafs.superdiary.framework.presentation.diarylist.DiaryListFragment"
+        android:label="DiaryListFragment"
+        tools:layout="@layout/fragment_diary_list" >
+        <action
+            android:id="@+id/action_diaryListFragment_to_addDiaryDialogFragment"
+            app:destination="@id/addDiaryDialogFragment" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/addDiaryDialogFragment"
+        tools:layout="@layout/bottom_sheet_add_diary"
+        android:name="com.foreverrafs.superdiary.framework.presentation.add.AddDiaryDialogFragment"
+        android:label="AddDiaryDialogFragment" />
+</navigation>

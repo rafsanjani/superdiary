@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ShapeAppearanceOverlay.SuperDiary.RoundedTopEnd" parent="">
+        <item name="cornerSizeTopRight">@dimen/height_row_half</item>
+    </style>
+
+    <style name="ShapeAppearance.SuperDiary.RoundedTopAndBottomLeft" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeTopLeft">12dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">12dp</item>
+    </style>
+</resources>
