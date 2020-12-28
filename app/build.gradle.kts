@@ -58,7 +58,6 @@ dependencies {
     implementation(AndroidX.fragmentKtx)
     implementation(AndroidX.room.ktx)
     implementation(Google.dagger.hilt.android)
-    implementation("com.github.kizitonwose:CalendarView:1.0.0")
     kapt(Google.dagger.hilt.android.compiler)
     kapt(AndroidX.room.compiler)
     implementation(AndroidX.navigation.ui)
