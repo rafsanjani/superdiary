@@ -76,6 +76,7 @@ constructor(
 
             if (it.month == today.month.value) {
                 dateText.text = formatter.format(today)
+                selectDate(today)
             } else {
                 //let's select the first day of the month. This will fire 2 events in very quick succession
                 val firstDayOfMonth = LocalDate.of(it.year, it.month, 1)
