@@ -9,15 +9,32 @@
         android:id="@+id/diaryListFragment"
         android:name="com.foreverrafs.superdiary.framework.presentation.diarylist.DiaryListFragment"
         android:label="DiaryListFragment"
-        tools:layout="@layout/fragment_diary_list" >
+        tools:layout="@layout/fragment_diary_list">
         <action
             android:id="@+id/action_diaryListFragment_to_addDiaryDialogFragment"
             app:destination="@id/addDiaryDialogFragment" />
+        <action
+            android:id="@+id/action_diaryListFragment_to_diaryDetailFragment"
+            app:destination="@id/diaryDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <dialog
         android:id="@+id/addDiaryDialogFragment"
-        tools:layout="@layout/bottom_sheet_add_diary"
         android:name="com.foreverrafs.superdiary.framework.presentation.add.AddDiaryDialogFragment"
-        android:label="AddDiaryDialogFragment" />
+        android:label="AddDiaryDialogFragment"
+        tools:layout="@layout/bottom_sheet_add_diary" />
+
+    <fragment
+        android:id="@+id/diaryDetailFragment"
+        android:name="com.foreverrafs.superdiary.framework.presentation.detail.DiaryDetailFragment"
+        android:label="DiaryDetailFragment"
+        tools:layout="@layout/fragment_diary_detail">
+        <argument
+            android:name="diary"
+            app:argType="com.foreverrafs.superdiary.business.model.Diary" />
+    </fragment>
 </navigation>

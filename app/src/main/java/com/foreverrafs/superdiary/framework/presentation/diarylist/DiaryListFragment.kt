@@ -26,7 +26,8 @@ private const val TAG = "DiaryListFragment"
 @AndroidEntryPoint
 class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
     private val diaryListViewModel: DiaryListViewModel by viewModels()
-    private val diaryListAdapter = DiaryListAdapter(onDelete = ::onDiaryDeleted)
+    private val diaryListAdapter =
+        DiaryListAdapter(onDiaryDeleted = ::onDiaryDeleted, onDiaryClicked = ::onDiaryClicked)
 
     private val today = LocalDate.now()
 
@@ -106,6 +107,12 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
                 renderDiaryListState(list)
             }
             .show()
+    }
+
+    private fun onDiaryClicked(diary: Diary) {
+        navController.navigate(
+            DiaryListFragmentDirections.actionDiaryListFragmentToDiaryDetailFragment(diary)
+        )
     }
 
     private fun setupDiaryList() = with(binding) {

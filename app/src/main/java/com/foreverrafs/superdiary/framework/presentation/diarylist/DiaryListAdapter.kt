@@ -14,7 +14,10 @@ import java.time.format.DateTimeFormatter
  * One solution is to call [ListAdapter.submitList] with null, followed by the filtered list but we'd rather use a [RecyclerView.Adapter]
  * with a custom []
  */
-class DiaryListAdapter(private val onDelete: (diary: Diary) -> Unit) :
+class DiaryListAdapter(
+    private val onDiaryDeleted: (diary: Diary) -> Unit,
+    private val onDiaryClicked: (diary: Diary) -> Unit
+) :
     RecyclerView.Adapter<DiaryListAdapter.DiaryViewHolder>() {
 
     private val callback = object : DiffUtil.ItemCallback<Diary>() {
@@ -30,7 +33,7 @@ class DiaryListAdapter(private val onDelete: (diary: Diary) -> Unit) :
 
     private val itemTouchHelperCallback = ItemTouchHelperCallback(onSwiped = { position ->
         val diaryToDelete = diffUtil.currentList[position]
-        onDelete(diaryToDelete)
+        onDiaryDeleted(diaryToDelete)
     })
 
     override fun getItemCount(): Int {
@@ -64,6 +67,10 @@ class DiaryListAdapter(private val onDelete: (diary: Diary) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(diary: Diary) = with(binding) {
+            root.setOnClickListener {
+                onDiaryClicked(diary)
+            }
+
             text.text = diary.message
             diaryTime.text = formatter.format(diary.date)
         }

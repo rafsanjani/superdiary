@@ -50,6 +50,7 @@ class AddDiaryDialogFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         (requireDialog() as BottomSheetDialog).apply {
+            isCancelable = false
             behavior.isDraggable = false
             dismissWithAnimation = true
         }
