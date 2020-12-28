@@ -6,6 +6,7 @@ import com.foreverrafs.superdiary.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
+// TODO: 28/12/20 Switch from AppCompat
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

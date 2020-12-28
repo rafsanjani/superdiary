@@ -6,5 +6,6 @@ sealed class DiaryListState {
     data class DiaryList(val list: List<Diary>) : DiaryListState()
     data class Error(val error: Throwable) : DiaryListState()
     object Loading : DiaryListState()
+    object Empty: DiaryListState()
     data class Deleted(val diary: Diary): DiaryListState()
 }

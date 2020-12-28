@@ -9,6 +9,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.foreverrafs.superdiary.business.model.Diary
 import com.foreverrafs.superdiary.databinding.BottomSheetAddDiaryBinding
 import com.foreverrafs.superdiary.framework.presentation.add.state.AddDiaryState
@@ -16,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -101,13 +103,15 @@ class AddDiaryDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun observeDiarySaveState() {
-        addDiaryViewModel.viewState.observe(viewLifecycleOwner) { state ->
-            if (state == null) return@observe
+        lifecycleScope.launchWhenStarted {
+            addDiaryViewModel.viewState.collect { state ->
+                if (state == null) return@collect
 
-            when (state) {
-                is AddDiaryState.Saved -> renderSavedState(state.diary)
-                AddDiaryState.Saving -> renderSavingState()
-                is AddDiaryState.Error -> renderErrorState(state.error)
+                when (state) {
+                    is AddDiaryState.Saved -> renderSavedState(state.diary)
+                    AddDiaryState.Saving -> renderSavingState()
+                    is AddDiaryState.Error -> renderErrorState(state.error)
+                }
             }
         }
     }

@@ -18,6 +18,18 @@ class DiaryListViewModel @ViewModelInject constructor(
     private val dispatcher: CoroutineDispatcher
 ) : BaseViewModel<DiaryListState>() {
 
+    private var _allDiaries = listOf<Diary>()
+    private var _selectedDate: LocalDate = LocalDate.now()
+
+
+    val selectedDate: LocalDate = _selectedDate
+    fun setSelectedDate(value: LocalDate) {
+        _selectedDate = value
+    }
+
+    val allDiaries: List<Diary>
+        get() = _allDiaries
+
     init {
         getAllDiaries()
     }
@@ -34,7 +46,9 @@ class DiaryListViewModel @ViewModelInject constructor(
                     diaryItem.date
                 }
 
-                setViewState(DiaryListState.DiaryList(sortedDiaries))
+                _allDiaries = sortedDiaries
+
+                getDiariesForDate(_selectedDate)
             }
     }
 
@@ -47,9 +61,15 @@ class DiaryListViewModel @ViewModelInject constructor(
         }
     }
 
-    fun filterDiariesByDate(list: List<Diary>, date: LocalDate): List<Diary> {
-        return list.filter {
+    fun getDiariesForDate(date: LocalDate) {
+        val filtered = _allDiaries.filter {
             it.date.toLocalDate() == date
+        }
+
+        if (filtered.isNotEmpty()) {
+            setViewState(DiaryListState.DiaryList(filtered))
+        } else {
+            setViewState(DiaryListState.Empty)
         }
     }
 }

@@ -6,15 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.foreverrafs.superdiary.R
 import com.foreverrafs.superdiary.business.model.Diary
 import com.foreverrafs.superdiary.databinding.FragmentDiaryListBinding
 import com.foreverrafs.superdiary.framework.presentation.common.BaseFragment
 import com.foreverrafs.superdiary.framework.presentation.diarylist.state.DiaryListState
+import com.foreverrafs.superdiary.framework.presentation.util.invisible
+import com.foreverrafs.superdiary.framework.presentation.util.visible
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
+import kotlinx.coroutines.flow.collect
 import java.time.LocalDate
 
 private const val TAG = "DiaryListFragment"
@@ -23,9 +27,9 @@ private const val TAG = "DiaryListFragment"
 class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
     private val diaryListViewModel: DiaryListViewModel by viewModels()
     private val diaryListAdapter = DiaryListAdapter(onDelete = ::onDiaryDeleted)
-    private var diaryList = mutableListOf<Diary>()
+
     private val today = LocalDate.now()
-    private var selectedDay: LocalDate = today
+
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -41,14 +45,13 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
             diaryCalendarView.smoothScrollToToday()
         }
 
-        diaryCalendarView.addOnDateSelectedListener { selectedDay ->
-            this@DiaryListFragment.selectedDay = selectedDay
+        diaryCalendarView.addOnDateSelectedListener { selectedDate ->
+            diaryListViewModel.setSelectedDate(selectedDate)
 
-            val selectedDayEntries = diaryListViewModel.filterDiariesByDate(diaryList, selectedDay)
+            diaryListViewModel.getDiariesForDate(selectedDate)
 
-            renderDiaryListState(selectedDayEntries)
 
-            if (selectedDay == today)
+            if (selectedDate == today)
                 btnNewEntry.show()
             else
                 btnNewEntry.hide()
@@ -68,14 +71,26 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
         observeDiaryList()
     }
 
+    private fun renderEmptyListState() = with(binding) {
+        diaryListAdapter.submitList(emptyList())
+
+        tvEmptyMessage.text = "No Diary Entry!"
+
+        tvEmptyMessage.visible()
+    }
 
     private fun onDiaryDeleted(diary: Diary) {
-        diaryListAdapter.submitList(
-            diaryListViewModel.filterDiariesByDate(
-                diaryList.toMutableList().also {
-                    it.remove(diary)
-                }, today
-            )
+        //remove the item to be deleted from the list
+        val list = diaryListViewModel.allDiaries
+            .filter {
+                it.date.toLocalDate() == diary.date.toLocalDate()
+            }
+
+        //show new list without item
+        renderDiaryListState(
+            list.toMutableList().also {
+                it.remove(diary)
+            }
         )
 
         MaterialAlertDialogBuilder(requireContext())
@@ -84,11 +99,11 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
             .setPositiveButton(
                 R.string.alert_delete
             ) { _, _ ->
+                //Actually delete the item from the data source
                 diaryListViewModel.deleteDiary(diary)
             }.setNegativeButton(android.R.string.cancel) { _, _ ->
-                diaryListAdapter.submitList(
-                    diaryListViewModel.filterDiariesByDate(diaryList, today)
-                )
+                //show back list containing original item because we didn't delete
+                renderDiaryListState(list)
             }
             .show()
     }
@@ -103,7 +118,7 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
                 if (dy - dx > 0) {
                     binding.btnNewEntry.hide()
                 } else {
-                    if (selectedDay == today)
+                    if (diaryListViewModel.selectedDate == today)
                         binding.btnNewEntry.show()
                 }
             }
@@ -117,23 +132,21 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
     }
 
     private fun observeDiaryList() {
-        diaryListViewModel.viewState.observe(viewLifecycleOwner) { state ->
-            if (state == null) return@observe
+        lifecycleScope.launchWhenStarted {
+            diaryListViewModel.viewState.collect { state ->
+                if (state == null) return@collect
 
-            when (state) {
-                is DiaryListState.DiaryList -> {
-                    diaryList = state.list.toMutableList()
-                    val todayEntries = diaryListViewModel.filterDiariesByDate(diaryList, today)
+                when (state) {
+                    is DiaryListState.DiaryList -> {
+                        renderDiaryListState(state.list)
 
-                    renderDiaryListState(
-                        todayEntries
-                    )
-
-                    populateCalendarWithDiaryEntryDates(diaryList)
-                }
-                is DiaryListState.Error -> renderErrorFetchingDiaryListState(state.error)
-                DiaryListState.Loading -> renderLoadingState()
-                is DiaryListState.Deleted -> {
+                        populateCalendarWithDiaryEntryDates(diaryListViewModel.allDiaries)
+                    }
+                    is DiaryListState.Error -> renderErrorFetchingDiaryListState(state.error)
+                    DiaryListState.Loading -> renderLoadingState()
+                    is DiaryListState.Deleted -> {
+                    }
+                    DiaryListState.Empty -> renderEmptyListState()
                 }
             }
         }
@@ -141,9 +154,11 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
 
 
     private fun renderDiaryListState(diaries: List<Diary>, scrollToTop: Boolean = true) {
-        Log.d(TAG, "renderDiaryListState: ${diaries.size} items")
-        diaryListAdapter.submitList(diaries) {
+        binding.tvEmptyMessage.invisible()
 
+        Log.d(TAG, "renderDiaryListState: ${diaries.size} items")
+
+        diaryListAdapter.submitList(diaries) {
             if (scrollToTop)
                 binding.diaryListView.smoothScrollToPosition(0)
         }
