@@ -30,6 +30,7 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
         DiaryListAdapter(onDiaryDeleted = ::onDiaryDeleted, onDiaryClicked = ::onDiaryClicked)
 
     private val today = LocalDate.now()
+    private var selectedDate = today
 
 
     override fun inflateBinding(
@@ -48,10 +49,11 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
         }
 
         diaryCalendarView.addOnDateSelectedListener { selectedDate ->
+            this@DiaryListFragment.selectedDate = selectedDate
+
             diaryListViewModel.setSelectedDate(selectedDate)
 
             diaryListViewModel.getDiariesForDate(selectedDate)
-
 
             if (selectedDate == today)
                 btnNewEntry.show()
@@ -59,9 +61,6 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
                 btnNewEntry.hide()
         }
 
-        diaryCalendarView.addOnMonthChangedListener {
-            // TODO: 28/12/20
-        }
 
         btnNewEntry.setOnClickListener {
             navController.navigate(
@@ -133,7 +132,9 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 when (newState) {
-                    RecyclerView.SCROLL_STATE_IDLE -> binding.btnNewEntry.show()
+                    RecyclerView.SCROLL_STATE_IDLE ->
+                        if (selectedDate == today)
+                            binding.btnNewEntry.show()
                 }
             }
         })

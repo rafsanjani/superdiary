@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.foreverrafs.superdiary.R
 import com.foreverrafs.superdiary.business.model.Diary
 import com.foreverrafs.superdiary.databinding.BottomSheetAddDiaryBinding
 import com.foreverrafs.superdiary.framework.presentation.add.state.AddDiaryState
@@ -83,18 +84,18 @@ class AddDiaryDialogFragment : BottomSheetDialogFragment() {
         val diaryEntry = binding.diaryEntry.text.toString()
 
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Save Entry")
-            .setMessage("Do you want to discard this entry?")
-            .setPositiveButton("Discard") { _, _ ->
+            .setTitle(R.string.dialog_title_save)
+            .setMessage(R.string.dialog_save_draft)
+            .setPositiveButton(R.string.discard) { _, _ ->
                 addDiaryViewModel.clearDiaryDraft()
                 closeDialog()
 
-            }.setNegativeButton("Save") { _, _ ->
+            }.setNegativeButton(R.string.draft) { _, _ ->
                 addDiaryViewModel.saveDiaryDraft(diaryEntry)
                 closeDialog()
 
             }
-            .setNeutralButton("Cancel", null)
+            .setNeutralButton(R.string.cancel, null)
             .show()
     }
 

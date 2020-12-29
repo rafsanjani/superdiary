@@ -15,8 +15,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-// TODO: 28/12/20 Save user's text across process death
-// TODO: 28/12/20 Allow user to save entry as draft when navigating away from a non-empty screen
+
 class AddDiaryViewModel
 @ViewModelInject constructor(
     private val addDiary: AddDiaryUseCase,

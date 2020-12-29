@@ -4,4 +4,9 @@
     <string name="alert_delete">Delete</string>
     <string name="content_description_create_new_diary_entry">Create new entry</string>
     <string name="label_diary_entry">Diary Entry</string>
+    <string name="discard">Discard</string>
+    <string name="draft">Draft</string>
+    <string name="cancel">Cancel</string>
+    <string name="dialog_save_draft">Do you want to discard this entry?</string>
+    <string name="dialog_title_save">Save Entry</string>
 </resources>

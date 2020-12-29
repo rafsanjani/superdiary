@@ -30,7 +30,6 @@ object AppModule {
     @Singleton
     @Provides
     fun provideDiaryDatabase(app: Application): DiaryDatabase {
-        // TODO: 27/12/20  Use a proper migration strategy in production
         return Room
             .databaseBuilder(app, DiaryDatabase::class.java, DiaryDatabase.DATABASE_NAME)
             .fallbackToDestructiveMigration()
