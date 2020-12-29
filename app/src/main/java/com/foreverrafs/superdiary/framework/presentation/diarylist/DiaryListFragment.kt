@@ -30,7 +30,6 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
         DiaryListAdapter(onDiaryDeleted = ::onDiaryDeleted, onDiaryClicked = ::onDiaryClicked)
 
     private val today = LocalDate.now()
-    private var selectedDate = today
 
 
     override fun inflateBinding(
@@ -49,8 +48,6 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
         }
 
         diaryCalendarView.addOnDateSelectedListener { selectedDate ->
-            this@DiaryListFragment.selectedDate = selectedDate
-
             diaryListViewModel.setSelectedDate(selectedDate)
 
             diaryListViewModel.getDiariesForDate(selectedDate)
@@ -133,7 +130,7 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 when (newState) {
                     RecyclerView.SCROLL_STATE_IDLE ->
-                        if (selectedDate == today)
+                        if (diaryListViewModel.selectedDate == today)
                             binding.btnNewEntry.show()
                 }
             }

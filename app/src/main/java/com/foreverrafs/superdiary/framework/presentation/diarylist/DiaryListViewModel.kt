@@ -25,7 +25,9 @@ class DiaryListViewModel @ViewModelInject constructor(
     private var _selectedDate: LocalDate = LocalDate.now()
 
 
-    val selectedDate: LocalDate = _selectedDate
+    val selectedDate: LocalDate
+        get() = _selectedDate
+
     fun setSelectedDate(value: LocalDate) {
         _selectedDate = value
     }
