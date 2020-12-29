@@ -19,6 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 private const val TAG = "DiaryListFragment"
@@ -30,6 +31,7 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
         DiaryListAdapter(onDiaryDeleted = ::onDiaryDeleted, onDiaryClicked = ::onDiaryClicked)
 
     private val today = LocalDate.now()
+    private var selectedDate = today
 
 
     override fun inflateBinding(
@@ -48,7 +50,9 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
         }
 
         diaryCalendarView.addOnDateSelectedListener { selectedDate ->
-            diaryListViewModel.setSelectedDate(selectedDate)
+            this@DiaryListFragment.selectedDate = selectedDate
+
+            diaryListViewModel.setSelectedDateForDiaries(selectedDate)
 
             diaryListViewModel.getDiariesForDate(selectedDate)
 
@@ -56,6 +60,21 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
                 btnNewEntry.show()
             else
                 btnNewEntry.hide()
+        }
+
+        diaryCalendarView.addOnMonthChangedListener {
+            when (it.month) {
+                diaryListViewModel.dateForSelectedDiary.month -> {
+                    diaryCalendarView.selectDate(diaryListViewModel.dateForSelectedDiary)
+                }
+                today.month -> {
+                    diaryCalendarView.selectDate(today)
+                }
+                else -> {
+                    val firstDayOfMonth = LocalDate.of(it.year, it.month, 1)
+                    diaryCalendarView.selectDate(firstDayOfMonth)
+                }
+            }
         }
 
 
@@ -69,6 +88,15 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
         observeDiaryList()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        lifecycleScope.launch {
+//            delay(5)
+            binding.diaryCalendarView.selectDate(diaryListViewModel.dateForSelectedDiary)
+        }
+    }
+
     private fun renderEmptyListState() = with(binding) {
         diaryListAdapter.submitList(emptyList())
 
@@ -76,6 +104,7 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
 
         tvEmptyMessage.visible()
     }
+
 
     private fun onDiaryDeleted(diary: Diary) {
         //remove the item to be deleted from the list
@@ -122,7 +151,7 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
                 if (dy - dx > 0) {
                     binding.btnNewEntry.hide()
                 } else {
-                    if (diaryListViewModel.selectedDate == today)
+                    if (diaryListViewModel.dateForSelectedDiary == today)
                         binding.btnNewEntry.show()
                 }
             }
@@ -130,7 +159,7 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 when (newState) {
                     RecyclerView.SCROLL_STATE_IDLE ->
-                        if (diaryListViewModel.selectedDate == today)
+                        if (diaryListViewModel.dateForSelectedDiary == today)
                             binding.btnNewEntry.show()
                 }
             }
@@ -180,7 +209,6 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
         }
 
         binding.diaryCalendarView.setEventDates(entryDates)
-
     }
 
     private fun renderLoadingState() {

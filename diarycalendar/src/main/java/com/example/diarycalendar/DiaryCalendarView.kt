@@ -73,16 +73,10 @@ constructor(
 
     private fun setUpMonthChangeListener() = with(binding) {
         calendar.monthScrollListener = {
-
             if (it.month == today.month.value) {
                 dateText.text = formatter.format(today)
-                selectDate(today)
-            } else {
-                //let's select the first day of the month. This will fire 2 events in very quick succession
-                val firstDayOfMonth = LocalDate.of(it.year, it.month, 1)
-                selectDate(firstDayOfMonth)
             }
-
+            //let's select the first day of the month. This will fire 2 events in very quick succession
             onMonthChanged(it.yearMonth)
         }
     }
@@ -97,14 +91,15 @@ constructor(
         calendar.scrollToMonth(currentMonth)
     }
 
-    private fun selectDate(date: LocalDate) {
+    fun selectDate(date: LocalDate) {
+        binding.dateText.text = formatter.format(date)
+
         if (selectedDate != date) {
+            binding.calendar.scrollToMonth(date.yearMonth)
             val oldDate = selectedDate
             selectedDate = date
             oldDate?.let { binding.calendar.notifyDateChanged(it) }
             binding.calendar.notifyDateChanged(date)
-
-            binding.dateText.text = formatter.format(date)
             onDateSelected(date)
         }
     }

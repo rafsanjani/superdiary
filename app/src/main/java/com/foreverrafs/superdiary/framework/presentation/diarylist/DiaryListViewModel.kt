@@ -17,18 +17,15 @@ class DiaryListViewModel @ViewModelInject constructor(
     private val listInteractor: DiaryListInteractor,
     private val dispatcher: CoroutineDispatcher,
 ) : BaseViewModel<DiaryListState>() {
-    companion object {
-        private const val KEY_ENTRY = "saved_state_key_diary_entry"
-    }
 
     private var _allDiaries = listOf<Diary>()
     private var _selectedDate: LocalDate = LocalDate.now()
 
 
-    val selectedDate: LocalDate
+    val dateForSelectedDiary: LocalDate
         get() = _selectedDate
 
-    fun setSelectedDate(value: LocalDate) {
+    fun setSelectedDateForDiaries(value: LocalDate) {
         _selectedDate = value
     }
 
