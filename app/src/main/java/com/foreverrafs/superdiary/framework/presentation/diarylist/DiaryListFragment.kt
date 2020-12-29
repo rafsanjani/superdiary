@@ -5,7 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.foreverrafs.superdiary.R
@@ -25,7 +25,7 @@ private const val TAG = "DiaryListFragment"
 
 @AndroidEntryPoint
 class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
-    private val diaryListViewModel: DiaryListViewModel by viewModels()
+    private val diaryListViewModel: DiaryListViewModel by activityViewModels()
     private val diaryListAdapter =
         DiaryListAdapter(onDiaryDeleted = ::onDiaryDeleted, onDiaryClicked = ::onDiaryClicked)
 
@@ -41,6 +41,7 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d(TAG, "onViewCreated: $savedInstanceState")
 
         binding.titleText.setOnClickListener {
             diaryCalendarView.smoothScrollToToday()

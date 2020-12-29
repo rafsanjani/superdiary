@@ -1,6 +1,9 @@
 package com.foreverrafs.superdiary.di
 
 import android.app.Application
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.createDataStore
 import androidx.room.Room
 import com.foreverrafs.superdiary.business.repository.DataSource
 import com.foreverrafs.superdiary.business.repository.DiaryRepository
@@ -26,13 +29,20 @@ import javax.inject.Singleton
 object AppModule {
     @Singleton
     @Provides
-    fun provideDiaryDatabase(context: Application): DiaryDatabase {
+    fun provideDiaryDatabase(app: Application): DiaryDatabase {
         // TODO: 27/12/20  Use a proper migration strategy in production
         return Room
-            .databaseBuilder(context, DiaryDatabase::class.java, DiaryDatabase.DATABASE_NAME)
+            .databaseBuilder(app, DiaryDatabase::class.java, DiaryDatabase.DATABASE_NAME)
             .fallbackToDestructiveMigration()
             .build()
     }
+
+    @Singleton
+    @Provides
+    fun provideDataStore(app: Application): DataStore<Preferences> {
+        return app.createDataStore(name = "settings")
+    }
+
 
     @Singleton
     @Provides

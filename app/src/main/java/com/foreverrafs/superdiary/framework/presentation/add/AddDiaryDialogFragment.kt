@@ -15,6 +15,7 @@ import com.foreverrafs.superdiary.databinding.BottomSheetAddDiaryBinding
 import com.foreverrafs.superdiary.framework.presentation.add.state.AddDiaryState
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -48,14 +49,20 @@ class AddDiaryDialogFragment : BottomSheetDialogFragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
-        (requireDialog() as BottomSheetDialog).apply {
-            isCancelable = false
-            behavior.isDraggable = false
-            dismissWithAnimation = true
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setUpDialogBehaviour()
+        setUpViewsAndClickListeners()
+        loadDraftEntry()
+        setUpTodayDateText()
+        observeDiarySaveState()
+    }
 
+    private fun setUpViewsAndClickListeners() = with(binding) {
         dismiss.setOnClickListener {
+            if (diaryEntry.text.isNotEmpty()) {
+                showSaveDraftDialog()
+                return@setOnClickListener
+            }
             closeDialog()
         }
 
@@ -70,9 +77,42 @@ class AddDiaryDialogFragment : BottomSheetDialogFragment() {
         done.setOnClickListener {
             onDoneClicked()
         }
+    }
 
-        setUpTodayDateText()
-        observeDiarySaveState()
+    private fun showSaveDraftDialog() {
+        val diaryEntry = binding.diaryEntry.text.toString()
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Save Entry")
+            .setMessage("Do you want to discard this entry?")
+            .setPositiveButton("Discard") { _, _ ->
+                addDiaryViewModel.clearDiaryDraft()
+                closeDialog()
+
+            }.setNegativeButton("Save") { _, _ ->
+                addDiaryViewModel.saveDiaryDraft(diaryEntry)
+                closeDialog()
+
+            }
+            .setNeutralButton("Cancel", null)
+            .show()
+    }
+
+    private fun setUpDialogBehaviour() {
+        (requireDialog() as BottomSheetDialog).apply {
+            isCancelable = false
+            behavior.isDraggable = false
+            dismissWithAnimation = true
+        }
+    }
+
+    private fun loadDraftEntry() = lifecycleScope.launchWhenStarted {
+        addDiaryViewModel.diaryDraftEntry.collect { draft ->
+            draft?.let {
+                binding.diaryEntry.setText(it)
+                binding.diaryEntry.selectAll()
+            }
+        }
     }
 
     private fun closeDialog() {

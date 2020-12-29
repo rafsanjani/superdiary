@@ -24,4 +24,8 @@
     <style name="Widget.SuperDiary.PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">?attr/colorControlNormal</item>
     </style>
+
+    <style name="Widget.SuperDiary.NeutralButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?attr/colorControlNormal</item>
+    </style>
 </resources>

@@ -16,7 +16,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = AndroidX.test.runner
     }
 
     buildTypes {
@@ -48,6 +48,7 @@ android {
     }
 }
 
+
 dependencies {
     implementation(AndroidX.appCompat)
     implementation(AndroidX.core.ktx)
@@ -69,9 +70,13 @@ dependencies {
     implementation(AndroidX.lifecycle.viewModel)
     implementation(AndroidX.core.animation)
     implementation(Google.android.material)
+    implementation(AndroidX.constraintLayout)
+    implementation(AndroidX.preferenceKtx)
+    testImplementation(AndroidX.test.ext.junitKtx)
+    testImplementation(AndroidX.test.ext.truth)
+
+    implementation("androidx.datastore:datastore-core:_")
+    implementation("androidx.datastore:datastore-preferences:1.0.0-alpha05")
     implementation("jp.wasabeef:recyclerview-animators:4.0.1")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.1")
-    implementation(AndroidX.constraintLayout)
-    testImplementation(AndroidX.test.coreKtx)
-    testImplementation("junit:junit:4.13.1")
 }

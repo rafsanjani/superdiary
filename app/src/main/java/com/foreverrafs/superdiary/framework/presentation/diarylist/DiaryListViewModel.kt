@@ -15,8 +15,11 @@ import java.time.LocalDate
 
 class DiaryListViewModel @ViewModelInject constructor(
     private val listInteractor: DiaryListInteractor,
-    private val dispatcher: CoroutineDispatcher
+    private val dispatcher: CoroutineDispatcher,
 ) : BaseViewModel<DiaryListState>() {
+    companion object {
+        private const val KEY_ENTRY = "saved_state_key_diary_entry"
+    }
 
     private var _allDiaries = listOf<Diary>()
     private var _selectedDate: LocalDate = LocalDate.now()

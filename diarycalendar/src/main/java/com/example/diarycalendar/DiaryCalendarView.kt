@@ -53,7 +53,7 @@ constructor(
         this.onMonthChanged = listener
     }
 
-    fun smoothScrollToToday(){
+    fun smoothScrollToToday() {
         binding.calendar.smoothScrollToDate(LocalDate.now())
     }
 
@@ -138,21 +138,23 @@ constructor(
                     textView.visibility = View.VISIBLE
                     dotView.visibility = View.INVISIBLE
 
+                    val hasEvent = eventDates.contains(day.date)
+
                     when (day.date) {
                         today -> {
                             textView.setTextColorRes(R.color.calendar_black)
                             textView.setBackgroundResource(R.drawable.today_date_bg)
-                            dotView.visibility = View.INVISIBLE
+                            dotView.isVisible
                         }
                         selectedDate -> {
                             textView.setBackgroundResource(R.drawable.selected_day_bg)
-                            dotView.visibility = View.INVISIBLE
+                            dotView.isVisible = hasEvent
                         }
                         else -> {
                             if (eventDates.contains(day.date))
                                 textView.setTypeface(textView.typeface, Typeface.BOLD_ITALIC)
 
-                            dotView.isVisible = eventDates.contains(day.date)
+                            dotView.isVisible = hasEvent
                             textView.background = null
                         }
                     }
