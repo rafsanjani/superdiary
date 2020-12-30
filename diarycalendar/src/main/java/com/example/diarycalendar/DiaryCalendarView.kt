@@ -43,6 +43,7 @@ constructor(
     fun setEventDates(events: List<LocalDate>) {
         eventDates = events
         binding.calendar.notifyCalendarChanged()
+        invalidate()
     }
 
     fun addOnDateSelectedListener(listener: (date: LocalDate) -> Unit) {
