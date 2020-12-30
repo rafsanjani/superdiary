@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter
  * strategies to overcome the "inconsistencies" [IndexOutOfBoundsException]
  *
  * One solution is to call [ListAdapter.submitList] with null, followed by the filtered list but we'd rather use a [RecyclerView.Adapter]
- * with a custom []
+ * with a custom [AsyncListDiffer]
  */
 class DiaryListAdapter(
     private val onDiaryDeleted: (diary: Diary) -> Unit,

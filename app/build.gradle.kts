@@ -16,7 +16,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = AndroidX.test.runner
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -42,6 +42,8 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
+
 
     this.kotlinOptions {
         this.jvmTarget = "1.8"
@@ -73,7 +75,14 @@ dependencies {
     implementation(AndroidX.constraintLayout)
     implementation(AndroidX.preferenceKtx)
     testImplementation(AndroidX.test.ext.junitKtx)
+    testImplementation(CashApp.turbine)
+    testImplementation(AndroidX.archCore.testing)
+    androidTestImplementation(AndroidX.test.ext.junitKtx)
     testImplementation(AndroidX.test.ext.truth)
+    testImplementation(KotlinX.coroutines.test)
+    testImplementation(Square.moshi.kotlinCodegen)
+    testImplementation("io.mockk:mockk:1.10.4")
+    testImplementation(Square.moshi.kotlinReflect)
 
     implementation("androidx.datastore:datastore-core:_")
     implementation("androidx.datastore:datastore-preferences:1.0.0-alpha05")

@@ -10,7 +10,7 @@ data class DiaryEntity(
     val id: Long = 0,
 
     @ColumnInfo(name = "title")
-    val title: String,
+    val message: String,
 
     @ColumnInfo(name = "date")
     val date: String

@@ -7,6 +7,7 @@ import com.foreverrafs.superdiary.business.usecase.diarylist.DiaryListInteractor
 import com.foreverrafs.superdiary.framework.presentation.common.BaseViewModel
 import com.foreverrafs.superdiary.framework.presentation.diarylist.state.DiaryListState
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -15,10 +16,11 @@ import java.time.LocalDate
 
 class DiaryListViewModel @ViewModelInject constructor(
     private val listInteractor: DiaryListInteractor,
-    private val dispatcher: CoroutineDispatcher,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.Main,
 ) : BaseViewModel<DiaryListState>() {
 
-    private var _allDiaries = listOf<Diary>()
+    private var _allDiaries = emptyList<Diary>()
+
     private var _selectedDate: LocalDate = LocalDate.now()
 
 

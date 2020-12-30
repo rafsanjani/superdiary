@@ -9,7 +9,7 @@ class DiaryMapper : EntityMapper<DiaryEntity, Diary> {
     override fun mapToDomain(entity: DiaryEntity): Diary {
         return Diary(
             id = entity.id,
-            message = entity.title,
+            message = entity.message,
             date = LocalDateTime.parse(entity.date)
         )
     }
@@ -17,7 +17,7 @@ class DiaryMapper : EntityMapper<DiaryEntity, Diary> {
     override fun mapToEntity(domainModel: Diary): DiaryEntity {
         return DiaryEntity(
             id = domainModel.id,
-            title = domainModel.message,
+            message = domainModel.message,
             date = domainModel.date.toString()
         )
     }

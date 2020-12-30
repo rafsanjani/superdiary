@@ -8,7 +8,8 @@
     android:background="@color/bg_dark"
     android:clickable="true"
     android:focusable="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".framework.presentation.detail.DiaryDetailFragment">
 
 
     <com.google.android.material.appbar.AppBarLayout
@@ -95,7 +96,8 @@
             android:scrollHorizontally="false"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@tools:sample/lorem/random" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

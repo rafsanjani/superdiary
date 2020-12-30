@@ -43,8 +43,9 @@ class DiaryDetailFragment : BaseFragment<FragmentDiaryDetailBinding>() {
             textDiaryEntry.setText(incomingDiary.message)
 
             if (incomingDiary.date.toLocalDate() != LocalDate.now()) {
-                textDiaryEntry.inputType = InputType.TYPE_NULL
                 btnEditDiary.invisible()
+
+                // TODO: 29/12/20 Disable user input  
 
                 //center the delete button if we are unable to edit
                 val params =
@@ -57,6 +58,9 @@ class DiaryDetailFragment : BaseFragment<FragmentDiaryDetailBinding>() {
                 params.bottomMargin = resources.getDimension(R.dimen.space).toInt()
 
                 btnDeleteDiary.layoutParams = params
+            } else {
+                binding.textDiaryEntry.inputType =
+                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE;
             }
         }
     }

@@ -12,6 +12,7 @@ import com.foreverrafs.superdiary.business.usecase.add.AddDiaryUseCase
 import com.foreverrafs.superdiary.framework.presentation.add.state.AddDiaryState
 import com.foreverrafs.superdiary.framework.presentation.common.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 class AddDiaryViewModel
 @ViewModelInject constructor(
     private val addDiary: AddDiaryUseCase,
-    private val dispatcher: CoroutineDispatcher,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.Main,
     private val dataStore: DataStore<Preferences>,
 ) : BaseViewModel<AddDiaryState>() {
 
