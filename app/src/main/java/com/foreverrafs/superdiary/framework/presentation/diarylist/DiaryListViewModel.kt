@@ -14,6 +14,8 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 
+private const val TAG = "DiaryListViewModel"
+
 class DiaryListViewModel @ViewModelInject constructor(
     private val listInteractor: DiaryListInteractor,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main,

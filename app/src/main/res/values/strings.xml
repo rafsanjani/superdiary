@@ -9,4 +9,5 @@
     <string name="cancel">Cancel</string>
     <string name="dialog_save_draft">Do you want to discard this entry?</string>
     <string name="dialog_title_save">Save Entry</string>
+    <string name="label_no_diary_entry">No Diary Entry!</string>
 </resources>

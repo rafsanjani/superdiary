@@ -19,7 +19,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 private const val TAG = "DiaryListFragment"
@@ -43,7 +42,6 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "onViewCreated: $savedInstanceState")
 
         binding.titleText.setOnClickListener {
             diaryCalendarView.smoothScrollToToday()
@@ -91,16 +89,18 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
     override fun onResume() {
         super.onResume()
 
-        lifecycleScope.launch {
-//            delay(5)
-            binding.diaryCalendarView.selectDate(diaryListViewModel.dateForSelectedDiary)
-        }
+        binding.diaryCalendarView.selectDate(diaryListViewModel.dateForSelectedDiary)
     }
 
     private fun renderEmptyListState() = with(binding) {
+        //we still need to show the entry dots on the map if we still have entries in the database
+        if (diaryListViewModel.allDiaries.isNotEmpty())
+            diaryCalendarView.setEventDates(diaryListViewModel.allDiaries.map { it.date.toLocalDate() })
+
+
         diaryListAdapter.submitList(emptyList())
 
-        tvEmptyMessage.text = "No Diary Entry!"
+        tvEmptyMessage.setText(R.string.label_no_diary_entry)
 
         tvEmptyMessage.visible()
     }
@@ -181,7 +181,9 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
                     DiaryListState.Loading -> renderLoadingState()
                     is DiaryListState.Deleted -> {
                     }
-                    DiaryListState.Empty -> renderEmptyListState()
+                    DiaryListState.Empty -> {
+                        renderEmptyListState()
+                    }
                 }
             }
         }
