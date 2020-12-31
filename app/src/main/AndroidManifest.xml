@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.foreverrafs.superdiary">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:name=".framework.App"
         android:allowBackup="true"
@@ -12,6 +15,7 @@
         android:theme="@style/Theme.Superdiary">
         <activity
             android:name=".framework.presentation.MainActivity"
+            android:launchMode="singleInstance"
             android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,6 +23,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".framework.broadcastreceiver.BootReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".framework.broadcastreceiver.AlarmReceiver"
+            android:enabled="true" />
+
+        <service
+            android:name=".framework.service.NotificationService"
+            android:enabled="true" />
     </application>
+
 
 </manifest>
