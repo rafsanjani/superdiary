@@ -1,0 +1,14 @@
+<resources>
+
+    <string-array name="notification_time_entries">
+        <item>6 PM</item>
+        <item>10 PM</item>
+        <item>12 PM</item>
+    </string-array>
+
+    <string-array name="notification_time_values">
+        <item>6</item>
+        <item>10</item>
+        <item>12</item>
+    </string-array>
+</resources>

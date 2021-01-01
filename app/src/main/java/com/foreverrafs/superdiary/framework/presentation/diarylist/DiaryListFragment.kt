@@ -47,6 +47,12 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
             diaryCalendarView.smoothScrollToToday()
         }
 
+        binding.settings.setOnClickListener {
+            navController.navigate(
+                DiaryListFragmentDirections.actionDiaryListFragmentToSettingsFragment()
+            )
+        }
+
         diaryCalendarView.addOnDateSelectedListener { selectedDate ->
             this@DiaryListFragment.selectedDate = selectedDate
 

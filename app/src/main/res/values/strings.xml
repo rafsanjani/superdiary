@@ -10,4 +10,15 @@
     <string name="dialog_save_draft">Do you want to discard this entry?</string>
     <string name="dialog_title_save">Save Entry</string>
     <string name="label_no_diary_entry">No Diary Entry!</string>
+    <!-- Preference Titles -->
+    <string name="notifications_header">Notifications</string>
+
+
+    <string name="pref_daily_reminder">Daily reminder time</string>
+
+    <string name="pref_enable_notifications">Enable Daily reminder notifications</string>
+
+    <string name="pref_key_enable_notifications">com.foreverrafs.superdiary.enable_notifications</string>
+    <string name="pref_key_notification_time">com.foreverrafs.superdiary.notification_time</string>
+
 </resources>
