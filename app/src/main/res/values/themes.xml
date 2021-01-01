@@ -8,8 +8,7 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="materialAlertDialogTheme">@style/Widget.SuperDiary.AlertDialogTheme</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.SuperDiary.BottomSheetDialog</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/bg_light</item>
     </style>
 
     <style name="Base.ThemeOverlay.SuperDiary.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.DayNight.BottomSheetDialog">
