@@ -1,9 +1,11 @@
 package com.foreverrafs.superdiary.di
 
 import android.app.Application
+import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.createDataStore
+import androidx.preference.PreferenceManager
 import androidx.room.Room
 import com.foreverrafs.superdiary.business.repository.DataSource
 import com.foreverrafs.superdiary.business.repository.DiaryRepository
@@ -16,6 +18,7 @@ import com.foreverrafs.superdiary.framework.datasource.local.RoomDataSource
 import com.foreverrafs.superdiary.framework.datasource.local.database.DiaryDao
 import com.foreverrafs.superdiary.framework.datasource.local.database.DiaryDatabase
 import com.foreverrafs.superdiary.framework.datasource.local.mapper.DiaryMapper
+import com.foreverrafs.superdiary.framework.scheduler.NotificationScheduler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,6 +45,11 @@ object AppModule {
         return app.createDataStore(name = "settings")
     }
 
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(app: Application): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(app)
+    }
 
     @Singleton
     @Provides
@@ -88,5 +96,14 @@ object AppModule {
     @Singleton
     fun provideAddDiaryUseCase(repo: DiaryRepository): AddDiaryUseCase {
         return AddDiaryUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNotificationScheduler(
+        app: Application,
+        prefs: SharedPreferences
+    ): NotificationScheduler {
+        return NotificationScheduler(app, prefs)
     }
 }

@@ -36,9 +36,6 @@
             android:name=".framework.broadcastreceiver.AlarmReceiver"
             android:enabled="true" />
 
-        <service
-            android:name=".framework.service.NotificationService"
-            android:enabled="true" />
     </application>
 
 
