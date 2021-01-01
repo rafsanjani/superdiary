@@ -9,10 +9,7 @@ import android.util.Log
 import com.foreverrafs.superdiary.R
 import com.foreverrafs.superdiary.framework.broadcastreceiver.AlarmReceiver
 import com.foreverrafs.superdiary.util.DEBUG_TAG
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneOffset
+import java.util.*
 
 private const val TAG = DEBUG_TAG
 
@@ -31,12 +28,13 @@ class NotificationScheduler(private val context: Context, private val prefs: Sha
             prefs.getString(context.getString(R.string.pref_key_notification_time), "0")?.toInt()
                 ?: 10
 
+        val alarmTime = Calendar.getInstance().also {
+            it.set(Calendar.HOUR, alarmHour)
+        }
 
-        val time = LocalDateTime.of(LocalDate.now(), LocalTime.of(alarmHour + 12, 0, 0))
-
-        alarmManager.setRepeating(
+        alarmManager.setInexactRepeating(
             AlarmManager.RTC_WAKEUP,
-            time.toInstant(ZoneOffset.UTC).toEpochMilli(),
+            alarmTime.timeInMillis,
             AlarmManager.INTERVAL_DAY,
             alarmIntent
         )
