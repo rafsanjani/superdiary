@@ -48,6 +48,12 @@ class SettingsFragment : PreferenceFragmentCompat(),
         if (key == getString(R.string.pref_key_notification_time)) {
             notificationScheduler.cancelAlarm()
             notificationScheduler.scheduleAlarm()
+        } else if (key == getString(R.string.pref_key_enable_notifications)) {
+            val shouldEnableNotifications = sharedPreferences.getBoolean(key, true)
+            if (shouldEnableNotifications)
+                notificationScheduler.scheduleAlarm()
+            else
+                notificationScheduler.cancelAlarm()
         }
     }
 }
