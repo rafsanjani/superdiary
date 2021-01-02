@@ -40,6 +40,8 @@ class DiaryDetailFragment : BaseFragment<FragmentDiaryDetailBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
 
+        diaryEntryPager.setPageTransformer(RotateDownPageTransformer())
+
         next.setOnClickListener {
             diaryEntryPager.currentItem =
                 (diaryEntryPager.currentItem + 1).coerceAtMost(diaryList.size - 1)
