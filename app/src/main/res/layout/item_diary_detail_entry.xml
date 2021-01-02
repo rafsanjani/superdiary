@@ -5,22 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/textDiaryEntry"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space"
-        android:layout_marginEnd="@dimen/space"
+        android:layout_marginStart="@dimen/space_medium"
+        android:layout_marginEnd="@dimen/space_medium"
+        android:layout_marginBottom="@dimen/space"
         android:background="@drawable/diary_input_shape"
-        android:fontFamily="@font/andada"
-        android:gravity="top"
-        android:inputType="none"
-        android:minHeight="@dimen/diary_detail_height_min"
-        android:padding="@dimen/space_small"
-        android:scrollbars="vertical"
-        android:scrollHorizontally="false"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@tools:sample/lorem/random" />
+        android:paddingHorizontal="@dimen/space_small"
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:id="@+id/textDiaryEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/andada"
+            android:gravity="top"
+            android:justificationMode="inter_word"
+            android:lineSpacingExtra="@dimen/space"
+            android:minHeight="@dimen/diary_detail_height_min"
+            android:padding="@dimen/space_small"
+            android:scrollbars="vertical"
+            android:scrollHorizontally="false"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@tools:sample/lorem/random" />
+    </ScrollView>
+
 </FrameLayout>
