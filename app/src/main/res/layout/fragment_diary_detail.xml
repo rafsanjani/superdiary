@@ -56,8 +56,8 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/next"
-                app:layout_constraintStart_toEndOf="@+id/previous"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="December 20, 2020" />
 
@@ -80,24 +80,16 @@
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <EditText
-            android:id="@+id/textDiaryEntry"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/diaryEntryPager"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="@dimen/space"
             android:layout_marginEnd="@dimen/space"
-            android:background="@drawable/diary_input_shape"
-            android:fontFamily="@font/andada"
-            android:gravity="top"
-            android:inputType="textMultiLine"
-            android:minHeight="@dimen/diary_detail_height_min"
-            android:padding="@dimen/space_small"
-            android:scrollbars="vertical"
-            android:scrollHorizontally="false"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="@tools:sample/lorem/random" />
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
