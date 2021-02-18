@@ -109,7 +109,8 @@ class AddDiaryDialogFragment : BottomSheetDialogFragment() {
 
     private fun loadDraftEntry() = lifecycleScope.launchWhenStarted {
         addDiaryViewModel.diaryDraftEntry.collect { draft ->
-            draft?.let {
+
+        draft?.let {
                 binding.diaryEntry.setText(it)
                 binding.diaryEntry.selectAll()
             }
