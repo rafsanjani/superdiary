@@ -7,7 +7,6 @@ import com.foreverrafs.superdiary.framework.presentation.common.BaseViewModel
 import com.foreverrafs.superdiary.framework.presentation.diarylist.state.DiaryListState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -16,9 +15,11 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class DiaryListViewModel @Inject constructor(
+class DiaryListViewModel
+@Inject
+constructor(
     private val listInteractor: DiaryListInteractor,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.Main,
+    private val dispatcher: CoroutineDispatcher,
 ) : BaseViewModel<DiaryListState>() {
 
     private var _allDiaries = emptyList<Diary>()

@@ -11,7 +11,6 @@ import com.foreverrafs.superdiary.framework.presentation.add.state.AddDiaryState
 import com.foreverrafs.superdiary.framework.presentation.common.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,9 +18,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddDiaryViewModel
-@Inject constructor(
+@Inject
+constructor(
     private val addDiary: AddDiaryUseCase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.Main,
+    private val dispatcher: CoroutineDispatcher,
     private val dataStore: DataStore<Preferences>,
 ) : BaseViewModel<AddDiaryState>() {
 
