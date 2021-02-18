@@ -85,7 +85,7 @@ dependencies {
     testImplementation(Square.moshi.kotlinReflect)
 
     implementation("androidx.datastore:datastore-core:_")
-    implementation("androidx.datastore:datastore-preferences:1.0.0-alpha05")
+    implementation("androidx.datastore:datastore-preferences:_")
     implementation("jp.wasabeef:recyclerview-animators:4.0.1")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.1")
 }
