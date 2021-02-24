@@ -51,6 +51,7 @@
     <style name="Widget.SuperDiary.AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="android:windowAnimationStyle">@style/Animation.SuperDiary.MaterialAlertDialog
         </item>
+        <item name="android:background">@color/bg_dark</item>
         <item name="buttonBarPositiveButtonStyle">@style/Widget.SuperDiary.NegativeButtonStyle
         </item>
         <item name="buttonBarNegativeButtonStyle">@style/Widget.SuperDiary.PositiveButtonStyle

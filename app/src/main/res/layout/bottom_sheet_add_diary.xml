@@ -41,7 +41,7 @@
         android:layout_height="wrap_content">
 
         <EditText
-            android:id="@+id/diaryEntry"
+            android:id="@+id/textDiaryEntry"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space"
@@ -68,18 +68,18 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/diaryEntry"
+            app:layout_constraintTop_toBottomOf="@id/textDiaryEntry"
             tools:text="Today: December 25, 2020" />
 
         <Button
-            android:id="@+id/done"
+            android:id="@+id/btnDone"
             style="@style/Widget.SuperDiary.Button.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:enabled="false"
             app:icon="@drawable/ic_done"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/diaryEntry" />
+            app:layout_constraintTop_toBottomOf="@id/textDiaryEntry" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
 

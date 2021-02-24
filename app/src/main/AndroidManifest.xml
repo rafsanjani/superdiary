@@ -13,9 +13,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Superdiary">
+
+        <!--Using SingleTask because ActivityScenarioRule displays a dark screen when SingleTask is used-->
         <activity
             android:name=".framework.presentation.MainActivity"
-            android:launchMode="singleInstance"
+
+            android:launchMode="singleTask"
             android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

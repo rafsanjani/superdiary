@@ -2,21 +2,12 @@ package com.foreverrafs.superdiary.di
 
 import android.app.Application
 import android.content.SharedPreferences
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.createDataStore
-import androidx.preference.PreferenceManager
-import androidx.room.Room
-import com.foreverrafs.superdiary.business.repository.DataSource
 import com.foreverrafs.superdiary.business.repository.DiaryRepository
 import com.foreverrafs.superdiary.business.usecase.add.AddDiaryUseCase
 import com.foreverrafs.superdiary.business.usecase.common.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.business.usecase.diarylist.DiaryListInteractor
 import com.foreverrafs.superdiary.business.usecase.diarylist.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.business.usecase.diarylist.SearchDiaryUseCase
-import com.foreverrafs.superdiary.framework.datasource.local.RoomDataSource
-import com.foreverrafs.superdiary.framework.datasource.local.database.DiaryDao
-import com.foreverrafs.superdiary.framework.datasource.local.database.DiaryDatabase
 import com.foreverrafs.superdiary.framework.datasource.local.mapper.DiaryMapper
 import com.foreverrafs.superdiary.framework.scheduler.NotificationScheduler
 import dagger.Module
@@ -30,32 +21,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-    @Singleton
-    @Provides
-    fun provideDiaryDatabase(app: Application): DiaryDatabase {
-        return Room
-            .databaseBuilder(app, DiaryDatabase::class.java, DiaryDatabase.DATABASE_NAME)
-            .fallbackToDestructiveMigration()
-            .build()
-    }
-
-    @Singleton
-    @Provides
-    fun provideDataStore(app: Application): DataStore<Preferences> {
-        return app.createDataStore(name = "settings")
-    }
-
-    @Singleton
-    @Provides
-    fun provideSharedPreferences(app: Application): SharedPreferences {
-        return PreferenceManager.getDefaultSharedPreferences(app)
-    }
-
-    @Singleton
-    @Provides
-    fun provideDiaryDao(database: DiaryDatabase): DiaryDao {
-        return database.diaryDao()
-    }
 
     @Singleton
     @Provides
@@ -64,22 +29,6 @@ object AppModule {
     @Singleton
     @Provides
     fun provideDataMapper(): DiaryMapper = DiaryMapper()
-
-    @Singleton
-    @Provides
-    fun provideRoomDataSource(
-        diaryDao: DiaryDao,
-        diaryMapper: DiaryMapper
-    ): DataSource {
-        return RoomDataSource(diaryDao, diaryMapper)
-    }
-
-
-    @Singleton
-    @Provides
-    fun provideDiaryRepository(dataSource: DataSource): DiaryRepository {
-        return DiaryRepository(dataSource = dataSource)
-    }
 
 
     @Provides
@@ -101,9 +50,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideNotificationScheduler(
-        app: Application,
+        appContext: Application,
         prefs: SharedPreferences
     ): NotificationScheduler {
-        return NotificationScheduler(app, prefs)
+        return NotificationScheduler(appContext, prefs)
     }
 }

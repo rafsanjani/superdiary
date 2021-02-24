@@ -20,5 +20,7 @@
 
     <string name="pref_key_enable_notifications">com.foreverrafs.superdiary.enable_notifications</string>
     <string name="pref_key_notification_time">com.foreverrafs.superdiary.notification_time</string>
+    <string name="dialy_notification_title">SuperDiary Reminder</string>
+    <string name="dialy_notification_message">How was your day today?</string>
 
 </resources>

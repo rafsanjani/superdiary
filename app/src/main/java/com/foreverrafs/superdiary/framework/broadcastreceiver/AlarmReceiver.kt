@@ -50,8 +50,8 @@ class AlarmReceiver : BroadcastReceiver() {
             context,
             NOTIFICATION_CHANNEL_ID
         )
-            .setContentTitle("SuperDiary Reminder")
-            .setContentText("How was your day today?")
+            .setContentTitle(context.getString(R.string.dialy_notification_title))
+            .setContentText(context.getString(R.string.dialy_notification_message))
             .setSmallIcon(R.mipmap.ic_launcher_round)
             .setContentIntent(
                 addDiaryIntent

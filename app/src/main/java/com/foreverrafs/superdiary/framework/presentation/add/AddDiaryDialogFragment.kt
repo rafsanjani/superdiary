@@ -60,28 +60,28 @@ class AddDiaryDialogFragment : BottomSheetDialogFragment() {
 
     private fun setUpViewsAndClickListeners() = with(binding) {
         dismiss.setOnClickListener {
-            if (diaryEntry.text.isNotEmpty()) {
+            if (textDiaryEntry.text.isNotEmpty()) {
                 showSaveDraftDialog()
                 return@setOnClickListener
             }
             closeDialog()
         }
 
-        diaryEntry.hint = hints.random()
+        textDiaryEntry.hint = hints.random()
 
-        diaryEntry.requestFocus()
+        textDiaryEntry.requestFocus()
 
-        diaryEntry.addTextChangedListener {
-            done.isEnabled = it?.isNotEmpty()!!
+        textDiaryEntry.addTextChangedListener {
+            btnDone.isEnabled = it?.isNotEmpty()!!
         }
 
-        done.setOnClickListener {
+        btnDone.setOnClickListener {
             onDoneClicked()
         }
     }
 
     private fun showSaveDraftDialog() {
-        val diaryEntry = binding.diaryEntry.text.toString()
+        val diaryEntry = binding.textDiaryEntry.text.toString()
 
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.dialog_title_save)
@@ -110,9 +110,9 @@ class AddDiaryDialogFragment : BottomSheetDialogFragment() {
     private fun loadDraftEntry() = lifecycleScope.launchWhenStarted {
         addDiaryViewModel.diaryDraftEntry.collect { draft ->
 
-        draft?.let {
-                binding.diaryEntry.setText(it)
-                binding.diaryEntry.selectAll()
+            draft?.let {
+                binding.textDiaryEntry.setText(it)
+                binding.textDiaryEntry.selectAll()
             }
         }
     }
@@ -128,7 +128,7 @@ class AddDiaryDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun onDoneClicked() {
-        val entry = binding.diaryEntry.text.toString()
+        val entry = binding.textDiaryEntry.text.toString()
         saveDiary(entry)
     }
 
