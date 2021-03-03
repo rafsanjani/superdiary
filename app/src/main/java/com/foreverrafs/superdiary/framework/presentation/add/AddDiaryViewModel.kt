@@ -3,30 +3,31 @@ package com.foreverrafs.superdiary.framework.presentation.add
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.preferencesKey
-import androidx.datastore.preferences.core.remove
-import androidx.hilt.lifecycle.ViewModelInject
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.business.model.Diary
 import com.foreverrafs.superdiary.business.usecase.add.AddDiaryUseCase
 import com.foreverrafs.superdiary.framework.presentation.add.state.AddDiaryState
 import com.foreverrafs.superdiary.framework.presentation.common.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
+@HiltViewModel
 class AddDiaryViewModel
-@ViewModelInject constructor(
+@Inject
+constructor(
     private val addDiary: AddDiaryUseCase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.Main,
+    private val dispatcher: CoroutineDispatcher,
     private val dataStore: DataStore<Preferences>,
 ) : BaseViewModel<AddDiaryState>() {
 
 
     companion object {
-        private val KEY_DIARY_DRAFT = preferencesKey<String>("draft")
+        private val KEY_DIARY_DRAFT = stringPreferencesKey("draft")
     }
 
     fun saveDiaryDraft(message: String) = viewModelScope.launch {

@@ -6,6 +6,9 @@ plugins {
     kotlin("kapt")
     id("org.jetbrains.kotlin.plugin.parcelize")
 }
+apply {
+    plugin("kotlin-android")
+}
 
 android {
     defaultConfig {
@@ -16,7 +19,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.foreverrafs.superdiary.HiltTestRunner"
     }
 
     buildTypes {
@@ -29,9 +32,9 @@ android {
         }
     }
 
-    viewBinding {
-        android.buildFeatures.viewBinding = true
-    }
+
+    buildFeatures.viewBinding = true
+
 
     packagingOptions {
         exclude("META-INF/notice.txt")
@@ -52,15 +55,17 @@ android {
 
 
 dependencies {
+    implementation(project(mapOf("path" to ":diarycalendar")))
+
     implementation(AndroidX.appCompat)
     implementation(AndroidX.core.ktx)
     implementation(AndroidX.activityKtx)
     implementation(AndroidX.hilt.lifecycleViewModel)
-    implementation(project(mapOf("path" to ":diarycalendar")))
     kapt(AndroidX.hilt.compiler)
     implementation(AndroidX.fragmentKtx)
     implementation(AndroidX.room.ktx)
     implementation(Google.dagger.hilt.android)
+    androidTestImplementation(Google.dagger.hilt.android.testing)
     kapt(Google.dagger.hilt.android.compiler)
     kapt(AndroidX.room.compiler)
     implementation(AndroidX.navigation.ui)
@@ -78,14 +83,19 @@ dependencies {
     testImplementation(CashApp.turbine)
     testImplementation(AndroidX.archCore.testing)
     androidTestImplementation(AndroidX.test.ext.junitKtx)
+    androidTestImplementation(AndroidX.test.espresso.core)
+    androidTestImplementation(AndroidX.test.espresso.contrib)
+    androidTestImplementation(AndroidX.test.coreKtx)
+    androidTestImplementation(AndroidX.test.rules)
     testImplementation(AndroidX.test.ext.truth)
     testImplementation(KotlinX.coroutines.test)
     testImplementation(Square.moshi.kotlinCodegen)
+    kaptAndroidTest(Google.dagger.hilt.android.compiler)
     testImplementation("io.mockk:mockk:1.10.4")
     testImplementation(Square.moshi.kotlinReflect)
 
     implementation("androidx.datastore:datastore-core:_")
-    implementation("androidx.datastore:datastore-preferences:1.0.0-alpha05")
+    implementation("androidx.datastore:datastore-preferences:_")
     implementation("jp.wasabeef:recyclerview-animators:4.0.1")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.1")
 }

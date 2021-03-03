@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.framework.presentation
 import android.content.IntentFilter
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.foreverrafs.superdiary.R
 import com.foreverrafs.superdiary.framework.broadcastreceiver.BootReceiver
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
         setUpBroadcastReceiver()
+        lifecycleScope.launchWhenStarted { }
 
 
         //If we are making an entry from the notification, we open the add dialog straight away

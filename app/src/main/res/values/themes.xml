@@ -11,7 +11,7 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/bg_light</item>
     </style>
 
-    <style name="Base.ThemeOverlay.SuperDiary.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.DayNight.BottomSheetDialog">
+    <style name="Base.ThemeOverlay.SuperDiary.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
         <item name="android:windowLightStatusBar">false</item>
         <item name="bottomSheetStyle">@style/Widget.SuperDiary.BottomSheet.Modal</item>
     </style>
@@ -51,6 +51,7 @@
     <style name="Widget.SuperDiary.AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="android:windowAnimationStyle">@style/Animation.SuperDiary.MaterialAlertDialog
         </item>
+        <item name="android:background">@color/bg_dark</item>
         <item name="buttonBarPositiveButtonStyle">@style/Widget.SuperDiary.NegativeButtonStyle
         </item>
         <item name="buttonBarNegativeButtonStyle">@style/Widget.SuperDiary.PositiveButtonStyle

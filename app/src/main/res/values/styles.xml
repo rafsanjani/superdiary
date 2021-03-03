@@ -9,6 +9,7 @@
 
 
     <style name="Widget.SuperDiary.BottomSheet.Modal" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="backgroundTint">@color/bg_dark</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.SuperDiary.RoundedTopEnd
         </item>
         <item name="behavior_skipCollapsed">true</item>
