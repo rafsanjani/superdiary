@@ -1,5 +1,5 @@
 # Superdiary ❤️
-A simple diary app, mostly focused on architectural patterns. 
+A simple diary app, mostly focused on Clean Architecture design pattern and 100% test coverage (unit and instrumentation). 
 
 
 <div align="left">
