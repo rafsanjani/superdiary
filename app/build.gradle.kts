@@ -68,6 +68,8 @@ dependencies {
     androidTestImplementation(Google.dagger.hilt.android.testing)
     kapt(Google.dagger.hilt.android.compiler)
     kapt(AndroidX.room.compiler)
+    implementation(Google.firebase.bom)
+//    implementation(Google.firebase.analytics)
     implementation(AndroidX.navigation.ui)
     implementation(AndroidX.navigation.fragmentKtx)
     implementation(AndroidX.navigation.commonKtx)
@@ -97,5 +99,5 @@ dependencies {
     implementation("androidx.datastore:datastore-core:_")
     implementation("androidx.datastore:datastore-preferences:_")
     implementation("jp.wasabeef:recyclerview-animators:4.0.1")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.1")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 }

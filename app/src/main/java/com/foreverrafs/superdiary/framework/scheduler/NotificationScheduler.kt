@@ -27,14 +27,14 @@ class NotificationScheduler(private val context: Context, private val prefs: Sha
         val alarmHour =
             prefs.getString(context.getString(R.string.pref_key_notification_time), "0")?.toInt()
                 ?: 10
-        val alarmHour2  = when(alarmHour){
+        val alarmHour2 = when (alarmHour) {
             12 -> 12
-            else -> alarmHour+12
+            else -> alarmHour + 12
         }
         val alarmTime = Calendar.getInstance().also {
             it.set(Calendar.HOUR_OF_DAY, alarmHour2)
-            it.set(Calendar.MINUTE,0)
-            it.set(Calendar.SECOND,0)
+            it.set(Calendar.MINUTE, 0)
+            it.set(Calendar.SECOND, 0)
         }
 
         alarmManager.setInexactRepeating(
