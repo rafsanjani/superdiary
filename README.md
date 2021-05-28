@@ -1,16 +1,11 @@
 # Superdiary ❤️
-A simple diary app, mostly focused on Clean Architecture design pattern and 100% test coverage (unit and instrumentation). 
-
+A simple diary app, mostly focused on Clean Architecture design pattern and 100% test coverage (unit and instrumentation)
+ 
 
 <div align="left">
-    <a href = "https://github.com/rafsanjani/superdiary/issues">
-        <img src = "https://img.shields.io/github/issues/pushpalroy/jetstore" />
-    </a>  
+    <img src = "https://github.com/rafsanjani/superdiary/actions/workflows/.unit-test.yml/badge.svg" />
     <a href = "https://github.com/rafsanjani/superdiary/blob/master/LICENSE">
         <img src = "https://img.shields.io/github/license/pushpalroy/jetstore" />
-    </a>
-    <a href="">
-        <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"/>
     </a>
     <a href = "https://twitter.com/coded_raf">
         <img src = "https://img.shields.io/twitter/url?label=follow&style=social&url=https%3A%2F%2Ftwitter.com%2Fpushpalroy" />
