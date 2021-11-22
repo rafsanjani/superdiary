@@ -98,6 +98,6 @@ dependencies {
 
     implementation("androidx.datastore:datastore-core:_")
     implementation("androidx.datastore:datastore-preferences:_")
-    implementation("jp.wasabeef:recyclerview-animators:4.0.1")
+    implementation("jp.wasabeef:recyclerview-animators:4.0.2")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 }
