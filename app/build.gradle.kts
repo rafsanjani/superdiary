@@ -32,8 +32,14 @@ android {
         }
     }
 
+    buildFeatures {
+        compose = true
+        viewBinding = true
+    }
 
-    buildFeatures.viewBinding = true
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.0.5"
+    }
 
 
     packagingOptions {
@@ -57,6 +63,16 @@ android {
 dependencies {
     implementation(project(mapOf("path" to ":diarycalendar")))
 
+    // compose dependencies
+    implementation(AndroidX.activity.compose)
+    // Compose Material Design
+    implementation (AndroidX.compose.material)
+    // Animations
+    implementation (AndroidX.compose.animation)
+    // Tooling support (Previews, etc.)
+    implementation(AndroidX.compose.ui.tooling)
+    // UI Tests
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.0.5")
     implementation(AndroidX.appCompat)
     implementation(AndroidX.core.ktx)
     implementation(AndroidX.activity.ktx)
