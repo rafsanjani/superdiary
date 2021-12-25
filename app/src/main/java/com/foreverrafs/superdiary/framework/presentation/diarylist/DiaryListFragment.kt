@@ -5,9 +5,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.foreverrafs.datepicker.DatePickerTimeline
+import com.foreverrafs.datepicker.state.rememberDatePickerState
 import com.foreverrafs.superdiary.R
 import com.foreverrafs.superdiary.business.model.Diary
 import com.foreverrafs.superdiary.databinding.FragmentDiaryListBinding
@@ -17,7 +31,6 @@ import com.foreverrafs.superdiary.framework.presentation.util.invisible
 import com.foreverrafs.superdiary.framework.presentation.util.visible
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
 import kotlinx.coroutines.flow.collect
 import java.time.LocalDate
 
@@ -40,45 +53,22 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
         return FragmentDiaryListBinding.inflate(inflater, container, false)
     }
 
+    @ExperimentalComposeUiApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.titleText.setOnClickListener {
-            diaryCalendarView.smoothScrollToToday()
+        binding.diaryCalendarView.setContent {
+            DiaryCalendar(
+                initialDate = LocalDate.now(),
+                onDateSelected = {},
+                eventDates = listOf(),
+            )
         }
 
         binding.settings.setOnClickListener {
             navController.navigate(
                 DiaryListFragmentDirections.actionDiaryListFragmentToSettingsFragment()
             )
-        }
-
-        diaryCalendarView.addOnDateSelectedListener { selectedDate ->
-            this@DiaryListFragment.selectedDate = selectedDate
-
-            diaryListViewModel.setSelectedDateForDiaries(selectedDate)
-
-            diaryListViewModel.getDiariesForDate(selectedDate)
-
-            if (selectedDate == today)
-                btnNewEntry.show()
-            else
-                btnNewEntry.hide()
-        }
-
-        diaryCalendarView.addOnMonthChangedListener {
-            when (it.month) {
-                diaryListViewModel.dateForSelectedDiary.month -> {
-                    diaryCalendarView.selectDate(diaryListViewModel.dateForSelectedDiary)
-                }
-                today.month -> {
-                    diaryCalendarView.selectDate(today)
-                }
-                else -> {
-                    val firstDayOfMonth = LocalDate.of(it.year, it.month, 1)
-                    diaryCalendarView.selectDate(firstDayOfMonth)
-                }
-            }
         }
 
 
@@ -95,13 +85,13 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
     override fun onResume() {
         super.onResume()
 
-        binding.diaryCalendarView.selectDate(diaryListViewModel.dateForSelectedDiary)
+//        binding.diaryCalendarView.selectDate(diaryListViewModel.dateForSelectedDiary)
     }
 
     private fun renderEmptyListState() = with(binding) {
         //we still need to show the entry dots on the map if we still have entries in the database
-        if (diaryListViewModel.allDiaries.isNotEmpty())
-            diaryCalendarView.setEventDates(diaryListViewModel.allDiaries.map { it.date.toLocalDate() })
+        //if (diaryListViewModel.allDiaries.isNotEmpty())
+        // diaryCalendarView.setEventDates(diaryListViewModel.allDiaries.map { it.date.toLocalDate() })
 
 
         diaryListAdapter.submitList(emptyList())
@@ -150,7 +140,6 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
     private fun setupDiaryList() = with(binding) {
         diaryListView.adapter = diaryListAdapter
 
-        diaryListView.itemAnimator = FadeInDownAnimator()
 
         diaryListView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -216,11 +205,42 @@ class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
             it.date.toLocalDate()
         }
 
-        binding.diaryCalendarView.setEventDates(entryDates)
+//        binding.diaryCalendarView.setEventDates(entryDates)
     }
 
     private fun renderLoadingState() {
         Log.d(TAG, "renderLoadingState: Loading Diaries")
     }
 
+    @ExperimentalComposeUiApi
+    @Composable
+    fun DiaryCalendar(
+        initialDate: LocalDate,
+        onDateSelected: (LocalDate) -> Unit,
+        eventDates: List<LocalDate>
+    ) {
+        DatePickerTimeline(
+            modifier = Modifier
+                .wrapContentSize()
+                .padding(4.dp),
+            onDateSelected = onDateSelected,
+            state = rememberDatePickerState(initialDate = initialDate),
+            eventDates = eventDates,
+            todayLabel = {
+                Text(
+                    text = "Today",
+                    style = MaterialTheme.typography.h5,
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .clip(
+                            CircleShape
+                        ),
+                    color = Color.White
+                )
+            },
+            dateTextColor = Color.White,
+            backgroundColor = colorResource(id = R.color.bg_light)
+        )
+
+    }
 }

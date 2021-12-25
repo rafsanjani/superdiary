@@ -14,7 +14,7 @@ android {
     compileSdk = 31
     defaultConfig {
         applicationId = "com.foreverrafs.superdiary"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 31
         versionCode = 1
         versionName = "1.0"
@@ -109,6 +109,6 @@ dependencies {
 
     implementation("androidx.datastore:datastore-core:_")
     implementation("androidx.datastore:datastore-preferences:_")
-    implementation("jp.wasabeef:recyclerview-animators:4.0.2")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+    implementation("com.github.Rafsanjani:datepickertimeline:0.4.0")
 }
