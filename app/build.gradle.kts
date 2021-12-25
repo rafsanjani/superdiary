@@ -61,8 +61,6 @@ android {
 
 
 dependencies {
-    implementation(project(mapOf("path" to ":diarycalendar")))
-
     // compose dependencies
     implementation(AndroidX.activity.compose)
     // Compose Material Design
