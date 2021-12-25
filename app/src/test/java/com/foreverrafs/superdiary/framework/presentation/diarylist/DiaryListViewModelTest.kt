@@ -21,7 +21,8 @@ class DiaryListViewModelTest {
 
     private val diaryListViewModel = DiaryListViewModel(
         dispatcher = coroutineRule.testDispatcher,
-        listInteractor = DependenciesInjector.provideDiaryListInteractor()
+        fetchAllDiariesUseCase = DependenciesInjector.provideGetAllDiaryUseCase(),
+        deleteDiaryUseCase = DependenciesInjector.provideDeleteDiaryUseCase()
     )
 
     @Test

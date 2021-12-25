@@ -1,11 +1,7 @@
 package com.foreverrafs.superdiary.business.usecase.diarylist
 
-import com.foreverrafs.superdiary.business.model.Diary
-import com.foreverrafs.superdiary.business.repository.DataSource
-import kotlinx.coroutines.flow.Flow
+import com.foreverrafs.superdiary.business.repository.Repository
 
-class GetAllDiariesUseCase(private val repo: DataSource) {
-    operator fun invoke(): Flow<List<Diary>> {
-        return repo.getAllDiaries()
-    }
+class GetAllDiariesUseCase(private val dataSource: Repository) {
+    operator fun invoke() = dataSource.getAllDiaries()
 }

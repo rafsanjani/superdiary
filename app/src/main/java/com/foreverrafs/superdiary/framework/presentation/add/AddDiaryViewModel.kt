@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.viewModelScope
+import com.foreverrafs.superdiary.business.Result
 import com.foreverrafs.superdiary.business.model.Diary
 import com.foreverrafs.superdiary.business.usecase.add.AddDiaryUseCase
 import com.foreverrafs.superdiary.framework.presentation.add.state.AddDiaryState
@@ -47,13 +48,13 @@ constructor(
     }
 
     fun saveDiary(diary: Diary) = viewModelScope.launch(dispatcher) {
-        try {
-            addDiary(diary)
-            setViewState(AddDiaryState.Saved(diary))
-        } catch (throwable: Throwable) {
-            setViewState(AddDiaryState.Error(throwable))
+        when (val result = addDiary(diary)) {
+            is Result.Error -> {
+                setViewState(AddDiaryState.Error(error = result.error))
+            }
+            is Result.Success -> {
+                setViewState(AddDiaryState.Saved(diary))
+            }
         }
     }
-
-
 }

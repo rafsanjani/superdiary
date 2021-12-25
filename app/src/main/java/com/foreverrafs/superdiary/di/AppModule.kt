@@ -2,10 +2,11 @@ package com.foreverrafs.superdiary.di
 
 import android.app.Application
 import android.content.SharedPreferences
-import com.foreverrafs.superdiary.business.repository.DiaryRepository
+import com.foreverrafs.superdiary.business.repository.DataSource
+import com.foreverrafs.superdiary.business.repository.Repository
+import com.foreverrafs.superdiary.business.repository.RepositoryImpl
 import com.foreverrafs.superdiary.business.usecase.add.AddDiaryUseCase
 import com.foreverrafs.superdiary.business.usecase.common.DeleteDiaryUseCase
-import com.foreverrafs.superdiary.business.usecase.diarylist.DiaryListInteractor
 import com.foreverrafs.superdiary.business.usecase.diarylist.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.business.usecase.diarylist.SearchDiaryUseCase
 import com.foreverrafs.superdiary.framework.datasource.local.mapper.DiaryMapper
@@ -30,21 +31,32 @@ object AppModule {
     @Provides
     fun provideDataMapper(): DiaryMapper = DiaryMapper()
 
-
     @Provides
     @Singleton
-    fun provideDiaryListInteractors(repo: DiaryRepository): DiaryListInteractor {
-        return DiaryListInteractor(
-            SearchDiaryUseCase(repo),
-            GetAllDiariesUseCase(repo),
-            DeleteDiaryUseCase(repo)
-        )
+    fun provideSearchDiaryUseCase(repository: Repository): SearchDiaryUseCase {
+        return SearchDiaryUseCase(repository)
     }
 
     @Provides
     @Singleton
-    fun provideAddDiaryUseCase(repo: DiaryRepository): AddDiaryUseCase {
-        return AddDiaryUseCase(repo)
+    fun provideDeleteDiaryUseCase(repository: Repository): DeleteDiaryUseCase {
+        return DeleteDiaryUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetAllDiaryUseCase(repository: Repository): GetAllDiariesUseCase {
+        return GetAllDiariesUseCase(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideRepository(dataSource: DataSource): Repository = RepositoryImpl(dataSource)
+
+    @Provides
+    @Singleton
+    fun provideAddDiaryUseCase(repository: Repository): AddDiaryUseCase {
+        return AddDiaryUseCase(repository)
     }
 
     @Provides

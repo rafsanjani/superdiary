@@ -1,13 +1,15 @@
 package com.foreverrafs.superdiary.business.usecase.add
 
+import app.cash.turbine.test
+import com.foreverrafs.superdiary.business.Result
 import com.foreverrafs.superdiary.business.data.DependenciesInjector
 import com.foreverrafs.superdiary.business.model.Diary
 import com.foreverrafs.superdiary.business.usecase.diarylist.GetAllDiariesUseCase
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
+import kotlin.time.ExperimentalTime
 
 class AddDiaryUseCaseTest {
     private lateinit var addDiary: AddDiaryUseCase
@@ -21,15 +23,16 @@ class AddDiaryUseCaseTest {
         getAllDiaries = GetAllDiariesUseCase(repository)
     }
 
+    @OptIn(ExperimentalTime::class)
     @Test
-    fun `add new diary confirm added`() = runBlocking {
-        var items = getAllDiaries().toList()
-        val initialSize = items.first().size
+    fun `add new diary confirm added`(): Unit = runBlocking {
+        addDiary(Diary(message = "Hello Brown Cow"))
 
-        val response = addDiary(Diary(message = "Hello Brown Cow"))
-        items = getAllDiaries().toList()
-
-        assertThat(response).isEqualTo(1)
-        assertThat(items.first().size).isGreaterThan(initialSize)
+        getAllDiaries().test {
+            val result = expectItem()
+            cancelAndConsumeRemainingEvents()
+            assertThat(result).isInstanceOf(Result.Success::class.java)
+            assertThat((result as Result.Success<List<Diary>>).data.size).isGreaterThan(1)
+        }
     }
 }

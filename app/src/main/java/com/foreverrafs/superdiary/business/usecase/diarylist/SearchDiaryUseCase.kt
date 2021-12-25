@@ -1,11 +1,9 @@
 package com.foreverrafs.superdiary.business.usecase.diarylist
 
-import com.foreverrafs.superdiary.business.repository.DataSource
+import com.foreverrafs.superdiary.business.repository.Repository
 
 class SearchDiaryUseCase(
-    private val repository: DataSource
+    private val repository: Repository
 ) {
-    suspend operator fun invoke(query: String) {
-
-    }
+    operator fun invoke(query: String) = repository.searchDiary(query)
 }

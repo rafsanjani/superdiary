@@ -1,5 +1,7 @@
 package com.foreverrafs.superdiary.business.usecase.common
 
+import app.cash.turbine.test
+import com.foreverrafs.superdiary.business.Result
 import com.foreverrafs.superdiary.business.data.DependenciesInjector
 import com.foreverrafs.superdiary.business.usecase.diarylist.GetAllDiariesUseCase
 import com.google.common.truth.Truth.assertThat
@@ -8,6 +10,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
+import kotlin.time.ExperimentalTime
 
 @ExperimentalCoroutinesApi
 class DeleteDiaryUseCaseTest {
@@ -23,18 +26,22 @@ class DeleteDiaryUseCaseTest {
         getAllDiaries = GetAllDiariesUseCase(repository)
     }
 
+    @ExperimentalTime
     @Test
     fun `delete diary confirm deleted`() = runBlocking {
-        var items = getAllDiaries().toList()
-        val initialSize = items.first().size
+        getAllDiaries().test {
+            val items = (expectItem() as Result.Success).data
 
-        val diaryToDelete = items.first().first()
-        val response = deleteDiary(diaryToDelete)
+            val initialSize = items.size
 
+            val diaryToDelete = items.first()
+            val response = deleteDiary(diaryToDelete)
 
-        items = getAllDiaries().toList()
+            val updatedItems = getAllDiaries().toList().first()
 
-        assertThat(response).isEqualTo(1)
-        assertThat(items.first().size).isLessThan(initialSize)
+            assertThat(response).isInstanceOf(Result.Success::class.java)
+            assertThat((updatedItems as Result.Success).data.size).isLessThan(initialSize)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 }
