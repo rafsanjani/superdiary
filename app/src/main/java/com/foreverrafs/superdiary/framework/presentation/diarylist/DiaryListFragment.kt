@@ -1,246 +1,121 @@
 package com.foreverrafs.superdiary.framework.presentation.diarylist
 
+import SuperDiaryTheme
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import com.foreverrafs.datepicker.DatePickerTimeline
-import com.foreverrafs.datepicker.state.rememberDatePickerState
-import com.foreverrafs.superdiary.R
 import com.foreverrafs.superdiary.business.model.Diary
-import com.foreverrafs.superdiary.databinding.FragmentDiaryListBinding
-import com.foreverrafs.superdiary.framework.presentation.common.BaseFragment
 import com.foreverrafs.superdiary.framework.presentation.diarylist.state.DiaryListState
-import com.foreverrafs.superdiary.framework.presentation.util.invisible
-import com.foreverrafs.superdiary.framework.presentation.util.visible
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.foreverrafs.superdiary.framework.presentation.style.colorPrimary
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import java.time.LocalDate
 
 private const val TAG = "DiaryListFragment"
 
+@ExperimentalComposeUiApi
 @AndroidEntryPoint
-class DiaryListFragment : BaseFragment<FragmentDiaryListBinding>() {
+class DiaryListFragment : Fragment() {
     private val diaryListViewModel: DiaryListViewModel by activityViewModels()
-    private val diaryListAdapter =
-        DiaryListAdapter(onDiaryDeleted = ::onDiaryDeleted, onDiaryClicked = ::onDiaryClicked)
 
-    private val today = LocalDate.now()
-    private var selectedDate = today
-
-
-    override fun inflateBinding(
+    override fun onCreateView(
         inflater: LayoutInflater,
-        container: ViewGroup?
-    ): FragmentDiaryListBinding {
-        return FragmentDiaryListBinding.inflate(inflater, container, false)
-    }
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setContent {
+                val viewState by diaryListViewModel.viewState.collectAsState(initial = DiaryListState.Loading)
 
-    @ExperimentalComposeUiApi
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
-        super.onViewCreated(view, savedInstanceState)
+                viewState?.let {
+                    DiaryList(
+                        viewState = it,
+                        onDiaryDeleted = {
 
-        binding.diaryCalendarView.setContent {
-            DiaryCalendar(
-                initialDate = LocalDate.now(),
-                onDateSelected = {},
-                eventDates = listOf(),
-            )
-        }
+                        },
+                        onDateSelected = {
 
-        binding.settings.setOnClickListener {
-            navController.navigate(
-                DiaryListFragmentDirections.actionDiaryListFragmentToSettingsFragment()
-            )
-        }
-
-
-        btnNewEntry.setOnClickListener {
-            navController.navigate(
-                DiaryListFragmentDirections.actionDiaryListFragmentToAddDiaryDialogFragment()
-            )
-        }
-
-        setupDiaryList()
-        observeDiaryList()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-//        binding.diaryCalendarView.selectDate(diaryListViewModel.dateForSelectedDiary)
-    }
-
-    private fun renderEmptyListState() = with(binding) {
-        //we still need to show the entry dots on the map if we still have entries in the database
-        //if (diaryListViewModel.allDiaries.isNotEmpty())
-        // diaryCalendarView.setEventDates(diaryListViewModel.allDiaries.map { it.date.toLocalDate() })
-
-
-        diaryListAdapter.submitList(emptyList())
-
-        tvEmptyMessage.setText(R.string.label_no_diary_entry)
-
-        tvEmptyMessage.visible()
-    }
-
-
-    private fun onDiaryDeleted(diary: Diary) {
-        //remove the item to be deleted from the list
-        val list = diaryListViewModel.allDiaries
-            .filter {
-                it.date.toLocalDate() == diary.date.toLocalDate()
-            }
-
-        //show new list without item
-        renderDiaryListState(
-            list.toMutableList().also {
-                it.remove(diary)
-            }
-        )
-
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Delete Diary Entry")
-            .setMessage("Are you sure you want to delete this diary entry?")
-            .setPositiveButton(
-                R.string.alert_delete
-            ) { _, _ ->
-                //Actually delete the item from the data source
-                diaryListViewModel.deleteDiary(diary)
-            }.setNegativeButton(android.R.string.cancel) { _, _ ->
-                //show back list containing original item because we didn't delete
-                renderDiaryListState(list)
-            }
-            .show()
-    }
-
-    private fun onDiaryClicked(diary: Diary) {
-        navController.navigate(
-            DiaryListFragmentDirections.actionDiaryListFragmentToDiaryDetailFragment(diary)
-        )
-    }
-
-    private fun setupDiaryList() = with(binding) {
-        diaryListView.adapter = diaryListAdapter
-
-
-        diaryListView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy - dx > 0) {
-                    binding.btnNewEntry.hide()
-                } else {
-                    if (diaryListViewModel.dateForSelectedDiary == today)
-                        binding.btnNewEntry.show()
-                }
-            }
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                when (newState) {
-                    RecyclerView.SCROLL_STATE_IDLE ->
-                        if (diaryListViewModel.dateForSelectedDiary == today)
-                            binding.btnNewEntry.show()
-                }
-            }
-        })
-    }
-
-    private fun observeDiaryList() {
-        lifecycleScope.launchWhenStarted {
-            diaryListViewModel.viewState.collect { state ->
-                if (state == null) return@collect
-
-                when (state) {
-                    is DiaryListState.DiaryList -> {
-                        renderDiaryListState(state.list)
-
-                        populateCalendarWithDiaryEntryDates(diaryListViewModel.allDiaries)
-                    }
-                    is DiaryListState.Error -> renderErrorFetchingDiaryListState(state.error)
-                    DiaryListState.Loading -> renderLoadingState()
-                    is DiaryListState.Deleted -> {
-                    }
-                    DiaryListState.Empty -> {
-                        renderEmptyListState()
-                    }
+                        }
+                    )
                 }
             }
         }
-    }
-
-
-    private fun renderDiaryListState(diaries: List<Diary>, scrollToTop: Boolean = true) {
-        binding.tvEmptyMessage.invisible()
-
-        Log.d(TAG, "renderDiaryListState: ${diaries.size} items")
-
-        diaryListAdapter.submitList(diaries) {
-            if (scrollToTop)
-                binding.diaryListView.smoothScrollToPosition(0)
-        }
-    }
-
-    private fun renderErrorFetchingDiaryListState(error: Throwable) {
-        Log.e(TAG, "renderErrorFetchingDiaryListState: Error fetching", error)
-    }
-
-    private fun populateCalendarWithDiaryEntryDates(entries: List<Diary>) {
-        val entryDates = entries.map {
-            it.date.toLocalDate()
-        }
-
-//        binding.diaryCalendarView.setEventDates(entryDates)
-    }
-
-    private fun renderLoadingState() {
-        Log.d(TAG, "renderLoadingState: Loading Diaries")
     }
 
     @ExperimentalComposeUiApi
     @Composable
-    fun DiaryCalendar(
-        initialDate: LocalDate,
-        onDateSelected: (LocalDate) -> Unit,
-        eventDates: List<LocalDate>
+    fun DiaryList(
+        viewState: DiaryListState,
+        onDiaryDeleted: (diary: Diary) -> Unit,
+        onDateSelected: (date: LocalDate) -> Unit
     ) {
-        DatePickerTimeline(
-            modifier = Modifier
-                .wrapContentSize()
-                .padding(4.dp),
-            onDateSelected = onDateSelected,
-            state = rememberDatePickerState(initialDate = initialDate),
-            eventDates = eventDates,
-            todayLabel = {
-                Text(
-                    text = "Today",
-                    style = MaterialTheme.typography.h5,
-                    modifier = Modifier
-                        .padding(2.dp)
-                        .clip(
-                            CircleShape
-                        ),
-                    color = Color.White
-                )
-            },
-            dateTextColor = Color.White,
-            backgroundColor = colorResource(id = R.color.bg_light)
-        )
+        SuperDiaryTheme {
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize(),
+                color = MaterialTheme.colors.primary
+            ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                text = "SuperDiary", modifier = Modifier
+                                    .weight(1f),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.h4
+                            )
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp)
+                                    .align(Alignment.CenterVertically)
 
+                            )
+                        }
+
+                        DatePickerTimeline(
+                            onDateSelected = {},
+                            backgroundColor = colorPrimary,
+                            dateTextColor = Color.White,
+                            selectedTextColor = Color.Black.copy(alpha = 0.55f)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    @ExperimentalComposeUiApi
+    @Composable
+    @Preview
+    fun Preview() {
+        DiaryList(
+            viewState = DiaryListState.Loading,
+            onDiaryDeleted = {},
+            onDateSelected = {}
+        )
     }
 }
+
