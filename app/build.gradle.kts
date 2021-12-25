@@ -110,5 +110,5 @@ dependencies {
     implementation("androidx.datastore:datastore-core:_")
     implementation("androidx.datastore:datastore-preferences:_")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
-    implementation("com.github.Rafsanjani:datepickertimeline:0.4.0")
+    implementation("com.github.Rafsanjani:datepickertimeline:0.5.0")
 }
