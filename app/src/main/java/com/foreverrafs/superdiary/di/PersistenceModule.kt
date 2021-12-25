@@ -1,10 +1,11 @@
 package com.foreverrafs.superdiary.di
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.createDataStore
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.preference.PreferenceManager
 import androidx.room.Room
 import com.foreverrafs.superdiary.business.repository.DataSource
@@ -18,6 +19,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+
+
+// At the top level of your kotlin file
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -34,7 +39,7 @@ object PersistenceModule {
     @Singleton
     @Provides
     fun provideDataStore(appContext: Application): DataStore<Preferences> {
-        return appContext.createDataStore(name = "settings")
+        return appContext.dataStore
     }
 
     @Singleton

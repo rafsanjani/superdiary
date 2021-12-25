@@ -11,11 +11,11 @@ apply {
 }
 
 android {
+    compileSdk = 31
     defaultConfig {
         applicationId = "com.foreverrafs.superdiary"
-        minSdkVersion(23)
-        compileSdkVersion(30)
-        targetSdkVersion(30)
+        minSdk = 23
+        targetSdk = 31
         versionCode = 1
         versionName = "1.0"
 
@@ -59,28 +59,25 @@ dependencies {
 
     implementation(AndroidX.appCompat)
     implementation(AndroidX.core.ktx)
-    implementation(AndroidX.activityKtx)
-    implementation(AndroidX.hilt.lifecycleViewModel)
+    implementation(AndroidX.activity.ktx)
     kapt(AndroidX.hilt.compiler)
-    implementation(AndroidX.fragmentKtx)
+    implementation(AndroidX.fragment.ktx)
     implementation(AndroidX.room.ktx)
     implementation(Google.dagger.hilt.android)
     androidTestImplementation(Google.dagger.hilt.android.testing)
     kapt(Google.dagger.hilt.android.compiler)
     kapt(AndroidX.room.compiler)
     implementation(Google.firebase.bom)
-//    implementation(Google.firebase.analytics)
     implementation(AndroidX.navigation.ui)
     implementation(AndroidX.navigation.fragmentKtx)
     implementation(AndroidX.navigation.commonKtx)
-    implementation(AndroidX.fragmentTesting)
+    implementation(AndroidX.fragment.testing)
     implementation(Kotlin.stdlib.jdk8)
     implementation(AndroidX.lifecycle.liveDataKtx)
-    implementation(AndroidX.lifecycle.viewModel)
     implementation(AndroidX.core.animation)
     implementation(Google.android.material)
     implementation(AndroidX.constraintLayout)
-    implementation(AndroidX.preferenceKtx)
+    implementation(AndroidX.preference.ktx)
     testImplementation(AndroidX.test.ext.junitKtx)
     testImplementation(CashApp.turbine)
     testImplementation(AndroidX.archCore.testing)
