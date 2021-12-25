@@ -17,7 +17,7 @@
         <!--Using SingleTask because ActivityScenarioRule displays a dark screen when SingleTask is used-->
         <activity
             android:name=".framework.presentation.MainActivity"
-
+            android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="sensorPortrait">
             <intent-filter>
@@ -29,7 +29,8 @@
 
         <receiver
             android:name=".framework.broadcastreceiver.BootReceiver"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

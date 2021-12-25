@@ -27,21 +27,21 @@ class SettingsFragment : PreferenceFragmentCompat(),
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
-        view?.background = ContextCompat.getDrawable(requireContext(), R.color.bg_light)
+        view.background = ContextCompat.getDrawable(requireContext(), R.color.bg_light)
 
         return view
     }
 
     override fun onResume() {
         super.onResume()
-        preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        preferenceScreen.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onPause() {
         super.onPause()
-        preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+        preferenceScreen.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
@@ -50,6 +50,7 @@ class SettingsFragment : PreferenceFragmentCompat(),
             notificationScheduler.scheduleAlarm()
         } else if (key == getString(R.string.pref_key_enable_notifications)) {
             val shouldEnableNotifications = sharedPreferences.getBoolean(key, true)
+
             if (shouldEnableNotifications)
                 notificationScheduler.scheduleAlarm()
             else
