@@ -30,13 +30,6 @@ constructor(
     private var _selectedDate: LocalDate = LocalDate.now()
 
 
-    val dateForSelectedDiary: LocalDate
-        get() = _selectedDate
-
-    fun setSelectedDateForDiaries(value: LocalDate) {
-        _selectedDate = value
-    }
-
     val allDiaries: List<Diary>
         get() = _allDiaries
 
