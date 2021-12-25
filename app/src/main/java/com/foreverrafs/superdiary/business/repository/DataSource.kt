@@ -7,4 +7,5 @@ interface DataSource {
     suspend fun add(diary: Diary): Long
     suspend fun delete(diary: Diary): Int
     fun getAllDiaries(): Flow<List<Diary>>
+    fun searchDiary(query: String): Flow<Diary>
 }

@@ -8,7 +8,7 @@ import androidx.datastore.preferences.createDataStore
 import androidx.preference.PreferenceManager
 import androidx.room.Room
 import com.foreverrafs.superdiary.business.repository.DataSource
-import com.foreverrafs.superdiary.business.repository.DiaryRepository
+import com.foreverrafs.superdiary.business.repository.RepositoryImpl
 import com.foreverrafs.superdiary.framework.datasource.local.RoomDataSource
 import com.foreverrafs.superdiary.framework.datasource.local.database.DiaryDao
 import com.foreverrafs.superdiary.framework.datasource.local.database.DiaryDatabase
@@ -49,8 +49,8 @@ object PersistenceModule {
 
     @Singleton
     @Provides
-    fun provideDiaryRepository(dataSource: DataSource): DiaryRepository {
-        return DiaryRepository(dataSource = dataSource)
+    fun provideDiaryRepository(dataSource: DataSource): RepositoryImpl {
+        return RepositoryImpl(dataSource = dataSource)
     }
 
     @Singleton

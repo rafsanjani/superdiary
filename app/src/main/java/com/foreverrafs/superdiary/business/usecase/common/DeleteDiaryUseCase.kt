@@ -1,12 +1,13 @@
 package com.foreverrafs.superdiary.business.usecase.common
 
+import com.foreverrafs.superdiary.business.Result
 import com.foreverrafs.superdiary.business.model.Diary
-import com.foreverrafs.superdiary.business.repository.DataSource
+import com.foreverrafs.superdiary.business.repository.Repository
 
 class DeleteDiaryUseCase(
-    private val repository: DataSource
+    private val dataSource: Repository
 ) {
-    suspend operator fun invoke(diary: Diary): Int {
-        return repository.delete(diary)
+    suspend operator fun invoke(diary: Diary): Result<Int> {
+        return dataSource.delete(diary)
     }
 }

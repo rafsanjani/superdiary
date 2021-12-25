@@ -25,4 +25,8 @@ class MockDataSource : DataSource {
             emit(mockDiaries)
         }
     }
+
+    override fun searchDiary(query: String): Flow<Diary>  = flow{
+        emit(mockDiaries.first())
+    }
 }

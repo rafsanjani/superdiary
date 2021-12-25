@@ -1,8 +1,10 @@
 package com.foreverrafs.superdiary.framework.presentation.diarylist
 
 import androidx.lifecycle.viewModelScope
+import com.foreverrafs.superdiary.business.Result
 import com.foreverrafs.superdiary.business.model.Diary
-import com.foreverrafs.superdiary.business.usecase.diarylist.DiaryListInteractor
+import com.foreverrafs.superdiary.business.usecase.common.DeleteDiaryUseCase
+import com.foreverrafs.superdiary.business.usecase.diarylist.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.framework.presentation.common.BaseViewModel
 import com.foreverrafs.superdiary.framework.presentation.diarylist.state.DiaryListState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +20,8 @@ import javax.inject.Inject
 class DiaryListViewModel
 @Inject
 constructor(
-    private val listInteractor: DiaryListInteractor,
+    private val fetchAllDiariesUseCase: GetAllDiariesUseCase,
+    private val deleteDiaryUseCase: DeleteDiaryUseCase,
     private val dispatcher: CoroutineDispatcher,
 ) : BaseViewModel<DiaryListState>() {
 
@@ -42,26 +45,32 @@ constructor(
     }
 
     private fun getAllDiaries() = viewModelScope.launch(dispatcher) {
-        listInteractor.fetchAllDiaries()
+        fetchAllDiariesUseCase()
             .catch {
                 it.cause?.let { cause ->
                     setViewState(DiaryListState.Error(cause))
                 }
             }
             .collect {
-                val sortedDiaries = it.sortedByDescending { diaryItem ->
-                    diaryItem.date
+                when (it) {
+                    is Result.Error -> {
+                        //render error state here
+                    }
+                    is Result.Success -> {
+                        val sortedDiaries = it.data.sortedByDescending { diaryItem ->
+                            diaryItem.date
+                        }
+
+                        _allDiaries = sortedDiaries
+                        getDiariesForDate(_selectedDate)
+                    }
                 }
-
-                _allDiaries = sortedDiaries
-
-                getDiariesForDate(_selectedDate)
             }
     }
 
     fun deleteDiary(diary: Diary) = viewModelScope.launch(dispatcher) {
         try {
-            listInteractor.deleteDiary(diary)
+            deleteDiaryUseCase(diary)
             setViewState(DiaryListState.Deleted(diary))
         } catch (exception: Throwable) {
             setViewState(DiaryListState.Error(exception))
