@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.createDataStore
 import androidx.preference.PreferenceManager
 import androidx.room.Room
 import com.foreverrafs.superdiary.business.repository.DataSource
@@ -33,7 +32,7 @@ object TestPersistenceModule {
     @Singleton
     @Provides
     fun provideDataStore(appContext: Application): DataStore<Preferences> {
-        return appContext.createDataStore(name = "settings")
+        return appContext.dataStore
     }
 
     @Singleton
