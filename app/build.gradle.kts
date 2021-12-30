@@ -93,7 +93,7 @@ dependencies {
     testImplementation(KotlinX.coroutines.test)
     testImplementation(Square.moshi.kotlinCodegen)
     kaptAndroidTest(Google.dagger.hilt.android.compiler)
-    testImplementation("io.mockk:mockk:1.12.1")
+    testImplementation("io.mockk:mockk:1.12.2")
     testImplementation(Square.moshi.kotlinReflect)
 
     implementation("androidx.datastore:datastore-core:_")
