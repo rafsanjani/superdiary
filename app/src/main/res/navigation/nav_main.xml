@@ -40,9 +40,7 @@
         android:name="com.foreverrafs.superdiary.framework.presentation.detail.DiaryDetailFragment"
         android:label="DiaryDetailFragment"
         tools:layout="@layout/fragment_diary_detail">
-        <argument
-            android:name="diary"
-            app:argType="com.foreverrafs.superdiary.business.model.Diary" />
+
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

@@ -19,6 +19,6 @@ interface DiaryDao {
     @Query("SELECT  * FROM diary")
     fun getAllDiaries(): Flow<List<DiaryDto>>
 
-    @Query("SELECT * from diary WHERE title=:query")
+    @Query("SELECT * from diary WHERE title LIKE :query")
     fun searchDiary(query: String): Flow<DiaryDto>
 }
