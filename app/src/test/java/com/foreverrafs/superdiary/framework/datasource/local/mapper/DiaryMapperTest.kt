@@ -11,7 +11,7 @@ internal class DiaryMapperTest {
 
     @Test
     fun `map entity diary to domain confirm mapped`() {
-        val entityDiary = DiaryDto(message = "Hello World", date = "2020-12-28T18:14:47.119")
+        val entityDiary = DiaryDto(message = "Hello World", date = "2020-12-28T18:14:47.119", title = "")
         val domainDiary = entityMapper.mapToDomain(entityDiary)
 
         assertThat(entityDiary).isInstanceOf(DiaryDto::class.java)
@@ -24,7 +24,7 @@ internal class DiaryMapperTest {
 
     @Test
     fun `map domain to diary entity confirm mapped`() {
-        val domainDiary = Diary(message = "Hello World")
+        val domainDiary = Diary(message = "Hello World", title = "")
         val entityDiary = entityMapper.mapToEntity(domainDiary)
 
         assertThat(entityDiary).isInstanceOf(DiaryDto::class.java)

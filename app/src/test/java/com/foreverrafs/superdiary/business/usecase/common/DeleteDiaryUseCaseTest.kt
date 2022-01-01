@@ -30,7 +30,7 @@ class DeleteDiaryUseCaseTest {
     @Test
     fun `delete diary confirm deleted`() = runBlocking {
         getAllDiaries().test {
-            val items = (expectItem() as Result.Success).data
+            val items = (expectMostRecentItem() as Result.Success).data
 
             val initialSize = items.size
 
