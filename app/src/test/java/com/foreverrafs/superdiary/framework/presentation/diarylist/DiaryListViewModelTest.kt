@@ -1,8 +1,6 @@
 package com.foreverrafs.superdiary.framework.presentation.diarylist
 
-import app.cash.turbine.test
 import com.foreverrafs.superdiary.business.data.DependenciesInjector
-import com.foreverrafs.superdiary.framework.presentation.diarylist.state.DiaryListState
 import com.foreverrafs.superdiary.util.rules.CoroutineTestRule
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,8 +31,8 @@ class DiaryListViewModelTest {
         diaryListViewModel.viewState.test {
             val data = expectItem()
 
-            assertThat(data).isInstanceOf(DiaryListState.DiaryList::class.java)
-            assertThat((data as DiaryListState.DiaryList).list).isNotEmpty()
+            assertThat(data).isInstanceOf(DiaryListState.Loaded::class.java)
+            assertThat((data as DiaryListState.Loaded).list).isNotEmpty()
         }
     }
 
@@ -45,8 +43,8 @@ class DiaryListViewModelTest {
         diaryListViewModel.viewState.test {
             val data = expectItem()
 
-            assertThat(data).isInstanceOf(DiaryListState.DiaryList::class.java)
-            assertThat((data as DiaryListState.DiaryList).list).isNotEmpty()
+            assertThat(data).isInstanceOf(DiaryListState.Loaded::class.java)
+            assertThat((data as DiaryListState.Loaded).list).isNotEmpty()
         }
     }
 

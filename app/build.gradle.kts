@@ -1,3 +1,4 @@
+val kotlin_version: String by extra
 plugins {
     id("com.android.application")
     id("dagger.hilt.android.plugin")
@@ -43,7 +44,7 @@ android {
 
 
     packagingOptions {
-        exclude("META-INF/notice.txt")
+        resources.excludes.add("META-INF/notice.txt")
     }
 
     compileOptions {
@@ -52,9 +53,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-
-
-    this.kotlinOptions {
+    kotlinOptions {
         this.jvmTarget = "1.8"
     }
 }
@@ -64,13 +63,13 @@ dependencies {
     // compose dependencies
     implementation(AndroidX.activity.compose)
     // Compose Material Design
-    implementation (AndroidX.compose.material)
+    implementation(AndroidX.compose.material)
     // Animations
-    implementation (AndroidX.compose.animation)
+    implementation(AndroidX.compose.animation)
     // Tooling support (Previews, etc.)
     implementation(AndroidX.compose.ui.tooling)
     // UI Tests
-    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.0.5")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.5")
     implementation(AndroidX.appCompat)
     implementation(AndroidX.core.ktx)
     implementation(AndroidX.activity.ktx)
@@ -104,11 +103,10 @@ dependencies {
     testImplementation(KotlinX.coroutines.test)
     testImplementation(Square.moshi.kotlinCodegen)
     kaptAndroidTest(Google.dagger.hilt.android.compiler)
-    testImplementation("io.mockk:mockk:1.12.1")
     testImplementation(Square.moshi.kotlinReflect)
 
-    implementation("androidx.datastore:datastore-core:_")
-    implementation("androidx.datastore:datastore-preferences:_")
+    implementation(AndroidX.dataStore.core)
+    implementation(AndroidX.dataStore.preferences)
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
     implementation("com.github.Rafsanjani:datepickertimeline:0.5.0")
 }

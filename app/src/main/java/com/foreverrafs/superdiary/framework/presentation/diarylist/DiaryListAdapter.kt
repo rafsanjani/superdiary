@@ -27,6 +27,7 @@ class DiaryListAdapter(
         override fun areContentsTheSame(oldItem: Diary, newItem: Diary): Boolean =
             oldItem.id == newItem.id
     }
+
     private val diffUtil = AsyncListDiffer(this, callback)
 
     private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy hh:mm a")
