@@ -10,7 +10,8 @@ class DiaryMapper : EntityMapper<DiaryDto, Diary> {
         return Diary(
             id = entity.id,
             message = entity.message,
-            date = LocalDateTime.parse(entity.date)
+            date = LocalDateTime.parse(entity.date),
+            title = entity.title
         )
     }
 
@@ -18,7 +19,8 @@ class DiaryMapper : EntityMapper<DiaryDto, Diary> {
         return DiaryDto(
             id = domainModel.id,
             message = domainModel.message,
-            date = domainModel.date.toString()
+            date = domainModel.date.toString(),
+            title = domainModel.title
         )
     }
 

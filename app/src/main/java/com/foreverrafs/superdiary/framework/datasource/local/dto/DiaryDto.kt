@@ -9,8 +9,11 @@ data class DiaryDto(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
-    @ColumnInfo(name = "title")
+    @ColumnInfo(name = "message")
     val message: String,
+
+    @ColumnInfo(name = "title")
+    val title: String,
 
     @ColumnInfo(name = "date")
     val date: String

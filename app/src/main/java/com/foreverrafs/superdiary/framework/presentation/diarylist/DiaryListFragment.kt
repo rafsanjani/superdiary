@@ -259,9 +259,9 @@ fun Preview() {
     DiaryListScreen(
         viewState = DiaryListState.Loaded(
             list = listOf(
-                Diary(id = Random.nextLong(), message = "Hello my amazing people"),
-                Diary(id = Random.nextLong(), message = "Hello my family members"),
-                Diary(id = Random.nextLong(), message = "A nice entry")
+                Diary(id = Random.nextLong(), message = "Hello my amazing people", title = ""),
+                Diary(id = Random.nextLong(), message = "Hello my family members", title = ""),
+                Diary(id = Random.nextLong(), message = "A nice entry", title = "")
             )
         ),
         onDiaryDeleted = {},

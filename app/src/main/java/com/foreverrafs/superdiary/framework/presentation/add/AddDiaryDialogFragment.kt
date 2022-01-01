@@ -128,13 +128,14 @@ class AddDiaryDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun onDoneClicked() {
-        val entry = binding.textDiaryEntry.text.toString()
-        saveDiary(entry)
+//        val entry = binding.textDiaryEntry.text.toString()
+//        saveDiary(entry)
     }
 
-    private fun saveDiary(entry: String) {
+    private fun saveDiary(entry: String, title: String) {
         val diary = Diary(
-            message = entry
+            message = entry,
+            title = title
         )
 
         addDiaryViewModel.saveDiary(diary)
