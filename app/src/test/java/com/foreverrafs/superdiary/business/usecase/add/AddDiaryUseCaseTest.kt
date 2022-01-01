@@ -26,10 +26,10 @@ class AddDiaryUseCaseTest {
     @OptIn(ExperimentalTime::class)
     @Test
     fun `add new diary confirm added`(): Unit = runBlocking {
-        addDiary(Diary(message = "Hello Brown Cow"))
+        addDiary(Diary(message = "Hello Brown Cow", title = ""))
 
         getAllDiaries().test {
-            val result = expectItem()
+            val result = expectMostRecentItem()
             cancelAndConsumeRemainingEvents()
             assertThat(result).isInstanceOf(Result.Success::class.java)
             assertThat((result as Result.Success<List<Diary>>).data.size).isGreaterThan(1)

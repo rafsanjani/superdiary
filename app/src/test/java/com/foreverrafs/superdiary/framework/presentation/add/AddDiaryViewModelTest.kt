@@ -30,10 +30,10 @@ class AddDiaryViewModelTest {
     @ExperimentalTime
     @Test
     fun `save diary confirm saved`() = runBlockingTest {
-        addDiaryViewModel.saveDiary(Diary(message = "Test Diary"))
+        addDiaryViewModel.saveDiary(Diary(message = "Test Diary", title = ""))
 
         addDiaryViewModel.viewState.test {
-            assertThat(expectItem()).isInstanceOf(AddDiaryState.Saved::class.java)
+            assertThat(expectMostRecentItem()).isInstanceOf(AddDiaryState.Saved::class.java)
         }
     }
 }

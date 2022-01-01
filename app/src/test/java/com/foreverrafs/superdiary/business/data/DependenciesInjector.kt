@@ -39,7 +39,7 @@ object DependenciesInjector {
         val domainList = entityMapper.mapToDomain(list!!).toMutableList().also {
             //let's add one entry for today
             it.add(
-                Diary(id = Random.nextLong(), message = "Hello World")
+                Diary(id = Random.nextLong(), message = "Hello World", title = "")
             )
         }
 

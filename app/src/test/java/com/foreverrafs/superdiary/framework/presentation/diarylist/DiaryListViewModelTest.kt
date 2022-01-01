@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.framework.presentation.diarylist
 
+import app.cash.turbine.test
 import com.foreverrafs.superdiary.business.data.DependenciesInjector
 import com.foreverrafs.superdiary.util.rules.CoroutineTestRule
 import com.google.common.truth.Truth.assertThat
@@ -29,7 +30,7 @@ class DiaryListViewModelTest {
         assertThat(items).isNotEmpty()
 
         diaryListViewModel.viewState.test {
-            val data = expectItem()
+            val data = expectMostRecentItem()
 
             assertThat(data).isInstanceOf(DiaryListState.Loaded::class.java)
             assertThat((data as DiaryListState.Loaded).list).isNotEmpty()
@@ -41,7 +42,7 @@ class DiaryListViewModelTest {
         diaryListViewModel.getDiariesForDate(LocalDate.of(2020, 12, 28))
 
         diaryListViewModel.viewState.test {
-            val data = expectItem()
+            val data = expectMostRecentItem()
 
             assertThat(data).isInstanceOf(DiaryListState.Loaded::class.java)
             assertThat((data as DiaryListState.Loaded).list).isNotEmpty()
@@ -53,9 +54,9 @@ class DiaryListViewModelTest {
         diaryListViewModel.getDiariesForDate(LocalDate.of(2020, 1, 1))
 
         diaryListViewModel.viewState.test {
-            val data = expectItem()
+            val data = expectMostRecentItem()
 
-            assertThat(data).isInstanceOf(DiaryListState.Empty::class.java)
+            assertThat(data).isInstanceOf(DiaryListState.Loaded::class.java)
         }
     }
 

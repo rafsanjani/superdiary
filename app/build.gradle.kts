@@ -39,7 +39,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.0.5"
+        kotlinCompilerExtensionVersion = "1.1.0-rc01"
     }
 
 
@@ -69,7 +69,7 @@ dependencies {
     // Tooling support (Previews, etc.)
     implementation(AndroidX.compose.ui.tooling)
     // UI Tests
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.5")
+    androidTestImplementation(AndroidX.compose.ui.testJunit4)
     implementation(AndroidX.appCompat)
     implementation(AndroidX.core.ktx)
     implementation(AndroidX.activity.ktx)
