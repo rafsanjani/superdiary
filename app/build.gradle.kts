@@ -64,6 +64,7 @@ dependencies {
     implementation(AndroidX.activity.compose)
     // Compose Material Design
     implementation(AndroidX.compose.material)
+    implementation(AndroidX.compose.material.icons.extended)
     // Animations
     implementation(AndroidX.compose.animation)
     // Tooling support (Previews, etc.)

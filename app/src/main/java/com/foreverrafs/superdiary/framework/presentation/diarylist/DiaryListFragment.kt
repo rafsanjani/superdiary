@@ -9,13 +9,39 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.SnackbarResult
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Event
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.AddCircleOutline
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -64,7 +90,7 @@ class DiaryListFragment : Fragment() {
 
                             coroutineScope.launch {
                                 val action = scaffoldState.snackbarHostState.showSnackbar(
-                                    message = "Note Deleted",
+                                    message = "Diary Deleted",
                                     actionLabel = "Undo"
                                 )
 
@@ -98,10 +124,39 @@ fun DiaryListScreen(
         DateTimeFormatter.ofPattern("dd MMMM")
     }
 
+    val navItems = listOf(
+        "Home" to Icons.Default.Home,
+        "Add" to Icons.Outlined.AddCircleOutline,
+        "Calendar" to Icons.Default.Event
+    )
+
+    var selected by remember {
+        mutableStateOf(navItems.first().first)
+    }
+
     SuperDiaryTheme {
         Scaffold(
             scaffoldState = scaffoldState,
-        ) {
+            bottomBar = {
+                BottomNavigation {
+                    for (item in navItems) {
+                        BottomNavigationItem(
+                            selected = selected == item.first,
+                            onClick = { selected = item.first },
+                            icon = {
+                                Icon(
+                                    modifier = Modifier
+                                        .size(32.dp),
+                                    imageVector = item.second,
+                                    contentDescription = null
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+        )
+        {
             Surface(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -184,7 +239,6 @@ fun DiaryList(
     diaries: List<Diary>,
     onDiaryClicked: (Diary) -> Unit
 ) {
-
     AnimatedVisibility(
         visible = diaries.isNotEmpty(),
         modifier = modifier.fillMaxSize(),
