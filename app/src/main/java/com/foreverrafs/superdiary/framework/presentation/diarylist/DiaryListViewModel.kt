@@ -1,12 +1,12 @@
 package com.foreverrafs.superdiary.framework.presentation.diarylist
 
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.business.Result
 import com.foreverrafs.superdiary.business.model.Diary
 import com.foreverrafs.superdiary.business.usecase.common.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.business.usecase.diarylist.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.framework.presentation.common.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +27,12 @@ constructor(
     private val fetchAllDiariesUseCase: GetAllDiariesUseCase,
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
     private val dispatcher: CoroutineDispatcher,
-) : BaseViewModel<DiaryListState>() {
+) : ViewModel() {
+
+    private val _viewState: MutableStateFlow<DiaryListState?> = MutableStateFlow(null)
+
+    val viewState = _viewState.asStateFlow()
+
     private var _allDiaries = emptyList<Diary>()
 
     private var _selectedDate: LocalDate = LocalDate.now()
@@ -51,7 +56,7 @@ constructor(
                         is DiaryListEvent.DeleteDiary -> {
 
                         }
-                        DiaryListEvent.AddDiary ->{
+                        DiaryListEvent.AddDiary -> {
 
                         }
                     }
@@ -64,7 +69,7 @@ constructor(
         fetchAllDiariesUseCase()
             .catch {
                 it.cause?.let { cause ->
-                    setViewState(DiaryListState.Error(cause))
+                    _viewState.value = DiaryListState.Error(cause)
                 }
             }
             .collect {
@@ -98,9 +103,9 @@ constructor(
         }
 
         if (filtered.isNotEmpty()) {
-            setViewState(DiaryListState.Loaded(filtered))
+            _viewState.value = DiaryListState.Loaded(filtered)
         } else {
-            setViewState(DiaryListState.Loaded(emptyList()))
+            _viewState.value = DiaryListState.Loaded(emptyList())
         }
     }
 }

@@ -4,14 +4,17 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.business.Result
 import com.foreverrafs.superdiary.business.model.Diary
 import com.foreverrafs.superdiary.business.usecase.add.AddDiaryUseCase
 import com.foreverrafs.superdiary.framework.presentation.add.state.AddDiaryState
-import com.foreverrafs.superdiary.framework.presentation.common.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,8 +27,11 @@ constructor(
     private val addDiary: AddDiaryUseCase,
     private val dispatcher: CoroutineDispatcher,
     private val dataStore: DataStore<Preferences>,
-) : BaseViewModel<AddDiaryState>() {
+) : ViewModel() {
 
+    private var _viewState: MutableStateFlow<AddDiaryState?> = MutableStateFlow(null)
+
+    val viewState: StateFlow<AddDiaryState?> = _viewState.asStateFlow()
 
     companion object {
         private val KEY_DIARY_DRAFT = stringPreferencesKey("draft")
@@ -50,10 +56,10 @@ constructor(
     fun saveDiary(diary: Diary) = viewModelScope.launch(dispatcher) {
         when (val result = addDiary(diary)) {
             is Result.Error -> {
-                setViewState(AddDiaryState.Error(error = result.error))
+                _viewState.value = AddDiaryState.Error(error = result.error)
             }
             is Result.Success -> {
-                setViewState(AddDiaryState.Saved(diary))
+                _viewState.value = AddDiaryState.Saved(diary)
             }
         }
     }

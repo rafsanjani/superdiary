@@ -93,7 +93,6 @@ class AddDiaryDialogFragment : BottomSheetDialogFragment() {
             }.setNegativeButton(R.string.draft) { _, _ ->
                 addDiaryViewModel.saveDiaryDraft(diaryEntry)
                 closeDialog()
-
             }
             .setNeutralButton(R.string.cancel, null)
             .show()
