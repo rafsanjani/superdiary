@@ -2,10 +2,10 @@ package com.foreverrafs.superdiary.business.data
 
 import com.foreverrafs.superdiary.business.model.Diary
 import com.foreverrafs.superdiary.business.repository.Repository
-import com.foreverrafs.superdiary.business.usecase.add.AddDiaryUseCase
-import com.foreverrafs.superdiary.business.usecase.common.DeleteDiaryUseCase
-import com.foreverrafs.superdiary.business.usecase.diarylist.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.business.usecase.diarylist.SearchDiaryUseCase
+import com.foreverrafs.superdiary.business.usecase.AddDiaryUseCase
+import com.foreverrafs.superdiary.business.usecase.DeleteDiaryUseCase
+import com.foreverrafs.superdiary.business.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.business.usecase.SearchDiaryUseCase
 import com.foreverrafs.superdiary.framework.datasource.local.dto.DiaryDto
 import com.foreverrafs.superdiary.framework.datasource.local.mapper.DiaryMapper
 import com.squareup.moshi.Moshi
@@ -60,7 +60,7 @@ object DependenciesInjector {
         return DeleteDiaryUseCase(provideTestDataSource())
     }
 
-    fun provideGetAllDiaryUseCase(): GetAllDiariesUseCase{
+    fun provideGetAllDiaryUseCase(): GetAllDiariesUseCase {
         return GetAllDiariesUseCase(provideTestDataSource())
     }
 

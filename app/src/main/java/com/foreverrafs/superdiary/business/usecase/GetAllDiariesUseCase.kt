@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.business.usecase.diarylist
+package com.foreverrafs.superdiary.business.usecase
 
 import com.foreverrafs.superdiary.business.repository.Repository
 

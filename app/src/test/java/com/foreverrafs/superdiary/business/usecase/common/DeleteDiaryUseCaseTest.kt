@@ -3,7 +3,8 @@ package com.foreverrafs.superdiary.business.usecase.common
 import app.cash.turbine.test
 import com.foreverrafs.superdiary.business.Result
 import com.foreverrafs.superdiary.business.data.DependenciesInjector
-import com.foreverrafs.superdiary.business.usecase.diarylist.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.business.usecase.DeleteDiaryUseCase
+import com.foreverrafs.superdiary.business.usecase.GetAllDiariesUseCase
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList

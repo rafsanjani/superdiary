@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.business.Result
 import com.foreverrafs.superdiary.business.model.Diary
-import com.foreverrafs.superdiary.business.usecase.add.AddDiaryUseCase
+import com.foreverrafs.superdiary.business.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.framework.presentation.add.state.AddDiaryState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

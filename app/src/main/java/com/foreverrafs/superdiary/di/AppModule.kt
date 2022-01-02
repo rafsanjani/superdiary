@@ -5,10 +5,10 @@ import android.content.SharedPreferences
 import com.foreverrafs.superdiary.business.repository.DataSource
 import com.foreverrafs.superdiary.business.repository.Repository
 import com.foreverrafs.superdiary.business.repository.RepositoryImpl
-import com.foreverrafs.superdiary.business.usecase.add.AddDiaryUseCase
-import com.foreverrafs.superdiary.business.usecase.common.DeleteDiaryUseCase
-import com.foreverrafs.superdiary.business.usecase.diarylist.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.business.usecase.diarylist.SearchDiaryUseCase
+import com.foreverrafs.superdiary.business.usecase.AddDiaryUseCase
+import com.foreverrafs.superdiary.business.usecase.DeleteDiaryUseCase
+import com.foreverrafs.superdiary.business.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.business.usecase.SearchDiaryUseCase
 import com.foreverrafs.superdiary.framework.datasource.local.mapper.DiaryMapper
 import com.foreverrafs.superdiary.framework.scheduler.NotificationScheduler
 import dagger.Module

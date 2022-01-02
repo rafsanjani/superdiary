@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.business.Result
 import com.foreverrafs.superdiary.business.model.Diary
-import com.foreverrafs.superdiary.business.usecase.common.DeleteDiaryUseCase
-import com.foreverrafs.superdiary.business.usecase.diarylist.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.business.usecase.DeleteDiaryUseCase
+import com.foreverrafs.superdiary.business.usecase.GetAllDiariesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
