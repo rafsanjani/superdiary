@@ -20,6 +20,11 @@ val Typography = androidx.compose.material.Typography(
     h4 = TextStyle(
         fontFamily = MarkoFontFamily,
         fontWeight = FontWeight.Normal,
+        fontSize = 30.sp
+    ),
+    h5 = TextStyle(
+        fontFamily = MarkoFontFamily,
+        fontWeight = FontWeight.Normal,
         fontSize = 24.sp
     )
 )

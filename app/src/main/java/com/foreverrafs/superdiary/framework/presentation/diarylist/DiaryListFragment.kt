@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,6 +37,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.AddCircleOutline
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,9 +56,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
+import brand
 import com.foreverrafs.datepicker.DatePickerTimeline
 import com.foreverrafs.superdiary.business.model.Diary
-import com.foreverrafs.superdiary.framework.presentation.style.colorPrimary
+import com.foreverrafs.superdiary.framework.presentation.style.brandColorDark
 import com.foreverrafs.superdiary.framework.presentation.style.diaryCardColor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -103,7 +107,12 @@ class DiaryListFragment : Fragment() {
                             diaryListViewModel.getDiariesForDate(it)
                         },
                         scaffoldState = scaffoldState,
-                        diaryEventDates = diaryListViewModel.diaryEventDates
+                        diaryEventDates = diaryListViewModel.diaryEventDates,
+                        onNavigate = {
+                            findNavController().navigate(
+                                DiaryListFragmentDirections.actionDiaryListFragmentToAddDiaryDialogFragment()
+                            )
+                        }
                     )
                 }
             }
@@ -118,7 +127,8 @@ fun DiaryListScreen(
     onDiaryDeleted: (diary: Diary) -> Unit,
     onDateSelected: (date: LocalDate) -> Unit,
     diaryEventDates: List<LocalDate>,
-    scaffoldState: ScaffoldState
+    scaffoldState: ScaffoldState,
+    onNavigate: () -> Unit
 ) {
     val formatter = remember {
         DateTimeFormatter.ofPattern("dd MMMM")
@@ -134,11 +144,17 @@ fun DiaryListScreen(
         mutableStateOf(navItems.first().first)
     }
 
+    LaunchedEffect(selected) {
+        if (selected == "Add") {
+            onNavigate()
+        }
+    }
+
     SuperDiaryTheme {
         Scaffold(
             scaffoldState = scaffoldState,
             bottomBar = {
-                BottomNavigation {
+                BottomNavigation(backgroundColor = MaterialTheme.colors.brand) {
                     for (item in navItems) {
                         BottomNavigationItem(
                             selected = selected == item.first,
@@ -154,16 +170,20 @@ fun DiaryListScreen(
                         )
                     }
                 }
-            }
+            },
         )
         {
             Surface(
                 modifier = Modifier
                     .fillMaxSize(),
-                color = MaterialTheme.colors.primary
             ) {
-                Box(modifier = Modifier.fillMaxSize()) {
+                Box(
+                    modifier = Modifier
+                        .background(MaterialTheme.colors.brand)
+                        .fillMaxSize()
+                ) {
                     Column(modifier = Modifier.fillMaxSize()) {
+                        // TODO: 02/01/2022 Replace with Header composable
                         Box(
                             modifier = Modifier.fillMaxWidth(),
                             contentAlignment = Alignment.Center
@@ -187,20 +207,19 @@ fun DiaryListScreen(
 
                         DatePickerTimeline(
                             onDateSelected = onDateSelected,
-                            backgroundColor = colorPrimary,
+                            backgroundColor = brandColorDark,
                             dateTextColor = Color.White,
                             selectedTextColor = Color.LightGray,
                             eventDates = diaryEventDates,
                             eventIndicatorColor = Color.White,
                             todayLabel = {
-
                                 Text(
                                     modifier = Modifier.padding(10.dp),
                                     text = "Today: ${formatter.format(LocalDate.now())}",
-                                    color = Color.White,
                                     fontWeight = FontWeight.Bold
                                 )
-                            }
+                            },
+                            selectedBackgroundColor = diaryCardColor
                         )
 
                         Text(
@@ -321,7 +340,8 @@ fun Preview() {
         onDiaryDeleted = {},
         onDateSelected = {},
         scaffoldState = rememberScaffoldState(),
-        diaryEventDates = listOf()
+        diaryEventDates = listOf(),
+        onNavigate = {}
     )
 }
 

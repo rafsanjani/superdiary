@@ -29,9 +29,9 @@
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
-    <dialog
+    <fragment
         android:id="@+id/addDiaryDialogFragment"
-        android:name="com.foreverrafs.superdiary.framework.presentation.add.AddDiaryDialogFragment"
+        android:name="com.foreverrafs.superdiary.framework.presentation.add.AddDiaryFragment"
         android:label="AddDiaryDialogFragment"
         tools:layout="@layout/bottom_sheet_add_diary" />
 
