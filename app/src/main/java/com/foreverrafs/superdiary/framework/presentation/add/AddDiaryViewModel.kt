@@ -9,12 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.business.Result
 import com.foreverrafs.superdiary.business.model.Diary
 import com.foreverrafs.superdiary.business.usecase.AddDiaryUseCase
-import com.foreverrafs.superdiary.framework.presentation.add.state.AddDiaryState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,6 +30,7 @@ constructor(
 ) : ViewModel() {
 
     private var _viewState: MutableStateFlow<AddDiaryState?> = MutableStateFlow(null)
+    private var viewEvent: MutableStateFlow<AddDiaryEvent?> = MutableStateFlow(null)
 
     val viewState: StateFlow<AddDiaryState?> = _viewState.asStateFlow()
 
@@ -37,10 +38,28 @@ constructor(
         private val KEY_DIARY_DRAFT = stringPreferencesKey("draft")
     }
 
+    init {
+        viewModelScope.launch {
+            viewEvent.collect {
+                it?.let { event ->
+                    when (event) {
+                        is AddDiaryEvent.SaveDiary -> {
+                            saveDiary(event.diary)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     fun saveDiaryDraft(message: String) = viewModelScope.launch {
         dataStore.edit { settings ->
             settings[KEY_DIARY_DRAFT] = message
         }
+    }
+
+    fun onEvent(event: AddDiaryEvent) {
+        viewEvent.value = event
     }
 
     fun clearDiaryDraft() = viewModelScope.launch {
@@ -59,7 +78,7 @@ constructor(
                 _viewState.value = AddDiaryState.Error(error = result.error)
             }
             is Result.Success -> {
-                _viewState.value = AddDiaryState.Saved(diary)
+                _viewState.value = AddDiaryState.Success(diary)
             }
         }
     }

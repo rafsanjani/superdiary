@@ -10,7 +10,6 @@ import com.foreverrafs.superdiary.business.usecase.GetAllDiariesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -37,9 +36,8 @@ constructor(
 
     private var _selectedDate: LocalDate = LocalDate.now()
 
-    private var _diaryListUiEvent: MutableStateFlow<DiaryListEvent?> = MutableStateFlow(null)
+    private var diaryListUiEvent: MutableStateFlow<DiaryListEvent?> = MutableStateFlow(null)
 
-    private val diaryListUiEvent: StateFlow<DiaryListEvent?> = _diaryListUiEvent.asStateFlow()
 
     val allDiaries: List<Diary>
         get() = _allDiaries
@@ -90,7 +88,7 @@ constructor(
     }
 
     fun onEvent(event: DiaryListEvent) {
-        _diaryListUiEvent.value = event
+        diaryListUiEvent.value = event
     }
 
     fun deleteDiary(diary: Diary) = viewModelScope.launch(dispatcher) {

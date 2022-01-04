@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -26,9 +27,11 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,10 +42,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.foreverrafs.superdiary.business.model.Diary
 import com.foreverrafs.superdiary.framework.presentation.style.brandColorDark
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 private const val TAG = "AddDiaryDialogFragment"
 
+@AndroidEntryPoint
 class AddDiaryFragment : Fragment() {
     private val addDiaryViewModel: AddDiaryViewModel by viewModels()
 
@@ -53,101 +60,145 @@ class AddDiaryFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                AddDiaryScreen()
+                val viewState by addDiaryViewModel.viewState.collectAsState()
+
+                AddDiaryScreen(
+                    onViewEvent = {
+                        addDiaryViewModel.onEvent(it)
+                    },
+                    viewState = viewState
+                )
             }
         }
     }
 }
 
 @Composable
-fun AddDiaryScreen() {
-    SuperDiaryTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            Column(
-                modifier = Modifier
-                    .background(color = brandColorDark)
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp)
+fun AddDiaryScreen(
+    viewState: AddDiaryState?,
+    onViewEvent: (AddDiaryEvent) -> Unit
+) {
+    val scope = rememberCoroutineScope()
 
+    Scaffold(
+        snackbarHost = { snackbarHostSstate ->
+            viewState?.let {
+                when (it) {
+                    is AddDiaryState.Error -> {
+                        scope.launch {
+                            snackbarHostSstate.showSnackbar(
+                                message = "Error Saving Diary Entry"
+                            )
+                        }
+                    }
+                    is AddDiaryState.Success -> {
+                        scope.launch {
+                            snackbarHostSstate.showSnackbar(
+                                message = "Successfully Saved Entry"
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    ) {
+        SuperDiaryTheme {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
             ) {
-                Header(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .padding(top = 16.dp)
-                )
+                        .background(color = brandColorDark)
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp)
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    modifier = Modifier.padding(start = 12.dp),
-                    text = "Title",
-                    style = MaterialTheme.typography.h5
-                )
-
-                var diaryTitle by remember {
-                    mutableStateOf("")
-                }
-                var diaryMessage by remember {
-                    mutableStateOf("")
-                }
-
-                TextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    value = diaryTitle,
-                    onValueChange = { diaryTitle = it },
-                    colors = TextFieldDefaults.textFieldColors(
-                        focusedIndicatorColor = Color.Transparent,
-                        backgroundColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
-                        errorIndicatorColor = Color.Transparent,
-                    ),
-                    placeholder = {
-                        Text(text = "Entry #1, the happy day")
-                    },
-                    singleLine = true,
-                )
-
-
-                Text(
-                    modifier = Modifier.padding(start = 12.dp),
-                    text = "Whats on your mind?",
-                    style = MaterialTheme.typography.h5
-                )
-
-                TextField(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                    value = diaryMessage,
-                    onValueChange = { diaryMessage = it },
-                    colors = TextFieldDefaults.textFieldColors(
-                        focusedIndicatorColor = Color.Transparent,
-                        backgroundColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
-                        errorIndicatorColor = Color.Transparent,
-                    ),
-                    placeholder = {
-                        Text(text = "Today was the happiest day of my life because I got to do all the things I wanted...")
-                    },
-                    singleLine = false,
-                )
-
-                Button(
-                    modifier = Modifier
-                        .height(64.dp)
-                        .width(120.dp)
-                        .padding(bottom = 16.dp)
-                        .align(Alignment.End),
-                    onClick = { },
-                    shape = CircleShape
                 ) {
-                    Text(text = "Save")
+                    Header(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .padding(top = 16.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        modifier = Modifier.padding(start = 12.dp),
+                        text = "Title",
+                        style = MaterialTheme.typography.h5
+                    )
+
+                    var diaryTitle by remember {
+                        mutableStateOf("")
+                    }
+                    var diaryMessage by remember {
+                        mutableStateOf("")
+                    }
+
+                    TextField(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        value = diaryTitle,
+                        onValueChange = { diaryTitle = it },
+                        colors = TextFieldDefaults.textFieldColors(
+                            focusedIndicatorColor = Color.Transparent,
+                            backgroundColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent,
+                            errorIndicatorColor = Color.Transparent,
+                        ),
+                        placeholder = {
+                            Text(text = "Entry #1, the happy day")
+                        },
+                        singleLine = true,
+                    )
+
+
+                    Text(
+                        modifier = Modifier.padding(start = 12.dp),
+                        text = "Whats on your mind?",
+                        style = MaterialTheme.typography.h5
+                    )
+
+                    TextField(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                        value = diaryMessage,
+                        onValueChange = { diaryMessage = it },
+                        colors = TextFieldDefaults.textFieldColors(
+                            focusedIndicatorColor = Color.Transparent,
+                            backgroundColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent,
+                            errorIndicatorColor = Color.Transparent,
+                        ),
+                        placeholder = {
+                            Text(text = "Today was the happiest day of my life because I got to do all the things I wanted...")
+                        },
+                        singleLine = false,
+                    )
+
+                    Button(
+                        modifier = Modifier
+                            .height(64.dp)
+                            .width(120.dp)
+                            .padding(bottom = 16.dp)
+                            .align(Alignment.End),
+                        onClick = {
+                            onViewEvent(
+                                AddDiaryEvent.SaveDiary(
+                                    diary = Diary(
+                                        title = diaryTitle,
+                                        message = diaryMessage
+                                    )
+                                )
+                            )
+                        },
+                        shape = CircleShape
+                    ) {
+                        Text(text = "Save")
+                    }
                 }
             }
         }
@@ -180,7 +231,11 @@ fun Header(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun Preview() {
-    AddDiaryScreen()
+    AddDiaryScreen(
+        viewState = null,
+    ) {
+
+    }
 }
 
 //@AndroidEntryPoint

@@ -8,7 +8,6 @@ import java.time.LocalDateTime
 class DiaryMapper : EntityMapper<DiaryDto, Diary> {
     override fun mapToDomain(entity: DiaryDto): Diary {
         return Diary(
-            id = entity.id,
             message = entity.message,
             date = LocalDateTime.parse(entity.date),
             title = entity.title
@@ -17,7 +16,6 @@ class DiaryMapper : EntityMapper<DiaryDto, Diary> {
 
     override fun mapToEntity(domainModel: Diary): DiaryDto {
         return DiaryDto(
-            id = domainModel.id,
             message = domainModel.message,
             date = domainModel.date.toString(),
             title = domainModel.title

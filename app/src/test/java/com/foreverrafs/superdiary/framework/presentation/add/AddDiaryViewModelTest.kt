@@ -3,7 +3,6 @@ package com.foreverrafs.superdiary.framework.presentation.add
 import app.cash.turbine.test
 import com.foreverrafs.superdiary.business.data.DependenciesInjector
 import com.foreverrafs.superdiary.business.model.Diary
-import com.foreverrafs.superdiary.framework.presentation.add.state.AddDiaryState
 import com.foreverrafs.superdiary.util.MockPreferenceDataStore
 import com.foreverrafs.superdiary.util.rules.CoroutineTestRule
 import com.google.common.truth.Truth.assertThat
@@ -32,7 +31,7 @@ class AddDiaryViewModelTest {
     fun `save diary confirm saved`() = runBlockingTest {
         addDiaryViewModel.saveDiary(Diary(message = "Test Diary", title = ""))
 
-        addDiaryViewModel.viewState.test {
+        addDiaryViewModel.viewEvent.test {
             assertThat(expectMostRecentItem()).isInstanceOf(AddDiaryState.Saved::class.java)
         }
     }

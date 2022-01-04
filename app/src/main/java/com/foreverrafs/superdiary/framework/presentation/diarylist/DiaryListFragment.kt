@@ -66,7 +66,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import kotlin.random.Random
 
 private const val TAG = "DiaryListFragment"
 
@@ -320,7 +319,7 @@ fun DiaryCard(
                 text = formatter.format(diary.date),
                 fontWeight = FontWeight.Bold,
             )
-            Text(text = diary.message)
+            Text(text = diary.title)
         }
     }
 }
@@ -332,9 +331,9 @@ fun Preview() {
     DiaryListScreen(
         viewState = DiaryListState.Loaded(
             list = listOf(
-                Diary(id = Random.nextLong(), message = "Hello my amazing people", title = ""),
-                Diary(id = Random.nextLong(), message = "Hello my family members", title = ""),
-                Diary(id = Random.nextLong(), message = "A nice entry", title = "")
+                Diary(message = "Hello my amazing people", title = ""),
+                Diary(message = "Hello my family members", title = ""),
+                Diary(message = "A nice entry", title = "")
             )
         ),
         onDiaryDeleted = {},
