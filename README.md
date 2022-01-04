@@ -1,5 +1,7 @@
 # Superdiary ❤️
-A simple diary app, mostly focused on Clean Architecture design pattern and 100% test coverage (unit and instrumentation)
+A simple diary app, mostly focused on Clean Architecture design pattern and 100% test coverage (unit and instrumentation).
+
+UI Designs are mostly based on https://dribbble.com/shots/6685452/attachments/6685452-Diary-UI?mode=media 
  
 
 <div align="left">
