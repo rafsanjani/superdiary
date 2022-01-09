@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name=".framework.SuperDiaryApp"
+        android:name=".SuperDiaryApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,7 +16,7 @@
 
         <!--Using SingleTask because ActivityScenarioRule displays a dark screen when SingleTask is used-->
         <activity
-            android:name=".framework.presentation.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="sensorPortrait">
@@ -28,7 +28,7 @@
         </activity>
 
         <receiver
-            android:name=".framework.broadcastreceiver.BootReceiver"
+            android:name="com.foreverrafs.superdiary.broadcastreceiver.BootReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -37,7 +37,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".framework.broadcastreceiver.AlarmReceiver"
+            android:name="com.foreverrafs.superdiary.broadcastreceiver.AlarmReceiver"
             android:enabled="true" />
 
     </application>

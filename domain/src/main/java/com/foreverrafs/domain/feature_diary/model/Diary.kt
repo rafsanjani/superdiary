@@ -4,6 +4,7 @@ import android.graphics.Color
 import java.time.LocalDateTime
 
 data class Diary(
+    val id: Long? = null,
     val title: String,
     val message: String,
     val date: LocalDateTime = LocalDateTime.now(),

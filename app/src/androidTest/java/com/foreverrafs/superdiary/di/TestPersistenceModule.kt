@@ -9,8 +9,8 @@ import androidx.room.Room
 import com.foreverrafs.domain.business.repository.DataSource
 import com.foreverrafs.domain.business.repository.RepositoryImpl
 import com.foreverrafs.superdiary.data.MockDataSource
-import com.foreverrafs.superdiary.framework.datasource.local.database.DiaryDao
-import com.foreverrafs.superdiary.framework.datasource.local.database.DiaryDatabase
+import com.foreverrafs.superdiary.data.local.database.DiaryDao
+import com.foreverrafs.superdiary.data.local.database.DiaryDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

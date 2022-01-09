@@ -9,8 +9,8 @@ import com.foreverrafs.domain.feature_diary.usecase.AddDiaryUseCase
 import com.foreverrafs.domain.feature_diary.usecase.DeleteDiaryUseCase
 import com.foreverrafs.domain.feature_diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.domain.feature_diary.usecase.SearchDiaryUseCase
-import com.foreverrafs.superdiary.framework.datasource.local.mapper.DiaryMapper
-import com.foreverrafs.superdiary.framework.scheduler.NotificationScheduler
+import com.foreverrafs.superdiary.data.local.mapper.DiaryMapper
+import com.foreverrafs.superdiary.scheduler.NotificationScheduler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

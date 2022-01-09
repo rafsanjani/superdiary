@@ -21,7 +21,7 @@ class DeleteDiaryUseCaseTest {
 
     @Before
     fun before() {
-        val repository = DependenciesInjector.`provideTestRepository()`()
+        val repository = DependenciesInjector.provideTestRepository()
 
         deleteDiary = DeleteDiaryUseCase(repository)
         getAllDiaries = GetAllDiariesUseCase(repository)

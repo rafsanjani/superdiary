@@ -1,7 +1,9 @@
 package com.foreverrafs.superdiary.framework.presentation.diarylist
 
 import app.cash.turbine.test
-import com.foreverrafs.domain.business.data.DependenciesInjector
+import com.foreverrafs.domain.feature_diary.data.DependenciesInjector
+import com.foreverrafs.superdiary.ui.feature_diary.diarylist.DiaryListState
+import com.foreverrafs.superdiary.ui.feature_diary.diarylist.DiaryListViewModel
 import com.foreverrafs.superdiary.util.rules.CoroutineTestRule
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,8 +22,8 @@ class DiaryListViewModelTest {
 
     private val diaryListViewModel = DiaryListViewModel(
         dispatcher = coroutineRule.testDispatcher,
-        fetchAllDiariesUseCase = com.foreverrafs.domain.business.data.DependenciesInjector.provideGetAllDiaryUseCase(),
-        deleteDiaryUseCase = com.foreverrafs.domain.business.data.DependenciesInjector.provideDeleteDiaryUseCase()
+        fetchAllDiariesUseCase = DependenciesInjector.provideGetAllDiaryUseCase(),
+        deleteDiaryUseCase = DependenciesInjector.provideDeleteDiaryUseCase()
     )
 
     @Test

@@ -10,10 +10,10 @@ import androidx.preference.PreferenceManager
 import androidx.room.Room
 import com.foreverrafs.domain.feature_diary.repository.DataSource
 import com.foreverrafs.domain.feature_diary.repository.RepositoryImpl
-import com.foreverrafs.superdiary.framework.datasource.local.RoomDataSource
-import com.foreverrafs.superdiary.framework.datasource.local.database.DiaryDao
-import com.foreverrafs.superdiary.framework.datasource.local.database.DiaryDatabase
-import com.foreverrafs.superdiary.framework.datasource.local.mapper.DiaryMapper
+import com.foreverrafs.superdiary.data.local.RoomDataSource
+import com.foreverrafs.superdiary.data.local.database.DiaryDao
+import com.foreverrafs.superdiary.data.local.database.DiaryDatabase
+import com.foreverrafs.superdiary.data.local.mapper.DiaryMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

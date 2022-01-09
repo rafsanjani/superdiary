@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".framework.presentation.add.AddDiaryFragment"
+    tools:context=".ui.feature_diary.add.AddDiaryFragment"
     tools:theme="@style/ThemeOverlay.SuperDiary.BottomSheetDialog">
 
     <androidx.constraintlayout.widget.ConstraintLayout

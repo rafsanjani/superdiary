@@ -75,6 +75,8 @@ dependencies {
     // Tooling support (Previews, etc.)
     implementation(AndroidX.compose.ui.tooling)
     implementation(project(mapOf("path" to ":domain")))
+    implementation(AndroidX.navigation.compose)
+    implementation(AndroidX.hilt.navigationCompose)
     // UI Tests
     androidTestImplementation(AndroidX.compose.ui.testJunit4)
     implementation(AndroidX.appCompat)

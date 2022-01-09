@@ -60,27 +60,27 @@ object DependenciesInjector {
         return domainList
     }
 
-    fun `provideTestRepository()`(): Repository {
+    fun provideTestRepository(): Repository {
         return TestDiaryRepository(
             provideDiariesFromFile().toMutableList()
         )
     }
 
     fun provideAddDiaryUseCase(): AddDiaryUseCase {
-        return AddDiaryUseCase(`provideTestRepository()`())
+        return AddDiaryUseCase(provideTestRepository())
     }
 
     fun provideDeleteDiaryUseCase(): DeleteDiaryUseCase {
-        return DeleteDiaryUseCase(`provideTestRepository()`())
+        return DeleteDiaryUseCase(provideTestRepository())
     }
 
     fun provideGetAllDiaryUseCase(): GetAllDiariesUseCase {
         return GetAllDiariesUseCase(
-            `provideTestRepository()`()
+            provideTestRepository()
         )
     }
 
     fun provideSearchDiaryUseCase(): SearchDiaryUseCase {
-        return SearchDiaryUseCase(`provideTestRepository()`())
+        return SearchDiaryUseCase(provideTestRepository())
     }
 }

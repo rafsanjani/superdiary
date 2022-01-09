@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/diaryListFragment"
-        android:name="com.foreverrafs.superdiary.framework.presentation.diarylist.DiaryListFragment"
+        android:name="com.foreverrafs.superdiary.ui.feature_diary.diarylist.DiaryListFragment"
         android:label="DiaryListFragment"
         tools:layout="@layout/fragment_diary_list">
         <action
@@ -31,19 +31,19 @@
 
     <fragment
         android:id="@+id/addDiaryDialogFragment"
-        android:name="com.foreverrafs.superdiary.framework.presentation.add.AddDiaryFragment"
+        android:name="com.foreverrafs.superdiary.ui.feature_diary.add.AddDiaryFragment"
         android:label="AddDiaryDialogFragment"
         tools:layout="@layout/bottom_sheet_add_diary" />
 
     <fragment
         android:id="@+id/diaryDetailFragment"
-        android:name="com.foreverrafs.superdiary.framework.presentation.detail.DiaryDetailFragment"
+        android:name="com.foreverrafs.superdiary.ui.feature_diary.detail.DiaryDetailFragment"
         android:label="DiaryDetailFragment"
         tools:layout="@layout/fragment_diary_detail">
 
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.foreverrafs.superdiary.framework.presentation.settings.SettingsFragment"
+        android:name="com.foreverrafs.superdiary.ui.feature_diary.settings.SettingsFragment"
         android:label="SettingsFragment" />
 </navigation>

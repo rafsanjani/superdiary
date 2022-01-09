@@ -3,7 +3,6 @@ package com.foreverrafs.superdiary
 import androidx.annotation.StringRes
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.platform.app.InstrumentationRegistry
-import com.foreverrafs.superdiary.framework.presentation.MainActivity
 import dagger.hilt.android.testing.HiltAndroidRule
 import org.junit.Before
 import org.junit.Rule
