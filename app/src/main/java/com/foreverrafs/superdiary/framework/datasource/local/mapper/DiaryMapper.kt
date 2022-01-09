@@ -1,6 +1,6 @@
 package com.foreverrafs.superdiary.framework.datasource.local.mapper
 
-import com.foreverrafs.superdiary.business.model.Diary
+import com.foreverrafs.domain.feature_diary.model.Diary
 import com.foreverrafs.superdiary.framework.datasource.local.dto.DiaryDto
 import com.foreverrafs.superdiary.util.EntityMapper
 import java.time.LocalDateTime

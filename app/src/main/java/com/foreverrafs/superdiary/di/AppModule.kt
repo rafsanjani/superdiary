@@ -2,13 +2,13 @@ package com.foreverrafs.superdiary.di
 
 import android.app.Application
 import android.content.SharedPreferences
-import com.foreverrafs.superdiary.business.repository.DataSource
-import com.foreverrafs.superdiary.business.repository.Repository
-import com.foreverrafs.superdiary.business.repository.RepositoryImpl
-import com.foreverrafs.superdiary.business.usecase.AddDiaryUseCase
-import com.foreverrafs.superdiary.business.usecase.DeleteDiaryUseCase
-import com.foreverrafs.superdiary.business.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.business.usecase.SearchDiaryUseCase
+import com.foreverrafs.domain.feature_diary.repository.DataSource
+import com.foreverrafs.domain.feature_diary.repository.Repository
+import com.foreverrafs.domain.feature_diary.repository.RepositoryImpl
+import com.foreverrafs.domain.feature_diary.usecase.AddDiaryUseCase
+import com.foreverrafs.domain.feature_diary.usecase.DeleteDiaryUseCase
+import com.foreverrafs.domain.feature_diary.usecase.GetAllDiariesUseCase
+import com.foreverrafs.domain.feature_diary.usecase.SearchDiaryUseCase
 import com.foreverrafs.superdiary.framework.datasource.local.mapper.DiaryMapper
 import com.foreverrafs.superdiary.framework.scheduler.NotificationScheduler
 import dagger.Module

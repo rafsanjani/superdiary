@@ -1,8 +1,8 @@
 package com.foreverrafs.superdiary.framework.presentation.add
 
 import app.cash.turbine.test
-import com.foreverrafs.superdiary.business.data.DependenciesInjector
-import com.foreverrafs.superdiary.business.model.Diary
+import com.foreverrafs.domain.business.data.DependenciesInjector
+import com.foreverrafs.domain.business.model.Diary
 import com.foreverrafs.superdiary.util.MockPreferenceDataStore
 import com.foreverrafs.superdiary.util.rules.CoroutineTestRule
 import com.google.common.truth.Truth.assertThat
@@ -21,7 +21,7 @@ class AddDiaryViewModelTest {
 
     private val addDiaryViewModel = AddDiaryViewModel(
         dispatcher = coroutineRule.testDispatcher,
-        addDiary = DependenciesInjector.provideAddDiaryUseCase(),
+        addDiary = com.foreverrafs.domain.business.data.DependenciesInjector.provideAddDiaryUseCase(),
         dataStore = dataStore
     )
 
@@ -29,7 +29,12 @@ class AddDiaryViewModelTest {
     @ExperimentalTime
     @Test
     fun `save diary confirm saved`() = runBlockingTest {
-        addDiaryViewModel.saveDiary(Diary(message = "Test Diary", title = ""))
+        addDiaryViewModel.saveDiary(
+            com.foreverrafs.domain.business.model.Diary(
+                message = "Test Diary",
+                title = ""
+            )
+        )
 
         addDiaryViewModel.viewEvent.test {
             assertThat(expectMostRecentItem()).isInstanceOf(AddDiaryState.Saved::class.java)

@@ -3,7 +3,7 @@ package com.foreverrafs.superdiary.framework.presentation.detail
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.foreverrafs.superdiary.business.model.Diary
+import com.foreverrafs.domain.feature_diary.model.Diary
 import com.foreverrafs.superdiary.databinding.FragmentDiaryDetailBinding
 import com.foreverrafs.superdiary.framework.presentation.common.BaseFragment
 import com.foreverrafs.superdiary.framework.presentation.diarylist.DiaryListViewModel

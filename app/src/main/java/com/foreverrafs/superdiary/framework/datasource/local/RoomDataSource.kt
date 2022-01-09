@@ -1,7 +1,7 @@
 package com.foreverrafs.superdiary.framework.datasource.local
 
-import com.foreverrafs.superdiary.business.model.Diary
-import com.foreverrafs.superdiary.business.repository.DataSource
+import com.foreverrafs.domain.feature_diary.model.Diary
+import com.foreverrafs.domain.feature_diary.repository.DataSource
 import com.foreverrafs.superdiary.framework.datasource.local.database.DiaryDao
 import com.foreverrafs.superdiary.framework.datasource.local.mapper.DiaryMapper
 import kotlinx.coroutines.flow.Flow

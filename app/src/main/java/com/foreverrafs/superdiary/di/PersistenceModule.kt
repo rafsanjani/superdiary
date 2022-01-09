@@ -8,8 +8,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.preference.PreferenceManager
 import androidx.room.Room
-import com.foreverrafs.superdiary.business.repository.DataSource
-import com.foreverrafs.superdiary.business.repository.RepositoryImpl
+import com.foreverrafs.domain.feature_diary.repository.DataSource
+import com.foreverrafs.domain.feature_diary.repository.RepositoryImpl
 import com.foreverrafs.superdiary.framework.datasource.local.RoomDataSource
 import com.foreverrafs.superdiary.framework.datasource.local.database.DiaryDao
 import com.foreverrafs.superdiary.framework.datasource.local.database.DiaryDatabase

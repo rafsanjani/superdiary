@@ -1,6 +1,6 @@
 package com.foreverrafs.superdiary.framework.presentation.diarylist
 
-import com.foreverrafs.superdiary.business.model.Diary
+import com.foreverrafs.domain.feature_diary.model.Diary
 
 
 sealed class DiaryListState {

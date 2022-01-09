@@ -59,7 +59,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import brand
 import com.foreverrafs.datepicker.DatePickerTimeline
-import com.foreverrafs.superdiary.business.model.Diary
+import com.foreverrafs.domain.feature_diary.model.Diary
 import com.foreverrafs.superdiary.framework.presentation.style.brandColorDark
 import com.foreverrafs.superdiary.framework.presentation.style.diaryCardColor
 import dagger.hilt.android.AndroidEntryPoint
@@ -331,8 +331,14 @@ fun Preview() {
     DiaryListScreen(
         viewState = DiaryListState.Loaded(
             list = listOf(
-                Diary(message = "Hello my amazing people", title = ""),
-                Diary(message = "Hello my family members", title = ""),
+                Diary(
+                    message = "Hello my amazing people",
+                    title = ""
+                ),
+                Diary(
+                    message = "Hello my family members",
+                    title = ""
+                ),
                 Diary(message = "A nice entry", title = "")
             )
         ),

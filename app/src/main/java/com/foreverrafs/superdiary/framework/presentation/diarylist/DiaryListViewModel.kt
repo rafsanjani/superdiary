@@ -3,16 +3,15 @@ package com.foreverrafs.superdiary.framework.presentation.diarylist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.foreverrafs.superdiary.business.Result
-import com.foreverrafs.superdiary.business.model.Diary
-import com.foreverrafs.superdiary.business.usecase.DeleteDiaryUseCase
-import com.foreverrafs.superdiary.business.usecase.GetAllDiariesUseCase
+import com.foreverrafs.domain.feature_diary.Result
+import com.foreverrafs.domain.feature_diary.model.Diary
+import com.foreverrafs.domain.feature_diary.usecase.DeleteDiaryUseCase
+import com.foreverrafs.domain.feature_diary.usecase.GetAllDiariesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Collections.emptyList

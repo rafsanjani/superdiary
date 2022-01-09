@@ -6,8 +6,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.preference.PreferenceManager
 import androidx.room.Room
-import com.foreverrafs.superdiary.business.repository.DataSource
-import com.foreverrafs.superdiary.business.repository.RepositoryImpl
+import com.foreverrafs.domain.business.repository.DataSource
+import com.foreverrafs.domain.business.repository.RepositoryImpl
 import com.foreverrafs.superdiary.data.MockDataSource
 import com.foreverrafs.superdiary.framework.datasource.local.database.DiaryDao
 import com.foreverrafs.superdiary.framework.datasource.local.database.DiaryDatabase
@@ -44,15 +44,15 @@ object TestPersistenceModule {
     @Singleton
     @Provides
     fun provideRoomDataSource(
-    ): DataSource {
+    ): com.foreverrafs.domain.business.repository.DataSource {
         return MockDataSource()
     }
 
 
     @Singleton
     @Provides
-    fun provideDiaryRepository(dataSource: DataSource): RepositoryImpl {
-        return RepositoryImpl(dataSource = dataSource)
+    fun provideDiaryRepository(dataSource: com.foreverrafs.domain.business.repository.DataSource): com.foreverrafs.domain.business.repository.RepositoryImpl {
+        return com.foreverrafs.domain.business.repository.RepositoryImpl(dataSource = dataSource)
     }
 
     @Singleton

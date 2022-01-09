@@ -3,7 +3,7 @@ package com.foreverrafs.superdiary.framework.presentation.detail
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.foreverrafs.superdiary.business.model.Diary
+import com.foreverrafs.domain.feature_diary.model.Diary
 import com.foreverrafs.superdiary.databinding.ItemDiaryDetailEntryBinding
 
 class DiaryDetailPagerAdapter(

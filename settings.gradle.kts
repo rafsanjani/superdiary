@@ -4,3 +4,4 @@ plugins {
 
 rootProject.name = "superdiary"
 include(":app")
+include(":domain")

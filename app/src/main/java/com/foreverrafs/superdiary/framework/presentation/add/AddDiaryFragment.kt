@@ -20,12 +20,14 @@ import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarDefaults
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -42,7 +44,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.foreverrafs.superdiary.business.model.Diary
+import androidx.navigation.findNavController
+import com.foreverrafs.domain.feature_diary.model.Diary
 import com.foreverrafs.superdiary.framework.presentation.style.brandColorDark
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -66,7 +69,10 @@ class AddDiaryFragment : Fragment() {
                     onViewEvent = {
                         addDiaryViewModel.onEvent(it)
                     },
-                    viewState = viewState
+                    viewState = viewState,
+                    onDiarySaved = {
+                        findNavController().popBackStack()
+                    }
                 )
             }
         }
@@ -76,32 +82,51 @@ class AddDiaryFragment : Fragment() {
 @Composable
 fun AddDiaryScreen(
     viewState: AddDiaryState?,
-    onViewEvent: (AddDiaryEvent) -> Unit
+    onViewEvent: (AddDiaryEvent) -> Unit,
+    onDiarySaved: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState()
 
-    Scaffold(
-        snackbarHost = { snackbarHostSstate ->
-            viewState?.let {
-                when (it) {
-                    is AddDiaryState.Error -> {
-                        scope.launch {
-                            snackbarHostSstate.showSnackbar(
-                                message = "Error Saving Diary Entry"
-                            )
-                        }
-                    }
-                    is AddDiaryState.Success -> {
-                        scope.launch {
-                            snackbarHostSstate.showSnackbar(
-                                message = "Successfully Saved Entry"
-                            )
-                        }
-                    }
+    val hints = listOf(
+        "On this day, I met my damsel in distress...",
+        "Today was one memorable day...",
+        "Today couldn't have gone any better,...",
+        "I finally accepted that dream job offer...",
+        "Once upon a story"
+    )
+
+    val hint = remember {
+        hints.random()
+    }
+
+    viewState?.let {
+        when (it) {
+            is AddDiaryState.Error -> {
+                scope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = "Error Saving Diary Entry",
+                    )
+                }
+            }
+
+            is AddDiaryState.Success -> {
+                scope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = "Successfully Saved Entry",
+                    )
+
+                    onDiarySaved()
                 }
             }
         }
-    ) {
+    }
+
+    SnackbarDefaults.backgroundColor
+    Scaffold(
+        scaffoldState = scaffoldState,
+
+        ) {
         SuperDiaryTheme {
             Surface(
                 modifier = Modifier.fillMaxSize(),
@@ -174,7 +199,7 @@ fun AddDiaryScreen(
                             errorIndicatorColor = Color.Transparent,
                         ),
                         placeholder = {
-                            Text(text = "Today was the happiest day of my life because I got to do all the things I wanted...")
+                            Text(text = hint)
                         },
                         singleLine = false,
                     )
@@ -233,9 +258,9 @@ fun Header(modifier: Modifier = Modifier) {
 fun Preview() {
     AddDiaryScreen(
         viewState = null,
-    ) {
-
-    }
+        onViewEvent = {},
+        onDiarySaved = {}
+    )
 }
 
 //@AndroidEntryPoint

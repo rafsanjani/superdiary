@@ -1,4 +1,3 @@
-val kotlin_version: String by extra
 plugins {
     id("com.android.application")
     id("dagger.hilt.android.plugin")
@@ -60,7 +59,7 @@ android {
     }
 
     kotlinOptions {
-        this.jvmTarget = "1.8"
+        jvmTarget = "1.8"
     }
 }
 
@@ -75,6 +74,7 @@ dependencies {
     implementation(AndroidX.compose.animation)
     // Tooling support (Previews, etc.)
     implementation(AndroidX.compose.ui.tooling)
+    implementation(project(mapOf("path" to ":domain")))
     // UI Tests
     androidTestImplementation(AndroidX.compose.ui.testJunit4)
     implementation(AndroidX.appCompat)
@@ -98,19 +98,19 @@ dependencies {
     implementation(Google.android.material)
     implementation(AndroidX.constraintLayout)
     implementation(AndroidX.preference.ktx)
-    testImplementation(AndroidX.test.ext.junitKtx)
-    testImplementation(CashApp.turbine)
-    testImplementation(AndroidX.archCore.testing)
     androidTestImplementation(AndroidX.test.ext.junitKtx)
     androidTestImplementation(AndroidX.test.espresso.core)
     androidTestImplementation(AndroidX.test.espresso.contrib)
     androidTestImplementation(AndroidX.test.coreKtx)
     androidTestImplementation(AndroidX.test.rules)
+    testImplementation(AndroidX.test.ext.junitKtx)
+    testImplementation(CashApp.turbine)
+    testImplementation(AndroidX.archCore.testing)
     testImplementation(AndroidX.test.ext.truth)
     testImplementation(KotlinX.coroutines.test)
     testImplementation(Square.moshi.kotlinCodegen)
-    kaptAndroidTest(Google.dagger.hilt.android.compiler)
     testImplementation(Square.moshi.kotlinReflect)
+    kaptAndroidTest(Google.dagger.hilt.compiler)
 
     implementation(AndroidX.dataStore.core)
     implementation(AndroidX.dataStore.preferences)
