@@ -13,31 +13,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Event
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.AddCircleOutline
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -48,13 +39,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import brand
-import com.example.composesamples.components.SuperDiaryNavDestination
 import com.foreverrafs.datepicker.DatePickerTimeline
 import com.foreverrafs.domain.feature_diary.model.Diary
-import com.foreverrafs.superdiary.ui.navigation.NavViewModel
+import com.foreverrafs.superdiary.ui.navigation.BottomNavigation
 import com.foreverrafs.superdiary.ui.style.brandColorDark
 import com.foreverrafs.superdiary.ui.style.diaryCardColor
 import java.time.LocalDate
@@ -65,38 +55,27 @@ private const val TAG = "DiaryListFragment"
 @ExperimentalComposeUiApi
 @Composable
 fun DiaryListScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    showSnackBar: Boolean,
+    snackBarMessage: String,
 ) {
     val diaryViewModel: DiaryListViewModel = hiltViewModel()
-    val navViewModel: NavViewModel = viewModel()
 
     val viewState by diaryViewModel.viewState.collectAsState()
-    val navEvent by navViewModel.event.collectAsState(initial = null)
-
-    println("Navigation Event: $navEvent")
-
-    LaunchedEffect(navEvent) {
-        navEvent?.let { event ->
-            navController.navigate(
-                route = event.destination
-            )
-        }
-    }
 
     viewState?.let { state ->
         DiaryListScreen(
             viewState = state,
-            onDiaryDeleted = { diary ->
+            onDiaryDeleted = { diary: Diary ->
                 diaryViewModel.onEvent(DiaryListEvent.DeleteDiary(diary))
             },
             onDateSelected = {
                 diaryViewModel.getDiariesForDate(it)
             },
             diaryEventDates = diaryViewModel.diaryEventDates,
-            scaffoldState = rememberScaffoldState(),
-            onNavigate = {
-                navViewModel.onNavEvent(NavViewModel.NavEvent(destination = SuperDiaryNavDestination.AddDiary()))
-            }
+            navController = navController,
+            snackBarMessage = snackBarMessage,
+            showSnackBar = showSnackBar
         )
     }
 }
@@ -108,49 +87,20 @@ fun DiaryListScreen(
     onDiaryDeleted: (diary: Diary) -> Unit,
     onDateSelected: (date: LocalDate) -> Unit,
     diaryEventDates: List<LocalDate>,
-    scaffoldState: ScaffoldState,
-    onNavigate: () -> Unit
+    navController: NavHostController,
+    snackBarMessage: String = "",
+    showSnackBar: Boolean
 ) {
     val formatter = remember {
         DateTimeFormatter.ofPattern("dd MMMM")
     }
-
-    val navItems = listOf(
-        "Home" to Icons.Default.Home,
-        "Add" to Icons.Outlined.AddCircleOutline,
-        "Calendar" to Icons.Default.Event
-    )
-
-    var selected by remember {
-        mutableStateOf(navItems.first().first)
-    }
-
-    LaunchedEffect(selected) {
-        if (selected == "Add") {
-            onNavigate()
-        }
-    }
+    val scaffoldState = rememberScaffoldState()
 
     SuperDiaryTheme {
         Scaffold(
             scaffoldState = scaffoldState,
             bottomBar = {
-                BottomNavigation(backgroundColor = MaterialTheme.colors.brand) {
-                    for (item in navItems) {
-                        BottomNavigationItem(
-                            selected = selected == item.first,
-                            onClick = { selected = item.first },
-                            icon = {
-                                Icon(
-                                    modifier = Modifier
-                                        .size(32.dp),
-                                    imageVector = item.second,
-                                    contentDescription = null
-                                )
-                            }
-                        )
-                    }
-                }
+                BottomNavigation(navController = navController)
             },
         )
         {
@@ -158,6 +108,12 @@ fun DiaryListScreen(
                 modifier = Modifier
                     .fillMaxSize(),
             ) {
+                LaunchedEffect(Unit) {
+                    if (showSnackBar) {
+                        scaffoldState.snackbarHostState.showSnackbar(message = snackBarMessage)
+                    }
+                }
+
                 Box(
                     modifier = Modifier
                         .background(MaterialTheme.colors.brand)
@@ -329,9 +285,9 @@ fun Preview() {
         ),
         onDiaryDeleted = {},
         onDateSelected = {},
-        scaffoldState = rememberScaffoldState(),
         diaryEventDates = listOf(),
-        onNavigate = {}
+        navController = rememberNavController(),
+        showSnackBar = false,
     )
 }
 

@@ -11,7 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Collections.emptyList
@@ -31,15 +30,11 @@ constructor(
 
     val viewState = _viewState.asStateFlow()
 
-    private var _allDiaries = emptyList<Diary>()
+    var allDiaries = emptyList<Diary>()
 
     private var _selectedDate: LocalDate = LocalDate.now()
 
     private var diaryListUiEvent: MutableStateFlow<DiaryListEvent?> = MutableStateFlow(null)
-
-
-    val allDiaries: List<Diary>
-        get() = _allDiaries
 
     val diaryEventDates get() = allDiaries.map { it.date.toLocalDate() }
 
@@ -64,24 +59,13 @@ constructor(
 
     private fun getAllDiaries() = viewModelScope.launch(dispatcher) {
         fetchAllDiariesUseCase()
-            .catch {
-                it.cause?.let { cause ->
-                    _viewState.value = DiaryListState.Error(cause)
-                }
-            }
-            .collect {
-                when (it) {
-                    is Result.Error -> {
-                        //render error state here
-                    }
+            .collect { result ->
+                when (result) {
                     is Result.Success -> {
-                        val sortedDiaries = it.data.sortedByDescending { diaryItem ->
-                            diaryItem.date
-                        }
-
-                        _allDiaries = sortedDiaries
-                        getDiariesForDate(_selectedDate)
+                        _viewState.value = DiaryListState.Loaded(result.data)
+                        allDiaries = result.data
                     }
+                    is Result.Error -> _viewState.value = DiaryListState.Error(result.error)
                 }
             }
     }
@@ -95,14 +79,14 @@ constructor(
     }
 
     fun getDiariesForDate(date: LocalDate) {
-        val filtered = _allDiaries.filter {
+        val filtered = allDiaries.filter {
             it.date.toLocalDate() == date
         }
 
         if (filtered.isNotEmpty()) {
-            _viewState.value = DiaryListState.Loaded(filtered)
+            _viewState.value = DiaryListState.Loaded(filtered, true)
         } else {
-            _viewState.value = DiaryListState.Loaded(emptyList())
+            _viewState.value = DiaryListState.Loaded(emptyList(), true)
         }
     }
 }

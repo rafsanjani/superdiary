@@ -21,14 +21,14 @@ class TestDiaryRepository(
             Result.Error(Exception("Error deleting diary"))
     }
 
-    override fun getAllDiaries(): Flow<Result<List<Diary>>> {
+    override suspend fun getAllDiaries(): Flow<Result<List<Diary>>> {
         return flowOf(Result.Success(diaryList.toList()))
     }
 
-    override fun searchDiary(query: String): Flow<Result<Diary>> = flow {
-        val data = diaryList.firstOrNull { it.message.contains(query) }
+    override suspend fun searchDiary(title: String): Flow<Result<List<Diary>>> = flow {
+        val data = diaryList.filter { it.message.contains(title) }
 
-        if (data == null) {
+        if (data.isNotEmpty()) {
             emit(Result.Error(Exception("Diary not found")))
         } else {
             emit(Result.Success(data = data))

@@ -31,14 +31,14 @@ constructor(
     private var _viewState: MutableStateFlow<AddDiaryState?> = MutableStateFlow(null)
     private var viewEvent: MutableStateFlow<AddDiaryEvent?> = MutableStateFlow(null)
 
-    val viewState: StateFlow<AddDiaryState?> = _viewState.asStateFlow()
+    val viewState: StateFlow<AddDiaryState?> get() = _viewState.asStateFlow()
 
     companion object {
         private val KEY_DIARY_DRAFT = stringPreferencesKey("draft")
     }
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             viewEvent.collect {
                 it?.let { event ->
                     when (event) {
@@ -50,14 +50,14 @@ constructor(
             }
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             _viewState.collect {
                 println("Collected")
             }
         }
     }
 
-    fun saveDiaryDraft(message: String) = viewModelScope.launch {
+    fun saveDiaryDraft(message: String) = viewModelScope.launch(dispatcher) {
         dataStore.edit { settings ->
             settings[KEY_DIARY_DRAFT] = message
         }
@@ -67,7 +67,7 @@ constructor(
         viewEvent.value = event
     }
 
-    fun clearDiaryDraft() = viewModelScope.launch {
+    fun clearDiaryDraft() = viewModelScope.launch(dispatcher) {
         dataStore.edit {
             it.remove(KEY_DIARY_DRAFT)
         }
@@ -85,6 +85,7 @@ constructor(
                 }
                 is Result.Success -> {
                     _viewState.value = AddDiaryState.Success(diary)
+                    println()
                 }
             }
         }

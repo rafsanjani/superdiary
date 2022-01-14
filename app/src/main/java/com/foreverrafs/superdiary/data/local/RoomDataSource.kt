@@ -5,8 +5,6 @@ import com.foreverrafs.domain.feature_diary.repository.DataSource
 import com.foreverrafs.superdiary.data.local.database.DiaryDao
 import com.foreverrafs.superdiary.data.local.mapper.DiaryMapper
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class RoomDataSource(
@@ -17,10 +15,13 @@ class RoomDataSource(
 
     override suspend fun delete(diary: Diary): Int = diaryDao.delete(mapper.mapToEntity(diary))
 
-    override fun searchDiary(query: String): Flow<Diary> =
-        diaryDao.searchDiary(query).map { mapper.mapToDomain(it) }
-
-    override fun getAllDiaries(): Flow<List<Diary>> = flow {
-        emitAll(diaryDao.getAllDiaries().map { mapper.mapToDomain(it) })
-    }
+    override suspend fun fetchAll(): Flow<List<Diary>> =
+        diaryDao.getAllDiaries().map { mapper.mapToDomain(it) }
+//
+//    override fun searchDiary(query: String): Flow<Diary> =
+//        diaryDao.searchDiary(query).map { mapper.mapToDomain(it) }
+//
+//    override fun getAllDiaries(): Flow<List<Diary>> = flow {
+//        emitAll(diaryDao.getAllDiaries().map { mapper.mapToDomain(it) })
+//    }
 }

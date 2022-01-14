@@ -70,6 +70,7 @@ dependencies {
     // Compose Material Design
     implementation(AndroidX.compose.material)
     implementation(AndroidX.compose.material.icons.extended)
+    testImplementation(Testing.MockK)
     // Animations
     implementation(AndroidX.compose.animation)
     // Tooling support (Previews, etc.)

@@ -19,7 +19,8 @@ class DiaryMapper : EntityMapper<DiaryDto, Diary> {
         return DiaryDto(
             message = domainModel.message,
             date = domainModel.date.toString(),
-            title = domainModel.title
+            title = domainModel.title,
+            id = domainModel.id ?: 0L
         )
     }
 

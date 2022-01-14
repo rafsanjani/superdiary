@@ -25,7 +25,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideIODispatcher(): CoroutineDispatcher = Dispatchers.Default
+    fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
 
     @Singleton
     @Provides
@@ -51,7 +51,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRepository(dataSource: DataSource): Repository = RepositoryImpl(dataSource)
+    fun provideRepository(dataSource: DataSource): Repository =
+        RepositoryImpl(dataSource)
 
     @Provides
     @Singleton

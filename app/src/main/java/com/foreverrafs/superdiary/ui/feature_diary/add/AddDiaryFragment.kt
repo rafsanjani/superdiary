@@ -16,14 +16,15 @@ import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarDefaults
+import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,7 +40,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.foreverrafs.domain.feature_diary.model.Diary
 import com.foreverrafs.superdiary.ui.style.brandColorDark
 import kotlinx.coroutines.launch
@@ -47,29 +47,33 @@ import kotlinx.coroutines.launch
 private const val TAG = "AddDiaryDialogFragment"
 
 @Composable
-fun AddDiaryScreen(navController: NavHostController) {
+fun AddDiaryScreen(
+    scaffoldState: ScaffoldState,
+    onDiarySaved: () -> Unit,
+) {
     val addDiaryViewModel: AddDiaryViewModel = hiltViewModel()
+
     val addDiaryState by addDiaryViewModel.viewState.collectAsState()
+
 
     AddDiaryScreen(
         addDiaryState = addDiaryState,
         onViewEvent = {
             addDiaryViewModel.onEvent(it)
         },
-        onDiarySaved = {
-            println("Diary saved")
-        }
+        onDiarySaved = onDiarySaved,
+        scaffoldState = scaffoldState,
     )
 }
 
 @Composable
 fun AddDiaryScreen(
+    scaffoldState: ScaffoldState,
     addDiaryState: AddDiaryState?,
     onViewEvent: (AddDiaryEvent) -> Unit,
     onDiarySaved: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    val scaffoldState = rememberScaffoldState()
 
     val hints = remember {
         listOf(
@@ -97,13 +101,7 @@ fun AddDiaryScreen(
                 }
 
                 is AddDiaryState.Success -> {
-                    scope.launch {
-                        scaffoldState.snackbarHostState.showSnackbar(
-                            message = "Successfully Saved Entry",
-                        )
-
-                        onDiarySaved()
-                    }
+                    onDiarySaved()
                 }
             }
         }
@@ -111,10 +109,7 @@ fun AddDiaryScreen(
 
 
     SnackbarDefaults.backgroundColor
-    Scaffold(
-        scaffoldState = scaffoldState,
-
-        ) {
+    Scaffold(scaffoldState = scaffoldState) {
         SuperDiaryTheme {
             Surface(
                 modifier = Modifier.fillMaxSize(),
@@ -199,6 +194,16 @@ fun AddDiaryScreen(
                             .padding(bottom = 16.dp)
                             .align(Alignment.End),
                         onClick = {
+                            if (diaryTitle.isEmpty() || diaryMessage.isEmpty()) {
+                                scope.launch {
+                                    scaffoldState.snackbarHostState.showSnackbar(
+                                        message = "Title and message are required",
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
+                                return@Button
+                            }
+
                             onViewEvent(
                                 AddDiaryEvent.SaveDiary(
                                     diary = Diary(
