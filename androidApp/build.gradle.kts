@@ -11,7 +11,7 @@ android {
         minSdk = 28
         targetSdk = 33
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.1"
     }
     buildFeatures {
         compose = true
@@ -34,10 +34,13 @@ android {
 dependencies {
     implementation(projects.shared)
     implementation(platform(libs.compose.bom))
-    implementation("androidx.compose.ui:ui:1.2.1")
-    implementation("androidx.compose.ui:ui-tooling:1.2.1")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.2.1")
-    implementation("androidx.compose.foundation:foundation:1.2.1")
-    implementation("androidx.compose.material:material:1.2.1")
-    implementation("androidx.activity:activity-compose:1.5.1")
+    implementation(libs.compose.ui.ui)
+    implementation(libs.compose.ui.tooling)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.ui.tooling.data)
+    implementation(libs.compose.foundation.layout)
+    implementation(libs.compose.foundation.foundation)
+    implementation(libs.compose.material.material)
+    implementation(libs.compose.material.iconsextended)
+    implementation(libs.androidx.activity.compose)
 }

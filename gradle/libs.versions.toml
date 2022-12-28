@@ -25,6 +25,7 @@ work = "2.7.1"
 room = "2.5.0-rc01"
 media3 = "1.0.0-beta03"
 lifecycle = "2.5.1"
+sqldelight = "1.5.4"
 
 [libraries]
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
@@ -41,6 +42,7 @@ compose-foundation-layout = { module = "androidx.compose.foundation:foundation-l
 compose-material-material = { module = "androidx.compose.material:material" }
 compose-material-iconsextended = { module = "androidx.compose.material:material-icons-extended" }
 compose-animation-animation = { module = "androidx.compose.animation:animation" }
+
 
 
 
@@ -73,6 +75,11 @@ square-moshi-core = { module = "com.squareup.moshi:moshi", version.ref = "moshi"
 square-moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
 square-moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
 
+#Sql Delight
+square-sqldelight-runtime = { module = "com.squareup.sqldelight:runtime", version.ref = "sqldelight" }
+square-sqldelight-driver-native = { module = "com.squareup.sqldelight:native-driver", version.ref = "sqldelight" }
+square-sqldelight-driver-android = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqldelight" }
+
 #Leak Canary
 square-leakcanary = "com.squareup.leakcanary:leakcanary-android:2.10"
 
@@ -100,8 +107,13 @@ accompanist-swipeRefresh = { module = "com.google.accompanist:accompanist-swiper
 
 kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlin-coroutines-native = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
 
 dokka = "org.jetbrains.dokka:dokka-gradle-plugin:1.7.20"
+kotlin-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
+
+
 
 coil-coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coil" }

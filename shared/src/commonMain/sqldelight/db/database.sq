@@ -1,0 +1,20 @@
+CREATE TABLE diary (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  entry TEXT NOT NULL,
+  date TEXT NOT NULL
+);
+
+selectAll:
+SELECT * FROM diary ORDER BY id;
+
+insert:
+INSERT INTO diary(entry, date) VALUES (?, ?);
+
+delete:
+DELETE FROM diary WHERE id=?;
+
+find:
+SELECT * FROM diary WHERE entry LIKE ?;
+
+deleteAll:
+DELETE FROM diary;
