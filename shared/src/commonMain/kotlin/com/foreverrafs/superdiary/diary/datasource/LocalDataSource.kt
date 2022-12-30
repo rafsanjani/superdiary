@@ -1,20 +1,17 @@
 package com.foreverrafs.superdiary.diary.datasource
 
-import com.foreverrafs.superdiary.LocalDatabaseFactory
+import com.foreverrafs.superdiary.Database
 import com.foreverrafs.superdiary.diary.model.Diary
-import db.KmpSuperDiaryDB
 
-class LocalDataSource private constructor(database: KmpSuperDiaryDB = LocalDatabaseFactory.getSuperDiaryDB()) : DataSource {
-    private val queries = database.databaseQueries
-
+class LocalDataSource(private val database: Database) : DataSource {
     override suspend fun add(diary: Diary): Long {
-        queries.insert(diary.entry, diary.date)
+        database.addDiary(diary)
         return 1
     }
 
     override suspend fun delete(diary: Diary): Int {
         diary.id?.let {
-            queries.delete(it)
+            database.deleteDiary(it)
             return 1
         }
 
@@ -22,22 +19,15 @@ class LocalDataSource private constructor(database: KmpSuperDiaryDB = LocalDatab
     }
 
     override suspend fun fetchAll(): List<Diary> {
-        return queries.selectAll(mapper = { id, entry, date -> Diary(id, entry, date) })
-            .executeAsList()
+        return database.getAllDiaries()
     }
 
     override suspend fun find(query: String): List<Diary> {
-        return queries.find(entry = query, mapper = { id, entry, date -> Diary(id, entry, date) })
-            .executeAsList()
+        return database.findDiary(query)
     }
 
 
     override suspend fun deleteAll() {
-        return queries.deleteAll()
-    }
-
-
-    companion object {
-        fun getInstance(): DataSource = LocalDataSource()
+        return database.clearDiaries()
     }
 }

@@ -27,6 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
+import com.foreverrafs.superdiary.Database
+import com.foreverrafs.superdiary.DatabaseDriverFactory
 import com.foreverrafs.superdiary.FlowLocalDataSource
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
@@ -38,7 +40,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val dataSource: DataSource = FlowLocalDataSource()
+        val dataSource: DataSource = FlowLocalDataSource(Database(DatabaseDriverFactory(this)))
 
         val clearDiaries = DeleteAllDiariesUseCase(dataSource)
         val add = AddDiaryUseCase(dataSource)
