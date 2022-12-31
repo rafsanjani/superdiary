@@ -10,7 +10,7 @@ import Foundation
 import shared
 
 @MainActor class MainViewModel: ObservableObject {
-    private let dataSource: DataSource = LocalDataSource.Companion.shared.getInstance()
+    private let dataSource: DataSource = LocalDataSource(database: Database(databaseDriver: DarwinDatabaseDriver()))
 
     private lazy var fetchAllDiariesUseCase = GetAllDiariesUseCase(dataSource: dataSource)
     private lazy var deleteDiariesUseCase = DeleteAllDiariesUseCase(dataSource: dataSource)
