@@ -4,8 +4,8 @@ import com.foreverrafs.superdiary.diary.model.Diary
 import db.DatabaseQueries
 import db.KmpSuperDiaryDB
 
-class Database(databaseDriverFactory: DatabaseDriverFactory) {
-    private val database = KmpSuperDiaryDB(databaseDriverFactory.createDriver())
+class Database(databaseDriver: DatabaseDriver) {
+    private val database = KmpSuperDiaryDB(databaseDriver.createDriver())
     private val queries = database.databaseQueries
 
     private val diaryMapper = { id: Long, entry: String, date: String ->
@@ -26,5 +26,4 @@ class Database(databaseDriverFactory: DatabaseDriverFactory) {
     fun clearDiaries() = queries.deleteAll()
 
     fun getDatabaseQueries(): DatabaseQueries = queries
-
 }

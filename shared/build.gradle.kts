@@ -23,17 +23,20 @@ kotlin {
                 implementation(libs.kotlin.coroutines.core)
                 implementation(libs.kotlin.coroutines.native)
                 implementation(libs.kotlin.datetime)
-                implementation(libs.square.sqldelight.runtime)
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+                implementation(libs.junit)
+                implementation(libs.kotlin.coroutines.test)
+                implementation(libs.turbine)
             }
         }
         val androidMain by getting {
             dependencies {
                 implementation(libs.square.sqldelight.driver.android)
+                implementation("com.squareup.sqldelight:sqlite-driver:1.5.4")
                 implementation("com.squareup.sqldelight:coroutines-extensions:1.2.1")
             }
         }
@@ -49,6 +52,7 @@ kotlin {
             dependencies {
                 implementation(libs.square.sqldelight.driver.native)
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+                implementation("com.squareup.sqldelight:native-driver:1.5.4")
             }
         }
         val iosX64Test by getting
