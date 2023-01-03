@@ -16,7 +16,7 @@ import kotlin.test.assertTrue
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiaryUseCaseTest {
     private val dataSource: DataSource = LocalStorageDataSource()
-    private val addDiaryUseCase = AddDiaryUseCase(dataSource);
+    private val addDiaryUseCase = AddDiaryUseCase(dataSource)
     private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
     private val deleteDiaryUseCase = DeleteDiaryUseCase(dataSource)
     private val deleteAllDiariesUseCase = DeleteAllDiariesUseCase(dataSource)
