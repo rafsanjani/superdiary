@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application")
+    id("com.google.devtools.ksp") version "1.7.22-1.0.8" // Depends on your kotlin version
     kotlin("android")
 }
 
@@ -34,6 +35,8 @@ android {
 dependencies {
     implementation(projects.shared)
     implementation(platform(libs.compose.bom))
+    implementation(libs.compose.destinations.processor)
+    implementation(libs.compose.destinations.runtime)
     implementation(libs.compose.ui.ui)
     implementation(libs.compose.ui.tooling)
     implementation(libs.compose.ui.tooling.preview)
@@ -43,4 +46,5 @@ dependencies {
     implementation(libs.compose.material.material)
     implementation(libs.compose.material.iconsextended)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.datePickerTimeline)
 }
