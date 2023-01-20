@@ -195,8 +195,8 @@ androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidxt
 androidx-test-orchestrator = { module = "androidx.test:orchestrator", version.ref = "androidxtest" }
 androidx-test-uiAutomator = "androidx.test.uiautomator:uiautomator:2.2.0"
 
-androidx-test-espressoCore = "androidx.test.espresso:espresso-core:3.5.0"
-androidx-test-espressoWeb = "androidx.test.espresso:espresso-web:3.5.0"
+androidx-test-espressoCore = "androidx.test.espresso:espresso-core:3.5.1"
+androidx-test-espressoWeb = "androidx.test.espresso:espresso-web:3.5.1"
 
 affectedmoduledetector = "com.dropbox.affectedmoduledetector:affectedmoduledetector:0.2.0"
 
