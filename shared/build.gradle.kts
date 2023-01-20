@@ -1,9 +1,13 @@
 plugins {
     kotlin("multiplatform")
-    id("com.android.library")
-    id("com.squareup.sqldelight").version("1.5.4")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.sqldelight)
 }
 
+repositories {
+    google()
+    mavenCentral()
+}
 kotlin {
     android()
 

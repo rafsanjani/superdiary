@@ -9,7 +9,7 @@ gradlePlugin = "7.3.1"
 lintMinCompose = "30.3.1"
 ktlint = "0.42.1"
 kotlin = "1.7.21"
-ksp = "1.7.20-1.0.7"
+ksp = "1.7.21-1.0.8"
 coroutines = "1.6.4"
 okhttp = "5.0.0-alpha.11"
 coil = "2.2.2"
@@ -256,3 +256,12 @@ androidx-compose-testImplementation = [
 androidx-compose-androidTestImplementation = [
     "compose-ui-test-junit"
 ]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "gradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "gradlePlugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+sqldelight = { id = "com.squareup.sqldelight", version.ref = "sqldelight" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
