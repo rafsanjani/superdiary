@@ -1,35 +1,35 @@
 package com.foreverrafs.superdiary.android.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.foreverrafs.superdiary.android.AppTheme
-import com.foreverrafs.superdiary.android.screens.destinations.DiaryListScreenDestination
+import com.foreverrafs.superdiary.android.components.SuperDiaryAppBar
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @AppNavGraph(start = true)
 @Destination
 @Composable
-fun CreateDiaryScreen(
-    navigator: DestinationsNavigator
-) {
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .clickable {
-                navigator.navigate(
-                    DiaryListScreenDestination
-                )
-            },
-        color = Color.Yellow
+fun CreateDiaryScreen() {
+    AppTheme {
+        Surface {
+            Content()
+        }
+    }
+}
+
+@Composable
+private fun Content() {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = { SuperDiaryAppBar() }
     ) {
-        Text(text = "Hello World")
+        Text(modifier = Modifier.padding(it), text = "Create Diary")
     }
 }
 
@@ -37,6 +37,8 @@ fun CreateDiaryScreen(
 @Composable
 private fun Preview() {
     AppTheme {
-        DiaryListScreen()
+        Surface {
+            Content()
+        }
     }
 }
