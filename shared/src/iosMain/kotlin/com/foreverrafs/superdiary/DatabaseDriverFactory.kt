@@ -1,7 +1,7 @@
 package com.foreverrafs.superdiary
 
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import db.KmpSuperDiaryDB
 
 class DarwinDatabaseDriver : DatabaseDriver {

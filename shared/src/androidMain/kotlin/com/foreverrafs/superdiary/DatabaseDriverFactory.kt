@@ -1,8 +1,8 @@
 package com.foreverrafs.superdiary
 
 import android.content.Context
-import com.squareup.sqldelight.android.AndroidSqliteDriver
-import com.squareup.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import db.KmpSuperDiaryDB
 
 class AndroidDatabaseDriver(private val context: Context) : DatabaseDriver {

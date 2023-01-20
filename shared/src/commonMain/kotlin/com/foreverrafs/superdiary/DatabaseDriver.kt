@@ -1,6 +1,6 @@
 package com.foreverrafs.superdiary
 
-import com.squareup.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlDriver
 
 
 interface DatabaseDriver {

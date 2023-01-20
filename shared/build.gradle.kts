@@ -37,17 +37,19 @@ kotlin {
                 implementation(libs.turbine)
             }
         }
+
         val androidMain by getting {
             dependencies {
                 implementation(libs.square.sqldelight.driver.android)
-                implementation("com.squareup.sqldelight:sqlite-driver:1.5.4")
-                implementation("com.squareup.sqldelight:coroutines-extensions:1.2.1")
+                implementation(libs.square.sqldelight.coroutinesExt)
             }
         }
+
         val androidTest by getting
         val iosX64Main by getting
         val iosArm64Main by getting
         val iosSimulatorArm64Main by getting
+
         val iosMain by creating {
             dependsOn(commonMain)
             iosX64Main.dependsOn(this)
@@ -56,9 +58,10 @@ kotlin {
             dependencies {
                 implementation(libs.square.sqldelight.driver.native)
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-                implementation("com.squareup.sqldelight:native-driver:1.5.4")
+                implementation(libs.kotlin.coroutines.core)
             }
         }
+
         val iosX64Test by getting
         val iosArm64Test by getting
         val iosSimulatorArm64Test by getting
@@ -72,9 +75,10 @@ kotlin {
 }
 
 sqldelight {
-    database("KmpSuperDiaryDB") {
-        packageName = "db"
-        sourceFolders = listOf("sqldelight")
+    databases {
+        create("KmpSuperDiaryDB") {
+            packageName.set("db")
+        }
     }
 }
 
