@@ -200,7 +200,7 @@ androidx-test-uiAutomator = "androidx.test.uiautomator:uiautomator:2.2.0"
 androidx-test-espressoCore = "androidx.test.espresso:espresso-core:3.5.0"
 androidx-test-espressoWeb = "androidx.test.espresso:espresso-web:3.5.0"
 
-affectedmoduledetector = "com.dropbox.affectedmoduledetector:affectedmoduledetector:0.2.0"
+affectedmoduledetector = "com.dropbox.affectedmoduledetector:affectedmoduledetector:0.2.1"
 
 android-tools-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "gradlePlugin" }
 android-tools-lint-lint = { module = "com.android.tools.lint:lint", version.ref = "lintMinCompose" }
