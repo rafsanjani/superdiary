@@ -1,6 +1,6 @@
 plugins {
     id("com.android.application")
-    id("com.google.devtools.ksp") version "1.7.22-1.0.8" // Depends on your kotlin version
+    id("com.google.devtools.ksp") version "1.7.10-1.0.6" // Depends on your kotlin version
     kotlin("android")
 }
 
@@ -30,12 +30,20 @@ android {
             isMinifyEnabled = false
         }
     }
+
+    applicationVariants.all {
+        kotlin.sourceSets {
+            getByName(name) {
+                kotlin.srcDir("build/generated/ksp/$name/kotlin")
+            }
+        }
+    }
 }
 
 dependencies {
     implementation(projects.shared)
     implementation(platform(libs.compose.bom))
-    implementation(libs.compose.destinations.processor)
+    ksp(libs.compose.destinations.processor)
     implementation(libs.compose.destinations.runtime)
     implementation(libs.compose.ui.ui)
     implementation(libs.compose.ui.tooling)
