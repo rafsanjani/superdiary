@@ -6,8 +6,9 @@ composesnapshot = "-" # a single character = no snapshot
 
 # gradlePlugin and lint need to be updated together
 gradlePlugin = "7.4.0"
+detekt = "1.22.0"
 lintMinCompose = "30.3.1"
-ktlint = "0.42.1"
+ktlint = "11.0.0"
 kotlin = "1.8.0"
 ksp = "1.8.0-1.0.9"
 coroutines = "1.6.4"
@@ -79,8 +80,8 @@ square-moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codege
 square-sqldelight-runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqldelight" }
 square-sqldelight-driver-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
 square-sqldelight-driver-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
-square-sqldelight-driver-sqlite = {module = "com.squareup.sqldelight:sqlite-driver", version.ref ="sqldelight"}
-square-sqldelight-coroutinesExt = {module = "app.cash.sqldelight:coroutines-extensions", version.ref ="sqldelight"}
+square-sqldelight-driver-sqlite = { module = "com.squareup.sqldelight:sqlite-driver", version.ref = "sqldelight" }
+square-sqldelight-coroutinesExt = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
 
 #Leak Canary
 square-leakcanary = "com.squareup.leakcanary:leakcanary-android:2.10"
@@ -214,7 +215,6 @@ desugaring = "com.android.tools:desugar_jdk_libs:2.0.0"
 snapper = "dev.chrisbanes.snapper:snapper:0.3.0"
 gradleMavenPublishPlugin = "com.vanniktech:gradle-maven-publish-plugin:0.23.2"
 gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.44.0"
-ktlintPlugin = "org.jlleitschuh.gradle:ktlint-gradle:11.0.0"
 metalavaGradle = "me.tylerbwong.gradle:metalava-gradle:0.2.3"
 glide = "com.github.bumptech.glide:glide:4.14.2"
 screengrab = "tools.fastlane:screengrab:2.1.1"
@@ -265,5 +265,7 @@ android-library = { id = "com.android.library", version.ref = "gradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

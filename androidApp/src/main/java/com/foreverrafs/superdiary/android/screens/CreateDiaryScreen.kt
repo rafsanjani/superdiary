@@ -15,9 +15,9 @@ import com.ramcosta.composedestinations.annotation.Destination
 @AppNavGraph(start = true)
 @Destination
 @Composable
-fun CreateDiaryScreen() {
+fun CreateDiaryScreen(modifier: Modifier = Modifier) {
     AppTheme {
-        Surface {
+        Surface(modifier = modifier) {
             Content()
         }
     }

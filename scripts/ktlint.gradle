@@ -1,0 +1,14 @@
+apply plugin: "org.jlleitschuh.gradle.ktlint"
+
+ktlint {
+    version = "0.44.0"
+    additionalEditorconfigFile.set(file("$rootProject.projectDir/config/ktlint/.editorconfig"))
+
+    reporters {
+        reporter "plain"
+        reporter "checkstyle"
+        reporter "html"
+    }
+
+    outputColorName = "RED"
+}

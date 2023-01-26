@@ -1,0 +1,15 @@
+apply plugin: "io.gitlab.arturbosch.detekt"
+
+detekt {
+    config = files("${rootProject.projectDir}/config/detekt/detekt.yml")
+    autoCorrect = true
+
+    reports {
+
+    }
+}
+
+dependencies{
+    detektPlugins(libs.detekt.formatting)
+    detektPlugins(libs.detekt.twitterComposeRules)
+}
