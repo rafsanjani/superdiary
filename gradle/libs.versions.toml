@@ -9,7 +9,7 @@ material3 = "1.0.1"
 # gradlePlugin and lint need to be updated together
 gradle = "7.4.0"
 detekt = "1.22.0"
-lintMinCompose = "30.3.1"
+lintMinCompose = "30.4.0"
 ktlint = "11.0.0"
 kotlin = "1.8.0"
 ksp = "1.8.0-1.0.9"
