@@ -23,6 +23,22 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
+    kotlinOptions{
+        val experimentalOptIns = listOf(
+            "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+            "-Xopt-in=androidx.compose.ui.ExperimentalComposeUiApi",
+            "-Xopt-in=com.google.accompanist.pager.ExperimentalPagerApi",
+            "-Xopt-in=androidx.compose.ui.graphics.ExperimentalGraphicsApi",
+            "-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi",
+            "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi",
+            "-Xopt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-Xopt-in=kotlinx.coroutines.FlowPreview",
+        )
+
+        freeCompilerArgs =
+            freeCompilerArgs + experimentalOptIns
+    }
+
     packagingOptions {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -55,7 +71,8 @@ dependencies {
     implementation(libs.compose.ui.tooling.data)
     implementation(libs.compose.foundation.layout)
     implementation(libs.compose.foundation.foundation)
-    implementation(libs.compose.material.material)
+    implementation(libs.compose.material.material3)
+    implementation(libs.compose.material.material3.windowSizeClass)
     implementation(libs.compose.material.iconsextended)
     implementation(libs.androidx.activity.compose)
     implementation(libs.datePickerTimeline)
