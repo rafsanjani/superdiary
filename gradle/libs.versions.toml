@@ -214,7 +214,7 @@ android-tools-lint-tests = { module = "com.android.tools.lint:lint-tests", versi
 # Lone wolves
 desugaring = "com.android.tools:desugar_jdk_libs:2.0.0"
 snapper = "dev.chrisbanes.snapper:snapper:0.3.0"
-gradleMavenPublishPlugin = "com.vanniktech:gradle-maven-publish-plugin:0.23.2"
+gradleMavenPublishPlugin = "com.vanniktech:gradle-maven-publish-plugin:0.24.0"
 gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.44.0"
 metalavaGradle = "me.tylerbwong.gradle:metalava-gradle:0.2.3"
 glide = "com.github.bumptech.glide:glide:4.14.2"
