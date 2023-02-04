@@ -7,7 +7,7 @@ composesnapshot = "-" # a single character = no snapshot
 
 material3 = "1.0.1"
 # gradlePlugin and lint need to be updated together
-gradle = "7.4.0"
+gradle = "7.4.1"
 detekt = "1.22.0"
 lintMinCompose = "30.4.0"
 ktlint = "11.1.0"
