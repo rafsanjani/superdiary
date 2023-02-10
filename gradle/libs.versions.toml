@@ -70,7 +70,7 @@ firebase-auth = { module = "com.google.firebase:firebase-auth-ktx" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore-ktx" }
 firebase-analyticsKts = { module = "com.google.firebase:firebase-analytics-ktx" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
-firebase-crashlytics-gradlePlugin = "com.google.firebase:firebase-crashlytics-gradle:2.9.2"
+firebase-crashlytics-gradlePlugin = "com.google.firebase:firebase-crashlytics-gradle:2.9.4"
 
 #Moshi
 square-moshi-core = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
