@@ -23,7 +23,7 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
-    kotlinOptions{
+    kotlinOptions {
         val experimentalOptIns = listOf(
             "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi",
             "-Xopt-in=androidx.compose.ui.ExperimentalComposeUiApi",

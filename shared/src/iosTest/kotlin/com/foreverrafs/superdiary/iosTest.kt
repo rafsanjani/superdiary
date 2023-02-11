@@ -7,13 +7,12 @@ import com.squareup.sqldelight.drivers.native.wrapConnection
 import db.KmpSuperDiaryDB
 import kotlin.test.Test
 
-class IosTest{
+class IosTest {
     @Test
-    fun test(){
-
+    fun test() {
     }
 }
-var index = 0;
+var index = 0
 actual fun createInMemorySqlDriver(): SqlDriver {
     val schema = KmpSuperDiaryDB.Schema
 

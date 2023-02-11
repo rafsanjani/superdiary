@@ -26,7 +26,6 @@ class LocalDataSource(private val database: Database) : DataSource {
         return database.findDiary(query)
     }
 
-
     override suspend fun deleteAll() {
         return database.clearDiaries()
     }

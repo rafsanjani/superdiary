@@ -41,7 +41,6 @@ class DiaryUseCaseTest {
         }
     }
 
-
     @Test
     fun testAddNewDiary() = runTest {
         val diary = Diary(
