@@ -37,6 +37,12 @@ android {
 
         freeCompilerArgs =
             freeCompilerArgs + experimentalOptIns
+
+        jvmTarget = "1.8"
+    }
+
+    java {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(8))
     }
 
     packagingOptions {
@@ -67,6 +73,7 @@ dependencies {
     implementation(libs.compose.destinations.runtime)
     implementation(libs.compose.ui.ui)
     implementation(libs.compose.ui.tooling)
+    implementation(libs.accompanist.permissions)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.ui.tooling.data)
     implementation(libs.compose.foundation.layout)

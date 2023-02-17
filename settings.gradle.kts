@@ -14,7 +14,6 @@ dependencyResolutionManagement {
         maven("https://jitpack.io")
     }
 }
-enableFeaturePreview("VERSION_CATALOGS")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "Superdiary"

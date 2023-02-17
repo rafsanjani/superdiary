@@ -8,6 +8,7 @@ repositories {
     google()
     mavenCentral()
 }
+
 kotlin {
     android()
 
@@ -20,7 +21,6 @@ kotlin {
             baseName = "shared"
         }
     }
-
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -71,6 +71,18 @@ kotlin {
             iosArm64Test.dependsOn(this)
             iosSimulatorArm64Test.dependsOn(this)
         }
+    }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
     }
 }
 
