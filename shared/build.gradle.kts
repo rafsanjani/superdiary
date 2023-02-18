@@ -57,7 +57,6 @@ kotlin {
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation(libs.square.sqldelight.driver.native)
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
                 implementation(libs.kotlin.coroutines.core)
             }
         }
@@ -71,12 +70,6 @@ kotlin {
             iosArm64Test.dependsOn(this)
             iosSimulatorArm64Test.dependsOn(this)
         }
-    }
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
 }
 
