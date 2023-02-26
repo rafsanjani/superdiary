@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.diary.datasource
 
 import com.foreverrafs.superdiary.Database
 import com.foreverrafs.superdiary.diary.model.Diary
+import kotlinx.coroutines.flow.Flow
 
 class LocalDataSource(private val database: Database) : DataSource {
     override suspend fun add(diary: Diary): Long {
@@ -18,7 +19,7 @@ class LocalDataSource(private val database: Database) : DataSource {
         return 0
     }
 
-    override suspend fun fetchAll(): List<Diary> {
+    override fun fetchAll(): Flow<List<Diary>> {
         return database.getAllDiaries()
     }
 

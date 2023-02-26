@@ -1,16 +1,11 @@
 package com.foreverrafs.superdiary.diary.usecase
 
-import com.foreverrafs.superdiary.diary.Result
 import com.foreverrafs.superdiary.diary.datasource.DataSource
+import com.foreverrafs.superdiary.diary.model.Diary
+import kotlinx.coroutines.flow.Flow
 
 class GetAllDiariesUseCase(
-    private val dataSource: DataSource
+    dataSource: DataSource,
 ) {
-    suspend operator fun invoke(): Result {
-        return try {
-            Result.Success(dataSource.fetchAll())
-        } catch (exception: Exception) {
-            Result.Failure(exception)
-        }
-    }
+    val diaries: Flow<List<Diary>> = dataSource.fetchAll()
 }

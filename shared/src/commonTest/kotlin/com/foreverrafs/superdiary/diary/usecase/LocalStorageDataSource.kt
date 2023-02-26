@@ -2,34 +2,48 @@ package com.foreverrafs.superdiary.diary.usecase
 
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
+import kotlin.coroutines.EmptyCoroutineContext
 
 internal class LocalStorageDataSource : DataSource {
     private val diaries = mutableListOf<Diary>()
 
-    override suspend fun add(diary: Diary): Long {
+    private val diariesFlow = MutableSharedFlow<List<Diary>>(replay = 1)
+
+    override suspend fun add(diary: Diary): Long = withPublishDiaries {
         diaries.add(diary)
-        return 1
+        1L
     }
 
-    override suspend fun delete(diary: Diary): Int {
-        return if (diaries.remove(diary)) 1 else 0
+    override suspend fun delete(diary: Diary): Int = withPublishDiaries {
+        if (diaries.remove(diary)) 1 else 0
     }
 
-    override suspend fun fetchAll(): List<Diary> {
-        return diaries
+    override fun fetchAll(): Flow<List<Diary>> {
+        return diariesFlow.asSharedFlow()
     }
 
     override suspend fun find(query: String): List<Diary> {
         return diaries.filter { it.entry.contains(query, ignoreCase = true) }
     }
 
-    override fun fetchAllAsFlow(): Flow<List<Diary>> {
-        return flowOf(diaries)
+    override suspend fun deleteAll() = withPublishDiaries {
+        withPublishDiaries {
+            diaries.clear()
+        }
     }
 
-    override suspend fun deleteAll() {
-        diaries.clear()
+    private fun <T> withPublishDiaries(func: () -> T): T {
+        val result = func()
+
+        CoroutineScope(EmptyCoroutineContext).launch {
+            diariesFlow.emit(diaries)
+        }
+
+        return result
     }
 }

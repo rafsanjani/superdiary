@@ -28,16 +28,7 @@ interface DataSource {
      * all the items that were successfully fetched.
      * @return a list of diary items that were fetched
      */
-    suspend fun fetchAll(): List<Diary>
-
-    /**
-     * Fetch all the diary items from the datasource, returning a flow of
-     * list of all the items that were successfully fetched.
-     * @return a list of diary items that were fetched
-     */
-    fun fetchAllAsFlow(): Flow<List<Diary>> {
-        throw NotImplementedError("Fetch as flow is not implemented for target")
-    }
+    fun fetchAll(): Flow<List<Diary>>
 
     /**
      * Search for matching Diaries with entries matching [query]. This

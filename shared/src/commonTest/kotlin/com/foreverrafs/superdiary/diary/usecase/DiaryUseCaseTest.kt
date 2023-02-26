@@ -1,11 +1,13 @@
 package com.foreverrafs.superdiary.diary.usecase
 
+import app.cash.turbine.test
 import com.foreverrafs.superdiary.diary.Result
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import kotlin.random.Random
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertContains
@@ -32,10 +34,10 @@ class DiaryUseCaseTest {
             repeat(30) {
                 addDiaryUseCase(
                     Diary(
-                        null,
+                        Random.nextLong(),
                         entry = "Diary Entry #$it",
-                        date = "Monday, Jan 01, 2023"
-                    )
+                        date = "Monday, Jan 01, 2023",
+                    ),
                 )
             }
         }
@@ -45,30 +47,33 @@ class DiaryUseCaseTest {
     fun testAddNewDiary() = runTest {
         val diary = Diary(
             entry = "New Entry",
-            date = "Jan 01, 2023"
+            date = "Jan 01, 2023",
         )
-        val diaries = (getAllDiariesUseCase() as Result.Success).data
-        val result = addDiaryUseCase(diary)
 
-        assertIs<Result.Success>(result)
-        assertContains(diaries, diary)
+        addDiaryUseCase(diary)
+
+        getAllDiariesUseCase.diaries.test {
+            val items = awaitItem()
+            cancelAndConsumeRemainingEvents()
+            assertContains(items, diary)
+        }
     }
 
     @Test
     fun testDeleteDiary() = runTest {
-        // fetch all diaries
-        var diaries = (getAllDiariesUseCase() as Result.Success).data
-        val firstDiary = diaries.first()
+        getAllDiariesUseCase.diaries.test {
+            var diaries = expectMostRecentItem()
+            val firstDiary = diaries.first()
 
-        // delete the first entry
-        val result = deleteDiaryUseCase(firstDiary)
+            // delete the first entry
+            deleteDiaryUseCase.deleteDiary(firstDiary)
 
-        // fetch the diaries again
-        diaries = (getAllDiariesUseCase() as Result.Success).data
+            // get latest diaries again
+            diaries = awaitItem()
 
-        // confirm that the first diary has been removed from the list
-        assertIs<Result.Success>(result)
-        assertFalse { diaries.contains(firstDiary) }
+            // confirm that the first diary has been deleted
+            assertFalse { diaries.contains(firstDiary) }
+        }
     }
 
     @Test
@@ -81,13 +86,22 @@ class DiaryUseCaseTest {
 
     @Test
     fun testDeleteAllDiaries() = runTest {
-        // clear all the diaries
-        deleteAllDiariesUseCase.invoke()
+        getAllDiariesUseCase.diaries.test {
+            val originalDiaryList = expectMostRecentItem()
 
-        // fetch all the diaries
-        val diaries = (getAllDiariesUseCase() as Result.Success).data
+            assertTrue {
+                originalDiaryList.isNotEmpty()
+            }
 
-        // verify that the list is empty
-        assertTrue { diaries.isEmpty() }
+            // clear all the diaries
+            deleteAllDiariesUseCase.invoke()
+
+            // fetch all the diaries
+            val diaries = awaitItem()
+            cancelAndConsumeRemainingEvents()
+
+            // verify all diaries have been cleared
+            assertTrue { diaries.isEmpty() }
+        }
     }
 }
