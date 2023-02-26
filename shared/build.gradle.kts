@@ -1,3 +1,5 @@
+@Suppress("DSL_SCOPE_VIOLATION")
+
 plugins {
     kotlin("multiplatform")
     alias(libs.plugins.android.library)
