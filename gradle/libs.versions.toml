@@ -6,7 +6,7 @@ composesnapshot = "-" # a single character = no snapshot
 
 
 material3 = "1.0.1"
-gradle = "7.4.1"
+gradle = "7.4.2"
 detekt = "1.22.0"
 lintMinCompose = "30.4.1"
 ktlint = "11.2.0"
