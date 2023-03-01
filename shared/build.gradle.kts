@@ -6,6 +6,7 @@ plugins {
     kotlin("multiplatform")
     alias(libs.plugins.android.library)
     alias(libs.plugins.sqldelight)
+    id("com.rickclephas.kmp.nativecoroutines") version "0.13.3"
 }
 
 repositories {
@@ -23,6 +24,7 @@ kotlin {
     ).forEach {
         it.binaries.framework {
             baseName = "shared"
+            binaryOption("bundleId", "com.foreverrafs.superdiary.shared")
         }
     }
     sourceSets {
