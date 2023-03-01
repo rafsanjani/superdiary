@@ -6,6 +6,8 @@ import com.foreverrafs.superdiary.diary.model.Diary
 import db.KmpSuperDiaryDB
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class Database(databaseDriver: DatabaseDriver) {
     private val superDiaryDatabase = KmpSuperDiaryDB(databaseDriver.createDriver())

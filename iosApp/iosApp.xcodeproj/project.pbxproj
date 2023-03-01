@@ -12,8 +12,10 @@
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 		E37293E4295B469700AE599F /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E37293E3295B469700AE599F /* MainViewModel.swift */; };
-		E394AB972961F9F30060C659 /* KMPNativeCoroutinesAsync in Frameworks */ = {isa = PBXBuildFile; productRef = E394AB962961F9F30060C659 /* KMPNativeCoroutinesAsync */; };
-		E394AB992961F9F30060C659 /* KMPNativeCoroutinesCore in Frameworks */ = {isa = PBXBuildFile; productRef = E394AB982961F9F30060C659 /* KMPNativeCoroutinesCore */; };
+		E3C2833029AF386900B52CF4 /* KMPNativeCoroutinesCore in Frameworks */ = {isa = PBXBuildFile; productRef = E3C2832F29AF386900B52CF4 /* KMPNativeCoroutinesCore */; };
+		E3C2833229AF387400B52CF4 /* KMPNativeCoroutinesCombine in Frameworks */ = {isa = PBXBuildFile; productRef = E3C2833129AF387400B52CF4 /* KMPNativeCoroutinesCombine */; };
+		E3C2833429AF387400B52CF4 /* KMPNativeCoroutinesRxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E3C2833329AF387400B52CF4 /* KMPNativeCoroutinesRxSwift */; };
+		E3C2833629AF439C00B52CF4 /* KMPNativeCoroutinesAsync in Frameworks */ = {isa = PBXBuildFile; productRef = E3C2833529AF439C00B52CF4 /* KMPNativeCoroutinesAsync */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,8 +46,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E394AB992961F9F30060C659 /* KMPNativeCoroutinesCore in Frameworks */,
-				E394AB972961F9F30060C659 /* KMPNativeCoroutinesAsync in Frameworks */,
+				E3C2833629AF439C00B52CF4 /* KMPNativeCoroutinesAsync in Frameworks */,
+				E3C2833429AF387400B52CF4 /* KMPNativeCoroutinesRxSwift in Frameworks */,
+				E3C2833029AF386900B52CF4 /* KMPNativeCoroutinesCore in Frameworks */,
+				E3C2833229AF387400B52CF4 /* KMPNativeCoroutinesCombine in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,7 +69,7 @@
 			children = (
 				7555FF7D242A565900829871 /* iosApp */,
 				7555FF7C242A565900829871 /* Products */,
-				7555FFB0242A642200829871 /* Frameworks */,
+				E3C2832E29AF386900B52CF4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -90,7 +94,7 @@
 			path = iosApp;
 			sourceTree = "<group>";
 		};
-		7555FFB0242A642200829871 /* Frameworks */ = {
+		E3C2832E29AF386900B52CF4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 			);
@@ -116,8 +120,10 @@
 			);
 			name = iosApp;
 			packageProductDependencies = (
-				E394AB962961F9F30060C659 /* KMPNativeCoroutinesAsync */,
-				E394AB982961F9F30060C659 /* KMPNativeCoroutinesCore */,
+				E3C2832F29AF386900B52CF4 /* KMPNativeCoroutinesCore */,
+				E3C2833129AF387400B52CF4 /* KMPNativeCoroutinesCombine */,
+				E3C2833329AF387400B52CF4 /* KMPNativeCoroutinesRxSwift */,
+				E3C2833529AF439C00B52CF4 /* KMPNativeCoroutinesAsync */,
 			);
 			productName = iosApp;
 			productReference = 7555FF7B242A565900829871 /* iosApp.app */;
@@ -406,15 +412,25 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E394AB962961F9F30060C659 /* KMPNativeCoroutinesAsync */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E394AB952961F9F30060C659 /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */;
-			productName = KMPNativeCoroutinesAsync;
-		};
-		E394AB982961F9F30060C659 /* KMPNativeCoroutinesCore */ = {
+		E3C2832F29AF386900B52CF4 /* KMPNativeCoroutinesCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E394AB952961F9F30060C659 /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */;
 			productName = KMPNativeCoroutinesCore;
+		};
+		E3C2833129AF387400B52CF4 /* KMPNativeCoroutinesCombine */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E394AB952961F9F30060C659 /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */;
+			productName = KMPNativeCoroutinesCombine;
+		};
+		E3C2833329AF387400B52CF4 /* KMPNativeCoroutinesRxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E394AB952961F9F30060C659 /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */;
+			productName = KMPNativeCoroutinesRxSwift;
+		};
+		E3C2833529AF439C00B52CF4 /* KMPNativeCoroutinesAsync */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E394AB952961F9F30060C659 /* XCRemoteSwiftPackageReference "KMP-NativeCoroutines" */;
+			productName = KMPNativeCoroutinesAsync;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

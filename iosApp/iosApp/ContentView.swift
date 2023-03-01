@@ -21,7 +21,7 @@ struct ContentView: View {
                 }
                 .environmentObject(viewModel)
                     .listStyle(.grouped)
-                    .padding(.all   , 15)
+                    .padding(.all, 15)
                     .frame(maxWidth: .infinity)
             }
             
@@ -34,9 +34,9 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .edgesIgnoringSafeArea(.all)
         .onAppear{
+            viewModel.loadDiaries()
             viewModel.clearDiaries()
             viewModel.addRandomDiary()
-            viewModel.loadDiaries()
         }
     }
 }
