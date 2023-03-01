@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_VARIABLE")
+
 @Suppress("DSL_SCOPE_VIOLATION")
 
 plugins {
@@ -17,13 +19,17 @@ kotlin {
     listOf(
         iosX64(),
         iosArm64(),
-        iosSimulatorArm64()
+        iosSimulatorArm64(),
     ).forEach {
         it.binaries.framework {
             baseName = "shared"
         }
     }
     sourceSets {
+        all {
+            languageSettings.optIn("kotlin.RequiresOptIn")
+        }
+
         val commonMain by getting {
             dependencies {
                 implementation(libs.kotlin.coroutines.core)
@@ -48,7 +54,6 @@ kotlin {
             }
         }
 
-        val androidTest by getting
         val iosX64Main by getting
         val iosArm64Main by getting
         val iosSimulatorArm64Main by getting
