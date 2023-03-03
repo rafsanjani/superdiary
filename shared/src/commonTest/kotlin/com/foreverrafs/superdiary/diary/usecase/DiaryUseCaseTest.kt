@@ -8,12 +8,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlin.random.Random
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertContains
-import kotlin.test.assertFalse
-import kotlin.test.assertIs
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiaryUseCaseTest {
@@ -43,7 +38,7 @@ class DiaryUseCaseTest {
     }
 
     @Test
-    fun testAddNewDiary() = runTest {
+    fun `Add new Diary and confirm saved`() = runTest {
         val diary = Diary(
             entry = "New Entry",
             date = "Jan 01, 2023",
@@ -59,7 +54,7 @@ class DiaryUseCaseTest {
     }
 
     @Test
-    fun testDeleteDiary() = runTest {
+    fun `Delete diary and confirm deletion`() = runTest {
         getAllDiariesUseCase.diaries.test {
             var diaries = expectMostRecentItem()
             val firstDiary = diaries.first()
@@ -76,15 +71,25 @@ class DiaryUseCaseTest {
     }
 
     @Test
-    fun testSearchDiary() = runTest {
+    fun `Searching for a valid diary returns it`() = runTest {
         // search for the first diary
         val result = searchDiaryUseCase(query = "Diary Entry #8")
 
         assertIs<Result.Success>(result)
+        assertTrue { result.data.isNotEmpty() }
     }
 
     @Test
-    fun testDeleteAllDiaries() = runTest {
+    fun `Searching for an invalid diary returns empty data`() = runTest {
+        // search for the first diary
+        val result = searchDiaryUseCase(query = "Diary Entry #800")
+
+        assertIs<Result.Success>(result)
+        assertTrue { result.data.isEmpty() }
+    }
+
+    @Test
+    fun `Delete All Diaries Clears Diaries`() = runTest {
         getAllDiariesUseCase.diaries.test {
             val originalDiaryList = expectMostRecentItem()
 
