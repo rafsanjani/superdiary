@@ -13,8 +13,14 @@ INSERT INTO diary(entry, date) VALUES (?, ?);
 delete:
 DELETE FROM diary WHERE id=?;
 
-find:
+findByEntry:
 SELECT * FROM diary WHERE entry LIKE ?;
+
+findByDate:
+SELECT * FROM diary WHERE date=?;
+
+findByDateRange:
+SELECT * FROM diary WHERE date BETWEEN ? AND ?;
 
 deleteAll:
 DELETE FROM diary;

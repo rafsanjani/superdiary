@@ -7,6 +7,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlin.coroutines.EmptyCoroutineContext
 
 internal class LocalStorageDataSource : DataSource {
@@ -27,8 +31,27 @@ internal class LocalStorageDataSource : DataSource {
         return diariesFlow.asSharedFlow()
     }
 
-    override suspend fun find(query: String): List<Diary> {
-        return diaries.filter { it.entry.contains(query, ignoreCase = true) }
+    override suspend fun find(entry: String): List<Diary> {
+        return diaries.filter { it.entry.contains(entry, ignoreCase = true) }
+    }
+
+    override suspend fun find(from: String, to: String): List<Diary> {
+        val fromDate = LocalDate.parse(from)
+        val toDate = LocalDate.parse(to)
+
+        return diaries.filter {
+            val diaryDate =
+                Instant.parse(it.date).toLocalDateTime(TimeZone.currentSystemDefault()).date
+
+            diaryDate in fromDate..toDate
+        }
+    }
+
+    override suspend fun findByDate(date: String): List<Diary> {
+        return diaries.filter {
+            Instant.parse(it.date)
+                .toLocalDateTime(TimeZone.currentSystemDefault()).date == LocalDate.parse(date)
+        }
     }
 
     override suspend fun deleteAll() = withPublishDiaries {

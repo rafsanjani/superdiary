@@ -1,19 +1,26 @@
 package com.foreverrafs.superdiary.diary.usecase
 
 import app.cash.turbine.test
-import com.foreverrafs.superdiary.diary.Result
+import assertk.assertThat
+import assertk.assertions.contains
+import assertk.assertions.doesNotContain
+import assertk.assertions.isEmpty
+import assertk.assertions.isFailure
+import assertk.assertions.isNotEmpty
+import assertk.assertions.messageContains
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
 import kotlin.random.Random
 import kotlin.test.BeforeTest
 import kotlin.test.Test
-import kotlin.test.assertContains
-import kotlin.test.assertFalse
-import kotlin.test.assertIs
-import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiaryUseCaseTest {
@@ -30,14 +37,18 @@ class DiaryUseCaseTest {
 
     private fun insertRandomDiaries() {
         runBlocking {
+            // March 03, 2023
+            var currentDate = Instant.parse(isoString = "2023-03-03T02:35:53.049Z")
             repeat(30) {
                 addDiaryUseCase(
                     Diary(
                         Random.nextLong(),
                         entry = "Diary Entry #$it",
-                        date = "Monday, Jan 01, 2023",
+                        date = currentDate.toString(),
                     ),
                 )
+
+                currentDate = currentDate.plus(1, DateTimeUnit.DAY, TimeZone.currentSystemDefault())
             }
         }
     }
@@ -46,7 +57,7 @@ class DiaryUseCaseTest {
     fun `Add new Diary and confirm saved`() = runTest {
         val diary = Diary(
             entry = "New Entry",
-            date = "Jan 01, 2023",
+            date = "2023-03-03T03:33:25.587Z",
         )
 
         addDiaryUseCase(diary)
@@ -54,7 +65,8 @@ class DiaryUseCaseTest {
         getAllDiariesUseCase.diaries.test {
             val items = awaitItem()
             cancelAndConsumeRemainingEvents()
-            assertContains(items, diary)
+
+            assertThat(items).contains(diary)
         }
     }
 
@@ -71,26 +83,62 @@ class DiaryUseCaseTest {
             diaries = awaitItem()
 
             // confirm that the first diary has been deleted
-            assertFalse { diaries.contains(firstDiary) }
+            assertThat(diaries).doesNotContain(firstDiary)
         }
     }
 
     @Test
     fun `Searching for a valid diary returns it`() = runTest {
         // search for the first diary
-        val result = searchDiaryUseCase(query = "Diary Entry #8")
+        val result = searchDiaryUseCase.searchByEntry(entry = "Diary Entry #8")
 
-        assertIs<Result.Success>(result)
-        assertTrue { result.data.isNotEmpty() }
+        assertThat(result).isNotEmpty()
     }
 
     @Test
     fun `Searching for an invalid diary returns empty data`() = runTest {
         // search for the first diary
-        val result = searchDiaryUseCase(query = "Diary Entry #800")
+        val result = searchDiaryUseCase.searchByEntry(entry = "Diary Entry #800")
 
-        assertIs<Result.Success>(result)
-        assertTrue { result.data.isEmpty() }
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `Searching for diaries between valid dates with entries returns entries`() = runTest {
+        val fromDate = LocalDate.parse("2023-03-20")
+        val toDate = LocalDate.parse("2023-03-22")
+
+        val diaries = searchDiaryUseCase.searchBetween(fromDate, toDate)
+
+        assertThat(diaries).isNotEmpty()
+    }
+
+    @Test
+    fun `Searching for diaries between valid dates without entries returns empty`() = runTest {
+        val fromDate = LocalDate.parse("2023-04-04")
+        val toDate = LocalDate.parse("2023-04-05")
+
+        val diaries = searchDiaryUseCase.searchBetween(fromDate, toDate)
+
+        assertThat(diaries).isEmpty()
+    }
+
+    @Test
+    fun `Searching for diaries between invalid dates throw exception`() = runTest {
+        val fromDate = LocalDate.parse("2023-03-22")
+        val toDate = LocalDate.parse("2023-03-20")
+
+        assertThat { searchDiaryUseCase.searchBetween(fromDate, toDate) }
+            .isFailure()
+            .messageContains("should be less than or equal to")
+    }
+
+    @Test
+    fun `Searching for diary for a valid date returns entries`() = runTest {
+        val date = LocalDate.parse("2023-03-15")
+        val diaries = searchDiaryUseCase.searchByDate(date = date)
+
+        assertThat(diaries).isNotEmpty()
     }
 
     @Test
@@ -98,9 +146,7 @@ class DiaryUseCaseTest {
         getAllDiariesUseCase.diaries.test {
             val originalDiaryList = expectMostRecentItem()
 
-            assertTrue {
-                originalDiaryList.isNotEmpty()
-            }
+            assertThat(originalDiaryList).isNotEmpty()
 
             // clear all the diaries
             deleteDiaryUseCase.deleteAll()
@@ -110,7 +156,7 @@ class DiaryUseCaseTest {
             cancelAndConsumeRemainingEvents()
 
             // verify all diaries have been cleared
-            assertTrue { diaries.isEmpty() }
+            assertThat(diaries).isEmpty()
         }
     }
 }

@@ -46,6 +46,7 @@ kotlin {
                 implementation(libs.junit)
                 implementation(libs.kotlin.coroutines.test)
                 implementation(libs.turbine)
+                implementation(libs.assertk.common)
             }
         }
 

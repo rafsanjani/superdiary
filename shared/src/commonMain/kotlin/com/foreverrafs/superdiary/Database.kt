@@ -6,8 +6,6 @@ import com.foreverrafs.superdiary.diary.model.Diary
 import db.KmpSuperDiaryDB
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 class Database(databaseDriver: DatabaseDriver) {
     private val superDiaryDatabase = KmpSuperDiaryDB(databaseDriver.createDriver())
@@ -27,8 +25,16 @@ class Database(databaseDriver: DatabaseDriver) {
         .asFlow()
         .mapToList(Dispatchers.Main)
 
-    fun findDiary(query: String): List<Diary> = queries.find(entry = query, mapper = diaryMapper)
+    fun findDiaryByEntry(query: String): List<Diary> = queries.findByEntry(entry = query, mapper = diaryMapper)
         .executeAsList()
+
+    fun findByDate(date: String): List<Diary> = queries.findByDate(
+        date = date,
+        mapper = diaryMapper,
+    ).executeAsList()
+
+    fun findByDateRange(from: String, to: String): List<Diary> =
+        queries.findByDateRange(from, to, diaryMapper).executeAsList()
 
     fun clearDiaries() = queries.deleteAll()
 }

@@ -23,8 +23,16 @@ class LocalDataSource(private val database: Database) : DataSource {
         return database.getAllDiaries()
     }
 
-    override suspend fun find(query: String): List<Diary> {
-        return database.findDiary(query)
+    override suspend fun find(entry: String): List<Diary> {
+        return database.findDiaryByEntry(entry)
+    }
+
+    override suspend fun find(from: String, to: String): List<Diary> {
+        return database.findByDateRange(from, to)
+    }
+
+    override suspend fun findByDate(date: String): List<Diary> {
+        return database.findByDate(date)
     }
 
     override suspend fun deleteAll() {
