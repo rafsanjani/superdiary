@@ -21,7 +21,6 @@ class DiaryUseCaseTest {
     private val addDiaryUseCase = AddDiaryUseCase(dataSource)
     private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
     private val deleteDiaryUseCase = DeleteDiaryUseCase(dataSource)
-    private val deleteAllDiariesUseCase = DeleteAllDiariesUseCase(dataSource)
     private val searchDiaryUseCase = SearchDiaryUseCase(dataSource)
 
     @BeforeTest
@@ -66,7 +65,7 @@ class DiaryUseCaseTest {
             val firstDiary = diaries.first()
 
             // delete the first entry
-            deleteDiaryUseCase.deleteDiary(firstDiary)
+            this@DiaryUseCaseTest.deleteDiaryUseCase.deleteDiary(firstDiary)
 
             // get latest diaries again
             diaries = awaitItem()
@@ -94,7 +93,7 @@ class DiaryUseCaseTest {
             }
 
             // clear all the diaries
-            deleteAllDiariesUseCase.invoke()
+            deleteDiaryUseCase.deleteAll()
 
             // fetch all the diaries
             val diaries = awaitItem()
