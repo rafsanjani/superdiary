@@ -5,8 +5,8 @@ UI Designs are mostly based on https://dribbble.com/shots/6685452/attachments/66
 
 
 <div align="left">
-    <img src = "https://github.com/rafsanjani/superdiary/actions/workflows/.unit-test.yml/badge.svg" />
-    <a href = "https://github.com/rafsanjani/superdiary/blob/master/LICENSE">
+    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/unit-test.yml/badge.svg" />
+    <a href = "https://github.com/Rafsanjani/superdiary/blob/master/LICENSE">
         <img src = "https://img.shields.io/github/license/pushpalroy/jetstore" />
     </a>
     <a href = "https://twitter.com/coded_raf">
@@ -18,6 +18,8 @@ UI Designs are mostly based on https://dribbble.com/shots/6685452/attachments/66
 |                                                             Home                                                             |                                                             Home                                                             |                                                             Home                                                             |
 |:----------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------:|
 | <img src="https://user-images.githubusercontent.com/9197459/119953073-85c14400-bf95-11eb-9ade-2ef36a57bcb3.png" width=240 /> | <img src="https://user-images.githubusercontent.com/9197459/119953073-85c14400-bf95-11eb-9ade-2ef36a57bcb3.png" width=240 /> | <img src="https://user-images.githubusercontent.com/9197459/119953073-85c14400-bf95-11eb-9ade-2ef36a57bcb3.png" width=240 /> |
+
+
 
 ### Status: 🚧 In progress
 <p>Superdiary is still under heavy development and some screens are yet to be designed.</p>
