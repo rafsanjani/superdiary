@@ -116,7 +116,7 @@ kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-te
 kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlin-coroutines-native = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
 
-dokka = "org.jetbrains.dokka:dokka-gradle-plugin:1.7.20"
+dokka = "org.jetbrains.dokka:dokka-gradle-plugin:1.8.10"
 kotlin-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
 
 
