@@ -6,17 +6,21 @@ import assertk.assertions.contains
 import assertk.assertions.doesNotContain
 import assertk.assertions.isEmpty
 import assertk.assertions.isFailure
+import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
 import assertk.assertions.messageContains
+import com.foreverrafs.superdiary.diary.Result
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlin.random.Random
 import kotlin.test.BeforeTest
@@ -37,10 +41,12 @@ class DiaryUseCaseTest {
 
     private fun insertRandomDiaries() {
         runBlocking {
+            val relaxedAddDiaryUseCase = RelaxedAddDiaryUseCase(dataSource)
+
             // March 03, 2023
             var currentDate = Instant.parse(isoString = "2023-03-03T02:35:53.049Z")
             repeat(30) {
-                addDiaryUseCase(
+                relaxedAddDiaryUseCase(
                     Diary(
                         Random.nextLong(),
                         entry = "Diary Entry #$it",
@@ -54,10 +60,29 @@ class DiaryUseCaseTest {
     }
 
     @Test
-    fun `Add new Diary and confirm saved`() = runTest {
+    fun `Add new relaxed diary and confirm saved`() = runTest {
+        val relaxedAddDiaryUseCase = RelaxedAddDiaryUseCase(dataSource)
+
         val diary = Diary(
             entry = "New Entry",
             date = "2023-03-03T03:33:25.587Z",
+        )
+
+        relaxedAddDiaryUseCase(diary)
+
+        getAllDiariesUseCase.diaries.test {
+            val items = awaitItem()
+            cancelAndConsumeRemainingEvents()
+
+            assertThat(items).contains(diary)
+        }
+    }
+
+    @Test
+    fun `Add new diary today and confirm saved`() = runTest {
+        val diary = Diary(
+            entry = "New Entry",
+            date = Clock.System.now().toString(),
         )
 
         addDiaryUseCase(diary)
@@ -68,6 +93,34 @@ class DiaryUseCaseTest {
 
             assertThat(items).contains(diary)
         }
+    }
+
+    @Test
+    fun `Adding a new diary in the future fails`() = runTest {
+        val today = Clock.System.now()
+
+        val diary = Diary(
+            entry = "New Entry",
+            date = today.plus(1, DateTimeUnit.DAY, TimeZone.currentSystemDefault()).toString(),
+        )
+
+        val result = addDiaryUseCase(diary)
+
+        assertThat(result).isInstanceOf(Result.Failure::class)
+    }
+
+    @Test
+    fun `Adding a new diary in the past fails`() = runTest {
+        val today = Clock.System.now()
+
+        val diary = Diary(
+            entry = "New Entry",
+            date = today.minus(1, DateTimeUnit.DAY, TimeZone.currentSystemDefault()).toString(),
+        )
+
+        val result = addDiaryUseCase(diary)
+
+        assertThat(result).isInstanceOf(Result.Failure::class)
     }
 
     @Test
