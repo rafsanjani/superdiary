@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.android.screens
 
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -178,20 +179,17 @@ private fun Content() {
     }
 }
 
-@Preview
+@Preview(
+    name = "Night Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+@Preview(
+    name = "Day Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+)
 @Composable
-private fun DarkPreview() {
-    AppTheme(darkTheme = true) {
-        Surface {
-            Content()
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun LightPreview() {
-    AppTheme(darkTheme = false) {
+private fun Preview() {
+    AppTheme {
         Surface {
             Content()
         }
