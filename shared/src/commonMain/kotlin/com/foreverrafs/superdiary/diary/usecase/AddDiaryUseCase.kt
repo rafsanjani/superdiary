@@ -26,11 +26,13 @@ class AddDiaryUseCase(private val dataSource: DataSource) {
         val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
 
         require(diaryDate == today) {
-            if (diaryDate > today) {
-                "Saving a diary entry in the future is an error. [diary date = $diaryDate, today = $today]"
+            val placeHolder = if (diaryDate > today) {
+                "future"
             } else {
-                "Saving a diary entry in the past is an error. [diary date = $diaryDate, today = $today]"
+                "past"
             }
+
+            "Saving a diary entry in the $placeHolder is an error. [diary date = $diaryDate, today = $today]"
         }
     }
 }
