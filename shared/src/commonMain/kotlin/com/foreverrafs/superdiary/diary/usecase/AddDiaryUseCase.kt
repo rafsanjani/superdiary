@@ -15,7 +15,7 @@ class AddDiaryUseCase(private val dataSource: DataSource) {
 
             dataSource.add(diary)
             Result.Success(data = listOf(diary))
-        } catch (ex: Exception) {
+        } catch (ex: IllegalArgumentException) {
             Result.Failure(ex)
         }
     }
