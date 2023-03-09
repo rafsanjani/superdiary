@@ -30,7 +30,11 @@ fun CreateDiaryScreen(modifier: Modifier = Modifier) {
 private fun Content() {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { SuperDiaryAppBar(colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = Color.Green)) },
+        topBar = {
+            SuperDiaryAppBar(
+                colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = Color.Green),
+            )
+        },
     ) {
         Text(modifier = Modifier.padding(it), text = "Create Diary")
     }
