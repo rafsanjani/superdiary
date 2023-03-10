@@ -5,12 +5,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -54,7 +57,7 @@ private fun Content(diaries: List<Diary>) {
         mutableStateOf(
             diaries.map {
                 Instant.parse(it.date).atZone(ZoneId.systemDefault()).toLocalDate()
-            },
+            }
         )
     }
 
@@ -62,11 +65,9 @@ private fun Content(diaries: List<Diary>) {
         Text(
             text = "Super Diary",
             textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
             style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.Bold
         )
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -81,26 +82,22 @@ private fun Content(diaries: List<Diary>) {
                     placeholder = {
                         Text(
                             text = "Search diary by phrase or date...",
-                            textAlign = TextAlign.Center,
+                            textAlign = TextAlign.Center
                         )
                     },
                     value = "",
                     onValueChange = {},
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth(),
+                    modifier = Modifier.padding(8.dp).fillMaxWidth(),
                     colors = TextFieldDefaults.textFieldColors(
                         focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                    ),
+                        unfocusedIndicatorColor = Color.Transparent
+                    )
                 )
-            },
+            }
         ) { padding ->
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 4.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize().padding(horizontal = 4.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 var selectedDate by remember {
                     mutableStateOf(LocalDate.now())
@@ -109,18 +106,14 @@ private fun Content(diaries: List<Diary>) {
                 val datePickerState = rememberDatePickerState()
 
                 Text(
-                    modifier = Modifier
-                        .padding(padding)
-                        .clickable {
-                            datePickerState.smoothScrollToDate(
-                                LocalDate.now(),
-                            )
-                        }
-                        .padding(16.dp),
-                    text = DateTimeFormatter.ofPattern("MMM dd yyyy").format(selectedDate)
-                        .format(selectedDate),
+                    modifier = Modifier.padding(padding).clickable {
+                        datePickerState.smoothScrollToDate(
+                            LocalDate.now()
+                        )
+                    }.padding(16.dp),
+                    text = DateTimeFormatter.ofPattern("MMM dd yyyy").format(selectedDate),
                     textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Bold
                 )
 
                 DatePickerTimeline(
@@ -132,12 +125,15 @@ private fun Content(diaries: List<Diary>) {
                     dateTextColor = MaterialTheme.colorScheme.onBackground,
                     selectedBackgroundColor = Color.Black.copy(alpha = 0.5f),
                     selectedTextColor = MaterialTheme.colorScheme.onBackground,
-                    eventDates = diaryDates,
+                    eventDates = diaryDates
                 )
 
                 LazyColumn {
-                    items(items = diaries) {
-                        Text(text = it.entry)
+                    items(
+                        items = diaries,
+                        key = { it.id ?: Random.nextLong().toString() }
+                    ) {
+                        DiaryCard(diary = it)
                     }
                 }
             }
@@ -145,13 +141,27 @@ private fun Content(diaries: List<Diary>) {
     }
 }
 
+@Composable
+private fun DiaryCard(
+    modifier: Modifier = Modifier,
+    diary: Diary
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(72.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Green)
+    ) {
+    }
+}
+
 @Preview(
     name = "Night Mode",
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Preview(
     name = "Day Mode",
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
 )
 @Composable
 private fun Preview() {
@@ -162,9 +172,9 @@ private fun Preview() {
                     Diary(
                         id = Random.nextLong(),
                         entry = "Diary #1",
-                        date = Instant.now().toString(),
-                    ),
-                ),
+                        date = Instant.now().toString()
+                    )
+                )
             )
         }
     }
