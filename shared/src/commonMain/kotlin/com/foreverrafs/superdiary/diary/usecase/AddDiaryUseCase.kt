@@ -32,7 +32,8 @@ class AddDiaryUseCase(private val dataSource: DataSource) {
                 "past"
             }
 
-            "Saving a diary entry in the $placeHolder is an error. [diary date = $diaryDate, today = $today]"
+            "Saving a diary entry in the $placeHolder is an error.," +
+                " [diary date = $diaryDate, today = $today]"
         }
     }
 }
