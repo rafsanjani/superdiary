@@ -48,7 +48,7 @@ interface DataSource {
     suspend fun find(from: String, to: String): List<Diary>
 
     /**
-     * Delets all the diary entries from the data source.
+     * Deletes all the diary entries from the data source.
      */
     suspend fun deleteAll()
 }
