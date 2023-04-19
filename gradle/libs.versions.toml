@@ -127,7 +127,7 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 androidx-appcompat = "androidx.appcompat:appcompat:1.6.1"
 androidx-core = "androidx.core:core-ktx:1.10.0"
-androidx-activity-compose = "androidx.activity:activity-compose:1.7.0"
+androidx-activity-compose = "androidx.activity:activity-compose:1.7.1"
 androidx-fragment = "androidx.fragment:fragment-ktx:1.5.6"
 androidx-dynamicanimation = "androidx.dynamicanimation:dynamicanimation-ktx:1.0.0-alpha03"
 androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
