@@ -1,6 +1,6 @@
 package com.foreverrafs.superdiary.diary.datasource
 
-import com.foreverrafs.superdiary.Database
+import com.foreverrafs.superdiary.diary.Database
 import com.foreverrafs.superdiary.diary.model.Diary
 import kotlinx.coroutines.flow.Flow
 

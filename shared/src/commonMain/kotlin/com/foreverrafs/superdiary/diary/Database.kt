@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary
+package com.foreverrafs.superdiary.diary
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
