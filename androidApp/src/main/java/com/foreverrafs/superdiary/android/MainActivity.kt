@@ -14,11 +14,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+
+
             AppTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     DestinationsNavHost(navGraph = NavGraphs.app)
                 }
             }
+
         }
     }
 }

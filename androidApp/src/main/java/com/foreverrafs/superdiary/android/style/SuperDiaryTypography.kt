@@ -7,3 +7,7 @@ import com.foreverrafs.superdiary.android.R
 val PrincesSofia = FontFamily(
     fonts = listOf(Font(resId = R.font.princess_sofia)),
 )
+
+val robotoCondensed = FontFamily(
+    fonts = listOf(Font(resId = R.font.source_sans_pro))
+)
