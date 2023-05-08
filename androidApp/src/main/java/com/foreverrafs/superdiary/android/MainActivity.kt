@@ -15,13 +15,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
-
             AppTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     DestinationsNavHost(navGraph = NavGraphs.app)
                 }
             }
-
         }
     }
 }

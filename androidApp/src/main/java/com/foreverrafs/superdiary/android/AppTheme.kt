@@ -26,11 +26,11 @@ fun AppTheme(
     val colorScheme = if (darkTheme) {
         darkColorScheme(
             background = Color(0xFF1E1E1E),
-            secondaryContainer =  Color(0x611E1E1E),
+            secondaryContainer = Color(0x611E1E1E),
         )
     } else {
         lightColorScheme(
-            secondaryContainer =  Color.LightGray
+            secondaryContainer = Color.LightGray
         )
     }
 

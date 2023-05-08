@@ -55,13 +55,15 @@ import kotlin.random.Random
 @Destination
 @Composable
 fun DiaryListScreen() {
-    Content((0..30).map {
-        Diary(
-            id = Random.nextLong(),
-            entry = "Diary #1",
-            date = Instant.now().plus(it.toLong() * 2, ChronoUnit.DAYS).toString()
-        )
-    })
+    Content(
+        (0..30).map {
+            Diary(
+                id = Random.nextLong(),
+                entry = "Diary #1",
+                date = Instant.now().plus(it.toLong() * 2, ChronoUnit.DAYS).toString()
+            )
+        }
+    )
 }
 
 @Composable
@@ -185,7 +187,6 @@ private fun DiaryCard(
                         val letterSpacing = (-0.4).sp
                         val date = ZonedDateTime.parse(diary.date)
 
-
                         withStyle(
                             SpanStyle(
                                 fontFamily = robotoCondensed,
@@ -269,7 +270,7 @@ private fun Preview() {
                 diaries = (0..30).map {
                     Diary(
                         id = Random.nextLong(),
-                        entry = "Diary #1. This isn't a very long entry, but it should be more than a single line",
+                        entry = "Test Diary",
                         date = Instant.now().plus(it.toLong(), ChronoUnit.DAYS).toString()
                     )
                 }
