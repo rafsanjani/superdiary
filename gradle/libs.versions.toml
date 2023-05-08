@@ -7,14 +7,14 @@ composesnapshot = "-" # a single character = no snapshot
 
 
 material3 = "1.0.1"
-gradle = "8.0.1"
+gradle = "8.1.0-beta01"
 detekt = "1.22.0"
 lintMinCompose = "31.0.1"
 ktlint = "11.3.1"
 kotlin = "1.8.21"
 ksp = "1.8.21-1.0.11"
 coroutines = "1.6.4"
-okhttp = "5.0.0-alpha.11"
+okhttp = "5.0.0-alpha.11",
 coil = "2.3.0"
 androidxtest = "1.5.2"
 pagingCompose = "1.0.0-alpha19"
