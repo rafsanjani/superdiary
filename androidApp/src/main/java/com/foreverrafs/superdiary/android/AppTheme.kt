@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.android.style.PrincesSofia
+import com.foreverrafs.superdiary.android.style.robotoCondensed
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
@@ -45,6 +46,11 @@ fun AppTheme(
             fontWeight = FontWeight.Normal,
             fontSize = 30.sp,
         ),
+        headlineMedium = TextStyle(
+            fontFamily = robotoCondensed,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
+        )
     )
     val shapes = Shapes(
         small = RoundedCornerShape(4.dp),

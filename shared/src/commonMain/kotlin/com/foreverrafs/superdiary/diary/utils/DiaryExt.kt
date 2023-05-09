@@ -19,18 +19,19 @@ private fun getDurationString(diary: Diary, clock: Clock = Clock.System): String
     }
 
     if (difference.days < 7 && difference.months == 0 && difference.years == 0) {
-        return "${difference.days} days ago..."
+        val days = difference.days
+        return "$days day${if (days > 1) "s" else ""} ago"
     }
 
     if (difference.months < 1 && difference.years == 0) {
         val weeks = difference.days / 7
-        return "$weeks week${if (weeks > 1) "s" else ""} ago..."
+        return "$weeks week${if (weeks > 1) "s" else ""} ago"
     }
 
     if (difference.years < 1) {
         val months = difference.months
-        return "$months month${if (months > 1) "s" else ""} ago..."
+        return "$months month${if (months > 1) "s" else ""} ago"
     }
 
-    return "${difference.years} year(s) ago..."
+    return "${difference.years} year(s) ago"
 }

@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.android.AppTheme
 import com.foreverrafs.superdiary.android.style.robotoCondensed
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.utils.groupByDate
 import com.ramcosta.composedestinations.annotation.Destination
 import java.time.Instant
 import java.time.ZonedDateTime
@@ -59,8 +61,8 @@ fun DiaryListScreen() {
         (0..30).map {
             Diary(
                 id = Random.nextLong(),
-                entry = "Diary #1",
-                date = Instant.now().plus(it.toLong() * 2, ChronoUnit.DAYS).toString()
+                entry = "Diary Entry #100",
+                date = Instant.now().minus(it.toLong() * 2, ChronoUnit.DAYS).toString()
             )
         }
     )
@@ -77,8 +79,7 @@ private fun Content(diaries: List<Diary>) {
             text = "Super Diary",
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxWidth(),
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold
         )
@@ -108,14 +109,40 @@ private fun Content(diaries: List<Diary>) {
 
 @Composable
 private fun DiaryList(diaries: List<Diary>) {
+    val groupedDiaries = remember(diaries) {
+        diaries.groupByDate()
+    }
+
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(space = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        items(items = diaries, key = { it.id.toString() }) { diary ->
-            DiaryCard(diary = diary)
+        groupedDiaries.forEach { (date, diaries) ->
+            stickyHeader(key = date) {
+                StickyHeader(
+                    text = date, modifier = Modifier
+                        .fillMaxWidth()
+                )
+            }
+
+            items(items = diaries, key = { it.id.toString() }) { diary ->
+                DiaryCard(diary = diary)
+            }
         }
     }
+}
+
+@Composable
+private fun StickyHeader(modifier: Modifier = Modifier, text: String) {
+    Text(
+        text = text,
+        modifier = modifier
+            .background(color = MaterialTheme.colorScheme.background),
+        style = MaterialTheme.typography.headlineMedium
+    )
 }
 
 @Composable
@@ -271,7 +298,7 @@ private fun Preview() {
                     Diary(
                         id = Random.nextLong(),
                         entry = "Test Diary",
-                        date = Instant.now().plus(it.toLong(), ChronoUnit.DAYS).toString()
+                        date = Instant.now().minus(it.toLong(), ChronoUnit.DAYS).toString()
                     )
                 }
             )
