@@ -17,7 +17,7 @@ UI Designs are mostly based on https://dribbble.com/shots/6685452/attachments/66
 ### Screens
 |                                                             Home                                                             |                                                             Home                                                             |                                                             Home                                                             |
 |:----------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------:|
-| <img src="https://user-images.githubusercontent.com/9197459/119953073-85c14400-bf95-11eb-9ade-2ef36a57bcb3.png" width=240 /> | <img src="https://user-images.githubusercontent.com/9197459/119953073-85c14400-bf95-11eb-9ade-2ef36a57bcb3.png" width=240 /> | <img src="https://user-images.githubusercontent.com/9197459/119953073-85c14400-bf95-11eb-9ade-2ef36a57bcb3.png" width=240 /> |
+| <img src="https://github.com/Rafsanjani/superdiary/assets/9197459/78beb4e0-8cd0-4a60-bff7-77ce2e8612ab" width=240 /> | <img src="https://github.com/Rafsanjani/superdiary/assets/9197459/78beb4e0-8cd0-4a60-bff7-77ce2e8612ab" width=240 /> | <img src="https://github.com/Rafsanjani/superdiary/assets/9197459/78beb4e0-8cd0-4a60-bff7-77ce2e8612ab" width=240 /> |
 
 
 
