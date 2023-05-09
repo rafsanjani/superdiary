@@ -11,14 +11,14 @@ import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination
 @Composable
-fun CreateDiaryScreen(modifier: Modifier = Modifier) {
+fun CalendarScreen(modifier: Modifier = Modifier) {
     Content()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Content() {
-   Text(text = "Hello Compose")
+    Text(text = "Hello Calendar")
 }
 
 @Preview

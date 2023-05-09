@@ -41,7 +41,7 @@ fun AppTheme(
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
         ),
-        labelMedium = TextStyle(
+        labelLarge = TextStyle(
             fontFamily = PrincesSofia,
             fontWeight = FontWeight.Normal,
             fontSize = 30.sp,

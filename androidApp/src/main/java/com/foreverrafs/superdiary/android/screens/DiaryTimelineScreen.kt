@@ -56,7 +56,7 @@ import kotlin.random.Random
 @AppNavGraph(start = true)
 @Destination
 @Composable
-fun DiaryListScreen() {
+fun DiaryTimelineScreen() {
     Content(
         (0..30).map {
             Diary(
@@ -75,14 +75,6 @@ private fun Content(diaries: List<Diary>) {
             .fillMaxSize()
             .padding(horizontal = 8.dp)
     ) {
-        Text(
-            text = "Super Diary",
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth(),
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.Bold
-        )
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {

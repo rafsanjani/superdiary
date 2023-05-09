@@ -83,6 +83,7 @@ dependencies {
     implementation(libs.compose.material.material3)
     implementation(libs.compose.material.material3.windowSizeClass)
     implementation(libs.compose.material.iconsextended)
+    implementation (libs.androidx.material)
     implementation(libs.androidx.activity.compose)
     implementation(libs.accompanist.systemUiController)
     implementation(libs.datePickerTimeline)
