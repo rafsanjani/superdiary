@@ -1,10 +1,14 @@
 package com.foreverrafs.superdiary.android.screens
 
 import android.content.res.Configuration
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -28,7 +32,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,7 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.android.AppTheme
-import com.foreverrafs.superdiary.android.style.robotoCondensed
+import com.foreverrafs.superdiary.android.style.sourceSansPro
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
 import com.ramcosta.composedestinations.annotation.Destination
@@ -61,7 +68,9 @@ fun DiaryTimelineScreen() {
         (0..30).map {
             Diary(
                 id = Random.nextLong(),
-                entry = "Diary Entry #100",
+                entry = """
+                    Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of
+                """.trimIndent(),
                 date = Instant.now().minus(it.toLong() * 2, ChronoUnit.DAYS).toString()
             )
         }
@@ -90,7 +99,6 @@ private fun Content(diaries: List<Diary>) {
                     .padding(padding),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 Spacer(modifier = Modifier.height(8.dp))
 
                 DiaryList(diaries)
@@ -115,8 +123,10 @@ private fun DiaryList(diaries: List<Diary>) {
         groupedDiaries.forEach { (date, diaries) ->
             stickyHeader(key = date) {
                 StickyHeader(
-                    text = date, modifier = Modifier
-                        .fillMaxWidth()
+                    text = date,
+                    modifier = Modifier
+                        .background(color = MaterialTheme.colorScheme.background)
+                        .fillMaxWidth(),
                 )
             }
 
@@ -169,11 +179,25 @@ private fun DiaryCard(
     modifier: Modifier = Modifier,
     diary: Diary
 ) {
+    val defaultTextLines = 4
+    // Used to determine whether to expand/collapse the card onClick
+    var isOverFlowing by remember {
+        mutableStateOf(false)
+    }
+
+    var maxLines by remember {
+        mutableStateOf(defaultTextLines)
+    }
+
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(110.dp),
         colors = CardDefaults.cardColors(),
+        modifier = modifier
+            .animateContentSize(animationSpec = tween())
+            .height(IntrinsicSize.Max)
+            .clickable {
+                maxLines = if (isOverFlowing) Int.MAX_VALUE else defaultTextLines
+            }
+            .fillMaxWidth(),
         shape = RoundedCornerShape(
             topStart = 0.dp,
             bottomStart = 12.dp,
@@ -182,9 +206,8 @@ private fun DiaryCard(
         )
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxSize()
         ) {
             Box(
                 modifier = Modifier
@@ -201,14 +224,15 @@ private fun DiaryCard(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    modifier = Modifier.padding(horizontal = 20.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp),
                     text = buildAnnotatedString {
                         val letterSpacing = (-0.4).sp
                         val date = ZonedDateTime.parse(diary.date)
 
                         withStyle(
                             SpanStyle(
-                                fontFamily = robotoCondensed,
+                                fontFamily = sourceSansPro,
                                 letterSpacing = letterSpacing,
                             )
                         ) {
@@ -222,7 +246,7 @@ private fun DiaryCard(
 
                         withStyle(
                             SpanStyle(
-                                fontFamily = robotoCondensed,
+                                fontFamily = sourceSansPro,
                                 fontWeight = FontWeight.ExtraBold,
                                 letterSpacing = letterSpacing,
                                 fontSize = 20.sp,
@@ -234,7 +258,7 @@ private fun DiaryCard(
 
                         withStyle(
                             SpanStyle(
-                                fontFamily = robotoCondensed,
+                                fontFamily = sourceSansPro,
                                 letterSpacing = letterSpacing,
                             )
                         ) {
@@ -247,7 +271,7 @@ private fun DiaryCard(
 
                         withStyle(
                             SpanStyle(
-                                fontFamily = robotoCondensed,
+                                fontFamily = sourceSansPro,
                                 letterSpacing = letterSpacing,
                             )
                         ) {
@@ -261,13 +285,19 @@ private fun DiaryCard(
                 )
             }
 
+            // Diary Entry
             Text(
                 modifier = Modifier
-                    .padding(horizontal = 8.dp)
+                    .padding(8.dp)
                     .align(Alignment.Top),
                 text = diary.entry,
+                letterSpacing = (-0.3).sp,
+                maxLines = maxLines,
                 overflow = TextOverflow.Ellipsis,
-                letterSpacing = (-0.3).sp
+                onTextLayout = { textLayoutResult ->
+                    isOverFlowing =
+                        textLayoutResult.didOverflowHeight || textLayoutResult.didOverflowWidth
+                }
             )
         }
     }

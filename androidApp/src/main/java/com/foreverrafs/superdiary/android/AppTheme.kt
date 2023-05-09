@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.android.style.PrincesSofia
-import com.foreverrafs.superdiary.android.style.robotoCondensed
+import com.foreverrafs.superdiary.android.style.sourceSansPro
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
@@ -31,7 +31,7 @@ fun AppTheme(
         )
     } else {
         lightColorScheme(
-            secondaryContainer = Color.LightGray
+            secondaryContainer = Color.LightGray,
         )
     }
 
@@ -47,9 +47,10 @@ fun AppTheme(
             fontSize = 30.sp,
         ),
         headlineMedium = TextStyle(
-            fontFamily = robotoCondensed,
+            fontFamily = sourceSansPro,
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp
+            fontSize = 16.sp,
+            letterSpacing = (-0.3).sp
         )
     )
     val shapes = Shapes(
