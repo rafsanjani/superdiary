@@ -9,7 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
-import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.rememberNavController
 import com.foreverrafs.superdiary.android.AppTheme
 import com.foreverrafs.superdiary.android.screens.NavGraphs
@@ -30,9 +29,12 @@ fun BottomBar(
             NavigationBarItem(
                 selected = currentDestination == destination.direction,
                 onClick = {
-                    navController.navigate(destination.direction, fun NavOptionsBuilder.() {
-                        launchSingleTop = true
-                    })
+                    navController.navigate(
+                        direction = destination.direction,
+                        navOptionsBuilder = {
+                            launchSingleTop = true
+                        }
+                    )
                 },
                 icon = {
                     Icon(
