@@ -102,7 +102,6 @@ private fun Content(diaries: List<Diary>) {
             DiaryList(diaries)
         }
     }
-
 }
 
 @Composable

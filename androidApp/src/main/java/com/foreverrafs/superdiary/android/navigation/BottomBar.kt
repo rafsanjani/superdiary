@@ -48,6 +48,7 @@ fun BottomBar(
                         text = destination.label,
                     )
                 },
+                alwaysShowLabel = false
             )
         }
     }

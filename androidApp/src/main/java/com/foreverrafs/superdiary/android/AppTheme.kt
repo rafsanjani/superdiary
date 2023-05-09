@@ -34,6 +34,7 @@ fun AppTheme(
             secondaryContainer = Color.LightGray,
             background = Color(0xFFF5F5F5),
             surfaceVariant = Color(0x27BDBDBD),
+            surface = Color(0x27BDBDBD),
         )
     }
 
