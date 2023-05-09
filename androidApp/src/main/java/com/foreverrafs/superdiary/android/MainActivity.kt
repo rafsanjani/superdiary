@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                     },
                     topBar = {
                         SuperDiaryAppBar()
-                    }
+                    },
                 ) {
                     Surface(
                         modifier = Modifier

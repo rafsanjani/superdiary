@@ -79,32 +79,30 @@ fun DiaryTimelineScreen() {
 
 @Composable
 private fun Content(diaries: List<Diary>) {
-    Column(
+    Scaffold(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 8.dp)
-    ) {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            topBar = {
-                SearchField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-            }
-        ) { padding ->
-            Column(
+            .fillMaxSize(),
+        topBar = {
+            SearchField(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Spacer(modifier = Modifier.height(8.dp))
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+            )
+        },
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(horizontal = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(8.dp))
 
-                DiaryList(diaries)
-            }
+            DiaryList(diaries)
         }
     }
+
 }
 
 @Composable
