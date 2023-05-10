@@ -18,15 +18,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -35,6 +42,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +61,7 @@ import com.foreverrafs.superdiary.android.style.sourceSansPro
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
 import com.ramcosta.composedestinations.annotation.Destination
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZonedDateTime
 import java.time.format.TextStyle
@@ -79,27 +88,67 @@ fun DiaryTimelineScreen() {
 
 @Composable
 private fun Content(diaries: List<Diary>) {
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
-        topBar = {
-            SearchField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-            )
-        },
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(8.dp))
+    val modalBottomSheetState =
+        rememberModalBottomSheetState(
+            initialValue = ModalBottomSheetValue.Hidden,
+            confirmValueChange = { false }
+        )
 
-            DiaryList(diaries)
+    val coroutineScope = rememberCoroutineScope()
+
+    ModalBottomSheetLayout(
+        sheetContent = {
+            Column(
+                modifier = Modifier
+                    .height(120.dp)
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colorScheme.background)
+            ) {
+                Button(onClick = {
+                    coroutineScope.launch {
+                        modalBottomSheetState.hide()
+                    }
+
+                }) {
+                    Text(text = "Hide")
+                }
+            }
+        },
+        sheetState = modalBottomSheetState,
+    ) {
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize(),
+            topBar = {
+                SearchField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                )
+            },
+            floatingActionButton = {
+                FloatingActionButton(onClick = {
+                    coroutineScope.launch {
+                        modalBottomSheetState.show()
+                    }
+                }, shape = CircleShape) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                }
+            },
+            isFloatingActionButtonDocked = true,
+            backgroundColor = MaterialTheme.colorScheme.background,
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(horizontal = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(8.dp))
+
+                DiaryList(diaries)
+            }
         }
     }
 }
@@ -294,7 +343,8 @@ private fun DiaryCard(
                 onTextLayout = { textLayoutResult ->
                     isOverFlowing =
                         textLayoutResult.didOverflowHeight || textLayoutResult.didOverflowWidth
-                }
+                },
+                textAlign = TextAlign.Justify
             )
         }
     }
