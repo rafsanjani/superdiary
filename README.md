@@ -1,9 +1,6 @@
 # Superdiary ❤️
 A simple diary app, mostly focused on Clean Architecture design pattern and 100% test coverage (unit and instrumentation).
 
-UI Designs are mostly based on https://dribbble.com/shots/6685452/attachments/6685452-Diary-UI?mode=media
-
-
 <div align="left">
     <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/unit-test.yml/badge.svg" />
     <a href = "https://github.com/Rafsanjani/superdiary/blob/master/LICENSE">
