@@ -7,7 +7,7 @@ composesnapshot = "-" # a single character = no snapshot
 
 
 material = "1.4.3"
-material3 = "1.0.1"
+material3 = "1.1.0"
 gradle = "8.1.0-beta02"
 detekt = "1.22.0"
 lintMinCompose = "31.0.1"
