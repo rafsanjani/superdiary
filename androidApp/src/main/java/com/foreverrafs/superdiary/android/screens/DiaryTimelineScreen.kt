@@ -1,7 +1,10 @@
 package com.foreverrafs.superdiary.android.screens
 
 import android.content.res.Configuration
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +21,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ModalBottomSheetLayout
@@ -25,28 +29,30 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -56,11 +62,17 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.foreverrafs.superdiary.AndroidDatabaseDriver
 import com.foreverrafs.superdiary.android.AppTheme
 import com.foreverrafs.superdiary.android.style.sourceSansPro
+import com.foreverrafs.superdiary.diary.Database
+import com.foreverrafs.superdiary.diary.datasource.LocalDataSource
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.diary.usecase.SearchDiaryUseCase
 import com.foreverrafs.superdiary.diary.utils.groupByDate
 import com.ramcosta.composedestinations.annotation.Destination
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZonedDateTime
@@ -73,28 +85,45 @@ import kotlin.random.Random
 @Destination
 @Composable
 fun DiaryTimelineScreen() {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+    val dataSource = LocalDataSource(
+        Database(AndroidDatabaseDriver(context))
+    )
+
+    val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
+    val searchDiaryUseCase = SearchDiaryUseCase(dataSource)
+
+    val diaries by getAllDiariesUseCase.diaries.collectAsState(initial = listOf())
+    var searchDiaryResults by remember {
+        mutableStateOf(listOf<Diary>())
+    }
+
     Content(
-        (0..30).map {
-            Diary(
-                id = Random.nextLong(),
-                entry = """
-                    Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of
-                """.trimIndent(),
-                date = Instant.now().minus(it.toLong() * 2, ChronoUnit.DAYS).toString()
-            )
-        }
+        diaries = diaries,
+        onSearchQueryChange = {
+            coroutineScope.launch {
+                searchDiaryResults = searchDiaryUseCase.searchByEntry(entry = it)
+            }
+        },
+        filteredDiaries = searchDiaryResults
     )
 }
 
 @Composable
-private fun Content(diaries: List<Diary>) {
+private fun Content(
+    diaries: List<Diary>,
+    filteredDiaries: List<Diary>,
+    onSearchQueryChange: (query: String) -> Unit,
+) {
     val modalBottomSheetState =
-        rememberModalBottomSheetState(
-            initialValue = ModalBottomSheetValue.Hidden,
-            confirmValueChange = { false }
-        )
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden,
+            confirmValueChange = { false })
 
     val coroutineScope = rememberCoroutineScope()
+
+    Log.d("Rafs", "Content: ${filteredDiaries.size}")
 
     ModalBottomSheetLayout(
         sheetContent = {
@@ -103,61 +132,72 @@ private fun Content(diaries: List<Diary>) {
                     .height(120.dp)
                     .fillMaxWidth()
                     .background(color = MaterialTheme.colorScheme.background)
-            ) {
-                Button(onClick = {
-                    coroutineScope.launch {
-                        modalBottomSheetState.hide()
+                    .clickable {
+                        coroutineScope.launch {
+                            modalBottomSheetState.hide()
+                        }
                     }
+            ) {
 
-                }) {
-                    Text(text = "Hide")
-                }
             }
         },
         sheetState = modalBottomSheetState,
     ) {
         Scaffold(
-            modifier = Modifier
-                .fillMaxSize(),
-            topBar = {
-                SearchField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                )
-            },
+            modifier = Modifier.fillMaxSize(),
             floatingActionButton = {
-                FloatingActionButton(onClick = {
-                    coroutineScope.launch {
-                        modalBottomSheetState.show()
-                    }
-                }, shape = CircleShape) {
+                FloatingActionButton(
+                    onClick = {
+                        coroutineScope.launch {
+                            modalBottomSheetState.show()
+                        }
+                    }, shape = CircleShape
+                ) {
                     Icon(imageVector = Icons.Default.Add, contentDescription = null)
                 }
             },
             isFloatingActionButtonDocked = true,
             backgroundColor = MaterialTheme.colorScheme.background,
         ) { padding ->
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
                     .padding(horizontal = 8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                contentAlignment = Alignment.Center
             ) {
-                Spacer(modifier = Modifier.height(8.dp))
+                SearchField(
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    onQueryChange = onSearchQueryChange,
+                )
 
-                DiaryList(diaries)
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .padding(horizontal = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Spacer(modifier = Modifier.height(50.dp))
+
+                    DiaryList(
+                        diaries = filteredDiaries.ifEmpty { diaries },
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun DiaryList(diaries: List<Diary>) {
+private fun DiaryList(
+    diaries: List<Diary>,
+) {
     val groupedDiaries = remember(diaries) {
         diaries.groupByDate()
     }
+
+    val listState = rememberLazyListState()
 
     LazyColumn(
         modifier = Modifier
@@ -165,6 +205,7 @@ private fun DiaryList(diaries: List<Diary>) {
             .padding(vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(space = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
+        state = listState
     ) {
         groupedDiaries.forEach { (date, diaries) ->
             stickyHeader(key = date) {
@@ -176,8 +217,13 @@ private fun DiaryList(diaries: List<Diary>) {
                 )
             }
 
-            items(items = diaries, key = { it.id.toString() }) { diary ->
-                DiaryCard(diary = diary)
+            items(
+                items = diaries,
+                key = { item -> item.id.toString() }
+            ) { diary ->
+                DiaryCard(
+                    diary = diary,
+                )
             }
         }
     }
@@ -187,8 +233,7 @@ private fun DiaryList(diaries: List<Diary>) {
 private fun StickyHeader(modifier: Modifier = Modifier, text: String) {
     Text(
         text = text,
-        modifier = modifier
-            .background(color = MaterialTheme.colorScheme.background),
+        modifier = modifier.background(color = MaterialTheme.colorScheme.background),
         style = MaterialTheme.typography.headlineMedium
     )
 }
@@ -196,54 +241,91 @@ private fun StickyHeader(modifier: Modifier = Modifier, text: String) {
 @Composable
 private fun SearchField(
     modifier: Modifier = Modifier,
+    onQueryChange: (query: String) -> Unit,
 ) {
-    TextField(
-        leadingIcon = {
-            Icon(imageVector = Icons.Default.Menu, contentDescription = null)
+    val focusManager = LocalFocusManager.current
+
+    var query by remember {
+        mutableStateOf("")
+    }
+
+    LaunchedEffect(query) {
+        // a 1 second debounce
+        delay(500)
+        onQueryChange(query)
+    }
+
+    var active by rememberSaveable() {
+        mutableStateOf(false)
+    }
+
+    fun closeSearchBar() {
+        focusManager.clearFocus()
+        active = false
+    }
+
+    var isFocused by remember {
+        mutableStateOf(false)
+    }
+
+    DockedSearchBar(
+        modifier = modifier
+            .onFocusChanged {
+                isFocused = it.isFocused
+            }
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
+        query = query,
+        onQueryChange = {
+            query = it
         },
+        onSearch = { closeSearchBar() },
+        active = false, // To prevent the searchbar from showing suggestions
+        onActiveChange = {},
+        placeholder = { Text("Search diary...") },
+        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
         trailingIcon = {
-            Icon(imageVector = Icons.Default.Search, contentDescription = null)
-        },
-        placeholder = {
-            Text(
-                text = "Search diary by phrase or date...",
-                textAlign = TextAlign.Center
+            Icon(
+                modifier = Modifier.clickable { },
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = null
             )
         },
-        value = "",
-        onValueChange = {},
-        modifier = modifier,
-        colors = TextFieldDefaults.textFieldColors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
-        )
+        content = {}
     )
+
+    BackHandler(isFocused) {
+        focusManager.clearFocus(true)
+    }
 }
+
 
 @Composable
 private fun DiaryCard(
     modifier: Modifier = Modifier,
-    diary: Diary
+    diary: Diary,
 ) {
     val defaultTextLines = 4
+
     // Used to determine whether to expand/collapse the card onClick
     var isOverFlowing by remember {
         mutableStateOf(false)
     }
 
+
     var maxLines by remember {
         mutableStateOf(defaultTextLines)
     }
 
+
     Card(
-        colors = CardDefaults.cardColors(),
         modifier = modifier
-            .animateContentSize(animationSpec = tween())
+            .animateContentSize(animationSpec = tween(easing = LinearEasing))
             .height(IntrinsicSize.Max)
+            .fillMaxWidth()
             .clickable {
                 maxLines = if (isOverFlowing) Int.MAX_VALUE else defaultTextLines
-            }
-            .fillMaxWidth(),
+            },
         shape = RoundedCornerShape(
             topStart = 0.dp,
             bottomStart = 12.dp,
@@ -261,17 +343,13 @@ private fun DiaryCard(
                     .background(
                         color = MaterialTheme.colorScheme.secondaryContainer,
                         shape = RoundedCornerShape(
-                            topStart = 0.dp,
-                            topEnd = 12.dp,
-                            bottomStart = 12.dp,
-                            bottomEnd = 0.dp
+                            topStart = 0.dp, topEnd = 12.dp, bottomStart = 12.dp, bottomEnd = 0.dp
                         )
-                    ),
-                contentAlignment = Alignment.Center
+                    ), contentAlignment = Alignment.Center
             ) {
                 Text(
                     modifier = Modifier
-                        .padding(horizontal = 20.dp),
+                        .padding(horizontal = 20.dp, vertical = 4.dp),
                     text = buildAnnotatedString {
                         val letterSpacing = (-0.4).sp
                         val date = ZonedDateTime.parse(diary.date)
@@ -351,12 +429,10 @@ private fun DiaryCard(
 }
 
 @Preview(
-    name = "Night Mode",
-    uiMode = Configuration.UI_MODE_NIGHT_YES
+    name = "Night Mode", uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Preview(
-    name = "Day Mode",
-    uiMode = Configuration.UI_MODE_NIGHT_NO
+    name = "Day Mode", uiMode = Configuration.UI_MODE_NIGHT_NO
 )
 @Composable
 private fun Preview() {
@@ -369,7 +445,9 @@ private fun Preview() {
                         entry = "Test Diary",
                         date = Instant.now().minus(it.toLong(), ChronoUnit.DAYS).toString()
                     )
-                }
+                },
+                onSearchQueryChange = {},
+                filteredDiaries = listOf()
             )
         }
     }

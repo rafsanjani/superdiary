@@ -26,7 +26,7 @@ class Database(databaseDriver: DatabaseDriver) {
         .mapToList(Dispatchers.Main)
 
     fun findDiaryByEntry(query: String): List<Diary> =
-        queries.findByEntry(entry = query, mapper = diaryMapper)
+        queries.findByEntry(name = query, mapper = diaryMapper)
             .executeAsList()
 
     fun findByDate(date: String): List<Diary> = queries.findByDate(

@@ -5,7 +5,7 @@ CREATE TABLE diary (
 );
 
 selectAll:
-SELECT * FROM diary ORDER BY id;
+SELECT * FROM diary ORDER BY date DESC;
 
 insert:
 INSERT INTO diary(entry, date) VALUES (?, ?);
@@ -14,7 +14,7 @@ delete:
 DELETE FROM diary WHERE id=?;
 
 findByEntry:
-SELECT * FROM diary WHERE entry LIKE ?;
+SELECT * FROM diary WHERE entry LIKE '%' || :name || '%' ORDER BY date ASC;
 
 findByDate:
 SELECT * FROM diary WHERE date=?;
