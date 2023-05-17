@@ -2,7 +2,7 @@
 assertk = "0.25"
 compose-compiler = "1.4.7"
 compose = "1.4.3"
-compose-bom = "2023.05.00"
+compose-bom = "2023.05.01"
 composesnapshot = "-" # a single character = no snapshot
 
 
