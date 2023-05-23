@@ -24,11 +24,13 @@ fun SuperDiaryAppBar(
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth(),
-                style = MaterialTheme.typography.labelLarge,
+                style = MaterialTheme.typography.displayLarge,
                 fontWeight = FontWeight.Bold
             )
         },
-        colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = MaterialTheme.colorScheme.background),
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background
+        ),
     )
 }
 

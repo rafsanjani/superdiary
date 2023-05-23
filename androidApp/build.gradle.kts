@@ -56,6 +56,7 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 
@@ -71,6 +72,7 @@ android {
 dependencies {
     implementation(projects.shared)
     implementation(platform(libs.compose.bom))
+    implementation(project(mapOf("path" to ":calendar")))
     ksp(libs.compose.destinations.processor)
     implementation(libs.compose.destinations.runtime)
     implementation(libs.compose.ui.ui)

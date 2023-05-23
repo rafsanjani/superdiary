@@ -1,29 +1,17 @@
 package com.foreverrafs.superdiary.android.screens
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
@@ -32,7 +20,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.Card
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -53,37 +40,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.AndroidDatabaseDriver
 import com.foreverrafs.superdiary.android.AppTheme
-import com.foreverrafs.superdiary.android.style.sourceSansPro
+import com.foreverrafs.superdiary.android.components.DiaryList
 import com.foreverrafs.superdiary.diary.Database
 import com.foreverrafs.superdiary.diary.datasource.LocalDataSource
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryUseCase
-import com.foreverrafs.superdiary.diary.utils.groupByDate
 import com.ramcosta.composedestinations.annotation.Destination
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.Instant
-import java.time.ZonedDateTime
-import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
-import java.util.Locale
 import kotlin.random.Random
 
-@AppNavGraph(start = true)
-@Destination
 @Composable
+@Destination
+@AppNavGraph(start = true)
 fun DiaryTimelineScreen() {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -122,8 +98,6 @@ private fun Content(
             confirmValueChange = { false })
 
     val coroutineScope = rememberCoroutineScope()
-
-    Log.d("Rafs", "Content: ${filteredDiaries.size}")
 
     ModalBottomSheetLayout(
         sheetContent = {
@@ -189,54 +163,6 @@ private fun Content(
     }
 }
 
-@Composable
-private fun DiaryList(
-    diaries: List<Diary>,
-) {
-    val groupedDiaries = remember(diaries) {
-        diaries.groupByDate()
-    }
-
-    val listState = rememberLazyListState()
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(space = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        state = listState
-    ) {
-        groupedDiaries.forEach { (date, diaries) ->
-            stickyHeader(key = date) {
-                StickyHeader(
-                    text = date,
-                    modifier = Modifier
-                        .background(color = MaterialTheme.colorScheme.background)
-                        .fillMaxWidth(),
-                )
-            }
-
-            items(
-                items = diaries,
-                key = { item -> item.id.toString() }
-            ) { diary ->
-                DiaryCard(
-                    diary = diary,
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun StickyHeader(modifier: Modifier = Modifier, text: String) {
-    Text(
-        text = text,
-        modifier = modifier.background(color = MaterialTheme.colorScheme.background),
-        style = MaterialTheme.typography.headlineMedium
-    )
-}
 
 @Composable
 private fun SearchField(
@@ -296,135 +222,6 @@ private fun SearchField(
 
     BackHandler(isFocused) {
         focusManager.clearFocus(true)
-    }
-}
-
-
-@Composable
-private fun DiaryCard(
-    modifier: Modifier = Modifier,
-    diary: Diary,
-) {
-    val defaultTextLines = 4
-
-    // Used to determine whether to expand/collapse the card onClick
-    var isOverFlowing by remember {
-        mutableStateOf(false)
-    }
-
-
-    var maxLines by remember {
-        mutableStateOf(defaultTextLines)
-    }
-
-
-    Card(
-        modifier = modifier
-            .animateContentSize(animationSpec = tween(easing = LinearEasing))
-            .height(IntrinsicSize.Max)
-            .fillMaxWidth()
-            .clickable {
-                maxLines = if (isOverFlowing) Int.MAX_VALUE else defaultTextLines
-            },
-        shape = RoundedCornerShape(
-            topStart = 0.dp,
-            bottomStart = 12.dp,
-            topEnd = 12.dp,
-            bottomEnd = 0.dp
-        )
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .background(
-                        color = MaterialTheme.colorScheme.secondaryContainer,
-                        shape = RoundedCornerShape(
-                            topStart = 0.dp, topEnd = 12.dp, bottomStart = 12.dp, bottomEnd = 0.dp
-                        )
-                    ), contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp, vertical = 4.dp),
-                    text = buildAnnotatedString {
-                        val letterSpacing = (-0.4).sp
-                        val date = ZonedDateTime.parse(diary.date)
-
-                        withStyle(
-                            SpanStyle(
-                                fontFamily = sourceSansPro,
-                                letterSpacing = letterSpacing,
-                            )
-                        ) {
-                            append(
-                                date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ROOT)
-                                    .uppercase()
-                            )
-                        }
-
-                        appendLine()
-
-                        withStyle(
-                            SpanStyle(
-                                fontFamily = sourceSansPro,
-                                fontWeight = FontWeight.ExtraBold,
-                                letterSpacing = letterSpacing,
-                                fontSize = 20.sp,
-                            )
-                        ) {
-                            append(date.dayOfMonth.toString())
-                        }
-                        appendLine()
-
-                        withStyle(
-                            SpanStyle(
-                                fontFamily = sourceSansPro,
-                                letterSpacing = letterSpacing,
-                            )
-                        ) {
-                            append(
-                                date.month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
-                                    .uppercase()
-                            )
-                        }
-                        appendLine()
-
-                        withStyle(
-                            SpanStyle(
-                                fontFamily = sourceSansPro,
-                                letterSpacing = letterSpacing,
-                            )
-                        ) {
-                            append(date.year.toString())
-                        }
-
-                        toAnnotatedString()
-                    },
-                    textAlign = TextAlign.Center,
-                    lineHeight = 20.sp
-                )
-            }
-
-            // Diary Entry
-            Text(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .align(Alignment.Top),
-                text = diary.entry,
-                letterSpacing = (-0.3).sp,
-                maxLines = maxLines,
-                overflow = TextOverflow.Ellipsis,
-                onTextLayout = { textLayoutResult ->
-                    isOverFlowing =
-                        textLayoutResult.didOverflowHeight || textLayoutResult.didOverflowWidth
-                },
-                textAlign = TextAlign.Justify
-            )
-        }
     }
 }
 

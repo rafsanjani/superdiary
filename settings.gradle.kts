@@ -1,8 +1,8 @@
 pluginManagement {
     repositories {
+        mavenCentral()
         google()
         gradlePluginPortal()
-        mavenCentral()
         maven("https://jitpack.io")
     }
 }
@@ -19,3 +19,4 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "Superdiary"
 include(":androidApp")
 include(":shared")
+include(":calendar")

@@ -16,6 +16,9 @@ import com.foreverrafs.superdiary.android.screens.appCurrentDestinationAsState
 import com.foreverrafs.superdiary.android.screens.destinations.Destination
 import com.foreverrafs.superdiary.android.screens.startAppDestination
 import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.popBackStack
+import com.ramcosta.composedestinations.navigation.popUpTo
+import com.ramcosta.composedestinations.utils.isRouteOnBackStack
 
 @Composable
 fun BottomBar(
@@ -26,15 +29,24 @@ fun BottomBar(
 
     NavigationBar {
         BottomBarDestination.values().forEach { destination ->
+            val isCurrentDestOnBackStack = navController.isRouteOnBackStack(destination.direction)
+
             NavigationBarItem(
                 selected = currentDestination == destination.direction,
                 onClick = {
-                    navController.navigate(
-                        direction = destination.direction,
-                        navOptionsBuilder = {
-                            launchSingleTop = true
+                    if (isCurrentDestOnBackStack) {
+                        navController.popBackStack(destination.direction, false)
+                        return@NavigationBarItem
+                    }
+
+                    navController.navigate(destination.direction) {
+                        popUpTo(NavGraphs.app.startAppDestination) {
+                            saveState = true
                         }
-                    )
+
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 },
                 icon = {
                     Icon(
@@ -52,7 +64,6 @@ fun BottomBar(
             )
         }
     }
-
 }
 
 @Composable

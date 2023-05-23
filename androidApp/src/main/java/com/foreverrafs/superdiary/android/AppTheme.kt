@@ -44,7 +44,7 @@ fun AppTheme(
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
         ),
-        labelLarge = TextStyle(
+        displayLarge = TextStyle(
             fontFamily = PrincesSofia,
             fontWeight = FontWeight.Normal,
             fontSize = 30.sp,
@@ -54,7 +54,7 @@ fun AppTheme(
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
             letterSpacing = (-0.3).sp
-        )
+        ),
     )
     val shapes = Shapes(
         small = RoundedCornerShape(4.dp),

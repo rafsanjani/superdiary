@@ -8,6 +8,7 @@ import com.foreverrafs.superdiary.android.screens.destinations.CalendarScreenDes
 import com.foreverrafs.superdiary.android.screens.destinations.DiaryTimelineScreenDestination
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 
+@Suppress("unused")
 enum class BottomBarDestination(
     val direction: DirectionDestinationSpec,
     val icon: ImageVector,
