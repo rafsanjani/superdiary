@@ -46,7 +46,7 @@ import java.util.Locale
 @Composable
 fun DiaryList(
     diaries: List<Diary>,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val groupedDiaries = remember(diaries) {
         diaries
@@ -99,7 +99,7 @@ private fun StickyHeader(modifier: Modifier = Modifier, text: String) {
 @Composable
 private fun DiaryCard(
     modifier: Modifier = Modifier,
-    diary: Diary,
+    diary: Diary
 ) {
     val defaultTextLines = 4
 
@@ -137,9 +137,13 @@ private fun DiaryCard(
                     .background(
                         color = MaterialTheme.colorScheme.secondaryContainer,
                         shape = RoundedCornerShape(
-                            topStart = 0.dp, topEnd = 12.dp, bottomStart = 12.dp, bottomEnd = 0.dp
+                            topStart = 0.dp,
+                            topEnd = 12.dp,
+                            bottomStart = 12.dp,
+                            bottomEnd = 0.dp
                         )
-                    ), contentAlignment = Alignment.Center
+                    ),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
                     modifier = Modifier
