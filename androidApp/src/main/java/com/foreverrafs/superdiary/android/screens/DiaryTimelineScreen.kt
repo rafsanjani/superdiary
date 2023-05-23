@@ -94,8 +94,10 @@ private fun Content(
     onSearchQueryChange: (query: String) -> Unit,
 ) {
     val modalBottomSheetState =
-        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden,
-            confirmValueChange = { false })
+        rememberModalBottomSheetState(
+            initialValue = ModalBottomSheetValue.Hidden,
+            confirmValueChange = { false }
+        )
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -112,7 +114,6 @@ private fun Content(
                         }
                     }
             ) {
-
             }
         },
         sheetState = modalBottomSheetState,

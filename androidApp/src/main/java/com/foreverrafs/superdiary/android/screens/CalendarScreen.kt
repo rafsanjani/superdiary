@@ -125,9 +125,13 @@ private fun Calendar(
                         onDateSelected(it.date.toKotlinLocalDate())
                     }
                     .background(
-                        color = if (selected) MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                            alpha = 0.15f
-                        ) else Color.Transparent
+                        color = if (selected) {
+                            MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                alpha = 0.15f
+                            )
+                        } else {
+                            Color.Transparent
+                        }
                     ),
                 contentAlignment = Alignment.Center
             ) {
@@ -196,8 +200,6 @@ private fun Calendar(
                                     currentMonth.plusMonths(1)
                             }
                             .padding(8.dp)
-
-
                     )
                 }
             }

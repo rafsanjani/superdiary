@@ -59,7 +59,8 @@ private fun Content() {
                 .padding(16.dp)
         )
         Button(
-            onClick = { /*TODO*/ }, modifier = Modifier
+            onClick = { /*TODO*/ },
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
             shape = RoundedCornerShape(2.dp)
