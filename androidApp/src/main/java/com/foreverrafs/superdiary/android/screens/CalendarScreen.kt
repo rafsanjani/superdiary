@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -82,7 +81,6 @@ fun CalendarScreen(modifier: Modifier = Modifier) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Content(
     modifier: Modifier = Modifier,
@@ -95,7 +93,7 @@ private fun Content(
             .background(color = MaterialTheme.colorScheme.background)
             .padding(8.dp)
     ) {
-        Calendar(onDateSelected = onSearch, diaries = diaries)
+        Calendar(onDateSelected = onSearch)
         DiaryList(diaries = diaries, modifier = Modifier.weight(1f))
     }
 }
@@ -104,7 +102,6 @@ private fun Content(
 private fun Calendar(
     modifier: Modifier = Modifier,
     onDateSelected: (date: LocalDate) -> Unit,
-    diaries: List<Diary>
 ) {
     val calendarState = rememberSelectableCalendarState(
         initialSelectionMode = SelectionMode.Single,
@@ -113,7 +110,6 @@ private fun Calendar(
     SelectableCalendar(
         dayContent = {
             val selected = calendarState.selectionState.isDateSelected(it.date)
-            val hasEntry = diaries.any { diary -> diary.date == it.date.toString() }
 
             Box(
                 modifier = Modifier

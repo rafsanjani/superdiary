@@ -41,13 +41,17 @@ public fun <T : SelectionState> DefaultDay(
 
     Card(
         modifier = modifier
-          .aspectRatio(1f)
-          .padding(2.dp),
+            .aspectRatio(1f)
+            .padding(2.dp),
         elevation = if (state.isFromCurrentMonth) 4.dp else 0.dp,
         border = if (state.isCurrentDay) BorderStroke(1.dp, currentDayColor) else null,
-        contentColor = if (isSelected) selectionColor else contentColorFor(
-            backgroundColor = MaterialTheme.colors.onBackground
-        )
+        contentColor = if (isSelected) {
+            selectionColor
+        } else {
+            contentColorFor(
+                backgroundColor = MaterialTheme.colors.onBackground
+            )
+        }
     ) {
         Box(
             modifier = Modifier.clickable {

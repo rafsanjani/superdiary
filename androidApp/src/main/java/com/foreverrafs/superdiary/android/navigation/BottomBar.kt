@@ -7,6 +7,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -22,12 +23,13 @@ import com.ramcosta.composedestinations.utils.isRouteOnBackStack
 
 @Composable
 fun BottomBar(
-    navController: NavController
+    navController: NavController,
+    modifier: Modifier = Modifier,
 ) {
     val currentDestination: Destination = navController.appCurrentDestinationAsState().value
         ?: NavGraphs.app.startAppDestination
 
-    NavigationBar {
+    NavigationBar(modifier = modifier) {
         BottomBarDestination.values().forEach { destination ->
             val isCurrentDestOnBackStack = navController.isRouteOnBackStack(destination.direction)
 

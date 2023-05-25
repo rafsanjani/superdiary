@@ -164,7 +164,6 @@ private fun Content(
     }
 }
 
-
 @Composable
 private fun SearchField(
     modifier: Modifier = Modifier,

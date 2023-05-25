@@ -16,6 +16,5 @@ apply {
 subprojects {
     apply {
         from("../scripts/detekt.gradle")
-        from("../scripts/ktlint.gradle")
     }
 }
