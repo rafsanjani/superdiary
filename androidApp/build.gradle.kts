@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.dagger.hilt)
+    kotlin("kapt")
 }
 
 android {
@@ -86,6 +88,9 @@ dependencies {
     implementation(libs.compose.material.material3.windowSizeClass)
     implementation(libs.compose.material.iconsextended)
     implementation(libs.androidx.material)
+    kapt(libs.dagger.hilt.compiler)
+    implementation(libs.dagger.hilt)
+    implementation(libs.dagger.hilt.testing)
     implementation(libs.androidx.activity.compose)
     implementation(libs.accompanist.systemUiController)
     implementation(libs.datePickerTimeline)
