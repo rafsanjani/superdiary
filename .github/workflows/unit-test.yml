@@ -13,7 +13,7 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
       - name: Lint using ktlint
-        run: ./gradlew app:detekt shared:detekt
+        run: ./gradlew androidApp:detekt shared:detekt
 
   build:
     needs: lint
