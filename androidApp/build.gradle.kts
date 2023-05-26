@@ -42,11 +42,16 @@ android {
         freeCompilerArgs =
             freeCompilerArgs + experimentalOptIns
 
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
-    java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(8))
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
     }
 
     packaging {
