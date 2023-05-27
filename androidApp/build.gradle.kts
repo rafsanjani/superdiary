@@ -76,7 +76,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.shared)
+    implementation(projects.data)
     implementation(platform(libs.compose.bom))
     implementation(project(mapOf("path" to ":calendar")))
     ksp(libs.compose.destinations.processor)
@@ -92,8 +92,8 @@ dependencies {
     implementation(libs.compose.material.material3.windowSizeClass)
     implementation(libs.compose.material.iconsextended)
     implementation(libs.androidx.material)
-    ksp("me.tatarka.inject:kotlin-inject-compiler-ksp:0.6.1")
-    implementation("me.tatarka.inject:kotlin-inject-runtime:0.6.1")
+    ksp(libs.kotlin.inject.compiler.ksp)
+    implementation(libs.kotlin.inject.runtime)
     implementation(libs.androidx.activity.compose)
     implementation(libs.accompanist.systemUiController)
     implementation(libs.datePickerTimeline)

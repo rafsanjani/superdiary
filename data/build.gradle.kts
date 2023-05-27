@@ -4,6 +4,7 @@
 
 plugins {
     kotlin("multiplatform")
+    alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
     alias(libs.plugins.sqldelight)
     id("com.rickclephas.kmp.nativecoroutines") version "0.13.3"
@@ -37,6 +38,7 @@ kotlin {
                 implementation(libs.kotlin.coroutines.core)
                 implementation(libs.kotlin.coroutines.native)
                 implementation(libs.kotlin.datetime)
+                implementation(libs.kotlin.inject.runtime)
                 implementation(libs.square.sqldelight.coroutinesExt)
             }
         }
@@ -97,6 +99,11 @@ sqldelight {
         }
     }
 }
+
+dependencies {
+    add("kspAndroid", libs.kotlin.inject.compiler.ksp)
+}
+
 
 android {
     namespace = "com.foreverrafs.superdiary"
