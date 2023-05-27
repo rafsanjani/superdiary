@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.dagger.hilt)
     kotlin("kapt")
 }
 
@@ -93,9 +92,8 @@ dependencies {
     implementation(libs.compose.material.material3.windowSizeClass)
     implementation(libs.compose.material.iconsextended)
     implementation(libs.androidx.material)
-    kapt(libs.dagger.hilt.compiler)
-    implementation(libs.dagger.hilt)
-    implementation(libs.dagger.hilt.testing)
+    ksp("me.tatarka.inject:kotlin-inject-compiler-ksp:0.6.1")
+    implementation("me.tatarka.inject:kotlin-inject-runtime:0.6.1")
     implementation(libs.androidx.activity.compose)
     implementation(libs.accompanist.systemUiController)
     implementation(libs.datePickerTimeline)
