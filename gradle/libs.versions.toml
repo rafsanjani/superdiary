@@ -118,7 +118,7 @@ accompanist-systemUiController = { module = "com.google.accompanist:accompanist-
 kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
-kotlin-coroutines-native = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0"
+kotlin-coroutines-native = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1"
 
 dokka = "org.jetbrains.dokka:dokka-gradle-plugin:1.8.10"
 kotlin-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
