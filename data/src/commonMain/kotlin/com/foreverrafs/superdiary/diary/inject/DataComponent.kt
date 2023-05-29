@@ -1,7 +1,5 @@
-package com.foreverrafs.superdiary.android.di
+package com.foreverrafs.superdiary.diary.inject
 
-import android.content.Context
-import com.foreverrafs.superdiary.AndroidDatabaseDriver
 import com.foreverrafs.superdiary.diary.Database
 import com.foreverrafs.superdiary.diary.DatabaseDriver
 import com.foreverrafs.superdiary.diary.datasource.DataSource
@@ -14,7 +12,7 @@ import me.tatarka.inject.annotations.Component
 import me.tatarka.inject.annotations.Provides
 
 @Component
-abstract class AppComponent {
+interface DataComponent : DatabaseComponent {
     @Provides
     fun provideAddDiaryUseCase(dataSource: DataSource): AddDiaryUseCase =
         AddDiaryUseCase(dataSource)
@@ -30,10 +28,6 @@ abstract class AppComponent {
     @Provides
     fun searchDiaryUseCase(dataSource: DataSource): SearchDiaryUseCase =
         SearchDiaryUseCase(dataSource)
-
-    @Provides
-    fun provideDatabaseDriver(context: Context): DatabaseDriver =
-        AndroidDatabaseDriver(context)
 
     @Provides
     fun provideDataBase(databaseDriver: DatabaseDriver): Database = Database(databaseDriver)
