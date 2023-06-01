@@ -44,7 +44,6 @@ import com.foreverrafs.superdiary.diary.Database
 import com.foreverrafs.superdiary.diary.datasource.LocalDataSource
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryUseCase
-import com.ramcosta.composedestinations.annotation.Destination
 import io.github.boguszpawlowski.composecalendar.SelectableCalendar
 import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
 import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
@@ -54,9 +53,12 @@ import kotlinx.datetime.toKotlinLocalDate
 import java.time.format.TextStyle
 import java.util.Locale
 
-@Destination
+typealias CalendarScreen = @Composable () -> Unit
+
+//@Destination
 @Composable
-@AppNavGraph(start = false)
+//@AppNavGraph(start = false)
+
 fun CalendarScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()

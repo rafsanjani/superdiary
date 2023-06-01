@@ -10,13 +10,22 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.foreverrafs.superdiary.android.components.SuperDiaryAppBar
+import com.foreverrafs.superdiary.android.di.ApplicationComponent
+import com.foreverrafs.superdiary.android.navigation.AppNavigation
 import com.foreverrafs.superdiary.android.navigation.BottomBar
-import com.foreverrafs.superdiary.android.screens.NavGraphs
-import com.ramcosta.composedestinations.DestinationsNavHost
 
 class MainActivity : ComponentActivity() {
+    private val appComponent by lazy {
+        ApplicationComponent.from(this)
+    }
+
+    private val appScreens by lazy {
+        appComponent.appScreens
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
         setContent {
             AppTheme {
@@ -34,8 +43,8 @@ class MainActivity : ComponentActivity() {
                             .padding(it)
                             .fillMaxSize()
                     ) {
-                        DestinationsNavHost(
-                            navGraph = NavGraphs.app,
+                        AppNavigation(
+                            modifier = Modifier.fillMaxSize(),
                             navController = navController
                         )
                     }

@@ -7,42 +7,29 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.foreverrafs.superdiary.android.AppTheme
-import com.foreverrafs.superdiary.android.screens.NavGraphs
-import com.foreverrafs.superdiary.android.screens.appCurrentDestinationAsState
-import com.foreverrafs.superdiary.android.screens.destinations.Destination
-import com.foreverrafs.superdiary.android.screens.startAppDestination
-import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.navigation.popBackStack
-import com.ramcosta.composedestinations.navigation.popUpTo
-import com.ramcosta.composedestinations.utils.isRouteOnBackStack
 
 @Composable
 fun BottomBar(
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
-    val currentDestination: Destination = navController.appCurrentDestinationAsState().value
-        ?: NavGraphs.app.startAppDestination
-
     NavigationBar(modifier = modifier) {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
+
         BottomBarDestination.values().forEach { destination ->
-            val isCurrentDestOnBackStack = navController.isRouteOnBackStack(destination.direction)
-
             NavigationBarItem(
-                selected = currentDestination == destination.direction,
+                selected = currentRoute == destination.label,
                 onClick = {
-                    if (isCurrentDestOnBackStack) {
-                        navController.popBackStack(destination.direction, false)
-                        return@NavigationBarItem
-                    }
-
-                    navController.navigate(destination.direction) {
-                        popUpTo(NavGraphs.app.startAppDestination) {
+                    navController.navigate(destination.route) {
+                        popUpTo(destination.route) {
                             saveState = true
                         }
 

@@ -38,40 +38,33 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.foreverrafs.superdiary.AndroidDatabaseDriver
 import com.foreverrafs.superdiary.android.AppTheme
 import com.foreverrafs.superdiary.android.components.DiaryList
-import com.foreverrafs.superdiary.diary.Database
-import com.foreverrafs.superdiary.diary.datasource.LocalDataSource
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryUseCase
-import com.ramcosta.composedestinations.annotation.Destination
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.temporal.ChronoUnit
+import me.tatarka.inject.annotations.Inject
+import java.time.LocalDate
 import kotlin.random.Random
 
+
+typealias DiaryTimelineScreen = @Composable (
+) -> Unit
+
 @Composable
-@Destination
-@AppNavGraph(start = true)
-fun DiaryTimelineScreen() {
-    val context = LocalContext.current
+@Inject
+fun DiaryTimelineScreen(
+    getDiariesUseCase: GetAllDiariesUseCase,
+    searchDiaryUseCase: SearchDiaryUseCase,
+) {
     val coroutineScope = rememberCoroutineScope()
 
-    val dataSource = LocalDataSource(
-        Database(AndroidDatabaseDriver(context))
-    )
-
-    val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
-    val searchDiaryUseCase = SearchDiaryUseCase(dataSource)
-
-    val diaries by getAllDiariesUseCase.diaries.collectAsState(initial = listOf())
+    val diaries by getDiariesUseCase.diaries.collectAsState(initial = listOf())
     var searchDiaryResults by remember {
         mutableStateOf(listOf<Diary>())
     }
@@ -240,7 +233,7 @@ private fun Preview() {
                     Diary(
                         id = Random.nextLong(),
                         entry = "Test Diary",
-                        date = Instant.now().minus(it.toLong(), ChronoUnit.DAYS).toString()
+                        date = LocalDate.now().minusDays(it.toLong()).toString()
                     )
                 },
                 onSearchQueryChange = {},

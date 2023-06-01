@@ -29,6 +29,7 @@ abstract class ApplicationComponent(
     @get:Provides val application: Application,
 ) : DataComponent {
     abstract val getAllDiariesUseCase: GetAllDiariesUseCase
+    abstract val appScreens: AppScreens
 
     companion object {
         fun from(context: Context): ApplicationComponent {

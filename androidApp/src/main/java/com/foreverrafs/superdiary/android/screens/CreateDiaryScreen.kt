@@ -21,11 +21,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.foreverrafs.superdiary.android.AppTheme
-import com.ramcosta.composedestinations.annotation.Destination
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-@Destination
 @Composable
 fun CreateDiaryScreen() {
     Content()
