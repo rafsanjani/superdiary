@@ -55,10 +55,7 @@ import java.util.Locale
 
 typealias CalendarScreen = @Composable () -> Unit
 
-//@Destination
 @Composable
-//@AppNavGraph(start = false)
-
 fun CalendarScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()

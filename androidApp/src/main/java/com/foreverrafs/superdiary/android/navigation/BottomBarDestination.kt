@@ -5,7 +5,6 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.ui.graphics.vector.ImageVector
 
-
 @Suppress("unused")
 enum class BottomBarDestination(
     val icon: ImageVector,

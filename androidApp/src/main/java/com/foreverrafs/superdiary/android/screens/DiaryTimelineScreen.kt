@@ -52,9 +52,7 @@ import me.tatarka.inject.annotations.Inject
 import java.time.LocalDate
 import kotlin.random.Random
 
-
-typealias DiaryTimelineScreen = @Composable (
-) -> Unit
+typealias DiaryTimelineScreen = @Composable () -> Unit
 
 @Composable
 @Inject

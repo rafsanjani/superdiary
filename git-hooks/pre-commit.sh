@@ -9,10 +9,11 @@ if [ -z "$CHANGED_FILES" ]; then
     exit 0
 fi;
 
-echo "Running ktlint over these files:"
+echo "Running detekt over these files:"
 echo "$CHANGED_FILES"
 
 ./gradlew --quiet ktlintFormat -PinternalKtlintGitFilter="$CHANGED_FILES"
+detekt --input "$CHANGED_FILES" 2>&1
 
 echo "Completed ktlint run."
 
@@ -23,4 +24,4 @@ echo "$CHANGED_FILES" | while read -r file; do
 done
 
 echo "Completed ktlint hook."
-######## KTLINT-GRADLE HOOK END ########
+######## DETEKT-GRADLE HOOK END ########

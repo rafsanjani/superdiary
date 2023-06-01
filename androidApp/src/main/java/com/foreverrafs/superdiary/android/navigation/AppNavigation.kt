@@ -7,7 +7,6 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 
 @Composable
 fun AppNavigation(modifier: Modifier = Modifier, navController: NavHostController) {
-    AnimatedNavHost(modifier = modifier, navController = navController, startDestination = "") {
-
+    AnimatedNavHost(modifier = modifier, navController = navController, startDestination = "home") {
     }
 }
