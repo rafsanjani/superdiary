@@ -79,8 +79,6 @@ dependencies {
     implementation(projects.data)
     implementation(platform(libs.compose.bom))
     implementation(projects.calendar)
-    implementation(libs.compose.destinations.runtime)
-    ksp(libs.compose.destinations.processor)
     implementation(libs.compose.ui.ui)
     implementation(libs.compose.ui.tooling)
     implementation(libs.accompanist.permissions)

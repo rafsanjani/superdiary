@@ -11,5 +11,5 @@ detekt {
 
 dependencies{
     detektPlugins(libs.detekt.formatting)
-    detektPlugins(libs.detekt.twitterComposeRules)
+    detektPlugins(libs.twitterComposeRules)
 }
