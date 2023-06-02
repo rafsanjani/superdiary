@@ -8,11 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
 import com.foreverrafs.superdiary.android.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.android.di.ApplicationComponent
 import com.foreverrafs.superdiary.android.navigation.AppNavigation
 import com.foreverrafs.superdiary.android.navigation.BottomBar
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 class MainActivity : ComponentActivity() {
     private val appComponent by lazy {
@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             AppTheme {
-                val navController = rememberNavController()
+                val navController = rememberAnimatedNavController()
                 Scaffold(
                     bottomBar = {
                         BottomBar(navController = navController)
@@ -44,7 +44,8 @@ class MainActivity : ComponentActivity() {
                     ) {
                         AppNavigation(
                             modifier = Modifier.fillMaxSize(),
-                            navController = navController
+                            navController = navController,
+                            appScreens = appScreens,
                         )
                     }
                 }

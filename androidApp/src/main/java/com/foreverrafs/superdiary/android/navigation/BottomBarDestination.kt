@@ -11,6 +11,6 @@ enum class BottomBarDestination(
     val label: String,
     val route: String,
 ) {
-    Timeline(Icons.Default.Timeline, "Timeline", "timeline"),
-    Calendar(Icons.Default.CalendarMonth, "Timeline", "timeline"),
+    Timeline(Icons.Default.Timeline, "Timeline", Routes.DiaryTimelineScreen),
+    Calendar(Icons.Default.CalendarMonth, "Calendar", Routes.CalendarScreen),
 }

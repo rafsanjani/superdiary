@@ -15,22 +15,36 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.foreverrafs.superdiary.android.AppTheme
+import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
+import kotlinx.coroutines.launch
+import me.tatarka.inject.annotations.Inject
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+typealias CreateDiaryScreen = @Composable () -> Unit
+
 @Composable
-fun CreateDiaryScreen() {
-    Content()
+@Inject
+fun CreateDiaryScreen(addDiaryUseCase: AddDiaryUseCase) {
+    val coroutineScope = rememberCoroutineScope()
+
+    Content { diary ->
+        coroutineScope.launch {
+            addDiaryUseCase(diary)
+        }
+    }
 }
 
 @Composable
-private fun Content() {
+private fun Content(onAddDiary: (diary: Diary) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -73,7 +87,7 @@ private fun Content() {
 private fun Preview() {
     AppTheme {
         Surface {
-            Content()
+            Content(onAddDiary = {})
         }
     }
 }

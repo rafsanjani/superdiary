@@ -49,11 +49,7 @@ fun DiaryList(
     modifier: Modifier = Modifier
 ) {
     val groupedDiaries = remember(diaries) {
-        diaries
-            .groupByDate()
-            .toSortedMap { item1, item2 ->
-                item1.priority - item2.priority
-            }
+        diaries.groupByDate()
     }
 
     val listState = rememberLazyListState()

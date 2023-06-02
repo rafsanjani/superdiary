@@ -31,17 +31,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.AndroidDatabaseDriver
 import com.foreverrafs.superdiary.android.AppTheme
 import com.foreverrafs.superdiary.android.components.DiaryList
-import com.foreverrafs.superdiary.diary.Database
-import com.foreverrafs.superdiary.diary.datasource.LocalDataSource
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryUseCase
 import io.github.boguszpawlowski.composecalendar.SelectableCalendar
@@ -50,27 +46,25 @@ import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toKotlinLocalDate
+import me.tatarka.inject.annotations.Inject
 import java.time.format.TextStyle
 import java.util.Locale
 
 typealias CalendarScreen = @Composable () -> Unit
 
 @Composable
-fun CalendarScreen(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
+@Inject
+fun CalendarScreen(
+    searchDiaryUseCase: SearchDiaryUseCase
+) {
     val coroutineScope = rememberCoroutineScope()
 
-    val dataSource = LocalDataSource(
-        Database(AndroidDatabaseDriver(context))
-    )
-
-    val searchDiaryUseCase = SearchDiaryUseCase(dataSource)
     var diaries by remember {
         mutableStateOf(listOf<Diary>())
     }
 
     Content(
-        modifier = modifier,
+        modifier = Modifier.fillMaxSize(),
         onSearch = { date ->
             coroutineScope.launch {
                 diaries = searchDiaryUseCase.searchByDate(date = date)

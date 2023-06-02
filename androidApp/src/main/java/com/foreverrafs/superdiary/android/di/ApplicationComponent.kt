@@ -20,7 +20,6 @@ import android.app.Application
 import android.content.Context
 import com.foreverrafs.superdiary.android.DiaryApp
 import com.foreverrafs.superdiary.diary.inject.DataComponent
-import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import me.tatarka.inject.annotations.Component
 import me.tatarka.inject.annotations.Provides
 
@@ -28,7 +27,6 @@ import me.tatarka.inject.annotations.Provides
 abstract class ApplicationComponent(
     @get:Provides val application: Application,
 ) : DataComponent {
-    abstract val getAllDiariesUseCase: GetAllDiariesUseCase
     abstract val appScreens: AppScreens
 
     companion object {
