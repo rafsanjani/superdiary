@@ -6,13 +6,6 @@ import androidx.navigation.NavHostController
 import com.foreverrafs.superdiary.android.di.AppScreens
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
-
-object Routes {
-    const val CalendarScreen = "calendar-screen"
-    const val CreateDiaryScreen = "create-diary"
-    const val DiaryTimelineScreen = "diary-timeline"
-}
-
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
@@ -24,7 +17,9 @@ fun AppNavigation(
         navController = navController,
         startDestination = Routes.DiaryTimelineScreen
     ) {
-        composable(route = Routes.DiaryTimelineScreen) {
+        composable(
+            route = Routes.DiaryTimelineScreen,
+        ) {
             appScreens.diaryTimelineScreen()
         }
 
@@ -36,4 +31,10 @@ fun AppNavigation(
             appScreens.createDiaryScreen()
         }
     }
+}
+
+object Routes {
+    const val CalendarScreen = "calendar-screen"
+    const val CreateDiaryScreen = "create-diary"
+    const val DiaryTimelineScreen = "diary-timeline"
 }

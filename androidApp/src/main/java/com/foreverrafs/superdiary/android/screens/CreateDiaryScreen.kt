@@ -44,6 +44,7 @@ fun CreateDiaryScreen(addDiaryUseCase: AddDiaryUseCase) {
 }
 
 @Composable
+@Suppress("UnusedPrivateMember")
 private fun Content(onAddDiary: (diary: Diary) -> Unit) {
     Column(
         modifier = Modifier

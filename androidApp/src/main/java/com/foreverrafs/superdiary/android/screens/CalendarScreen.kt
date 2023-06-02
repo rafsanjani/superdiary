@@ -55,6 +55,7 @@ typealias CalendarScreen = @Composable () -> Unit
 @Composable
 @Inject
 fun CalendarScreen(
+    modifier: Modifier = Modifier,
     searchDiaryUseCase: SearchDiaryUseCase
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -64,7 +65,7 @@ fun CalendarScreen(
     }
 
     Content(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         onSearch = { date ->
             coroutineScope.launch {
                 diaries = searchDiaryUseCase.searchByDate(date = date)
