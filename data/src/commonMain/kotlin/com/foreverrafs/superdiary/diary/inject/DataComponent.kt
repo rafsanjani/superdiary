@@ -12,26 +12,33 @@ import me.tatarka.inject.annotations.Component
 import me.tatarka.inject.annotations.Provides
 
 @Component
+@AppScope
 interface DataComponent : DatabaseComponent {
     @Provides
+    @AppScope
     fun provideAddDiaryUseCase(dataSource: DataSource): AddDiaryUseCase =
         AddDiaryUseCase(dataSource)
 
     @Provides
+    @AppScope
     fun provideDeleteDiaryUseCase(dataSource: DataSource): DeleteDiaryUseCase =
         DeleteDiaryUseCase(dataSource)
 
     @Provides
+    @AppScope
     fun provideGetAllDiariesUseCase(dataSource: DataSource): GetAllDiariesUseCase =
         GetAllDiariesUseCase(dataSource)
 
     @Provides
+    @AppScope
     fun searchDiaryUseCase(dataSource: DataSource): SearchDiaryUseCase =
         SearchDiaryUseCase(dataSource)
 
     @Provides
+    @AppScope
     fun provideDataBase(databaseDriver: DatabaseDriver): Database = Database(databaseDriver)
 
     @Provides
+    @AppScope
     fun provideDataSource(database: Database): DataSource = LocalDataSource(database)
 }
