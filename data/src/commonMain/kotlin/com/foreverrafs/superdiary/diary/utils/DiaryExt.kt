@@ -8,7 +8,7 @@ import kotlinx.datetime.periodUntil
 import kotlinx.datetime.todayIn
 
 fun List<Diary>.groupByDate(clock: Clock = Clock.System): Map<PrioritizedDuration, List<Diary>> =
-    groupBy { getDurationString(it, clock) }
+    groupBy { getDurationString(it, clock) }.toList().sortedBy { it.first.priority }.toMap()
 
 /**
  * Durations are weighted from 0 - 4 with 0 being the most prioritized and
@@ -36,7 +36,7 @@ private fun getDurationString(diary: Diary, clock: Clock = Clock.System): Priori
         val days = difference.days
         return PrioritizedDuration(
             label = "$days day${if (days > 1) "s" else ""} ago",
-            priority = 1
+            priority = days + 1
         )
     }
 
@@ -44,7 +44,7 @@ private fun getDurationString(diary: Diary, clock: Clock = Clock.System): Priori
         val weeks = difference.days / 7
         return PrioritizedDuration(
             label = "$weeks week${if (weeks > 1) "s" else ""} ago",
-            priority = 2
+            priority = 7 * weeks
         )
     }
 
@@ -52,12 +52,12 @@ private fun getDurationString(diary: Diary, clock: Clock = Clock.System): Priori
         val months = difference.months
         return PrioritizedDuration(
             label = "$months month${if (months > 1) "s" else ""} ago",
-            priority = 3
+            priority = 30 * months
         )
     }
 
     return PrioritizedDuration(
         label = "${difference.years} year(s) ago",
-        priority = 4
+        priority = 360 * difference.years
     )
 }

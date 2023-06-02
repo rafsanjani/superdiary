@@ -19,7 +19,6 @@ class DiaryGroupingTest {
 
     @Test
     fun `test diary groupings by day`() {
-
         val diaries = createDiaries(
             durationSpacing = DateTimeUnit.DAY,
             startDate = LocalDate.parse(isoString = "2023-05-01"),
@@ -66,6 +65,25 @@ class DiaryGroupingTest {
         val groups = diaries.groupByDate(clock)
 
         assertThat(groups.size).isEqualTo(4)
+    }
+
+    @Test
+    fun `test diary grouping prioritization`() {
+        val diaries = createDiaries(
+            durationSpacing = DateTimeUnit.WEEK,
+            startDate = LocalDate.parse(isoString = "2023-04-08"),
+            count = 4
+        )
+
+        // This grouping should contain days and weeks
+        val groups = diaries.groupByDate(clock)
+        val priorities = groups.keys.toList()
+
+        var previousPriority = -1
+        priorities.forEach { prioritizedDuration ->
+            assertThat(prioritizedDuration.priority > previousPriority)
+            previousPriority = prioritizedDuration.priority
+        }
     }
 
     private fun createDiaries(
