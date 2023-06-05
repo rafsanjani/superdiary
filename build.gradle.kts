@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.android).apply(false)
     alias(libs.plugins.detekt).apply(false)
     alias(libs.plugins.ktlint).apply(false)
-    id("org.jetbrains.dokka") version "1.6.0"
+    id("org.jetbrains.dokka") version "1.8.10"
 }
 
 apply {
