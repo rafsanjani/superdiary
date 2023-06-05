@@ -5,7 +5,7 @@ compose = "1.4.3"
 compose-bom = "2023.05.01"
 composeLintChecks = "1.2.0"
 
-kalendar = "1.3.1"
+kalendar = "1.3.2"
 kotestRunnerJunit5 = "5.6.2"
 kotlinInjectRuntime = "0.6.1"
 kotlinInjectCompilerKsp = "0.6.1"
