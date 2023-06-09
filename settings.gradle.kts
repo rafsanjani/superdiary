@@ -4,6 +4,7 @@ pluginManagement {
         google()
         gradlePluginPortal()
         maven("https://jitpack.io")
+        mavenLocal()
     }
 }
 
@@ -12,6 +13,13 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://jitpack.io")
+        mavenLocal()
+    }
+
+    versionCatalogs {
+        create("libs") {
+            from("io.github.rafsanjani:versions:0.0.4")
+        }
     }
 }
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
