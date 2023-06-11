@@ -117,7 +117,8 @@ private fun Content(
                         coroutineScope.launch {
                             modalBottomSheetState.show()
                         }
-                    }, shape = CircleShape
+                    },
+                    shape = CircleShape
                 ) {
                     Icon(imageVector = Icons.Default.Add, contentDescription = null)
                 }
@@ -172,7 +173,7 @@ private fun SearchField(
         onQueryChange(query)
     }
 
-    var active by rememberSaveable() {
+    var active by rememberSaveable {
         mutableStateOf(false)
     }
 
@@ -217,10 +218,12 @@ private fun SearchField(
 }
 
 @Preview(
-    name = "Night Mode", uiMode = Configuration.UI_MODE_NIGHT_YES
+    name = "Night Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
 )
 @Preview(
-    name = "Day Mode", uiMode = Configuration.UI_MODE_NIGHT_NO
+    name = "Day Mode",
+    uiMode = Configuration.UI_MODE_NIGHT_NO
 )
 @Composable
 private fun Preview() {
