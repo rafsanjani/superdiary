@@ -1,0 +1,87 @@
+@file:Suppress("UNUSED_VARIABLE")
+
+plugins {
+    kotlin("multiplatform")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.sqldelight)
+    alias(libs.plugins.ricklephas.kmp.nativeCoroutines)
+}
+
+@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
+kotlin {
+    targetHierarchy.default()
+
+    android {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
+        }
+    }
+
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+//    listOf(
+//        iosX64(),
+//        iosArm64(),
+//        iosSimulatorArm64()
+//    ).forEach {
+//        it.binaries.framework {
+//            baseName = "data"
+//            binaryOption("bundleId", "com.foreverrafs.superdiary.data")
+//        }
+//    }
+
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(libs.kotlin.coroutines.core)
+                implementation(libs.kotlin.coroutines.native)
+                implementation(libs.kotlin.datetime)
+                implementation(libs.kotlin.inject.runtime)
+                implementation(libs.square.sqldelight.coroutinesExt)
+            }
+        }
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.square.sqldelight.driver.android)
+                implementation(libs.square.sqldelight.coroutinesExt)
+            }
+        }
+
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.junit)
+                implementation(libs.kotlin.coroutines.test)
+                implementation(libs.turbine)
+                implementation(libs.assertk.common)
+            }
+        }
+        val iosMain by getting {
+            dependencies {
+                implementation(libs.square.sqldelight.driver.native)
+                implementation(libs.kotlin.coroutines.core)
+            }
+        }
+    }
+}
+
+android {
+    namespace = "com.foreverrafs.data"
+    compileSdk = libs.versions.compileSdk.get().toInt()
+    defaultConfig {
+        minSdk = libs.versions.minimumSdk.get().toInt()
+    }
+}
+
+sqldelight {
+    databases {
+        create("KmpSuperDiaryDB") {
+            packageName.set("db")
+        }
+    }
+}

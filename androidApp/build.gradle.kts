@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.android)
-    kotlin("kapt")
 }
 
 android {
@@ -23,7 +22,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+        kotlinCompilerExtensionVersion = "1.4.6"
     }
 
     kotlinOptions {
@@ -76,7 +75,8 @@ android {
 }
 
 dependencies {
-    implementation(projects.data)
+    implementation(projects.common.ui)
+    implementation(projects.common.data)
     implementation(platform(libs.compose.bom))
     implementation(projects.calendar)
     implementation(libs.compose.ui.ui)

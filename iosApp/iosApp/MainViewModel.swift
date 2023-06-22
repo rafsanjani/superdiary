@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import shared
+import common
 import RxSwift
 import KMPNativeCoroutinesRxSwift
 
@@ -24,8 +24,6 @@ import KMPNativeCoroutinesRxSwift
         didSet { isMonitoring = disposable != nil }
     }
     
-    
-    @Published var viewState: Result = Result.Loading()
 
     func loadDiaries() {
         startMonitoring()

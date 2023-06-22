@@ -3,6 +3,7 @@ pluginManagement {
         mavenCentral()
         google()
         gradlePluginPortal()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven("https://jitpack.io")
         mavenLocal()
     }
@@ -13,18 +14,26 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://jitpack.io")
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         mavenLocal()
     }
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:0.0.7")
+            from("io.github.rafsanjani:versions:0.0.8")
+
+            // Because compose multiplatform doesn't support 1.8.22 yet
+            version("kotlin", "1.8.20")
+            version("ksp", "1.8.20-1.0.11")
         }
     }
 }
+
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "Superdiary"
 include(":androidApp")
-include(":data")
 include(":calendar")
+include(":common:data")
+include(":common:ui")
+include(":common")

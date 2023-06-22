@@ -6,7 +6,8 @@ plugins {
     alias(libs.plugins.kotlin.android).apply(false)
     alias(libs.plugins.detekt).apply(false)
     alias(libs.plugins.ktlint).apply(false)
-    id("org.jetbrains.dokka") version "1.8.10"
+    alias(libs.plugins.kotlin.dokka)
+    id("org.jetbrains.compose") version "1.4.0"
 }
 
 apply {
@@ -15,6 +16,6 @@ apply {
 
 subprojects {
     apply {
-        from("../scripts/detekt.gradle")
+        from("${rootDir.path}/scripts/detekt.gradle")
     }
 }
