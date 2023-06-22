@@ -23,7 +23,6 @@ kotlin {
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
-//            linkerOpts.add("-lsqlite3")
             baseName = "common"
             export(projects.common.data)
             export(projects.common.ui)
