@@ -11,7 +11,7 @@ A simple diary app, mostly focused on Clean Architecture design pattern and 100%
     </a>
 </div>
 
-### Screens
+### Screens Android
 |                                                         Home                                                         |                                                         Home                                                         |                                                         Home                                                         |
 |:--------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------:|
 | <img src="https://github.com/Rafsanjani/superdiary/assets/9197459/78beb4e0-8cd0-4a60-bff7-77ce2e8612ab" width=240 /> | <img src="https://github.com/Rafsanjani/superdiary/assets/9197459/78beb4e0-8cd0-4a60-bff7-77ce2e8612ab" width=240 /> | <img src="https://github.com/Rafsanjani/superdiary/assets/9197459/78beb4e0-8cd0-4a60-bff7-77ce2e8612ab" width=240 /> |
