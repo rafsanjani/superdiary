@@ -12,15 +12,10 @@ plugins {
 kotlin {
     targetHierarchy.default()
 
-    android {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "1.8"
-            }
-        }
-    }
+    android()
 
     iosX64()
+    jvm()
     iosArm64()
     iosSimulatorArm64()
 
@@ -64,6 +59,11 @@ android {
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
         minSdk = libs.versions.minimumSdk.get().toInt()
+    }
+
+    compileOptions {
+        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
     }
 }
 

@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun App() {
-    Surface(modifier = Modifier.fillMaxSize(), color = Color.Green) {
+    Surface(modifier = Modifier.fillMaxSize(), color = Color.Cyan) {
         Box(contentAlignment = Alignment.Center) {
             Button(onClick = {}) {
                 Text("Hello Compose")

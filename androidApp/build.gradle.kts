@@ -75,7 +75,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.common.ui)
+//    implementation(projects.common.ui)
     implementation(projects.common.data)
     implementation(platform(libs.compose.bom))
     implementation(projects.calendar)

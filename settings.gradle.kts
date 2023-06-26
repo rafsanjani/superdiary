@@ -20,9 +20,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:0.0.8")
-
-            // Because compose multiplatform doesn't support 1.8.22 yet
+            from("io.github.rafsanjani:versions:0.0.9")
             version("kotlin", "1.8.20")
             version("ksp", "1.8.20-1.0.11")
         }

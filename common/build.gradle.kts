@@ -1,7 +1,8 @@
-@file:Suppress("UNUSED_VARIABLE")
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
     kotlin("multiplatform")
+    kotlin("native.cocoapods")
     id("com.android.library")
 }
 
@@ -9,24 +10,29 @@ plugins {
 kotlin {
     targetHierarchy.default()
 
-    android {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "1.8"
-            }
-        }
-    }
+    jvmToolchain(17)
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach {
-        it.binaries.framework {
+    android()
+
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+
+    cocoapods {
+        summary = "Some description for the Shared Module"
+        homepage = "Link to the Shared Module homepage"
+        version = "1.0"
+        ios.deploymentTarget = "14.1"
+        podfile = project.file("../iosApp/Podfile")
+        framework {
             baseName = "common"
+            isStatic = true
+
             export(projects.common.data)
             export(projects.common.ui)
-            isStatic = true
+
+            binaryOption("bundleId", "com.foreverrafs.superdiary.common")
         }
     }
 
@@ -34,12 +40,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(projects.common.data)
-                implementation(projects.common.ui)
-            }
-        }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
             }
         }
 
@@ -53,9 +53,16 @@ kotlin {
 }
 
 android {
-    namespace = "com.foreverrafs.common"
-    compileSdk = 33
+    namespace = "com.foreverrafs.kmmcocoapods"
+    compileSdk = libs.versions.compileSdk.get().toInt()
+
     defaultConfig {
-        minSdk = 26
+        minSdk = libs.versions.compileSdk.get().toInt()
     }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
 }
