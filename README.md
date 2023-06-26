@@ -19,7 +19,7 @@ A simple diary app, mostly focused on Clean Architecture design pattern and 100%
 ### Screens iOS - In Progress
 
 ### Status: 🚧 In progress
-<p>Superdiary is still under heavy development and some screens are yet to be designed.</p>
+<p>Superdiary is still under heavy development and some screens are yet to be designed. This app is highly experimental and meant to serve as my personal playground for Kotlin multiplatform </p>
 
 
 ### License
