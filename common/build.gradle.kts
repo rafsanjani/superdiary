@@ -1,8 +1,10 @@
+@file:Suppress("UNUSED_VARIABLE")
+
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("com.android.library")
-    id("dev.icerock.mobile.multiplatform-resources")
+    alias(libs.plugins.mokoResources)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -29,7 +31,6 @@ kotlin {
             linkerOpts("-lsqlite3")
             export(projects.common.data)
             export(projects.common.ui)
-            isStatic = true
 
             binaryOption("bundleId", "com.foreverrafs.superdiary.common")
 
@@ -43,7 +44,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(projects.common.data)
+                api(projects.common.ui)
             }
         }
 
@@ -57,7 +58,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.foreverrafs.kmmcocoapods"
+    namespace = "com.foreverrafs.superdiary"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

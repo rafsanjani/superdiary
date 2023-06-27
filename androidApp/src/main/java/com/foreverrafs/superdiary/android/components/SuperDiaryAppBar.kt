@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.foreverrafs.superdiary.android.AppTheme
+import com.foreverrafs.superdiary.ui.AppTheme
 
 @Composable
 fun SuperDiaryAppBar(
@@ -25,11 +25,11 @@ fun SuperDiaryAppBar(
                 modifier = Modifier
                     .fillMaxWidth(),
                 style = MaterialTheme.typography.displayLarge,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = MaterialTheme.colorScheme.background,
         ),
     )
 }

@@ -21,9 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.foreverrafs.superdiary.android.AppTheme
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
+import com.foreverrafs.superdiary.ui.AppTheme
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
 import java.time.LocalDateTime
@@ -49,14 +49,14 @@ private fun Content(onAddDiary: (diary: Diary) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.background),
     ) {
         val today = LocalDateTime.now()
         Text(
             text = "Entry for today: ${DateTimeFormatter.ofPattern("dd MMM, yyyy").format(today)}",
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
         )
 
         var entry by remember {
@@ -69,14 +69,14 @@ private fun Content(onAddDiary: (diary: Diary) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .padding(16.dp)
+                .padding(16.dp),
         )
         Button(
             onClick = { /*TODO*/ },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            shape = RoundedCornerShape(2.dp)
+            shape = RoundedCornerShape(2.dp),
         ) {
             Text(text = "Save", style = MaterialTheme.typography.bodySmall)
         }

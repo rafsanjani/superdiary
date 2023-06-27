@@ -14,8 +14,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.resources.MR
 import dev.icerock.moko.resources.compose.fontFamilyResource
+import superdiary.common.ui.MR
 
 @Composable
 fun AppTheme(
@@ -59,15 +59,6 @@ fun AppTheme(
         medium = RoundedCornerShape(4.dp),
         large = RoundedCornerShape(0.dp),
     )
-
-// //    val systemUiController = rememberSystemUiController()
-//    val bgColor = colorScheme.background
-//
-//    SideEffect {
-//        systemUiController.setStatusBarColor(
-//            color = bgColor
-//        )
-//    }
 
     MaterialTheme(
         colorScheme = colorScheme,

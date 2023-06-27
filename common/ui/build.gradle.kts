@@ -1,8 +1,10 @@
+@file:Suppress("UNUSED_VARIABLE")
+
 plugins {
+    kotlin("multiplatform")
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
-    kotlin("multiplatform")
-    id("dev.icerock.mobile.multiplatform-resources")
+    alias(libs.plugins.mokoResources)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -21,21 +23,26 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api("dev.icerock.moko:resources:0.23.0")
-                implementation(compose.foundation)
-                implementation("dev.icerock.moko:resources-compose:0.23.0")
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
+                implementation(compose.foundation)
+                implementation(compose.material3)
+                api(libs.moko.resources)
+                implementation(libs.moko.resources.compose)
                 implementation(compose.material3)
                 implementation("org.jetbrains.kotlinx:atomicfu:0.20.2")
             }
         }
+
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
             }
         }
+
         val jvmMain by getting {
+            resources.srcDirs("src/androidMain/res")
+            resources.srcDirs("src/commonMain/resources")
             dependencies {
                 implementation(compose.desktop.currentOs)
             }
@@ -59,8 +66,4 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-}
-
-multiplatformResources {
-    multiplatformResourcesPackage = "com.foreverrafs.superdiary.resources"
 }

@@ -20,7 +20,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:0.0.9")
+            from("io.github.rafsanjani:versions:0.2.0")
             version("kotlin", "1.8.20")
             version("ksp", "1.8.20-1.0.11")
         }
@@ -29,7 +29,7 @@ dependencyResolutionManagement {
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-rootProject.name = "Superdiary"
+rootProject.name = "superdiary"
 include(":androidApp")
 include(":calendar")
 include(":common:data")
