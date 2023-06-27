@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.ktlint).apply(false)
     alias(libs.plugins.kotlin.dokka)
     alias(libs.plugins.compose.multiplatform).apply(false)
+    id("dev.icerock.mobile.multiplatform-resources").version("0.23.0")
 }
 
 apply {
