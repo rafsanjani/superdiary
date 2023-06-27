@@ -10,8 +10,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.foreverrafs.superdiary.android.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.android.di.ApplicationComponent
+import com.foreverrafs.superdiary.android.navigation.AppNavigation
 import com.foreverrafs.superdiary.android.navigation.BottomBar
-import com.foreverrafs.superdiary.ui.App
+import com.foreverrafs.superdiary.ui.AppTheme
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 class MainActivity : ComponentActivity() {
@@ -42,12 +43,11 @@ class MainActivity : ComponentActivity() {
                             .padding(it)
                             .fillMaxSize(),
                     ) {
-//                        AppNavigation(
-//                            modifier = Modifier.fillMaxSize(),
-//                            navController = navController,
-//                            appScreens = appScreens,
-//                        )
-                        App()
+                        AppNavigation(
+                            modifier = Modifier.fillMaxSize(),
+                            navController = navController,
+                            appScreens = appScreens,
+                        )
                     }
                 }
             }
