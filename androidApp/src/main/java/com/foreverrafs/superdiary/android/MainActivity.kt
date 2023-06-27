@@ -8,11 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.foreverrafs.superdiary.android.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.android.di.ApplicationComponent
 import com.foreverrafs.superdiary.android.navigation.AppNavigation
 import com.foreverrafs.superdiary.android.navigation.BottomBar
 import com.foreverrafs.superdiary.ui.AppTheme
+import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 class MainActivity : ComponentActivity() {
