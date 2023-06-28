@@ -41,11 +41,11 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.foreverrafs.superdiary.android.components.DiaryList
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryUseCase
 import com.foreverrafs.superdiary.ui.AppTheme
+import com.foreverrafs.superdiary.ui.components.DiaryList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject

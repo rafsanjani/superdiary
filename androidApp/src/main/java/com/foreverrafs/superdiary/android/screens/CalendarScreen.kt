@@ -36,10 +36,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.android.components.DiaryList
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryUseCase
 import com.foreverrafs.superdiary.ui.AppTheme
+import com.foreverrafs.superdiary.ui.components.DiaryList
 import io.github.boguszpawlowski.composecalendar.SelectableCalendar
 import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
 import io.github.boguszpawlowski.composecalendar.selection.SelectionMode

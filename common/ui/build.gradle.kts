@@ -27,7 +27,10 @@ kotlin {
                 implementation(compose.components.resources)
                 implementation(compose.foundation)
                 implementation(compose.material3)
+                implementation(projects.common.data)
+                implementation(libs.kotlin.datetime)
                 api(libs.moko.resources)
+                implementation(libs.kotlin.inject.runtime)
                 implementation(libs.moko.resources.compose)
                 implementation(compose.material3)
                 implementation("org.jetbrains.kotlinx:atomicfu:0.20.2")
@@ -60,6 +63,10 @@ android {
         resources.srcDirs("src/androidMain/res")
         resources.srcDirs("src/commonMain/resources")
         resources.exclude("src/commonMain/resources/MR")
+    }
+
+    defaultConfig {
+        minSdk = libs.versions.minimumSdk.get().toInt()
     }
 
     compileOptions {

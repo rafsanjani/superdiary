@@ -1,8 +1,9 @@
-package com.foreverrafs.superdiary.android.components
+package com.foreverrafs.superdiary.ui.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,13 +37,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.android.style.sourceSansPro
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
-import java.time.LocalDate
-import java.time.format.TextStyle
-import java.util.Locale
+import com.foreverrafs.superdiary.ui.format
+import dev.icerock.moko.resources.compose.fontFamilyResource
+import kotlinx.datetime.LocalDate
+import superdiary.common.ui.MR
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DiaryList(
     diaries: List<Diary>,
@@ -150,12 +152,12 @@ private fun DiaryCard(
 
                         withStyle(
                             SpanStyle(
-                                fontFamily = sourceSansPro,
+                                fontFamily = fontFamilyResource(MR.fonts.SourceSans.regular),
                                 letterSpacing = letterSpacing,
                             ),
                         ) {
                             append(
-                                date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ROOT)
+                                date.format("E")
                                     .uppercase(),
                             )
                         }
@@ -164,7 +166,7 @@ private fun DiaryCard(
 
                         withStyle(
                             SpanStyle(
-                                fontFamily = sourceSansPro,
+                                fontFamily = fontFamilyResource(MR.fonts.SourceSans.bold),
                                 fontWeight = FontWeight.ExtraBold,
                                 letterSpacing = letterSpacing,
                                 fontSize = 20.sp,
@@ -176,12 +178,12 @@ private fun DiaryCard(
 
                         withStyle(
                             SpanStyle(
-                                fontFamily = sourceSansPro,
+                                fontFamily = fontFamilyResource(MR.fonts.SourceSans.regular),
                                 letterSpacing = letterSpacing,
                             ),
                         ) {
                             append(
-                                date.month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
+                                date.format("MMM")
                                     .uppercase(),
                             )
                         }
@@ -189,7 +191,7 @@ private fun DiaryCard(
 
                         withStyle(
                             SpanStyle(
-                                fontFamily = sourceSansPro,
+                                fontFamily = fontFamilyResource(MR.fonts.SourceSans.regular),
                                 letterSpacing = letterSpacing,
                             ),
                         ) {

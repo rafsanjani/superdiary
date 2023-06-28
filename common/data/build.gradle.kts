@@ -51,6 +51,12 @@ kotlin {
                 implementation(libs.kotlin.coroutines.core)
             }
         }
+
+        val jvmMain by getting {
+            dependencies {
+                implementation("app.cash.sqldelight:sqlite-driver:2.0.0-rc01")
+            }
+        }
     }
 }
 
