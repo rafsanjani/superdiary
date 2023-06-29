@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.detekt).apply(false)
     alias(libs.plugins.ktlint).apply(false)
     alias(libs.plugins.kotlin.dokka)
-    id("org.jetbrains.compose") version "1.4.0"
+    id("org.jetbrains.compose") version "1.4.1"
 }
 
 apply {
