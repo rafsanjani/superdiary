@@ -36,10 +36,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.android.AppTheme
-import com.foreverrafs.superdiary.android.components.DiaryList
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryUseCase
+import com.foreverrafs.superdiary.ui.AppTheme
+import com.foreverrafs.superdiary.ui.components.DiaryList
 import io.github.boguszpawlowski.composecalendar.SelectableCalendar
 import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
 import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
@@ -56,7 +56,7 @@ typealias CalendarScreen = @Composable () -> Unit
 @Inject
 fun CalendarScreen(
     modifier: Modifier = Modifier,
-    searchDiaryUseCase: SearchDiaryUseCase
+    searchDiaryUseCase: SearchDiaryUseCase,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -71,7 +71,7 @@ fun CalendarScreen(
                 diaries = searchDiaryUseCase.searchByDate(date = date)
             }
         },
-        diaries = diaries
+        diaries = diaries,
     )
 }
 
@@ -79,13 +79,13 @@ fun CalendarScreen(
 private fun Content(
     modifier: Modifier = Modifier,
     onSearch: (date: LocalDate) -> Unit,
-    diaries: List<Diary>
+    diaries: List<Diary>,
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background)
-            .padding(8.dp)
+            .padding(8.dp),
     ) {
         Calendar(onDateSelected = onSearch)
         DiaryList(diaries = diaries, modifier = Modifier.weight(1f))
@@ -117,16 +117,16 @@ private fun Calendar(
                     .background(
                         color = if (selected) {
                             MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                alpha = 0.15f
+                                alpha = 0.15f,
                             )
                         } else {
                             Color.Transparent
-                        }
+                        },
                     ),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = it.date.dayOfMonth.toString()
+                    text = it.date.dayOfMonth.toString(),
                 )
             }
         },
@@ -153,18 +153,18 @@ private fun Calendar(
                     .padding(bottom = 8.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     text = "${
                         currentMonth.month.getDisplayName(
                             TextStyle.FULL,
-                            Locale.getDefault()
+                            Locale.getDefault(),
                         )
                     } ${currentMonth.year}",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp
+                    fontSize = 24.sp,
                 )
 
                 Row {
@@ -177,7 +177,7 @@ private fun Calendar(
                                 calendarState.monthState.currentMonth =
                                     currentMonth.minusMonths(1)
                             }
-                            .padding(8.dp)
+                            .padding(8.dp),
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Icon(
@@ -189,7 +189,7 @@ private fun Calendar(
                                 calendarState.monthState.currentMonth =
                                     currentMonth.plusMonths(1)
                             }
-                            .padding(8.dp)
+                            .padding(8.dp),
                     )
                 }
             }

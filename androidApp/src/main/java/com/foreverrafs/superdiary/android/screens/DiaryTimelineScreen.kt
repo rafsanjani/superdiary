@@ -41,11 +41,11 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.foreverrafs.superdiary.android.AppTheme
-import com.foreverrafs.superdiary.android.components.DiaryList
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryUseCase
+import com.foreverrafs.superdiary.ui.AppTheme
+import com.foreverrafs.superdiary.ui.components.DiaryList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.tatarka.inject.annotations.Inject
@@ -74,7 +74,7 @@ fun DiaryTimelineScreen(
                 searchDiaryResults = searchDiaryUseCase.searchByEntry(entry = it)
             }
         },
-        filteredDiaries = searchDiaryResults
+        filteredDiaries = searchDiaryResults,
     )
 }
 
@@ -87,7 +87,7 @@ private fun Content(
     val modalBottomSheetState =
         rememberModalBottomSheetState(
             initialValue = ModalBottomSheetValue.Hidden,
-            confirmValueChange = { false }
+            confirmValueChange = { false },
         )
 
     val coroutineScope = rememberCoroutineScope()
@@ -103,7 +103,7 @@ private fun Content(
                         coroutineScope.launch {
                             modalBottomSheetState.hide()
                         }
-                    }
+                    },
             ) {
             }
         },
@@ -118,7 +118,7 @@ private fun Content(
                             modalBottomSheetState.show()
                         }
                     },
-                    shape = CircleShape
+                    shape = CircleShape,
                 ) {
                     Icon(imageVector = Icons.Default.Add, contentDescription = null)
                 }
@@ -131,7 +131,7 @@ private fun Content(
                     .fillMaxSize()
                     .padding(padding)
                     .padding(horizontal = 8.dp),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 SearchField(
                     modifier = Modifier.align(Alignment.TopCenter),
@@ -206,10 +206,10 @@ private fun SearchField(
             Icon(
                 modifier = Modifier.clickable { },
                 imageVector = Icons.Default.MoreVert,
-                contentDescription = null
+                contentDescription = null,
             )
         },
-        content = {}
+        content = {},
     )
 
     BackHandler(isFocused) {
@@ -219,11 +219,11 @@ private fun SearchField(
 
 @Preview(
     name = "Night Mode",
-    uiMode = Configuration.UI_MODE_NIGHT_YES
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
 @Preview(
     name = "Day Mode",
-    uiMode = Configuration.UI_MODE_NIGHT_NO
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
 )
 @Composable
 private fun Preview() {
@@ -234,11 +234,11 @@ private fun Preview() {
                     Diary(
                         id = Random.nextLong(),
                         entry = "Test Diary",
-                        date = LocalDate.now().minusDays(it.toLong()).toString()
+                        date = LocalDate.now().minusDays(it.toLong()).toString(),
                     )
                 },
                 onSearchQueryChange = {},
-                filteredDiaries = listOf()
+                filteredDiaries = listOf(),
             )
         }
     }

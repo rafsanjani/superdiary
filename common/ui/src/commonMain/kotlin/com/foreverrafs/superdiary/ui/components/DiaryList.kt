@@ -1,8 +1,9 @@
-package com.foreverrafs.superdiary.android.components
+package com.foreverrafs.superdiary.ui.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,17 +37,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.android.style.sourceSansPro
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
-import java.time.LocalDate
-import java.time.format.TextStyle
-import java.util.Locale
+import com.foreverrafs.superdiary.ui.format
+import dev.icerock.moko.resources.compose.fontFamilyResource
+import kotlinx.datetime.LocalDate
+import superdiary.common.ui.MR
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DiaryList(
     diaries: List<Diary>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val groupedDiaries = remember(diaries) {
         diaries.groupByDate()
@@ -59,7 +61,7 @@ fun DiaryList(
             .padding(vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(space = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        state = listState
+        state = listState,
     ) {
         groupedDiaries.forEach { (date, diaries) ->
             stickyHeader(key = date.label) {
@@ -73,7 +75,7 @@ fun DiaryList(
 
             items(
                 items = diaries,
-                key = { item -> item.id.toString() }
+                key = { item -> item.id.toString() },
             ) { diary ->
                 DiaryCard(
                     diary = diary,
@@ -88,14 +90,14 @@ private fun StickyHeader(modifier: Modifier = Modifier, text: String) {
     Text(
         text = text,
         modifier = modifier.background(color = MaterialTheme.colorScheme.background),
-        style = MaterialTheme.typography.headlineMedium
+        style = MaterialTheme.typography.headlineMedium,
     )
 }
 
 @Composable
 private fun DiaryCard(
     modifier: Modifier = Modifier,
-    diary: Diary
+    diary: Diary,
 ) {
     val defaultTextLines = 4
 
@@ -120,12 +122,12 @@ private fun DiaryCard(
             topStart = 0.dp,
             bottomStart = 12.dp,
             topEnd = 12.dp,
-            bottomEnd = 0.dp
-        )
+            bottomEnd = 0.dp,
+        ),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             Box(
                 modifier = Modifier
@@ -136,10 +138,10 @@ private fun DiaryCard(
                             topStart = 0.dp,
                             topEnd = 12.dp,
                             bottomStart = 12.dp,
-                            bottomEnd = 0.dp
-                        )
+                            bottomEnd = 0.dp,
+                        ),
                     ),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     modifier = Modifier
@@ -150,13 +152,13 @@ private fun DiaryCard(
 
                         withStyle(
                             SpanStyle(
-                                fontFamily = sourceSansPro,
+                                fontFamily = fontFamilyResource(MR.fonts.SourceSans.regular),
                                 letterSpacing = letterSpacing,
-                            )
+                            ),
                         ) {
                             append(
-                                date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ROOT)
-                                    .uppercase()
+                                date.format("E")
+                                    .uppercase(),
                             )
                         }
 
@@ -164,11 +166,11 @@ private fun DiaryCard(
 
                         withStyle(
                             SpanStyle(
-                                fontFamily = sourceSansPro,
+                                fontFamily = fontFamilyResource(MR.fonts.SourceSans.bold),
                                 fontWeight = FontWeight.ExtraBold,
                                 letterSpacing = letterSpacing,
                                 fontSize = 20.sp,
-                            )
+                            ),
                         ) {
                             append(date.dayOfMonth.toString())
                         }
@@ -176,22 +178,22 @@ private fun DiaryCard(
 
                         withStyle(
                             SpanStyle(
-                                fontFamily = sourceSansPro,
+                                fontFamily = fontFamilyResource(MR.fonts.SourceSans.regular),
                                 letterSpacing = letterSpacing,
-                            )
+                            ),
                         ) {
                             append(
-                                date.month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
-                                    .uppercase()
+                                date.format("MMM")
+                                    .uppercase(),
                             )
                         }
                         appendLine()
 
                         withStyle(
                             SpanStyle(
-                                fontFamily = sourceSansPro,
+                                fontFamily = fontFamilyResource(MR.fonts.SourceSans.regular),
                                 letterSpacing = letterSpacing,
-                            )
+                            ),
                         ) {
                             append(date.year.toString())
                         }
@@ -199,7 +201,7 @@ private fun DiaryCard(
                         toAnnotatedString()
                     },
                     textAlign = TextAlign.Center,
-                    lineHeight = 20.sp
+                    lineHeight = 20.sp,
                 )
             }
 
@@ -216,7 +218,7 @@ private fun DiaryCard(
                     isOverFlowing =
                         textLayoutResult.didOverflowHeight || textLayoutResult.didOverflowWidth
                 },
-                textAlign = TextAlign.Justify
+                textAlign = TextAlign.Justify,
             )
         }
     }

@@ -23,6 +23,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion "1.4.8"
     }
+
     buildTypes {
         release {
             minifyEnabled false

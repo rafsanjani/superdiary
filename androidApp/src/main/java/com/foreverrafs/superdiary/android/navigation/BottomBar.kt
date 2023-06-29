@@ -14,7 +14,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.foreverrafs.superdiary.android.AppTheme
+import com.foreverrafs.superdiary.ui.AppTheme
 
 @Composable
 fun BottomBar(
@@ -42,7 +42,7 @@ fun BottomBar(
                     Icon(
                         imageVector = selected.icon,
                         contentDescription = selected.label,
-                        tint = MaterialTheme.colorScheme.onBackground
+                        tint = MaterialTheme.colorScheme.onBackground,
                     )
                 },
                 label = {
@@ -50,7 +50,7 @@ fun BottomBar(
                         text = selected.label,
                     )
                 },
-                alwaysShowLabel = false
+                alwaysShowLabel = false,
             )
         }
     }
@@ -59,11 +59,11 @@ fun BottomBar(
 @Composable
 @Preview(
     name = "Night Mode",
-    uiMode = Configuration.UI_MODE_NIGHT_YES
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
 @Preview(
     name = "Day Mode",
-    uiMode = Configuration.UI_MODE_NIGHT_NO
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
 )
 private fun Preview() {
     AppTheme {

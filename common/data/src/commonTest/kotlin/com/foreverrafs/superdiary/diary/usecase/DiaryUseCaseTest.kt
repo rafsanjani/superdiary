@@ -1,20 +1,17 @@
 package com.foreverrafs.superdiary.diary.usecase
 
 import app.cash.turbine.test
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.doesNotContain
 import assertk.assertions.isEmpty
-import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
 import assertk.assertions.messageContains
 import com.foreverrafs.superdiary.diary.Result
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
-import kotlin.random.Random
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
@@ -25,6 +22,9 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
+import kotlin.random.Random
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiaryUseCaseTest {
@@ -181,8 +181,7 @@ class DiaryUseCaseTest {
         val fromDate = LocalDate.parse("2023-03-22")
         val toDate = LocalDate.parse("2023-03-20")
 
-        assertThat { searchDiaryUseCase.searchBetween(fromDate, toDate) }
-            .isFailure()
+        assertFailure { searchDiaryUseCase.searchBetween(fromDate, toDate) }
             .messageContains("should be less than or equal to")
     }
 

@@ -1,4 +1,4 @@
-name: Android Build
+name: Build and Test
 
 on: [ push, pull_request ]
 
@@ -15,9 +15,9 @@ jobs:
       - name: Lint using ktlint
         run: ./gradlew androidApp:detekt common:detekt
 
-  build:
+  test:
     needs: lint
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v3

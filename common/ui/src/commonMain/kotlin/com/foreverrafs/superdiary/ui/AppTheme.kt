@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.android
+package com.foreverrafs.superdiary.ui
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,16 +8,14 @@ import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.android.style.PrincesSofia
-import com.foreverrafs.superdiary.android.style.sourceSansPro
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import dev.icerock.moko.resources.compose.fontFamilyResource
+import superdiary.common.ui.MR
 
 @Composable
 fun AppTheme(
@@ -45,15 +43,15 @@ fun AppTheme(
             fontSize = 16.sp,
         ),
         displayLarge = TextStyle(
-            fontFamily = PrincesSofia,
+            fontFamily = fontFamilyResource(MR.fonts.Sofia.regular),
             fontWeight = FontWeight.Normal,
             fontSize = 30.sp,
         ),
         headlineMedium = TextStyle(
-            fontFamily = sourceSansPro,
+            fontFamily = fontFamilyResource(MR.fonts.SourceSans.bold),
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
-            letterSpacing = (-0.3).sp
+            letterSpacing = (-0.3).sp,
         ),
     )
     val shapes = Shapes(
@@ -61,15 +59,6 @@ fun AppTheme(
         medium = RoundedCornerShape(4.dp),
         large = RoundedCornerShape(0.dp),
     )
-
-    val systemUiController = rememberSystemUiController()
-    val bgColor = colorScheme.background
-
-    SideEffect {
-        systemUiController.setStatusBarColor(
-            color = bgColor
-        )
-    }
 
     MaterialTheme(
         colorScheme = colorScheme,
