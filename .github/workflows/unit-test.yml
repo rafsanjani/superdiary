@@ -20,7 +20,9 @@ jobs:
         uses: gradle/wrapper-validation-action@v1
 
       - name: Lint using ktlint
-        run: ./gradlew androidApp:detekt common:detekt
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: androidApp:detekt common:detekt
 
       - name: Build and run tests
         id: gradle
