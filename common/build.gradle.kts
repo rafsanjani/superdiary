@@ -45,13 +45,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(projects.common.ui)
-            }
-        }
-
-        val iosMain by getting {
-            dependencies {
                 api(projects.common.data)
-                api(projects.common.ui)
             }
         }
     }

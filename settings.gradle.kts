@@ -22,6 +22,7 @@ dependencyResolutionManagement {
         create("libs") {
             from("io.github.rafsanjani:versions:0.2.2")
             version("kotlin", "1.8.20")
+            version("compose-compiler", "1.4.6")
             version("ksp", "1.8.20-1.0.11")
         }
     }
