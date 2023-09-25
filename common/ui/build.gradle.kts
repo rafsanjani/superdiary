@@ -33,7 +33,7 @@ kotlin {
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.moko.resources.compose)
                 implementation(compose.material3)
-                implementation("org.jetbrains.kotlinx:atomicfu:0.21.0")
+                implementation("org.jetbrains.kotlinx:atomicfu:0.22.0")
             }
         }
 
