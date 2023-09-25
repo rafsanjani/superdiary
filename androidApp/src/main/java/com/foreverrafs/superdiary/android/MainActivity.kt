@@ -3,17 +3,8 @@ package com.foreverrafs.superdiary.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
 import com.foreverrafs.superdiary.android.di.ApplicationComponent
-import com.foreverrafs.superdiary.android.navigation.AppNavigation
-import com.foreverrafs.superdiary.android.navigation.BottomBar
-import com.foreverrafs.superdiary.ui.AppTheme
-import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.foreverrafs.superdiary.ui.App
 
 class MainActivity : ComponentActivity() {
     private val appComponent by lazy {
@@ -28,29 +19,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            AppTheme {
-                val navController = rememberAnimatedNavController()
-                Scaffold(
-                    bottomBar = {
-                        BottomBar(navController = navController)
-                    },
-                    topBar = {
-                        SuperDiaryAppBar()
-                    },
-                ) {
-                    Surface(
-                        modifier = Modifier
-                            .padding(it)
-                            .fillMaxSize(),
-                    ) {
-                        AppNavigation(
-                            modifier = Modifier.fillMaxSize(),
-                            navController = navController,
-                            appScreens = appScreens,
-                        )
-                    }
-                }
-            }
+            App()
         }
     }
 }

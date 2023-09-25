@@ -29,6 +29,8 @@ kotlin {
                 implementation(compose.material3)
                 implementation(projects.common.data)
                 implementation(libs.kotlin.datetime)
+                implementation(libs.voyager.navigator)
+                implementation(libs.voyager.tabNavigator)
                 api(libs.moko.resources)
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.moko.resources.compose)

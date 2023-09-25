@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,11 +16,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,28 +43,60 @@ import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
 import com.foreverrafs.superdiary.ui.format
+import com.foreverrafs.superdiary.ui.screens.DiaryScreenState
 import dev.icerock.moko.resources.compose.fontFamilyResource
 import kotlinx.datetime.LocalDate
 import superdiary.common.ui.MR
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DiaryList(
-    diaries: List<Diary>,
+fun DiaryListScreen(
+    state: DiaryScreenState,
     modifier: Modifier = Modifier,
 ) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
+    ) {
+        when (state) {
+            is DiaryScreenState.Content -> DiaryList(
+                modifier = Modifier.fillMaxSize(),
+                diaries = state.diaries,
+            )
+
+            is DiaryScreenState.Error -> Error(modifier = Modifier.fillMaxSize())
+
+            is DiaryScreenState.Loading -> Loading(modifier = Modifier.wrapContentSize())
+        }
+    }
+}
+
+@Composable
+private fun Loading(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        CircularProgressIndicator()
+        Text(
+            text = "Loading Diaries",
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun DiaryList(modifier: Modifier = Modifier, diaries: List<Diary>) {
     val groupedDiaries = remember(diaries) {
         diaries.groupByDate()
     }
-
-    val listState = rememberLazyListState()
 
     LazyColumn(
         modifier = modifier
             .padding(vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(space = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        state = listState,
+        state = rememberLazyListState(),
     ) {
         groupedDiaries.forEach { (date, diaries) ->
             stickyHeader(key = date.label) {
@@ -83,6 +118,11 @@ fun DiaryList(
             }
         }
     }
+}
+
+@Composable
+private fun Error(modifier: Modifier) {
+    Text(text = "Error loading diaries", modifier = modifier)
 }
 
 @Composable
