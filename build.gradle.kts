@@ -17,6 +17,6 @@ apply {
 
 subprojects {
     apply {
-        from("${rootDir.path}/scripts/detekt.gradle")
+        from("${rootDir.path}/quality/static-check.gradle")
     }
 }

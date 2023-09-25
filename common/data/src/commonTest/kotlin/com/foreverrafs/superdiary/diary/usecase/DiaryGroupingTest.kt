@@ -22,7 +22,7 @@ class DiaryGroupingTest {
         val diaries = createDiaries(
             durationSpacing = DateTimeUnit.DAY,
             startDate = LocalDate.parse(isoString = "2023-05-01"),
-            count = 3
+            count = 3,
         )
 
         val groups = diaries.groupByDate(clock)
@@ -35,7 +35,7 @@ class DiaryGroupingTest {
         val diaries = createDiaries(
             durationSpacing = DateTimeUnit.WEEK,
             startDate = LocalDate.parse(isoString = "2023-05-01"),
-            count = 3
+            count = 3,
         )
         val groups = diaries.groupByDate(clock)
 
@@ -44,11 +44,10 @@ class DiaryGroupingTest {
 
     @Test
     fun `test diary groupings by months`() {
-
         val diaries = createDiaries(
             durationSpacing = DateTimeUnit.MONTH,
             startDate = LocalDate.parse(isoString = "2023-01-01"),
-            count = 3
+            count = 3,
         )
         val groups = diaries.groupByDate(clock)
 
@@ -60,7 +59,7 @@ class DiaryGroupingTest {
         val diaries = createDiaries(
             durationSpacing = DateTimeUnit.WEEK,
             startDate = LocalDate.parse(isoString = "2023-04-08"),
-            count = 4
+            count = 4,
         )
         val groups = diaries.groupByDate(clock)
 
@@ -72,7 +71,7 @@ class DiaryGroupingTest {
         val diaries = createDiaries(
             durationSpacing = DateTimeUnit.WEEK,
             startDate = LocalDate.parse(isoString = "2023-04-08"),
-            count = 4
+            count = 4,
         )
 
         // This grouping should contain days and weeks
