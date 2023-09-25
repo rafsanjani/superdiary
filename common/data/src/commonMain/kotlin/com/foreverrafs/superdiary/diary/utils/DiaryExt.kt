@@ -17,7 +17,7 @@ fun List<Diary>.groupByDate(clock: Clock = Clock.System): Map<PrioritizedDuratio
  */
 data class PrioritizedDuration(
     val label: String,
-    val priority: Int
+    val priority: Int,
 )
 
 private fun getDurationString(diary: Diary, clock: Clock = Clock.System): PrioritizedDuration {
@@ -28,7 +28,7 @@ private fun getDurationString(diary: Diary, clock: Clock = Clock.System): Priori
     if (difference.days == 0 && difference.months == 0 && difference.years == 0) {
         return PrioritizedDuration(
             label = "Today",
-            priority = 0
+            priority = 0,
         )
     }
 
@@ -36,7 +36,7 @@ private fun getDurationString(diary: Diary, clock: Clock = Clock.System): Priori
         val days = difference.days
         return PrioritizedDuration(
             label = "$days day${if (days > 1) "s" else ""} ago",
-            priority = days + 1
+            priority = days + 1,
         )
     }
 
@@ -44,7 +44,7 @@ private fun getDurationString(diary: Diary, clock: Clock = Clock.System): Priori
         val weeks = difference.days / 7
         return PrioritizedDuration(
             label = "$weeks week${if (weeks > 1) "s" else ""} ago",
-            priority = 7 * weeks
+            priority = 7 * weeks,
         )
     }
 
@@ -52,12 +52,12 @@ private fun getDurationString(diary: Diary, clock: Clock = Clock.System): Priori
         val months = difference.months
         return PrioritizedDuration(
             label = "$months month${if (months > 1) "s" else ""} ago",
-            priority = 30 * months
+            priority = 30 * months,
         )
     }
 
     return PrioritizedDuration(
         label = "${difference.years} year(s) ago",
-        priority = 360 * difference.years
+        priority = 360 * difference.years,
     )
 }

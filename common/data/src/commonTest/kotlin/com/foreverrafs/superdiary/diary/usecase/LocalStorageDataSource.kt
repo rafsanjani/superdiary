@@ -11,11 +11,9 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
-internal class LocalStorageDataSource(
-    private val coroutineContext: CoroutineContext,
-) : DataSource {
+internal class LocalStorageDataSource() : DataSource {
     private val diaries = mutableListOf<Diary>()
 
     private val diariesFlow = MutableSharedFlow<List<Diary>>(replay = 1)
@@ -65,7 +63,7 @@ internal class LocalStorageDataSource(
     private fun <T> withPublishDiaries(func: () -> T): T {
         val result = func()
 
-        CoroutineScope(coroutineContext).launch {
+        CoroutineScope(EmptyCoroutineContext).launch {
             diariesFlow.emit(diaries)
         }
 

@@ -15,7 +15,14 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.ui.components.DiaryListScreen
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.update
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.random.Random
 
 object DiaryListTab : Tab {
     @Composable
@@ -27,11 +34,13 @@ object DiaryListTab : Tab {
         val screenState by screenModel.state.collectAsState()
 
         LaunchedEffect(Unit) {
+            screenModel.observeDiaries()
         }
 
         ScreenContainer {
             DiaryListScreen(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize(),
                 state = screenState,
             )
         }
@@ -58,5 +67,20 @@ object DiaryListTab : Tab {
 
 private class DiaryListTabModel : StateScreenModel<DiaryScreenState>(DiaryScreenState.Loading) {
     suspend fun observeDiaries() {
+        delay(1500)
+        mutableState.update {
+            DiaryScreenState.Content(
+                diaries = (0..10).map {
+                    Diary(
+                        id = Random.nextLong(),
+                        entry = "Hello $it",
+                        date = Clock.System.now()
+                            .toLocalDateTime(TimeZone.currentSystemDefault())
+                            .date
+                            .toString(),
+                    )
+                },
+            )
+        }
     }
 }
