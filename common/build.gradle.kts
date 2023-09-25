@@ -1,4 +1,4 @@
-@file:Suppress("UNUSED_VARIABLE")
+@file:Suppress("UnusedPrivateProperty")
 
 plugins {
     kotlin("multiplatform")
@@ -13,7 +13,7 @@ kotlin {
 
     jvmToolchain(17)
 
-    android()
+    androidTarget()
 
     iosX64()
     iosArm64()

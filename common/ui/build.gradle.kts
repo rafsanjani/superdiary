@@ -1,4 +1,4 @@
-@file:Suppress("UNUSED_VARIABLE")
+@file:Suppress("UnusedPrivateProperty")
 
 plugins {
     kotlin("multiplatform")
@@ -11,7 +11,7 @@ plugins {
 kotlin {
     targetHierarchy.default()
 
-    android()
+    androidTarget()
 
     jvmToolchain(17)
 
