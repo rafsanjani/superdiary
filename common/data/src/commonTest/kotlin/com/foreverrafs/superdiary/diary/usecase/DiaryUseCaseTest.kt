@@ -12,8 +12,8 @@ import assertk.assertions.messageContains
 import com.foreverrafs.superdiary.diary.Result
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
@@ -26,9 +26,11 @@ import kotlin.random.Random
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class DiaryUseCaseTest {
-    private val dataSource: DataSource = LocalStorageDataSource()
+    private val testDispatcher = StandardTestDispatcher()
+
+    private val dataSource: DataSource = LocalStorageDataSource(testDispatcher)
+
     private val addDiaryUseCase = AddDiaryUseCase(dataSource)
     private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
     private val deleteDiaryUseCase = DeleteDiaryUseCase(dataSource)
@@ -124,13 +126,13 @@ class DiaryUseCaseTest {
     }
 
     @Test
-    fun `Delete diary and confirm deletion`() = runTest {
+    fun `Delete diary and confirm deletion`() = runTest(testDispatcher) {
         getAllDiariesUseCase.diaries.test {
             var diaries = expectMostRecentItem()
             val firstDiary = diaries.first()
 
             // delete the first entry
-            this@DiaryUseCaseTest.deleteDiaryUseCase.deleteDiary(firstDiary)
+            deleteDiaryUseCase.deleteDiary(firstDiary)
 
             // get latest diaries again
             diaries = awaitItem()

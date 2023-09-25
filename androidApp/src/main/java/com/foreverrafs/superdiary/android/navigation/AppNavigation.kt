@@ -6,16 +6,17 @@ import androidx.navigation.NavHostController
 import com.foreverrafs.superdiary.android.di.AppScreens
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    appScreens: AppScreens
+    appScreens: AppScreens,
 ) {
     AnimatedNavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Routes.DiaryTimelineScreen
+        startDestination = Routes.DiaryTimelineScreen,
     ) {
         composable(
             route = Routes.DiaryTimelineScreen,
