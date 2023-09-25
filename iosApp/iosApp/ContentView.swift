@@ -16,8 +16,7 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+#Preview {
+    Text("Placeholder preview because moko-resources doesn't yet support SwiftUI previews")
 }
+

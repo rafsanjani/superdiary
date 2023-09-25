@@ -8,11 +8,11 @@ plugins {
 
 android {
     namespace = "com.foreverrafs.superdiary.android"
-    compileSdk = 33
+    compileSdk = 34
     defaultConfig {
         applicationId = "com.foreverrafs.superdiary.android"
         minSdk = 28
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0.1"
     }
@@ -22,7 +22,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     kotlinOptions {
@@ -55,6 +55,7 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/versions/9/previous-compilation-data.bin"
         }
     }
 
@@ -78,10 +79,10 @@ dependencies {
     implementation(projects.common.ui)
     implementation(projects.common.data)
     implementation(platform(libs.compose.bom))
-    implementation(projects.calendar)
     implementation(libs.compose.ui.ui)
     implementation(libs.compose.ui.tooling)
     implementation(libs.accompanist.permissions)
+    implementation(libs.compose.material.material2)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.ui.tooling.data)
     implementation(libs.compose.foundation.layout)

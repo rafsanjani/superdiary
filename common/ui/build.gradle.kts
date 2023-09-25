@@ -44,11 +44,17 @@ kotlin {
         }
 
         val jvmMain by getting {
+            dependsOn(commonMain)
+
             resources.srcDirs("src/androidMain/res")
             resources.srcDirs("src/commonMain/resources")
             dependencies {
                 implementation(compose.desktop.currentOs)
             }
+        }
+
+        val androidMain by getting {
+            dependsOn(commonMain)
         }
     }
 }

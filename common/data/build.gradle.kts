@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
     alias(libs.plugins.sqldelight)
-    alias(libs.plugins.ricklephas.kmp.nativeCoroutines)
+    alias(libs.plugins.kmpNativeCoroutines)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)

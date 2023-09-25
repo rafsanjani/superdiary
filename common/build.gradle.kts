@@ -28,16 +28,16 @@ kotlin {
 
         framework {
             baseName = "common"
-            linkerOpts("-lsqlite3")
+            linkerOpts += "-lsqlite3"
+
+            if (System.getenv("XCODE_VERSION_MAJOR") == "1500") {
+                linkerOpts += "-ld64"
+            }
+
             export(projects.common.data)
             export(projects.common.ui)
-
+            isStatic = true
             binaryOption("bundleId", "com.foreverrafs.superdiary.common")
-
-            extraSpecAttributes["resources"] =
-                "['src/commonMain/resources/**', 'src/iosMain/resources/**']"
-
-            extraSpecAttributes["exclude_files"] = "['src/commonMain/resources/MR/**']"
         }
     }
 
@@ -47,6 +47,10 @@ kotlin {
                 api(projects.common.ui)
                 api(projects.common.data)
             }
+        }
+
+        val androidMain by getting {
+            dependsOn(commonMain)
         }
     }
 }
