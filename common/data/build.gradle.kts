@@ -1,11 +1,10 @@
-@file:Suppress("UNUSED_VARIABLE")
+@file:Suppress("UnusedPrivateProperty")
 
 plugins {
     kotlin("multiplatform")
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
     alias(libs.plugins.sqldelight)
-    alias(libs.plugins.kmpNativeCoroutines)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -76,7 +75,7 @@ android {
 sqldelight {
     databases {
         create("KmpSuperDiaryDB") {
-            packageName.set("db")
+            packageName.set("com.foreverrafs.superdiary.sqldelight.db")
         }
     }
 }
