@@ -20,7 +20,9 @@ import com.foreverrafs.superdiary.ui.components.DiaryListScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.datetime.Clock
+import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 import kotlin.random.Random
 
@@ -73,10 +75,11 @@ private class DiaryListTabModel : StateScreenModel<DiaryScreenState>(DiaryScreen
                 diaries = (0..10).map {
                     Diary(
                         id = Random.nextLong(),
-                        entry = "Hello $it",
+                        entry = "Hello World. This is a really long message such that it can swallow the whole world into pieces. Pieces we don't even want to talk about but I don't mind because I am the best there has ever been",
                         date = Clock.System.now()
                             .toLocalDateTime(TimeZone.currentSystemDefault())
                             .date
+                            .minus(DatePeriod(months = it))
                             .toString(),
                     )
                 },

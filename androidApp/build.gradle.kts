@@ -64,5 +64,8 @@ dependencies {
     implementation(projects.common.ui)
     implementation(projects.common.data)
     implementation(platform(libs.compose.bom))
+    implementation(libs.compose.foundation.foundation)
+    implementation(libs.compose.material.material3)
+    implementation(libs.compose.ui.tooling)
     implementation(libs.androidx.activity.compose)
 }

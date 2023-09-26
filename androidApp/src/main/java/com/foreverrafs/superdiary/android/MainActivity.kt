@@ -1,9 +1,18 @@
 package com.foreverrafs.superdiary.android
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.ui.App
+import com.foreverrafs.superdiary.ui.AppTheme
+import com.foreverrafs.superdiary.ui.components.DiaryList
+import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
 
@@ -12,6 +21,31 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             App()
+        }
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun DiaryListPreview() {
+    AppTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            DiaryList(
+                diaries = listOf(
+                    Diary(
+                        id = Random.nextLong(),
+                        entry = "Hello barbashe",
+                        date = "2023-01-01",
+                    ),
+
+                    Diary(
+                        id = Random.nextLong(),
+                        entry = "Hello barbashe",
+                        date = "2023-02-02",
+                    ),
+                ),
+            )
         }
     }
 }

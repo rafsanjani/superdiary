@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -93,14 +94,15 @@ fun DiaryList(modifier: Modifier = Modifier, diaries: List<Diary>) {
 
     LazyColumn(
         modifier = modifier
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .padding(horizontal = 4.dp),
         verticalArrangement = Arrangement.spacedBy(space = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         state = rememberLazyListState(),
     ) {
         groupedDiaries.forEach { (date, diaries) ->
             stickyHeader(key = date.label) {
-                StickyHeader(
+                DiaryHeader(
                     text = date.label,
                     modifier = Modifier
                         .background(color = MaterialTheme.colorScheme.background)
@@ -112,7 +114,7 @@ fun DiaryList(modifier: Modifier = Modifier, diaries: List<Diary>) {
                 items = diaries,
                 key = { item -> item.id.toString() },
             ) { diary ->
-                DiaryCard(
+                DiaryItem(
                     diary = diary,
                 )
             }
@@ -126,16 +128,20 @@ private fun Error(modifier: Modifier) {
 }
 
 @Composable
-private fun StickyHeader(modifier: Modifier = Modifier, text: String) {
-    Text(
-        text = text,
-        modifier = modifier.background(color = MaterialTheme.colorScheme.background),
-        style = MaterialTheme.typography.headlineMedium,
-    )
+private fun DiaryHeader(modifier: Modifier = Modifier, text: String) {
+    Card(
+        modifier = modifier,
+    ) {
+        Text(
+            modifier = Modifier.padding(vertical = 8.dp),
+            text = text,
+            style = MaterialTheme.typography.headlineMedium,
+        )
+    }
 }
 
 @Composable
-private fun DiaryCard(
+private fun DiaryItem(
     modifier: Modifier = Modifier,
     diary: Diary,
 ) {
