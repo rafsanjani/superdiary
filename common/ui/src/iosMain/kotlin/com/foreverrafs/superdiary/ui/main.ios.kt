@@ -1,4 +1,4 @@
-@file:Suppress("FunctionName")
+@file:Suppress("FunctionName", "Unused")
 
 package com.foreverrafs.superdiary.ui
 

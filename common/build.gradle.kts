@@ -3,7 +3,6 @@
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
-    id("com.android.library")
     alias(libs.plugins.mokoResources)
 }
 
@@ -12,8 +11,6 @@ kotlin {
     targetHierarchy.default()
 
     jvmToolchain(17)
-
-    androidTarget()
 
     iosX64()
     iosArm64()
@@ -48,23 +45,5 @@ kotlin {
                 api(projects.common.data)
             }
         }
-
-        val androidMain by getting {
-            dependsOn(commonMain)
-        }
-    }
-}
-
-android {
-    namespace = "com.foreverrafs.superdiary"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.compileSdk.get().toInt()
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
     }
 }
