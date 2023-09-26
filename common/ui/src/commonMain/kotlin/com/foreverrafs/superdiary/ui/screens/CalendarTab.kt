@@ -54,7 +54,4 @@ object CalendarTab : Tab {
         }
 }
 
-private class CalendarTabModel : StateScreenModel<DiaryScreenState>(DiaryScreenState.Loading) {
-    suspend fun observeDiaries() {
-    }
-}
+private class CalendarTabModel : StateScreenModel<DiaryScreenState>(DiaryScreenState.Loading)
