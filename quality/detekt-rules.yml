@@ -6,28 +6,28 @@ complexity:
     ignoreDefaultParameters: true
     ignoreAnnotated: [ 'Composable' ]
   LongMethod:
-    ignoreAnnotated: ['Composable']
+    ignoreAnnotated: [ 'Composable' ]
   TooManyFunctions:
     active: false
 
 naming:
   FunctionNaming:
-    ignoreAnnotated: ['Composable']
+    ignoreAnnotated: [ 'Composable' ]
 
 style:
   DataClassShouldBeImmutable:
     active: true
   MagicNumber:
     ignoreEnums: true
-    ignoreAnnotated: ['Composable','Stable']
+    ignoreAnnotated: [ 'Composable','Stable' ]
     ignorePropertyDeclaration: true
-    excludes: ['**/internal/**']
+    excludes: [ '**/internal/**' ]
   SpacingBetweenPackageAndImports:
     active: true
   UnusedImports:
     active: true
   UnusedPrivateMember:
-    ignoreAnnotated: ['MultiplePreviews']
+    ignoreAnnotated: [ 'Composable' ]
   WildcardImport:
     active: true
-    excludeImports: []
+    excludeImports: [ ]
