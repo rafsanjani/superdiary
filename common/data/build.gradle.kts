@@ -7,6 +7,14 @@ plugins {
     alias(libs.plugins.sqldelight)
 }
 
+sqldelight {
+    databases.register("KmpSuperDiaryDB") {
+        packageName.set("db")
+        deriveSchemaFromMigrations.set(true)
+        generateAsync.set(true)
+    }
+}
+
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     targetHierarchy.default()
@@ -69,13 +77,5 @@ android {
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_17
         sourceCompatibility = JavaVersion.VERSION_17
-    }
-}
-
-sqldelight {
-    databases {
-        create("KmpSuperDiaryDB") {
-            packageName.set("com.foreverrafs.superdiary.sqldelight.db")
-        }
     }
 }

@@ -15,9 +15,9 @@ class Database(databaseDriver: DatabaseDriver) {
         Diary(id, entry, date)
     }
 
-    fun addDiary(diary: Diary) = queries.insert(diary.entry, diary.date)
+    suspend fun addDiary(diary: Diary) = queries.insert(diary.entry, diary.date)
 
-    fun deleteDiary(id: Long) = queries.delete(id)
+    suspend fun deleteDiary(id: Long) = queries.delete(id)
 
     fun getAllDiaries(): Flow<List<Diary>> = queries.selectAll(
         mapper = diaryMapper,
@@ -37,5 +37,5 @@ class Database(databaseDriver: DatabaseDriver) {
     fun findByDateRange(from: String, to: String): List<Diary> =
         queries.findByDateRange(from, to, diaryMapper).executeAsList()
 
-    fun clearDiaries() = queries.deleteAll()
+    suspend fun clearDiaries() = queries.deleteAll()
 }
