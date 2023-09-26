@@ -39,13 +39,11 @@ object DiaryListTab : Tab {
             screenModel.observeDiaries()
         }
 
-        ScreenContainer {
-            DiaryListScreen(
-                modifier = Modifier
-                    .fillMaxSize(),
-                state = screenState,
-            )
-        }
+        DiaryListScreen(
+            modifier = Modifier
+                .fillMaxSize(),
+            state = screenState,
+        )
     }
 
     override val key: ScreenKey

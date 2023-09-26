@@ -104,9 +104,6 @@ fun DiaryList(modifier: Modifier = Modifier, diaries: List<Diary>) {
             stickyHeader(key = date.label) {
                 DiaryHeader(
                     text = date.label,
-                    modifier = Modifier
-                        .background(color = MaterialTheme.colorScheme.background)
-                        .fillMaxWidth(),
                 )
             }
 
@@ -130,7 +127,10 @@ private fun Error(modifier: Modifier) {
 @Composable
 private fun DiaryHeader(modifier: Modifier = Modifier, text: String) {
     Card(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.background,
+        ),
     ) {
         Text(
             modifier = Modifier.padding(vertical = 8.dp),

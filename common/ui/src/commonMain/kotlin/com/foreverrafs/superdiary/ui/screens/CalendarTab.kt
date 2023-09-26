@@ -29,12 +29,10 @@ object CalendarTab : Tab {
         LaunchedEffect(Unit) {
         }
 
-        ScreenContainer {
-            DiaryListScreen(
-                modifier = Modifier.fillMaxSize(),
-                state = screenState,
-            )
-        }
+        DiaryListScreen(
+            modifier = Modifier.fillMaxSize(),
+            state = screenState,
+        )
     }
 
     override val key: ScreenKey
