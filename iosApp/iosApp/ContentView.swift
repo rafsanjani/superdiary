@@ -1,22 +1,24 @@
 import SwiftUI
-import common
+import shared
 
-struct ComposeView : UIViewControllerRepresentable{
+struct ComposeView: UIViewControllerRepresentable{
     func makeUIViewController(context: Context) -> some UIViewController {
         Main_iosKt.MainViewController()
     }
     
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
-}
-
-struct ContentView: View {
-    var body: some View {
-        ComposeView()
-            .ignoresSafeArea(.all)
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
     }
 }
+struct ContentView: View {
 
-#Preview {
-    Text("Placeholder preview because moko-resources doesn't yet support SwiftUI previews")
+	var body: some View {
+		ComposeView()
+            .ignoresSafeArea(.all)
+	}
 }
 
+struct ContentView_Previews: PreviewProvider {
+	static var previews: some View {
+		ContentView()
+	}
+}

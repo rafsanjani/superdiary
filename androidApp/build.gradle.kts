@@ -61,12 +61,13 @@ android {
 }
 
 dependencies {
-    implementation(projects.common.ui)
-    implementation(projects.common.data)
+    implementation(projects.shared)
+    implementation(projects.shared.data)
     implementation(platform(libs.compose.bom))
     implementation(libs.androidx.activity.ktx)
     implementation(libs.compose.foundation.foundation)
     implementation(libs.compose.material.material3)
+    implementation(libs.androidx.material)
     implementation(libs.compose.ui.tooling)
     implementation(libs.androidx.activity.compose)
 }
