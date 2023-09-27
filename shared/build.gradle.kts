@@ -45,6 +45,12 @@ kotlin {
                 implementation(compose.material3)
             }
         }
+
+        val jvmMain by getting {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+            }
+        }
     }
 }
 
@@ -52,13 +58,6 @@ android {
     namespace = "com.foreverrafs.superdiary"
 
     compileSdk = libs.versions.compileSdk.get().toInt()
-
-    sourceSets.getByName("main") {
-        manifest.srcFile("src/androidMain/AndroidManifest.xml")
-        resources.srcDirs("src/androidMain/res")
-        resources.srcDirs("src/commonMain/resources")
-        resources.exclude("src/commonMain/resources/MR")
-    }
 
     defaultConfig {
         minSdk = libs.versions.minimumSdk.get().toInt()
@@ -68,4 +67,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    sourceSets["main"].res.srcDirs("src/commonMain/resources")
 }

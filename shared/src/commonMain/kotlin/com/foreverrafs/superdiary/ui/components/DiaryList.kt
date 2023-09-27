@@ -76,8 +76,10 @@ private fun Loading(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         CircularProgressIndicator()
+
         Text(
             text = "Loading Diaries",
             textAlign = TextAlign.Center,
@@ -226,7 +228,7 @@ private fun DiaryItem(
                             SpanStyle(
                                 fontFamily = montserratAlternativesFontFamily(),
                                 letterSpacing = letterSpacing,
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.Normal,
                             ),
                         ) {
                             append(
@@ -265,6 +267,7 @@ private fun DiaryItem(
                     isOverFlowing =
                         textLayoutResult.didOverflowHeight || textLayoutResult.didOverflowWidth
                 },
+                style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Justify,
             )
         }

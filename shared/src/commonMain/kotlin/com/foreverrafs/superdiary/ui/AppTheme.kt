@@ -96,11 +96,5 @@ fun montserratAlternativesFontFamily(): FontFamily = FontFamily(
             weight = FontWeight.Bold,
             style = FontStyle.Normal,
         ),
-        font(
-            name = "Righteous Regular",
-            resource = "montserrat_alternatives_semibold",
-            weight = FontWeight.SemiBold,
-            style = FontStyle.Normal,
-        ),
     ),
 )

@@ -1,6 +1,8 @@
-package com.foreverrafs.superdiary.ui // ktlint-disable filename
+package com.foreverrafs.superdiary.ui
 
 import androidx.compose.ui.window.singleWindowApplication
+
+// ktlint-disable filename
 
 fun main() = singleWindowApplication {
     AppTheme {

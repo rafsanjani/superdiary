@@ -25,7 +25,7 @@ fun SuperDiaryAppBar(
                 modifier = Modifier
                     .fillMaxWidth(),
                 style = MaterialTheme.typography.displayLarge,
-                fontWeight = FontWeight.ExtraBold,
+                fontWeight = FontWeight.Bold,
             )
         },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
