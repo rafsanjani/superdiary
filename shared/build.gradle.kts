@@ -37,7 +37,7 @@ kotlin {
                 implementation(compose.components.resources)
                 implementation(compose.foundation)
                 implementation(compose.material3)
-                implementation(projects.shared.data)
+                implementation(projects.data)
                 implementation(libs.kotlin.datetime)
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.tabNavigator)
