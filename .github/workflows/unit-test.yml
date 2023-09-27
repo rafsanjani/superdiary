@@ -22,7 +22,7 @@ jobs:
       - name: Lint using ktlint
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: androidApp:detekt common:detekt
+          arguments: androidApp:detekt shared:detekt data:detekt
 
       - name: Build and run tests
         id: gradle

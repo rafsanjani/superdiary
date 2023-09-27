@@ -1,5 +1,3 @@
-@Suppress("DSL_SCOPE_VIOLATION")
-
 plugins {
     alias(libs.plugins.android.application).apply(false)
     alias(libs.plugins.android.library).apply(false)
@@ -8,7 +6,6 @@ plugins {
     alias(libs.plugins.ktlint).apply(false)
     alias(libs.plugins.kotlin.dokka)
     alias(libs.plugins.compose.multiplatform).apply(false)
-    alias(libs.plugins.mokoResources).apply(false)
 }
 
 apply {
