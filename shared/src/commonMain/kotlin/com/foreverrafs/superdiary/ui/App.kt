@@ -33,12 +33,15 @@ fun App() {
                     NavigationBar {
                         TabNavigationItem(DiaryListTab)
                         TabNavigationItem(CalendarTab)
+                        TabNavigationItem(CalendarTab)
                     }
                 },
                 topBar = { SuperDiaryAppBar() },
                 content = {
                     Surface(
-                        modifier = Modifier.fillMaxSize().padding(it),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(it),
                         color = MaterialTheme.colorScheme.background,
                     ) {
                         CurrentTab()

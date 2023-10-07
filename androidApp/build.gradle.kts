@@ -63,7 +63,6 @@ android {
 dependencies {
     implementation(projects.shared)
     implementation(projects.data)
-    implementation(platform(libs.compose.bom))
     implementation(libs.androidx.activity.ktx)
     implementation(libs.compose.foundation.foundation)
     implementation(libs.compose.material.material3)
