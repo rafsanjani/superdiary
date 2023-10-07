@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.android
+package com.foreverrafs
 
 import android.app.Application
 

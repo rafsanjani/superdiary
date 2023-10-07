@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.android
+package com.foreverrafs
 
 import android.content.res.Configuration
 import android.os.Bundle
