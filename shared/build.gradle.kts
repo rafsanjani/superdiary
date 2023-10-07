@@ -10,7 +10,7 @@ plugins {
 kotlin {
     targetHierarchy.default()
 
-    android()
+    androidTarget()
 
     jvm()
     jvmToolchain(17)
