@@ -23,8 +23,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LibraryBooks
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -36,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,7 +44,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -97,64 +97,26 @@ private fun Loading(modifier: Modifier = Modifier) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DiaryList(modifier: Modifier = Modifier, diaries: List<Diary>) {
     val groupedDiaries = remember(diaries) {
         diaries.groupByDate()
     }
 
-    var text by rememberSaveable { mutableStateOf("") }
-    var active by rememberSaveable { mutableStateOf(false) }
-
     Box(
         modifier = modifier
-            .padding(horizontal = 4.dp)
-            .padding(vertical = 8.dp),
+            .padding(8.dp),
     ) {
-        DockedSearchBar(
+        SearchBar(
             modifier = Modifier
-                .fillMaxWidth(0.95f)
+                .fillMaxWidth()
                 .align(Alignment.TopCenter),
-            query = text,
-            onQueryChange = { text = it },
-            onSearch = { active = false },
-            active = active,
-            onActiveChange = { active = it },
-            placeholder = { Text("Hinted search text") },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-            trailingIcon = { Icon(Icons.Default.MoreVert, contentDescription = null) },
-            colors = SearchBarDefaults.colors(
-                containerColor = Color.DarkGray,
-            ),
-            shape = RoundedCornerShape(8.dp),
-        ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                items(4) { idx ->
-                    val resultText = "Suggestion $idx"
+            onQueryChanged = {},
+            onFilterClicked = {},
+        )
 
-                    ListItem(
-                        headlineContent = { Text(resultText) },
-                        supportingContent = { Text("Additional info") },
-                        leadingContent = {
-                            Icon(
-                                Icons.Filled.LibraryBooks,
-                                contentDescription = null,
-                            )
-                        },
-                        modifier = Modifier.clickable {
-                            text = resultText
-                            active = false
-                        },
-                    )
-                }
-            }
-        }
-
+        // Offset this by the height of the Searchbar (when it isn't active)
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -178,6 +140,78 @@ fun DiaryList(modifier: Modifier = Modifier, diaries: List<Diary>) {
                         diary = diary,
                     )
                 }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SearchBar(
+    modifier: Modifier = Modifier,
+    onQueryChanged: (query: String) -> Unit,
+    onFilterClicked: () -> Unit,
+) {
+    var query by rememberSaveable { mutableStateOf("") }
+    var active by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(query) {
+        onQueryChanged(query)
+    }
+
+    DockedSearchBar(
+        modifier = modifier,
+        query = query,
+        onQueryChange = { query = it },
+        onSearch = { active = false },
+        active = active,
+        onActiveChange = { active = it },
+        placeholder = {
+            Text(
+                text = "Search diary...",
+                style = MaterialTheme.typography.labelLarge,
+            )
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = null,
+            )
+        },
+        trailingIcon = {
+            Icon(
+                modifier = Modifier.clickable { onFilterClicked() },
+                imageVector = Icons.Default.Sort,
+                contentDescription = null,
+            )
+        },
+        colors = SearchBarDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+        ),
+        shape = RoundedCornerShape(8.dp),
+    ) {
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            items(4) { idx ->
+                val resultText = "Suggestion $idx"
+
+                ListItem(
+                    headlineContent = { Text(resultText) },
+                    supportingContent = { Text("Additional info") },
+                    leadingContent = {
+                        Icon(
+                            Icons.Filled.LibraryBooks,
+                            contentDescription = null,
+                        )
+                    },
+                    modifier = Modifier.clickable {
+                        query = resultText
+                        active = false
+                    },
+                )
             }
         }
     }
