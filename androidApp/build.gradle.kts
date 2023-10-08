@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.container.composeContainer
+
 plugins {
     kotlin("multiplatform")
     alias(libs.plugins.compose.multiplatform)
@@ -25,6 +27,14 @@ kotlin {
 }
 
 android {
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+    }
+
     compileSdk = 34
     defaultConfig {
         applicationId = "com.foreverrafs.gamehub"
