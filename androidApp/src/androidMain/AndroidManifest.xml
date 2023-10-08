@@ -5,7 +5,7 @@
 
     <application
             android:allowBackup="false"
-            android:label="Game Hub"
+            android:label="Superdiary"
             android:name="com.foreverrafs.DiaryApp"
             android:supportsRtl="true"
             android:theme="@style/Theme.Material3.DayNight">

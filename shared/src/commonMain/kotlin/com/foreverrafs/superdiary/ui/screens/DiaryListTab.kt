@@ -67,7 +67,7 @@ object DiaryListTab : Tab {
 
 private class DiaryListTabModel : StateScreenModel<DiaryScreenState>(DiaryScreenState.Loading) {
     suspend fun observeDiaries() {
-        delay(1500)
+        delay(700)
         mutableState.update {
             DiaryScreenState.Content(
                 diaries = (0..10).map {

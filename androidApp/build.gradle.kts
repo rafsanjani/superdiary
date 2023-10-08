@@ -1,3 +1,5 @@
+@file:Suppress("UnusedPrivateProperty")
+
 plugins {
     kotlin("multiplatform")
     alias(libs.plugins.compose.multiplatform)
@@ -35,7 +37,7 @@ android {
 
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.foreverrafs.gamehub"
+        applicationId = "com.foreverrafs.superdiary"
         minSdk = 28
         targetSdk = 34
         versionCode = 1
@@ -45,7 +47,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    namespace = "com.foreverrafs.gamehub"
+    namespace = "com.foreverrafs.superdiary"
 
     packaging {
         resources.excludes.add(
