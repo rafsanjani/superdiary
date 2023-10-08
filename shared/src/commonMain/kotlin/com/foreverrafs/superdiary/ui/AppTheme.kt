@@ -58,7 +58,7 @@ fun AppTheme(
         ),
         bodySmall = TextStyle(
             fontFamily = montserratAlternativesFontFamily(),
-            fontSize = 16.sp
+            fontSize = 16.sp,
         ),
     )
     val shapes = Shapes(
