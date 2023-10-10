@@ -74,8 +74,8 @@ import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
 import com.foreverrafs.superdiary.ui.format
-import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
 import com.foreverrafs.superdiary.ui.screens.DiaryScreenState
+import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -146,8 +146,15 @@ private fun EmptyDiaryList(modifier: Modifier = Modifier) {
 
         Text(
             text = "Why don't you start writing something...",
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodySmall,
+            fontSize = 14.sp,
         )
+
+        TextButton(
+            onClick = {},
+        ) {
+            Text("Add Entry")
+        }
     }
 }
 

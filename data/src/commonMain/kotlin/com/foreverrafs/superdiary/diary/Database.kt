@@ -8,11 +8,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 
 class Database(databaseDriver: DatabaseDriver) {
-    private val superDiaryDatabase = SuperDiaryDatabase(databaseDriver.createDriver())
+    private val driver = databaseDriver.createDriver()
+    private val superDiaryDatabase = SuperDiaryDatabase(driver)
     private val queries = superDiaryDatabase.databaseQueries
 
     private val diaryMapper = { id: Long, entry: String, date: String ->
         Diary(id, entry, date)
+    }
+
+    /**
+     * This is only used on JVM. Schema is created automatically on Android and iOS
+     */
+    fun createDatabase() {
+        SuperDiaryDatabase.Schema.create(driver)
     }
 
     fun addDiary(diary: Diary) = queries.insert(diary.entry, diary.date)
