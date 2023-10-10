@@ -92,10 +92,16 @@ fun DiaryListScreen(
         contentAlignment = Alignment.Center,
     ) {
         when (state) {
-            is DiaryScreenState.Content -> DiaryList(
-                modifier = Modifier.fillMaxSize(),
-                diaries = state.diaries,
-            )
+            is DiaryScreenState.Content -> {
+                if (state.diaries.isNotEmpty()) {
+                    DiaryList(
+                        modifier = Modifier.fillMaxSize(),
+                        diaries = state.diaries,
+                    )
+                } else {
+                    EmptyDiaryList()
+                }
+            }
 
             is DiaryScreenState.Error -> Error(modifier = Modifier.fillMaxSize())
 
@@ -116,6 +122,28 @@ private fun Loading(modifier: Modifier = Modifier) {
         Text(
             text = "Loading Diaries",
             textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+private fun EmptyDiaryList(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            textAlign = TextAlign.Center,
+            text = "Uh Uhh, you don't have any entry",
+            style = MaterialTheme.typography.headlineMedium,
+            fontSize = 20.sp,
+        )
+        Text(
+            text = "Why don't you start writing something...",
+            style = MaterialTheme.typography.bodyLarge,
         )
     }
 }

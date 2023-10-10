@@ -7,7 +7,7 @@ plugins {
 }
 
 kotlin {
-    androidTarget()
+    android()
     sourceSets {
         val androidMain by getting {
             dependencies {
@@ -20,6 +20,7 @@ kotlin {
                 implementation(compose.uiTooling)
                 implementation(compose.material3)
                 implementation(projects.shared)
+                implementation(libs.koin.android)
                 implementation(projects.data)
             }
         }

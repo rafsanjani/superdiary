@@ -40,9 +40,11 @@ kotlin {
                 implementation(compose.materialIconsExtended)
                 implementation(projects.data)
                 implementation(libs.kotlin.datetime)
+                implementation(libs.koin.core)
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.tabNavigator)
                 implementation(libs.kotlin.inject.runtime)
+                implementation("cafe.adriel.voyager:voyager-koin:1.0.0-rc07")
                 implementation(compose.material3)
             }
         }
@@ -50,6 +52,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
+                implementation("io.insert-koin:koin-core-jvm:3.5.0")
             }
         }
     }
