@@ -137,10 +137,13 @@ private fun EmptyDiaryList(modifier: Modifier = Modifier) {
     ) {
         Text(
             textAlign = TextAlign.Center,
-            text = "Uh Uhh, you don't have any entry",
+            text = "Uh Uhh, it's very lonely here 😔",
             style = MaterialTheme.typography.headlineMedium,
             fontSize = 20.sp,
         )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
         Text(
             text = "Why don't you start writing something...",
             style = MaterialTheme.typography.bodyLarge,
