@@ -44,7 +44,6 @@ kotlin {
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.tabNavigator)
                 implementation(libs.kotlin.inject.runtime)
-                implementation("cafe.adriel.voyager:voyager-koin:1.0.0-rc07")
                 implementation(compose.material3)
             }
         }

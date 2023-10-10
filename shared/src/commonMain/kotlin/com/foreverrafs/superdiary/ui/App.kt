@@ -18,6 +18,7 @@ import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.screens.CalendarTab
 import com.foreverrafs.superdiary.ui.screens.DiaryListTab
+import com.foreverrafs.superdiary.ui.style.AppTheme
 
 /**
  * Entry point into the whole app. In an ideal world
