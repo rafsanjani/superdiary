@@ -1,21 +1,34 @@
-@Suppress("DSL_SCOPE_VIOLATION")
+@file:Suppress("UnusedPrivateProperty")
 
 plugins {
+    kotlin("multiplatform")
+    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+}
+
+kotlin {
+    androidTarget()
+
+    sourceSets {
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.androidx.activity.compose)
+                implementation(libs.appcompat)
+                implementation(libs.material)
+                implementation(libs.androidx.activity.ktx)
+                implementation(compose.ui)
+                implementation(compose.runtime)
+                implementation(compose.uiTooling)
+                implementation(compose.material3)
+                implementation(projects.shared)
+                implementation(libs.koin.android)
+                implementation(projects.data)
+            }
+        }
+    }
 }
 
 android {
-    namespace = "com.foreverrafs.superdiary.android"
-    compileSdk = 34
-    defaultConfig {
-        applicationId = "com.foreverrafs.superdiary.android"
-        minSdk = 28
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.1"
-    }
-
     buildFeatures {
         compose = true
     }
@@ -24,50 +37,23 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
+    compileSdk = 34
+    defaultConfig {
+        applicationId = "com.foreverrafs.superdiary"
+        minSdk = 28
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+    namespace = "com.foreverrafs.superdiary"
 
     packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-            excludes += "/META-INF/versions/9/previous-compilation-data.bin"
-        }
+        resources.excludes.add(
+            "META-INF/versions/9/previous-compilation-data.bin",
+        )
     }
-
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("debug")
-        }
-    }
-
-    applicationVariants.all {
-        kotlin.sourceSets {
-            getByName(name) {
-                kotlin.srcDir("build/generated/ksp/$name/kotlin")
-            }
-        }
-    }
-}
-
-dependencies {
-    implementation(projects.shared)
-    implementation(projects.data)
-    implementation(platform(libs.compose.bom))
-    implementation(libs.androidx.activity.ktx)
-    implementation(libs.compose.foundation.foundation)
-    implementation(libs.compose.material.material3)
-    implementation(libs.androidx.material)
-    implementation(libs.compose.ui.tooling)
-    implementation(libs.androidx.activity.compose)
 }

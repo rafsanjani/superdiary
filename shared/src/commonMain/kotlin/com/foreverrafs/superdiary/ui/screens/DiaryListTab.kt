@@ -4,45 +4,35 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.rememberScreenModel
+import cafe.adriel.voyager.core.model.coroutineScope
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.ui.components.DiaryListScreen
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
-import kotlinx.datetime.Clock
-import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.minus
-import kotlinx.datetime.toLocalDateTime
-import kotlin.random.Random
+import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-object DiaryListTab : Tab {
+object DiaryListTab : Tab, KoinComponent {
+
+    private val screenModel: DiaryListTabModel by inject()
+
     @Composable
     override fun Content() {
-        val screenModel = rememberScreenModel(tag = "diary-list") {
-            DiaryListTabModel()
-        }
-
-        val screenState by screenModel.state.collectAsState()
-
-        LaunchedEffect(Unit) {
-            screenModel.observeDiaries()
-        }
+        val state by screenModel.state.collectAsState()
 
         DiaryListScreen(
             modifier = Modifier
                 .fillMaxSize(),
-            state = screenState,
+            state = state,
         )
     }
 
@@ -65,25 +55,19 @@ object DiaryListTab : Tab {
         }
 }
 
-private class DiaryListTabModel : StateScreenModel<DiaryScreenState>(DiaryScreenState.Loading) {
-    suspend fun observeDiaries() {
-        delay(1500)
-        mutableState.update {
-            DiaryScreenState.Content(
-                diaries = (0..10).map {
-                    Diary(
-                        id = Random.nextLong(),
-                        entry = "Hello World. This is a really long message such that it can " +
-                            "swallow the whole world into pieces. Pieces we don't even want " +
-                            "to talk about but I don't mind because I am the best there has ever been",
-                        date = Clock.System.now()
-                            .toLocalDateTime(TimeZone.currentSystemDefault())
-                            .date
-                            .minus(DatePeriod(months = it))
-                            .toString(),
-                    )
-                },
-            )
+class DiaryListTabModel(
+    private val getAllDiariesUseCase: GetAllDiariesUseCase,
+) : StateScreenModel<DiaryScreenState>(DiaryScreenState.Loading) {
+
+    init {
+        observeDiaries()
+    }
+
+    private fun observeDiaries() = coroutineScope.launch {
+        getAllDiariesUseCase.diaries.collect { diaries ->
+            mutableState.update {
+                DiaryScreenState.Content(diaries)
+            }
         }
     }
 }

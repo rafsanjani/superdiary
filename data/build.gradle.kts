@@ -8,10 +8,9 @@ plugins {
 }
 
 sqldelight {
-    databases.register("KmpSuperDiaryDB") {
-        packageName.set("db")
+    databases.register("SuperDiaryDatabase") {
+        packageName.set("com.foreverrafs.superdiary.database")
         deriveSchemaFromMigrations.set(true)
-        generateAsync.set(true)
     }
 }
 
@@ -21,6 +20,7 @@ kotlin {
 
     android()
 
+    ios()
     iosX64()
     jvm()
     iosArm64()
@@ -32,6 +32,7 @@ kotlin {
                 implementation(libs.kotlin.coroutines.core)
                 implementation(libs.kotlin.coroutines.native)
                 implementation(libs.kotlin.datetime)
+                implementation(libs.koin.core)
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.square.sqldelight.coroutinesExt)
             }
@@ -40,6 +41,7 @@ kotlin {
             dependencies {
                 implementation(libs.square.sqldelight.driver.android)
                 implementation(libs.square.sqldelight.coroutinesExt)
+                implementation(libs.koin.android)
             }
         }
 
@@ -56,6 +58,7 @@ kotlin {
             dependencies {
                 implementation(libs.square.sqldelight.driver.native)
                 implementation(libs.kotlin.coroutines.core)
+                implementation(libs.koin.core)
             }
         }
 

@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui
+package com.foreverrafs.superdiary.ui.style
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.foreverrafs.superdiary.ui.font
 
 @Composable
 fun AppTheme(
@@ -27,6 +28,7 @@ fun AppTheme(
             surface = Color(0x27BDBDBD),
             background = Color(0xFF1E1E1E),
             secondaryContainer = Color(0x611E1E1E),
+            tertiaryContainer = Color.DarkGray,
         )
     } else {
         lightColorScheme(
@@ -34,6 +36,7 @@ fun AppTheme(
             background = Color(0xFFF5F5F5),
             surfaceVariant = Color(0x27BDBDBD),
             surface = Color(0x27BDBDBD),
+            tertiaryContainer = Color(0xffe3e3e3),
         )
     }
 
@@ -53,6 +56,10 @@ fun AppTheme(
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
             letterSpacing = (-0.3).sp,
+        ),
+        bodySmall = TextStyle(
+            fontFamily = montserratAlternativesFontFamily(),
+            fontSize = 16.sp,
         ),
     )
     val shapes = Shapes(

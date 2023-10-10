@@ -10,7 +10,7 @@ plugins {
 kotlin {
     targetHierarchy.default()
 
-    android()
+    androidTarget()
 
     jvm()
     jvmToolchain(17)
@@ -37,8 +37,10 @@ kotlin {
                 implementation(compose.components.resources)
                 implementation(compose.foundation)
                 implementation(compose.material3)
+                implementation(compose.materialIconsExtended)
                 implementation(projects.data)
                 implementation(libs.kotlin.datetime)
+                implementation(libs.koin.core)
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.tabNavigator)
                 implementation(libs.kotlin.inject.runtime)
@@ -49,6 +51,8 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
+                implementation("io.insert-koin:koin-core-jvm:3.5.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.3")
             }
         }
     }

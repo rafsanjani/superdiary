@@ -31,5 +31,6 @@ fun SuperDiaryAppBar(
         colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
         ),
+        scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
     )
 }

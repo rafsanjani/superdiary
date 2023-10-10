@@ -2,7 +2,7 @@ package com.foreverrafs.superdiary.ui.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -42,7 +42,7 @@ object CalendarTab : Tab {
         @Composable
         get() {
             val title = "Home"
-            val icon = rememberVectorPainter(Icons.Default.Home)
+            val icon = rememberVectorPainter(Icons.Default.CalendarMonth)
 
             return remember {
                 TabOptions(
