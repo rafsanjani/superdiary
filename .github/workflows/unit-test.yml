@@ -15,6 +15,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
+          lfs: true
 
       - name: Gradle Wrapper Validation
         uses: gradle/wrapper-validation-action@v1
