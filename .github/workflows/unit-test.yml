@@ -11,6 +11,9 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
+
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
@@ -19,15 +22,38 @@ jobs:
       - name: Gradle Wrapper Validation
         uses: gradle/wrapper-validation-action@v1
 
-      - name: Lint using ktlint
+      - name: Lint all modules
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: androidApp:detekt shared:detekt data:detekt
+          arguments: androidApp:detekt shared-data:detekt shared-ui:detekt
 
-      - name: Build and run tests
+      - name: Unit tests (data)
         id: gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: allTests --continue --no-configuration-cache
+          arguments: shared-data:testDebugUnitTest --continue --no-configuration-cache
           gradle-home-cache-cleanup: true
           cache-read-only: false
+
+      - name: Run snapshot tests (shared-ui)
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: verifyPaparazziDebug -PuseKsp=true --stacktrace
+          gradle-home-cache-cleanup: true
+          cache-read-only: false
+
+      - name: Upload Screenshot Test Report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: reports
+          path: shared/build/reports/paparazzi/
+          retention-days: 1
+
+      - name: Upload Screenshot Failure Differences
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: reports
+          path: shared/build/paparazzi/failures/
+          retention-days: 1

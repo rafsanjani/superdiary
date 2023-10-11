@@ -20,9 +20,9 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.uiTooling)
                 implementation(compose.material3)
-                implementation(projects.shared)
+                implementation(projects.sharedUi)
                 implementation(libs.koin.android)
-                implementation(projects.data)
+                implementation(projects.sharedData)
             }
         }
     }

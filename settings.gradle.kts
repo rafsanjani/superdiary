@@ -33,5 +33,5 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "superdiary"
 include(":androidApp")
-include(":data")
-include(":shared")
+include(":shared-data")
+include(":shared-ui")

@@ -103,7 +103,7 @@ fun DiaryListScreen(
                 }
             }
 
-            is DiaryScreenState.Error -> Error(modifier = Modifier.fillMaxSize())
+            is DiaryScreenState.Error -> Error(modifier = Modifier.fillMaxWidth())
 
             is DiaryScreenState.Loading -> Loading(modifier = Modifier.wrapContentSize())
         }
@@ -295,7 +295,12 @@ private fun SearchBar(
 
 @Composable
 private fun Error(modifier: Modifier) {
-    Text(text = "Error loading diaries", modifier = modifier)
+    Text(
+        text = "Error loading diaries",
+        textAlign = TextAlign.Center,
+        modifier = modifier,
+        style = MaterialTheme.typography.headlineMedium,
+    )
 }
 
 @Composable
