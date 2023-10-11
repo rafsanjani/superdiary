@@ -39,7 +39,7 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.material3)
                 implementation(compose.materialIconsExtended)
-                implementation(projects.data)
+                implementation(projects.sharedData)
                 implementation(libs.kotlin.datetime)
                 implementation(libs.koin.core)
                 implementation(libs.voyager.navigator)

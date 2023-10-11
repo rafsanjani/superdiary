@@ -22,7 +22,7 @@ kotlin {
                 implementation(compose.material3)
                 implementation(projects.shared)
                 implementation(libs.koin.android)
-                implementation(projects.data)
+                implementation(projects.sharedData)
             }
         }
     }
