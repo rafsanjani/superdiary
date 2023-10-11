@@ -21,6 +21,8 @@ class DiaryListSnapshotTests : KoinTest {
 
     @Test
     fun nonEmptyDiaryList() {
+        println("Rafs: $paparazzi")
+
         paparazzi.snapshot {
             TestAppContainer {
                 DiaryListScreen(
