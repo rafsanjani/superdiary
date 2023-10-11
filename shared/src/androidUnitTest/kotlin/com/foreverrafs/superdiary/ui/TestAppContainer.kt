@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.ui
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -16,7 +17,11 @@ internal fun TestAppContainer(content: @Composable () -> Unit) {
                 SuperDiaryAppBar()
             },
         ) {
-            Surface(modifier = Modifier.padding(it)) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it),
+            ) {
                 content()
             }
         }

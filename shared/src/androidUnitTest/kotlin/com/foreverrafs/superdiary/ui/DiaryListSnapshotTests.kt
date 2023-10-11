@@ -52,4 +52,17 @@ class DiaryListSnapshotTests : KoinTest {
             }
         }
     }
+
+    @Test
+    fun errorLoadingDiaries() {
+        paparazzi.snapshot {
+            TestAppContainer {
+                DiaryListScreen(
+                    state = DiaryScreenState.Error(
+                        Error("Error loading diaries"),
+                    ),
+                )
+            }
+        }
+    }
 }
