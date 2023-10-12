@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.inject
+package com.foreverrafs.superdiary.ui.di
 
 import com.foreverrafs.superdiary.diary.inject.useCaseModule
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
