@@ -27,7 +27,7 @@ object CalendarTab : Tab {
 
     override val options: TabOptions
         @Composable get() {
-            val title = "Home"
+            val title = "Calendar"
             val icon = rememberVectorPainter(Icons.Default.CalendarMonth)
 
             return remember {
@@ -56,7 +56,7 @@ object HomeTab : Tab {
     }
 
     override val key: ScreenKey
-        get() = "diary-list-destination"
+        get() = "diary-list-home"
 
     override val options: TabOptions
         @Composable get() {
