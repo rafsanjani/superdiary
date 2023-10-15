@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.core.screen.ScreenKey
+import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
@@ -22,8 +23,7 @@ object CalendarTab : Tab {
         Text("Calendars go here")
     }
 
-    override val key: ScreenKey
-        get() = "diary-list-calendar"
+    override val key: ScreenKey = uniqueScreenKey
 
     override val options: TabOptions
         @Composable get() {
@@ -55,8 +55,7 @@ object HomeTab : Tab {
         }
     }
 
-    override val key: ScreenKey
-        get() = "diary-list-home"
+    override val key: ScreenKey = uniqueScreenKey
 
     override val options: TabOptions
         @Composable get() {
@@ -79,8 +78,7 @@ object FavoritesTab : Tab {
         FavoritesScreen()
     }
 
-    override val key: ScreenKey
-        get() = "diary-list-favorites"
+    override val key: ScreenKey = uniqueScreenKey
 
     override val options: TabOptions
         @Composable get() {
