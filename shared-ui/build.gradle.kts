@@ -4,7 +4,7 @@ plugins {
     kotlin("multiplatform")
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
-    id("app.cash.paparazzi").version("1.3.1")
+    alias(libs.plugins.paparazzi)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -52,7 +52,7 @@ kotlin {
 
         val androidUnitTest by getting {
             dependencies {
-                implementation("app.cash.paparazzi:paparazzi:1.3.1")
+                implementation(libs.cashapp.paparazzi)
                 implementation(libs.koin.android)
                 implementation(libs.koin.test)
             }
@@ -61,8 +61,8 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
-                implementation("io.insert-koin:koin-core-jvm:3.5.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.3")
+                implementation(libs.koin.jvm)
+                implementation(libs.kotlin.coroutines.swing)
             }
         }
     }
