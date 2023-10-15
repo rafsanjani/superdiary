@@ -34,7 +34,7 @@ fun App() {
                     NavigationBar {
                         TabNavigationItem(HomeTab)
                         TabNavigationItem(CalendarTab)
-                        TabNavigationItem(CalendarTab)
+                        TabNavigationItem(FavoritesTab)
                     }
                 },
                 topBar = {
