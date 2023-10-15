@@ -38,7 +38,7 @@ jobs:
       - name: Run snapshot tests (shared-ui)
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: verifyPaparazziDebug -PuseKsp=true --stacktrace
+          arguments: verifyPaparazziDebug
           gradle-home-cache-cleanup: true
           cache-read-only: false
 
