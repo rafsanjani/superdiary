@@ -16,6 +16,9 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
+import com.foreverrafs.superdiary.ui.feature.calendar.CalendarTab
+import com.foreverrafs.superdiary.ui.feature.favorites.FavoritesTab
+import com.foreverrafs.superdiary.ui.feature.home.HomeTab
 import com.foreverrafs.superdiary.ui.style.AppTheme
 
 /**
