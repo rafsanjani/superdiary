@@ -1,63 +1,47 @@
-package com.foreverrafs.superdiary.ui.screens
+package com.foreverrafs.superdiary.ui.feature.diarylist
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
-import cafe.adriel.voyager.core.screen.ScreenKey
-import cafe.adriel.voyager.navigator.tab.Tab
-import cafe.adriel.voyager.navigator.tab.TabOptions
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.ui.components.DiaryListScreen
+import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryScreen
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-object DiaryListTab : Tab, KoinComponent {
-
-    private val screenModel: DiaryListTabModel by inject()
+object DiaryListScreen : Screen, KoinComponent {
+    private val screenModel: DiaryListPageModel by inject()
 
     @Composable
     override fun Content() {
         val state by screenModel.state.collectAsState()
+        val navigator = LocalNavigator.currentOrThrow
 
         DiaryListScreen(
             modifier = Modifier
                 .fillMaxSize(),
             state = state,
+            onAddEntry = {
+                navigator.push(
+                    CreateDiaryScreen,
+                )
+            },
         )
     }
-
-    override val key: ScreenKey
-        get() = "diary-list-destination"
-
-    override val options: TabOptions
-        @Composable
-        get() {
-            val title = "Home"
-            val icon = rememberVectorPainter(Icons.Default.List)
-
-            return remember {
-                TabOptions(
-                    index = 0u,
-                    title = title,
-                    icon = icon,
-                )
-            }
-        }
 }
 
-class DiaryListTabModel(
+class DiaryListPageModel(
     private val getAllDiariesUseCase: GetAllDiariesUseCase,
-) : StateScreenModel<DiaryScreenState>(DiaryScreenState.Loading) {
+) : StateScreenModel<DiaryListScreenState>(DiaryListScreenState.Loading) {
 
     init {
         observeDiaries()
@@ -66,7 +50,7 @@ class DiaryListTabModel(
     private fun observeDiaries() = coroutineScope.launch {
         getAllDiariesUseCase.diaries.collect { diaries ->
             mutableState.update {
-                DiaryScreenState.Content(diaries)
+                DiaryListScreenState.Content(diaries)
             }
         }
     }

@@ -73,6 +73,7 @@ kotlin {
 android {
     namespace = "com.foreverrafs.data"
     compileSdk = libs.versions.compileSdk.get().toInt()
+
     defaultConfig {
         minSdk = libs.versions.minimumSdk.get().toInt()
     }

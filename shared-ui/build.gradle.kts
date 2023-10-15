@@ -44,6 +44,7 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.tabNavigator)
+                implementation(libs.voyager.transitions)
                 implementation(libs.kotlin.inject.runtime)
                 implementation(compose.material3)
             }
@@ -59,7 +60,6 @@ kotlin {
 
         val jvmMain by getting {
             dependencies {
-                implementation("app.cash.paparazzi:paparazzi:1.3.1")
                 implementation(compose.desktop.currentOs)
                 implementation("io.insert-koin:koin-core-jvm:3.5.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.3")

@@ -73,8 +73,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreenState
 import com.foreverrafs.superdiary.ui.format
-import com.foreverrafs.superdiary.ui.screens.DiaryScreenState
 import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -84,28 +84,31 @@ import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun DiaryListScreen(
-    state: DiaryScreenState,
+    state: DiaryListScreenState,
     modifier: Modifier = Modifier,
+    onAddEntry: () -> Unit,
 ) {
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center,
     ) {
         when (state) {
-            is DiaryScreenState.Content -> {
+            is DiaryListScreenState.Content -> {
                 if (state.diaries.isNotEmpty()) {
                     DiaryList(
                         modifier = Modifier.fillMaxSize(),
                         diaries = state.diaries,
                     )
                 } else {
-                    EmptyDiaryList()
+                    EmptyDiaryList(
+                        onAddEntry = onAddEntry,
+                    )
                 }
             }
 
-            is DiaryScreenState.Error -> Error(modifier = Modifier.fillMaxWidth())
+            is DiaryListScreenState.Error -> Error(modifier = Modifier.fillMaxWidth())
 
-            is DiaryScreenState.Loading -> Loading(modifier = Modifier.wrapContentSize())
+            is DiaryListScreenState.Loading -> Loading(modifier = Modifier.wrapContentSize())
         }
     }
 }
@@ -127,7 +130,10 @@ private fun Loading(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun EmptyDiaryList(modifier: Modifier = Modifier) {
+private fun EmptyDiaryList(
+    modifier: Modifier = Modifier,
+    onAddEntry: () -> Unit,
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -151,7 +157,7 @@ private fun EmptyDiaryList(modifier: Modifier = Modifier) {
         )
 
         TextButton(
-            onClick = {},
+            onClick = onAddEntry,
         ) {
             Text("Add Entry")
         }

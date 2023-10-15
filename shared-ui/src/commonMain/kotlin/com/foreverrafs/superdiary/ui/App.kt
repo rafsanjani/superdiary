@@ -16,8 +16,6 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
-import com.foreverrafs.superdiary.ui.screens.CalendarTab
-import com.foreverrafs.superdiary.ui.screens.DiaryListTab
 import com.foreverrafs.superdiary.ui.style.AppTheme
 
 /**
@@ -27,17 +25,21 @@ import com.foreverrafs.superdiary.ui.style.AppTheme
  */
 @Composable
 fun App() {
-    TabNavigator(DiaryListTab) {
+    TabNavigator(
+        tab = HomeTab,
+    ) {
         AppTheme {
             Scaffold(
                 bottomBar = {
                     NavigationBar {
-                        TabNavigationItem(DiaryListTab)
+                        TabNavigationItem(HomeTab)
                         TabNavigationItem(CalendarTab)
                         TabNavigationItem(CalendarTab)
                     }
                 },
-                topBar = { SuperDiaryAppBar() },
+                topBar = {
+                    SuperDiaryAppBar()
+                },
                 content = {
                     Surface(
                         modifier = Modifier

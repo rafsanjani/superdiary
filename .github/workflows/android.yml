@@ -27,7 +27,7 @@ jobs:
         with:
           arguments: androidApp:detekt shared-data:detekt shared-ui:detekt
 
-      - name: Unit tests (data)
+      - name: Unit tests (shared-data)
         id: gradle
         uses: gradle/gradle-build-action@v2
         with:
@@ -35,7 +35,7 @@ jobs:
           gradle-home-cache-cleanup: true
           cache-read-only: false
 
-      - name: Run snapshot tests (shared-ui)
+      - name: Snapshot tests (shared-ui)
         uses: gradle/gradle-build-action@v2
         with:
           arguments: verifyPaparazziDebug

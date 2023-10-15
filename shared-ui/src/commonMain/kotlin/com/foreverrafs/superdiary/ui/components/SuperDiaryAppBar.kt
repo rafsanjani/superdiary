@@ -1,7 +1,11 @@
 package com.foreverrafs.superdiary.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -15,6 +19,8 @@ import androidx.compose.ui.text.style.TextAlign
 @Composable
 fun SuperDiaryAppBar(
     modifier: Modifier = Modifier,
+    showBackIcon: Boolean = false,
+    onBackClicked: (() -> Unit)? = null,
 ) {
     TopAppBar(
         modifier = modifier,
@@ -31,6 +37,17 @@ fun SuperDiaryAppBar(
         colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
         ),
+        navigationIcon = {
+            if (showBackIcon) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        onBackClicked?.invoke()
+                    },
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = null,
+                )
+            }
+        },
         scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
     )
 }
