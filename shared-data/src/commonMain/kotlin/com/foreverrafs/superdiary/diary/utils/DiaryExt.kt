@@ -2,7 +2,7 @@ package com.foreverrafs.superdiary.diary.utils
 
 import com.foreverrafs.superdiary.diary.model.Diary
 import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.periodUntil
 import kotlinx.datetime.todayIn
@@ -20,8 +20,9 @@ data class PrioritizedDuration(
     val priority: Int,
 )
 
+@Suppress("ReturnCount")
 private fun getDurationString(diary: Diary, clock: Clock = Clock.System): PrioritizedDuration {
-    val entryDate = LocalDate.parse(diary.date)
+    val entryDate = LocalDateTime.parse(diary.date).date
 
     val difference = entryDate.periodUntil(clock.todayIn(TimeZone.currentSystemDefault()))
 

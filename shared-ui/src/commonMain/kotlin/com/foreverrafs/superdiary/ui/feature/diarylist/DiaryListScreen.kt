@@ -59,7 +59,7 @@ import com.foreverrafs.superdiary.diary.utils.groupByDate
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.format
 import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 
 @Composable
 fun DiaryListScreen(
@@ -67,11 +67,10 @@ fun DiaryListScreen(
     modifier: Modifier = Modifier,
     onAddEntry: () -> Unit,
 ) {
-    Box(
+    Column(
         modifier = modifier,
-        contentAlignment = Alignment.Center,
     ) {
-        SuperDiaryAppBar(modifier = Modifier.align(Alignment.TopCenter))
+        SuperDiaryAppBar()
 
         when (state) {
             is DiaryListScreenState.Content -> {
@@ -359,7 +358,7 @@ private fun DiaryItem(
             ) {
                 Text(
                     text = buildAnnotatedString {
-                        val date = LocalDate.parse(diary.date)
+                        val date = LocalDateTime.parse(diary.date).date
 
                         withStyle(
                             SpanStyle(
