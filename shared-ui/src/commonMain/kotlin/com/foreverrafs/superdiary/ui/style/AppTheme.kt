@@ -61,6 +61,11 @@ fun AppTheme(
             fontFamily = montserratAlternativesFontFamily(),
             fontSize = 16.sp,
         ),
+        titleMedium = TextStyle(
+            fontFamily = montserratAlternativesFontFamily(),
+            fontSize = 16.sp,
+            fontWeight = FontWeight.SemiBold,
+        ),
     )
     val shapes = Shapes(
         small = RoundedCornerShape(4.dp),
@@ -100,6 +105,12 @@ fun montserratAlternativesFontFamily(): FontFamily = FontFamily(
         font(
             name = "Righteous Regular",
             resource = "montserrat_alternatives_bold",
+            weight = FontWeight.Bold,
+            style = FontStyle.Normal,
+        ),
+        font(
+            name = "Righteous Regular",
+            resource = "montserrat_alternatives_semibold",
             weight = FontWeight.Bold,
             style = FontStyle.Normal,
         ),

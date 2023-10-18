@@ -37,21 +37,23 @@ fun App() {
         tab = tabs.first { it is HomeTab },
     ) {
         AppTheme {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    color = MaterialTheme.colorScheme.background,
+            Surface {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
                 ) {
-                    CurrentTab()
-                }
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        color = MaterialTheme.colorScheme.background,
+                    ) {
+                        CurrentTab()
+                    }
 
-                NavigationBar {
-                    tabs.forEach {
-                        TabNavigationItem(it)
+                    NavigationBar {
+                        tabs.forEach {
+                            TabNavigationItem(it)
+                        }
                     }
                 }
             }
