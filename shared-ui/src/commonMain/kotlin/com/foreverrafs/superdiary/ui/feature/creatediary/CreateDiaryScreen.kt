@@ -1,29 +1,50 @@
 package com.foreverrafs.superdiary.ui.feature.creatediary
 
-import androidx.compose.material3.TextField
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.coroutineScope
 import cafe.adriel.voyager.core.screen.Screen
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
+import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
+import kotlinx.coroutines.launch
 
-object CreateDiaryScreen : Screen, KoinComponent {
-    private val createDiaryPageModel: CreateDiaryPageModel by inject()
+object CreateDiaryScreen : Screen {
 
     @Composable
     override fun Content() {
-        TextField(
-            value = createDiaryPageModel.text,
-            onValueChange = {
-                createDiaryPageModel.text = it
-            },
-        )
+        val createDiaryScreenModel: CreateDiaryScreenModel = getScreenModel()
+        val navigator = LocalNavigator.currentOrThrow
+
+        CreateDiaryScreenContent(navigator)
     }
 }
 
-class CreateDiaryPageModel : ScreenModel {
-    var text by mutableStateOf("")
+@Composable
+private fun CreateDiaryScreenContent(navigator: Navigator) {
+    Scaffold(
+        topBar = {
+            SuperDiaryAppBar(
+                showBackIcon = true,
+                onBackClicked = navigator::pop,
+            )
+        },
+        modifier = Modifier.fillMaxSize(),
+    ) {
+    }
+}
+
+class CreateDiaryScreenModel(
+    private val addDiaryUseCase: AddDiaryUseCase,
+) : ScreenModel {
+    fun saveDiary(diary: Diary) = coroutineScope.launch {
+        addDiaryUseCase(diary)
+    }
 }

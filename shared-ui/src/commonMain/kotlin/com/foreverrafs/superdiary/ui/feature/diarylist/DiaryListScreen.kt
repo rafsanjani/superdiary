@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
+import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.format
 import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
 import kotlinx.datetime.LocalDate
@@ -70,6 +71,8 @@ fun DiaryListScreen(
         modifier = modifier,
         contentAlignment = Alignment.Center,
     ) {
+        SuperDiaryAppBar(modifier = Modifier.align(Alignment.TopCenter))
+
         when (state) {
             is DiaryListScreenState.Content -> {
                 if (state.diaries.isNotEmpty()) {

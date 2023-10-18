@@ -10,21 +10,21 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import cafe.adriel.voyager.transitions.SlideTransition
-import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreen
+import cafe.adriel.voyager.transitions.FadeTransition
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListTab
 
 /**
- * The home tab provides the entry point for the diary list
- * and an option to create a new diary if the list is empty
+ * The home tab provides the entry point for the diary list and an option
+ * to create a new diary if the list is empty
  */
 object HomeTab : Tab {
 
     @Composable
     override fun Content() {
         Navigator(
-            screen = DiaryListScreen,
+            screen = DiaryListTab,
         ) { navigator ->
-            SlideTransition(navigator)
+            FadeTransition(navigator)
         }
     }
 

@@ -1,13 +1,13 @@
 package com.foreverrafs.superdiary.ui
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,7 +15,6 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
-import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.calendar.CalendarTab
 import com.foreverrafs.superdiary.ui.feature.favorites.FavoritesTab
 import com.foreverrafs.superdiary.ui.feature.home.HomeTab
@@ -28,32 +27,34 @@ import com.foreverrafs.superdiary.ui.style.AppTheme
  */
 @Composable
 fun App() {
+    val tabs = listOf(
+        HomeTab,
+        CalendarTab,
+        FavoritesTab,
+    )
+
     TabNavigator(
-        tab = HomeTab,
+        tab = tabs.first { it is HomeTab },
     ) {
         AppTheme {
-            Scaffold(
-                bottomBar = {
-                    NavigationBar {
-                        TabNavigationItem(HomeTab)
-                        TabNavigationItem(CalendarTab)
-                        TabNavigationItem(FavoritesTab)
+            Column(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    color = MaterialTheme.colorScheme.background,
+                ) {
+                    CurrentTab()
+                }
+
+                NavigationBar {
+                    tabs.forEach {
+                        TabNavigationItem(it)
                     }
-                },
-                topBar = {
-                    SuperDiaryAppBar()
-                },
-                content = {
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(it),
-                        color = MaterialTheme.colorScheme.background,
-                    ) {
-                        CurrentTab()
-                    }
-                },
-            )
+                }
+            }
         }
     }
 }

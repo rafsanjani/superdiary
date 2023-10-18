@@ -8,27 +8,27 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryScreen
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-object DiaryListScreen : Screen, KoinComponent {
-    private val screenModel: DiaryListPageModel by inject()
+object DiaryListTab : Screen {
 
     @Composable
     override fun Content() {
-        val state by screenModel.state.collectAsState()
+        val screenModel: DiaryListScreenModel = getScreenModel()
+        val screenState by screenModel.state.collectAsState()
+
         val navigator = LocalNavigator.currentOrThrow
 
         DiaryListScreen(
             modifier = Modifier
                 .fillMaxSize(),
-            state = state,
+            state = screenState,
             onAddEntry = {
                 navigator.push(
                     CreateDiaryScreen,
@@ -38,7 +38,7 @@ object DiaryListScreen : Screen, KoinComponent {
     }
 }
 
-class DiaryListPageModel(
+class DiaryListScreenModel(
     private val getAllDiariesUseCase: GetAllDiariesUseCase,
 ) : StateScreenModel<DiaryListScreenState>(DiaryListScreenState.Loading) {
 
