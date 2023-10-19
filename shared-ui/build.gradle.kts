@@ -67,11 +67,25 @@ kotlin {
                 implementation(libs.kotlin.coroutines.swing)
             }
         }
+
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.compose.ui.tooling)
+            }
+        }
     }
 }
 
 android {
     namespace = "com.foreverrafs.superdiary"
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+    }
 
     compileSdk = libs.versions.compileSdk.get().toInt()
 
