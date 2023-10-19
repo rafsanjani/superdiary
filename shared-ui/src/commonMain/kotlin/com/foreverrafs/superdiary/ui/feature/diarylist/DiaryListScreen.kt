@@ -13,7 +13,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -30,22 +29,19 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.LibraryBooks
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DockedSearchBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -56,6 +52,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
@@ -445,7 +442,6 @@ private fun DiaryItem(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchBar(
     modifier: Modifier = Modifier,
@@ -453,25 +449,21 @@ private fun SearchBar(
     onFilterClicked: () -> Unit,
 ) {
     var query by rememberSaveable { mutableStateOf("") }
-    var active by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(query) {
         onQueryChanged(query)
     }
 
-    DockedSearchBar(
+    TextField(
         modifier = modifier,
-        query = query,
-        onQueryChange = { query = it },
-        onSearch = { active = false },
-        active = active,
-        onActiveChange = { active = it },
-        placeholder = {
-            Text(
-                text = "Search in diaries",
-                style = MaterialTheme.typography.labelLarge,
-            )
-        },
+        value = query,
+        onValueChange = { query = it },
+        colors = TextFieldDefaults.colors(
+            unfocusedIndicatorColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+        ),
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
@@ -487,36 +479,16 @@ private fun SearchBar(
                 contentDescription = null,
             )
         },
-        colors = SearchBarDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-        ),
         shape = RoundedCornerShape(8.dp),
-    ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-            items(4) { idx ->
-                val resultText = "Suggestion $idx"
-
-                ListItem(
-                    headlineContent = { Text(resultText) },
-                    supportingContent = { Text("Additional info") },
-                    leadingContent = {
-                        Icon(
-                            Icons.Filled.LibraryBooks,
-                            contentDescription = null,
-                        )
-                    },
-                    modifier = Modifier.clickable {
-                        query = resultText
-                        active = false
-                    },
-                )
-            }
-        }
-    }
+        placeholder = {
+            Text(
+                modifier = Modifier.alpha(0.5f),
+                text = "Search in diaries",
+                style = MaterialTheme.typography.titleMedium,
+            )
+        },
+        textStyle = MaterialTheme.typography.titleMedium,
+    )
 }
 
 @Composable
