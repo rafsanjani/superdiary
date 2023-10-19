@@ -1,6 +1,9 @@
 package com.foreverrafs.superdiary.ui.feature.diarylist.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
@@ -38,6 +41,7 @@ import androidx.compose.ui.unit.dp
 internal fun SearchBar(
     modifier: Modifier = Modifier,
     onQueryChanged: (query: String) -> Unit,
+    inSelectionMode: Boolean,
     onFilterClicked: () -> Unit,
 ) {
     var query by rememberSaveable { mutableStateOf("") }
@@ -57,57 +61,64 @@ internal fun SearchBar(
         onQueryChanged(query)
     }
 
-    TextField(
-        modifier = modifier
-            .onFocusChanged {
-                isFocused = it.hasFocus
-            }
-            .border(
-                width = border,
-                color = Color.Black,
-                shape = RoundedCornerShape(cornerRadius),
+    AnimatedVisibility(
+        visible = inSelectionMode,
+        modifier = modifier,
+        enter = fadeIn(),
+        exit = fadeOut(),
+    ) {
+        TextField(
+            modifier = Modifier
+                .onFocusChanged {
+                    isFocused = it.hasFocus
+                }
+                .border(
+                    width = border,
+                    color = Color.Black,
+                    shape = RoundedCornerShape(cornerRadius),
+                ),
+            singleLine = true,
+            value = query,
+            onValueChange = { query = it },
+            colors = TextFieldDefaults.colors(
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                errorIndicatorColor = Color.Transparent,
             ),
-        singleLine = true,
-        value = query,
-        onValueChange = { query = it },
-        colors = TextFieldDefaults.colors(
-            unfocusedIndicatorColor = Color.Transparent,
-            focusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-            errorIndicatorColor = Color.Transparent,
-        ),
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = null,
-            )
-        },
-        trailingIcon = {
-            Icon(
-                modifier = Modifier
-                    .clickable { onFilterClicked() }
-                    .padding(8.dp),
-                imageVector = Icons.Default.Sort,
-                contentDescription = null,
-            )
-        },
-        shape = RoundedCornerShape(cornerRadius),
-        placeholder = {
-            Text(
-                modifier = Modifier.alpha(0.5f),
-                text = "Search in diaries",
-                style = MaterialTheme.typography.titleMedium,
-            )
-        },
-        textStyle = MaterialTheme.typography.titleMedium,
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Search,
-        ),
-        keyboardActions = KeyboardActions(
-            onSearch = {
-                keyboardController?.hide()
-                focusManager.clearFocus(true)
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null,
+                )
             },
-        ),
-    )
+            trailingIcon = {
+                Icon(
+                    modifier = Modifier
+                        .clickable { onFilterClicked() }
+                        .padding(8.dp),
+                    imageVector = Icons.Default.Sort,
+                    contentDescription = null,
+                )
+            },
+            shape = RoundedCornerShape(cornerRadius),
+            placeholder = {
+                Text(
+                    modifier = Modifier.alpha(0.5f),
+                    text = "Search in diaries",
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            },
+            textStyle = MaterialTheme.typography.titleMedium,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Search,
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus(true)
+                },
+            ),
+        )
+    }
 }

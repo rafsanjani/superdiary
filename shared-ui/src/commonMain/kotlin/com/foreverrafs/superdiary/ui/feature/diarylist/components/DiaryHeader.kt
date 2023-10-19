@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -55,8 +57,13 @@ internal fun DiaryHeader(
                         tint = MaterialTheme.colorScheme.primary,
                         contentDescription = null,
                         modifier = Modifier
-                            .padding(4.dp)
-                            .border(2.dp, MaterialTheme.colorScheme.onSurface, CircleShape)
+                            .padding(top = 8.dp, start = 4.dp)
+                            .size(20.dp)
+                            .border(
+                                width = Dp.Hairline,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                shape = CircleShape,
+                            )
                             .clip(CircleShape)
                             .clickable {
                                 deSelectGroup()
@@ -68,7 +75,8 @@ internal fun DiaryHeader(
                         tint = Color.Black.copy(alpha = 0.55f),
                         contentDescription = null,
                         modifier = Modifier
-                            .padding(4.dp)
+                            .padding(top = 8.dp, start = 4.dp)
+                            .size(20.dp)
                             .clickable {
                                 selectGroup()
                             },

@@ -128,6 +128,7 @@ fun DiaryList(
 
         // Searchbar
         SearchBar(
+            inSelectionMode = !inSelectionMode,
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopCenter),

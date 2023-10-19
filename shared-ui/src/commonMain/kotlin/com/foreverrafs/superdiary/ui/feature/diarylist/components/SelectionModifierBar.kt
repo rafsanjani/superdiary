@@ -3,11 +3,11 @@ package com.foreverrafs.superdiary.ui.feature.diarylist.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -50,13 +50,15 @@ internal fun SelectionModifierBar(
         exit = fadeOut(),
     ) {
         // The outer surface will block inputs from propagating to the searchbar behind it
-        Surface {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .fillMaxWidth()
+                .height(56.dp),
+        ) {
             Row(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .background(color = MaterialTheme.colorScheme.background),
+                modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
