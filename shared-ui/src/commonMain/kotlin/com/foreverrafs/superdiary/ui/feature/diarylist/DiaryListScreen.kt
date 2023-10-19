@@ -57,7 +57,9 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.components.SearchBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.SelectionModifierBar
 import com.foreverrafs.superdiary.ui.format
 import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun DiaryListScreen(
@@ -389,7 +391,7 @@ private fun DiaryItem(
                 ) {
                     Text(
                         text = buildAnnotatedString {
-                            val date = LocalDateTime.parse(diary.date).date
+                            val date = Instant.parse(diary.date).toLocalDateTime(TimeZone.UTC).date
 
                             withStyle(
                                 SpanStyle(
