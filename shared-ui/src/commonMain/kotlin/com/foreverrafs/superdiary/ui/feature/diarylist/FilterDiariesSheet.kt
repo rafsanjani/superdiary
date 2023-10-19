@@ -47,6 +47,7 @@ import kotlinx.datetime.toLocalDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterDiariesSheet(
+    modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
 ) {
     ModalBottomSheet(
@@ -56,7 +57,8 @@ fun FilterDiariesSheet(
             skipHiddenState = false,
         ),
         windowInsets = WindowInsets(0),
-        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+        containerColor = MaterialTheme.colorScheme.background,
+        modifier = modifier,
     ) {
         var selectedDate by remember {
             mutableStateOf<LocalDate?>(
@@ -212,6 +214,7 @@ private fun DiaryFilterChip(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DiaryDatePicker(
+    modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onDateSelected: (date: LocalDate) -> Unit,
     selectedDate: LocalDate?,
@@ -253,6 +256,7 @@ private fun DiaryDatePicker(
         colors = DatePickerDefaults.colors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
         ),
+        modifier = modifier,
     ) {
         DatePicker(
             state = datePickerState,

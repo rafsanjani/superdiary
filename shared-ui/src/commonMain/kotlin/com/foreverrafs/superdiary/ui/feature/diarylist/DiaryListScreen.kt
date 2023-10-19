@@ -1,11 +1,15 @@
 package com.foreverrafs.superdiary.ui.feature.diarylist
 
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,13 +21,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.LibraryBooks
+import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.Card
@@ -31,6 +39,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +48,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +56,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -54,6 +66,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
@@ -78,6 +91,7 @@ fun DiaryListScreen(
                     DiaryList(
                         modifier = Modifier.fillMaxSize(),
                         diaries = state.diaries,
+                        onAddEntry = onAddEntry,
                     )
                 } else {
                     EmptyDiaryList(
@@ -146,7 +160,19 @@ private fun EmptyDiaryList(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DiaryList(modifier: Modifier = Modifier, diaries: List<Diary>) {
+fun DiaryList(
+    modifier: Modifier = Modifier,
+    diaries: List<Diary>,
+    onAddEntry: () -> Unit,
+) {
+    var selectedIds by rememberSaveable {
+        mutableStateOf(emptySet<Long>())
+    }
+
+    val inSelectionMode by remember {
+        derivedStateOf { selectedIds.isNotEmpty() }
+    }
+
     val groupedDiaries = remember(diaries) {
         diaries.groupByDate()
     }
@@ -159,6 +185,7 @@ fun DiaryList(modifier: Modifier = Modifier, diaries: List<Diary>) {
             mutableStateOf(false)
         }
 
+        // Searchbar
         SearchBar(
             modifier = Modifier
                 .fillMaxWidth()
@@ -168,6 +195,26 @@ fun DiaryList(modifier: Modifier = Modifier, diaries: List<Diary>) {
                 showFilterDiariesBottomSheet = true
             },
         )
+
+        // Modifier bar. Shown when in selection mode
+        AnimatedVisibility(
+            visible = inSelectionMode,
+            modifier = Modifier
+                .zIndex(1f)
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            enter = fadeIn(),
+            exit = fadeOut(),
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .background(color = Color.Green),
+            ) {
+                Text("Selected Items: ${selectedIds.size}")
+            }
+        }
 
         if (showFilterDiariesBottomSheet) {
             FilterDiariesSheet(
@@ -187,8 +234,28 @@ fun DiaryList(modifier: Modifier = Modifier, diaries: List<Diary>) {
         ) {
             groupedDiaries.forEach { (date, diaries) ->
                 stickyHeader(key = date.label) {
+                    val isGroupSelected by remember {
+                        derivedStateOf { selectedIds.containsAll(diaries.map { it.id }) }
+                    }
+
                     DiaryHeader(
                         text = date.label,
+                        inSelectionMode = inSelectionMode,
+                        selected = isGroupSelected,
+                        selectGroup = {
+                            diaries.forEach { diary ->
+                                diary.id?.let {
+                                    selectedIds = selectedIds.plus(it)
+                                }
+                            }
+                        },
+                        deSelectGroup = {
+                            diaries.forEach { diary ->
+                                diary.id?.let {
+                                    selectedIds = selectedIds.minus(it)
+                                }
+                            }
+                        },
                     )
                 }
 
@@ -196,10 +263,183 @@ fun DiaryList(modifier: Modifier = Modifier, diaries: List<Diary>) {
                     items = diaries,
                     key = { item -> item.id.toString() },
                 ) { diary ->
+                    val isSelected by remember { derivedStateOf { diary.id in selectedIds } }
+
                     DiaryItem(
+                        modifier = Modifier.combinedClickable(
+                            onClick = {
+                                if (inSelectionMode) {
+                                    selectedIds = selectedIds.addOrRemove(diary.id)
+                                } else {
+                                    // Process regular click here
+                                }
+                            },
+                            onLongClick = {
+                                selectedIds = selectedIds.addOrRemove(diary.id)
+                            },
+                        ),
                         diary = diary,
+                        selected = isSelected,
+                        inSelectionMode = inSelectionMode,
                     )
                 }
+            }
+        }
+        ExtendedFloatingActionButton(
+            shape = RoundedCornerShape(16.dp),
+            onClick = onAddEntry,
+            modifier = Modifier.align(Alignment.BottomEnd),
+        ) {
+            Text("Add Diary")
+        }
+    }
+}
+
+private fun Set<Long>.addOrRemove(id: Long?): Set<Long> {
+    if (id == null) return this
+    return if (this.contains(id)) this.minus(id) else this.plus(id)
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun DiaryItem(
+    modifier: Modifier = Modifier,
+    diary: Diary,
+    selected: Boolean,
+    inSelectionMode: Boolean,
+) {
+    val transition = updateTransition(selected, label = "selected")
+    val padding by transition.animateDp(label = "padding") { _ ->
+        if (inSelectionMode) 4.dp else 0.dp
+    }
+
+    val roundedCornerShape by transition.animateDp(label = "corner") { selected ->
+        if (selected) 16.dp else 0.dp
+    }
+    Box(
+        modifier = modifier
+            .height(120.dp)
+            .padding(padding)
+            .clip(RoundedCornerShape(roundedCornerShape))
+            .fillMaxWidth(),
+    ) {
+        Card(
+            shape = RoundedCornerShape(
+                topStart = 0.dp,
+                bottomStart = 12.dp,
+                topEnd = 12.dp,
+                bottomEnd = 0.dp,
+            ),
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .background(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = RoundedCornerShape(
+                                topStart = 0.dp,
+                                topEnd = 12.dp,
+                                bottomStart = 12.dp,
+                                bottomEnd = 0.dp,
+                            ),
+                        )
+                        .padding(horizontal = 25.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = buildAnnotatedString {
+                            val date = LocalDateTime.parse(diary.date).date
+
+                            withStyle(
+                                SpanStyle(
+                                    fontFamily = montserratAlternativesFontFamily(),
+                                ),
+                            ) {
+                                append(
+                                    date.format("E")
+                                        .uppercase(),
+                                )
+                            }
+
+                            appendLine()
+
+                            withStyle(
+                                SpanStyle(
+                                    fontFamily = montserratAlternativesFontFamily(),
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontSize = 20.sp,
+                                ),
+                            ) {
+                                append(date.dayOfMonth.toString())
+                            }
+                            appendLine()
+
+                            withStyle(
+                                SpanStyle(
+                                    fontFamily = montserratAlternativesFontFamily(),
+                                    fontWeight = FontWeight.Normal,
+                                ),
+                            ) {
+                                append(
+                                    date.format("MMM")
+                                        .uppercase(),
+                                )
+                            }
+                            appendLine()
+
+                            withStyle(
+                                SpanStyle(
+                                    fontFamily = montserratAlternativesFontFamily(),
+                                    fontWeight = FontWeight.Normal,
+                                ),
+                            ) {
+                                append(date.year.toString())
+                            }
+
+                            toAnnotatedString()
+                        },
+                        textAlign = TextAlign.Center,
+                        lineHeight = 20.sp,
+                    )
+                }
+
+                // Diary Entry
+                Text(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .align(Alignment.Top),
+                    text = diary.entry,
+                    letterSpacing = (-0.3).sp,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Justify,
+                )
+            }
+        }
+
+        if (inSelectionMode) {
+            if (selected) {
+                Icon(
+                    Icons.Filled.CheckCircle,
+                    tint = MaterialTheme.colorScheme.primary,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .border(2.dp, MaterialTheme.colorScheme.background, CircleShape)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.background),
+                )
+            } else {
+                Icon(
+                    Icons.Filled.RadioButtonUnchecked,
+                    tint = Color.White.copy(alpha = 0.7f),
+                    contentDescription = null,
+                    modifier = Modifier.padding(6.dp),
+                )
             }
         }
     }
@@ -290,141 +530,58 @@ private fun Error(modifier: Modifier) {
 }
 
 @Composable
-private fun DiaryHeader(modifier: Modifier = Modifier, text: String) {
+private fun DiaryHeader(
+    modifier: Modifier = Modifier,
+    text: String,
+    inSelectionMode: Boolean,
+    selectGroup: () -> Unit,
+    deSelectGroup: () -> Unit,
+    selected: Boolean,
+) {
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background,
         ),
     ) {
-        Text(
-            modifier = Modifier.padding(vertical = 8.dp),
-            text = text,
-            style = MaterialTheme.typography.headlineMedium,
-        )
-    }
-}
-
-@Composable
-private fun DiaryItem(
-    modifier: Modifier = Modifier,
-    diary: Diary,
-) {
-    val defaultTextLines = 4
-
-    // Used to determine whether to expand/collapse the card onClick
-    var isExpanded by remember {
-        mutableStateOf(false)
-    }
-
-    var maxLines by remember {
-        mutableStateOf(defaultTextLines)
-    }
-
-    Card(
-        modifier = modifier
-            .height(120.dp)
-            .animateContentSize(animationSpec = tween(easing = LinearEasing))
-            .fillMaxWidth()
-            .clickable {
-                maxLines = if (!isExpanded) Int.MAX_VALUE else defaultTextLines
-                isExpanded = !isExpanded
-            },
-        shape = RoundedCornerShape(
-            topStart = 0.dp,
-            bottomStart = 12.dp,
-            topEnd = 12.dp,
-            bottomEnd = 0.dp,
-        ),
-    ) {
         Row(
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .background(
-                        color = MaterialTheme.colorScheme.secondaryContainer,
-                        shape = RoundedCornerShape(
-                            topStart = 0.dp,
-                            topEnd = 12.dp,
-                            bottomStart = 12.dp,
-                            bottomEnd = 0.dp,
-                        ),
-                    )
-                    .padding(horizontal = 25.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = buildAnnotatedString {
-                        val date = LocalDateTime.parse(diary.date).date
-
-                        withStyle(
-                            SpanStyle(
-                                fontFamily = montserratAlternativesFontFamily(),
-                            ),
-                        ) {
-                            append(
-                                date.format("E")
-                                    .uppercase(),
-                            )
-                        }
-
-                        appendLine()
-
-                        withStyle(
-                            SpanStyle(
-                                fontFamily = montserratAlternativesFontFamily(),
-                                fontWeight = FontWeight.ExtraBold,
-                                fontSize = 20.sp,
-                            ),
-                        ) {
-                            append(date.dayOfMonth.toString())
-                        }
-                        appendLine()
-
-                        withStyle(
-                            SpanStyle(
-                                fontFamily = montserratAlternativesFontFamily(),
-                                fontWeight = FontWeight.Normal,
-                            ),
-                        ) {
-                            append(
-                                date.format("MMM")
-                                    .uppercase(),
-                            )
-                        }
-                        appendLine()
-
-                        withStyle(
-                            SpanStyle(
-                                fontFamily = montserratAlternativesFontFamily(),
-                                fontWeight = FontWeight.Normal,
-                            ),
-                        ) {
-                            append(date.year.toString())
-                        }
-
-                        toAnnotatedString()
-                    },
-                    textAlign = TextAlign.Center,
-                    lineHeight = 20.sp,
-                )
-            }
-
-            // Diary Entry
             Text(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .align(Alignment.Top),
-                text = diary.entry,
-                letterSpacing = (-0.3).sp,
-                maxLines = maxLines,
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Justify,
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = text,
+                style = MaterialTheme.typography.headlineMedium,
             )
+
+            if (inSelectionMode) {
+                if (selected) {
+                    Icon(
+                        Icons.Filled.CheckCircle,
+                        tint = MaterialTheme.colorScheme.primary,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .border(2.dp, MaterialTheme.colorScheme.onSurface, CircleShape)
+                            .clip(CircleShape)
+                            .clickable {
+                                deSelectGroup()
+                            },
+                    )
+                } else {
+                    Icon(
+                        Icons.Filled.RadioButtonUnchecked,
+                        tint = Color.Black.copy(alpha = 0.55f),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .clickable {
+                                selectGroup()
+                            },
+                    )
+                }
+            }
         }
     }
 }
