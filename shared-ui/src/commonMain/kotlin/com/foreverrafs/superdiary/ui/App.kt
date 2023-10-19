@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +19,7 @@ import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.foreverrafs.superdiary.ui.feature.calendar.CalendarTab
 import com.foreverrafs.superdiary.ui.feature.favorites.FavoritesTab
 import com.foreverrafs.superdiary.ui.feature.home.HomeTab
-import com.foreverrafs.superdiary.ui.style.AppTheme
+import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 
 /**
  * Entry point into the whole app. In an ideal world
@@ -36,16 +37,17 @@ fun App() {
     TabNavigator(
         tab = tabs.first { it is HomeTab },
     ) {
-        AppTheme {
-            Surface {
+        SuperdiaryAppTheme {
+            Surface(
+                color = MaterialTheme.colorScheme.background,
+            ) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    Surface(
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f),
-                        color = MaterialTheme.colorScheme.background,
                     ) {
                         CurrentTab()
                     }

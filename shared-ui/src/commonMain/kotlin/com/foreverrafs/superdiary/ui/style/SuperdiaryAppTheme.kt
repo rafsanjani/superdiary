@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.ui.font
 
 @Composable
-fun AppTheme(
+fun SuperdiaryAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {

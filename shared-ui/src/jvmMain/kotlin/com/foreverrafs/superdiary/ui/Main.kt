@@ -6,7 +6,7 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.singleWindowApplication
 import com.foreverrafs.superdiary.diary.Database
 import com.foreverrafs.superdiary.ui.di.appModule
-import com.foreverrafs.superdiary.ui.style.AppTheme
+import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
@@ -19,7 +19,7 @@ fun main() = singleWindowApplication(
     }
     initDatabase()
 
-    AppTheme {
+    SuperdiaryAppTheme {
         App()
     }
 }

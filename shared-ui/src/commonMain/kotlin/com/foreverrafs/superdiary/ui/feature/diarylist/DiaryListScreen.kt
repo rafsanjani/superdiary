@@ -521,12 +521,17 @@ private fun SearchBar(
 
 @Composable
 private fun Error(modifier: Modifier) {
-    Text(
-        text = "Error loading diaries",
-        textAlign = TextAlign.Center,
-        modifier = modifier,
-        style = MaterialTheme.typography.headlineMedium,
-    )
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "Error loading diaries",
+            textAlign = TextAlign.Center,
+            modifier = modifier,
+            style = MaterialTheme.typography.headlineMedium,
+        )
+    }
 }
 
 @Composable
