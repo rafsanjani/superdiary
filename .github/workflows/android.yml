@@ -47,7 +47,7 @@ jobs:
         if: always()
         with:
           name: reports
-          path: shared/build/reports/paparazzi/
+          path: shared-ui/build/reports/paparazzi/
           retention-days: 1
 
       - name: Upload Screenshot Failure Differences
@@ -55,5 +55,5 @@ jobs:
         if: failure()
         with:
           name: reports
-          path: shared/build/paparazzi/failures/
+          path: shared-ui/build/paparazzi/failures/
           retention-days: 1
