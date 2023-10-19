@@ -1,13 +1,14 @@
 package com.foreverrafs.superdiary.ui
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,10 +16,10 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
-import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
-import com.foreverrafs.superdiary.ui.screens.CalendarTab
-import com.foreverrafs.superdiary.ui.screens.DiaryListTab
-import com.foreverrafs.superdiary.ui.style.AppTheme
+import com.foreverrafs.superdiary.ui.feature.calendar.CalendarTab
+import com.foreverrafs.superdiary.ui.feature.favorites.FavoritesTab
+import com.foreverrafs.superdiary.ui.feature.home.HomeTab
+import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 
 /**
  * Entry point into the whole app. In an ideal world
@@ -27,28 +28,37 @@ import com.foreverrafs.superdiary.ui.style.AppTheme
  */
 @Composable
 fun App() {
-    TabNavigator(DiaryListTab) {
-        AppTheme {
-            Scaffold(
-                bottomBar = {
-                    NavigationBar {
-                        TabNavigationItem(DiaryListTab)
-                        TabNavigationItem(CalendarTab)
-                        TabNavigationItem(CalendarTab)
-                    }
-                },
-                topBar = { SuperDiaryAppBar() },
-                content = {
-                    Surface(
+    val tabs = listOf(
+        HomeTab,
+        CalendarTab,
+        FavoritesTab,
+    )
+
+    TabNavigator(
+        tab = tabs.first { it is HomeTab },
+    ) {
+        SuperdiaryAppTheme {
+            Surface(
+                color = MaterialTheme.colorScheme.background,
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    Box(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(it),
-                        color = MaterialTheme.colorScheme.background,
+                            .fillMaxWidth()
+                            .weight(1f),
                     ) {
                         CurrentTab()
                     }
-                },
-            )
+
+                    NavigationBar {
+                        tabs.forEach {
+                            TabNavigationItem(it)
+                        }
+                    }
+                }
+            }
         }
     }
 }

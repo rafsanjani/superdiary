@@ -4,7 +4,7 @@ plugins {
     kotlin("multiplatform")
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
-    id("app.cash.paparazzi").version("1.3.1")
+    alias(libs.plugins.paparazzi)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -44,14 +44,17 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.tabNavigator)
+                implementation(libs.voyager.transitions)
+                implementation(libs.voyager.koin)
                 implementation(libs.kotlin.inject.runtime)
                 implementation(compose.material3)
+                implementation("io.insert-koin:koin-compose:1.1.0")
             }
         }
 
         val androidUnitTest by getting {
             dependencies {
-                implementation("app.cash.paparazzi:paparazzi:1.3.1")
+                implementation(libs.cashapp.paparazzi)
                 implementation(libs.koin.android)
                 implementation(libs.koin.test)
             }
@@ -59,10 +62,15 @@ kotlin {
 
         val jvmMain by getting {
             dependencies {
-                implementation("app.cash.paparazzi:paparazzi:1.3.1")
                 implementation(compose.desktop.currentOs)
-                implementation("io.insert-koin:koin-core-jvm:3.5.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.3")
+                implementation(libs.koin.jvm)
+                implementation(libs.kotlin.coroutines.swing)
+            }
+        }
+
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.compose.ui.tooling)
             }
         }
     }
@@ -70,6 +78,14 @@ kotlin {
 
 android {
     namespace = "com.foreverrafs.superdiary"
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+    }
 
     compileSdk = libs.versions.compileSdk.get().toInt()
 
