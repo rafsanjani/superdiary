@@ -162,6 +162,17 @@ fun DiaryList(
     diaries: List<Diary>,
     onAddEntry: () -> Unit,
 ) {
+    // we will filter incoming diaries based on this value
+    var filterDiaryQuery by remember {
+        mutableStateOf("")
+    }
+
+    val diaries by remember {
+        derivedStateOf {
+            diaries.filter { it.entry.contains(filterDiaryQuery, true) }
+        }
+    }
+
     var selectedIds by rememberSaveable {
         mutableStateOf(emptySet<Long>())
     }
@@ -187,7 +198,9 @@ fun DiaryList(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopCenter),
-            onQueryChanged = {},
+            onQueryChanged = {
+                filterDiaryQuery = it
+            },
             onFilterClicked = {
                 showFilterDiariesBottomSheet = true
             },
@@ -220,6 +233,7 @@ fun DiaryList(
                 },
             )
         }
+
         // Offset this by the height of the Searchbar (when it isn't active)
         LazyColumn(
             modifier = Modifier
@@ -231,8 +245,8 @@ fun DiaryList(
         ) {
             groupedDiaries.forEach { (date, diaries) ->
                 stickyHeader(key = date.label) {
-                    val isGroupSelected by remember {
-                        derivedStateOf { selectedIds.containsAll(diaries.map { it.id }) }
+                    val isGroupSelected by remember(selectedIds) {
+                        mutableStateOf(selectedIds.containsAll(diaries.map { it.id }))
                     }
 
                     DiaryHeader(
