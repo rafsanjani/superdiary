@@ -468,7 +468,7 @@ private fun SearchBar(
         onActiveChange = { active = it },
         placeholder = {
             Text(
-                text = "Search diary...",
+                text = "Search in diaries",
                 style = MaterialTheme.typography.labelLarge,
             )
         },
