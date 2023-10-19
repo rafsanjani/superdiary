@@ -21,7 +21,7 @@ class AddDiaryUseCase(private val dataSource: DataSource) {
     }
 
     private fun checkPreconditions(diary: Diary) {
-        val diaryDate = Instant.parse(diary.date).toLocalDateTime(TimeZone.UTC).date
+        val diaryDate = diary.date.toLocalDateTime(TimeZone.UTC).date
         val today = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
 
         require(diaryDate == today) {

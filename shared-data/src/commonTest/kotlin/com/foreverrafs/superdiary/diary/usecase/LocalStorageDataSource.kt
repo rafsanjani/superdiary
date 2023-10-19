@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -41,7 +40,7 @@ internal class LocalStorageDataSource() : DataSource {
 
         return diaries.filter {
             val diaryDate =
-                Instant.parse(it.date).toLocalDateTime(TimeZone.currentSystemDefault()).date
+                it.date.toLocalDateTime(TimeZone.currentSystemDefault()).date
 
             diaryDate in fromDate..toDate
         }
@@ -49,7 +48,7 @@ internal class LocalStorageDataSource() : DataSource {
 
     override suspend fun findByDate(date: String): List<Diary> {
         return diaries.filter {
-            Instant.parse(it.date)
+            it.date
                 .toLocalDateTime(TimeZone.currentSystemDefault()).date == LocalDate.parse(date)
         }
     }

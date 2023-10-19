@@ -61,7 +61,7 @@ fun DiaryListPreview() {
                         Diary(
                             id = Random.nextLong(),
                             entry = "Hello World $it",
-                            date = Clock.System.now().toLocalDateTime(TimeZone.UTC).toString(),
+                            date = Clock.System.now(),
                         )
                     },
                 ),
@@ -81,7 +81,7 @@ fun SelectedDiariesPreview() {
                     Diary(
                         id = Random.nextLong(),
                         entry = "Hello World $it",
-                        date = Clock.System.now().toLocalDateTime(TimeZone.UTC).toString(),
+                        date = Clock.System.now(),
                     )
                 },
                 onAddEntry = {},

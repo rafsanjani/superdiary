@@ -33,7 +33,7 @@ class DiaryListSnapshotTests : KoinTest {
                             Diary(
                                 id = it.toLong(),
                                 entry = "Hello Diary $it",
-                                date = testClock.now().toString(),
+                                date = testClock.now(),
                             )
                         },
                     ),

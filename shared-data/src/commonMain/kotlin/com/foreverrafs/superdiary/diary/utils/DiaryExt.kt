@@ -23,7 +23,7 @@ data class PrioritizedDuration(
 
 @Suppress("ReturnCount")
 private fun getDurationString(diary: Diary, clock: Clock = Clock.System): PrioritizedDuration {
-    val entryDate = Instant.parse(diary.date).toLocalDateTime(TimeZone.UTC).date
+    val entryDate = diary.date.toLocalDateTime(TimeZone.UTC).date
 
     val difference = entryDate.periodUntil(clock.todayIn(TimeZone.currentSystemDefault()))
 

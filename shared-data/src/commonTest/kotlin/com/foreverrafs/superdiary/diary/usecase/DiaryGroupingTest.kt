@@ -98,7 +98,7 @@ class DiaryGroupingTest {
                     value = it,
                     unit = durationSpacing,
                     timeZone = TimeZone.UTC,
-                ).toString(),
+                ),
             )
         }
     }

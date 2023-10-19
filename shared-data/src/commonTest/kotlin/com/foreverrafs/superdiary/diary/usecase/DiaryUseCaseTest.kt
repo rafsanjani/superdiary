@@ -51,7 +51,7 @@ class DiaryUseCaseTest {
                     Diary(
                         Random.nextLong(),
                         entry = "Diary Entry #$it",
-                        date = currentDate.toString(),
+                        date = currentDate,
                     ),
                 )
 
@@ -66,7 +66,7 @@ class DiaryUseCaseTest {
 
         val diary = Diary(
             entry = "New Entry",
-            date = "2023-03-03T03:33:25.587Z",
+            date = Instant.parse("2023-03-03T03:33:25.587Z"),
         )
 
         relaxedAddDiaryUseCase(diary)
@@ -84,7 +84,7 @@ class DiaryUseCaseTest {
         val diary = Diary(
             id = Random.nextLong(),
             entry = "New Entry today",
-            date = Clock.System.now().toString(),
+            date = Clock.System.now(),
         )
 
         addDiaryUseCase(diary)
@@ -103,7 +103,7 @@ class DiaryUseCaseTest {
 
         val diary = Diary(
             entry = "New Entry",
-            date = today.plus(1, DateTimeUnit.DAY, TimeZone.currentSystemDefault()).toString(),
+            date = today.plus(1, DateTimeUnit.DAY, TimeZone.currentSystemDefault()),
         )
 
         val result = addDiaryUseCase(diary)
@@ -117,7 +117,7 @@ class DiaryUseCaseTest {
 
         val diary = Diary(
             entry = "New Entry",
-            date = today.minus(1, DateTimeUnit.DAY, TimeZone.currentSystemDefault()).toString(),
+            date = today.minus(1, DateTimeUnit.DAY, TimeZone.currentSystemDefault()),
         )
 
         val result = addDiaryUseCase(diary)
