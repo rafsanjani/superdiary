@@ -82,7 +82,8 @@ class DiaryUseCaseTest {
     @Test
     fun `Add new diary today and confirm saved`() = runTest {
         val diary = Diary(
-            entry = "New Entry",
+            id = Random.nextLong(),
+            entry = "New Entry today",
             date = Clock.System.now().toString(),
         )
 

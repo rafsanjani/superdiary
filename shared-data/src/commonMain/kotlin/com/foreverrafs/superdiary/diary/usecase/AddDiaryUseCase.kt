@@ -4,7 +4,7 @@ import com.foreverrafs.superdiary.diary.Result
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
 import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -21,7 +21,7 @@ class AddDiaryUseCase(private val dataSource: DataSource) {
     }
 
     private fun checkPreconditions(diary: Diary) {
-        val diaryDate = LocalDateTime.parse(diary.date).date
+        val diaryDate = Instant.parse(diary.date).toLocalDateTime(TimeZone.UTC).date
         val today = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
 
         require(diaryDate == today) {

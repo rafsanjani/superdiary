@@ -2,9 +2,10 @@ package com.foreverrafs.superdiary.diary.utils
 
 import com.foreverrafs.superdiary.diary.model.Diary
 import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.periodUntil
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 
 fun List<Diary>.groupByDate(clock: Clock = Clock.System): Map<PrioritizedDuration, List<Diary>> =
@@ -22,7 +23,7 @@ data class PrioritizedDuration(
 
 @Suppress("ReturnCount")
 private fun getDurationString(diary: Diary, clock: Clock = Clock.System): PrioritizedDuration {
-    val entryDate = LocalDateTime.parse(diary.date).date
+    val entryDate = Instant.parse(diary.date).toLocalDateTime(TimeZone.UTC).date
 
     val difference = entryDate.periodUntil(clock.todayIn(TimeZone.currentSystemDefault()))
 
