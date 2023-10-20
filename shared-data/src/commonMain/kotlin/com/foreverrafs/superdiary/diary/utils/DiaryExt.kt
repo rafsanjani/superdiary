@@ -2,7 +2,10 @@ package com.foreverrafs.superdiary.diary.utils
 
 import com.foreverrafs.superdiary.diary.model.Diary
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.periodUntil
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
@@ -62,3 +65,6 @@ private fun getDurationString(diary: Diary, clock: Clock = Clock.System): Priori
         priority = 360 * difference.years,
     )
 }
+
+fun Instant.toDate(): LocalDate = toLocalDateTime(TimeZone.UTC).date
+fun LocalDate.toInstant(): Instant = atStartOfDayIn(TimeZone.UTC)

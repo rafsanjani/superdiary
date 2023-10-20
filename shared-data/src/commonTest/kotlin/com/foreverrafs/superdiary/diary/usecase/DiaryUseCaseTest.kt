@@ -13,6 +13,7 @@ import com.foreverrafs.superdiary.diary.Result
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.DiaryValidator
+import com.foreverrafs.superdiary.diary.utils.toInstant
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock
@@ -151,17 +152,20 @@ class DiaryUseCaseTest {
     @Test
     fun `Searching for a valid diary returns it`() = runTest {
         // search for the first diary
-        val result = searchDiaryByEntryUseCase(entry = "Entry #8")
+        searchDiaryByEntryUseCase(entry = "Entry #8").test {
+            val result = expectMostRecentItem()
 
-        assertThat(result).isNotEmpty()
+            assertThat(result).isNotEmpty()
+        }
     }
 
     @Test
     fun `Searching for an invalid diary returns empty data`() = runTest {
         // search for the first diary
-        val result = searchDiaryByEntryUseCase(entry = "Diary Entry #800")
-
-        assertThat(result).isEmpty()
+        searchDiaryByEntryUseCase(entry = "Diary Entry #800").test {
+            val result = expectMostRecentItem()
+            assertThat(result).isEmpty()
+        }
     }
 
     @Test
@@ -169,9 +173,13 @@ class DiaryUseCaseTest {
         val fromDate = LocalDate.parse("2023-03-20")
         val toDate = LocalDate.parse("2023-03-22")
 
-        val diaries = searchDiaryBetweenDatesUseCase(fromDate, toDate)
-
-        assertThat(diaries).isNotEmpty()
+        searchDiaryBetweenDatesUseCase(
+            from = fromDate.toInstant(),
+            to = toDate.toInstant(),
+        ).test {
+            val diaries = expectMostRecentItem()
+            assertThat(diaries).isNotEmpty()
+        }
     }
 
     @Test
@@ -179,9 +187,13 @@ class DiaryUseCaseTest {
         val fromDate = LocalDate.parse("2023-04-04")
         val toDate = LocalDate.parse("2023-04-05")
 
-        val diaries = searchDiaryBetweenDatesUseCase(fromDate, toDate)
-
-        assertThat(diaries).isEmpty()
+        searchDiaryBetweenDatesUseCase(
+            from = fromDate.toInstant(),
+            to = toDate.toInstant(),
+        ).test {
+            val diaries = expectMostRecentItem()
+            assertThat(diaries).isEmpty()
+        }
     }
 
     @Test
@@ -189,16 +201,20 @@ class DiaryUseCaseTest {
         val fromDate = LocalDate.parse("2023-03-22")
         val toDate = LocalDate.parse("2023-03-20")
 
-        assertFailure { searchDiaryBetweenDatesUseCase(fromDate, toDate) }
+        assertFailure {
+            searchDiaryBetweenDatesUseCase(fromDate.toInstant(), toDate.toInstant())
+        }
             .messageContains("should be less than or equal to")
     }
 
     @Test
     fun `Searching for diary for a valid date returns entries`() = runTest {
         val date = LocalDate.parse("2023-03-15")
-        val diaries = searchDiaryByDateUseCase(date = date)
 
-        assertThat(diaries).isNotEmpty()
+        searchDiaryByDateUseCase(date = date.toInstant()).test {
+            val diaries = expectMostRecentItem()
+            assertThat(diaries).isNotEmpty()
+        }
     }
 
     @Test

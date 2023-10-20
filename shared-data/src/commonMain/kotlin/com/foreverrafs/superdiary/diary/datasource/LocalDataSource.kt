@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.diary.datasource
 import com.foreverrafs.superdiary.diary.Database
 import com.foreverrafs.superdiary.diary.model.Diary
 import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.Instant
 
 class LocalDataSource(private val database: Database) : DataSource {
     override suspend fun add(diary: Diary): Long {
@@ -23,15 +24,15 @@ class LocalDataSource(private val database: Database) : DataSource {
         return database.getAllDiaries()
     }
 
-    override suspend fun find(entry: String): List<Diary> {
+    override suspend fun find(entry: String): Flow<List<Diary>> {
         return database.findDiaryByEntry(entry)
     }
 
-    override suspend fun find(from: String, to: String): List<Diary> {
+    override suspend fun find(from: Instant, to: Instant): Flow<List<Diary>> {
         return database.findByDateRange(from, to)
     }
 
-    override suspend fun findByDate(date: String): List<Diary> {
+    override suspend fun findByDate(date: Instant): Flow<List<Diary>> {
         return database.findByDate(date)
     }
 

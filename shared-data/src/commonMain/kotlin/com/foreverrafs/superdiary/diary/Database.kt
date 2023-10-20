@@ -4,6 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.foreverrafs.superdiary.database.SuperDiaryDatabase
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.utils.toDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
@@ -34,17 +35,26 @@ class Database(databaseDriver: DatabaseDriver) {
         .asFlow()
         .mapToList(Dispatchers.Main)
 
-    fun findDiaryByEntry(query: String): List<Diary> =
+    fun findDiaryByEntry(query: String): Flow<List<Diary>> =
         queries.findByEntry(name = query, mapper = diaryMapper)
-            .executeAsList()
+            .asFlow()
+            .mapToList(Dispatchers.Main)
 
-    fun findByDate(date: String): List<Diary> = queries.findByDate(
-        date = date,
+    fun findByDate(date: Instant): Flow<List<Diary>> = queries.findByDate(
+        date = date.toDate().toString(),
         mapper = diaryMapper,
-    ).executeAsList()
+    )
+        .asFlow()
+        .mapToList(Dispatchers.Main)
 
-    fun findByDateRange(from: String, to: String): List<Diary> =
-        queries.findByDateRange(from, to, diaryMapper).executeAsList()
+    fun findByDateRange(from: Instant, to: Instant): Flow<List<Diary>> =
+        queries.findByDateRange(
+            from.toDate().toString(),
+            to.toDate().toString(),
+            diaryMapper,
+        )
+            .asFlow()
+            .mapToList(Dispatchers.Main)
 
     fun clearDiaries() = queries.deleteAll()
 }
