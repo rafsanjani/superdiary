@@ -7,8 +7,18 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 internal fun screenModules(): Module = module {
-    factory { DiaryListScreenModel(get()) }
-    factory { CreateDiaryScreenModel(get()) }
+    factory {
+        DiaryListScreenModel(
+            getAllDiariesUseCase = get(),
+            searchDiaryByEntryUseCase = get(),
+            searchDiaryByDateUseCase = get(),
+        )
+    }
+    factory {
+        CreateDiaryScreenModel(
+            addDiaryUseCase = get(),
+        )
+    }
 }
 
 expect fun platformModule(): Module

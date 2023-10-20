@@ -5,9 +5,11 @@ import app.cash.sqldelight.coroutines.mapToList
 import com.foreverrafs.superdiary.database.SuperDiaryDatabase
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.toDate
+import com.foreverrafs.superdiary.diary.utils.toInstant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 
 class Database(databaseDriver: DatabaseDriver) {
     private val driver = databaseDriver.createDriver()
@@ -15,7 +17,7 @@ class Database(databaseDriver: DatabaseDriver) {
     private val queries = superDiaryDatabase.databaseQueries
 
     private val diaryMapper = { id: Long, entry: String, date: String ->
-        Diary(id, entry, Instant.parse(date))
+        Diary(id, entry, LocalDate.parse(date).toInstant())
     }
 
     /**
@@ -25,7 +27,7 @@ class Database(databaseDriver: DatabaseDriver) {
         SuperDiaryDatabase.Schema.create(driver)
     }
 
-    fun addDiary(diary: Diary) = queries.insert(diary.entry, diary.date.toString())
+    fun addDiary(diary: Diary) = queries.insert(diary.entry, diary.date.toDate().toString())
 
     fun deleteDiary(id: Long) = queries.delete(id)
 

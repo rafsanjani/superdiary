@@ -11,7 +11,10 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 
 fun List<Diary>.groupByDate(clock: Clock = Clock.System): Map<PrioritizedDuration, List<Diary>> =
-    groupBy { getDurationString(it, clock) }.toList().sortedBy { it.first.priority }.toMap()
+    groupBy { getDurationString(it, clock) }
+        .toList()
+        .sortedBy { it.first.priority }
+        .toMap()
 
 /**
  * Durations are weighted from 0 - 4 with 0 being the most prioritized and

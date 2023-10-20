@@ -38,6 +38,7 @@ class DiaryListSnapshotTests : KoinTest {
                         },
                     ),
                     onAddEntry = {},
+                    onApplyFilters = {},
                 )
             }
         }
@@ -52,6 +53,7 @@ class DiaryListSnapshotTests : KoinTest {
                         listOf(),
                     ),
                     onAddEntry = {},
+                    onApplyFilters = {},
                 )
             }
         }
@@ -66,6 +68,7 @@ class DiaryListSnapshotTests : KoinTest {
                         Error("Error loading diaries"),
                     ),
                     onAddEntry = {},
+                    onApplyFilters = {},
                 )
             }
         }

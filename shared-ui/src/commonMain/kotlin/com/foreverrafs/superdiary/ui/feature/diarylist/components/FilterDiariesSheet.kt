@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.diarylist
+package com.foreverrafs.superdiary.ui.feature.diarylist.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,6 +38,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiarySortCriteria
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -49,7 +51,7 @@ import kotlinx.datetime.toLocalDateTime
 fun FilterDiariesSheet(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    onDateSelected: (date: LocalDate) -> Unit,
+    onApplyFilters: (filters: DiaryFilters) -> Unit,
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -182,7 +184,22 @@ fun FilterDiariesSheet(
                 }
 
                 Button(
-                    onClick = {},
+                    onClick = {
+                        onApplyFilters(
+                            DiaryFilters(
+                                date = selectedDate,
+                                sort = if (sortByDate) {
+                                    DiarySortCriteria.Date
+                                } else if (sortByWords) {
+                                    DiarySortCriteria.Words
+                                } else {
+                                    null
+                                },
+                            ),
+                        )
+
+                        onDismissRequest()
+                    },
                 ) {
                     Text("Apply")
                 }

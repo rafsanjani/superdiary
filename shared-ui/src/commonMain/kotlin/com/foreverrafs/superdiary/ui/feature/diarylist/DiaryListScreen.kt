@@ -53,11 +53,11 @@ import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryHeader
+import com.foreverrafs.superdiary.ui.feature.diarylist.components.FilterDiariesSheet
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.SearchBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.SelectionModifierBar
 import com.foreverrafs.superdiary.ui.format
 import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -66,6 +66,7 @@ fun DiaryListScreen(
     state: DiaryListScreenState,
     modifier: Modifier = Modifier,
     onAddEntry: () -> Unit,
+    onApplyFilters: (filters: DiaryFilters) -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -77,6 +78,7 @@ fun DiaryListScreen(
                 DiaryListContent(
                     diaries = state.diaries,
                     onAddEntry = onAddEntry,
+                    onApplyFilters = onApplyFilters,
                 )
             }
 
@@ -109,17 +111,18 @@ fun DiaryList(
     modifier: Modifier = Modifier,
     diaries: List<Diary>,
     onAddEntry: () -> Unit,
-    onDateSelected: (date: LocalDate) -> Unit,
     inSelectionMode: Boolean,
     addSelection: (id: Long?) -> Unit,
     removeSelection: (id: Long?) -> Unit,
     toggleSelection: (id: Long?) -> Unit,
     selectedIds: Set<Long>,
-    onFilterDiaryQuery: (query: String) -> Unit,
+    onApplyFilters: (filters: DiaryFilters) -> Unit,
 ) {
     val groupedDiaries = remember(diaries) {
         diaries.groupByDate()
     }
+
+    var diaryFilters = remember { DiaryFilters() }
 
     Box(
         modifier = modifier
@@ -135,7 +138,13 @@ fun DiaryList(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopCenter),
-            onQueryChanged = onFilterDiaryQuery,
+            onQueryChanged = {
+                diaryFilters = diaryFilters.copy(
+                    entry = it,
+                )
+
+                onApplyFilters(diaryFilters)
+            },
             onFilterClicked = {
                 showFilterDiariesBottomSheet = true
             },
@@ -152,9 +161,12 @@ fun DiaryList(
                 onDismissRequest = {
                     showFilterDiariesBottomSheet = false
                 },
-                onDateSelected = {
-                    onDateSelected(it)
-                    showFilterDiariesBottomSheet = false
+                onApplyFilters = {
+                    diaryFilters = diaryFilters.copy(
+                        date = it.date,
+                        sort = it.sort,
+                    )
+                    onApplyFilters(diaryFilters)
                 },
             )
         }
@@ -198,7 +210,7 @@ fun DiaryList(
                     }
 
                     items(
-                        items = diaries,
+                        items = diaries.sortedByDescending { it.id },
                         key = { item -> item.id.toString() },
                     ) { diary ->
                         DiaryItem(
@@ -224,6 +236,7 @@ fun DiaryList(
                 }
             }
         } else {
+            // When there is no diary entry from the search screen
             Box(
                 modifier = modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
@@ -243,30 +256,9 @@ fun DiaryList(
 private fun DiaryListContent(
     diaries: List<Diary>,
     onAddEntry: () -> Unit,
+    onApplyFilters: (filters: DiaryFilters) -> Unit,
 ) {
     if (diaries.isNotEmpty()) {
-        var filterQuery by remember {
-            mutableStateOf("")
-        }
-        var filterDate by remember {
-            mutableStateOf<LocalDate?>(null)
-        }
-
-        val filteredDiaries by remember(filterQuery, filterDate) {
-            mutableStateOf(
-                diaries
-                    .filter { it.entry.contains(filterQuery, false) }
-                    .filter {
-                        if (filterDate != null) {
-                            it.date.toLocalDateTime(TimeZone.UTC).date == filterDate
-                        } else {
-                            true
-                        }
-                    },
-
-            )
-        }
-
         var selectedIds by rememberSaveable {
             mutableStateOf(emptySet<Long>())
         }
@@ -277,11 +269,8 @@ private fun DiaryListContent(
 
         DiaryList(
             modifier = Modifier.fillMaxSize(),
-            diaries = filteredDiaries,
+            diaries = diaries,
             onAddEntry = onAddEntry,
-            onFilterDiaryQuery = {
-                filterQuery = it
-            },
             toggleSelection = {
                 selectedIds = selectedIds.addOrRemove(it)
             },
@@ -297,9 +286,7 @@ private fun DiaryListContent(
                     selectedIds = selectedIds.plus(diaryId)
                 }
             },
-            onDateSelected = {
-                filterDate = it
-            },
+            onApplyFilters = onApplyFilters,
         )
     } else {
         EmptyDiaryList(

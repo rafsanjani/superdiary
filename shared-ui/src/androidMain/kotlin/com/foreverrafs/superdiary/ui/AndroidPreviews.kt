@@ -6,10 +6,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryDatePicker
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreenState
+import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryDatePicker
 import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 import kotlinx.datetime.Clock
 import kotlinx.datetime.toKotlinLocalDate
@@ -26,13 +26,12 @@ fun EmptySearchDiaryListPreview() {
             DiaryList(
                 diaries = listOf(),
                 onAddEntry = { /*TODO*/ },
-                onFilterDiaryQuery = {},
                 selectedIds = setOf(),
                 removeSelection = {},
                 inSelectionMode = false,
                 addSelection = {},
                 toggleSelection = {},
-                onDateSelected = {},
+                onApplyFilters = {},
             )
         }
     }
@@ -48,6 +47,7 @@ fun EmptyDiaryListPreview() {
             DiaryListScreen(
                 state = DiaryListScreenState.Content(listOf()),
                 onAddEntry = {},
+                onApplyFilters = {},
             )
         }
     }
@@ -70,6 +70,7 @@ fun DiaryListPreview() {
                     },
                 ),
                 onAddEntry = {},
+                onApplyFilters = {},
             )
         }
     }
@@ -92,11 +93,10 @@ fun SelectedDiariesPreview() {
                 onAddEntry = {},
                 inSelectionMode = true,
                 selectedIds = setOf(0, 1),
-                onFilterDiaryQuery = {},
                 removeSelection = {},
                 toggleSelection = {},
+                onApplyFilters = {},
                 addSelection = {},
-                onDateSelected = {},
             )
         }
     }
