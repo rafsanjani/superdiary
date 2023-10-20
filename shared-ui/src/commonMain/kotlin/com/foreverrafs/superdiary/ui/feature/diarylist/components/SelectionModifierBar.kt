@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 
@@ -38,7 +39,7 @@ internal fun SelectionModifierBar(
         visible = inSelectionMode,
         modifier = Modifier
             .border(
-                width = 1.dp,
+                width = Dp.Hairline,
                 color = Color.Black,
                 shape = RoundedCornerShape(8.dp),
             )

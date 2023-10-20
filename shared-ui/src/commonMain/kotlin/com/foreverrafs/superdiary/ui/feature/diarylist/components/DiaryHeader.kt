@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -59,7 +60,7 @@ internal fun DiaryHeader(
                             .padding(top = 8.dp, start = 4.dp)
                             .size(20.dp)
                             .border(
-                                width = 1.dp,
+                                width = Dp.Hairline,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 shape = CircleShape,
                             )
