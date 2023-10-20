@@ -355,11 +355,12 @@ private fun DiaryItem(
     }
 
     Box(
-        modifier = modifier
+        modifier = Modifier
             .height(100.dp)
             .padding(padding)
             .clip(RoundedCornerShape(roundedCornerShape))
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .then(modifier),
     ) {
         Card(
             shape = RoundedCornerShape(

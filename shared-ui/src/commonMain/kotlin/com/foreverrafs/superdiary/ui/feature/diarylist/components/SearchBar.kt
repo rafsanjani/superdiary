@@ -54,7 +54,7 @@ internal fun SearchBar(
     )
 
     val border by animateDpAsState(
-        if (isFocused) 2.dp else Dp.Hairline,
+        if (isFocused) 2.dp else 1.dp,
     )
 
     LaunchedEffect(query) {
