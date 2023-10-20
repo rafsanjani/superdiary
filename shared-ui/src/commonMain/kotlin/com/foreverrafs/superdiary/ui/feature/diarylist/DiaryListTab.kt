@@ -47,7 +47,7 @@ class DiaryListScreenModel(
     }
 
     private fun observeDiaries() = coroutineScope.launch {
-        getAllDiariesUseCase.diaries.collect { diaries ->
+        getAllDiariesUseCase().collect { diaries ->
             mutableState.update {
                 DiaryListScreenState.Content(diaries)
             }

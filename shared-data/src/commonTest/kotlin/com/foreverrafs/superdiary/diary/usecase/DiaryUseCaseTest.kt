@@ -35,7 +35,10 @@ class DiaryUseCaseTest {
     private val addDiaryUseCase = AddDiaryUseCase(dataSource, validator)
     private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
     private val deleteDiaryUseCase = DeleteDiaryUseCase(dataSource)
-    private val searchDiaryUseCase = SearchDiaryUseCase(dataSource)
+    private val deleteAllDiariesUseCase = DeleteAllDiariesUseCase(dataSource)
+    private val searchDiaryBetweenDatesUseCase = SearchDiaryBetweenDatesUseCase(dataSource)
+    private val searchDiaryByDateUseCase = SearchDiaryByDateUseCase(dataSource)
+    private val searchDiaryByEntryUseCase = SearchDiaryByEntryUseCase(dataSource)
 
     @BeforeTest
     fun setup() {
@@ -73,7 +76,7 @@ class DiaryUseCaseTest {
 
         relaxedAddDiaryUseCase(diary)
 
-        getAllDiariesUseCase.diaries.test {
+        getAllDiariesUseCase().test {
             val items = awaitItem()
             cancelAndConsumeRemainingEvents()
 
@@ -91,7 +94,7 @@ class DiaryUseCaseTest {
 
         addDiaryUseCase(diary)
 
-        getAllDiariesUseCase.diaries.test {
+        getAllDiariesUseCase().test {
             val items = awaitItem()
             cancelAndConsumeRemainingEvents()
 
@@ -130,12 +133,12 @@ class DiaryUseCaseTest {
     @Test
     @Ignore
     fun `Delete diary and confirm deletion`() = runTest {
-        getAllDiariesUseCase.diaries.test {
+        getAllDiariesUseCase().test {
             var diaries = expectMostRecentItem()
             val firstDiary = diaries.first()
 
             // delete the first entry
-            deleteDiaryUseCase.deleteDiary(firstDiary)
+            deleteDiaryUseCase(firstDiary)
 
             // get latest diaries again
             diaries = awaitItem()
@@ -148,7 +151,7 @@ class DiaryUseCaseTest {
     @Test
     fun `Searching for a valid diary returns it`() = runTest {
         // search for the first diary
-        val result = searchDiaryUseCase.searchByEntry(entry = "Entry #8")
+        val result = searchDiaryByEntryUseCase(entry = "Entry #8")
 
         assertThat(result).isNotEmpty()
     }
@@ -156,7 +159,7 @@ class DiaryUseCaseTest {
     @Test
     fun `Searching for an invalid diary returns empty data`() = runTest {
         // search for the first diary
-        val result = searchDiaryUseCase.searchByEntry(entry = "Diary Entry #800")
+        val result = searchDiaryByEntryUseCase(entry = "Diary Entry #800")
 
         assertThat(result).isEmpty()
     }
@@ -166,7 +169,7 @@ class DiaryUseCaseTest {
         val fromDate = LocalDate.parse("2023-03-20")
         val toDate = LocalDate.parse("2023-03-22")
 
-        val diaries = searchDiaryUseCase.searchBetween(fromDate, toDate)
+        val diaries = searchDiaryBetweenDatesUseCase(fromDate, toDate)
 
         assertThat(diaries).isNotEmpty()
     }
@@ -176,7 +179,7 @@ class DiaryUseCaseTest {
         val fromDate = LocalDate.parse("2023-04-04")
         val toDate = LocalDate.parse("2023-04-05")
 
-        val diaries = searchDiaryUseCase.searchBetween(fromDate, toDate)
+        val diaries = searchDiaryBetweenDatesUseCase(fromDate, toDate)
 
         assertThat(diaries).isEmpty()
     }
@@ -186,27 +189,27 @@ class DiaryUseCaseTest {
         val fromDate = LocalDate.parse("2023-03-22")
         val toDate = LocalDate.parse("2023-03-20")
 
-        assertFailure { searchDiaryUseCase.searchBetween(fromDate, toDate) }
+        assertFailure { searchDiaryBetweenDatesUseCase(fromDate, toDate) }
             .messageContains("should be less than or equal to")
     }
 
     @Test
     fun `Searching for diary for a valid date returns entries`() = runTest {
         val date = LocalDate.parse("2023-03-15")
-        val diaries = searchDiaryUseCase.searchByDate(date = date)
+        val diaries = searchDiaryByDateUseCase(date = date)
 
         assertThat(diaries).isNotEmpty()
     }
 
     @Test
     fun `Delete All Diaries Clears Diaries`() = runTest {
-        getAllDiariesUseCase.diaries.test {
+        getAllDiariesUseCase().test {
             val originalDiaryList = expectMostRecentItem()
 
             assertThat(originalDiaryList).isNotEmpty()
 
             // clear all the diaries
-            deleteDiaryUseCase.deleteAll()
+            deleteAllDiariesUseCase()
 
             // fetch all the diaries
             val diaries = awaitItem()

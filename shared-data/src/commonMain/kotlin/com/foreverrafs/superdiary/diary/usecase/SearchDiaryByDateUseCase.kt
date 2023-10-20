@@ -2,10 +2,12 @@ package com.foreverrafs.superdiary.diary.usecase
 
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
-import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.LocalDate
 
-class GetAllDiariesUseCase(
+class SearchDiaryByDateUseCase(
     private val dataSource: DataSource,
 ) {
-    operator fun invoke(): Flow<List<Diary>> = dataSource.fetchAll()
+    suspend operator fun invoke(date: LocalDate): List<Diary> {
+        return dataSource.findByDate(date.toString())
+    }
 }
