@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.ui
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreenState
 import kotlinx.datetime.Clock
@@ -39,6 +40,7 @@ class DiaryListSnapshotTests : KoinTest {
                     ),
                     onAddEntry = {},
                     onApplyFilters = {},
+                    diaryFilters = DiaryFilters(),
                 )
             }
         }
@@ -54,6 +56,7 @@ class DiaryListSnapshotTests : KoinTest {
                     ),
                     onAddEntry = {},
                     onApplyFilters = {},
+                    diaryFilters = DiaryFilters(),
                 )
             }
         }
@@ -69,6 +72,7 @@ class DiaryListSnapshotTests : KoinTest {
                     ),
                     onAddEntry = {},
                     onApplyFilters = {},
+                    diaryFilters = DiaryFilters(),
                 )
             }
         }

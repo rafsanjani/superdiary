@@ -2,8 +2,12 @@ package com.foreverrafs.superdiary.ui.feature.diarylist
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
@@ -26,6 +30,32 @@ object DiaryListTab : Screen {
     override fun Content() {
         val screenModel: DiaryListScreenModel = getScreenModel()
         val screenState by screenModel.state.collectAsState()
+        var diaryFilters by remember {
+            mutableStateOf(DiaryFilters())
+        }
+
+        LaunchedEffect(diaryFilters) {
+            // Filter by entry only
+            if (diaryFilters.entry.isNotEmpty() && diaryFilters.date == null) {
+                screenModel.filterByEntry(diaryFilters.entry)
+                return@LaunchedEffect
+            }
+
+            // Filter by date only
+            if (diaryFilters.date != null && diaryFilters.entry.isEmpty()) {
+                screenModel.filterByDate(diaryFilters.date!!)
+                return@LaunchedEffect
+            }
+
+            // Filter by both date and entry
+            if (diaryFilters.date != null && diaryFilters.entry.isNotEmpty()) {
+                screenModel.filterByDateAndEntry(diaryFilters.date!!, diaryFilters.entry)
+                return@LaunchedEffect
+            }
+
+            // No filter applied
+            screenModel.observeDiaries()
+        }
 
         val navigator = LocalNavigator.currentOrThrow
 
@@ -39,27 +69,9 @@ object DiaryListTab : Screen {
                 )
             },
             onApplyFilters = { filters ->
-                // Filter by entry only
-                if (filters.entry.isNotEmpty() && filters.date == null) {
-                    screenModel.filterByEntry(filters.entry)
-                    return@DiaryListScreen
-                }
-
-                // Filter by date only
-                if (filters.date != null && filters.entry.isEmpty()) {
-                    screenModel.filterByDate(filters.date)
-                    return@DiaryListScreen
-                }
-
-                // Filter by both date and entry
-                if (filters.date != null && filters.entry.isNotEmpty()) {
-                    screenModel.filterByDateAndEntry(filters.date, filters.entry)
-                    return@DiaryListScreen
-                }
-
-                // No filter applied
-                screenModel.observeDiaries()
+                diaryFilters = filters
             },
+            diaryFilters = diaryFilters,
         )
     }
 }

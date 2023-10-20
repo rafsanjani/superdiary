@@ -67,6 +67,7 @@ fun DiaryListScreen(
     modifier: Modifier = Modifier,
     onAddEntry: () -> Unit,
     onApplyFilters: (filters: DiaryFilters) -> Unit,
+    diaryFilters: DiaryFilters,
 ) {
     Column(
         modifier = modifier,
@@ -79,6 +80,7 @@ fun DiaryListScreen(
                     diaries = state.diaries,
                     onAddEntry = onAddEntry,
                     onApplyFilters = onApplyFilters,
+                    diaryFilters = diaryFilters,
                 )
             }
 
@@ -112,17 +114,16 @@ fun DiaryList(
     diaries: List<Diary>,
     onAddEntry: () -> Unit,
     inSelectionMode: Boolean,
+    diaryFilters: DiaryFilters,
+    selectedIds: Set<Long>,
     addSelection: (id: Long?) -> Unit,
     removeSelection: (id: Long?) -> Unit,
     toggleSelection: (id: Long?) -> Unit,
-    selectedIds: Set<Long>,
     onApplyFilters: (filters: DiaryFilters) -> Unit,
 ) {
     val groupedDiaries = remember(diaries) {
         diaries.groupByDate()
     }
-
-    var diaryFilters = remember { DiaryFilters() }
 
     Box(
         modifier = modifier
@@ -139,11 +140,7 @@ fun DiaryList(
                 .fillMaxWidth()
                 .align(Alignment.TopCenter),
             onQueryChanged = {
-                diaryFilters = diaryFilters.copy(
-                    entry = it,
-                )
-
-                onApplyFilters(diaryFilters)
+                onApplyFilters(diaryFilters.copy(entry = it))
             },
             onFilterClicked = {
                 showFilterDiariesBottomSheet = true
@@ -162,12 +159,14 @@ fun DiaryList(
                     showFilterDiariesBottomSheet = false
                 },
                 onApplyFilters = {
-                    diaryFilters = diaryFilters.copy(
-                        date = it.date,
-                        sort = it.sort,
+                    onApplyFilters(
+                        diaryFilters.copy(
+                            date = it.date,
+                            sort = it.sort,
+                        ),
                     )
-                    onApplyFilters(diaryFilters)
                 },
+                diaryFilters = diaryFilters,
             )
         }
 
@@ -257,6 +256,7 @@ private fun DiaryListContent(
     diaries: List<Diary>,
     onAddEntry: () -> Unit,
     onApplyFilters: (filters: DiaryFilters) -> Unit,
+    diaryFilters: DiaryFilters,
 ) {
     if (diaries.isNotEmpty()) {
         var selectedIds by rememberSaveable {
@@ -287,6 +287,7 @@ private fun DiaryListContent(
                 }
             },
             onApplyFilters = onApplyFilters,
+            diaryFilters = diaryFilters,
         )
     } else {
         EmptyDiaryList(

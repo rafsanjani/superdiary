@@ -52,6 +52,7 @@ fun FilterDiariesSheet(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onApplyFilters: (filters: DiaryFilters) -> Unit,
+    diaryFilters: DiaryFilters,
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -64,17 +65,17 @@ fun FilterDiariesSheet(
         modifier = modifier,
     ) {
         var selectedDate by remember {
-            mutableStateOf<LocalDate?>(
-                null,
+            mutableStateOf(
+                diaryFilters.date,
             )
         }
 
         var sortByWords by remember {
-            mutableStateOf(false)
+            mutableStateOf(diaryFilters.sort == DiarySortCriteria.Words)
         }
 
         var sortByDate by remember {
-            mutableStateOf(false)
+            mutableStateOf(diaryFilters.sort == DiarySortCriteria.Date)
         }
 
         Column(modifier = Modifier.padding(16.dp)) {

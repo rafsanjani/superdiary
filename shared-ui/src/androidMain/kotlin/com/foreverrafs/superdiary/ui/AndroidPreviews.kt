@@ -6,6 +6,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreenState
@@ -32,6 +33,7 @@ fun EmptySearchDiaryListPreview() {
                 addSelection = {},
                 toggleSelection = {},
                 onApplyFilters = {},
+                diaryFilters = DiaryFilters(),
             )
         }
     }
@@ -48,6 +50,7 @@ fun EmptyDiaryListPreview() {
                 state = DiaryListScreenState.Content(listOf()),
                 onAddEntry = {},
                 onApplyFilters = {},
+                diaryFilters = DiaryFilters(),
             )
         }
     }
@@ -71,6 +74,7 @@ fun DiaryListPreview() {
                 ),
                 onAddEntry = {},
                 onApplyFilters = {},
+                diaryFilters = DiaryFilters(),
             )
         }
     }
@@ -97,6 +101,7 @@ fun SelectedDiariesPreview() {
                 toggleSelection = {},
                 onApplyFilters = {},
                 addSelection = {},
+                diaryFilters = DiaryFilters(),
             )
         }
     }
