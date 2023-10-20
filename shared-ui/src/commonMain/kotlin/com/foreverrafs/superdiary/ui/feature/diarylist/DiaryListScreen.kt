@@ -57,6 +57,7 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.components.SearchBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.SelectionModifierBar
 import com.foreverrafs.superdiary.ui.format
 import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -108,6 +109,7 @@ fun DiaryList(
     modifier: Modifier = Modifier,
     diaries: List<Diary>,
     onAddEntry: () -> Unit,
+    onDateSelected: (date: LocalDate) -> Unit,
     inSelectionMode: Boolean,
     addSelection: (id: Long?) -> Unit,
     removeSelection: (id: Long?) -> Unit,
@@ -148,6 +150,10 @@ fun DiaryList(
         if (showFilterDiariesBottomSheet) {
             FilterDiariesSheet(
                 onDismissRequest = {
+                    showFilterDiariesBottomSheet = false
+                },
+                onDateSelected = {
+                    onDateSelected(it)
                     showFilterDiariesBottomSheet = false
                 },
             )
@@ -239,13 +245,25 @@ private fun DiaryListContent(
     onAddEntry: () -> Unit,
 ) {
     if (diaries.isNotEmpty()) {
-        var query by remember {
+        var filterQuery by remember {
             mutableStateOf("")
         }
+        var filterDate by remember {
+            mutableStateOf<LocalDate?>(null)
+        }
 
-        val filteredDiaries by remember(query) {
+        val filteredDiaries by remember(filterQuery, filterDate) {
             mutableStateOf(
-                diaries.filter { it.entry.contains(query, false) },
+                diaries
+                    .filter { it.entry.contains(filterQuery, false) }
+                    .filter {
+                        if (filterDate != null) {
+                            it.date.toLocalDateTime(TimeZone.UTC).date == filterDate
+                        } else {
+                            true
+                        }
+                    },
+
             )
         }
 
@@ -262,7 +280,7 @@ private fun DiaryListContent(
             diaries = filteredDiaries,
             onAddEntry = onAddEntry,
             onFilterDiaryQuery = {
-                query = it
+                filterQuery = it
             },
             toggleSelection = {
                 selectedIds = selectedIds.addOrRemove(it)
@@ -278,6 +296,9 @@ private fun DiaryListContent(
                 diaryId?.let {
                     selectedIds = selectedIds.plus(diaryId)
                 }
+            },
+            onDateSelected = {
+                filterDate = it
             },
         )
     } else {

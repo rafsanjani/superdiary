@@ -32,6 +32,7 @@ fun EmptySearchDiaryListPreview() {
                 inSelectionMode = false,
                 addSelection = {},
                 toggleSelection = {},
+                onDateSelected = {},
             )
         }
     }
@@ -95,6 +96,7 @@ fun SelectedDiariesPreview() {
                 removeSelection = {},
                 toggleSelection = {},
                 addSelection = {},
+                onDateSelected = {},
             )
         }
     }

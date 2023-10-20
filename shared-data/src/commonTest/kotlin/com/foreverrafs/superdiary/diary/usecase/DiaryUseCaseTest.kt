@@ -12,6 +12,7 @@ import assertk.assertions.messageContains
 import com.foreverrafs.superdiary.diary.Result
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.utils.DiaryValidator
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock
@@ -29,8 +30,9 @@ import kotlin.test.Test
 class DiaryUseCaseTest {
 
     private val dataSource: DataSource = LocalStorageDataSource()
+    private val validator: DiaryValidator = DiaryValidator(Clock.System)
 
-    private val addDiaryUseCase = AddDiaryUseCase(dataSource)
+    private val addDiaryUseCase = AddDiaryUseCase(dataSource, validator)
     private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
     private val deleteDiaryUseCase = DeleteDiaryUseCase(dataSource)
     private val searchDiaryUseCase = SearchDiaryUseCase(dataSource)

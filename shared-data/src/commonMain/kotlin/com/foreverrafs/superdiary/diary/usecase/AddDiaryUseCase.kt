@@ -3,36 +3,20 @@ package com.foreverrafs.superdiary.diary.usecase
 import com.foreverrafs.superdiary.diary.Result
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import com.foreverrafs.superdiary.diary.utils.DiaryValidator
 
-class AddDiaryUseCase(private val dataSource: DataSource) {
+class AddDiaryUseCase(
+    private val dataSource: DataSource,
+    private val validator: DiaryValidator,
+) {
     suspend operator fun invoke(diary: Diary): Result {
         return try {
-            checkPreconditions(diary)
+            validator.validate(diary)
 
             dataSource.add(diary)
             Result.Success(data = listOf(diary))
         } catch (ex: IllegalArgumentException) {
             Result.Failure(ex)
-        }
-    }
-
-    private fun checkPreconditions(diary: Diary) {
-        val diaryDate = diary.date.toLocalDateTime(TimeZone.UTC).date
-        val today = Clock.System.now().toLocalDateTime(TimeZone.UTC).date
-
-        require(diaryDate == today) {
-            val placeHolder = if (diaryDate > today) {
-                "future"
-            } else {
-                "past"
-            }
-
-            "Saving a diary entry in the $placeHolder is an error.," +
-                " [diary date = $diaryDate, today = $today]"
         }
     }
 }

@@ -49,6 +49,7 @@ import kotlinx.datetime.toLocalDateTime
 fun FilterDiariesSheet(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
+    onDateSelected: (date: LocalDate) -> Unit,
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -180,7 +181,9 @@ fun FilterDiariesSheet(
                     Text("Reset All")
                 }
 
-                Button(onClick = {}) {
+                Button(
+                    onClick = {},
+                ) {
                     Text("Apply")
                 }
             }
