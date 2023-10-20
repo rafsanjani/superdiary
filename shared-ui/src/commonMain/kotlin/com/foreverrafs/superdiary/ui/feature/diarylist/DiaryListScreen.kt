@@ -356,7 +356,7 @@ private fun DiaryItem(
 
     Box(
         modifier = Modifier
-            .height(100.dp)
+            .height(110.dp)
             .padding(padding)
             .clip(RoundedCornerShape(roundedCornerShape))
             .fillMaxWidth()
@@ -396,6 +396,7 @@ private fun DiaryItem(
                             withStyle(
                                 SpanStyle(
                                     fontFamily = montserratAlternativesFontFamily(),
+                                    fontSize = 14.sp,
                                 ),
                             ) {
                                 append(
@@ -410,7 +411,7 @@ private fun DiaryItem(
                                 SpanStyle(
                                     fontFamily = montserratAlternativesFontFamily(),
                                     fontWeight = FontWeight.ExtraBold,
-                                    fontSize = 20.sp,
+                                    fontSize = 16.sp,
                                 ),
                             ) {
                                 append(date.dayOfMonth.toString())
@@ -421,6 +422,7 @@ private fun DiaryItem(
                                 SpanStyle(
                                     fontFamily = montserratAlternativesFontFamily(),
                                     fontWeight = FontWeight.Normal,
+                                    fontSize = 14.sp,
                                 ),
                             ) {
                                 append(
@@ -434,6 +436,7 @@ private fun DiaryItem(
                                 SpanStyle(
                                     fontFamily = montserratAlternativesFontFamily(),
                                     fontWeight = FontWeight.Normal,
+                                    fontSize = 14.sp,
                                 ),
                             ) {
                                 append(date.year.toString())
