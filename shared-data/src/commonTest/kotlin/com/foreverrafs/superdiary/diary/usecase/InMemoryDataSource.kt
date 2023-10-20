@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlin.coroutines.EmptyCoroutineContext
 
-internal class LocalStorageDataSource : DataSource {
+internal class InMemoryDataSource : DataSource {
     private val diaries = mutableListOf<Diary>()
 
     private val diariesFlow = MutableSharedFlow<List<Diary>>(replay = 1)

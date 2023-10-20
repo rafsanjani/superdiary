@@ -30,7 +30,7 @@ import kotlin.test.Test
 
 class DiaryUseCaseTest {
 
-    private val dataSource: DataSource = LocalStorageDataSource()
+    private val dataSource: DataSource = InMemoryDataSource()
     private val validator: DiaryValidator = DiaryValidator(Clock.System)
 
     private val addDiaryUseCase = AddDiaryUseCase(dataSource, validator)
