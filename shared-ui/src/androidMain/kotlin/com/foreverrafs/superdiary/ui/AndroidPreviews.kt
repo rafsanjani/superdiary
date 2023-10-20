@@ -1,15 +1,19 @@
 package com.foreverrafs.superdiary.ui
 
+import android.content.res.Configuration
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryDatePicker
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreenState
 import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 import kotlinx.datetime.Clock
+import kotlinx.datetime.toKotlinLocalDate
+import java.time.LocalDate
 import kotlin.random.Random
 
 @Preview
@@ -48,7 +52,8 @@ fun EmptyDiaryListPreview() {
     }
 }
 
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
 @Composable
 fun DiaryListPreview() {
     SuperdiaryAppTheme {
@@ -69,7 +74,8 @@ fun DiaryListPreview() {
     }
 }
 
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
 @Composable
 fun SelectedDiariesPreview() {
     SuperdiaryAppTheme {
@@ -89,6 +95,21 @@ fun SelectedDiariesPreview() {
                 removeSelection = {},
                 toggleSelection = {},
                 addSelection = {},
+            )
+        }
+    }
+}
+
+@Composable
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+fun DiaryDatePickerPreview() {
+    SuperdiaryAppTheme() {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            DiaryDatePicker(
+                onDismissRequest = { /*TODO*/ },
+                onDateSelected = {},
+                selectedDate = LocalDate.now().toKotlinLocalDate(),
             )
         }
     }

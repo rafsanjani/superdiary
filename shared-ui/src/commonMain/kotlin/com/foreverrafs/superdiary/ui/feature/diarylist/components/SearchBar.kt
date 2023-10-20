@@ -74,7 +74,7 @@ internal fun SearchBar(
                 }
                 .border(
                     width = border,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     shape = RoundedCornerShape(cornerRadius),
                 ),
             singleLine = true,

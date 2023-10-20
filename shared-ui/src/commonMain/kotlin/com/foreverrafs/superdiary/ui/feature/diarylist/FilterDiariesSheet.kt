@@ -213,7 +213,7 @@ private fun DiaryFilterChip(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DiaryDatePicker(
+fun DiaryDatePicker(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onDateSelected: (date: LocalDate) -> Unit,
@@ -253,13 +253,18 @@ private fun DiaryDatePicker(
                 )
             }
         },
-        colors = DatePickerDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-        ),
         modifier = modifier,
+        colors = DatePickerDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+        ),
     ) {
         DatePicker(
             state = datePickerState,
+            colors = DatePickerDefaults.colors(
+                selectedDayContainerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                dayContentColor = MaterialTheme.colorScheme.onBackground,
+                selectedDayContentColor = MaterialTheme.colorScheme.onPrimary,
+            ),
         )
     }
 }
