@@ -3,13 +3,18 @@ package com.foreverrafs.superdiary.diary.utils
 import com.foreverrafs.superdiary.diary.model.Diary
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.periodUntil
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 
 fun List<Diary>.groupByDate(clock: Clock = Clock.System): Map<PrioritizedDuration, List<Diary>> =
-    groupBy { getDurationString(it, clock) }.toList().sortedBy { it.first.priority }.toMap()
+    groupBy { getDurationString(it, clock) }
+        .toList()
+        .sortedBy { it.first.priority }
+        .toMap()
 
 /**
  * Durations are weighted from 0 - 4 with 0 being the most prioritized and
@@ -23,7 +28,7 @@ data class PrioritizedDuration(
 
 @Suppress("ReturnCount")
 private fun getDurationString(diary: Diary, clock: Clock = Clock.System): PrioritizedDuration {
-    val entryDate = Instant.parse(diary.date).toLocalDateTime(TimeZone.UTC).date
+    val entryDate = diary.date.toLocalDateTime(TimeZone.UTC).date
 
     val difference = entryDate.periodUntil(clock.todayIn(TimeZone.currentSystemDefault()))
 
@@ -63,3 +68,6 @@ private fun getDurationString(diary: Diary, clock: Clock = Clock.System): Priori
         priority = 360 * difference.years,
     )
 }
+
+fun Instant.toDate(): LocalDate = toLocalDateTime(TimeZone.UTC).date
+fun LocalDate.toInstant(): Instant = atStartOfDayIn(TimeZone.UTC)

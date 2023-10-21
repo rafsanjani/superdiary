@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.diary.inject
+package com.foreverrafs.superdiary.diary.di
 
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver

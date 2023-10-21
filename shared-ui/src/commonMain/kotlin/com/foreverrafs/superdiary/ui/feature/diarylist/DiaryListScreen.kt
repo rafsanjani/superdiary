@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -53,11 +52,11 @@ import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryHeader
+import com.foreverrafs.superdiary.ui.feature.diarylist.components.FilterDiariesSheet
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.SearchBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.SelectionModifierBar
 import com.foreverrafs.superdiary.ui.format
 import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -66,42 +65,50 @@ fun DiaryListScreen(
     state: DiaryListScreenState,
     modifier: Modifier = Modifier,
     onAddEntry: () -> Unit,
+    onApplyFilters: (filters: DiaryFilters) -> Unit,
+    diaryFilters: DiaryFilters,
 ) {
     Column(
         modifier = modifier,
+        verticalArrangement = Arrangement.Center,
     ) {
         SuperDiaryAppBar()
 
         when (state) {
             is DiaryListScreenState.Content -> {
                 DiaryListContent(
+                    modifier = Modifier.fillMaxSize(),
                     diaries = state.diaries,
                     onAddEntry = onAddEntry,
+                    onApplyFilters = onApplyFilters,
+                    diaryFilters = diaryFilters,
+                    isFiltered = state.filtered,
                 )
             }
 
-            is DiaryListScreenState.Error -> ErrorContent(modifier = Modifier.fillMaxWidth())
+            is DiaryListScreenState.Error -> ErrorContent(modifier = Modifier.fillMaxSize())
 
-            is DiaryListScreenState.Loading -> LoadingContent(modifier = Modifier.wrapContentSize())
+            is DiaryListScreenState.Loading -> LoadingContent(modifier = Modifier.fillMaxSize())
         }
     }
 }
 
 /**
- * Display a list of diaries from the database. We have different functions for adding
- * and removing instead of just using the toggl. There are instances where we
- * just want to add entries whether they exist or not and other times where we want to remove
- * entries at all costs.
+ * Display a list of diaries from the database. We have different functions
+ * for adding and removing instead of just using the toggl. There are
+ * instances where we just want to add entries whether they exist or
+ * not and other times where we want to remove entries at all costs.
  *
  * @param diaries The list of diaries to display
  * @param onAddEntry Add a new entry to the list
  * @param inSelectionMode Whether we are actively selecting items or not
+ * @param selectedIds The list of ids of the selected diary entries
  * @param addSelection Add an entry to the list of selected items
  * @param removeSelection Remove an entry from the list of selected items
- * @param toggleSelection Add an entry to the list of selected items or remove
- * it otherwise.
- * @param selectedIds The list of ids of the selected diary entries
- * @param onFilterDiaryQuery Called whenever the value of the search field is updated
+ * @param toggleSelection Add an entry to the list of selected items or
+ *     remove it otherwise.
+ * @param onFilterDiaryQuery Called whenever the value of the search field
+ *     is updated
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -110,11 +117,12 @@ fun DiaryList(
     diaries: List<Diary>,
     onAddEntry: () -> Unit,
     inSelectionMode: Boolean,
+    diaryFilters: DiaryFilters,
+    selectedIds: Set<Long>,
     addSelection: (id: Long?) -> Unit,
     removeSelection: (id: Long?) -> Unit,
     toggleSelection: (id: Long?) -> Unit,
-    selectedIds: Set<Long>,
-    onFilterDiaryQuery: (query: String) -> Unit,
+    onApplyFilters: (filters: DiaryFilters) -> Unit,
 ) {
     val groupedDiaries = remember(diaries) {
         diaries.groupByDate()
@@ -134,7 +142,9 @@ fun DiaryList(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopCenter),
-            onQueryChanged = onFilterDiaryQuery,
+            onQueryChanged = {
+                onApplyFilters(diaryFilters.copy(entry = it))
+            },
             onFilterClicked = {
                 showFilterDiariesBottomSheet = true
             },
@@ -151,6 +161,15 @@ fun DiaryList(
                 onDismissRequest = {
                     showFilterDiariesBottomSheet = false
                 },
+                onApplyFilters = {
+                    onApplyFilters(
+                        diaryFilters.copy(
+                            date = it.date,
+                            sort = it.sort,
+                        ),
+                    )
+                },
+                diaryFilters = diaryFilters,
             )
         }
 
@@ -193,7 +212,7 @@ fun DiaryList(
                     }
 
                     items(
-                        items = diaries,
+                        items = diaries.sortedByDescending { it.id },
                         key = { item -> item.id.toString() },
                     ) { diary ->
                         DiaryItem(
@@ -219,6 +238,7 @@ fun DiaryList(
                 }
             }
         } else {
+            // When there is no diary entry from the search screen
             Box(
                 modifier = modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
@@ -236,20 +256,18 @@ fun DiaryList(
 
 @Composable
 private fun DiaryListContent(
+    modifier: Modifier = Modifier,
     diaries: List<Diary>,
+    isFiltered: Boolean,
     onAddEntry: () -> Unit,
+    onApplyFilters: (filters: DiaryFilters) -> Unit,
+    diaryFilters: DiaryFilters,
 ) {
-    if (diaries.isNotEmpty()) {
-        var query by remember {
-            mutableStateOf("")
-        }
+    // We want to keep showing the search bar even for an empty list
+    // if filters have been applied
+    val filteredEmpty = diaries.isEmpty() && isFiltered
 
-        val filteredDiaries by remember(query) {
-            mutableStateOf(
-                diaries.filter { it.entry.contains(query, false) },
-            )
-        }
-
+    if (diaries.isNotEmpty() || filteredEmpty) {
         var selectedIds by rememberSaveable {
             mutableStateOf(emptySet<Long>())
         }
@@ -259,12 +277,9 @@ private fun DiaryListContent(
         }
 
         DiaryList(
-            modifier = Modifier.fillMaxSize(),
-            diaries = filteredDiaries,
+            modifier = modifier,
+            diaries = diaries,
             onAddEntry = onAddEntry,
-            onFilterDiaryQuery = {
-                query = it
-            },
             toggleSelection = {
                 selectedIds = selectedIds.addOrRemove(it)
             },
@@ -280,6 +295,8 @@ private fun DiaryListContent(
                     selectedIds = selectedIds.plus(diaryId)
                 }
             },
+            onApplyFilters = onApplyFilters,
+            diaryFilters = diaryFilters,
         )
     } else {
         EmptyDiaryList(
@@ -291,9 +308,12 @@ private fun DiaryListContent(
 @Composable
 private fun LoadingContent(modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier,
+        modifier = modifier.padding(bottom = 64.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(
+            space = 8.dp,
+            alignment = Alignment.CenterVertically,
+        ),
     ) {
         CircularProgressIndicator()
 
@@ -356,11 +376,12 @@ private fun DiaryItem(
     }
 
     Box(
-        modifier = modifier
-            .height(100.dp)
+        modifier = Modifier
+            .height(110.dp)
             .padding(padding)
             .clip(RoundedCornerShape(roundedCornerShape))
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .then(modifier),
     ) {
         Card(
             shape = RoundedCornerShape(
@@ -391,11 +412,12 @@ private fun DiaryItem(
                 ) {
                     Text(
                         text = buildAnnotatedString {
-                            val date = Instant.parse(diary.date).toLocalDateTime(TimeZone.UTC).date
+                            val date = diary.date.toLocalDateTime(TimeZone.UTC).date
 
                             withStyle(
                                 SpanStyle(
                                     fontFamily = montserratAlternativesFontFamily(),
+                                    fontSize = 14.sp,
                                 ),
                             ) {
                                 append(
@@ -410,7 +432,7 @@ private fun DiaryItem(
                                 SpanStyle(
                                     fontFamily = montserratAlternativesFontFamily(),
                                     fontWeight = FontWeight.ExtraBold,
-                                    fontSize = 20.sp,
+                                    fontSize = 16.sp,
                                 ),
                             ) {
                                 append(date.dayOfMonth.toString())
@@ -421,6 +443,7 @@ private fun DiaryItem(
                                 SpanStyle(
                                     fontFamily = montserratAlternativesFontFamily(),
                                     fontWeight = FontWeight.Normal,
+                                    fontSize = 14.sp,
                                 ),
                             ) {
                                 append(
@@ -434,6 +457,7 @@ private fun DiaryItem(
                                 SpanStyle(
                                     fontFamily = montserratAlternativesFontFamily(),
                                     fontWeight = FontWeight.Normal,
+                                    fontSize = 14.sp,
                                 ),
                             ) {
                                 append(date.year.toString())
@@ -487,13 +511,12 @@ private fun DiaryItem(
 @Composable
 private fun ErrorContent(modifier: Modifier) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.padding(bottom = 64.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "Error loading diaries",
             textAlign = TextAlign.Center,
-            modifier = modifier,
             style = MaterialTheme.typography.headlineMedium,
         )
     }

@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.diarylist
+package com.foreverrafs.superdiary.ui.feature.diarylist.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,6 +38,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiarySortCriteria
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -49,6 +51,8 @@ import kotlinx.datetime.toLocalDateTime
 fun FilterDiariesSheet(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
+    onApplyFilters: (filters: DiaryFilters) -> Unit,
+    diaryFilters: DiaryFilters,
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -61,17 +65,17 @@ fun FilterDiariesSheet(
         modifier = modifier,
     ) {
         var selectedDate by remember {
-            mutableStateOf<LocalDate?>(
-                null,
+            mutableStateOf(
+                diaryFilters.date,
             )
         }
 
         var sortByWords by remember {
-            mutableStateOf(false)
+            mutableStateOf(diaryFilters.sort == DiarySortCriteria.Words)
         }
 
         var sortByDate by remember {
-            mutableStateOf(false)
+            mutableStateOf(diaryFilters.sort == DiarySortCriteria.Date)
         }
 
         Column(modifier = Modifier.padding(16.dp)) {
@@ -180,7 +184,24 @@ fun FilterDiariesSheet(
                     Text("Reset All")
                 }
 
-                Button(onClick = {}) {
+                Button(
+                    onClick = {
+                        onApplyFilters(
+                            DiaryFilters(
+                                date = selectedDate,
+                                sort = if (sortByDate) {
+                                    DiarySortCriteria.Date
+                                } else if (sortByWords) {
+                                    DiarySortCriteria.Words
+                                } else {
+                                    null
+                                },
+                            ),
+                        )
+
+                        onDismissRequest()
+                    },
+                ) {
                     Text("Apply")
                 }
             }
@@ -213,7 +234,7 @@ private fun DiaryFilterChip(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DiaryDatePicker(
+fun DiaryDatePicker(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onDateSelected: (date: LocalDate) -> Unit,
@@ -253,13 +274,18 @@ private fun DiaryDatePicker(
                 )
             }
         },
-        colors = DatePickerDefaults.colors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-        ),
         modifier = modifier,
+        colors = DatePickerDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+        ),
     ) {
         DatePicker(
             state = datePickerState,
+            colors = DatePickerDefaults.colors(
+                selectedDayContainerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                dayContentColor = MaterialTheme.colorScheme.onBackground,
+                selectedDayContentColor = MaterialTheme.colorScheme.onPrimary,
+            ),
         )
     }
 }

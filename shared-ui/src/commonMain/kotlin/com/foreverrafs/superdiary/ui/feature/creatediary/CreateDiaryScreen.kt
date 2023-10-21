@@ -41,8 +41,6 @@ import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 object CreateDiaryScreen : Screen {
 
@@ -78,9 +76,7 @@ object CreateDiaryScreen : Screen {
                     Diary(
                         entry = entry,
                         date = Clock.System
-                            .now()
-                            .toLocalDateTime(TimeZone.UTC)
-                            .toString(),
+                            .now(),
                     ),
                 )
             },

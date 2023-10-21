@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.diary.datasource
 
 import com.foreverrafs.superdiary.diary.model.Diary
 import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.Instant
 
 /**
  * The DataSource represents the lowest level of data retrieval in the application architecture.
@@ -35,17 +36,17 @@ interface DataSource {
      * Search for matching Diaries with entries matching [entry]. This
      * will perform a FTS of the query and return all matching diaries.
      */
-    suspend fun find(entry: String): List<Diary>
+    suspend fun find(entry: String): Flow<List<Diary>>
 
     /**
      * Search for matching diaries for a specific date
      */
-    suspend fun findByDate(date: String): List<Diary>
+    suspend fun findByDate(date: Instant): Flow<List<Diary>>
 
     /**
      * Search for diaries between two dates inclusive
      */
-    suspend fun find(from: String, to: String): List<Diary>
+    suspend fun find(from: Instant, to: Instant): Flow<List<Diary>>
 
     /**
      * Deletes all the diary entries from the data source.
