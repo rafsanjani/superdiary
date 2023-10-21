@@ -20,6 +20,10 @@ class LocalDataSource(private val database: Database) : DataSource {
         return 0
     }
 
+    override suspend fun delete(diaries: List<Diary>): Int {
+        return database.deleteDiaries(diaries.mapNotNull { it.id })
+    }
+
     override fun fetchAll(): Flow<List<Diary>> {
         return database.getAllDiaries()
     }

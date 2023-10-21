@@ -6,6 +6,7 @@ import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.doesNotContain
 import assertk.assertions.isEmpty
+import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
 import assertk.assertions.messageContains
@@ -39,6 +40,7 @@ class DiaryUseCaseTest {
     private val searchDiaryBetweenDatesUseCase = SearchDiaryBetweenDatesUseCase(dataSource)
     private val searchDiaryByDateUseCase = SearchDiaryByDateUseCase(dataSource)
     private val searchDiaryByEntryUseCase = SearchDiaryByEntryUseCase(dataSource)
+    private val deleteMultipleDiariesUseCase = DeleteMultipleDiariesUseCase(dataSource)
 
     @BeforeTest
     fun setup() {
@@ -231,6 +233,22 @@ class DiaryUseCaseTest {
 
             // verify all diaries have been cleared
             assertThat(diaries).isEmpty()
+        }
+    }
+
+    @Test
+    fun `Delete multiple diaries actually deletes them`() = runTest {
+        getAllDiariesUseCase().test {
+            // Given initial diary items - We need to convert the resulting List to another list again
+            // to prevent it from getting overwritten by the subsequent call to awaitItem()
+            val originalList = awaitItem().toList()
+
+            // Delete the first two entries
+            deleteMultipleDiariesUseCase(originalList.take(2))
+
+            // fetch the remaining diaries
+            val currentList = awaitItem()
+            assertThat(currentList.size).isEqualTo(originalList.size - 2)
         }
     }
 }

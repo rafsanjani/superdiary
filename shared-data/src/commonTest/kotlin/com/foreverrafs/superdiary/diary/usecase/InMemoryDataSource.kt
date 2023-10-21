@@ -26,6 +26,10 @@ internal class InMemoryDataSource : DataSource {
         if (diaries.remove(diary)) 1 else 0
     }
 
+    override suspend fun delete(diaries: List<Diary>): Int = withPublishDiaries {
+        if (this.diaries.removeAll(diaries)) diaries.size else 0
+    }
+
     override fun fetchAll(): Flow<List<Diary>> {
         return diariesFlow.asSharedFlow()
     }

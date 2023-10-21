@@ -25,6 +25,11 @@ interface DataSource {
     suspend fun delete(diary: Diary): Int
 
     /**
+     * Delete multiple diaries
+     */
+    suspend fun delete(diaries: List<Diary>): Int
+
+    /**
      * Fetch all the diary items from the datasource, returning a list of
      * all the items that were successfully fetched. The flow returned from this
      * function will publish data changes to subscribers

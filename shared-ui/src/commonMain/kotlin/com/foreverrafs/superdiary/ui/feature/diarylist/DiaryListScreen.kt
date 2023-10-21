@@ -66,6 +66,7 @@ fun DiaryListScreen(
     modifier: Modifier = Modifier,
     onAddEntry: () -> Unit,
     onApplyFilters: (filters: DiaryFilters) -> Unit,
+    onDeleteDiaries: (selectedIds: List<Diary>) -> Unit,
     diaryFilters: DiaryFilters,
 ) {
     Column(
@@ -83,6 +84,13 @@ fun DiaryListScreen(
                     onApplyFilters = onApplyFilters,
                     diaryFilters = diaryFilters,
                     isFiltered = state.filtered,
+                    onDeleteDiaries = { selectedIds ->
+                        val diariesToDelete = state.diaries.filter {
+                            selectedIds.contains(it.id)
+                        }
+
+                        onDeleteDiaries(diariesToDelete)
+                    },
                 )
             }
 
@@ -103,25 +111,27 @@ fun DiaryListScreen(
  * @param onAddEntry Add a new entry to the list
  * @param inSelectionMode Whether we are actively selecting items or not
  * @param selectedIds The list of ids of the selected diary entries
- * @param addSelection Add an entry to the list of selected items
- * @param removeSelection Remove an entry from the list of selected items
- * @param toggleSelection Add an entry to the list of selected items or
+ * @param onAddSelection Add an entry to the list of selected items
+ * @param onRemoveSelection Remove an entry from the list of selected items
+ * @param onToggleSelection Add an entry to the list of selected items or
  *     remove it otherwise.
- * @param onFilterDiaryQuery Called whenever the value of the search field
- *     is updated
+ * @param onDeleteDiaries Delete the selected diaries from the list
+ * @param onApplyFilters Apply the selected filters onto the list of diaries
+ * @param diaryFilters The filters that will be applied to the diary list
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DiaryList(
     modifier: Modifier = Modifier,
     diaries: List<Diary>,
-    onAddEntry: () -> Unit,
     inSelectionMode: Boolean,
     diaryFilters: DiaryFilters,
     selectedIds: Set<Long>,
-    addSelection: (id: Long?) -> Unit,
-    removeSelection: (id: Long?) -> Unit,
-    toggleSelection: (id: Long?) -> Unit,
+    onAddEntry: () -> Unit,
+    onAddSelection: (id: Long?) -> Unit,
+    onRemoveSelection: (id: Long?) -> Unit,
+    onToggleSelection: (id: Long?) -> Unit,
+    onDeleteDiaries: (selectedIds: List<Long>) -> Unit,
     onApplyFilters: (filters: DiaryFilters) -> Unit,
 ) {
     val groupedDiaries = remember(diaries) {
@@ -154,6 +164,7 @@ fun DiaryList(
         SelectionModifierBar(
             inSelectionMode = inSelectionMode,
             selectedIds = selectedIds,
+            onDelete = onDeleteDiaries,
         )
 
         if (showFilterDiariesBottomSheet) {
@@ -197,14 +208,14 @@ fun DiaryList(
                             selectGroup = {
                                 diaries.forEach { diary ->
                                     diary.id?.let {
-                                        addSelection(it)
+                                        onAddSelection(it)
                                     }
                                 }
                             },
                             deSelectGroup = {
                                 diaries.forEach { diary ->
                                     diary.id?.let {
-                                        removeSelection(it)
+                                        onRemoveSelection(it)
                                     }
                                 }
                             },
@@ -221,13 +232,13 @@ fun DiaryList(
                                 .combinedClickable(
                                     onClick = {
                                         if (inSelectionMode) {
-                                            toggleSelection(diary.id)
+                                            onToggleSelection(diary.id)
                                         } else {
                                             // Process regular click here
                                         }
                                     },
                                     onLongClick = {
-                                        toggleSelection(diary.id)
+                                        onToggleSelection(diary.id)
                                     },
                                 ),
                             diary = diary,
@@ -261,6 +272,7 @@ private fun DiaryListContent(
     isFiltered: Boolean,
     onAddEntry: () -> Unit,
     onApplyFilters: (filters: DiaryFilters) -> Unit,
+    onDeleteDiaries: (selectedIds: List<Long>) -> Unit,
     diaryFilters: DiaryFilters,
 ) {
     // We want to keep showing the search bar even for an empty list
@@ -280,23 +292,31 @@ private fun DiaryListContent(
             modifier = modifier,
             diaries = diaries,
             onAddEntry = onAddEntry,
-            toggleSelection = {
+            onToggleSelection = {
                 selectedIds = selectedIds.addOrRemove(it)
             },
             inSelectionMode = inSelectionMode,
             selectedIds = selectedIds,
-            removeSelection = { diaryId ->
+            onRemoveSelection = { diaryId ->
                 diaryId?.let {
                     selectedIds = selectedIds.minus(diaryId)
                 }
             },
-            addSelection = { diaryId ->
+            onAddSelection = { diaryId ->
                 diaryId?.let {
                     selectedIds = selectedIds.plus(diaryId)
                 }
             },
             onApplyFilters = onApplyFilters,
             diaryFilters = diaryFilters,
+            onDeleteDiaries = {
+                // Clear all the selection to update screen state
+                selectedIds = setOf()
+
+                // Process the event
+                onDeleteDiaries(it)
+            },
+
         )
     } else {
         EmptyDiaryList(

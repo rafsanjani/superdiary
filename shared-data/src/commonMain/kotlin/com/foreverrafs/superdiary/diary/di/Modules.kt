@@ -5,6 +5,7 @@ import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.datasource.LocalDataSource
 import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
+import com.foreverrafs.superdiary.diary.usecase.DeleteMultipleDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryBetweenDatesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByDateUseCase
@@ -24,6 +25,7 @@ fun useCaseModule() = module {
     singleOf(::SearchDiaryByEntryUseCase)
     singleOf(::SearchDiaryByDateUseCase)
     singleOf(::DeleteDiaryUseCase)
+    singleOf(::DeleteMultipleDiariesUseCase)
     singleOf(::Database)
     singleOf(::DiaryValidator)
 }

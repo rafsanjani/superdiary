@@ -29,6 +29,7 @@ fun LoadingDiariesPreview() {
                 onAddEntry = {},
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
+                onDeleteDiaries = {},
             )
         }
     }
@@ -46,6 +47,7 @@ fun ErrorLoadingDiariesPreview() {
                 onAddEntry = {},
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
+                onDeleteDiaries = {},
             )
         }
     }
@@ -62,12 +64,13 @@ fun EmptySearchDiaryListPreview() {
                 diaries = listOf(),
                 onAddEntry = { /*TODO*/ },
                 selectedIds = setOf(),
-                removeSelection = {},
+                onRemoveSelection = {},
                 inSelectionMode = false,
-                addSelection = {},
-                toggleSelection = {},
+                onAddSelection = {},
+                onToggleSelection = {},
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
+                onDeleteDiaries = {},
             )
         }
     }
@@ -85,6 +88,7 @@ fun EmptyDiaryListPreview() {
                 onAddEntry = {},
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
+                onDeleteDiaries = {},
             )
         }
     }
@@ -110,6 +114,7 @@ fun DiaryListPreview() {
                 onAddEntry = {},
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
+                onDeleteDiaries = {},
             )
         }
     }
@@ -129,6 +134,7 @@ fun FilteredEmptyPreview() {
                 onAddEntry = {},
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
+                onDeleteDiaries = {},
             )
         }
     }
@@ -151,11 +157,12 @@ fun SelectedDiariesPreview() {
                 onAddEntry = {},
                 inSelectionMode = true,
                 selectedIds = setOf(0, 1),
-                removeSelection = {},
-                toggleSelection = {},
+                onRemoveSelection = {},
+                onToggleSelection = {},
                 onApplyFilters = {},
-                addSelection = {},
+                onAddSelection = {},
                 diaryFilters = DiaryFilters(),
+                onDeleteDiaries = {},
             )
         }
     }
