@@ -68,7 +68,7 @@ internal fun SearchBar(
         exit = fadeOut(),
     ) {
         TextField(
-            modifier = Modifier
+            modifier = modifier
                 .onFocusChanged {
                     isFocused = it.hasFocus
                 }

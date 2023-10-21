@@ -68,7 +68,12 @@ internal fun SelectionModifierBar(
                         modifier = Modifier.size(32.dp),
                     )
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text("Selected Diaries: ${selectedIds.size}")
+
+                    // Only show selected diaries when we have an item selected to prevent
+                    // weird Selected Diaries: 0 from showing
+                    if (selectedIds.isNotEmpty()) {
+                        Text("Selected Diaries: ${selectedIds.size}")
+                    }
                 }
 
                 Icon(
