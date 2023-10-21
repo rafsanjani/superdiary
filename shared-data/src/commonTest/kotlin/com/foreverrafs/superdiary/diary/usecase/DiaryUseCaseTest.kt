@@ -25,7 +25,6 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlin.random.Random
 import kotlin.test.BeforeTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 class DiaryUseCaseTest {
@@ -132,7 +131,6 @@ class DiaryUseCaseTest {
     }
 
     @Test
-    @Ignore
     fun `Delete diary and confirm deletion`() = runTest {
         getAllDiariesUseCase().test {
             var diaries = expectMostRecentItem()
