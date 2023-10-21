@@ -36,9 +36,11 @@ android {
     }
     namespace = "com.foreverrafs.superdiary"
 
-    packaging {
-        resources.excludes.add(
-            "META-INF/versions/9/previous-compilation-data.bin",
-        )
+    buildTypes {
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = true
+            proguardFile("proguard-rules.pro")
+        }
     }
 }
