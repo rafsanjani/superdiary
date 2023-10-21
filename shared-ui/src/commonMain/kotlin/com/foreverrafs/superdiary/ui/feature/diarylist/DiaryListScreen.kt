@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -197,7 +198,7 @@ fun DiaryList(
         diaries.groupByDate()
     }
 
-    Box(
+    Column(
         modifier = modifier
             .padding(8.dp),
     ) {
@@ -205,27 +206,28 @@ fun DiaryList(
             mutableStateOf(false)
         }
 
-        // Searchbar
-        DiarySearchBar(
-            inSelectionMode = !inSelectionMode,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopCenter),
-            onQueryChanged = {
-                onApplyFilters(diaryFilters.copy(entry = it))
-            },
-            onFilterClicked = {
-                showFilterDiariesBottomSheet = true
-            },
-        )
+        // Search and selection modifier bars
+        Box {
+            DiarySearchBar(
+                inSelectionMode = !inSelectionMode,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter),
+                onQueryChanged = {
+                    onApplyFilters(diaryFilters.copy(entry = it))
+                },
+                onFilterClicked = {
+                    showFilterDiariesBottomSheet = true
+                },
+            )
 
-        // Modifier bar. Shown when in selection mode
-        DiarySelectionModifierBar(
-            inSelectionMode = inSelectionMode,
-            selectedIds = selectedIds,
-            onDelete = onDeleteDiaries,
-            onCancelSelection = onCancelSelection,
-        )
+            DiarySelectionModifierBar(
+                inSelectionMode = inSelectionMode,
+                selectedIds = selectedIds,
+                onDelete = onDeleteDiaries,
+                onCancelSelection = onCancelSelection,
+            )
+        }
 
         if (showFilterDiariesBottomSheet) {
             DiaryFilterSheet(
@@ -244,12 +246,13 @@ fun DiaryList(
             )
         }
 
+        // When the user inputs a search query, we still want to show them
+        // the search bar instead of the original empty screen
         if (diaries.isNotEmpty()) {
-            // Offset this by the height of the Searchbar (when it isn't active)
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 60.dp),
+                    .padding(top = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(space = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 state = rememberLazyListState(),
@@ -548,25 +551,31 @@ private fun DiaryItem(
         // Selection mode icon
         if (inSelectionMode) {
             val iconModifier = Modifier
-                .padding(top = 8.dp, start = 4.dp)
+                .padding(top = 12.dp, start = 4.dp)
                 .size(20.dp)
 
             if (selected) {
                 Icon(
-                    Icons.Filled.CheckCircle,
+                    imageVector = Icons.Filled.CheckCircle,
                     tint = MaterialTheme.colorScheme.primary,
                     contentDescription = null,
                     modifier = iconModifier,
                 )
             } else {
                 Icon(
-                    Icons.Filled.RadioButtonUnchecked,
+                    imageVector = Icons.Filled.RadioButtonUnchecked,
                     tint = Color.White.copy(alpha = 0.7f),
                     contentDescription = null,
                     modifier = iconModifier,
                 )
             }
         }
+
+        Icon(
+            imageVector = Icons.Filled.Favorite,
+            contentDescription = null,
+            modifier = Modifier.padding(12.dp).size(20.dp).align(Alignment.BottomEnd),
+        )
     }
 }
 
