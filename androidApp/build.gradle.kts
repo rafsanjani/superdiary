@@ -13,30 +13,15 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(libs.androidx.activity.compose)
-                implementation(libs.appcompat)
                 implementation(libs.material)
-                implementation(libs.androidx.activity.ktx)
-                implementation(compose.ui)
-                implementation(compose.runtime)
-                implementation(compose.uiTooling)
-                implementation(compose.material3)
                 implementation(projects.sharedUi)
                 implementation(libs.koin.android)
-                implementation(projects.sharedData)
             }
         }
     }
 }
 
 android {
-    buildFeatures {
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
-
     compileSdk = 34
     defaultConfig {
         applicationId = "com.foreverrafs.superdiary"
