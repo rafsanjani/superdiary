@@ -25,7 +25,21 @@ class DiaryListSnapshotTests : KoinTest {
     )
 
     @Test
-    fun nonEmptyDiaryList() {
+    fun `Loading diary list`() {
+        paparazzi.snapshot {
+            TestAppContainer {
+                DiaryListScreen(
+                    state = DiaryListScreenState.Loading,
+                    onAddEntry = {},
+                    onApplyFilters = {},
+                    diaryFilters = DiaryFilters(),
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `Unfiltered non-empty diary list`() {
         paparazzi.snapshot {
             TestAppContainer {
                 DiaryListScreen(
@@ -37,6 +51,7 @@ class DiaryListSnapshotTests : KoinTest {
                                 date = testClock.now(),
                             )
                         },
+                        filtered = false,
                     ),
                     onAddEntry = {},
                     onApplyFilters = {},
@@ -47,12 +62,13 @@ class DiaryListSnapshotTests : KoinTest {
     }
 
     @Test
-    fun emptyDiaryList() {
+    fun `Unfiltered empty diary list`() {
         paparazzi.snapshot {
             TestAppContainer {
                 DiaryListScreen(
                     state = DiaryListScreenState.Content(
                         listOf(),
+                        filtered = false,
                     ),
                     onAddEntry = {},
                     onApplyFilters = {},
@@ -63,7 +79,24 @@ class DiaryListSnapshotTests : KoinTest {
     }
 
     @Test
-    fun errorLoadingDiaries() {
+    fun `Filtered empty diary list`() {
+        paparazzi.snapshot {
+            TestAppContainer {
+                DiaryListScreen(
+                    state = DiaryListScreenState.Content(
+                        listOf(),
+                        filtered = true,
+                    ),
+                    onAddEntry = {},
+                    onApplyFilters = {},
+                    diaryFilters = DiaryFilters(),
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `Error loading diary list`() {
         paparazzi.snapshot {
             TestAppContainer {
                 DiaryListScreen(

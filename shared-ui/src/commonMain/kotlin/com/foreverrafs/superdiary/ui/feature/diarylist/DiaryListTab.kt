@@ -89,7 +89,10 @@ class DiaryListScreenModel(
     fun observeDiaries() = coroutineScope.launch {
         getAllDiariesUseCase().collect { diaries ->
             mutableState.update {
-                DiaryListScreenState.Content(diaries)
+                DiaryListScreenState.Content(
+                    diaries = diaries,
+                    filtered = false,
+                )
             }
         }
     }
@@ -97,7 +100,10 @@ class DiaryListScreenModel(
     fun filterByEntry(entry: String) = coroutineScope.launch {
         searchDiaryByEntryUseCase(entry).collect { diaries ->
             mutableState.update {
-                DiaryListScreenState.Content(diaries)
+                DiaryListScreenState.Content(
+                    diaries = diaries,
+                    filtered = true,
+                )
             }
         }
     }
@@ -105,7 +111,10 @@ class DiaryListScreenModel(
     fun filterByDate(date: LocalDate) = coroutineScope.launch {
         searchDiaryByDateUseCase(date.toInstant()).collect { diaries ->
             mutableState.update {
-                DiaryListScreenState.Content(diaries)
+                DiaryListScreenState.Content(
+                    diaries = diaries,
+                    filtered = true,
+                )
             }
         }
     }
@@ -114,7 +123,8 @@ class DiaryListScreenModel(
         searchDiaryByDateUseCase(date.toInstant()).collect { diaries ->
             mutableState.update {
                 DiaryListScreenState.Content(
-                    diaries.filter { it.entry.contains(entry, false) },
+                    diaries = diaries.filter { it.entry.contains(entry, false) },
+                    filtered = true,
                 )
             }
         }

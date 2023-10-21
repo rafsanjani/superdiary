@@ -19,6 +19,40 @@ import kotlin.random.Random
 
 @Preview
 @Composable
+fun LoadingDiariesPreview() {
+    SuperdiaryAppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            DiaryListScreen(
+                state = DiaryListScreenState.Loading,
+                onAddEntry = {},
+                onApplyFilters = {},
+                diaryFilters = DiaryFilters(),
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ErrorLoadingDiariesPreview() {
+    SuperdiaryAppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            DiaryListScreen(
+                state = DiaryListScreenState.Error(Error()),
+                onAddEntry = {},
+                onApplyFilters = {},
+                diaryFilters = DiaryFilters(),
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
 fun EmptySearchDiaryListPreview() {
     SuperdiaryAppTheme {
         Surface(
@@ -47,7 +81,7 @@ fun EmptyDiaryListPreview() {
             color = MaterialTheme.colorScheme.background,
         ) {
             DiaryListScreen(
-                state = DiaryListScreenState.Content(listOf()),
+                state = DiaryListScreenState.Content(listOf(), false),
                 onAddEntry = {},
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
@@ -71,6 +105,26 @@ fun DiaryListPreview() {
                             date = Clock.System.now(),
                         )
                     },
+                    filtered = false,
+                ),
+                onAddEntry = {},
+                onApplyFilters = {},
+                diaryFilters = DiaryFilters(),
+            )
+        }
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@Composable
+fun FilteredEmptyPreview() {
+    SuperdiaryAppTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            DiaryListScreen(
+                state = DiaryListScreenState.Content(
+                    diaries = listOf(),
+                    filtered = true,
                 ),
                 onAddEntry = {},
                 onApplyFilters = {},
@@ -111,7 +165,7 @@ fun SelectedDiariesPreview() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
 fun DiaryDatePickerPreview() {
-    SuperdiaryAppTheme() {
+    SuperdiaryAppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             DiaryDatePicker(
                 onDismissRequest = { /*TODO*/ },
