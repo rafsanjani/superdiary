@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.ktlint).apply(false)
     alias(libs.plugins.kotlin.dokka)
     alias(libs.plugins.compose.multiplatform).apply(false)
+    id("androidx.baselineprofile") version "1.2.0-rc02" apply false
 }
 
 apply {

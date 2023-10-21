@@ -4,6 +4,7 @@ plugins {
     kotlin("multiplatform")
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.android.application)
+    id("androidx.baselineprofile")
 }
 
 kotlin {
@@ -42,5 +43,14 @@ android {
             isMinifyEnabled = true
             proguardFile("proguard-rules.pro")
         }
+        create("benchmark") {
+            initWith(buildTypes.getByName("release"))
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
+        }
     }
+}
+dependencies {
+    implementation("androidx.profileinstaller:profileinstaller:1.3.1")
+    "baselineProfile"(project(":baselineprofile"))
 }
