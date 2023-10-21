@@ -31,6 +31,13 @@ class Database(databaseDriver: DatabaseDriver) {
 
     fun deleteDiary(id: Long) = queries.delete(id)
 
+    fun deleteDiaries(ids: List<Long>): Int = queries.transactionWithResult {
+        ids.forEach { id ->
+            deleteDiary(id)
+        }
+        ids.size
+    }
+
     fun getAllDiaries(): Flow<List<Diary>> = queries.selectAll(
         mapper = diaryMapper,
     )

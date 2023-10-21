@@ -6,6 +6,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreen
@@ -29,6 +30,7 @@ fun LoadingDiariesPreview() {
                 onAddEntry = {},
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
+                onDeleteDiaries = {},
             )
         }
     }
@@ -46,6 +48,7 @@ fun ErrorLoadingDiariesPreview() {
                 onAddEntry = {},
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
+                onDeleteDiaries = {},
             )
         }
     }
@@ -62,12 +65,14 @@ fun EmptySearchDiaryListPreview() {
                 diaries = listOf(),
                 onAddEntry = { /*TODO*/ },
                 selectedIds = setOf(),
-                removeSelection = {},
+                onRemoveSelection = {},
                 inSelectionMode = false,
-                addSelection = {},
-                toggleSelection = {},
+                onAddSelection = {},
+                onToggleSelection = {},
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
+                onDeleteDiaries = {},
+                onCancelSelection = {},
             )
         }
     }
@@ -85,6 +90,7 @@ fun EmptyDiaryListPreview() {
                 onAddEntry = {},
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
+                onDeleteDiaries = {},
             )
         }
     }
@@ -110,6 +116,7 @@ fun DiaryListPreview() {
                 onAddEntry = {},
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
+                onDeleteDiaries = {},
             )
         }
     }
@@ -129,6 +136,7 @@ fun FilteredEmptyPreview() {
                 onAddEntry = {},
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
+                onDeleteDiaries = {},
             )
         }
     }
@@ -151,11 +159,13 @@ fun SelectedDiariesPreview() {
                 onAddEntry = {},
                 inSelectionMode = true,
                 selectedIds = setOf(0, 1),
-                removeSelection = {},
-                toggleSelection = {},
+                onRemoveSelection = {},
+                onToggleSelection = {},
                 onApplyFilters = {},
-                addSelection = {},
+                onAddSelection = {},
                 diaryFilters = DiaryFilters(),
+                onDeleteDiaries = {},
+                onCancelSelection = {},
             )
         }
     }
@@ -171,6 +181,20 @@ fun DiaryDatePickerPreview() {
                 onDismissRequest = { /*TODO*/ },
                 onDateSelected = {},
                 selectedDate = LocalDate.now().toKotlinLocalDate(),
+            )
+        }
+    }
+}
+
+@Composable
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+fun DeleteDialogPreview() {
+    SuperdiaryAppTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            ConfirmDeleteDialog(
+                onDismiss = {},
+                onConfirm = {},
             )
         }
     }

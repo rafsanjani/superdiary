@@ -6,7 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.StateScreenModel
@@ -15,6 +15,8 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.usecase.DeleteMultipleDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByEntryUseCase
@@ -30,7 +32,8 @@ object DiaryListTab : Screen {
     override fun Content() {
         val screenModel: DiaryListScreenModel = getScreenModel()
         val screenState by screenModel.state.collectAsState()
-        var diaryFilters by remember {
+
+        var diaryFilters by rememberSaveable(stateSaver = DiaryFilters.Saver) {
             mutableStateOf(DiaryFilters())
         }
 
@@ -72,6 +75,7 @@ object DiaryListTab : Screen {
                 diaryFilters = filters
             },
             diaryFilters = diaryFilters,
+            onDeleteDiaries = screenModel::deleteDiaries,
         )
     }
 }
@@ -80,6 +84,7 @@ class DiaryListScreenModel(
     private val getAllDiariesUseCase: GetAllDiariesUseCase,
     private val searchDiaryByEntryUseCase: SearchDiaryByEntryUseCase,
     private val searchDiaryByDateUseCase: SearchDiaryByDateUseCase,
+    private val deleteMultipleDiariesUseCase: DeleteMultipleDiariesUseCase,
 ) : StateScreenModel<DiaryListScreenState>(DiaryListScreenState.Loading) {
 
     init {
@@ -128,5 +133,9 @@ class DiaryListScreenModel(
                 )
             }
         }
+    }
+
+    fun deleteDiaries(diaries: List<Diary>) = coroutineScope.launch {
+        deleteMultipleDiariesUseCase(diaries)
     }
 }

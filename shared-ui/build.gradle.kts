@@ -77,7 +77,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.foreverrafs.superdiary"
+    namespace = "com.foreverrafs.superdiary.shared"
 
     buildFeatures {
         compose = true
