@@ -148,6 +148,7 @@ private fun CreateDiaryScreenContent(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                 ),
+                textStyle = MaterialTheme.typography.bodyMedium,
             )
         }
     }
