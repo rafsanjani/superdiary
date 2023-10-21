@@ -6,6 +6,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreen
@@ -178,6 +179,20 @@ fun DiaryDatePickerPreview() {
                 onDismissRequest = { /*TODO*/ },
                 onDateSelected = {},
                 selectedDate = LocalDate.now().toKotlinLocalDate(),
+            )
+        }
+    }
+}
+
+@Composable
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+fun DeleteDialogPreview() {
+    SuperdiaryAppTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            ConfirmDeleteDialog(
+                onDismiss = {},
+                onConfirm = {},
             )
         }
     }

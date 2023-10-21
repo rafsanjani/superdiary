@@ -27,13 +27,15 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -50,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
+import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryHeader
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.FilterDiariesSheet
@@ -57,6 +60,7 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.components.SearchBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.SelectionModifierBar
 import com.foreverrafs.superdiary.ui.format
 import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
+import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -69,6 +73,8 @@ fun DiaryListScreen(
     onDeleteDiaries: (selectedIds: List<Diary>) -> Unit,
     diaryFilters: DiaryFilters,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
@@ -77,20 +83,68 @@ fun DiaryListScreen(
 
         when (state) {
             is DiaryListScreenState.Content -> {
+                var selectedIds by rememberSaveable {
+                    mutableStateOf(emptySet<Long>())
+                }
+
+                var showConfirmDeleteDialog by remember {
+                    mutableStateOf(false)
+                }
+
+                val coroutineScope = rememberCoroutineScope()
+
+                if (showConfirmDeleteDialog) {
+                    ConfirmDeleteDialog(
+                        onDismiss = {
+                            showConfirmDeleteDialog = false
+                        },
+                        onConfirm = {
+                            onDeleteDiaries(
+                                state.diaries.filter { selectedIds.contains(it.id) },
+                            )
+
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar(
+                                    "${selectedIds.size + 1} item(s) deleted!",
+                                )
+                            }
+
+                            selectedIds = emptySet()
+                            showConfirmDeleteDialog = false
+                        },
+                    )
+                }
+
                 DiaryListContent(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                     diaries = state.diaries,
                     onAddEntry = onAddEntry,
                     onApplyFilters = onApplyFilters,
                     diaryFilters = diaryFilters,
                     isFiltered = state.filtered,
-                    onDeleteDiaries = { selectedIds ->
-                        val diariesToDelete = state.diaries.filter {
-                            selectedIds.contains(it.id)
-                        }
-
-                        onDeleteDiaries(diariesToDelete)
+                    onDeleteDiaries = {
+                        showConfirmDeleteDialog = true
                     },
+                    onRemoveSelection = { diaryId ->
+                        diaryId?.let {
+                            selectedIds = selectedIds.minus(diaryId)
+                        }
+                    },
+                    onAddSelection = { diaryId ->
+                        diaryId?.let {
+                            selectedIds = selectedIds.plus(diaryId)
+                        }
+                    },
+                    onToggleSelection = { diaryId ->
+                        selectedIds = selectedIds.addOrRemove(diaryId)
+                    },
+                    selectedIds = selectedIds,
+                )
+
+                SnackbarHost(
+                    hostState = snackbarHostState,
                 )
             }
 
@@ -108,16 +162,17 @@ fun DiaryListScreen(
  * not and other times where we want to remove entries at all costs.
  *
  * @param diaries The list of diaries to display
- * @param onAddEntry Add a new entry to the list
  * @param inSelectionMode Whether we are actively selecting items or not
+ * @param diaryFilters The filters that will be applied to the diary list
  * @param selectedIds The list of ids of the selected diary entries
+ * @param onAddEntry Add a new entry to the list
  * @param onAddSelection Add an entry to the list of selected items
  * @param onRemoveSelection Remove an entry from the list of selected items
  * @param onToggleSelection Add an entry to the list of selected items or
  *     remove it otherwise.
  * @param onDeleteDiaries Delete the selected diaries from the list
- * @param onApplyFilters Apply the selected filters onto the list of diaries
- * @param diaryFilters The filters that will be applied to the diary list
+ * @param onApplyFilters Apply the selected filters onto the list of
+ *     diaries
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -271,52 +326,31 @@ private fun DiaryListContent(
     diaries: List<Diary>,
     isFiltered: Boolean,
     onAddEntry: () -> Unit,
-    onApplyFilters: (filters: DiaryFilters) -> Unit,
-    onDeleteDiaries: (selectedIds: List<Long>) -> Unit,
+    selectedIds: Set<Long>,
     diaryFilters: DiaryFilters,
+    onToggleSelection: (id: Long?) -> Unit,
+    onRemoveSelection: (id: Long?) -> Unit,
+    onAddSelection: (id: Long?) -> Unit,
+    onDeleteDiaries: (selectedIds: List<Long>) -> Unit,
+    onApplyFilters: (filters: DiaryFilters) -> Unit,
 ) {
     // We want to keep showing the search bar even for an empty list
     // if filters have been applied
     val filteredEmpty = diaries.isEmpty() && isFiltered
 
     if (diaries.isNotEmpty() || filteredEmpty) {
-        var selectedIds by rememberSaveable {
-            mutableStateOf(emptySet<Long>())
-        }
-
-        val inSelectionMode by remember {
-            derivedStateOf { selectedIds.isNotEmpty() }
-        }
-
         DiaryList(
             modifier = modifier,
             diaries = diaries,
             onAddEntry = onAddEntry,
-            onToggleSelection = {
-                selectedIds = selectedIds.addOrRemove(it)
-            },
-            inSelectionMode = inSelectionMode,
+            onToggleSelection = onToggleSelection,
+            inSelectionMode = selectedIds.isNotEmpty(),
             selectedIds = selectedIds,
-            onRemoveSelection = { diaryId ->
-                diaryId?.let {
-                    selectedIds = selectedIds.minus(diaryId)
-                }
-            },
-            onAddSelection = { diaryId ->
-                diaryId?.let {
-                    selectedIds = selectedIds.plus(diaryId)
-                }
-            },
+            onRemoveSelection = onRemoveSelection,
+            onAddSelection = onAddSelection,
             onApplyFilters = onApplyFilters,
             diaryFilters = diaryFilters,
-            onDeleteDiaries = {
-                // Clear all the selection to update screen state
-                selectedIds = setOf()
-
-                // Process the event
-                onDeleteDiaries(it)
-            },
-
+            onDeleteDiaries = onDeleteDiaries,
         )
     } else {
         EmptyDiaryList(
