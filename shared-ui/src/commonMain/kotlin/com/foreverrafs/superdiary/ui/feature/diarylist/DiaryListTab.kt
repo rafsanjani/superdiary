@@ -6,7 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.StateScreenModel
@@ -32,7 +32,8 @@ object DiaryListTab : Screen {
     override fun Content() {
         val screenModel: DiaryListScreenModel = getScreenModel()
         val screenState by screenModel.state.collectAsState()
-        var diaryFilters by remember {
+
+        var diaryFilters by rememberSaveable(stateSaver = DiaryFilters.Saver) {
             mutableStateOf(DiaryFilters())
         }
 
