@@ -33,6 +33,7 @@ class DiaryListSnapshotTests : KoinTest {
                     onAddEntry = {},
                     onApplyFilters = {},
                     diaryFilters = DiaryFilters(),
+                    onDeleteDiaries = {},
                 )
             }
         }
@@ -56,6 +57,7 @@ class DiaryListSnapshotTests : KoinTest {
                     onAddEntry = {},
                     onApplyFilters = {},
                     diaryFilters = DiaryFilters(),
+                    onDeleteDiaries = {},
                 )
             }
         }
@@ -73,6 +75,7 @@ class DiaryListSnapshotTests : KoinTest {
                     onAddEntry = {},
                     onApplyFilters = {},
                     diaryFilters = DiaryFilters(),
+                    onDeleteDiaries = {},
                 )
             }
         }
@@ -90,6 +93,7 @@ class DiaryListSnapshotTests : KoinTest {
                     onAddEntry = {},
                     onApplyFilters = {},
                     diaryFilters = DiaryFilters(),
+                    onDeleteDiaries = {},
                 )
             }
         }
@@ -106,6 +110,7 @@ class DiaryListSnapshotTests : KoinTest {
                     onAddEntry = {},
                     onApplyFilters = {},
                     diaryFilters = DiaryFilters(),
+                    onDeleteDiaries = {},
                 )
             }
         }
