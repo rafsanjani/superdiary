@@ -135,14 +135,16 @@ class DiaryUseCaseTest {
     @Test
     fun `Delete diary and confirm deletion`() = runTest {
         getAllDiariesUseCase().test {
-            var diaries = expectMostRecentItem()
+            var diaries = expectMostRecentItem().toList()
             val firstDiary = diaries.first()
 
             // delete the first entry
             deleteDiaryUseCase(firstDiary)
 
             // get latest diaries again
-            diaries = awaitItem()
+            diaries = awaitItem().toList()
+
+            cancelAndConsumeRemainingEvents()
 
             // confirm that the first diary has been deleted
             assertThat(diaries).doesNotContain(firstDiary)
