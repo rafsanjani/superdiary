@@ -54,10 +54,10 @@ import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
+import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryFilterSheet
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryHeader
-import com.foreverrafs.superdiary.ui.feature.diarylist.components.FilterDiariesSheet
-import com.foreverrafs.superdiary.ui.feature.diarylist.components.SearchBar
-import com.foreverrafs.superdiary.ui.feature.diarylist.components.SelectionModifierBar
+import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiarySearchBar
+import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiarySelectionModifierBar
 import com.foreverrafs.superdiary.ui.format
 import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
 import kotlinx.coroutines.launch
@@ -141,6 +141,9 @@ fun DiaryListScreen(
                         selectedIds = selectedIds.addOrRemove(diaryId)
                     },
                     selectedIds = selectedIds,
+                    onCancelSelection = {
+                        selectedIds = setOf()
+                    },
                 )
 
                 SnackbarHost(
@@ -187,6 +190,7 @@ fun DiaryList(
     onRemoveSelection: (id: Long?) -> Unit,
     onToggleSelection: (id: Long?) -> Unit,
     onDeleteDiaries: (selectedIds: List<Long>) -> Unit,
+    onCancelSelection: () -> Unit,
     onApplyFilters: (filters: DiaryFilters) -> Unit,
 ) {
     val groupedDiaries = remember(diaries) {
@@ -202,7 +206,7 @@ fun DiaryList(
         }
 
         // Searchbar
-        SearchBar(
+        DiarySearchBar(
             inSelectionMode = !inSelectionMode,
             modifier = Modifier
                 .fillMaxWidth()
@@ -216,14 +220,15 @@ fun DiaryList(
         )
 
         // Modifier bar. Shown when in selection mode
-        SelectionModifierBar(
+        DiarySelectionModifierBar(
             inSelectionMode = inSelectionMode,
             selectedIds = selectedIds,
             onDelete = onDeleteDiaries,
+            onCancelSelection = onCancelSelection,
         )
 
         if (showFilterDiariesBottomSheet) {
-            FilterDiariesSheet(
+            DiaryFilterSheet(
                 onDismissRequest = {
                     showFilterDiariesBottomSheet = false
                 },
@@ -328,6 +333,7 @@ private fun DiaryListContent(
     onAddEntry: () -> Unit,
     selectedIds: Set<Long>,
     diaryFilters: DiaryFilters,
+    onCancelSelection: () -> Unit,
     onToggleSelection: (id: Long?) -> Unit,
     onRemoveSelection: (id: Long?) -> Unit,
     onAddSelection: (id: Long?) -> Unit,
@@ -351,6 +357,7 @@ private fun DiaryListContent(
             onApplyFilters = onApplyFilters,
             diaryFilters = diaryFilters,
             onDeleteDiaries = onDeleteDiaries,
+            onCancelSelection = onCancelSelection,
         )
     } else {
         EmptyDiaryList(
@@ -538,6 +545,7 @@ private fun DiaryItem(
             }
         }
 
+        // Selection mode icon
         if (inSelectionMode) {
             val iconModifier = Modifier
                 .padding(top = 8.dp, start = 4.dp)

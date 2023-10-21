@@ -50,7 +50,7 @@ import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterDiariesSheet(
+fun DiaryFilterSheet(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onApplyFilters: (filters: DiaryFilters) -> Unit,

@@ -32,9 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 
 @Composable
-internal fun SelectionModifierBar(
+internal fun DiarySelectionModifierBar(
     inSelectionMode: Boolean,
     onDelete: (selectedIds: List<Long>) -> Unit,
+    onCancelSelection: () -> Unit,
     selectedIds: Set<Long>,
 ) {
     AnimatedVisibility(
@@ -71,6 +72,7 @@ internal fun SelectionModifierBar(
                         modifier = Modifier
                             .clip(CircleShape)
                             .clickable {
+                                onCancelSelection()
                             }
                             .padding(8.dp),
                     )

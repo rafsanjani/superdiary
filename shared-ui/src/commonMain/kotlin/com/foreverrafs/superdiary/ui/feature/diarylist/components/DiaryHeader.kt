@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -55,7 +54,7 @@ internal fun DiaryHeader(
             if (inSelectionMode) {
                 if (selected) {
                     Icon(
-                        Icons.Filled.CheckCircle,
+                        imageVector = Icons.Filled.CheckCircle,
                         tint = MaterialTheme.colorScheme.primary,
                         contentDescription = null,
                         modifier = Modifier
@@ -73,8 +72,8 @@ internal fun DiaryHeader(
                     )
                 } else {
                     Icon(
-                        Icons.Filled.RadioButtonUnchecked,
-                        tint = Color.Black.copy(alpha = 0.55f),
+                        imageVector = Icons.Filled.RadioButtonUnchecked,
+                        tint = MaterialTheme.colorScheme.onSurface,
                         contentDescription = null,
                         modifier = Modifier
                             .padding(top = 8.dp, start = 4.dp)

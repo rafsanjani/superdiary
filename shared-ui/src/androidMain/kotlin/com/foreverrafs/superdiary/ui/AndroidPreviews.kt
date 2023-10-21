@@ -72,6 +72,7 @@ fun EmptySearchDiaryListPreview() {
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
                 onDeleteDiaries = {},
+                onCancelSelection = {},
             )
         }
     }
@@ -164,6 +165,7 @@ fun SelectedDiariesPreview() {
                 onAddSelection = {},
                 diaryFilters = DiaryFilters(),
                 onDeleteDiaries = {},
+                onCancelSelection = {},
             )
         }
     }

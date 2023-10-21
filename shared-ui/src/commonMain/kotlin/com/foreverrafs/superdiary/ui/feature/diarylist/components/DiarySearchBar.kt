@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-internal fun SearchBar(
+internal fun DiarySearchBar(
     modifier: Modifier = Modifier,
     onQueryChanged: (query: String) -> Unit,
     inSelectionMode: Boolean,
