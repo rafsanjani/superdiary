@@ -127,10 +127,3 @@ class DiaryListSnapshotTests : KoinTest {
         }
     }
 }
-
-private data class DiaryPreviewParameters(
-    val onAddEntry: () -> Unit,
-    val onDeleteDiaries: (selectedIds: List<Diary>) -> Unit,
-    val onToggleFavorite: (diary: Diary) -> Unit,
-    val onApplyFilters: (filters: DiaryFilters) -> Unit,
-)
