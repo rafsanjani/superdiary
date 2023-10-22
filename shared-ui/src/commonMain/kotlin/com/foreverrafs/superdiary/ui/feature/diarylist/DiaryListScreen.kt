@@ -69,16 +69,20 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
+data class DiaryListActions(
+    val onAddEntry: () -> Unit,
+    val onDeleteDiaries: suspend (selectedIds: List<Diary>) -> Boolean,
+    val onToggleFavorite: (diary: Diary) -> Unit,
+    val onApplyFilters: (filters: DiaryFilters) -> Unit,
+)
+
 @Composable
 fun DiaryListScreen(
     state: DiaryListScreenState,
     modifier: Modifier = Modifier,
-    showSearchBar: Boolean,
-    onAddEntry: () -> Unit,
-    onDeleteDiaries: suspend (selectedIds: List<Diary>) -> Boolean,
     diaryFilters: DiaryFilters,
-    onToggleFavorite: (diary: Diary) -> Unit,
-    onApplyFilters: (filters: DiaryFilters) -> Unit,
+    showSearchBar: Boolean,
+    diaryListActions: DiaryListActions,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -102,16 +106,16 @@ fun DiaryListScreen(
                 DiaryListContent(
                     modifier = screenModifier,
                     diaries = state.diaries,
-                    onAddEntry = onAddEntry,
-                    onApplyFilters = {
-                        onApplyFilters(it)
-                    },
+                    onAddEntry = diaryListActions.onAddEntry,
+                    onApplyFilters = diaryListActions.onApplyFilters,
                     diaryFilters = diaryFilters,
                     isFiltered = state.filtered,
-                    onToggleFavorite = onToggleFavorite,
+                    onToggleFavorite = diaryListActions.onToggleFavorite,
                     showSearchBar = showSearchBar,
                     onDeleteDiaries = { selectedIds ->
-                        onDeleteDiaries(state.diaries.filter { selectedIds.contains(it.id) })
+                        diaryListActions.onDeleteDiaries(
+                            state.diaries.filter { selectedIds.contains(it.id) },
+                        )
                     },
                     selectedIds = emptySet(),
                     snackbarHostState = snackbarHostState,
@@ -137,7 +141,6 @@ fun DiaryListScreen(
  * @param inSelectionMode Whether we are actively selecting items or not
  * @param diaryFilters The filters that will be applied to the diary list
  * @param selectedIds The list of ids of the selected diary entries
- * @param onAddEntry Add a new entry to the list
  * @param onAddSelection Add an entry to the list of selected items
  * @param onRemoveSelection Remove an entry from the list of selected items
  * @param onToggleSelection Add an entry to the list of selected items or
@@ -155,7 +158,6 @@ fun DiaryList(
     diaryFilters: DiaryFilters,
     selectedIds: Set<Long>,
     showSearchBar: Boolean = true,
-    onAddEntry: () -> Unit,
     onAddSelection: (id: Long?) -> Unit,
     onRemoveSelection: (id: Long?) -> Unit,
     onToggleSelection: (id: Long?) -> Unit,
@@ -340,7 +342,7 @@ private fun DiaryListContent(
                     )
 
                     val message = if (isSuccess) {
-                        "${currentSelectedIds.size + 1} item(s) deleted!"
+                        "${currentSelectedIds.size} item(s) deleted!"
                     } else {
                         "Error deleting diaries"
                     }
@@ -363,32 +365,31 @@ private fun DiaryListContent(
         DiaryList(
             modifier = modifier,
             diaries = diaries,
-            onAddEntry = onAddEntry,
-            onToggleSelection = {
-                currentSelectedIds = currentSelectedIds.addOrRemove(it)
-            },
             inSelectionMode = currentSelectedIds.isNotEmpty(),
+            diaryFilters = diaryFilters,
             selectedIds = currentSelectedIds,
-            onRemoveSelection = { diaryId ->
-                diaryId?.let {
-                    currentSelectedIds = currentSelectedIds.minus(diaryId)
-                }
-            },
             showSearchBar = showSearchBar,
             onAddSelection = { diaryId ->
                 diaryId?.let {
                     currentSelectedIds = currentSelectedIds.plus(diaryId)
                 }
             },
-            onApplyFilters = onApplyFilters,
-            diaryFilters = diaryFilters,
+            onRemoveSelection = { diaryId ->
+                diaryId?.let {
+                    currentSelectedIds = currentSelectedIds.minus(diaryId)
+                }
+            },
+            onToggleSelection = {
+                currentSelectedIds = currentSelectedIds.addOrRemove(it)
+            },
+            onToggleFavorite = onToggleFavorite,
             onDeleteDiaries = {
                 showConfirmDeleteDialog = true
             },
             onCancelSelection = {
                 currentSelectedIds = emptySet()
             },
-            onToggleFavorite = onToggleFavorite,
+            onApplyFilters = onApplyFilters,
         )
     } else {
         EmptyDiaryList(

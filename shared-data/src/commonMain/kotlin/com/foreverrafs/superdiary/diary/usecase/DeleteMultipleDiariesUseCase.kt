@@ -8,8 +8,7 @@ class DeleteMultipleDiariesUseCase(
 ) {
     suspend operator fun invoke(diaries: List<Diary>): Int {
         return try {
-            val affectedRows = dataSource.delete(diaries)
-            affectedRows
+            dataSource.delete(diaries)
         } catch (exception: Exception) {
             0
         }

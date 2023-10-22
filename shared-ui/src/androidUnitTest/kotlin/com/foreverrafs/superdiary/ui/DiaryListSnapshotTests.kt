@@ -6,6 +6,7 @@ import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreenState
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import org.junit.Rule
@@ -24,18 +25,22 @@ class DiaryListSnapshotTests : KoinTest {
         showSystemUi = true,
     )
 
+    private val diaryListActions = DiaryListActions(
+        onAddEntry = {},
+        onDeleteDiaries = { true },
+        onApplyFilters = {},
+        onToggleFavorite = {},
+    )
+
     @Test
     fun `Loading diary list`() {
         paparazzi.snapshot {
             TestAppContainer {
                 DiaryListScreen(
                     state = DiaryListScreenState.Loading,
-                    onAddEntry = {},
-                    onApplyFilters = {},
-                    onDeleteDiaries = { true },
                     showSearchBar = true,
-                    onToggleFavorite = {},
                     diaryFilters = DiaryFilters(),
+                    diaryListActions = diaryListActions,
                 )
             }
         }
@@ -57,12 +62,9 @@ class DiaryListSnapshotTests : KoinTest {
                         },
                         filtered = false,
                     ),
-                    onAddEntry = {},
-                    onApplyFilters = {},
-                    onDeleteDiaries = { true },
                     showSearchBar = true,
-                    onToggleFavorite = {},
                     diaryFilters = DiaryFilters(),
+                    diaryListActions = diaryListActions,
                 )
             }
         }
@@ -77,12 +79,9 @@ class DiaryListSnapshotTests : KoinTest {
                         listOf(),
                         filtered = false,
                     ),
-                    onAddEntry = {},
-                    onApplyFilters = {},
-                    onDeleteDiaries = { true },
                     showSearchBar = true,
-                    onToggleFavorite = {},
                     diaryFilters = DiaryFilters(),
+                    diaryListActions = diaryListActions,
                 )
             }
         }
@@ -97,12 +96,9 @@ class DiaryListSnapshotTests : KoinTest {
                         listOf(),
                         filtered = true,
                     ),
-                    onAddEntry = {},
-                    onApplyFilters = {},
-                    onDeleteDiaries = { true },
-                    onToggleFavorite = {},
                     showSearchBar = true,
                     diaryFilters = DiaryFilters(),
+                    diaryListActions = diaryListActions,
                 )
             }
         }
@@ -116,12 +112,9 @@ class DiaryListSnapshotTests : KoinTest {
                     state = DiaryListScreenState.Error(
                         Error("Error loading diaries"),
                     ),
-                    onAddEntry = {},
-                    onApplyFilters = {},
-                    onDeleteDiaries = { true },
-                    onToggleFavorite = {},
                     showSearchBar = true,
                     diaryFilters = DiaryFilters(),
+                    diaryListActions = diaryListActions,
                 )
             }
         }

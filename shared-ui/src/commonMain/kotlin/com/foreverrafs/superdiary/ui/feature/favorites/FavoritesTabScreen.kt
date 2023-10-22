@@ -22,19 +22,17 @@ fun FavoritesTabScreen(state: FavoritesTabScreenState) {
                 DiaryList(
                     modifier = Modifier.fillMaxSize().padding(it),
                     diaries = state.diaries,
-                    onToggleFavorite = {},
-                    onCancelSelection = {},
+                    inSelectionMode = false,
+                    diaryFilters = DiaryFilters(),
+                    selectedIds = setOf(),
+                    showSearchBar = false,
                     onAddSelection = {},
                     onRemoveSelection = {},
-                    onDeleteDiaries = {},
-                    onApplyFilters = {},
-                    onAddEntry = {},
                     onToggleSelection = {},
-                    diaryFilters = DiaryFilters(),
-                    showSearchBar = false,
-                    selectedIds = setOf(),
-                    inSelectionMode = false,
-                )
+                    onToggleFavorite = {},
+                    onDeleteDiaries = {},
+                    onCancelSelection = {},
+                ) {}
             }
 
             is FavoritesTabScreenState.Idle -> {}

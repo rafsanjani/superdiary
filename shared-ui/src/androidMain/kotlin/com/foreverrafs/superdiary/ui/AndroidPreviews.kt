@@ -9,6 +9,7 @@ import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryList
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreenState
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryDatePicker
@@ -17,6 +18,13 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.toKotlinLocalDate
 import java.time.LocalDate
 import kotlin.random.Random
+
+private val diaryListActions = DiaryListActions(
+    onAddEntry = {},
+    onDeleteDiaries = { true },
+    onToggleFavorite = {},
+    onApplyFilters = {},
+)
 
 @Preview
 @Composable
@@ -27,14 +35,9 @@ fun LoadingDiariesPreview() {
         ) {
             DiaryListScreen(
                 state = DiaryListScreenState.Loading,
-                onAddEntry = {},
-                onApplyFilters = {},
-                onDeleteDiaries = {
-                    true
-                },
-                onToggleFavorite = {},
                 showSearchBar = false,
                 diaryFilters = DiaryFilters(),
+                diaryListActions = diaryListActions,
             )
         }
     }
@@ -49,12 +52,9 @@ fun ErrorLoadingDiariesPreview() {
         ) {
             DiaryListScreen(
                 state = DiaryListScreenState.Error(Error()),
-                onAddEntry = {},
-                onApplyFilters = {},
-                onDeleteDiaries = { true },
-                onToggleFavorite = {},
                 showSearchBar = false,
                 diaryFilters = DiaryFilters(),
+                diaryListActions = diaryListActions,
             )
         }
     }
@@ -69,18 +69,16 @@ fun EmptySearchDiaryListPreview() {
         ) {
             DiaryList(
                 diaries = listOf(),
-                selectedIds = setOf(),
-                onAddEntry = { /*TODO*/ },
                 inSelectionMode = false,
-                onRemoveSelection = {},
-                onAddSelection = {},
-                onToggleSelection = {},
-                onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
+                selectedIds = setOf(),
+                onAddSelection = {},
+                onRemoveSelection = {},
+                onToggleSelection = {},
+                onToggleFavorite = {},
                 onDeleteDiaries = {},
                 onCancelSelection = {},
-                onToggleFavorite = {},
-            )
+            ) {}
         }
     }
 }
@@ -94,12 +92,9 @@ fun EmptyDiaryListPreview() {
         ) {
             DiaryListScreen(
                 state = DiaryListScreenState.Content(listOf(), false),
-                onAddEntry = {},
-                onApplyFilters = {},
-                onDeleteDiaries = { true },
-                onToggleFavorite = {},
                 showSearchBar = false,
                 diaryFilters = DiaryFilters(),
+                diaryListActions = diaryListActions,
             )
         }
     }
@@ -123,13 +118,9 @@ fun DiaryListPreview() {
                     },
                     filtered = false,
                 ),
-                onAddEntry = {},
-                onApplyFilters = {},
-                onDeleteDiaries = { true },
-                onToggleFavorite = {},
                 showSearchBar = true,
                 diaryFilters = DiaryFilters(),
-
+                diaryListActions = diaryListActions,
             )
         }
     }
@@ -146,12 +137,9 @@ fun FilteredEmptyPreview() {
                     diaries = listOf(),
                     filtered = true,
                 ),
-                onAddEntry = {},
-                onApplyFilters = {},
                 showSearchBar = true,
-                onDeleteDiaries = { true },
-                onToggleFavorite = {},
                 diaryFilters = DiaryFilters(),
+                diaryListActions = diaryListActions,
             )
         }
     }
@@ -172,18 +160,16 @@ fun SelectedDiariesPreview() {
                         isFavorite = false,
                     )
                 },
-                onAddEntry = {},
                 inSelectionMode = true,
+                diaryFilters = DiaryFilters(),
                 selectedIds = setOf(0, 1),
+                onAddSelection = {},
                 onRemoveSelection = {},
                 onToggleSelection = {},
-                onApplyFilters = {},
-                onAddSelection = {},
-                diaryFilters = DiaryFilters(),
+                onToggleFavorite = {},
                 onDeleteDiaries = {},
                 onCancelSelection = {},
-                onToggleFavorite = {},
-            )
+            ) {}
         }
     }
 }

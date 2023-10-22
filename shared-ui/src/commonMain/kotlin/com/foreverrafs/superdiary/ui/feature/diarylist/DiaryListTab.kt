@@ -49,28 +49,34 @@ object DiaryListTab : Screen {
         val snackbarHostState = remember { SnackbarHostState() }
         val coroutineScope = rememberCoroutineScope()
 
+        val diaryListActions = remember {
+            DiaryListActions(
+                onAddEntry = {
+                    navigator.push(
+                        CreateDiaryScreen,
+                    )
+                },
+                onDeleteDiaries = screenModel::deleteDiaries,
+                onApplyFilters = {
+                    diaryFilters = it
+                },
+                onToggleFavorite = {
+                    screenModel.onToggleFavorite(diary = it)
+
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = "Favorites Updated!",
+                        )
+                    }
+                },
+            )
+        }
+
         DiaryListScreen(
             state = screenState,
-            onAddEntry = {
-                navigator.push(
-                    CreateDiaryScreen,
-                )
-            },
-            onApplyFilters = { filters ->
-                diaryFilters = filters
-            },
-            onDeleteDiaries = screenModel::deleteDiaries,
-            onToggleFavorite = {
-                screenModel.onToggleFavorite(diary = it)
-
-                coroutineScope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = "Favorites Updated!",
-                    )
-                }
-            },
             showSearchBar = true,
             diaryFilters = diaryFilters,
+            diaryListActions = diaryListActions,
         )
     }
 
