@@ -34,6 +34,12 @@ internal class InMemoryDataSource : DataSource {
         return diariesFlow.asSharedFlow()
     }
 
+    override fun fetchFavorites(): Flow<List<Diary>> {
+        return diariesFlow.map { diaries ->
+            diaries.filter { it.isFavorite }
+        }
+    }
+
     override suspend fun find(entry: String): Flow<List<Diary>> {
         return diariesFlow.map { diaries ->
             diaries.filter {

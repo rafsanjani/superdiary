@@ -22,5 +22,8 @@ DELETE FROM diary;
 update:
 REPLACE INTO diary (id, entry, date, favorite) VALUES(?, ?,?, ?);
 
+getFavoriteDiaries:
+SELECT * FROM diary WHERE diary.favorite == 1;
+
 getAffectedRows:
 SELECT changes();

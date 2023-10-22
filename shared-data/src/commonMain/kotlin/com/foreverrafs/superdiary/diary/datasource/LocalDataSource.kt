@@ -28,6 +28,10 @@ class LocalDataSource(private val database: Database) : DataSource {
         return database.getAllDiaries()
     }
 
+    override fun fetchFavorites(): Flow<List<Diary>> {
+        return database.getFavoriteDiaries()
+    }
+
     override suspend fun find(entry: String): Flow<List<Diary>> {
         return database.findDiaryByEntry(entry)
     }

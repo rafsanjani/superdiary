@@ -44,6 +44,14 @@ interface DataSource {
     fun fetchAll(): Flow<List<Diary>>
 
     /**
+     * Fetch favorite diary items from the datasource, returning a list of
+     * all the items that were successfully fetched. The flow returned from this
+     * function will publish data changes and updates to subscribers.
+     * @return a list of diary items that were fetched
+     */
+    fun fetchFavorites(): Flow<List<Diary>>
+
+    /**
      * Search for matching Diaries with entries matching [entry]. This
      * will perform a FTS of the query and return all matching diaries.
      */

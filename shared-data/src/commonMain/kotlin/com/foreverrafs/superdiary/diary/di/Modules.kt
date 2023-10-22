@@ -7,6 +7,7 @@ import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.DeleteMultipleDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.diary.usecase.GetFavoriteDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryBetweenDatesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByEntryUseCase
@@ -21,6 +22,7 @@ fun useCaseModule() = module {
     factory<Clock> { Clock.System }
     singleOf(::AddDiaryUseCase)
     singleOf(::GetAllDiariesUseCase)
+    singleOf(::GetFavoriteDiariesUseCase)
     singleOf(::SearchDiaryBetweenDatesUseCase)
     singleOf(::SearchDiaryByEntryUseCase)
     singleOf(::SearchDiaryByEntryUseCase)

@@ -195,6 +195,7 @@ fun DiaryList(
     onRemoveSelection: (id: Long?) -> Unit,
     onToggleSelection: (id: Long?) -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
+    showSearchAndModifier: Boolean = true,
     onDeleteDiaries: (selectedIds: List<Long>) -> Unit,
     onCancelSelection: () -> Unit,
     onApplyFilters: (filters: DiaryFilters) -> Unit,
@@ -212,26 +213,28 @@ fun DiaryList(
         }
 
         // Search and selection modifier bars
-        Box {
-            DiarySearchBar(
-                inSelectionMode = !inSelectionMode,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.TopCenter),
-                onQueryChanged = {
-                    onApplyFilters(diaryFilters.copy(entry = it))
-                },
-                onFilterClicked = {
-                    showFilterDiariesBottomSheet = true
-                },
-            )
+        if (showSearchAndModifier) {
+            Box {
+                DiarySearchBar(
+                    inSelectionMode = !inSelectionMode,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.TopCenter),
+                    onQueryChanged = {
+                        onApplyFilters(diaryFilters.copy(entry = it))
+                    },
+                    onFilterClicked = {
+                        showFilterDiariesBottomSheet = true
+                    },
+                )
 
-            DiarySelectionModifierBar(
-                inSelectionMode = inSelectionMode,
-                selectedIds = selectedIds,
-                onDelete = onDeleteDiaries,
-                onCancelSelection = onCancelSelection,
-            )
+                DiarySelectionModifierBar(
+                    inSelectionMode = inSelectionMode,
+                    selectedIds = selectedIds,
+                    onDelete = onDeleteDiaries,
+                    onCancelSelection = onCancelSelection,
+                )
+            }
         }
 
         if (showFilterDiariesBottomSheet) {

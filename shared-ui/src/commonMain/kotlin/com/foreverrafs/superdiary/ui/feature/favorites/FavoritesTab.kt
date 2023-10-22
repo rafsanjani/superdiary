@@ -3,17 +3,32 @@ package com.foreverrafs.superdiary.ui.feature.favorites
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import cafe.adriel.voyager.core.model.StateScreenModel
+import cafe.adriel.voyager.core.model.coroutineScope
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
+import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 object FavoritesTab : Tab {
     @Composable
     override fun Content() {
-        FavoriteScreen()
+        val screenModel: FavoritesTabScreenModel = getScreenModel()
+
+        val screenState by screenModel.state.collectAsState()
+
+        FavoriteScreen(
+            state = screenState,
+        )
     }
 
     override val key: ScreenKey = uniqueScreenKey
@@ -31,4 +46,28 @@ object FavoritesTab : Tab {
                 )
             }
         }
+}
+
+class FavoritesTabScreenModel(
+    private val getAllDiariesUseCase: GetAllDiariesUseCase,
+) :
+    StateScreenModel<FavoritesTabScreenModel.FavoritesTabScreenState>(FavoritesTabScreenState.Idle) {
+    sealed interface FavoritesTabScreenState {
+        data object Idle : FavoritesTabScreenState
+        data class Favorites(val diaries: List<Diary>) : FavoritesTabScreenState
+    }
+
+    init {
+        loadFavorites()
+    }
+
+    private fun loadFavorites() = coroutineScope.launch {
+        getAllDiariesUseCase().collect { diaries ->
+            mutableState.update {
+                FavoritesTabScreenState.Favorites(
+                    diaries,
+                )
+            }
+        }
+    }
 }

@@ -26,7 +26,8 @@ class Database(databaseDriver: DatabaseDriver) {
     }
 
     /**
-     * This is only used on JVM. Schema is created automatically on Android and iOS
+     * This is only used on JVM. Schema is created automatically on Android and
+     * iOS
      */
     fun createDatabase() {
         SuperDiaryDatabase.Schema.create(driver)
@@ -80,6 +81,11 @@ class Database(databaseDriver: DatabaseDriver) {
 
         return queries.getAffectedRows().executeAsOne().toInt()
     }
+
+    fun getFavoriteDiaries(): Flow<List<Diary>> =
+        queries.getFavoriteDiaries(diaryMapper)
+            .asFlow()
+            .mapToList(Dispatchers.Main)
 
     fun clearDiaries() = queries.deleteAll()
 
