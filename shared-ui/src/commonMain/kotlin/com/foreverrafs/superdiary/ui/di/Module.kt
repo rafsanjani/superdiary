@@ -15,6 +15,7 @@ internal fun screenModules(): Module = module {
             searchDiaryByDateUseCase = get(),
             deleteMultipleDiariesUseCase = get(),
             updateDiaryUseCase = get(),
+            addDiaryUseCase = get()
         )
     }
     single {

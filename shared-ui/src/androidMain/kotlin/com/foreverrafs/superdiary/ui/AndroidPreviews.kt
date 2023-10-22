@@ -2,10 +2,8 @@ package com.foreverrafs.superdiary.ui
 
 import android.content.res.Configuration
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
@@ -31,12 +29,12 @@ fun LoadingDiariesPreview() {
                 state = DiaryListScreenState.Loading,
                 onAddEntry = {},
                 onApplyFilters = {},
-                diaryFilters = DiaryFilters(),
-                onDeleteDiaries = {},
-                onToggleFavorite = {},
-                snackbarHostState = remember {
-                    SnackbarHostState()
+                onDeleteDiaries = {
+                    true
                 },
+                onToggleFavorite = {},
+                showSearchBar = false,
+                diaryFilters = DiaryFilters(),
             )
         }
     }
@@ -53,12 +51,10 @@ fun ErrorLoadingDiariesPreview() {
                 state = DiaryListScreenState.Error(Error()),
                 onAddEntry = {},
                 onApplyFilters = {},
-                diaryFilters = DiaryFilters(),
-                onDeleteDiaries = {},
+                onDeleteDiaries = { true },
                 onToggleFavorite = {},
-                snackbarHostState = remember {
-                    SnackbarHostState()
-                },
+                showSearchBar = false,
+                diaryFilters = DiaryFilters(),
             )
         }
     }
@@ -73,10 +69,10 @@ fun EmptySearchDiaryListPreview() {
         ) {
             DiaryList(
                 diaries = listOf(),
-                onAddEntry = { /*TODO*/ },
                 selectedIds = setOf(),
-                onRemoveSelection = {},
+                onAddEntry = { /*TODO*/ },
                 inSelectionMode = false,
+                onRemoveSelection = {},
                 onAddSelection = {},
                 onToggleSelection = {},
                 onApplyFilters = {},
@@ -100,12 +96,10 @@ fun EmptyDiaryListPreview() {
                 state = DiaryListScreenState.Content(listOf(), false),
                 onAddEntry = {},
                 onApplyFilters = {},
-                diaryFilters = DiaryFilters(),
-                onDeleteDiaries = {},
+                onDeleteDiaries = { true },
                 onToggleFavorite = {},
-                snackbarHostState = remember {
-                    SnackbarHostState()
-                },
+                showSearchBar = false,
+                diaryFilters = DiaryFilters(),
             )
         }
     }
@@ -131,12 +125,11 @@ fun DiaryListPreview() {
                 ),
                 onAddEntry = {},
                 onApplyFilters = {},
-                diaryFilters = DiaryFilters(),
-                onDeleteDiaries = {},
+                onDeleteDiaries = { true },
                 onToggleFavorite = {},
-                snackbarHostState = remember {
-                    SnackbarHostState()
-                },
+                showSearchBar = true,
+                diaryFilters = DiaryFilters(),
+
             )
         }
     }
@@ -155,12 +148,10 @@ fun FilteredEmptyPreview() {
                 ),
                 onAddEntry = {},
                 onApplyFilters = {},
-                diaryFilters = DiaryFilters(),
-                onDeleteDiaries = {},
+                showSearchBar = true,
+                onDeleteDiaries = { true },
                 onToggleFavorite = {},
-                snackbarHostState = remember {
-                    SnackbarHostState()
-                },
+                diaryFilters = DiaryFilters(),
             )
         }
     }

@@ -1,7 +1,5 @@
 package com.foreverrafs.superdiary.ui
 
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.remember
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.superdiary.diary.model.Diary
@@ -34,11 +32,8 @@ class DiaryListSnapshotTests : KoinTest {
                     state = DiaryListScreenState.Loading,
                     onAddEntry = {},
                     onApplyFilters = {},
-                    diaryFilters = DiaryFilters(),
                     onDeleteDiaries = {},
-                    snackbarHostState = remember {
-                        SnackbarHostState()
-                    },
+                    showSearchBar = true,
                     onToggleFavorite = {},
                 )
             }
@@ -63,11 +58,8 @@ class DiaryListSnapshotTests : KoinTest {
                     ),
                     onAddEntry = {},
                     onApplyFilters = {},
-                    diaryFilters = DiaryFilters(),
                     onDeleteDiaries = {},
-                    snackbarHostState = remember {
-                        SnackbarHostState()
-                    },
+                    showSearchBar = true,
                     onToggleFavorite = {},
                 )
             }
@@ -85,11 +77,8 @@ class DiaryListSnapshotTests : KoinTest {
                     ),
                     onAddEntry = {},
                     onApplyFilters = {},
-                    diaryFilters = DiaryFilters(),
                     onDeleteDiaries = {},
-                    snackbarHostState = remember {
-                        SnackbarHostState()
-                    },
+                    showSearchBar = true,
                     onToggleFavorite = {},
                 )
             }
@@ -107,12 +96,9 @@ class DiaryListSnapshotTests : KoinTest {
                     ),
                     onAddEntry = {},
                     onApplyFilters = {},
-                    diaryFilters = DiaryFilters(),
                     onDeleteDiaries = {},
-                    snackbarHostState = remember {
-                        SnackbarHostState()
-                    },
                     onToggleFavorite = {},
+                    showSearchBar = true,
                 )
             }
         }
@@ -128,14 +114,18 @@ class DiaryListSnapshotTests : KoinTest {
                     ),
                     onAddEntry = {},
                     onApplyFilters = {},
-                    diaryFilters = DiaryFilters(),
                     onDeleteDiaries = {},
-                    snackbarHostState = remember {
-                        SnackbarHostState()
-                    },
                     onToggleFavorite = {},
+                    showSearchBar = true,
                 )
             }
         }
     }
 }
+
+private data class DiaryPreviewParameters(
+    val onAddEntry: () -> Unit,
+    val onDeleteDiaries: (selectedIds: List<Diary>) -> Unit,
+    val onToggleFavorite: (diary: Diary) -> Unit,
+    val onApplyFilters: (filters: DiaryFilters) -> Unit,
+)

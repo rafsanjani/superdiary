@@ -10,6 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlin.Result
+import kotlin.coroutines.suspendCoroutine
 
 class Database(databaseDriver: DatabaseDriver) {
     private val driver = databaseDriver.createDriver()
@@ -37,11 +39,17 @@ class Database(databaseDriver: DatabaseDriver) {
 
     fun deleteDiary(id: Long) = queries.delete(id)
 
-    fun deleteDiaries(ids: List<Long>): Int = queries.transactionWithResult {
-        ids.forEach { id ->
-            deleteDiary(id)
+    suspend fun deleteDiaries(ids: List<Long>): Int = suspendCoroutine { continuation ->
+        queries.transaction {
+            afterCommit {
+                continuation.resumeWith(
+                    Result.success(ids.size),
+                )
+            }
+            ids.forEach { id ->
+                deleteDiary(id)
+            }
         }
-        ids.size
     }
 
     fun getAllDiaries(): Flow<List<Diary>> = queries.selectAll(

@@ -31,6 +31,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -72,93 +73,56 @@ import kotlinx.datetime.toLocalDateTime
 fun DiaryListScreen(
     state: DiaryListScreenState,
     modifier: Modifier = Modifier,
-    snackbarHostState: SnackbarHostState,
+    showSearchBar: Boolean,
     onAddEntry: () -> Unit,
+    onDeleteDiaries: suspend (selectedIds: List<Diary>) -> Boolean,
     diaryFilters: DiaryFilters,
-    onApplyFilters: (filters: DiaryFilters) -> Unit,
-    onDeleteDiaries: (selectedIds: List<Diary>) -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
+    onApplyFilters: (filters: DiaryFilters) -> Unit,
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+            )
+        },
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            SuperDiaryAppBar()
+        },
     ) {
-        SuperDiaryAppBar()
+        val screenModifier = modifier
+            .padding(top = it.calculateTopPadding())
+            .fillMaxSize()
 
         when (state) {
             is DiaryListScreenState.Content -> {
-                var selectedIds by rememberSaveable {
-                    mutableStateOf(emptySet<Long>())
-                }
-
-                var showConfirmDeleteDialog by remember {
-                    mutableStateOf(false)
-                }
-
-                val coroutineScope = rememberCoroutineScope()
-
-                if (showConfirmDeleteDialog) {
-                    ConfirmDeleteDialog(
-                        onDismiss = {
-                            showConfirmDeleteDialog = false
-                        },
-                        onConfirm = {
-                            onDeleteDiaries(
-                                state.diaries.filter { selectedIds.contains(it.id) },
-                            )
-
-                            coroutineScope.launch {
-                                snackbarHostState.showSnackbar(
-                                    "${selectedIds.size + 1} item(s) deleted!",
-                                )
-                            }
-
-                            selectedIds = emptySet()
-                            showConfirmDeleteDialog = false
-                        },
-                    )
-                }
-
                 DiaryListContent(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
+                    modifier = screenModifier,
                     diaries = state.diaries,
                     onAddEntry = onAddEntry,
-                    onApplyFilters = onApplyFilters,
+                    onApplyFilters = {
+                        onApplyFilters(it)
+                    },
                     diaryFilters = diaryFilters,
                     isFiltered = state.filtered,
-                    onDeleteDiaries = {
-                        showConfirmDeleteDialog = true
-                    },
-                    onRemoveSelection = { diaryId ->
-                        diaryId?.let {
-                            selectedIds = selectedIds.minus(diaryId)
-                        }
-                    },
-                    onAddSelection = { diaryId ->
-                        diaryId?.let {
-                            selectedIds = selectedIds.plus(diaryId)
-                        }
-                    },
-                    onToggleSelection = { diaryId ->
-                        selectedIds = selectedIds.addOrRemove(diaryId)
-                    },
-                    selectedIds = selectedIds,
-                    onCancelSelection = {
-                        selectedIds = setOf()
-                    },
                     onToggleFavorite = onToggleFavorite,
-                )
-
-                SnackbarHost(
-                    hostState = snackbarHostState,
+                    showSearchBar = showSearchBar,
+                    onDeleteDiaries = { selectedIds ->
+                        onDeleteDiaries(state.diaries.filter { selectedIds.contains(it.id) })
+                    },
+                    selectedIds = emptySet(),
+                    snackbarHostState = snackbarHostState,
                 )
             }
 
-            is DiaryListScreenState.Error -> ErrorContent(modifier = Modifier.fillMaxSize())
+            is DiaryListScreenState.Error -> ErrorContent(
+                modifier = screenModifier,
+            )
 
-            is DiaryListScreenState.Loading -> LoadingContent(modifier = Modifier.fillMaxSize())
+            is DiaryListScreenState.Loading -> LoadingContent(modifier = screenModifier)
         }
     }
 }
@@ -190,13 +154,13 @@ fun DiaryList(
     inSelectionMode: Boolean,
     diaryFilters: DiaryFilters,
     selectedIds: Set<Long>,
+    showSearchBar: Boolean = true,
     onAddEntry: () -> Unit,
     onAddSelection: (id: Long?) -> Unit,
     onRemoveSelection: (id: Long?) -> Unit,
     onToggleSelection: (id: Long?) -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
-    showSearchAndModifier: Boolean = true,
-    onDeleteDiaries: (selectedIds: List<Long>) -> Unit,
+    onDeleteDiaries: (selectedIds: Set<Long>) -> Unit,
     onCancelSelection: () -> Unit,
     onApplyFilters: (filters: DiaryFilters) -> Unit,
 ) {
@@ -213,7 +177,7 @@ fun DiaryList(
         }
 
         // Search and selection modifier bars
-        if (showSearchAndModifier) {
+        if (showSearchBar) {
             Box {
                 DiarySearchBar(
                     inSelectionMode = !inSelectionMode,
@@ -344,17 +308,53 @@ private fun DiaryListContent(
     modifier: Modifier = Modifier,
     diaries: List<Diary>,
     isFiltered: Boolean,
+    showSearchBar: Boolean,
     onAddEntry: () -> Unit,
     selectedIds: Set<Long>,
     diaryFilters: DiaryFilters,
-    onCancelSelection: () -> Unit,
+    snackbarHostState: SnackbarHostState,
     onToggleFavorite: (diary: Diary) -> Unit,
-    onToggleSelection: (id: Long?) -> Unit,
-    onRemoveSelection: (id: Long?) -> Unit,
-    onAddSelection: (id: Long?) -> Unit,
-    onDeleteDiaries: (selectedIds: List<Long>) -> Unit,
+    onDeleteDiaries: suspend (selectedIds: Set<Long>) -> Boolean,
     onApplyFilters: (filters: DiaryFilters) -> Unit,
 ) {
+    var currentSelectedIds by rememberSaveable {
+        mutableStateOf(selectedIds)
+    }
+
+    var showConfirmDeleteDialog by remember {
+        mutableStateOf(false)
+    }
+
+    val coroutineScope = rememberCoroutineScope()
+
+    if (showConfirmDeleteDialog) {
+        ConfirmDeleteDialog(
+            onDismiss = {
+                showConfirmDeleteDialog = false
+            },
+            onConfirm = {
+                coroutineScope.launch {
+                    showConfirmDeleteDialog = false
+                    val isSuccess = onDeleteDiaries(
+                        currentSelectedIds,
+                    )
+
+                    val message = if (isSuccess) {
+                        "${currentSelectedIds.size + 1} item(s) deleted!"
+                    } else {
+                        "Error deleting diaries"
+                    }
+
+                    currentSelectedIds = emptySet()
+
+                    snackbarHostState.showSnackbar(
+                        message,
+                    )
+                }
+            },
+        )
+    }
+
     // We want to keep showing the search bar even for an empty list
     // if filters have been applied
     val filteredEmpty = diaries.isEmpty() && isFiltered
@@ -364,19 +364,35 @@ private fun DiaryListContent(
             modifier = modifier,
             diaries = diaries,
             onAddEntry = onAddEntry,
-            onToggleSelection = onToggleSelection,
-            inSelectionMode = selectedIds.isNotEmpty(),
-            selectedIds = selectedIds,
-            onRemoveSelection = onRemoveSelection,
-            onAddSelection = onAddSelection,
+            onToggleSelection = {
+                currentSelectedIds = currentSelectedIds.addOrRemove(it)
+            },
+            inSelectionMode = currentSelectedIds.isNotEmpty(),
+            selectedIds = currentSelectedIds,
+            onRemoveSelection = { diaryId ->
+                diaryId?.let {
+                    currentSelectedIds = currentSelectedIds.minus(diaryId)
+                }
+            },
+            showSearchBar = showSearchBar,
+            onAddSelection = { diaryId ->
+                diaryId?.let {
+                    currentSelectedIds = currentSelectedIds.plus(diaryId)
+                }
+            },
             onApplyFilters = onApplyFilters,
             diaryFilters = diaryFilters,
-            onDeleteDiaries = onDeleteDiaries,
-            onCancelSelection = onCancelSelection,
+            onDeleteDiaries = {
+                showConfirmDeleteDialog = true
+            },
+            onCancelSelection = {
+                currentSelectedIds = emptySet()
+            },
             onToggleFavorite = onToggleFavorite,
         )
     } else {
         EmptyDiaryList(
+            modifier = modifier,
             onAddEntry = onAddEntry,
         )
     }
@@ -408,7 +424,6 @@ private fun EmptyDiaryList(
 ) {
     Column(
         modifier = modifier
-            .fillMaxSize()
             .padding(horizontal = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,

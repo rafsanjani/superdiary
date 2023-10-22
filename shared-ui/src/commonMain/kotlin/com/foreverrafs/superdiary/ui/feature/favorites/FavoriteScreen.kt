@@ -31,7 +31,7 @@ fun FavoriteScreen(state: FavoritesTabScreenModel.FavoritesTabScreenState) {
                     onAddEntry = {},
                     onToggleSelection = {},
                     diaryFilters = DiaryFilters(),
-                    showSearchAndModifier = false,
+                    showSearchBar = false,
                     selectedIds = setOf(),
                     inSelectionMode = false,
                 )

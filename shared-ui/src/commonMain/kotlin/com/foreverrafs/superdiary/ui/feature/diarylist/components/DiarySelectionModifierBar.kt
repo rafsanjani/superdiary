@@ -34,7 +34,7 @@ import androidx.compose.ui.zIndex
 @Composable
 internal fun DiarySelectionModifierBar(
     inSelectionMode: Boolean,
-    onDelete: (selectedIds: List<Long>) -> Unit,
+    onDelete: (selectedIds: Set<Long>) -> Unit,
     onCancelSelection: () -> Unit,
     selectedIds: Set<Long>,
 ) {
@@ -89,7 +89,7 @@ internal fun DiarySelectionModifierBar(
                     modifier = Modifier
                         .clip(CircleShape)
                         .clickable {
-                            onDelete(selectedIds.toList())
+                            onDelete(selectedIds)
                         }
                         .padding(8.dp),
                     imageVector = Icons.Default.Delete,
