@@ -5,12 +5,28 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
     alias(libs.plugins.sqldelight)
+    id("org.jetbrains.kotlinx.kover") version "0.7.4"
 }
 
 sqldelight {
     databases.register("SuperDiaryDatabase") {
         packageName.set("com.foreverrafs.superdiary.database")
         deriveSchemaFromMigrations.set(true)
+    }
+}
+kover {
+    useJacoco("0.8.10")
+}
+
+koverReport {
+    filters {
+        excludes {
+            packages("com.foreverrafs.superdiary.database", "db")
+        }
+    }
+    defaults {
+        // adds the contents of the reports of `release` Android build variant to default reports
+        mergeWith("release")
     }
 }
 
