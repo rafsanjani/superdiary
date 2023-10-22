@@ -4,15 +4,6 @@ plugins {
     kotlin("multiplatform")
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.android.application)
-    id("org.sonarqube") version "4.4.1.3373"
-}
-
-sonar {
-    properties {
-        property("sonar.projectKey", "rafsanjani_superdiary")
-        property("sonar.organization", "rafsanjani")
-        property("sonar.host.url", "https://sonarcloud.io")
-    }
 }
 
 kotlin {

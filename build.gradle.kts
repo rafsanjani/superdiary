@@ -6,7 +6,15 @@ plugins {
     alias(libs.plugins.ktlint).apply(false)
     alias(libs.plugins.kotlin.dokka)
     alias(libs.plugins.compose.multiplatform).apply(false)
-    id("androidx.baselineprofile") version "1.2.0-rc02" apply false
+    id("org.sonarqube") version "4.4.1.3373"
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "rafsanjani_superdiary")
+        property("sonar.organization", "rafsanjani")
+        property("sonar.host.url", "https://sonarcloud.io")
+    }
 }
 
 apply {
