@@ -1,11 +1,14 @@
 package com.foreverrafs.superdiary.ui.feature.diarylist
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -20,6 +23,7 @@ import com.foreverrafs.superdiary.diary.usecase.DeleteMultipleDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByEntryUseCase
+import com.foreverrafs.superdiary.diary.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.diary.utils.toInstant
 import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryScreen
 import kotlinx.coroutines.flow.update
@@ -62,6 +66,9 @@ object DiaryListTab : Screen {
 
         val navigator = LocalNavigator.currentOrThrow
 
+        val snackbarHostState = remember { SnackbarHostState() }
+        val coroutineScope = rememberCoroutineScope()
+
         DiaryListScreen(
             modifier = Modifier
                 .fillMaxSize(),
@@ -76,6 +83,16 @@ object DiaryListTab : Screen {
             },
             diaryFilters = diaryFilters,
             onDeleteDiaries = screenModel::deleteDiaries,
+            onToggleFavorite = {
+                screenModel.onToggleFavorite(diary = it)
+
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "Favorites Updated!",
+                    )
+                }
+            },
+            snackbarHostState = snackbarHostState,
         )
     }
 }
@@ -85,6 +102,7 @@ class DiaryListScreenModel(
     private val searchDiaryByEntryUseCase: SearchDiaryByEntryUseCase,
     private val searchDiaryByDateUseCase: SearchDiaryByDateUseCase,
     private val deleteMultipleDiariesUseCase: DeleteMultipleDiariesUseCase,
+    private val updateDiaryUseCase: UpdateDiaryUseCase,
 ) : StateScreenModel<DiaryListScreenState>(DiaryListScreenState.Loading) {
 
     init {
@@ -137,5 +155,13 @@ class DiaryListScreenModel(
 
     fun deleteDiaries(diaries: List<Diary>) = coroutineScope.launch {
         deleteMultipleDiariesUseCase(diaries)
+    }
+
+    fun onToggleFavorite(diary: Diary) = coroutineScope.launch {
+        updateDiaryUseCase(
+            diary.copy(
+                isFavorite = !diary.isFavorite,
+            ),
+        )
     }
 }

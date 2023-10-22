@@ -25,6 +25,12 @@ interface DataSource {
     suspend fun delete(diary: Diary): Int
 
     /**
+     * Updates an existing item with the same id with the properties
+     * of the new item
+     */
+    suspend fun update(diary: Diary): Int
+
+    /**
      * Delete multiple diaries
      */
     suspend fun delete(diaries: List<Diary>): Int

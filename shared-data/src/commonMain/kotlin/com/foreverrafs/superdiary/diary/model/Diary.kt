@@ -6,4 +6,5 @@ data class Diary(
     val id: Long? = null,
     val entry: String,
     val date: Instant,
+    val isFavorite: Boolean,
 )

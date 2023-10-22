@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,10 +20,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -69,13 +72,13 @@ import kotlinx.datetime.toLocalDateTime
 fun DiaryListScreen(
     state: DiaryListScreenState,
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState,
     onAddEntry: () -> Unit,
+    diaryFilters: DiaryFilters,
     onApplyFilters: (filters: DiaryFilters) -> Unit,
     onDeleteDiaries: (selectedIds: List<Diary>) -> Unit,
-    diaryFilters: DiaryFilters,
+    onToggleFavorite: (diary: Diary) -> Unit,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
@@ -145,6 +148,7 @@ fun DiaryListScreen(
                     onCancelSelection = {
                         selectedIds = setOf()
                     },
+                    onToggleFavorite = onToggleFavorite,
                 )
 
                 SnackbarHost(
@@ -190,6 +194,7 @@ fun DiaryList(
     onAddSelection: (id: Long?) -> Unit,
     onRemoveSelection: (id: Long?) -> Unit,
     onToggleSelection: (id: Long?) -> Unit,
+    onToggleFavorite: (diary: Diary) -> Unit,
     onDeleteDiaries: (selectedIds: List<Long>) -> Unit,
     onCancelSelection: () -> Unit,
     onApplyFilters: (filters: DiaryFilters) -> Unit,
@@ -307,6 +312,9 @@ fun DiaryList(
                             diary = diary,
                             selected = diary.id in selectedIds,
                             inSelectionMode = inSelectionMode,
+                            onToggleFavorite = {
+                                onToggleFavorite(diary)
+                            },
                         )
                     }
                 }
@@ -337,6 +345,7 @@ private fun DiaryListContent(
     selectedIds: Set<Long>,
     diaryFilters: DiaryFilters,
     onCancelSelection: () -> Unit,
+    onToggleFavorite: (diary: Diary) -> Unit,
     onToggleSelection: (id: Long?) -> Unit,
     onRemoveSelection: (id: Long?) -> Unit,
     onAddSelection: (id: Long?) -> Unit,
@@ -361,6 +370,7 @@ private fun DiaryListContent(
             diaryFilters = diaryFilters,
             onDeleteDiaries = onDeleteDiaries,
             onCancelSelection = onCancelSelection,
+            onToggleFavorite = onToggleFavorite,
         )
     } else {
         EmptyDiaryList(
@@ -429,6 +439,7 @@ private fun DiaryItem(
     diary: Diary,
     selected: Boolean,
     inSelectionMode: Boolean,
+    onToggleFavorite: () -> Unit,
 ) {
     val transition = updateTransition(selected, label = "selected")
     val padding by transition.animateDp(label = "padding") { _ ->
@@ -571,10 +582,21 @@ private fun DiaryItem(
             }
         }
 
+        // favorite icon
         Icon(
-            imageVector = Icons.Filled.Favorite,
+            imageVector = if (diary.isFavorite) {
+                Icons.Filled.Favorite
+            } else {
+                Icons.Filled.FavoriteBorder
+            },
             contentDescription = null,
-            modifier = Modifier.padding(12.dp).size(20.dp).align(Alignment.BottomEnd),
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable {
+                    onToggleFavorite()
+                }
+                .padding(16.dp)
+                .align(Alignment.BottomEnd),
         )
     }
 }

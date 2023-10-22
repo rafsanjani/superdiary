@@ -61,9 +61,7 @@ internal class InMemoryDataSource : DataSource {
     }
 
     override suspend fun deleteAll() = withPublishDiaries {
-        withPublishDiaries {
-            diaries.clear()
-        }
+        diaries.clear()
     }
 
     private fun <T> withPublishDiaries(func: () -> T): T {
@@ -74,5 +72,17 @@ internal class InMemoryDataSource : DataSource {
         }
 
         return result
+    }
+
+    override suspend fun update(diary: Diary) = withPublishDiaries {
+        val targetDiary = diaries.firstOrNull { it.id == diary.id } ?: return@withPublishDiaries 0
+
+        diaries[diaries.indexOf(targetDiary)] = targetDiary.copy(
+            entry = diary.entry,
+            date = diary.date,
+            isFavorite = diary.isFavorite,
+        )
+
+        return@withPublishDiaries 1
     }
 }

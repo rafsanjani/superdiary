@@ -99,6 +99,7 @@ class DiaryGroupingTest {
                     unit = durationSpacing,
                     timeZone = TimeZone.UTC,
                 ),
+                isFavorite = false,
             )
         }
     }

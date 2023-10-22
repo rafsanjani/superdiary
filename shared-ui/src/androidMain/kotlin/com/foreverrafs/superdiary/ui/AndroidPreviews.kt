@@ -2,8 +2,10 @@ package com.foreverrafs.superdiary.ui
 
 import android.content.res.Configuration
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
@@ -31,6 +33,10 @@ fun LoadingDiariesPreview() {
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
                 onDeleteDiaries = {},
+                onToggleFavorite = {},
+                snackbarHostState = remember {
+                    SnackbarHostState()
+                },
             )
         }
     }
@@ -49,6 +55,10 @@ fun ErrorLoadingDiariesPreview() {
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
                 onDeleteDiaries = {},
+                onToggleFavorite = {},
+                snackbarHostState = remember {
+                    SnackbarHostState()
+                },
             )
         }
     }
@@ -73,6 +83,7 @@ fun EmptySearchDiaryListPreview() {
                 diaryFilters = DiaryFilters(),
                 onDeleteDiaries = {},
                 onCancelSelection = {},
+                onToggleFavorite = {},
             )
         }
     }
@@ -91,6 +102,10 @@ fun EmptyDiaryListPreview() {
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
                 onDeleteDiaries = {},
+                onToggleFavorite = {},
+                snackbarHostState = remember {
+                    SnackbarHostState()
+                },
             )
         }
     }
@@ -109,6 +124,7 @@ fun DiaryListPreview() {
                             id = Random.nextLong(),
                             entry = "Hello World $it",
                             date = Clock.System.now(),
+                            isFavorite = false,
                         )
                     },
                     filtered = false,
@@ -117,6 +133,10 @@ fun DiaryListPreview() {
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
                 onDeleteDiaries = {},
+                onToggleFavorite = {},
+                snackbarHostState = remember {
+                    SnackbarHostState()
+                },
             )
         }
     }
@@ -137,6 +157,10 @@ fun FilteredEmptyPreview() {
                 onApplyFilters = {},
                 diaryFilters = DiaryFilters(),
                 onDeleteDiaries = {},
+                onToggleFavorite = {},
+                snackbarHostState = remember {
+                    SnackbarHostState()
+                },
             )
         }
     }
@@ -154,6 +178,7 @@ fun SelectedDiariesPreview() {
                         id = Random.nextLong(),
                         entry = "Hello World $it",
                         date = Clock.System.now(),
+                        isFavorite = false,
                     )
                 },
                 onAddEntry = {},
@@ -166,6 +191,7 @@ fun SelectedDiariesPreview() {
                 diaryFilters = DiaryFilters(),
                 onDeleteDiaries = {},
                 onCancelSelection = {},
+                onToggleFavorite = {},
             )
         }
     }

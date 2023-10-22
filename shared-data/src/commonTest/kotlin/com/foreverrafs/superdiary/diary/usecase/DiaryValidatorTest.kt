@@ -30,6 +30,7 @@ class DiaryValidatorTest {
                 ),
                 TimeZone.UTC,
             ),
+            isFavorite = false,
         )
 
         assertFailure {
@@ -47,6 +48,7 @@ class DiaryValidatorTest {
                 ),
                 TimeZone.UTC,
             ),
+            isFavorite = false,
         )
 
         assertFailure {
@@ -59,6 +61,7 @@ class DiaryValidatorTest {
         val diary = Diary(
             entry = "Bad Diary",
             date = testClock.now(),
+            isFavorite = false,
         )
 
         assertThat(validator.validate(diary)).isInstanceOf<Unit>()

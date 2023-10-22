@@ -10,13 +10,14 @@ import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryBetweenDatesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByEntryUseCase
+import com.foreverrafs.superdiary.diary.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.diary.utils.DiaryValidator
 import kotlinx.datetime.Clock
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 fun useCaseModule() = module {
-    factory<DataSource> { LocalDataSource(get()) }
+    single<DataSource> { LocalDataSource(get()) }
     factory<Clock> { Clock.System }
     singleOf(::AddDiaryUseCase)
     singleOf(::GetAllDiariesUseCase)
@@ -26,6 +27,7 @@ fun useCaseModule() = module {
     singleOf(::SearchDiaryByDateUseCase)
     singleOf(::DeleteDiaryUseCase)
     singleOf(::DeleteMultipleDiariesUseCase)
+    singleOf(::UpdateDiaryUseCase)
     singleOf(::Database)
     singleOf(::DiaryValidator)
 }

@@ -7,15 +7,16 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 internal fun screenModules(): Module = module {
-    factory {
+    single {
         DiaryListScreenModel(
             getAllDiariesUseCase = get(),
             searchDiaryByEntryUseCase = get(),
             searchDiaryByDateUseCase = get(),
             deleteMultipleDiariesUseCase = get(),
+            updateDiaryUseCase = get(),
         )
     }
-    factory {
+    single {
         CreateDiaryScreenModel(
             addDiaryUseCase = get(),
         )

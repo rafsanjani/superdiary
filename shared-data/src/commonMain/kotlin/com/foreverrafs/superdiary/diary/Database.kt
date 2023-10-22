@@ -16,8 +16,13 @@ class Database(databaseDriver: DatabaseDriver) {
     private val superDiaryDatabase = SuperDiaryDatabase(driver)
     private val queries = superDiaryDatabase.databaseQueries
 
-    private val diaryMapper = { id: Long, entry: String, date: String ->
-        Diary(id, entry, LocalDate.parse(date).toInstant())
+    private val diaryMapper = { id: Long, entry: String, date: String, favorite: Long ->
+        Diary(
+            id = id,
+            entry = entry,
+            date = LocalDate.parse(date).toInstant(),
+            isFavorite = favorite.asBoolean(),
+        )
     }
 
     /**
@@ -65,5 +70,19 @@ class Database(databaseDriver: DatabaseDriver) {
             .asFlow()
             .mapToList(Dispatchers.Main)
 
+    fun update(diary: Diary): Int {
+        queries.update(
+            id = diary.id,
+            entry = diary.entry,
+            date = diary.date.toDate().toString(),
+            favorite = diary.isFavorite.asLong(),
+        )
+
+        return queries.getAffectedRows().executeAsOne().toInt()
+    }
+
     fun clearDiaries() = queries.deleteAll()
+
+    private fun Boolean.asLong(): Long = if (this) 1 else 0
+    private fun Long.asBoolean(): Boolean = this != 0L
 }

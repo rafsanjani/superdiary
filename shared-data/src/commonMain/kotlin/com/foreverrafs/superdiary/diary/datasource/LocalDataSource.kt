@@ -40,6 +40,10 @@ class LocalDataSource(private val database: Database) : DataSource {
         return database.findByDate(date)
     }
 
+    override suspend fun update(diary: Diary): Int {
+        return database.update(diary)
+    }
+
     override suspend fun deleteAll() {
         return database.clearDiaries()
     }

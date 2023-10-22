@@ -7,8 +7,10 @@ import assertk.assertions.contains
 import assertk.assertions.doesNotContain
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
+import assertk.assertions.isTrue
 import assertk.assertions.messageContains
 import com.foreverrafs.superdiary.diary.Result
 import com.foreverrafs.superdiary.diary.datasource.DataSource
@@ -41,6 +43,7 @@ class DiaryUseCaseTest {
     private val searchDiaryByDateUseCase = SearchDiaryByDateUseCase(dataSource)
     private val searchDiaryByEntryUseCase = SearchDiaryByEntryUseCase(dataSource)
     private val deleteMultipleDiariesUseCase = DeleteMultipleDiariesUseCase(dataSource)
+    private val updateDiaryUseCase = UpdateDiaryUseCase(dataSource)
 
     @BeforeTest
     fun setup() {
@@ -59,6 +62,7 @@ class DiaryUseCaseTest {
                         Random.nextLong(),
                         entry = "Diary Entry #$it",
                         date = currentDate,
+                        isFavorite = false,
                     ),
                 )
 
@@ -74,6 +78,7 @@ class DiaryUseCaseTest {
         val diary = Diary(
             entry = "New Entry",
             date = Instant.parse("2023-03-03T03:33:25.587Z"),
+            isFavorite = false,
         )
 
         relaxedAddDiaryUseCase(diary)
@@ -92,6 +97,7 @@ class DiaryUseCaseTest {
             id = Random.nextLong(),
             entry = "New Entry today",
             date = Clock.System.now(),
+            isFavorite = false,
         )
 
         addDiaryUseCase(diary)
@@ -111,6 +117,7 @@ class DiaryUseCaseTest {
         val diary = Diary(
             entry = "New Entry",
             date = today.plus(1, DateTimeUnit.DAY, TimeZone.currentSystemDefault()),
+            isFavorite = false,
         )
 
         val result = addDiaryUseCase(diary)
@@ -125,6 +132,7 @@ class DiaryUseCaseTest {
         val diary = Diary(
             entry = "New Entry",
             date = today.minus(1, DateTimeUnit.DAY, TimeZone.currentSystemDefault()),
+            isFavorite = false,
         )
 
         val result = addDiaryUseCase(diary)
@@ -251,6 +259,33 @@ class DiaryUseCaseTest {
             // fetch the remaining diaries
             val currentList = awaitItem()
             assertThat(currentList.size).isEqualTo(originalList.size - 2)
+        }
+    }
+
+    @Test
+    fun `Update valid diary entry returns 1 updated row`() = runTest {
+        getAllDiariesUseCase().test {
+            val originalList = awaitItem()
+
+            var firstEntry = originalList.first()
+
+            // verify that it isnt' favorited
+            assertThat(firstEntry.isFavorite).isFalse()
+
+            val updated = updateDiaryUseCase(
+                firstEntry.copy(
+                    isFavorite = true,
+                ),
+            )
+
+            // fetch the remaining diaries
+            val currentList = awaitItem()
+
+            firstEntry = currentList.first()
+
+            // verify that it has been updated and changed to favorite = true
+            assertThat(firstEntry.isFavorite).isTrue()
+            assertThat(updated).isTrue()
         }
     }
 }

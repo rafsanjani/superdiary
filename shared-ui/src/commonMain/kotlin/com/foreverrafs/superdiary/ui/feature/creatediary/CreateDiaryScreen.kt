@@ -77,6 +77,7 @@ object CreateDiaryScreen : Screen {
                         entry = entry,
                         date = Clock.System
                             .now(),
+                        isFavorite = false,
                     ),
                 )
             },

@@ -18,3 +18,9 @@ SELECT * FROM diary WHERE date BETWEEN ? AND ?;
 
 deleteAll:
 DELETE FROM diary;
+
+update:
+REPLACE INTO diary (id, entry, date, favorite) VALUES(?, ?,?, ?);
+
+getAffectedRows:
+SELECT changes();
