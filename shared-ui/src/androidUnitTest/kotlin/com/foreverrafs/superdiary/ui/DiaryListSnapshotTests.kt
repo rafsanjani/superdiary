@@ -32,9 +32,10 @@ class DiaryListSnapshotTests : KoinTest {
                     state = DiaryListScreenState.Loading,
                     onAddEntry = {},
                     onApplyFilters = {},
-                    onDeleteDiaries = {},
+                    onDeleteDiaries = { true },
                     showSearchBar = true,
                     onToggleFavorite = {},
+                    diaryFilters = DiaryFilters(),
                 )
             }
         }
@@ -58,9 +59,10 @@ class DiaryListSnapshotTests : KoinTest {
                     ),
                     onAddEntry = {},
                     onApplyFilters = {},
-                    onDeleteDiaries = {},
+                    onDeleteDiaries = { true },
                     showSearchBar = true,
                     onToggleFavorite = {},
+                    diaryFilters = DiaryFilters(),
                 )
             }
         }
@@ -77,9 +79,10 @@ class DiaryListSnapshotTests : KoinTest {
                     ),
                     onAddEntry = {},
                     onApplyFilters = {},
-                    onDeleteDiaries = {},
+                    onDeleteDiaries = { true },
                     showSearchBar = true,
                     onToggleFavorite = {},
+                    diaryFilters = DiaryFilters(),
                 )
             }
         }
@@ -96,9 +99,10 @@ class DiaryListSnapshotTests : KoinTest {
                     ),
                     onAddEntry = {},
                     onApplyFilters = {},
-                    onDeleteDiaries = {},
+                    onDeleteDiaries = { true },
                     onToggleFavorite = {},
                     showSearchBar = true,
+                    diaryFilters = DiaryFilters(),
                 )
             }
         }
@@ -114,9 +118,10 @@ class DiaryListSnapshotTests : KoinTest {
                     ),
                     onAddEntry = {},
                     onApplyFilters = {},
-                    onDeleteDiaries = {},
+                    onDeleteDiaries = { true },
                     onToggleFavorite = {},
                     showSearchBar = true,
+                    diaryFilters = DiaryFilters(),
                 )
             }
         }
