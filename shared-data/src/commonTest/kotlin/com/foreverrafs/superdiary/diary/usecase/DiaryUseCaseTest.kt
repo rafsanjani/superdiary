@@ -230,7 +230,7 @@ class DiaryUseCaseTest {
     @Test
     fun `Delete All Diaries Clears Diaries`() = runTest {
         getAllDiariesUseCase().test {
-            val originalDiaryList = expectMostRecentItem()
+            val originalDiaryList = expectMostRecentItem().toList()
 
             assertThat(originalDiaryList).isNotEmpty()
 
