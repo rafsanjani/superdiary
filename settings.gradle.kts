@@ -35,4 +35,3 @@ rootProject.name = "superdiary"
 include(":androidApp")
 include(":shared-data")
 include(":shared-ui")
-include(":baselineprofile")

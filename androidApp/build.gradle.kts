@@ -4,7 +4,6 @@ plugins {
     kotlin("multiplatform")
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.android.application)
-    id("androidx.baselineprofile")
     id("org.sonarqube") version "4.4.1.3373"
 }
 
@@ -58,8 +57,4 @@ android {
             isDebuggable = false
         }
     }
-}
-dependencies {
-    implementation("androidx.profileinstaller:profileinstaller:1.3.1")
-    "baselineProfile"(project(":baselineprofile"))
 }
