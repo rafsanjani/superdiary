@@ -10,7 +10,7 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryList
 
 @Composable
-fun FavoriteScreen(state: FavoritesTabScreenModel.FavoritesTabScreenState) {
+fun FavoritesTabScreen(state: FavoritesTabScreenState) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -18,26 +18,24 @@ fun FavoriteScreen(state: FavoritesTabScreenModel.FavoritesTabScreenState) {
         },
     ) {
         when (state) {
-            is FavoritesTabScreenModel.FavoritesTabScreenState.Favorites -> {
+            is FavoritesTabScreenState.Favorites -> {
                 DiaryList(
                     modifier = Modifier.fillMaxSize().padding(it),
                     diaries = state.diaries,
-                    onToggleFavorite = {},
-                    onCancelSelection = {},
+                    inSelectionMode = false,
+                    diaryFilters = DiaryFilters(),
+                    selectedIds = setOf(),
+                    showSearchBar = false,
                     onAddSelection = {},
                     onRemoveSelection = {},
-                    onDeleteDiaries = {},
-                    onApplyFilters = {},
-                    onAddEntry = {},
                     onToggleSelection = {},
-                    diaryFilters = DiaryFilters(),
-                    showSearchAndModifier = false,
-                    selectedIds = setOf(),
-                    inSelectionMode = false,
-                )
+                    onToggleFavorite = {},
+                    onDeleteDiaries = {},
+                    onCancelSelection = {},
+                ) {}
             }
 
-            is FavoritesTabScreenModel.FavoritesTabScreenState.Idle -> {}
+            is FavoritesTabScreenState.Idle -> {}
         }
     }
 }
