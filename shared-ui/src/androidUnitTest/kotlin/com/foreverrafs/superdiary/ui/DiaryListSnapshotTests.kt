@@ -4,9 +4,9 @@ import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreenState
-import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import org.junit.Rule
@@ -29,7 +29,7 @@ class DiaryListSnapshotTests : KoinTest {
         onAddEntry = {},
         onDeleteDiaries = { true },
         onApplyFilters = {},
-        onToggleFavorite = {},
+        onToggleFavorite = { false },
     )
 
     @Test
