@@ -32,15 +32,15 @@ class LocalDataSource(private val database: Database) : DataSource {
         return database.getFavoriteDiaries()
     }
 
-    override suspend fun find(entry: String): Flow<List<Diary>> {
+    override fun find(entry: String): Flow<List<Diary>> {
         return database.findDiaryByEntry(entry)
     }
 
-    override suspend fun find(from: Instant, to: Instant): Flow<List<Diary>> {
+    override fun find(from: Instant, to: Instant): Flow<List<Diary>> {
         return database.findByDateRange(from, to)
     }
 
-    override suspend fun findByDate(date: Instant): Flow<List<Diary>> {
+    override fun findByDate(date: Instant): Flow<List<Diary>> {
         return database.findByDate(date)
     }
 

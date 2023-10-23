@@ -1,15 +1,15 @@
 package com.foreverrafs.superdiary.ui.feature.diarylist
 
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import cafe.adriel.voyager.core.screen.Screen
@@ -46,9 +46,6 @@ object DiaryListTab : Screen {
 
         val navigator = LocalNavigator.currentOrThrow
 
-        val snackbarHostState = remember { SnackbarHostState() }
-        val coroutineScope = rememberCoroutineScope()
-
         val diaryListActions = remember {
             DiaryListActions(
                 onAddEntry = {
@@ -60,19 +57,12 @@ object DiaryListTab : Screen {
                 onApplyFilters = {
                     diaryFilters = it
                 },
-                onToggleFavorite = {
-                    screenModel.onToggleFavorite(diary = it)
-
-                    coroutineScope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = "Favorites Updated!",
-                        )
-                    }
-                },
+                onToggleFavorite = screenModel::toggleFavorite,
             )
         }
 
         DiaryListScreen(
+            modifier = Modifier.fillMaxSize(),
             state = screenState,
             showSearchBar = true,
             diaryFilters = diaryFilters,
@@ -185,8 +175,8 @@ class DiaryListScreenModel(
         return affectedRows == diaries.size
     }
 
-    fun onToggleFavorite(diary: Diary) = coroutineScope.launch {
-        updateDiaryUseCase(
+    suspend fun toggleFavorite(diary: Diary): Boolean {
+        return updateDiaryUseCase(
             diary.copy(
                 isFavorite = !diary.isFavorite,
             ),

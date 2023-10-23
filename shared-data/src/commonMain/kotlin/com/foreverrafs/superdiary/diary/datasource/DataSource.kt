@@ -55,17 +55,17 @@ interface DataSource {
      * Search for matching Diaries with entries matching [entry]. This
      * will perform a FTS of the query and return all matching diaries.
      */
-    suspend fun find(entry: String): Flow<List<Diary>>
+    fun find(entry: String): Flow<List<Diary>>
 
     /**
      * Search for matching diaries for a specific date
      */
-    suspend fun findByDate(date: Instant): Flow<List<Diary>>
+    fun findByDate(date: Instant): Flow<List<Diary>>
 
     /**
      * Search for diaries between two dates inclusive
      */
-    suspend fun find(from: Instant, to: Instant): Flow<List<Diary>>
+    fun find(from: Instant, to: Instant): Flow<List<Diary>>
 
     /**
      * Deletes all the diary entries from the data source.

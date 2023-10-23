@@ -8,7 +8,7 @@ import kotlinx.datetime.Instant
 class SearchDiaryBetweenDatesUseCase(
     private val dataSource: DataSource,
 ) {
-    suspend operator fun invoke(from: Instant, to: Instant): Flow<List<Diary>> {
+    operator fun invoke(from: Instant, to: Instant): Flow<List<Diary>> {
         require(from <= to) {
             "The date $from should be less than or equal to $to"
         }

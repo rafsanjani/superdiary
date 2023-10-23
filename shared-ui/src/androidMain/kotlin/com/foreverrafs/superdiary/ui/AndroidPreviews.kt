@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.ui
 
 import android.content.res.Configuration
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,7 +23,7 @@ import kotlin.random.Random
 private val diaryListActions = DiaryListActions(
     onAddEntry = {},
     onDeleteDiaries = { true },
-    onToggleFavorite = {},
+    onToggleFavorite = { true },
     onApplyFilters = {},
 )
 
@@ -72,13 +73,11 @@ fun EmptySearchDiaryListPreview() {
                 inSelectionMode = false,
                 diaryFilters = DiaryFilters(),
                 selectedIds = setOf(),
-                onAddSelection = {},
-                onRemoveSelection = {},
-                onToggleSelection = {},
-                onToggleFavorite = {},
                 onDeleteDiaries = {},
                 onCancelSelection = {},
-            ) {}
+                diaryListActions = diaryListActions,
+                snackbarHostState = SnackbarHostState(),
+            )
         }
     }
 }
@@ -163,13 +162,11 @@ fun SelectedDiariesPreview() {
                 inSelectionMode = true,
                 diaryFilters = DiaryFilters(),
                 selectedIds = setOf(0, 1),
-                onAddSelection = {},
-                onRemoveSelection = {},
-                onToggleSelection = {},
-                onToggleFavorite = {},
                 onDeleteDiaries = {},
                 onCancelSelection = {},
-            ) {}
+                diaryListActions = diaryListActions,
+                snackbarHostState = SnackbarHostState(),
+            )
         }
     }
 }

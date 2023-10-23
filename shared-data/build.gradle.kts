@@ -14,6 +14,7 @@ sqldelight {
         deriveSchemaFromMigrations.set(true)
     }
 }
+
 kover {
     useJacoco("0.8.10")
 }

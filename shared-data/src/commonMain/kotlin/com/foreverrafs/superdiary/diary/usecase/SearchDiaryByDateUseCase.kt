@@ -8,7 +8,7 @@ import kotlinx.datetime.Instant
 class SearchDiaryByDateUseCase(
     private val dataSource: DataSource,
 ) {
-    suspend operator fun invoke(date: Instant): Flow<List<Diary>> {
+    operator fun invoke(date: Instant): Flow<List<Diary>> {
         return dataSource.findByDate(date)
     }
 }
