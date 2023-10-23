@@ -31,8 +31,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -58,7 +56,6 @@ import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
-import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryFilterSheet
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryHeader
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiarySearchBar
@@ -88,45 +85,31 @@ fun DiaryListScreen(
     diaryFilters: DiaryFilters,
     showSearchBar: Boolean,
     diaryListActions: DiaryListActions,
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
+    val screenModifier = modifier
+        .fillMaxSize()
 
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(
-                hostState = snackbarHostState,
-            )
-        },
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            SuperDiaryAppBar()
-        },
-    ) {
-        val screenModifier = modifier
-            .padding(top = it.calculateTopPadding())
-            .fillMaxSize()
-
-        when (state) {
-            is DiaryListScreenState.Content -> {
-                DiaryListContent(
-                    modifier = screenModifier,
-                    diaries = state.diaries,
-                    isFiltered = state.filtered,
-                    showSearchBar = showSearchBar,
-                    onAddEntry = diaryListActions.onAddEntry,
-                    diaryListActions = diaryListActions,
-                    selectedIds = emptySet(),
-                    diaryFilters = diaryFilters,
-                    snackbarHostState = snackbarHostState,
-                )
-            }
-
-            is DiaryListScreenState.Error -> ErrorContent(
+    when (state) {
+        is DiaryListScreenState.Content -> {
+            DiaryListContent(
                 modifier = screenModifier,
+                diaries = state.diaries,
+                isFiltered = state.filtered,
+                showSearchBar = showSearchBar,
+                onAddEntry = diaryListActions.onAddEntry,
+                diaryListActions = diaryListActions,
+                selectedIds = emptySet(),
+                diaryFilters = diaryFilters,
+                snackbarHostState = snackbarHostState,
             )
-
-            is DiaryListScreenState.Loading -> LoadingContent(modifier = screenModifier)
         }
+
+        is DiaryListScreenState.Error -> ErrorContent(
+            modifier = screenModifier,
+        )
+
+        is DiaryListScreenState.Loading -> LoadingContent(modifier = screenModifier)
     }
 }
 
@@ -161,6 +144,8 @@ fun DiaryList(
     val groupedDiaries = remember(diaries) {
         diaries.groupByDate()
     }
+
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = modifier
@@ -244,7 +229,6 @@ fun DiaryList(
                         items = diaries.sortedByDescending { it.id },
                         key = { item -> item.id.toString() },
                     ) { diary ->
-                        val coroutineScope = rememberCoroutineScope()
 
                         DiaryItem(
                             modifier = Modifier

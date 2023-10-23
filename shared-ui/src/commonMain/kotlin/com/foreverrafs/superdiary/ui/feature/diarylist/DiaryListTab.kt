@@ -17,18 +17,16 @@ import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.DeleteMultipleDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.diary.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.diary.utils.toInstant
+import com.foreverrafs.superdiary.ui.LocalSnackbarHostState
 import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryScreen
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 
 object DiaryListTab : Screen {
@@ -45,6 +43,7 @@ object DiaryListTab : Screen {
         observeFilterEvents(diaryFilters, screenModel)
 
         val navigator = LocalNavigator.currentOrThrow
+        val snackbarHostState = LocalSnackbarHostState.current
 
         val diaryListActions = remember {
             DiaryListActions(
@@ -67,6 +66,7 @@ object DiaryListTab : Screen {
             showSearchBar = true,
             diaryFilters = diaryFilters,
             diaryListActions = diaryListActions,
+            snackbarHostState = snackbarHostState,
         )
     }
 
@@ -105,25 +105,11 @@ class DiaryListScreenModel(
     private val searchDiaryByEntryUseCase: SearchDiaryByEntryUseCase,
     private val searchDiaryByDateUseCase: SearchDiaryByDateUseCase,
     private val deleteMultipleDiariesUseCase: DeleteMultipleDiariesUseCase,
-    private val addDiaryUseCase: AddDiaryUseCase,
     private val updateDiaryUseCase: UpdateDiaryUseCase,
 ) : StateScreenModel<DiaryListScreenState>(DiaryListScreenState.Loading) {
 
     init {
         observeDiaries()
-        screenModelScope.launch {
-            (0..20).map { number ->
-                async {
-                    addDiaryUseCase(
-                        Diary(
-                            entry = "Rafsanjani $number",
-                            date = Clock.System.now(),
-                            isFavorite = false,
-                        ),
-                    )
-                }
-            }
-        }
     }
 
     fun observeDiaries() = screenModelScope.launch {
