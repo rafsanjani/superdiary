@@ -35,6 +35,17 @@ jobs:
           gradle-home-cache-cleanup: true
           cache-read-only: false
 
+      - name: Analyze with Sonar
+        id: sonar
+        uses: gradle/gradle-build-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          arguments: sonar
+          gradle-home-cache-cleanup: true
+          cache-read-only: false
+
       - name: Snapshot tests (shared-ui)
         uses: gradle/gradle-build-action@v2
         with:

@@ -3,11 +3,14 @@ package com.foreverrafs.superdiary.ui.feature.favorites
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryList
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
+import com.foreverrafs.superdiary.ui.feature.diarylist.Empty
 
 @Composable
 fun FavoritesTabScreen(state: FavoritesTabScreenState) {
@@ -26,13 +29,11 @@ fun FavoritesTabScreen(state: FavoritesTabScreenState) {
                     diaryFilters = DiaryFilters(),
                     selectedIds = setOf(),
                     showSearchBar = false,
-                    onAddSelection = {},
-                    onRemoveSelection = {},
-                    onToggleSelection = {},
-                    onToggleFavorite = {},
                     onDeleteDiaries = {},
                     onCancelSelection = {},
-                ) {}
+                    diaryListActions = DiaryListActions.Empty,
+                    snackbarHostState = SnackbarHostState(),
+                )
             }
 
             is FavoritesTabScreenState.Idle -> {}

@@ -42,10 +42,5 @@ android {
             isMinifyEnabled = true
             proguardFile("proguard-rules.pro")
         }
-        create("benchmark") {
-            initWith(buildTypes.getByName("release"))
-            matchingFallbacks += listOf("release")
-            isDebuggable = false
-        }
     }
 }

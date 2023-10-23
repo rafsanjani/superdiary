@@ -12,7 +12,6 @@ import org.jetbrains.compose.resources.resource
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 actual fun font(
-    name: String,
     resource: String,
     weight: FontWeight,
     style: FontStyle,

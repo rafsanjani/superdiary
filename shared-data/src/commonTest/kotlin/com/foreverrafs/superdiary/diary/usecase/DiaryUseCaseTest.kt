@@ -258,6 +258,8 @@ class DiaryUseCaseTest {
 
             // fetch the remaining diaries
             val currentList = awaitItem()
+
+            cancelAndIgnoreRemainingEvents()
             assertThat(currentList.size).isEqualTo(originalList.size - 2)
         }
     }

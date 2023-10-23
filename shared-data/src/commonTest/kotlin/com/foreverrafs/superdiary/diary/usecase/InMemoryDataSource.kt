@@ -40,7 +40,7 @@ internal class InMemoryDataSource : DataSource {
         }
     }
 
-    override suspend fun find(entry: String): Flow<List<Diary>> {
+    override fun find(entry: String): Flow<List<Diary>> {
         return diariesFlow.map { diaries ->
             diaries.filter {
                 it.entry.contains(entry, ignoreCase = true)
@@ -48,7 +48,7 @@ internal class InMemoryDataSource : DataSource {
         }
     }
 
-    override suspend fun find(from: Instant, to: Instant): Flow<List<Diary>> {
+    override fun find(from: Instant, to: Instant): Flow<List<Diary>> {
         return diariesFlow.map { diaries ->
             diaries.filter {
                 val diaryDate = it.date.toDate()
@@ -58,7 +58,7 @@ internal class InMemoryDataSource : DataSource {
         }
     }
 
-    override suspend fun findByDate(date: Instant): Flow<List<Diary>> {
+    override fun findByDate(date: Instant): Flow<List<Diary>> {
         return diariesFlow.map { diaries ->
             diaries.filter {
                 it.date.toDate() == date.toDate()

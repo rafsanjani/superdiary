@@ -90,7 +90,6 @@ fun SuperdiaryAppTheme(
 fun righteousFontFamily(): FontFamily = FontFamily(
     listOf(
         font(
-            name = "Righteous Regular",
             resource = "righteous_regular",
             weight = FontWeight.Normal,
             style = FontStyle.Normal,
@@ -102,19 +101,16 @@ fun righteousFontFamily(): FontFamily = FontFamily(
 fun montserratAlternativesFontFamily(): FontFamily = FontFamily(
     listOf(
         font(
-            name = "Righteous Regular",
             resource = "montserrat_alternatives_regular",
             weight = FontWeight.Normal,
             style = FontStyle.Normal,
         ),
         font(
-            name = "Righteous Regular",
             resource = "montserrat_alternatives_bold",
             weight = FontWeight.Bold,
             style = FontStyle.Normal,
         ),
         font(
-            name = "Righteous Regular",
             resource = "montserrat_alternatives_semibold",
             weight = FontWeight.Bold,
             style = FontStyle.Normal,
