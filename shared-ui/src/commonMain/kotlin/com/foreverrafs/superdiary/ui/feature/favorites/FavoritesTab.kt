@@ -1,7 +1,7 @@
 package com.foreverrafs.superdiary.ui.feature.favorites
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,8 +34,8 @@ object FavoritesTab : Tab {
 
     override val options: TabOptions
         @Composable get() {
-            val title = "Home"
-            val icon = rememberVectorPainter(Icons.Default.Favorite)
+            val title = "Favorites"
+            val icon = rememberVectorPainter(Icons.Default.FavoriteBorder)
 
             return remember {
                 TabOptions(
