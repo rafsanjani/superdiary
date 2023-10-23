@@ -178,7 +178,7 @@ fun DiaryDatePickerPreview() {
     SuperdiaryAppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             DiaryDatePicker(
-                onDismissRequest = { /*TODO*/ },
+                onDismissRequest = {},
                 onDateSelected = {},
                 selectedDate = LocalDate.now().toKotlinLocalDate(),
             )
