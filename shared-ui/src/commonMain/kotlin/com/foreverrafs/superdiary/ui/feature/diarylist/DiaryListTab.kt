@@ -11,7 +11,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -111,7 +111,7 @@ class DiaryListScreenModel(
 
     init {
         observeDiaries()
-        coroutineScope.launch {
+        screenModelScope.launch {
             (0..20).map { number ->
                 async {
                     addDiaryUseCase(
@@ -126,7 +126,7 @@ class DiaryListScreenModel(
         }
     }
 
-    fun observeDiaries() = coroutineScope.launch {
+    fun observeDiaries() = screenModelScope.launch {
         getAllDiariesUseCase().collect { diaries ->
             mutableState.update {
                 DiaryListScreenState.Content(
@@ -137,7 +137,7 @@ class DiaryListScreenModel(
         }
     }
 
-    fun filterByEntry(entry: String) = coroutineScope.launch {
+    fun filterByEntry(entry: String) = screenModelScope.launch {
         searchDiaryByEntryUseCase(entry).collect { diaries ->
             mutableState.update {
                 DiaryListScreenState.Content(
@@ -148,7 +148,7 @@ class DiaryListScreenModel(
         }
     }
 
-    fun filterByDate(date: LocalDate) = coroutineScope.launch {
+    fun filterByDate(date: LocalDate) = screenModelScope.launch {
         searchDiaryByDateUseCase(date.toInstant()).collect { diaries ->
             mutableState.update {
                 DiaryListScreenState.Content(
@@ -159,7 +159,7 @@ class DiaryListScreenModel(
         }
     }
 
-    fun filterByDateAndEntry(date: LocalDate, entry: String) = coroutineScope.launch {
+    fun filterByDateAndEntry(date: LocalDate, entry: String) = screenModelScope.launch {
         searchDiaryByDateUseCase(date.toInstant()).collect { diaries ->
             mutableState.update {
                 DiaryListScreenState.Content(

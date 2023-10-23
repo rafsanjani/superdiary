@@ -20,23 +20,19 @@ fun FavoritesTabScreen(state: FavoritesTabScreenState) {
             SuperDiaryAppBar()
         },
     ) {
-        when (state) {
-            is FavoritesTabScreenState.Favorites -> {
-                DiaryList(
-                    modifier = Modifier.fillMaxSize().padding(it),
-                    diaries = state.diaries,
-                    inSelectionMode = false,
-                    diaryFilters = DiaryFilters(),
-                    selectedIds = setOf(),
-                    showSearchBar = false,
-                    onDeleteDiaries = {},
-                    onCancelSelection = {},
-                    diaryListActions = DiaryListActions.Empty,
-                    snackbarHostState = SnackbarHostState(),
-                )
-            }
-
-            is FavoritesTabScreenState.Idle -> {}
+        if (state is FavoritesTabScreenState.Favorites) {
+            DiaryList(
+                modifier = Modifier.fillMaxSize().padding(it),
+                diaries = state.diaries,
+                inSelectionMode = false,
+                diaryFilters = DiaryFilters(),
+                selectedIds = setOf(),
+                showSearchBar = false,
+                onDeleteDiaries = {},
+                onCancelSelection = {},
+                diaryListActions = DiaryListActions.Empty,
+                snackbarHostState = SnackbarHostState(),
+            )
         }
     }
 }
