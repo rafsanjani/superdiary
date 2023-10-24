@@ -42,7 +42,7 @@ internal fun DiaryHeader(
             }
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background,
+            containerColor = MaterialTheme.colorScheme.background.copy(alpha = 0.85f),
         ),
         shape = RoundedCornerShape(0.dp),
     ) {
