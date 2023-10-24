@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -165,7 +165,7 @@ class CreateDiaryScreenModel(
         data class Failure(val error: Throwable) : CreateDiaryScreenState
     }
 
-    fun saveDiary(diary: Diary) = coroutineScope.launch {
+    fun saveDiary(diary: Diary) = screenModelScope.launch {
         when (val result = addDiaryUseCase(diary)) {
             is Result.Success -> mutableState.update {
                 CreateDiaryScreenState.Success

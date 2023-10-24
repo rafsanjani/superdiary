@@ -1,13 +1,18 @@
 package com.foreverrafs.superdiary.ui
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
+import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
@@ -27,20 +32,36 @@ private val diaryListActions = DiaryListActions(
     onApplyFilters = {},
 )
 
+@Composable
+internal fun TestAppContainer(content: @Composable () -> Unit) {
+    SuperdiaryAppTheme {
+        Scaffold(
+            topBar = {
+                SuperDiaryAppBar()
+            },
+            contentColor = MaterialTheme.colorScheme.background,
+        ) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it),
+            ) {
+                content()
+            }
+        }
+    }
+}
+
 @Preview
 @Composable
 fun LoadingDiariesPreview() {
-    SuperdiaryAppTheme {
-        Surface(
-            color = MaterialTheme.colorScheme.background,
-        ) {
-            DiaryListScreen(
-                state = DiaryListScreenState.Loading,
-                showSearchBar = false,
-                diaryFilters = DiaryFilters(),
-                diaryListActions = diaryListActions,
-            )
-        }
+    TestAppContainer {
+        DiaryListScreen(
+            state = DiaryListScreenState.Loading,
+            showSearchBar = false,
+            diaryFilters = DiaryFilters(),
+            diaryListActions = diaryListActions,
+        )
     }
 }
 
@@ -129,18 +150,16 @@ fun DiaryListPreview() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
 @Composable
 fun FilteredEmptyPreview() {
-    SuperdiaryAppTheme {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            DiaryListScreen(
-                state = DiaryListScreenState.Content(
-                    diaries = listOf(),
-                    filtered = true,
-                ),
-                showSearchBar = true,
-                diaryFilters = DiaryFilters(),
-                diaryListActions = diaryListActions,
-            )
-        }
+    TestAppContainer {
+        DiaryListScreen(
+            state = DiaryListScreenState.Content(
+                diaries = listOf(),
+                filtered = true,
+            ),
+            showSearchBar = true,
+            diaryFilters = DiaryFilters(),
+            diaryListActions = diaryListActions,
+        )
     }
 }
 
@@ -148,26 +167,24 @@ fun FilteredEmptyPreview() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
 @Composable
 fun SelectedDiariesPreview() {
-    SuperdiaryAppTheme {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            DiaryList(
-                diaries = (0..10).map {
-                    Diary(
-                        id = Random.nextLong(),
-                        entry = "Hello World $it",
-                        date = Clock.System.now(),
-                        isFavorite = false,
-                    )
-                },
-                inSelectionMode = true,
-                diaryFilters = DiaryFilters(),
-                selectedIds = setOf(0, 1),
-                onDeleteDiaries = {},
-                onCancelSelection = {},
-                diaryListActions = diaryListActions,
-                snackbarHostState = SnackbarHostState(),
-            )
-        }
+    TestAppContainer {
+        DiaryList(
+            diaries = (0..10).map {
+                Diary(
+                    id = Random.nextLong(),
+                    entry = "Hello World $it",
+                    date = Clock.System.now(),
+                    isFavorite = false,
+                )
+            },
+            inSelectionMode = true,
+            diaryFilters = DiaryFilters(),
+            selectedIds = setOf(0, 1),
+            onDeleteDiaries = {},
+            onCancelSelection = {},
+            diaryListActions = diaryListActions,
+            snackbarHostState = SnackbarHostState(),
+        )
     }
 }
 
@@ -175,14 +192,12 @@ fun SelectedDiariesPreview() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
 fun DiaryDatePickerPreview() {
-    SuperdiaryAppTheme {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            DiaryDatePicker(
-                onDismissRequest = { /*TODO*/ },
-                onDateSelected = {},
-                selectedDate = LocalDate.now().toKotlinLocalDate(),
-            )
-        }
+    TestAppContainer {
+        DiaryDatePicker(
+            onDismissRequest = {},
+            onDateSelected = {},
+            selectedDate = LocalDate.now().toKotlinLocalDate(),
+        )
     }
 }
 
@@ -190,12 +205,10 @@ fun DiaryDatePickerPreview() {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
 fun DeleteDialogPreview() {
-    SuperdiaryAppTheme {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            ConfirmDeleteDialog(
-                onDismiss = {},
-                onConfirm = {},
-            )
-        }
+    TestAppContainer {
+        ConfirmDeleteDialog(
+            onDismiss = {},
+            onConfirm = {},
+        )
     }
 }

@@ -8,7 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.koin.getScreenModel
@@ -56,7 +56,7 @@ class FavoritesTabScreenModel(
         loadFavorites()
     }
 
-    private fun loadFavorites() = coroutineScope.launch {
+    private fun loadFavorites() = screenModelScope.launch {
         getAllDiariesUseCase().collect { diaries ->
             mutableState.update {
                 FavoritesTabScreenState.Favorites(

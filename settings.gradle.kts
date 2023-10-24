@@ -20,11 +20,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2023.10.17")
-            version(
-                "compose-multiplatform",
-                "1.5.10-beta02",
-            ) // because it has searchbar and dockedsearchbar
+            from("io.github.rafsanjani:versions:2023.10.23")
         }
     }
 }
