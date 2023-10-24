@@ -4,7 +4,6 @@ import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,6 +29,7 @@ import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -45,6 +45,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -122,10 +128,9 @@ fun DiaryListScreen(
  * @param diaries The list of diaries to display
  * @param inSelectionMode Whether we are actively selecting items or not
  * @param diaryFilters The filters that will be applied to the diary list
- * @param selectedIds The list of ids of the selected diary entries
- *     remove it otherwise.
- * @param onDeleteDiaries Delete the selected diaries from the list
- *     diaries
+ * @param selectedIds The list of ids of the selected diary entries remove
+ *     it otherwise.
+ * @param onDeleteDiaries Delete the selected diaries from the list diaries
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -467,7 +472,21 @@ private fun DiaryItem(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .semantics {
+                        stateDescription = if (diary.isFavorite) "Favorite" else "Not favorite"
+
+                        customActions = listOf(
+                            CustomAccessibilityAction(
+                                label = "Toggle Favorite",
+                                action = {
+                                    onToggleFavorite()
+                                    true
+                                },
+                            ),
+                        )
+                    }
+                    .fillMaxSize(),
             ) {
                 Box(
                     modifier = Modifier
@@ -484,10 +503,13 @@ private fun DiaryItem(
                         .padding(horizontal = 25.dp),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text(
-                        text = buildAnnotatedString {
-                            val date = diary.date.toLocalDateTime(TimeZone.UTC).date
+                    val date = diary.date.toLocalDateTime(TimeZone.UTC).date
 
+                    Text(
+                        modifier = Modifier.semantics {
+                            contentDescription = "Entry for ${date.format("EEE dd MMMM yyyy")}"
+                        },
+                        text = buildAnnotatedString {
                             withStyle(
                                 SpanStyle(
                                     fontFamily = montserratAlternativesFontFamily(),
@@ -547,6 +569,7 @@ private fun DiaryItem(
                 // Diary Entry
                 Text(
                     modifier = Modifier
+                        .clearAndSetSemantics { }
                         .padding(8.dp)
                         .align(Alignment.Top),
                     text = diary.entry,
@@ -582,21 +605,24 @@ private fun DiaryItem(
         }
 
         // favorite icon
-        Icon(
-            imageVector = if (diary.isFavorite) {
-                Icons.Filled.Favorite
-            } else {
-                Icons.Filled.FavoriteBorder
-            },
-            contentDescription = null,
+        IconButton(
+            onClick = onToggleFavorite,
             modifier = Modifier
+                .clearAndSetSemantics { }
                 .clip(CircleShape)
-                .clickable {
-                    onToggleFavorite()
-                }
                 .padding(16.dp)
                 .align(Alignment.BottomEnd),
-        )
+        ) {
+            Icon(
+                modifier = Modifier.clearAndSetSemantics { },
+                imageVector = if (diary.isFavorite) {
+                    Icons.Filled.Favorite
+                } else {
+                    Icons.Filled.FavoriteBorder
+                },
+                contentDescription = null,
+            )
+        }
     }
 }
 
