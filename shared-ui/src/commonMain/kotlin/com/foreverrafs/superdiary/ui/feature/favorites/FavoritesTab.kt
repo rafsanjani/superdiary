@@ -14,7 +14,7 @@ import cafe.adriel.voyager.core.screen.uniqueScreenKey
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.diary.usecase.GetFavoriteDiariesUseCase
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -48,7 +48,7 @@ object FavoritesTab : Tab {
 }
 
 class FavoritesTabScreenModel(
-    private val getAllDiariesUseCase: GetAllDiariesUseCase,
+    private val getAllDiariesUseCase: GetFavoriteDiariesUseCase,
 ) :
     StateScreenModel<FavoritesTabScreenState>(FavoritesTabScreenState.Idle) {
 
