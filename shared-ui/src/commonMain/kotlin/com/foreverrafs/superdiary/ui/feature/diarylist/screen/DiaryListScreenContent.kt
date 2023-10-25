@@ -70,6 +70,8 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiarySearchBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiarySelectionModifierBar
 import com.foreverrafs.superdiary.ui.format
 import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
+import com.mohamedrejeb.richeditor.model.rememberRichTextState
+import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -569,12 +571,14 @@ private fun DiaryItem(
                 }
 
                 // Diary Entry
-                Text(
+                RichText(
+                    state = rememberRichTextState().apply {
+                        setHtml(diary.entry)
+                    },
                     modifier = Modifier
                         .clearAndSetSemantics { }
                         .padding(8.dp)
                         .align(Alignment.Top),
-                    text = diary.entry,
                     letterSpacing = (-0.3).sp,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,

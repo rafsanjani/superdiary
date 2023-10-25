@@ -1,6 +1,5 @@
 package com.foreverrafs.superdiary.ui.feature.creatediary.screen
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,8 +7,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -28,21 +29,36 @@ fun CreateDiaryScreenContent(
     onNavigateBack: () -> Unit,
     onSaveDiary: (entry: String) -> Unit,
 ) {
+    val richTextState = rememberRichTextState()
+
     Scaffold(
         topBar = {
             SuperDiaryAppBar(
                 navigationIcon = {
-                    Icon(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .clip(CircleShape)
-                            .clickable {
-                                onNavigateBack()
-                            }
-                            .padding(8.dp),
-                        imageVector = Icons.Default.ArrowBackIosNew,
-                        contentDescription = null,
-                    )
+                    IconButton(
+                        onClick = onNavigateBack,
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .clip(CircleShape),
+                            imageVector = Icons.Default.ArrowBackIosNew,
+                            contentDescription = "Navigate back",
+                        )
+                    }
+                },
+                saveIcon = {
+                    IconButton(
+                        onClick = {
+                            onSaveDiary(richTextState.toHtml())
+                        },
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .clip(CircleShape),
+                            imageVector = Icons.Default.Check,
+                            contentDescription = "Save entry",
+                        )
+                    }
                 },
             )
         },
@@ -54,10 +70,8 @@ fun CreateDiaryScreenContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(4.dp),
+                    .padding(12.dp),
             ) {
-                val richTextState = rememberRichTextState()
-
                 RichTextStyleRow(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -67,6 +81,7 @@ fun CreateDiaryScreenContent(
                 OutlinedRichTextEditor(
                     state = richTextState,
                     modifier = Modifier.fillMaxSize(),
+                    textStyle = MaterialTheme.typography.bodyMedium,
                 )
             }
         }

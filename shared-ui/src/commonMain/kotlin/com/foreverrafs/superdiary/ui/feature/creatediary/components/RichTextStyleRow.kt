@@ -1,13 +1,8 @@
 package com.foreverrafs.superdiary.ui.feature.creatediary.components
 
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Circle
-import androidx.compose.material.icons.outlined.Circle
-import androidx.compose.material.icons.outlined.FormatAlignCenter
-import androidx.compose.material.icons.outlined.FormatAlignLeft
-import androidx.compose.material.icons.outlined.FormatAlignRight
 import androidx.compose.material.icons.outlined.FormatBold
 import androidx.compose.material.icons.outlined.FormatItalic
 import androidx.compose.material.icons.outlined.FormatListBulleted
@@ -16,72 +11,21 @@ import androidx.compose.material.icons.outlined.FormatStrikethrough
 import androidx.compose.material.icons.outlined.FormatUnderlined
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import com.mohamedrejeb.richeditor.model.RichTextState
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RichTextStyleRow(
     modifier: Modifier = Modifier,
     state: RichTextState,
 ) {
-    FlowRow(
+    Row(
         modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        RichTextStyleButton(
-            onClick = {
-                state.addParagraphStyle(
-                    ParagraphStyle(
-                        textAlign = TextAlign.Left,
-                    ),
-                )
-            },
-            isSelected = state.currentParagraphStyle.textAlign == TextAlign.Left,
-            icon = Icons.Outlined.FormatAlignLeft,
-        )
-
-        RichTextStyleButton(
-            onClick = {
-                state.addParagraphStyle(
-                    ParagraphStyle(
-                        textAlign = TextAlign.Center,
-                    ),
-                )
-            },
-            isSelected = state.currentParagraphStyle.textAlign == TextAlign.Center,
-            icon = Icons.Outlined.FormatAlignCenter,
-        )
-
-        RichTextStyleButton(
-            onClick = {
-                state.addParagraphStyle(
-                    ParagraphStyle(
-                        textAlign = TextAlign.Right,
-                    ),
-                )
-            },
-            isSelected = state.currentParagraphStyle.textAlign == TextAlign.Right,
-            icon = Icons.Outlined.FormatAlignRight,
-        )
-
-        RichTextStyleButton(
-            onClick = {
-                state.addParagraphStyle(
-                    ParagraphStyle(
-                        textAlign = TextAlign.Justify,
-                    ),
-                )
-            },
-            isSelected = state.currentParagraphStyle.textAlign == TextAlign.Justify,
-            icon = Icons.Outlined.FormatAlignRight,
-        )
-
         RichTextStyleButton(
             onClick = {
                 state.toggleSpanStyle(
@@ -128,32 +72,6 @@ fun RichTextStyleRow(
             },
             isSelected = state.currentSpanStyle.textDecoration?.contains(TextDecoration.LineThrough) == true,
             icon = Icons.Outlined.FormatStrikethrough,
-        )
-
-        RichTextStyleButton(
-            onClick = {
-                state.toggleSpanStyle(
-                    SpanStyle(
-                        color = Color.Green,
-                    ),
-                )
-            },
-            isSelected = state.currentSpanStyle.color == Color.Red,
-            icon = Icons.Filled.Circle,
-            tint = Color.Red,
-        )
-
-        RichTextStyleButton(
-            onClick = {
-                state.toggleSpanStyle(
-                    SpanStyle(
-                        background = Color.Yellow,
-                    ),
-                )
-            },
-            isSelected = state.currentSpanStyle.background == Color.Yellow,
-            icon = Icons.Outlined.Circle,
-            tint = Color.Yellow,
         )
 
         RichTextStyleButton(
