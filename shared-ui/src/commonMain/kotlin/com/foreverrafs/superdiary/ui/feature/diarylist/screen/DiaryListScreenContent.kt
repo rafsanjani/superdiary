@@ -22,12 +22,14 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -364,27 +366,42 @@ private fun DiaryListContent(
     // if filters have been applied
     val filteredEmpty = diaries.isEmpty() && isFiltered
 
-    if (diaries.isNotEmpty() || filteredEmpty) {
-        DiaryList(
-            modifier = modifier,
-            diaries = diaries,
-            inSelectionMode = selectedIds.isNotEmpty(),
-            diaryFilters = diaryFilters,
-            selectedIds = selectedIds,
-            showSearchBar = showSearchBar,
-            onDeleteDiaries = {
-                selectedIds = it
-                showConfirmDeleteDialog = true
-            },
-            onCancelSelection = diaryListActions.onCancelSelection,
-            diaryListActions = diaryListActions,
-            snackbarHostState = snackbarHostState,
-        )
-    } else {
-        EmptyDiaryList(
-            modifier = modifier,
-            onAddEntry = onAddEntry,
-        )
+    Box(modifier = modifier) {
+        if (diaries.isNotEmpty() || filteredEmpty) {
+            DiaryList(
+                modifier = Modifier.fillMaxSize(),
+                diaries = diaries,
+                inSelectionMode = selectedIds.isNotEmpty(),
+                diaryFilters = diaryFilters,
+                selectedIds = selectedIds,
+                showSearchBar = showSearchBar,
+                onDeleteDiaries = {
+                    selectedIds = it
+                    showConfirmDeleteDialog = true
+                },
+                onCancelSelection = diaryListActions.onCancelSelection,
+                diaryListActions = diaryListActions,
+                snackbarHostState = snackbarHostState,
+            )
+
+            FloatingActionButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(8.dp),
+                onClick = diaryListActions.onAddEntry,
+                shape = RoundedCornerShape(4.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null,
+                )
+            }
+        } else {
+            EmptyDiaryList(
+                modifier = Modifier.fillMaxSize(),
+                onAddEntry = onAddEntry,
+            )
+        }
     }
 }
 
