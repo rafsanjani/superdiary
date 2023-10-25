@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.diarylist
+package com.foreverrafs.superdiary.ui.feature.diarylist.screen
 
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
@@ -62,6 +62,8 @@ import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryFilterSheet
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryHeader
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiarySearchBar
@@ -85,7 +87,7 @@ val DiaryListActions.Companion.Empty: DiaryListActions
     )
 
 @Composable
-fun DiaryListScreen(
+fun DiaryListScreenContent(
     state: DiaryListScreenState,
     modifier: Modifier = Modifier,
     diaryFilters: DiaryFilters,
@@ -605,24 +607,37 @@ private fun DiaryItem(
         }
 
         // favorite icon
-        IconButton(
-            onClick = onToggleFavorite,
-            modifier = Modifier
-                .clearAndSetSemantics { }
-                .clip(CircleShape)
-                .padding(16.dp)
-                .align(Alignment.BottomEnd),
-        ) {
-            Icon(
-                modifier = Modifier.clearAndSetSemantics { },
-                imageVector = if (diary.isFavorite) {
-                    Icons.Filled.Favorite
-                } else {
-                    Icons.Filled.FavoriteBorder
-                },
-                contentDescription = null,
-            )
-        }
+        FavoriteIcon(
+            modifier = Modifier.align(Alignment.BottomEnd),
+            onToggleFavorite = onToggleFavorite,
+            isFavorite = diary.isFavorite,
+        )
+    }
+}
+
+@Composable
+fun FavoriteIcon(
+    modifier: Modifier = Modifier,
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit,
+) {
+    // favorite icon
+    IconButton(
+        onClick = onToggleFavorite,
+        modifier = modifier
+            .clearAndSetSemantics { }
+            .clip(CircleShape)
+            .padding(16.dp),
+    ) {
+        Icon(
+            modifier = Modifier.clearAndSetSemantics { },
+            imageVector = if (isFavorite) {
+                Icons.Filled.Favorite
+            } else {
+                Icons.Filled.FavoriteBorder
+            },
+            contentDescription = null,
+        )
     }
 }
 

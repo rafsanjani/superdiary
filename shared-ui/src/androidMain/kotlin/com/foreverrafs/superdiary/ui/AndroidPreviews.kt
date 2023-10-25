@@ -14,10 +14,10 @@ import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
-import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryList
+import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
-import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreen
-import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreenState
+import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
+import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenState
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryDatePicker
 import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 import kotlinx.datetime.Clock
@@ -56,7 +56,7 @@ internal fun TestAppContainer(content: @Composable () -> Unit) {
 @Composable
 fun LoadingDiariesPreview() {
     TestAppContainer {
-        DiaryListScreen(
+        DiaryListScreenContent(
             state = DiaryListScreenState.Loading,
             showSearchBar = false,
             diaryFilters = DiaryFilters(),
@@ -72,7 +72,7 @@ fun ErrorLoadingDiariesPreview() {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
-            DiaryListScreen(
+            DiaryListScreenContent(
                 state = DiaryListScreenState.Error(Error()),
                 showSearchBar = false,
                 diaryFilters = DiaryFilters(),
@@ -110,7 +110,7 @@ fun EmptyDiaryListPreview() {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
-            DiaryListScreen(
+            DiaryListScreenContent(
                 state = DiaryListScreenState.Content(listOf(), false),
                 showSearchBar = false,
                 diaryFilters = DiaryFilters(),
@@ -126,7 +126,7 @@ fun EmptyDiaryListPreview() {
 fun DiaryListPreview() {
     SuperdiaryAppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
-            DiaryListScreen(
+            DiaryListScreenContent(
                 state = DiaryListScreenState.Content(
                     diaries = (0..10).map {
                         Diary(
@@ -151,7 +151,7 @@ fun DiaryListPreview() {
 @Composable
 fun FilteredEmptyPreview() {
     TestAppContainer {
-        DiaryListScreen(
+        DiaryListScreenContent(
             state = DiaryListScreenState.Content(
                 diaries = listOf(),
                 filtered = true,

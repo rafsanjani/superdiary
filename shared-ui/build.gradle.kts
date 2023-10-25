@@ -49,6 +49,7 @@ kotlin {
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.koin.compose)
                 implementation(compose.material3)
+                implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-beta03")
             }
         }
 

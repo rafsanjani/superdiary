@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.diarylist
+package com.foreverrafs.superdiary.ui.feature.diarylist.screen
 
 import com.foreverrafs.superdiary.diary.model.Diary
 

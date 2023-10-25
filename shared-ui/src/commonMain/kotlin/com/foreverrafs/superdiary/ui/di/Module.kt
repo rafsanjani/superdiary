@@ -1,9 +1,9 @@
 package com.foreverrafs.superdiary.ui.di
 
 import com.foreverrafs.superdiary.diary.di.useCaseModule
-import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryScreenModel
-import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreenModel
-import com.foreverrafs.superdiary.ui.feature.favorites.FavoritesTabScreenModel
+import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenModel
+import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListScreenModel
+import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoritesTabScreenModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
