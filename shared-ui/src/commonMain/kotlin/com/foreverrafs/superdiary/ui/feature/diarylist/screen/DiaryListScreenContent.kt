@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -37,6 +38,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,7 +75,6 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiarySelection
 import com.foreverrafs.superdiary.ui.format
 import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
-import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -150,6 +151,7 @@ fun DiaryList(
     diaryListActions: DiaryListActions,
     snackbarHostState: SnackbarHostState,
     onDeleteDiaries: (selectedIds: Set<Long>) -> Unit,
+    listState: LazyListState = rememberLazyListState(),
     onCancelSelection: () -> Unit,
 ) {
     val groupedDiaries = remember(diaries) {
@@ -210,7 +212,7 @@ fun DiaryList(
                     .padding(top = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(space = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                state = rememberLazyListState(),
+                state = listState,
             ) {
                 groupedDiaries.forEach { (date, diaries) ->
                     stickyHeader(key = date.label) {
@@ -367,6 +369,11 @@ private fun DiaryListContent(
     val filteredEmpty = diaries.isEmpty() && isFiltered
 
     Box(modifier = modifier) {
+        val listState = rememberLazyListState()
+
+        val fabVisibility by derivedStateOf {
+            listState.firstVisibleItemIndex == 0
+        }
         if (diaries.isNotEmpty() || filteredEmpty) {
             DiaryList(
                 modifier = Modifier.fillMaxSize(),
@@ -382,6 +389,7 @@ private fun DiaryListContent(
                 onCancelSelection = diaryListActions.onCancelSelection,
                 diaryListActions = diaryListActions,
                 snackbarHostState = snackbarHostState,
+                listState = listState,
             )
 
             FloatingActionButton(
@@ -588,10 +596,7 @@ private fun DiaryItem(
                 }
 
                 // Diary Entry
-                RichText(
-                    state = rememberRichTextState().apply {
-                        setHtml(diary.entry)
-                    },
+                Text(
                     modifier = Modifier
                         .clearAndSetSemantics { }
                         .padding(8.dp)
@@ -600,6 +605,7 @@ private fun DiaryItem(
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Justify,
+                    text = rememberRichTextState().apply { setHtml(diary.entry) }.annotatedString,
                 )
             }
         }
@@ -648,7 +654,7 @@ fun FavoriteIcon(
         modifier = modifier
             .clearAndSetSemantics { }
             .clip(CircleShape)
-            .padding(16.dp),
+            .padding(4.dp),
     ) {
         Icon(
             modifier = Modifier.clearAndSetSemantics { },

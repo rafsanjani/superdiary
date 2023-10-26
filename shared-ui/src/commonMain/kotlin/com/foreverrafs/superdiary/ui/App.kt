@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.ui
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -19,7 +20,12 @@ import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 fun App() {
     SuperdiaryAppTheme {
         Navigator(BottomNavigationScreen) { navigator ->
-            CompositionLocalProvider(LocalScreenNavigator provides navigator) {
+            val snackbarHostState = SnackbarHostState()
+
+            CompositionLocalProvider(
+                LocalRootSnackbarHostState provides snackbarHostState,
+                LocalScreenNavigator provides navigator,
+            ) {
                 FadeTransition(
                     navigator = navigator,
                     animationSpec = tween(easing = LinearEasing),
@@ -37,4 +43,9 @@ fun App() {
  */
 val LocalScreenNavigator = staticCompositionLocalOf<Navigator> {
     error("No Navigator provided")
+}
+
+// Use this snackbarhost to show messages on the main screen
+val LocalRootSnackbarHostState = staticCompositionLocalOf<SnackbarHostState> {
+    error("Root snackbarhost not provided")
 }

@@ -16,8 +16,8 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.foreverrafs.superdiary.ui.LocalRootSnackbarHostState
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
-import com.foreverrafs.superdiary.ui.home.LocalRootSnackbarHostState
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions

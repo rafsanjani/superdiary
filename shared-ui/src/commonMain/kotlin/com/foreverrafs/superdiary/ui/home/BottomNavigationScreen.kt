@@ -7,7 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -17,6 +17,7 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import com.foreverrafs.superdiary.ui.LocalRootSnackbarHostState
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.calendar.CalendarScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
@@ -29,8 +30,11 @@ import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreen
 object BottomNavigationScreen : Screen {
     @Composable
     override fun Content() {
+        val snackbarHostState = LocalRootSnackbarHostState.current
+
         TabNavigator(DiaryListScreen) {
             Scaffold(
+                snackbarHost = { SnackbarHost(snackbarHostState) },
                 content = {
                     Surface(
                         modifier = Modifier.padding(it),
@@ -52,8 +56,6 @@ object BottomNavigationScreen : Screen {
     }
 }
 
-// Use this snackbarhost to show messages on the main screen
-val LocalRootSnackbarHostState = staticCompositionLocalOf { SnackbarHostState() }
 
 @Composable
 private fun RowScope.TabNavigationItem(tab: Tab) {
