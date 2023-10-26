@@ -3,10 +3,12 @@ package com.foreverrafs.superdiary.ui
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenState
+import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import org.junit.Rule
@@ -41,6 +43,18 @@ class DiaryListSnapshotTests : KoinTest {
                     showSearchBar = true,
                     diaryFilters = DiaryFilters(),
                     diaryListActions = diaryListActions,
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `Create diary entry`() {
+        paparazzi.snapshot {
+            SuperdiaryAppTheme {
+                CreateDiaryScreenContent(
+                    onNavigateBack = {},
+                    onSaveDiary = {},
                 )
             }
         }

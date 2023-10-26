@@ -13,12 +13,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
+import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
-import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
+import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryDatePicker
+import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenState
-import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryDatePicker
 import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 import kotlinx.datetime.Clock
 import kotlinx.datetime.toKotlinLocalDate
@@ -141,6 +142,20 @@ fun DiaryListPreview() {
                 showSearchBar = true,
                 diaryFilters = DiaryFilters(),
                 diaryListActions = diaryListActions,
+            )
+        }
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@Composable
+fun CreateDiaryPreview() {
+    SuperdiaryAppTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            CreateDiaryScreenContent(
+                onSaveDiary = {},
+                onNavigateBack = {},
             )
         }
     }
