@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.ui.feature.diarylist.screen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -374,6 +375,7 @@ private fun DiaryListContent(
         val fabVisibility by derivedStateOf {
             listState.firstVisibleItemIndex == 0
         }
+
         if (diaries.isNotEmpty() || filteredEmpty) {
             DiaryList(
                 modifier = Modifier.fillMaxSize(),
@@ -392,17 +394,21 @@ private fun DiaryListContent(
                 listState = listState,
             )
 
-            FloatingActionButton(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(8.dp),
-                onClick = diaryListActions.onAddEntry,
-                shape = RoundedCornerShape(4.dp),
+            AnimatedVisibility(
+                visible = fabVisibility,
             ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null,
-                )
+                FloatingActionButton(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(8.dp),
+                    onClick = diaryListActions.onAddEntry,
+                    shape = RoundedCornerShape(4.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null,
+                    )
+                }
             }
         } else {
             EmptyDiaryList(
