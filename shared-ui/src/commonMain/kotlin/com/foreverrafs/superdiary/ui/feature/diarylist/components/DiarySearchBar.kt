@@ -32,6 +32,9 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -69,6 +72,9 @@ internal fun DiarySearchBar(
     ) {
         TextField(
             modifier = modifier
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "Search in diaries"
+                }
                 .onFocusChanged {
                     isFocused = it.hasFocus
                 }
@@ -98,13 +104,15 @@ internal fun DiarySearchBar(
                         .clickable { onFilterClicked() }
                         .padding(8.dp),
                     imageVector = Icons.Default.Sort,
-                    contentDescription = null,
+                    contentDescription = "Sort diary entries",
                 )
             },
             shape = RoundedCornerShape(cornerRadius),
             placeholder = {
                 Text(
-                    modifier = Modifier.alpha(0.5f),
+                    modifier = Modifier
+                        .clearAndSetSemantics { }
+                        .alpha(0.5f),
                     text = "Search in diaries",
                     style = MaterialTheme.typography.titleMedium,
                 )

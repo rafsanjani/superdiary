@@ -3,10 +3,12 @@ package com.foreverrafs.superdiary.ui
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
-import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreen
-import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListScreenState
+import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
+import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenState
+import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import org.junit.Rule
@@ -36,7 +38,7 @@ class DiaryListSnapshotTests : KoinTest {
     fun `Loading diary list`() {
         paparazzi.snapshot {
             TestAppContainer {
-                DiaryListScreen(
+                DiaryListScreenContent(
                     state = DiaryListScreenState.Loading,
                     showSearchBar = true,
                     diaryFilters = DiaryFilters(),
@@ -47,10 +49,22 @@ class DiaryListSnapshotTests : KoinTest {
     }
 
     @Test
+    fun `Create diary entry`() {
+        paparazzi.snapshot {
+            SuperdiaryAppTheme {
+                CreateDiaryScreenContent(
+                    onNavigateBack = {},
+                    onSaveDiary = {},
+                )
+            }
+        }
+    }
+
+    @Test
     fun `Unfiltered non-empty diary list`() {
         paparazzi.snapshot {
             TestAppContainer {
-                DiaryListScreen(
+                DiaryListScreenContent(
                     state = DiaryListScreenState.Content(
                         (0..5).map {
                             Diary(
@@ -74,7 +88,7 @@ class DiaryListSnapshotTests : KoinTest {
     fun `Unfiltered empty diary list`() {
         paparazzi.snapshot {
             TestAppContainer {
-                DiaryListScreen(
+                DiaryListScreenContent(
                     state = DiaryListScreenState.Content(
                         listOf(),
                         filtered = false,
@@ -91,7 +105,7 @@ class DiaryListSnapshotTests : KoinTest {
     fun `Filtered empty diary list`() {
         paparazzi.snapshot {
             TestAppContainer {
-                DiaryListScreen(
+                DiaryListScreenContent(
                     state = DiaryListScreenState.Content(
                         listOf(),
                         filtered = true,
@@ -108,7 +122,7 @@ class DiaryListSnapshotTests : KoinTest {
     fun `Error loading diary list`() {
         paparazzi.snapshot {
             TestAppContainer {
-                DiaryListScreen(
+                DiaryListScreenContent(
                     state = DiaryListScreenState.Error(
                         Error("Error loading diaries"),
                     ),

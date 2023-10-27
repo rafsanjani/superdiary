@@ -21,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -35,9 +37,12 @@ internal fun DiaryHeader(
 ) {
     Card(
         modifier = modifier
+            .semantics(mergeDescendants = true) {
+                contentDescription = "Group header"
+            }
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background,
+            containerColor = MaterialTheme.colorScheme.background.copy(alpha = 0.85f),
         ),
         shape = RoundedCornerShape(0.dp),
     ) {
@@ -49,7 +54,8 @@ internal fun DiaryHeader(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                modifier = Modifier.padding(vertical = 8.dp),
+                modifier = Modifier
+                    .padding(vertical = 8.dp),
                 text = text,
                 style = MaterialTheme.typography.headlineMedium,
             )

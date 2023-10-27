@@ -1,10 +1,9 @@
-package com.foreverrafs.superdiary.ui.feature.diarylist
+package com.foreverrafs.superdiary.ui.feature.diarylist.screen
 
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,23 +17,28 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +49,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -56,12 +66,15 @@ import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryFilterSheet
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryHeader
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiarySearchBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiarySelectionModifierBar
 import com.foreverrafs.superdiary.ui.format
 import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
+import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -79,7 +92,7 @@ val DiaryListActions.Companion.Empty: DiaryListActions
     )
 
 @Composable
-fun DiaryListScreen(
+fun DiaryListScreenContent(
     state: DiaryListScreenState,
     modifier: Modifier = Modifier,
     diaryFilters: DiaryFilters,
@@ -122,10 +135,9 @@ fun DiaryListScreen(
  * @param diaries The list of diaries to display
  * @param inSelectionMode Whether we are actively selecting items or not
  * @param diaryFilters The filters that will be applied to the diary list
- * @param selectedIds The list of ids of the selected diary entries
- *     remove it otherwise.
- * @param onDeleteDiaries Delete the selected diaries from the list
- *     diaries
+ * @param selectedIds The list of ids of the selected diary entries remove
+ *     it otherwise.
+ * @param onDeleteDiaries Delete the selected diaries from the list diaries
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -139,6 +151,7 @@ fun DiaryList(
     diaryListActions: DiaryListActions,
     snackbarHostState: SnackbarHostState,
     onDeleteDiaries: (selectedIds: Set<Long>) -> Unit,
+    listState: LazyListState = rememberLazyListState(),
     onCancelSelection: () -> Unit,
 ) {
     val groupedDiaries = remember(diaries) {
@@ -199,7 +212,7 @@ fun DiaryList(
                     .padding(top = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(space = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                state = rememberLazyListState(),
+                state = listState,
             ) {
                 groupedDiaries.forEach { (date, diaries) ->
                     stickyHeader(key = date.label) {
@@ -355,27 +368,48 @@ private fun DiaryListContent(
     // if filters have been applied
     val filteredEmpty = diaries.isEmpty() && isFiltered
 
-    if (diaries.isNotEmpty() || filteredEmpty) {
-        DiaryList(
-            modifier = modifier,
-            diaries = diaries,
-            inSelectionMode = selectedIds.isNotEmpty(),
-            diaryFilters = diaryFilters,
-            selectedIds = selectedIds,
-            showSearchBar = showSearchBar,
-            onDeleteDiaries = {
-                selectedIds = it
-                showConfirmDeleteDialog = true
-            },
-            onCancelSelection = diaryListActions.onCancelSelection,
-            diaryListActions = diaryListActions,
-            snackbarHostState = snackbarHostState,
-        )
-    } else {
-        EmptyDiaryList(
-            modifier = modifier,
-            onAddEntry = onAddEntry,
-        )
+    Box(modifier = modifier) {
+        val listState = rememberLazyListState()
+
+        val fabVisibility by derivedStateOf {
+            listState.firstVisibleItemIndex == 0
+        }
+        if (diaries.isNotEmpty() || filteredEmpty) {
+            DiaryList(
+                modifier = Modifier.fillMaxSize(),
+                diaries = diaries,
+                inSelectionMode = selectedIds.isNotEmpty(),
+                diaryFilters = diaryFilters,
+                selectedIds = selectedIds,
+                showSearchBar = showSearchBar,
+                onDeleteDiaries = {
+                    selectedIds = it
+                    showConfirmDeleteDialog = true
+                },
+                onCancelSelection = diaryListActions.onCancelSelection,
+                diaryListActions = diaryListActions,
+                snackbarHostState = snackbarHostState,
+                listState = listState,
+            )
+
+            FloatingActionButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(8.dp),
+                onClick = diaryListActions.onAddEntry,
+                shape = RoundedCornerShape(4.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null,
+                )
+            }
+        } else {
+            EmptyDiaryList(
+                modifier = Modifier.fillMaxSize(),
+                onAddEntry = onAddEntry,
+            )
+        }
     }
 }
 
@@ -467,7 +501,21 @@ private fun DiaryItem(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .semantics {
+                        stateDescription = if (diary.isFavorite) "Favorite" else "Not favorite"
+
+                        customActions = listOf(
+                            CustomAccessibilityAction(
+                                label = "Toggle Favorite",
+                                action = {
+                                    onToggleFavorite()
+                                    true
+                                },
+                            ),
+                        )
+                    }
+                    .fillMaxSize(),
             ) {
                 Box(
                     modifier = Modifier
@@ -484,10 +532,13 @@ private fun DiaryItem(
                         .padding(horizontal = 25.dp),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text(
-                        text = buildAnnotatedString {
-                            val date = diary.date.toLocalDateTime(TimeZone.UTC).date
+                    val date = diary.date.toLocalDateTime(TimeZone.UTC).date
 
+                    Text(
+                        modifier = Modifier.semantics {
+                            contentDescription = "Entry for ${date.format("EEE dd MMMM yyyy")}"
+                        },
+                        text = buildAnnotatedString {
                             withStyle(
                                 SpanStyle(
                                     fontFamily = montserratAlternativesFontFamily(),
@@ -547,13 +598,14 @@ private fun DiaryItem(
                 // Diary Entry
                 Text(
                     modifier = Modifier
+                        .clearAndSetSemantics { }
                         .padding(8.dp)
                         .align(Alignment.Top),
-                    text = diary.entry,
                     letterSpacing = (-0.3).sp,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Justify,
+                    text = rememberRichTextState().apply { setHtml(diary.entry) }.annotatedString,
                 )
             }
         }
@@ -582,20 +634,36 @@ private fun DiaryItem(
         }
 
         // favorite icon
+        FavoriteIcon(
+            modifier = Modifier.align(Alignment.BottomEnd),
+            onToggleFavorite = onToggleFavorite,
+            isFavorite = diary.isFavorite,
+        )
+    }
+}
+
+@Composable
+fun FavoriteIcon(
+    modifier: Modifier = Modifier,
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit,
+) {
+    // favorite icon
+    IconButton(
+        onClick = onToggleFavorite,
+        modifier = modifier
+            .clearAndSetSemantics { }
+            .clip(CircleShape)
+            .padding(4.dp),
+    ) {
         Icon(
-            imageVector = if (diary.isFavorite) {
+            modifier = Modifier.clearAndSetSemantics { },
+            imageVector = if (isFavorite) {
                 Icons.Filled.Favorite
             } else {
                 Icons.Filled.FavoriteBorder
             },
             contentDescription = null,
-            modifier = Modifier
-                .clip(CircleShape)
-                .clickable {
-                    onToggleFavorite()
-                }
-                .padding(16.dp)
-                .align(Alignment.BottomEnd),
         )
     }
 }
