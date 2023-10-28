@@ -369,7 +369,10 @@ private fun DiaryListContent(
     // if filters have been applied
     val filteredEmpty = diaries.isEmpty() && isFiltered
 
-    Box(modifier = modifier) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
+    ) {
         val listState = rememberLazyListState()
 
         val fabVisibility by derivedStateOf {
@@ -395,12 +398,12 @@ private fun DiaryListContent(
             )
 
             AnimatedVisibility(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(8.dp),
                 visible = fabVisibility,
             ) {
                 FloatingActionButton(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(8.dp),
                     onClick = diaryListActions.onAddEntry,
                     shape = RoundedCornerShape(4.dp),
                 ) {

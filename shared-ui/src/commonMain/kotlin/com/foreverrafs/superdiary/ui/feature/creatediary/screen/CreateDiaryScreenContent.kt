@@ -1,25 +1,37 @@
 package com.foreverrafs.superdiary.ui.feature.creatediary.screen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.creatediary.components.RichTextStyleRow
+import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
 
@@ -27,10 +39,10 @@ import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
 @Composable
 fun CreateDiaryScreenContent(
     onNavigateBack: () -> Unit,
+    onGenerateAI: (prompt: String, wordCount: Int) -> Unit,
+    richTextState: RichTextState = rememberRichTextState(),
     onSaveDiary: (entry: String) -> Unit,
 ) {
-    val richTextState = rememberRichTextState()
-
     Scaffold(
         topBar = {
             SuperDiaryAppBar(
@@ -78,10 +90,63 @@ fun CreateDiaryScreenContent(
                     state = richTextState,
                 )
 
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .background(color = MaterialTheme.colorScheme.surface),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(
+                        text = "Diary AI:",
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+
+                    SuggestionChip(
+                        onClick = {
+                            onGenerateAI(
+                                richTextState.annotatedString.text,
+                                50,
+                            )
+                        },
+                        colors = SuggestionChipDefaults.suggestionChipColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        ),
+                        label = {
+                            Text(
+                                text = "50 Words",
+                                style = MaterialTheme.typography.labelSmall,
+                            )
+                        },
+                    )
+
+                    SuggestionChip(
+                        onClick = {},
+                        colors = SuggestionChipDefaults.suggestionChipColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        ),
+                        label = {
+                            Text(
+                                text = "100 Words",
+                                style = MaterialTheme.typography.labelSmall,
+                            )
+                        },
+                    )
+
+                    IconButton(onClick = {}) {
+                        Icon(imageVector = Icons.Outlined.PlayArrow, null)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
                 OutlinedRichTextEditor(
                     state = richTextState,
                     modifier = Modifier.fillMaxSize(),
-                    textStyle = MaterialTheme.typography.bodyMedium,
+                    textStyle = MaterialTheme.typography.bodyMedium.copy(
+                        lineHeight = 15.sp,
+                    ),
                 )
             }
         }

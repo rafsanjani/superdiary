@@ -10,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import kotlin.Result
 import kotlin.coroutines.suspendCoroutine
 
 class Database(databaseDriver: DatabaseDriver) {
@@ -35,7 +34,8 @@ class Database(databaseDriver: DatabaseDriver) {
         SuperDiaryDatabase.Schema.create(driver)
     }
 
-    fun addDiary(diary: Diary) = queries.insert(diary.entry, diary.date.toDate().toString())
+    fun addDiary(diary: Diary) =
+        queries.insert(diary.entry, diary.date.toDate().toString(), diary.isFavorite.asLong())
 
     fun deleteDiary(id: Long) = queries.delete(id)
 
@@ -43,7 +43,7 @@ class Database(databaseDriver: DatabaseDriver) {
         queries.transaction {
             afterCommit {
                 continuation.resumeWith(
-                    Result.success(ids.size),
+                    kotlin.Result.success(ids.size),
                 )
             }
             ids.forEach { id ->

@@ -71,6 +71,11 @@ fun SuperdiaryAppTheme(
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
         ),
+        labelSmall = TextStyle(
+            fontFamily = montserratAlternativesFontFamily(),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Normal,
+        ),
     )
     val shapes = Shapes(
         small = RoundedCornerShape(4.dp),

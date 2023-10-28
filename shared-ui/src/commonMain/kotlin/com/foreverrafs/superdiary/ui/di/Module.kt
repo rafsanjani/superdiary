@@ -20,6 +20,7 @@ internal fun screenModules(): Module = module {
     single {
         CreateDiaryScreenModel(
             addDiaryUseCase = get(),
+            diaryAI = get(),
         )
     }
 

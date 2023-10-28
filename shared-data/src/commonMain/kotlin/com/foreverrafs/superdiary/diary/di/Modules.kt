@@ -3,6 +3,8 @@ package com.foreverrafs.superdiary.diary.di
 import com.foreverrafs.superdiary.diary.Database
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.datasource.LocalDataSource
+import com.foreverrafs.superdiary.diary.generator.DiaryAI
+import com.foreverrafs.superdiary.diary.generator.SuperDiaryAI
 import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.DeleteMultipleDiariesUseCase
@@ -20,6 +22,7 @@ import org.koin.dsl.module
 fun useCaseModule() = module {
     single<DataSource> { LocalDataSource(get()) }
     factory<Clock> { Clock.System }
+    single<DiaryAI> { SuperDiaryAI() }
     singleOf(::AddDiaryUseCase)
     singleOf(::GetAllDiariesUseCase)
     singleOf(::GetFavoriteDiariesUseCase)

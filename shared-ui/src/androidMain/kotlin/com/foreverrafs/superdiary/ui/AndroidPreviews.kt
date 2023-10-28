@@ -156,6 +156,7 @@ fun CreateDiaryPreview() {
             CreateDiaryScreenContent(
                 onSaveDiary = {},
                 onNavigateBack = {},
+                onGenerateAI = { _, _ -> },
             )
         }
     }
