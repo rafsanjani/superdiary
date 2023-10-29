@@ -43,14 +43,14 @@ object DiaryListScreen : Tab {
 
         observeFilterEvents(diaryFilters, screenModel)
 
-        val navigator = LocalScreenNavigator.current
+        val screenNavigator = LocalScreenNavigator.current
         val snackbarHostState = LocalRootSnackbarHostState.current
 
         val diaryListActions = remember {
             DiaryListActions(
                 onAddEntry = {
-                    navigator.push(
-                        CreateDiaryScreen,
+                    screenNavigator.push(
+                        CreateDiaryScreen(),
                     )
                 },
                 onDeleteDiaries = screenModel::deleteDiaries,
@@ -58,6 +58,9 @@ object DiaryListScreen : Tab {
                     diaryFilters = it
                 },
                 onToggleFavorite = screenModel::toggleFavorite,
+                onDiaryClicked = {
+                    screenNavigator.push(CreateDiaryScreen(it))
+                },
             )
         }
 

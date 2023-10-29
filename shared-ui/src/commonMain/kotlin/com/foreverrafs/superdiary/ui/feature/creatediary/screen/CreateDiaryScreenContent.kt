@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,6 +33,7 @@ import com.foreverrafs.superdiary.ui.feature.creatediary.components.RichTextStyl
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
+import com.mohamedrejeb.richeditor.ui.material3.RichText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,6 +41,7 @@ fun CreateDiaryScreenContent(
     onNavigateBack: () -> Unit,
     onGenerateAI: (prompt: String, wordCount: Int) -> Unit,
     richTextState: RichTextState = rememberRichTextState(),
+    isEditable: Boolean,
     onSaveDiary: (entry: String) -> Unit,
 ) {
     Scaffold(
@@ -90,65 +91,78 @@ fun CreateDiaryScreenContent(
                     state = richTextState,
                 )
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .background(color = MaterialTheme.colorScheme.surface),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Text(
-                        text = "Diary AI:",
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
+                if (isEditable) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .background(color = MaterialTheme.colorScheme.surface),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Text(
+                            text = "Diary AI:",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
 
-                    SuggestionChip(
-                        onClick = {
-                            onGenerateAI(
-                                richTextState.annotatedString.text,
-                                50,
-                            )
-                        },
-                        colors = SuggestionChipDefaults.suggestionChipColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        ),
-                        label = {
-                            Text(
-                                text = "50 Words",
-                                style = MaterialTheme.typography.labelSmall,
-                            )
-                        },
-                    )
+                        DiaryAISuggestionChip(
+                            words = 50,
+                            onClick = {
+                                onGenerateAI(
+                                    richTextState.annotatedString.text,
+                                    50,
+                                )
+                            },
+                        )
 
-                    SuggestionChip(
-                        onClick = {},
-                        colors = SuggestionChipDefaults.suggestionChipColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        ),
-                        label = {
-                            Text(
-                                text = "100 Words",
-                                style = MaterialTheme.typography.labelSmall,
-                            )
-                        },
-                    )
-
-                    IconButton(onClick = {}) {
-                        Icon(imageVector = Icons.Outlined.PlayArrow, null)
+                        DiaryAISuggestionChip(
+                            words = 100,
+                            onClick = {
+                                onGenerateAI(
+                                    richTextState.annotatedString.text,
+                                    100,
+                                )
+                            },
+                        )
                     }
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                OutlinedRichTextEditor(
-                    state = richTextState,
-                    modifier = Modifier.fillMaxSize(),
-                    textStyle = MaterialTheme.typography.bodyMedium.copy(
-                        lineHeight = 15.sp,
-                    ),
-                )
+                if (isEditable) {
+                    OutlinedRichTextEditor(
+                        state = richTextState,
+                        modifier = Modifier.fillMaxSize(),
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            lineHeight = 15.sp,
+                        ),
+                    )
+                } else {
+                    RichText(
+                        state = richTextState,
+                        modifier = Modifier.fillMaxSize(),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            lineHeight = 15.sp,
+                        ),
+                    )
+                }
             }
         }
     }
+}
+
+@Composable
+private fun DiaryAISuggestionChip(words: Int, onClick: () -> Unit) {
+    SuggestionChip(
+        onClick = onClick,
+        colors = SuggestionChipDefaults.suggestionChipColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        ),
+        label = {
+            Text(
+                text = "$words Words",
+                style = MaterialTheme.typography.labelSmall,
+            )
+        },
+    )
 }

@@ -8,6 +8,7 @@ data class DiaryListActions(
     val onToggleFavorite: suspend (diary: Diary) -> Boolean,
     val onApplyFilters: (filters: DiaryFilters) -> Unit,
     val onAddSelection: ((id: Long?) -> Unit) = { },
+    val onDiaryClicked: (diary: Diary) -> Unit,
     val onRemoveSelection: (id: Long?) -> Unit = {},
     val onToggleSelection: (id: Long?) -> Unit = {},
     val onCancelSelection: () -> Unit = {},

@@ -1,6 +1,7 @@
 package com.foreverrafs.superdiary.ui.feature.creatediary.screen
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
-object CreateDiaryScreen : Screen {
+class CreateDiaryScreen(val diary: Diary? = null) : Screen {
 
     @Composable
     override fun Content() {
@@ -23,6 +24,12 @@ object CreateDiaryScreen : Screen {
         val navigator = LocalScreenNavigator.current
         val richTextState = rememberRichTextState()
         val coroutineScope = rememberCoroutineScope()
+
+        LaunchedEffect(Unit) {
+            diary?.let {
+                richTextState.setHtml(it.entry)
+            }
+        }
 
         CreateDiaryScreenContent(
             onNavigateBack = navigator::pop,
@@ -40,13 +47,15 @@ object CreateDiaryScreen : Screen {
                     }
                 }
             },
+            isEditable = diary == null, // We can't edit existing diaries
         ) { entry ->
             createDiaryScreenModel.saveDiary(
                 Diary(
                     entry = entry,
                     date = Clock.System
                         .now(),
-                    isFavorite = false,
+                    isFavorite = diary?.isFavorite ?: false,
+                    id = diary?.id,
                 ),
             )
 

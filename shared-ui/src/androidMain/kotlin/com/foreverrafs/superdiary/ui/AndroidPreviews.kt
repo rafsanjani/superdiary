@@ -31,6 +31,7 @@ private val diaryListActions = DiaryListActions(
     onDeleteDiaries = { true },
     onToggleFavorite = { true },
     onApplyFilters = {},
+    onDiaryClicked = {},
 )
 
 @Composable
@@ -157,6 +158,7 @@ fun CreateDiaryPreview() {
                 onSaveDiary = {},
                 onNavigateBack = {},
                 onGenerateAI = { _, _ -> },
+                isEditable = false,
             )
         }
     }

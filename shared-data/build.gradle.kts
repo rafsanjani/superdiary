@@ -4,6 +4,7 @@ plugins {
     kotlin("multiplatform")
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
+    id("kotlin-parcelize")
     alias(libs.plugins.sqldelight)
     id("org.jetbrains.kotlinx.kover") version "0.7.4"
 }

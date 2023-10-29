@@ -32,6 +32,7 @@ class DiaryListSnapshotTests : KoinTest {
         onDeleteDiaries = { true },
         onApplyFilters = {},
         onToggleFavorite = { false },
+        onDiaryClicked = {},
     )
 
     @Test
@@ -55,6 +56,8 @@ class DiaryListSnapshotTests : KoinTest {
                 CreateDiaryScreenContent(
                     onNavigateBack = {},
                     onSaveDiary = {},
+                    isEditable = false,
+                    onGenerateAI = { _, _ -> },
                 )
             }
         }
