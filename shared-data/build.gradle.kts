@@ -54,11 +54,7 @@ kotlin {
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.square.sqldelight.coroutinesExt)
 
-                // import Kotlin API client BOM
-                implementation(
-                    platform("com.aallam.openai:openai-client-bom:3.5.0"),
-                )
-                // define dependencies without versions
+                implementation(platform("com.aallam.openai:openai-client-bom:3.5.0"))
                 implementation("com.aallam.openai:openai-client")
                 runtimeOnly("io.ktor:ktor-client-cio")
             }

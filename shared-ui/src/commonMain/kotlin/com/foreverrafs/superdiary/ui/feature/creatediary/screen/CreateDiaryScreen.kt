@@ -47,7 +47,7 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
                     }
                 }
             },
-            isEditable = diary == null, // We can't edit existing diaries
+            isEditable = diary != null, // We can't edit existing diaries
         ) { entry ->
             createDiaryScreenModel.saveDiary(
                 Diary(

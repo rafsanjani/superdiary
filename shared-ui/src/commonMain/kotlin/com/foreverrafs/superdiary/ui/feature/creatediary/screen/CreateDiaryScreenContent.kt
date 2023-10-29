@@ -33,7 +33,6 @@ import com.foreverrafs.superdiary.ui.feature.creatediary.components.RichTextStyl
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
-import com.mohamedrejeb.richeditor.ui.material3.RichText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -129,23 +128,14 @@ fun CreateDiaryScreenContent(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                if (isEditable) {
-                    OutlinedRichTextEditor(
-                        state = richTextState,
-                        modifier = Modifier.fillMaxSize(),
-                        textStyle = MaterialTheme.typography.bodyMedium.copy(
-                            lineHeight = 15.sp,
-                        ),
-                    )
-                } else {
-                    RichText(
-                        state = richTextState,
-                        modifier = Modifier.fillMaxSize(),
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            lineHeight = 15.sp,
-                        ),
-                    )
-                }
+                OutlinedRichTextEditor(
+                    state = richTextState,
+                    modifier = Modifier.fillMaxSize(),
+                    textStyle = MaterialTheme.typography.bodyMedium.copy(
+                        lineHeight = 15.sp,
+                    ),
+                    readOnly = isEditable,
+                )
             }
         }
     }
