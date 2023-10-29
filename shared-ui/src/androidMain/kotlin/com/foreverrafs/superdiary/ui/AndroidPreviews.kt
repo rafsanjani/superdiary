@@ -155,10 +155,11 @@ fun CreateDiaryPreview() {
     SuperdiaryAppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             CreateDiaryScreenContent(
-                onSaveDiary = {},
                 onNavigateBack = {},
                 onGenerateAI = { _, _ -> },
-                isEditable = true,
+                diary = null,
+                onSaveDiary = {},
+                isGeneratingFromAi = false,
             )
         }
     }
@@ -171,10 +172,16 @@ fun CreateDiaryPreviewNonEditable() {
     SuperdiaryAppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             CreateDiaryScreenContent(
-                onSaveDiary = {},
                 onNavigateBack = {},
                 onGenerateAI = { _, _ -> },
-                isEditable = false,
+                diary = Diary(
+                    id = null,
+                    entry = "Sample diary",
+                    date = Clock.System.now(),
+                    isFavorite = false,
+                ),
+                onSaveDiary = {},
+                isGeneratingFromAi = false,
             )
         }
     }

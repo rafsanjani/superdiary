@@ -1,11 +1,11 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
-    kotlin("multiplatform")
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
-    id("kotlin-parcelize")
     alias(libs.plugins.sqldelight)
+    kotlin("multiplatform")
+    id("kotlin-parcelize")
     id("org.jetbrains.kotlinx.kover") version "0.7.4"
 }
 

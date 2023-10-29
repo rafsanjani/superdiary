@@ -13,8 +13,10 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(libs.androidx.activity.compose)
+                implementation(libs.kotlin.datetime)
                 implementation(libs.material)
                 implementation(projects.sharedUi)
+                implementation(projects.sharedData)
                 implementation(libs.koin.android)
             }
         }

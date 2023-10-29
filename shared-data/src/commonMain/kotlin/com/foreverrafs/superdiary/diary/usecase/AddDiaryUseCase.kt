@@ -9,7 +9,7 @@ class AddDiaryUseCase(
     private val dataSource: DataSource,
     private val validator: DiaryValidator,
 ) {
-    suspend operator fun invoke(diary: Diary): Result {
+    suspend operator fun invoke(diary: Diary): DiaryListResult {
         return try {
             validator.validate(diary)
 

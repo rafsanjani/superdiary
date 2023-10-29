@@ -9,7 +9,7 @@ import com.foreverrafs.superdiary.diary.model.Diary
  * @see [AddDiaryUseCase] for the original version of this
  */
 internal class RelaxedAddDiaryUseCase(private val dataSource: DataSource) {
-    suspend operator fun invoke(diary: Diary): Result {
+    suspend operator fun invoke(diary: Diary): DiaryListResult {
         return try {
             dataSource.add(diary)
             Result.Success(data = listOf(diary))

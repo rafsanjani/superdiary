@@ -6,7 +6,7 @@ import com.foreverrafs.superdiary.diary.datasource.DataSource
 class DeleteAllDiariesUseCase(
     private val dataSource: DataSource,
 ) {
-    suspend operator fun invoke(): Result {
+    suspend operator fun invoke(): DiaryListResult {
         return try {
             dataSource.deleteAll()
             Result.Success(data = listOf())

@@ -9,6 +9,7 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenState
 import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
+import com.mohamedrejeb.richeditor.model.RichTextState
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import org.junit.Rule
@@ -56,8 +57,35 @@ class DiaryListSnapshotTests : KoinTest {
                 CreateDiaryScreenContent(
                     onNavigateBack = {},
                     onSaveDiary = {},
-                    isEditable = false,
+                    diary = Diary(
+                        id = null,
+                        date = Clock.System.now(),
+                        entry = "Hello World",
+                        isFavorite = false,
+                    ),
                     onGenerateAI = { _, _ -> },
+                    isGeneratingFromAi = false,
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `Create diary entry AI generated`() {
+        paparazzi.snapshot {
+            SuperdiaryAppTheme {
+                CreateDiaryScreenContent(
+                    richTextState = RichTextState().apply { setHtml("<p>AI generated diary content</p>") },
+                    onNavigateBack = {},
+                    onSaveDiary = {},
+                    diary = Diary(
+                        id = null,
+                        date = Clock.System.now(),
+                        entry = "Hello World",
+                        isFavorite = false,
+                    ),
+                    onGenerateAI = { _, _ -> },
+                    isGeneratingFromAi = true,
                 )
             }
         }

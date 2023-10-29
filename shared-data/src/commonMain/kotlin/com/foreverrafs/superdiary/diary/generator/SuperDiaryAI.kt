@@ -16,13 +16,16 @@ class SuperDiaryAI : DiaryAI {
         timeout = Timeout(socket = 60.seconds),
     )
 
-    override fun generateDiary(prompt: String, wordCount: Int): Flow<String> {
+    override fun generateDiary(
+        prompt: String,
+        wordCount: Int,
+    ): Flow<String> {
         val chatCompletionRequest = ChatCompletionRequest(
             model = ModelId("gpt-3.5-turbo"),
             messages = listOf(
                 ChatMessage(
                     role = ChatRole.System,
-                    content = "You are Journal AI, you can rewrite every statement I give you into a $wordCount word journal. You are not supposed to write anything yet. ",
+                    content = "You are Journal AI, you can rewrite every statement I give you into a $wordCount word informal journal. You are not supposed to write anything yet. ",
                 ),
                 ChatMessage(
                     role = ChatRole.System,
@@ -32,6 +35,8 @@ class SuperDiaryAI : DiaryAI {
         )
 
         return openAi.chatCompletions(chatCompletionRequest)
-            .map { it.choices.first().delta.content.orEmpty() }
+            .map {
+                it.choices.first().delta.content.orEmpty()
+            }
     }
 }

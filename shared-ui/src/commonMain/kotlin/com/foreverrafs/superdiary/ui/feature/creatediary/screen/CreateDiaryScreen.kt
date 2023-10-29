@@ -1,8 +1,11 @@
 package com.foreverrafs.superdiary.ui.feature.creatediary.screen
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.screen.Screen
@@ -13,6 +16,9 @@ import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
@@ -25,29 +31,42 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
         val richTextState = rememberRichTextState()
         val coroutineScope = rememberCoroutineScope()
 
-        LaunchedEffect(Unit) {
-            diary?.let {
-                richTextState.setHtml(it.entry)
-            }
+        var isGeneratingFromAI by remember {
+            mutableStateOf(false)
         }
 
         CreateDiaryScreenContent(
             onNavigateBack = navigator::pop,
             richTextState = richTextState,
+            diary = diary,
+            isGeneratingFromAi = isGeneratingFromAI,
             onGenerateAI = { prompt, wordCount ->
                 var generatedWords = ""
 
                 coroutineScope.launch {
-                    createDiaryScreenModel.generateAIDiary(
-                        prompt = prompt,
-                        wordCount = wordCount,
-                    ).collect { chunk ->
-                        generatedWords += chunk
-                        richTextState.setHtml("<p>$generatedWords</p>")
-                    }
+                    createDiaryScreenModel
+                        .generateAIDiary(
+                            prompt = prompt,
+                            wordCount = wordCount,
+                        )
+                        .onStart {
+                            isGeneratingFromAI = true
+                            richTextState.setHtml("<p>Generating diary...</p>")
+                        }
+                        .catch {
+                            isGeneratingFromAI = false
+                            richTextState.setHtml("<p style=\"color:red\">Error generating entry</p>")
+                            println(it)
+                        }
+                        .onCompletion {
+                            isGeneratingFromAI = false
+                        }
+                        .collect { chunk ->
+                            generatedWords += chunk
+                            richTextState.setHtml("<p>$generatedWords</p>")
+                        }
                 }
             },
-            isEditable = diary != null, // We can't edit existing diaries
         ) { entry ->
             createDiaryScreenModel.saveDiary(
                 Diary(
