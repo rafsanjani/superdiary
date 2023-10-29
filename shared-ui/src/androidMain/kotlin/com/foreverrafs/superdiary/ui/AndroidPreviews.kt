@@ -158,6 +158,22 @@ fun CreateDiaryPreview() {
                 onSaveDiary = {},
                 onNavigateBack = {},
                 onGenerateAI = { _, _ -> },
+                isEditable = true,
+            )
+        }
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@Composable
+fun CreateDiaryPreviewNonEditable() {
+    SuperdiaryAppTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            CreateDiaryScreenContent(
+                onSaveDiary = {},
+                onNavigateBack = {},
+                onGenerateAI = { _, _ -> },
                 isEditable = false,
             )
         }
