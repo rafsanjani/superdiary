@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.paparazzi)
+    id("kotlin-parcelize")
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -36,8 +37,8 @@ kotlin {
             dependencies {
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
-                implementation(compose.foundation)
                 implementation(compose.material3)
+                implementation(compose.materialIconsExtended)
                 implementation(compose.materialIconsExtended)
                 implementation(projects.sharedData)
                 implementation(libs.kotlin.datetime)
@@ -48,8 +49,7 @@ kotlin {
                 implementation(libs.voyager.koin)
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.koin.compose)
-                implementation(compose.material3)
-                implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-beta03")
+                implementation(libs.richTextEditor)
             }
         }
 

@@ -5,27 +5,13 @@ import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScree
 import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListScreenModel
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoritesTabScreenModel
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 internal fun screenModules(): Module = module {
-    single {
-        DiaryListScreenModel(
-            getAllDiariesUseCase = get(),
-            searchDiaryByEntryUseCase = get(),
-            searchDiaryByDateUseCase = get(),
-            deleteMultipleDiariesUseCase = get(),
-            updateDiaryUseCase = get(),
-        )
-    }
-    single {
-        CreateDiaryScreenModel(
-            addDiaryUseCase = get(),
-        )
-    }
-
-    single {
-        FavoritesTabScreenModel(get())
-    }
+    singleOf(::DiaryListScreenModel)
+    singleOf(::CreateDiaryScreenModel)
+    singleOf(::FavoritesTabScreenModel)
 }
 
 expect fun platformModule(): Module

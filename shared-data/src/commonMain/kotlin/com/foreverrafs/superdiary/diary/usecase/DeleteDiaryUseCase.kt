@@ -7,7 +7,7 @@ import com.foreverrafs.superdiary.diary.model.Diary
 class DeleteDiaryUseCase(
     private val dataSource: DataSource,
 ) {
-    suspend operator fun invoke(diary: Diary): Result {
+    suspend operator fun invoke(diary: Diary): DiaryListResult {
         return try {
             dataSource.delete(diary)
             Result.Success(data = listOf(diary))

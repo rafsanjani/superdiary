@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.ui.feature.diarylist.screen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -30,6 +31,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -89,6 +91,7 @@ val DiaryListActions.Companion.Empty: DiaryListActions
         onApplyFilters = {},
         onDeleteDiaries = { true },
         onAddEntry = {},
+        onDiaryClicked = {},
     )
 
 @Composable
@@ -251,7 +254,7 @@ fun DiaryList(
                                         if (inSelectionMode) {
                                             diaryListActions.onToggleSelection(diary.id)
                                         } else {
-                                            // Process regular click here
+                                            diaryListActions.onDiaryClicked(diary)
                                         }
                                     },
                                     onLongClick = {
@@ -368,12 +371,16 @@ private fun DiaryListContent(
     // if filters have been applied
     val filteredEmpty = diaries.isEmpty() && isFiltered
 
-    Box(modifier = modifier) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
+    ) {
         val listState = rememberLazyListState()
 
         val fabVisibility by derivedStateOf {
             listState.firstVisibleItemIndex == 0
         }
+
         if (diaries.isNotEmpty() || filteredEmpty) {
             DiaryList(
                 modifier = Modifier.fillMaxSize(),
@@ -392,17 +399,21 @@ private fun DiaryListContent(
                 listState = listState,
             )
 
-            FloatingActionButton(
+            AnimatedVisibility(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(8.dp),
-                onClick = diaryListActions.onAddEntry,
-                shape = RoundedCornerShape(4.dp),
+                visible = fabVisibility,
             ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null,
-                )
+                FloatingActionButton(
+                    onClick = diaryListActions.onAddEntry,
+                    shape = RoundedCornerShape(4.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null,
+                    )
+                }
             }
         } else {
             EmptyDiaryList(
@@ -466,6 +477,7 @@ private fun EmptyDiaryList(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DiaryItem(
     modifier: Modifier = Modifier,

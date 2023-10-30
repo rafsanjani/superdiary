@@ -31,6 +31,7 @@ private val diaryListActions = DiaryListActions(
     onDeleteDiaries = { true },
     onToggleFavorite = { true },
     onApplyFilters = {},
+    onDiaryClicked = {},
 )
 
 @Composable
@@ -154,8 +155,33 @@ fun CreateDiaryPreview() {
     SuperdiaryAppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             CreateDiaryScreenContent(
-                onSaveDiary = {},
                 onNavigateBack = {},
+                onGenerateAI = { _, _ -> },
+                diary = null,
+                onSaveDiary = {},
+                isGeneratingFromAi = false,
+            )
+        }
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@Composable
+fun CreateDiaryPreviewNonEditable() {
+    SuperdiaryAppTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            CreateDiaryScreenContent(
+                onNavigateBack = {},
+                onGenerateAI = { _, _ -> },
+                diary = Diary(
+                    id = null,
+                    entry = "Sample diary",
+                    date = Clock.System.now(),
+                    isFavorite = false,
+                ),
+                onSaveDiary = {},
+                isGeneratingFromAi = false,
             )
         }
     }

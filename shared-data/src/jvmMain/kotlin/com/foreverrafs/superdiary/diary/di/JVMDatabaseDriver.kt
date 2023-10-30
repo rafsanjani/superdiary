@@ -6,6 +6,8 @@ import com.foreverrafs.superdiary.diary.DatabaseDriver
 
 class JVMDatabaseDriver : DatabaseDriver {
     override fun createDriver(): SqlDriver {
-        return JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+        return JdbcSqliteDriver(
+            url = "jdbc:sqlite:diary.db",
+        )
     }
 }

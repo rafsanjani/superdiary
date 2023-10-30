@@ -1,10 +1,11 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
-    kotlin("multiplatform")
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
     alias(libs.plugins.sqldelight)
+    kotlin("multiplatform")
+    id("kotlin-parcelize")
     id("org.jetbrains.kotlinx.kover") version "0.7.4"
 }
 
@@ -52,6 +53,10 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.square.sqldelight.coroutinesExt)
+
+                implementation(platform("com.aallam.openai:openai-client-bom:3.5.0"))
+                implementation("com.aallam.openai:openai-client")
+                runtimeOnly(libs.ktor.client.cio)
             }
         }
         val androidMain by getting {
@@ -76,6 +81,8 @@ kotlin {
                 implementation(libs.square.sqldelight.driver.native)
                 implementation(libs.kotlin.coroutines.core)
                 implementation(libs.koin.core)
+                implementation(libs.ktor.client.darwin)
+                implementation(libs.ktor.client.ios)
             }
         }
 

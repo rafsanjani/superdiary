@@ -1,8 +1,6 @@
 package com.foreverrafs.superdiary.diary
 
-import com.foreverrafs.superdiary.diary.model.Diary
-
-sealed interface Result {
-    data class Success(val data: List<Diary>) : Result
-    data class Failure(val error: Throwable) : Result
+sealed interface Result<out T> {
+    data class Success<T>(val data: T) : Result<T>
+    data class Failure(val error: Throwable) : Result<Nothing>
 }
