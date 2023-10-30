@@ -59,7 +59,7 @@ class DiaryListSnapshotTests : KoinTest {
                     onSaveDiary = {},
                     diary = Diary(
                         id = null,
-                        date = Clock.System.now(),
+                        date = testClock.now(),
                         entry = "Hello World",
                         isFavorite = false,
                     ),
@@ -80,7 +80,7 @@ class DiaryListSnapshotTests : KoinTest {
                     onSaveDiary = {},
                     diary = Diary(
                         id = null,
-                        date = Clock.System.now(),
+                        date = testClock.now(),
                         entry = "Hello World",
                         isFavorite = false,
                     ),
