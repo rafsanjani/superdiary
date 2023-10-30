@@ -82,7 +82,7 @@ kotlin {
                 implementation(libs.kotlin.coroutines.core)
                 implementation(libs.koin.core)
                 implementation(libs.ktor.client.darwin)
-                implementation("io.ktor:ktor-client-ios:2.3.5")
+                implementation(libs.ktor.client.ios)
             }
         }
 
