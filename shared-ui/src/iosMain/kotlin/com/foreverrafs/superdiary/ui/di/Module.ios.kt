@@ -5,10 +5,11 @@ import com.foreverrafs.superdiary.diary.DatabaseDriver
 import com.foreverrafs.superdiary.diary.di.useCaseModule
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 actual fun platformModule(): Module = module {
-    factory<DatabaseDriver> { DarwinDatabaseDriver() }
+    factoryOf<DatabaseDriver>(::DarwinDatabaseDriver)
 }
 
 @Suppress("unused")

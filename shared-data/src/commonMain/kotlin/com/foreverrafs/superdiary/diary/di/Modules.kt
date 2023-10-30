@@ -22,7 +22,8 @@ import org.koin.dsl.module
 fun useCaseModule() = module {
     single<DataSource> { LocalDataSource(get()) }
     factory<Clock> { Clock.System }
-    single<DiaryAI> { SuperDiaryAI() }
+
+    singleOf<DiaryAI>(::SuperDiaryAI)
     singleOf(::AddDiaryUseCase)
     singleOf(::GetAllDiariesUseCase)
     singleOf(::GetFavoriteDiariesUseCase)
