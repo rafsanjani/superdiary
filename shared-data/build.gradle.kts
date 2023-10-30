@@ -56,7 +56,7 @@ kotlin {
 
                 implementation(platform("com.aallam.openai:openai-client-bom:3.5.0"))
                 implementation("com.aallam.openai:openai-client")
-                runtimeOnly("io.ktor:ktor-client-cio")
+                runtimeOnly(libs.ktor.client.cio)
             }
         }
         val androidMain by getting {
@@ -81,6 +81,8 @@ kotlin {
                 implementation(libs.square.sqldelight.driver.native)
                 implementation(libs.kotlin.coroutines.core)
                 implementation(libs.koin.core)
+                implementation(libs.ktor.client.darwin)
+                implementation("io.ktor:ktor-client-ios:2.3.5")
             }
         }
 
