@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.ui.feature.diarylist.screen
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.outlined.List
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -12,25 +13,30 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.koin.getScreenModel
-import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.foreverrafs.superdiary.ui.LocalRootSnackbarHostState
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
+import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListScreenModel
 
-object DiaryListScreen : Tab {
+object DiaryListScreen : SuperDiaryScreen() {
     override val options: TabOptions
         @Composable
         get() = TabOptions(
             index = 1u,
-            title = "Diary list",
-            icon = rememberVectorPainter(Icons.Default.List),
+            title = "Entries",
+            icon = rememberVectorPainter(Icons.Outlined.List),
         )
+
+    override val selectedIcon: VectorPainter
+        @Composable
+        get() = rememberVectorPainter(Icons.Filled.List)
 
     @Composable
     override fun Content() {
