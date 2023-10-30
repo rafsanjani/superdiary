@@ -123,9 +123,13 @@ fun CreateDiaryScreenContent(
                             style = MaterialTheme.typography.bodyMedium,
                         )
 
+                        // Only enable AI suggestions when there is at least 50 characters entered
+                        val enableSuggestionChip =
+                            !isGeneratingFromAi && richTextState.annotatedString.text.length >= 50
+
                         DiaryAISuggestionChip(
                             words = 50,
-                            enabled = !isGeneratingFromAi,
+                            enabled = enableSuggestionChip,
                             onClick = {
                                 onGenerateAI(
                                     richTextState.annotatedString.text,
@@ -136,7 +140,7 @@ fun CreateDiaryScreenContent(
 
                         DiaryAISuggestionChip(
                             words = 100,
-                            enabled = !isGeneratingFromAi,
+                            enabled = enableSuggestionChip,
                             onClick = {
                                 onGenerateAI(
                                     richTextState.annotatedString.text,
