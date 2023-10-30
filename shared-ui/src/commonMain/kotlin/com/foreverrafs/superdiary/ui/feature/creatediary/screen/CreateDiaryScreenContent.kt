@@ -71,7 +71,9 @@ fun CreateDiaryScreenContent(
                     }
                 },
                 saveIcon = {
-                    if (readOnly) return@SuperDiaryAppBar
+                    if (readOnly || richTextState.annotatedString.text.isEmpty()) {
+                        return@SuperDiaryAppBar
+                    }
                     IconButton(
                         onClick = {
                             onSaveDiary(richTextState.toHtml())
@@ -103,18 +105,35 @@ fun CreateDiaryScreenContent(
                     .fillMaxSize()
                     .padding(12.dp),
             ) {
-                RichTextStyleRow(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    state = richTextState,
-                )
-
-                if (!readOnly) {
+                if (readOnly) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(48.dp)
-                            .background(color = MaterialTheme.colorScheme.surface),
+                            .background(color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            text = diary?.date?.toLocalDateTime(TimeZone.UTC)?.date?.format(
+                                format = "EEE, MMM dd, yyyy",
+                            ) ?: "",
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                    }
+                } else {
+                    RichTextStyleRow(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        state = richTextState,
+                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .background(color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
@@ -154,24 +173,6 @@ fun CreateDiaryScreenContent(
                         AnimatedVisibility(visible = isGeneratingFromAi) {
                             CircularProgressIndicator(modifier = Modifier.size(24.dp))
                         }
-                    }
-                } else {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                            .background(color = MaterialTheme.colorScheme.surface),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            text = diary?.date?.toLocalDateTime(TimeZone.UTC)?.date?.format(
-                                format = "EEE, MMM dd, yyyy",
-                            ) ?: "",
-                            style = MaterialTheme.typography.labelMedium,
-                        )
                     }
                 }
 
