@@ -53,7 +53,6 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.square.sqldelight.coroutinesExt)
-
                 implementation(platform("com.aallam.openai:openai-client-bom:3.5.0"))
                 implementation("com.aallam.openai:openai-client")
                 runtimeOnly(libs.ktor.client.cio)
@@ -71,6 +70,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(libs.junit)
+                implementation(libs.koin.test)
                 implementation(libs.kotlin.coroutines.test)
                 implementation(libs.turbine)
                 implementation(libs.assertk.common)
@@ -80,7 +80,6 @@ kotlin {
             dependencies {
                 implementation(libs.square.sqldelight.driver.native)
                 implementation(libs.kotlin.coroutines.core)
-                implementation(libs.koin.core)
                 implementation(libs.ktor.client.darwin)
                 implementation(libs.ktor.client.ios)
             }
