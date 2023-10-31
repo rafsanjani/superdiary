@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.ui.di
 
+import com.foreverrafs.superdiary.diary.di.platformModule
 import com.foreverrafs.superdiary.diary.di.useCaseModule
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListScreenModel
@@ -14,5 +15,4 @@ internal fun screenModules(): Module = module {
     singleOf(::FavoritesTabScreenModel)
 }
 
-expect fun platformModule(): Module
 fun appModule() = listOf(useCaseModule(), screenModules(), platformModule())

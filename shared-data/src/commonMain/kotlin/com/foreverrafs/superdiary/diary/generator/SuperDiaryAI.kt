@@ -12,8 +12,8 @@ import kotlin.time.Duration.Companion.seconds
 
 class SuperDiaryAI : DiaryAI {
     private val openAi = OpenAI(
-        token = "my-token",
-        timeout = Timeout(socket = 60.seconds),
+        token = "test-token",
+        timeout = Timeout(socket = 15.seconds),
     )
 
     override fun generateDiary(
@@ -25,7 +25,7 @@ class SuperDiaryAI : DiaryAI {
             messages = listOf(
                 ChatMessage(
                     role = ChatRole.System,
-                    content = "You are Journal AI, you can rewrite every statement I give you into a $wordCount word informal journal. You are not supposed to write anything yet. ",
+                    content = "You are Journal AI, you can rewrite every statement I give you into a $wordCount word informal journal. You are not supposed to write anything yet and you are not supposed to respond to questions.",
                 ),
                 ChatMessage(
                     role = ChatRole.System,

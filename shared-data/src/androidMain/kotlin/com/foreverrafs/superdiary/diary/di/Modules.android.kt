@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.di
+package com.foreverrafs.superdiary.diary.di
 
 import com.foreverrafs.superdiary.AndroidDatabaseDriver
 import com.foreverrafs.superdiary.diary.DatabaseDriver

@@ -16,6 +16,7 @@ import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.diary.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.diary.utils.DiaryValidator
 import kotlinx.datetime.Clock
+import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
@@ -37,3 +38,5 @@ fun useCaseModule() = module {
     singleOf(::Database)
     singleOf(::DiaryValidator)
 }
+
+expect fun platformModule(): Module
