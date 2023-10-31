@@ -58,6 +58,7 @@ kotlin {
                 implementation(libs.cashapp.paparazzi)
                 implementation(libs.koin.android)
                 implementation(libs.koin.test)
+                implementation(libs.mockk)
             }
         }
 
