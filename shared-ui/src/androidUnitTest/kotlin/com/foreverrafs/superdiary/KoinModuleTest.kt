@@ -1,4 +1,4 @@
-package com.foreverrafs
+package com.foreverrafs.superdiary
 
 import com.foreverrafs.superdiary.diary.di.platformModule
 import com.foreverrafs.superdiary.diary.di.useCaseModule
