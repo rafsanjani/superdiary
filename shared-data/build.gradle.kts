@@ -53,7 +53,7 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.square.sqldelight.coroutinesExt)
-                implementation(platform("com.aallam.openai:openai-client-bom:3.5.0"))
+                implementation(platform("com.aallam.openai:openai-client-bom:3.5.1"))
                 implementation("com.aallam.openai:openai-client")
                 runtimeOnly(libs.ktor.client.cio)
             }
