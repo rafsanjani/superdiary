@@ -1,0 +1,4 @@
+{
+    "backend.maxHeapSizeMb": 3584,
+    "run.destination.stop.already.running": "Always"
+}
