@@ -182,7 +182,7 @@ fun CreateDiaryScreenContent(
                     state = richTextState,
                     modifier = Modifier.fillMaxSize(),
                     textStyle = MaterialTheme.typography.bodyMedium.copy(
-                        lineHeight = 15.sp,
+                        lineHeight = 25.sp,
                     ),
                     readOnly = diary != null,
                 )

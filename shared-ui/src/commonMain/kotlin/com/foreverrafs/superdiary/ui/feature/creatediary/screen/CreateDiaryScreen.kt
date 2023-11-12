@@ -14,7 +14,6 @@ import com.foreverrafs.superdiary.diary.generator.DiaryAI
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
-import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
@@ -28,7 +27,9 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
     override fun Content() {
         val createDiaryScreenModel: CreateDiaryScreenModel = getScreenModel()
         val navigator = LocalScreenNavigator.current
-        val richTextState = rememberRichTextState()
+
+        val undoManager = rememberUndoableRichTextState()
+        val richTextState = undoManager.richTextState
         val coroutineScope = rememberCoroutineScope()
 
         var isGeneratingFromAI by remember {
@@ -41,6 +42,7 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
             diary = diary,
             isGeneratingFromAi = isGeneratingFromAI,
             onGenerateAI = { prompt, wordCount ->
+                undoManager.save()
                 var generatedWords = ""
 
                 coroutineScope.launch {
@@ -60,6 +62,7 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
                         }
                         .onCompletion {
                             isGeneratingFromAI = false
+                            undoManager.undo()
                         }
                         .collect { chunk ->
                             generatedWords += chunk
