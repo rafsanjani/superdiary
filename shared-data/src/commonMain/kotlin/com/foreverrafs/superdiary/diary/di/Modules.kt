@@ -1,6 +1,7 @@
 package com.foreverrafs.superdiary.diary.di
 
 import com.foreverrafs.superdiary.diary.Database
+import com.foreverrafs.superdiary.diary.analytics.Analytics
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.datasource.LocalDataSource
 import com.foreverrafs.superdiary.diary.generator.DiaryAI
@@ -39,4 +40,4 @@ fun useCaseModule() = module {
     singleOf(::DiaryValidator)
 }
 
-expect fun platformModule(): Module
+expect fun platformModule(analytics: Analytics): Module

@@ -15,8 +15,11 @@ fun main() = singleWindowApplication(
     state = WindowState(size = DpSize(400.dp, 800.dp)),
 ) {
     startKoin {
-        modules(appModule())
+        modules(
+            appModule(),
+        )
     }
+
     initDatabase()
 
     SuperdiaryAppTheme {

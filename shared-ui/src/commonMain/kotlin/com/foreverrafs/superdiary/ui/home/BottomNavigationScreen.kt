@@ -17,12 +17,13 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.foreverrafs.superdiary.ui.LocalRootSnackbarHostState
+import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.calendar.CalendarScreen
+import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreen
 import com.foreverrafs.superdiary.ui.feature.diaryai.DiaryAiScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreen
-import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 
 /**
  * Provides a navigation entry point for all the screens that rely on
@@ -48,8 +49,8 @@ object BottomNavigationScreen : Screen {
                 topBar = { SuperDiaryAppBar() },
                 bottomBar = {
                     NavigationBar {
+                        TabNavigationItem(DashboardScreen)
                         TabNavigationItem(DiaryListScreen)
-                        TabNavigationItem(CalendarScreen)
                         TabNavigationItem(FavoriteScreen)
                         TabNavigationItem(DiaryAiScreen)
                     }

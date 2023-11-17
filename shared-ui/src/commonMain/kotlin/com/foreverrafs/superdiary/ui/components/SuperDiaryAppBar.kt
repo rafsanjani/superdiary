@@ -11,7 +11,6 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RichTooltipBox
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -28,7 +27,7 @@ import androidx.compose.ui.unit.dp
 fun SuperDiaryAppBar(
     modifier: Modifier = Modifier,
     navigationIcon: (@Composable () -> Unit)? = null,
-    saveIcon: (@Composable () -> Unit)? = null,
+    tralingIcon: (@Composable () -> Unit)? = null,
 ) {
     CenterAlignedTopAppBar(
         modifier = modifier,
@@ -49,7 +48,7 @@ fun SuperDiaryAppBar(
             containerColor = MaterialTheme.colorScheme.background,
         ),
         actions = {
-            saveIcon?.invoke()
+            tralingIcon?.invoke()
         },
         navigationIcon = {
             navigationIcon?.invoke()

@@ -160,6 +160,7 @@ fun CreateDiaryPreview() {
                 diary = null,
                 onSaveDiary = {},
                 isGeneratingFromAi = false,
+                onDeleteDiary = {},
             )
         }
     }
@@ -182,6 +183,7 @@ fun CreateDiaryPreviewNonEditable() {
                 ),
                 onSaveDiary = {},
                 isGeneratingFromAi = false,
+                onDeleteDiary = {},
             )
         }
     }
