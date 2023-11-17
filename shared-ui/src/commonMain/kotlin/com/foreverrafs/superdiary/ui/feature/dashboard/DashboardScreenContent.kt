@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CalendarScreenContent() {
+fun DashboardScreenContent() {
     Scaffold(modifier = Modifier.padding(8.dp)) {
         Column {
             Text(

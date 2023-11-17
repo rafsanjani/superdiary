@@ -54,7 +54,7 @@ internal fun TestAppContainer(content: @Composable () -> Unit) {
     }
 }
 
-@Preview
+@SuperDiaryPreview
 @Composable
 fun LoadingDiariesPreview() {
     TestAppContainer {
@@ -67,7 +67,7 @@ fun LoadingDiariesPreview() {
     }
 }
 
-@Preview
+@SuperDiaryPreview
 @Composable
 fun ErrorLoadingDiariesPreview() {
     SuperdiaryAppTheme {
@@ -84,7 +84,7 @@ fun ErrorLoadingDiariesPreview() {
     }
 }
 
-@Preview
+@SuperDiaryPreview
 @Composable
 fun EmptySearchDiaryListPreview() {
     SuperdiaryAppTheme {
@@ -105,7 +105,7 @@ fun EmptySearchDiaryListPreview() {
     }
 }
 
-@Preview
+@SuperDiaryPreview
 @Composable
 fun EmptyDiaryListPreview() {
     SuperdiaryAppTheme {
@@ -122,8 +122,7 @@ fun EmptyDiaryListPreview() {
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@SuperDiaryPreview
 @Composable
 fun DiaryListPreview() {
     SuperdiaryAppTheme {
@@ -148,8 +147,7 @@ fun DiaryListPreview() {
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@SuperDiaryPreview
 @Composable
 fun CreateDiaryPreview() {
     SuperdiaryAppTheme {
@@ -166,8 +164,7 @@ fun CreateDiaryPreview() {
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@SuperDiaryPreview
 @Composable
 fun CreateDiaryPreviewNonEditable() {
     SuperdiaryAppTheme {
@@ -189,8 +186,7 @@ fun CreateDiaryPreviewNonEditable() {
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@SuperDiaryPreview
 @Composable
 fun FilteredEmptyPreview() {
     TestAppContainer {
@@ -206,8 +202,7 @@ fun FilteredEmptyPreview() {
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@SuperDiaryPreview
 @Composable
 fun SelectedDiariesPreview() {
     TestAppContainer {
@@ -232,8 +227,7 @@ fun SelectedDiariesPreview() {
 }
 
 @Composable
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@SuperDiaryPreview
 fun DiaryDatePickerPreview() {
     TestAppContainer {
         DiaryDatePicker(
@@ -245,8 +239,7 @@ fun DiaryDatePickerPreview() {
 }
 
 @Composable
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@SuperDiaryPreview
 fun DeleteDialogPreview() {
     TestAppContainer {
         ConfirmDeleteDialog(
@@ -255,3 +248,7 @@ fun DeleteDialogPreview() {
         )
     }
 }
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+annotation class SuperDiaryPreview

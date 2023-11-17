@@ -12,7 +12,7 @@ import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 object DashboardScreen : SuperDiaryScreen() {
     @Composable
     override fun Content() {
-        CalendarScreenContent()
+        DashboardScreenContent()
     }
 
     override val selectedIcon: VectorPainter
