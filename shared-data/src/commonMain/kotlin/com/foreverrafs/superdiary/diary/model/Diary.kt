@@ -1,6 +1,6 @@
 package com.foreverrafs.superdiary.diary.model
 
-import com.foreverrafs.superdiary.diary.parcel.JavaSerializable
+import com.foreverrafs.superdiary.diary.serializable.JavaSerializable
 import kotlinx.datetime.Instant
 import kotlin.jvm.Transient
 
