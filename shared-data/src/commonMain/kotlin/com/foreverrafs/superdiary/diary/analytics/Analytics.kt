@@ -1,6 +1,5 @@
 package com.foreverrafs.superdiary.diary.analytics
 
-
 interface Analytics {
-    fun trackEvent()
+    fun trackEvent(event: AnalyticsEvents)
 }

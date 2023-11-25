@@ -4,6 +4,7 @@ pluginManagement {
         google()
         gradlePluginPortal()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
         maven("https://jitpack.io")
         mavenLocal()
     }
@@ -15,12 +16,14 @@ dependencyResolutionManagement {
         mavenCentral()
         maven("https://jitpack.io")
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
         mavenLocal()
     }
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2023.11.05")
+            from("io.github.rafsanjani:versions:2023.11.25")
+            version("sqldelight", "2.1.0-SNAPSHOT")
         }
     }
 }

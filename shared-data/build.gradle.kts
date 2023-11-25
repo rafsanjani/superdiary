@@ -34,22 +34,20 @@ koverReport {
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    targetHierarchy.default()
+    androidTarget()
 
-    android()
-
-    ios()
     iosX64()
     jvm()
     iosArm64()
     iosSimulatorArm64()
 
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 implementation(libs.kotlin.coroutines.core)
                 implementation(libs.kotlin.coroutines.native)
                 implementation(libs.kotlin.datetime)
+                implementation("co.touchlab:stately-common:2.0.5") // Because sqldelight is misbehaving
                 implementation(libs.koin.core)
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.square.sqldelight.coroutinesExt)
@@ -58,7 +56,7 @@ kotlin {
                 runtimeOnly(libs.ktor.client.cio)
             }
         }
-        val androidMain by getting {
+        androidMain {
             dependencies {
                 implementation(libs.square.sqldelight.driver.android)
                 implementation(libs.square.sqldelight.coroutinesExt)
@@ -66,7 +64,7 @@ kotlin {
             }
         }
 
-        val commonTest by getting {
+        commonTest {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(libs.junit)
@@ -76,7 +74,8 @@ kotlin {
                 implementation(libs.assertk.common)
             }
         }
-        val iosMain by getting {
+
+        iosMain {
             dependencies {
                 implementation(libs.square.sqldelight.driver.native)
                 implementation(libs.kotlin.coroutines.core)
@@ -85,7 +84,7 @@ kotlin {
             }
         }
 
-        val jvmMain by getting {
+        jvmMain {
             dependencies {
                 implementation(libs.square.sqldelight.driver.sqlite)
             }

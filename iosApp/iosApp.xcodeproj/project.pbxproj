@@ -62,6 +62,7 @@
 				7555FF7D242A565900829871 /* iosApp */,
 				7555FF7C242A565900829871 /* Products */,
 				7555FFB0242A642200829871 /* Frameworks */,
+				C98CC691164B3AD1D7238F3B /* xcuserdata */,
 			);
 			sourceTree = "<group>";
 		};
@@ -91,6 +92,22 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C98CC691164B3AD1D7238F3B /* xcuserdata */ = {
+			isa = PBXGroup;
+			children = (
+				C98CC90884540F1CBDCD803F /* rafsanjani.xcuserdatad */,
+			);
+			name = xcuserdata;
+			path = iosApp.xcodeproj/project.xcworkspace/xcuserdata;
+			sourceTree = "<group>";
+		};
+		C98CC90884540F1CBDCD803F /* rafsanjani.xcuserdatad */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = rafsanjani.xcuserdatad;
 			sourceTree = "<group>";
 		};
 		C98CCCB8C5D439AAD6E28F35 /* analytics */ = {
