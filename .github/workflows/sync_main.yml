@@ -14,11 +14,6 @@ jobs:
         with:
           lfs: true
 
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
       - name: Sync master with develop branch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
