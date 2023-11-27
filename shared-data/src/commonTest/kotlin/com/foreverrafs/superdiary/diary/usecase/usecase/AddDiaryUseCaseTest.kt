@@ -9,11 +9,13 @@ import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.diary.usecase.InMemoryDataSource
-import com.foreverrafs.superdiary.diary.utils.DiaryValidator
+import com.foreverrafs.superdiary.diary.usecase.datasource.InMemoryDataSource
+import com.foreverrafs.superdiary.diary.validator.DiaryValidator
+import com.foreverrafs.superdiary.diary.validator.DiaryValidatorImpl
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
@@ -22,7 +24,7 @@ import kotlin.test.Test
 
 class AddDiaryUseCaseTest {
     private val dataSource: DataSource = InMemoryDataSource()
-    private val validator: DiaryValidator = DiaryValidator(Clock.System)
+    private val validator: DiaryValidator = DiaryValidatorImpl(Clock.System)
 
     private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
     private val addDiaryUseCase = AddDiaryUseCase(dataSource, validator)
@@ -74,5 +76,25 @@ class AddDiaryUseCaseTest {
         val result = addDiaryUseCase(diary)
 
         assertThat(result).isInstanceOf(Result.Failure::class)
+    }
+
+    @Test
+    fun `Add new relaxed diary and confirm saved`() = runTest {
+        val relaxedAddDiaryUseCase = AddDiaryUseCase(dataSource) {}
+
+        val diary = Diary(
+            entry = "New Entry",
+            date = Instant.parse("2023-03-03T03:33:25.587Z"),
+            isFavorite = false,
+        )
+
+        relaxedAddDiaryUseCase(diary)
+
+        getAllDiariesUseCase().test {
+            val items = awaitItem()
+            cancelAndConsumeRemainingEvents()
+
+            assertThat(items).contains(diary)
+        }
     }
 }

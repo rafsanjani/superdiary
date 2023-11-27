@@ -11,7 +11,7 @@ import kotlin.random.Random
 
 fun insertRandomDiaries(dataSource: DataSource) {
     runBlocking {
-        val relaxedAddDiaryUseCase = RelaxedAddDiaryUseCase(dataSource)
+        val relaxedAddDiaryUseCase = AddDiaryUseCase(dataSource) {}
 
         // March 03, 2023
         var currentDate = Instant.parse(isoString = "2023-03-03T02:35:53.049Z")

@@ -6,7 +6,7 @@ import assertk.assertions.doesNotContain
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.diary.usecase.InMemoryDataSource
+import com.foreverrafs.superdiary.diary.usecase.datasource.InMemoryDataSource
 import com.foreverrafs.superdiary.diary.usecase.insertRandomDiaries
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest

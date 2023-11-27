@@ -3,7 +3,6 @@ package com.foreverrafs.superdiary.diary.usecase
 import app.cash.turbine.test
 import assertk.assertFailure
 import assertk.assertThat
-import assertk.assertions.contains
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
@@ -11,10 +10,9 @@ import assertk.assertions.isNotEmpty
 import assertk.assertions.isTrue
 import assertk.assertions.messageContains
 import com.foreverrafs.superdiary.diary.datasource.DataSource
-import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.usecase.datasource.InMemoryDataSource
 import com.foreverrafs.superdiary.diary.utils.toInstant
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -35,26 +33,6 @@ class DiaryUseCaseTest {
     @BeforeTest
     fun setup() {
         insertRandomDiaries(dataSource)
-    }
-
-    @Test
-    fun `Add new relaxed diary and confirm saved`() = runTest {
-        val relaxedAddDiaryUseCase = RelaxedAddDiaryUseCase(dataSource)
-
-        val diary = Diary(
-            entry = "New Entry",
-            date = Instant.parse("2023-03-03T03:33:25.587Z"),
-            isFavorite = false,
-        )
-
-        relaxedAddDiaryUseCase(diary)
-
-        getAllDiariesUseCase().test {
-            val items = awaitItem()
-            cancelAndConsumeRemainingEvents()
-
-            assertThat(items).contains(diary)
-        }
     }
 
     @Test
