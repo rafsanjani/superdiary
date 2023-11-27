@@ -4,42 +4,27 @@ import app.cash.turbine.test
 import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.contains
-import assertk.assertions.doesNotContain
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
-import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isTrue
 import assertk.assertions.messageContains
-import com.foreverrafs.superdiary.diary.Result
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.usecase.datasource.InMemoryDataSource
 import com.foreverrafs.superdiary.diary.utils.toInstant
-import com.foreverrafs.superdiary.diary.validator.DiaryValidator
-import com.foreverrafs.superdiary.diary.validator.DiaryValidatorImpl
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Clock
-import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.minus
-import kotlinx.datetime.plus
-import kotlin.random.Random
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 class DiaryUseCaseTest {
 
     private val dataSource: DataSource = InMemoryDataSource()
-    private val validator: DiaryValidator = DiaryValidatorImpl(Clock.System)
 
-    private val addDiaryUseCase = AddDiaryUseCase(dataSource, validator)
     private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
-    private val deleteDiaryUseCase = DeleteDiaryUseCase(dataSource)
+
     private val deleteAllDiariesUseCase = DeleteAllDiariesUseCase(dataSource)
     private val searchDiaryBetweenDatesUseCase = SearchDiaryBetweenDatesUseCase(dataSource)
     private val searchDiaryByDateUseCase = SearchDiaryByDateUseCase(dataSource)
@@ -49,43 +34,12 @@ class DiaryUseCaseTest {
 
     @BeforeTest
     fun setup() {
-        insertRandomDiaries()
-    }
-
-    private fun insertRandomDiaries() {
-        runBlocking {
-            /**
-             * Adds diaries to our local datasource without enforcing any data integrity checks.
-             * @see [AddDiaryUseCase] for the original version of this
-             */
-            val relaxedAddDiaryUseCase = AddDiaryUseCase(
-                dataSource,
-            ) {
-                // no-op
-            }
-
-            // March 03, 2023
-            var currentDate = Instant.parse(isoString = "2023-03-03T02:35:53.049Z")
-            repeat(30) {
-                relaxedAddDiaryUseCase(
-                    Diary(
-                        Random.nextLong(),
-                        entry = "Diary Entry #$it",
-                        date = currentDate,
-                        isFavorite = false,
-                    ),
-                )
-
-                currentDate = currentDate.plus(1, DateTimeUnit.DAY, TimeZone.currentSystemDefault())
-            }
-        }
+        insertRandomDiaries(dataSource)
     }
 
     @Test
-    fun `Add diary without integrity checks and confirm saved`() = runTest {
-        val relaxedAddDiaryUseCase = AddDiaryUseCase(dataSource) {
-            // no-op
-        }
+    fun `Add new relaxed diary and confirm saved`() = runTest {
+        val relaxedAddDiaryUseCase = RelaxedAddDiaryUseCase(dataSource)
 
         val diary = Diary(
             entry = "New Entry",
@@ -100,74 +54,6 @@ class DiaryUseCaseTest {
             cancelAndConsumeRemainingEvents()
 
             assertThat(items).contains(diary)
-        }
-    }
-
-    @Test
-    fun `Add new diary today and confirm saved`() = runTest {
-        val diary = Diary(
-            id = Random.nextLong(),
-            entry = "New Entry today",
-            date = Clock.System.now(),
-            isFavorite = false,
-        )
-
-        addDiaryUseCase(diary)
-
-        getAllDiariesUseCase().test {
-            val items = awaitItem()
-            cancelAndConsumeRemainingEvents()
-
-            assertThat(items).contains(diary)
-        }
-    }
-
-    @Test
-    fun `Adding a new diary in the future fails`() = runTest {
-        val today = Clock.System.now()
-
-        val diary = Diary(
-            entry = "New Entry",
-            date = today.plus(1, DateTimeUnit.DAY, TimeZone.currentSystemDefault()),
-            isFavorite = false,
-        )
-
-        val result = addDiaryUseCase(diary)
-
-        assertThat(result).isInstanceOf(Result.Failure::class)
-    }
-
-    @Test
-    fun `Adding a new diary in the past fails`() = runTest {
-        val today = Clock.System.now()
-
-        val diary = Diary(
-            entry = "New Entry",
-            date = today.minus(1, DateTimeUnit.DAY, TimeZone.currentSystemDefault()),
-            isFavorite = false,
-        )
-
-        val result = addDiaryUseCase(diary)
-
-        assertThat(result).isInstanceOf(Result.Failure::class)
-    }
-
-    @Test
-    fun `Delete diary and confirm deletion`() = runTest {
-        getAllDiariesUseCase().test {
-            var diaries = expectMostRecentItem().toList()
-            val firstDiary = diaries.first()
-
-            // delete the first entry
-            deleteDiaryUseCase(firstDiary)
-
-            // get latest diaries again
-            diaries = awaitItem().toList()
-
-            cancelAndConsumeRemainingEvents()
-
-            // confirm that the first diary has been deleted
-            assertThat(diaries).doesNotContain(firstDiary)
         }
     }
 

@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.diary.usecase
+package com.foreverrafs.superdiary.diary.usecase.grouping
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo

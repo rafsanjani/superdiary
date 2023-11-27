@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.diary.usecase
+package com.foreverrafs.superdiary.diary.usecase.validator
 
 import assertk.assertFailure
 import assertk.assertThat
