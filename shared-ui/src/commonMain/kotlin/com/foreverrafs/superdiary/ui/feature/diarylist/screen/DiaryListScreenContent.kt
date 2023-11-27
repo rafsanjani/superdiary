@@ -56,6 +56,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -66,6 +67,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
+import com.foreverrafs.superdiary.diary.utils.toDate
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
@@ -77,8 +79,7 @@ import com.foreverrafs.superdiary.ui.format
 import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import kotlinx.coroutines.launch
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.LocalDate
 
 val DiaryListActions.Companion.Empty: DiaryListActions
     get() = DiaryListActions(
@@ -477,7 +478,7 @@ private fun EmptyDiaryList(
 }
 
 @Composable
-private fun DiaryItem(
+fun DiaryItem(
     modifier: Modifier = Modifier,
     diary: Diary,
     selected: Boolean,
@@ -494,12 +495,11 @@ private fun DiaryItem(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .height(110.dp)
             .padding(padding)
             .clip(RoundedCornerShape(roundedCornerShape))
-            .fillMaxWidth()
-            .then(modifier),
+            .fillMaxWidth(),
     ) {
         Card(
             shape = RoundedCornerShape(
@@ -527,89 +527,18 @@ private fun DiaryItem(
                     }
                     .fillMaxSize(),
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .background(
-                            color = MaterialTheme.colorScheme.secondaryContainer,
-                            shape = RoundedCornerShape(
-                                topStart = 0.dp,
-                                topEnd = 12.dp,
-                                bottomStart = 12.dp,
-                                bottomEnd = 0.dp,
-                            ),
-                        )
-                        .padding(horizontal = 25.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    val date = diary.date.toLocalDateTime(TimeZone.UTC).date
-
-                    Text(
-                        modifier = Modifier.semantics {
-                            contentDescription = "Entry for ${date.format("EEE dd MMMM yyyy")}"
-                        },
-                        text = buildAnnotatedString {
-                            withStyle(
-                                SpanStyle(
-                                    fontFamily = montserratAlternativesFontFamily(),
-                                    fontSize = 14.sp,
-                                ),
-                            ) {
-                                append(
-                                    date.format("E")
-                                        .uppercase(),
-                                )
-                            }
-
-                            appendLine()
-
-                            withStyle(
-                                SpanStyle(
-                                    fontFamily = montserratAlternativesFontFamily(),
-                                    fontWeight = FontWeight.ExtraBold,
-                                    fontSize = 16.sp,
-                                ),
-                            ) {
-                                append(date.dayOfMonth.toString())
-                            }
-                            appendLine()
-
-                            withStyle(
-                                SpanStyle(
-                                    fontFamily = montserratAlternativesFontFamily(),
-                                    fontWeight = FontWeight.Normal,
-                                    fontSize = 14.sp,
-                                ),
-                            ) {
-                                append(
-                                    date.format("MMM")
-                                        .uppercase(),
-                                )
-                            }
-                            appendLine()
-
-                            withStyle(
-                                SpanStyle(
-                                    fontFamily = montserratAlternativesFontFamily(),
-                                    fontWeight = FontWeight.Normal,
-                                    fontSize = 14.sp,
-                                ),
-                            ) {
-                                append(date.year.toString())
-                            }
-
-                            toAnnotatedString()
-                        },
-                        textAlign = TextAlign.Center,
-                        lineHeight = 20.sp,
-                    )
-                }
+                DateCard(diary.date.toDate())
 
                 // Diary Entry
                 Text(
                     modifier = Modifier
                         .clearAndSetSemantics { }
-                        .padding(8.dp)
+                        .padding(
+                            start = 8.dp,
+                            end = 8.dp,
+                            bottom = 8.dp,
+                            top = 16.dp,
+                        )
                         .align(Alignment.Top),
                     letterSpacing = (-0.3).sp,
                     overflow = TextOverflow.Ellipsis,
@@ -619,7 +548,6 @@ private fun DiaryItem(
                 )
             }
         }
-
         // Selection mode icon
         if (inSelectionMode) {
             val iconModifier = Modifier
@@ -642,13 +570,89 @@ private fun DiaryItem(
                 )
             }
         }
+    }
+}
 
-        // favorite icon
-        FavoriteIcon(
-            modifier = Modifier.align(Alignment.BottomEnd),
-            onToggleFavorite = onToggleFavorite,
-            isFavorite = diary.isFavorite,
+@Composable
+private fun DateCard(date: LocalDate) {
+    Box(
+        modifier = Modifier
+            .fillMaxHeight()
+            .background(
+                color = MaterialTheme.colorScheme.secondaryContainer,
+                shape = RoundedCornerShape(
+                    topStart = 0.dp,
+                    topEnd = 12.dp,
+                    bottomStart = 12.dp,
+                    bottomEnd = 0.dp,
+                ),
+            )
+            .padding(horizontal = 25.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            modifier = Modifier
+                .semantics {
+                    contentDescription = "Entry for ${date.format("EEE dd MMMM yyyy")}"
+                },
+            text = annotatedString(date),
+            textAlign = TextAlign.Center,
+            lineHeight = 20.sp,
+            style = MaterialTheme.typography.labelMedium,
         )
+    }
+}
+
+@Composable
+private fun annotatedString(date: LocalDate): AnnotatedString = buildAnnotatedString {
+    withStyle(
+        SpanStyle(
+            fontFamily = montserratAlternativesFontFamily(),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Normal,
+        ),
+    ) {
+        append(
+            date.format("E")
+                .uppercase(),
+        )
+    }
+
+    appendLine()
+
+    withStyle(
+        SpanStyle(
+            fontFamily = montserratAlternativesFontFamily(),
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 16.sp,
+        ),
+    ) {
+        append(date.dayOfMonth.toString())
+    }
+    appendLine()
+
+    withStyle(
+        SpanStyle(
+            fontFamily = montserratAlternativesFontFamily(),
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp,
+        ),
+    ) {
+        append(
+            date.format("MMM")
+                .uppercase(),
+        )
+    }
+    appendLine()
+
+    withStyle(
+        SpanStyle(
+            fontFamily = montserratAlternativesFontFamily(),
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp,
+        ),
+    ) {
+        append(date.year.toString())
     }
 }
 

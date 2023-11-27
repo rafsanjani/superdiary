@@ -35,7 +35,7 @@ object BottomNavigationScreen : Screen {
     override fun Content() {
         val snackbarHostState = LocalRootSnackbarHostState.current
 
-        TabNavigator(DiaryListScreen) {
+        TabNavigator(DashboardScreen) {
             Scaffold(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
                 content = {
@@ -50,7 +50,7 @@ object BottomNavigationScreen : Screen {
                 bottomBar = {
                     NavigationBar {
                         TabNavigationItem(DashboardScreen)
-                        TabNavigationItem(DiaryListScreen)
+//                        TabNavigationItem(DiaryListScreen)
                         TabNavigationItem(FavoriteScreen)
                         TabNavigationItem(DiaryAiScreen)
                     }

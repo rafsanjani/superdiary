@@ -13,6 +13,7 @@ import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetFavoriteDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryBetweenDatesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByDateUseCase
+import com.foreverrafs.superdiary.diary.usecase.GetLatestEntriesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.diary.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.diary.utils.DiaryValidator
@@ -38,6 +39,7 @@ fun useCaseModule() = module {
     singleOf(::UpdateDiaryUseCase)
     singleOf(::Database)
     singleOf(::DiaryValidator)
+    singleOf(::GetLatestEntriesUseCase)
 }
 
 expect fun platformModule(analytics: Analytics): Module

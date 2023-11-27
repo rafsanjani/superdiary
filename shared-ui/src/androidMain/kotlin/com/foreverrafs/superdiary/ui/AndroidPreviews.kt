@@ -14,6 +14,8 @@ import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
+import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreenContent
+import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreenModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryDatePicker
@@ -245,6 +247,17 @@ fun DeleteDialogPreview() {
         ConfirmDeleteDialog(
             onDismiss = {},
             onConfirm = {},
+        )
+    }
+}
+
+@Composable
+@SuperDiaryPreview
+fun DashboardPreview() {
+    TestAppContainer {
+        DashboardScreenContent(
+            onAddEntry = {},
+            state = DashboardScreenModel.DashboardScreenState.Loading,
         )
     }
 }
