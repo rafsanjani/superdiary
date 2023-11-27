@@ -1,14 +1,15 @@
 import SwiftUI
 import shared
 
-struct ComposeView: UIViewControllerRepresentable{
+struct ComposeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> some UIViewController {
-        Main_iosKt.MainViewController()
+        ViewController().mainViewController()
     }
-    
+
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
     }
 }
+
 struct ContentView: View {
 
 	var body: some View {

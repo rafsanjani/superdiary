@@ -51,4 +51,8 @@ class LocalDataSource(private val database: Database) : DataSource {
     override suspend fun deleteAll() {
         return database.clearDiaries()
     }
+
+    override fun getLatestEntries(count: Int): Flow<List<Diary>> {
+        return database.getLatestEntries(count)
+    }
 }

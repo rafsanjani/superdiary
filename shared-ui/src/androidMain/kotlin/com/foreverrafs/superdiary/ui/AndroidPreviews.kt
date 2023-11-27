@@ -14,6 +14,8 @@ import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
+import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreenContent
+import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreenModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryDatePicker
@@ -54,7 +56,7 @@ internal fun TestAppContainer(content: @Composable () -> Unit) {
     }
 }
 
-@Preview
+@SuperDiaryPreview
 @Composable
 fun LoadingDiariesPreview() {
     TestAppContainer {
@@ -67,7 +69,7 @@ fun LoadingDiariesPreview() {
     }
 }
 
-@Preview
+@SuperDiaryPreview
 @Composable
 fun ErrorLoadingDiariesPreview() {
     SuperdiaryAppTheme {
@@ -84,7 +86,7 @@ fun ErrorLoadingDiariesPreview() {
     }
 }
 
-@Preview
+@SuperDiaryPreview
 @Composable
 fun EmptySearchDiaryListPreview() {
     SuperdiaryAppTheme {
@@ -105,7 +107,7 @@ fun EmptySearchDiaryListPreview() {
     }
 }
 
-@Preview
+@SuperDiaryPreview
 @Composable
 fun EmptyDiaryListPreview() {
     SuperdiaryAppTheme {
@@ -122,8 +124,7 @@ fun EmptyDiaryListPreview() {
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@SuperDiaryPreview
 @Composable
 fun DiaryListPreview() {
     SuperdiaryAppTheme {
@@ -148,8 +149,7 @@ fun DiaryListPreview() {
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@SuperDiaryPreview
 @Composable
 fun CreateDiaryPreview() {
     SuperdiaryAppTheme {
@@ -160,13 +160,13 @@ fun CreateDiaryPreview() {
                 diary = null,
                 onSaveDiary = {},
                 isGeneratingFromAi = false,
+                onDeleteDiary = {},
             )
         }
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@SuperDiaryPreview
 @Composable
 fun CreateDiaryPreviewNonEditable() {
     SuperdiaryAppTheme {
@@ -182,13 +182,13 @@ fun CreateDiaryPreviewNonEditable() {
                 ),
                 onSaveDiary = {},
                 isGeneratingFromAi = false,
+                onDeleteDiary = {},
             )
         }
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@SuperDiaryPreview
 @Composable
 fun FilteredEmptyPreview() {
     TestAppContainer {
@@ -204,8 +204,7 @@ fun FilteredEmptyPreview() {
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@SuperDiaryPreview
 @Composable
 fun SelectedDiariesPreview() {
     TestAppContainer {
@@ -230,8 +229,7 @@ fun SelectedDiariesPreview() {
 }
 
 @Composable
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@SuperDiaryPreview
 fun DiaryDatePickerPreview() {
     TestAppContainer {
         DiaryDatePicker(
@@ -243,8 +241,7 @@ fun DiaryDatePickerPreview() {
 }
 
 @Composable
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+@SuperDiaryPreview
 fun DeleteDialogPreview() {
     TestAppContainer {
         ConfirmDeleteDialog(
@@ -253,3 +250,18 @@ fun DeleteDialogPreview() {
         )
     }
 }
+
+@Composable
+@SuperDiaryPreview
+fun DashboardPreview() {
+    TestAppContainer {
+        DashboardScreenContent(
+            onAddEntry = {},
+            state = DashboardScreenModel.DashboardScreenState.Loading,
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
+annotation class SuperDiaryPreview

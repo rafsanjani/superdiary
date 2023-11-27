@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import kotlin.coroutines.EmptyCoroutineContext
@@ -90,5 +91,12 @@ internal class InMemoryDataSource : DataSource {
         )
 
         return@withPublishDiaries 1
+    }
+
+    override fun getLatestEntries(count: Int): Flow<List<Diary>> {
+        return diariesFlow.map { diaries ->
+            diaries.sortedByDescending { it.date }
+        }
+            .take(count)
     }
 }

@@ -13,8 +13,9 @@ import cafe.adriel.voyager.koin.getScreenModel
 import com.foreverrafs.superdiary.diary.generator.DiaryAI
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
+import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
-import com.mohamedrejeb.richeditor.model.rememberRichTextState
+import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
@@ -28,11 +29,29 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
     override fun Content() {
         val createDiaryScreenModel: CreateDiaryScreenModel = getScreenModel()
         val navigator = LocalScreenNavigator.current
-        val richTextState = rememberRichTextState()
+
+        val undoManager = rememberUndoableRichTextState()
+        val richTextState = undoManager.richTextState
         val coroutineScope = rememberCoroutineScope()
 
         var isGeneratingFromAI by remember {
             mutableStateOf(false)
+        }
+
+        var showDeleteDialog by remember {
+            mutableStateOf(false)
+        }
+
+        if (showDeleteDialog) {
+            ConfirmDeleteDialog(
+                onDismiss = { showDeleteDialog = false },
+                onConfirm = {
+                    if (diary != null) {
+                        createDiaryScreenModel.deleteDiary(diary)
+                    }
+                    showDeleteDialog = false
+                },
+            )
         }
 
         CreateDiaryScreenContent(
@@ -40,7 +59,11 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
             richTextState = richTextState,
             diary = diary,
             isGeneratingFromAi = isGeneratingFromAI,
+            onDeleteDiary = {
+                showDeleteDialog = true
+            },
             onGenerateAI = { prompt, wordCount ->
+                undoManager.save()
                 var generatedWords = ""
 
                 coroutineScope.launch {
@@ -60,6 +83,7 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
                         }
                         .onCompletion {
                             isGeneratingFromAI = false
+                            undoManager.undo()
                         }
                         .collect { chunk ->
                             generatedWords += chunk
@@ -85,6 +109,7 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
 
 class CreateDiaryScreenModel(
     private val addDiaryUseCase: AddDiaryUseCase,
+    private val deleteDiaryUseCase: DeleteDiaryUseCase,
     private val diaryAI: DiaryAI,
 ) : ScreenModel {
 
@@ -94,4 +119,8 @@ class CreateDiaryScreenModel(
 
     fun generateAIDiary(prompt: String, wordCount: Int): Flow<String> =
         diaryAI.generateDiary(prompt, wordCount)
+
+    fun deleteDiary(diary: Diary) = screenModelScope.launch {
+        deleteDiaryUseCase(diary)
+    }
 }

@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary
 
+import com.foreverrafs.superdiary.analytics.AndroidAnalytics
 import com.foreverrafs.superdiary.diary.di.platformModule
 import com.foreverrafs.superdiary.diary.di.useCaseModule
 import io.mockk.mockk
@@ -13,7 +14,7 @@ class KoinModuleTest {
     fun checkKoinModules() {
         koinApplication {
             androidContext(mockk())
-            modules(useCaseModule(), platformModule())
+            modules(useCaseModule(), platformModule(AndroidAnalytics()))
             checkModules()
         }
     }

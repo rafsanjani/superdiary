@@ -99,4 +99,8 @@ class Database(databaseDriver: DatabaseDriver) {
 
     private fun Boolean.asLong(): Long = if (this) 1 else 0
     private fun Long.asBoolean(): Boolean = this != 0L
+    fun getLatestEntries(count: Int): Flow<List<Diary>> =
+        queries.getLatestEntries(count.toLong(), diaryMapper)
+            .asFlow()
+            .mapToList(Dispatchers.Main)
 }

@@ -1,6 +1,7 @@
 package com.foreverrafs
 
 import android.app.Application
+import com.foreverrafs.superdiary.analytics.AndroidAnalytics
 import com.foreverrafs.superdiary.ui.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -10,7 +11,9 @@ class DiaryApp : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@DiaryApp)
-            modules(appModule())
+            modules(
+                modules = appModule(analytics = AndroidAnalytics()),
+            )
         }
     }
 }

@@ -65,6 +65,7 @@ class DiaryListSnapshotTests : KoinTest {
                     ),
                     onGenerateAI = { _, _ -> },
                     isGeneratingFromAi = false,
+                    onDeleteDiary = {},
                 )
             }
         }
@@ -86,6 +87,7 @@ class DiaryListSnapshotTests : KoinTest {
                     ),
                     onGenerateAI = { _, _ -> },
                     isGeneratingFromAi = true,
+                    onDeleteDiary = {},
                 )
             }
         }

@@ -12,17 +12,18 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.foreverrafs.superdiary.ui.LocalRootSnackbarHostState
+import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
-import com.foreverrafs.superdiary.ui.feature.calendar.CalendarScreen
+import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreen
 import com.foreverrafs.superdiary.ui.feature.diaryai.DiaryAiScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreen
-import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 
 /**
  * Provides a navigation entry point for all the screens that rely on
@@ -34,7 +35,7 @@ object BottomNavigationScreen : Screen {
     override fun Content() {
         val snackbarHostState = LocalRootSnackbarHostState.current
 
-        TabNavigator(DiaryListScreen) {
+        TabNavigator(DashboardScreen) {
             Scaffold(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
                 content = {
@@ -48,8 +49,8 @@ object BottomNavigationScreen : Screen {
                 topBar = { SuperDiaryAppBar() },
                 bottomBar = {
                     NavigationBar {
-                        TabNavigationItem(DiaryListScreen)
-                        TabNavigationItem(CalendarScreen)
+                        TabNavigationItem(DashboardScreen)
+//                        TabNavigationItem(DiaryListScreen)
                         TabNavigationItem(FavoriteScreen)
                         TabNavigationItem(DiaryAiScreen)
                     }
@@ -77,6 +78,7 @@ private fun RowScope.TabNavigationItem(screen: SuperDiaryScreen) {
             Text(
                 text = screen.options.title,
                 style = MaterialTheme.typography.labelSmall,
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
             )
         },
     )

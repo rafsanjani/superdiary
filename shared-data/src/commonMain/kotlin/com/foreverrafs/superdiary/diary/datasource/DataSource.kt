@@ -71,4 +71,9 @@ interface DataSource {
      * Deletes all the diary entries from the data source.
      */
     suspend fun deleteAll()
+
+    /**
+     * Obtains the latest [count] entries from the datasource
+     */
+    fun getLatestEntries(count: Int): Flow<List<Diary>>
 }

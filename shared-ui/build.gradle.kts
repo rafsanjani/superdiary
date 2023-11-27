@@ -1,18 +1,16 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
-    kotlin("multiplatform")
+    alias(libs.plugins.paparazzi)
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.paparazzi)
+    kotlin("multiplatform")
     id("kotlin-parcelize")
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    targetHierarchy.default()
-
-    android()
+    android() // Because paparazzi plugin hasn't been upgraded to support androidTarget() yet
 
     jvm()
     jvmToolchain(17)
@@ -25,20 +23,15 @@ kotlin {
         it.binaries.framework {
             baseName = "shared"
             linkerOpts += "-lsqlite3"
-
-            if (System.getenv("XCODE_VERSION_MAJOR") == "1500") {
-                linkerOpts += "-ld64"
-            }
         }
     }
 
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
                 implementation(compose.material3)
-                implementation(compose.materialIconsExtended)
                 implementation(compose.materialIconsExtended)
                 implementation(projects.sharedData)
                 implementation(libs.kotlin.datetime)
@@ -50,6 +43,7 @@ kotlin {
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.koin.compose)
                 implementation(libs.richTextEditor)
+                implementation("co.touchlab:stately-common:2.0.5")
             }
         }
 

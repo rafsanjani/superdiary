@@ -15,7 +15,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,6 +42,8 @@ import com.foreverrafs.superdiary.ui.format
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
+import com.mohamedrejeb.richeditor.ui.material3.RichTextEditor
+import com.mohamedrejeb.richeditor.ui.material3.RichTextEditorDefaults
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -51,6 +55,7 @@ fun CreateDiaryScreenContent(
     richTextState: RichTextState = rememberRichTextState(),
     diary: Diary?,
     isGeneratingFromAi: Boolean,
+    onDeleteDiary: (diary: Diary) -> Unit,
     onSaveDiary: (entry: String) -> Unit,
 ) {
     val readOnly = diary != null
@@ -70,10 +75,25 @@ fun CreateDiaryScreenContent(
                         )
                     }
                 },
-                saveIcon = {
-                    if (readOnly || richTextState.annotatedString.text.isEmpty()) {
+                tralingIcon = {
+                    if (readOnly) {
+                        IconButton(
+                            onClick = {
+                                if (diary != null) {
+                                    onDeleteDiary(diary)
+                                }
+                            },
+                        ) {
+                            Icon(
+                                modifier = Modifier
+                                    .clip(CircleShape),
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Save entry",
+                            )
+                        }
                         return@SuperDiaryAppBar
                     }
+
                     IconButton(
                         onClick = {
                             onSaveDiary(richTextState.toHtml())
@@ -106,23 +126,23 @@ fun CreateDiaryScreenContent(
                     .padding(12.dp),
             ) {
                 if (readOnly) {
-                    Row(
+                    Divider()
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                            .background(color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            text = diary?.date?.toLocalDateTime(TimeZone.UTC)?.date?.format(
-                                format = "EEE, MMM dd, yyyy",
-                            ) ?: "",
-                            style = MaterialTheme.typography.labelMedium,
-                        )
-                    }
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        text = diary?.date?.toLocalDateTime(TimeZone.UTC)?.date?.format(
+                            format = "EEE, MMM dd, yyyy",
+                        ) ?: "",
+                        style = MaterialTheme.typography.labelMedium,
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Divider()
                 } else {
                     RichTextStyleRow(
                         modifier = Modifier
@@ -178,14 +198,28 @@ fun CreateDiaryScreenContent(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                OutlinedRichTextEditor(
-                    state = richTextState,
-                    modifier = Modifier.fillMaxSize(),
-                    textStyle = MaterialTheme.typography.bodyMedium.copy(
-                        lineHeight = 15.sp,
-                    ),
-                    readOnly = diary != null,
-                )
+                // editable state
+                if (diary == null) {
+                    OutlinedRichTextEditor(
+                        state = richTextState,
+                        modifier = Modifier.fillMaxSize(),
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            lineHeight = 25.sp,
+                        ),
+                    )
+                } else {
+                    RichTextEditor(
+                        state = richTextState,
+                        modifier = Modifier.fillMaxSize(),
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            lineHeight = 25.sp,
+                        ),
+                        readOnly = true,
+                        colors = RichTextEditorDefaults.outlinedRichTextEditorColors(
+                            containerColor = MaterialTheme.colorScheme.background,
+                        ),
+                    )
+                }
             }
         }
     }

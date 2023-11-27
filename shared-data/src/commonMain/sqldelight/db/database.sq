@@ -22,6 +22,9 @@ DELETE FROM diary;
 update:
 REPLACE INTO diary (id, entry, date, favorite) VALUES(?, ?,?, ?);
 
+getLatestEntries:
+SELECT * FROM diary ORDER BY date DESC LIMIT ?;
+
 getFavoriteDiaries:
 SELECT * FROM diary WHERE diary.favorite == 1;
 
