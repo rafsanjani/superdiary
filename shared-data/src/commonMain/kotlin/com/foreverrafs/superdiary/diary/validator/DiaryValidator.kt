@@ -1,14 +1,18 @@
-package com.foreverrafs.superdiary.diary.utils
+package com.foreverrafs.superdiary.diary.validator
 
 import com.foreverrafs.superdiary.diary.model.Diary
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-class DiaryValidator(
+fun interface DiaryValidator {
+    fun validate(diary: Diary)
+}
+
+class DiaryValidatorImpl(
     private val clock: Clock,
-) {
-    fun validate(diary: Diary) {
+) : DiaryValidator {
+    override fun validate(diary: Diary) {
         val diaryDate = diary.date.toLocalDateTime(TimeZone.UTC).date
         val today = clock.now().toLocalDateTime(TimeZone.UTC).date
 
