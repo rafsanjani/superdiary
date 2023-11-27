@@ -1,0 +1,24 @@
+name: Sync main with develop
+
+on: workflow_dispatch
+
+concurrency:
+  group: 'ci-${{ github.event.merge_group.head_ref || github.head_ref }}-${{ github.workflow }}'
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Sync master with develop branch
+        run: gh pr create -t "Sync main with develop" -b "Sync main with develop branch"
+
