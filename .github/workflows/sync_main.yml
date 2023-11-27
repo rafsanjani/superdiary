@@ -1,6 +1,9 @@
 name: Sync main with develop
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0'
 
 concurrency:
   group: 'ci-${{ github.event.merge_group.head_ref || github.head_ref }}-${{ github.workflow }}'
