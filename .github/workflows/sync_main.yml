@@ -22,5 +22,5 @@ jobs:
       - name: Sync master with develop branch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh pr create -t "Sync main with develop" -b "Sync main with develop branch"
+        run: git checkout develop && gh pr create -t "Sync main with develop" -b "Sync main with develop branch"
 
