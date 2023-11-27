@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.diary.usecase
+package com.foreverrafs.superdiary.diary.usecase.datasource
 
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary

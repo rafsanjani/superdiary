@@ -3,7 +3,7 @@ package com.foreverrafs.superdiary.diary.usecase
 import com.foreverrafs.superdiary.diary.Result
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.utils.DiaryValidator
+import com.foreverrafs.superdiary.diary.validator.DiaryValidator
 
 class AddDiaryUseCase(
     private val dataSource: DataSource,

@@ -4,7 +4,8 @@ import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.utils.DiaryValidator
+import com.foreverrafs.superdiary.diary.validator.DiaryValidator
+import com.foreverrafs.superdiary.diary.validator.DiaryValidatorImpl
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.Instant
@@ -18,7 +19,7 @@ class DiaryValidatorTest {
         override fun now(): Instant = Instant.parse("2023-05-01T01:01:01.049Z")
     }
 
-    private val validator: DiaryValidator = DiaryValidator(clock = testClock)
+    private val validator: DiaryValidator = DiaryValidatorImpl(clock = testClock)
 
     @Test
     fun `fail validation for past date`() {

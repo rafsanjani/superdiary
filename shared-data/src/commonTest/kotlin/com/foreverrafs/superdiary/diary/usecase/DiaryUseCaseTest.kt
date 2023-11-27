@@ -15,8 +15,10 @@ import assertk.assertions.messageContains
 import com.foreverrafs.superdiary.diary.Result
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.utils.DiaryValidator
+import com.foreverrafs.superdiary.diary.usecase.datasource.InMemoryDataSource
 import com.foreverrafs.superdiary.diary.utils.toInstant
+import com.foreverrafs.superdiary.diary.validator.DiaryValidator
+import com.foreverrafs.superdiary.diary.validator.DiaryValidatorImpl
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock
@@ -33,7 +35,7 @@ import kotlin.test.Test
 class DiaryUseCaseTest {
 
     private val dataSource: DataSource = InMemoryDataSource()
-    private val validator: DiaryValidator = DiaryValidator(Clock.System)
+    private val validator: DiaryValidator = DiaryValidatorImpl(Clock.System)
 
     private val addDiaryUseCase = AddDiaryUseCase(dataSource, validator)
     private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
@@ -52,7 +54,15 @@ class DiaryUseCaseTest {
 
     private fun insertRandomDiaries() {
         runBlocking {
-            val relaxedAddDiaryUseCase = RelaxedAddDiaryUseCase(dataSource)
+            /**
+             * Adds diaries to our local datasource without enforcing any data integrity checks.
+             * @see [AddDiaryUseCase] for the original version of this
+             */
+            val relaxedAddDiaryUseCase = AddDiaryUseCase(
+                dataSource,
+            ) {
+                // no-op
+            }
 
             // March 03, 2023
             var currentDate = Instant.parse(isoString = "2023-03-03T02:35:53.049Z")
@@ -72,8 +82,10 @@ class DiaryUseCaseTest {
     }
 
     @Test
-    fun `Add new relaxed diary and confirm saved`() = runTest {
-        val relaxedAddDiaryUseCase = RelaxedAddDiaryUseCase(dataSource)
+    fun `Add diary without integrity checks and confirm saved`() = runTest {
+        val relaxedAddDiaryUseCase = AddDiaryUseCase(dataSource) {
+            // no-op
+        }
 
         val diary = Diary(
             entry = "New Entry",
