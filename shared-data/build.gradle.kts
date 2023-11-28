@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.sqldelight)
     kotlin("multiplatform")
     id("kotlin-parcelize")
-    id("org.jetbrains.kotlinx.kover") version "0.7.4"
+    id("org.jetbrains.kotlinx.kover") version "0.7.5"
 }
 
 sqldelight {
@@ -51,7 +51,7 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.square.sqldelight.coroutinesExt)
-                implementation(platform("com.aallam.openai:openai-client-bom:3.5.1"))
+                implementation(platform("com.aallam.openai:openai-client-bom:3.6.1"))
                 implementation("com.aallam.openai:openai-client")
                 runtimeOnly(libs.ktor.client.cio)
             }
