@@ -3,6 +3,8 @@ package com.foreverrafs.superdiary.ui.feature.dashboard
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -46,6 +48,7 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryItem
 fun DashboardScreenContent(
     state: DashboardScreenModel.DashboardScreenState,
     onAddEntry: () -> Unit,
+    onSeeAll: () -> Unit,
 ) {
     Scaffold(
         floatingActionButton = {
@@ -175,7 +178,7 @@ fun DashboardScreenContent(
                     .height(4.dp),
             )
             if (state is DashboardScreenModel.DashboardScreenState.Content) {
-                LatestEntries(diaries = state.data)
+                LatestEntries(diaries = state.data, onSeeAll = onSeeAll)
             }
         }
     }
@@ -184,11 +187,16 @@ fun DashboardScreenContent(
 @Composable
 private fun LatestEntries(
     modifier: Modifier = Modifier,
+    onSeeAll: () -> Unit,
     diaries: List<Diary>,
 ) {
     Column(modifier) {
         Row(
             modifier = Modifier
+                .clickable(
+                    indication = null,
+                    interactionSource = MutableInteractionSource(),
+                ) { onSeeAll() }
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,

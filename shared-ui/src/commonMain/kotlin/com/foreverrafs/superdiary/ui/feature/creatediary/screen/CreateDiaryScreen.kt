@@ -83,7 +83,6 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
                         }
                         .onCompletion {
                             isGeneratingFromAI = false
-                            undoManager.undo()
                         }
                         .collect { chunk ->
                             generatedWords += chunk

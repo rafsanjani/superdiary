@@ -8,7 +8,6 @@ import com.foreverrafs.superdiary.diary.Database
 import com.foreverrafs.superdiary.diary.analytics.Analytics
 import com.foreverrafs.superdiary.diary.analytics.AnalyticsEvents
 import com.foreverrafs.superdiary.ui.di.appModule
-import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
@@ -28,9 +27,7 @@ fun main() = singleWindowApplication(
 
     initDatabase()
 
-    SuperdiaryAppTheme {
-        App()
-    }
+    App()
 }
 
 fun initDatabase() = object : KoinComponent {

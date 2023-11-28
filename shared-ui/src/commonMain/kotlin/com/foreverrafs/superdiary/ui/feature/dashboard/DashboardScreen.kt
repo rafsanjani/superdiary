@@ -18,6 +18,7 @@ import com.foreverrafs.superdiary.diary.usecase.GetLatestEntriesUseCase
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
+import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -25,6 +26,7 @@ object DashboardScreen : SuperDiaryScreen() {
     @Composable
     override fun Content() {
         val navigator = LocalScreenNavigator.current
+
         val screenModel: DashboardScreenModel = getScreenModel()
         val screenState by screenModel.state.collectAsState()
 
@@ -35,6 +37,7 @@ object DashboardScreen : SuperDiaryScreen() {
         DashboardScreenContent(
             state = screenState,
             onAddEntry = { navigator.push(CreateDiaryScreen()) },
+            onSeeAll = { navigator.push(DiaryListScreen) },
         )
     }
 

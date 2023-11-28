@@ -1,6 +1,5 @@
 package com.foreverrafs.superdiary.ui.feature.diarylist.screen
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -25,6 +24,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -35,11 +35,11 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -69,6 +69,7 @@ import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.groupByDate
 import com.foreverrafs.superdiary.diary.utils.toDate
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
+import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryFilterSheet
@@ -106,26 +107,58 @@ fun DiaryListScreenContent(
     val screenModifier = modifier
         .fillMaxSize()
 
-    when (state) {
-        is DiaryListScreenState.Content -> {
-            DiaryListContent(
-                modifier = screenModifier,
-                diaries = state.diaries,
-                isFiltered = state.filtered,
-                showSearchBar = showSearchBar,
-                onAddEntry = diaryListActions.onAddEntry,
-                diaryListActions = diaryListActions,
-                selectedIds = emptySet(),
-                diaryFilters = diaryFilters,
-                snackbarHostState = snackbarHostState,
+    Scaffold(
+        topBar = {
+            SuperDiaryAppBar(
+                navigationIcon = {
+                    IconButton(
+                        onClick = diaryListActions.onBackPressed,
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .clip(CircleShape),
+                            imageVector = Icons.Default.ArrowBackIosNew,
+                            contentDescription = "Navigate back",
+                        )
+                    }
+                },
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = diaryListActions.onAddEntry,
+                shape = RoundedCornerShape(4.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null,
+                )
+            }
+        },
+    ) {
+        Box(modifier = Modifier.padding(it)) {
+            when (state) {
+                is DiaryListScreenState.Content -> {
+                    DiaryListContent(
+                        modifier = screenModifier,
+                        diaries = state.diaries,
+                        isFiltered = state.filtered,
+                        showSearchBar = showSearchBar,
+                        onAddEntry = diaryListActions.onAddEntry,
+                        diaryListActions = diaryListActions,
+                        selectedIds = emptySet(),
+                        diaryFilters = diaryFilters,
+                        snackbarHostState = snackbarHostState,
+                    )
+                }
+
+                is DiaryListScreenState.Error -> ErrorContent(
+                    modifier = screenModifier,
+                )
+
+                is DiaryListScreenState.Loading -> LoadingContent(modifier = screenModifier)
+            }
         }
-
-        is DiaryListScreenState.Error -> ErrorContent(
-            modifier = screenModifier,
-        )
-
-        is DiaryListScreenState.Loading -> LoadingContent(modifier = screenModifier)
     }
 }
 
@@ -377,10 +410,6 @@ private fun DiaryListContent(
     ) {
         val listState = rememberLazyListState()
 
-        val fabVisibility by derivedStateOf {
-            listState.firstVisibleItemIndex == 0
-        }
-
         if (diaries.isNotEmpty() || filteredEmpty) {
             DiaryList(
                 modifier = Modifier.fillMaxSize(),
@@ -398,23 +427,6 @@ private fun DiaryListContent(
                 snackbarHostState = snackbarHostState,
                 listState = listState,
             )
-
-            AnimatedVisibility(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(8.dp),
-                visible = fabVisibility,
-            ) {
-                FloatingActionButton(
-                    onClick = diaryListActions.onAddEntry,
-                    shape = RoundedCornerShape(4.dp),
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = null,
-                    )
-                }
-            }
         } else {
             EmptyDiaryList(
                 modifier = Modifier.fillMaxSize(),

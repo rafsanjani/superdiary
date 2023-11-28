@@ -59,13 +59,17 @@ internal fun TestAppContainer(content: @Composable () -> Unit) {
 @SuperDiaryPreview
 @Composable
 fun LoadingDiariesPreview() {
-    TestAppContainer {
-        DiaryListScreenContent(
-            state = DiaryListScreenState.Loading,
-            showSearchBar = false,
-            diaryFilters = DiaryFilters(),
-            diaryListActions = diaryListActions,
-        )
+    SuperdiaryAppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            DiaryListScreenContent(
+                state = DiaryListScreenState.Loading,
+                showSearchBar = false,
+                diaryFilters = DiaryFilters(),
+                diaryListActions = diaryListActions,
+            )
+        }
     }
 }
 
@@ -89,21 +93,17 @@ fun ErrorLoadingDiariesPreview() {
 @SuperDiaryPreview
 @Composable
 fun EmptySearchDiaryListPreview() {
-    SuperdiaryAppTheme {
-        Surface(
-            color = MaterialTheme.colorScheme.background,
-        ) {
-            DiaryList(
-                diaries = listOf(),
-                inSelectionMode = false,
-                diaryFilters = DiaryFilters(),
-                selectedIds = setOf(),
-                onDeleteDiaries = {},
-                onCancelSelection = {},
-                diaryListActions = diaryListActions,
-                snackbarHostState = SnackbarHostState(),
-            )
-        }
+    TestAppContainer {
+        DiaryList(
+            diaries = listOf(),
+            inSelectionMode = false,
+            diaryFilters = DiaryFilters(),
+            selectedIds = setOf(),
+            onDeleteDiaries = {},
+            onCancelSelection = {},
+            diaryListActions = diaryListActions,
+            snackbarHostState = SnackbarHostState(),
+        )
     }
 }
 
@@ -191,16 +191,24 @@ fun CreateDiaryPreviewNonEditable() {
 @SuperDiaryPreview
 @Composable
 fun FilteredEmptyPreview() {
-    TestAppContainer {
-        DiaryListScreenContent(
-            state = DiaryListScreenState.Content(
-                diaries = listOf(),
-                filtered = true,
-            ),
-            showSearchBar = true,
-            diaryFilters = DiaryFilters(),
-            diaryListActions = diaryListActions,
-        )
+    SuperdiaryAppTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            Surface(
+                color = MaterialTheme.colorScheme.background,
+            ) {
+                DiaryListScreenContent(
+                    state = DiaryListScreenState.Content(
+                        diaries = listOf(),
+                        filtered = true,
+                    ),
+                    showSearchBar = true,
+                    diaryFilters = DiaryFilters(),
+                    diaryListActions = diaryListActions,
+                )
+            }
+        }
     }
 }
 
@@ -257,7 +265,17 @@ fun DashboardPreview() {
     TestAppContainer {
         DashboardScreenContent(
             onAddEntry = {},
-            state = DashboardScreenModel.DashboardScreenState.Loading,
+            state = DashboardScreenModel.DashboardScreenState.Content(
+                (0..1).map {
+                    Diary(
+                        id = it.toLong(),
+                        entry = "<strong>Awesome</strong> Diary",
+                        date = Clock.System.now(),
+                        isFavorite = false,
+                    )
+                },
+            ),
+            onSeeAll = {},
         )
     }
 }
