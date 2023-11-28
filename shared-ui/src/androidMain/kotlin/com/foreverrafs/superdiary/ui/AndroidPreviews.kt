@@ -258,6 +258,7 @@ fun DashboardPreview() {
         DashboardScreenContent(
             onAddEntry = {},
             state = DashboardScreenModel.DashboardScreenState.Loading,
+            onSeeAll = {},
         )
     }
 }
