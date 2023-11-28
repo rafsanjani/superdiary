@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.sqldelight)
     kotlin("multiplatform")
     id("kotlin-parcelize")
-    id("org.jetbrains.kotlinx.kover") version "0.7.4"
+    id("org.jetbrains.kotlinx.kover") version "0.7.5"
 }
 
 sqldelight {
