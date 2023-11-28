@@ -7,11 +7,12 @@ data class DiaryListActions(
     val onDeleteDiaries: suspend (selectedIds: List<Diary>) -> Boolean,
     val onToggleFavorite: suspend (diary: Diary) -> Boolean,
     val onApplyFilters: (filters: DiaryFilters) -> Unit,
-    val onAddSelection: ((id: Long?) -> Unit) = { },
+    val onAddSelection: ((id: Long?) -> Unit) = {},
     val onDiaryClicked: (diary: Diary) -> Unit,
     val onRemoveSelection: (id: Long?) -> Unit = {},
     val onToggleSelection: (id: Long?) -> Unit = {},
     val onCancelSelection: () -> Unit = {},
+    val onBackPressed: () -> Unit = {},
 ) {
     companion object
 }

@@ -67,6 +67,7 @@ object DiaryListScreen : SuperDiaryScreen() {
                 onDiaryClicked = {
                     screenNavigator.push(CreateDiaryScreen(it))
                 },
+                onBackPressed = screenNavigator::popUntilRoot,
             )
         }
 
