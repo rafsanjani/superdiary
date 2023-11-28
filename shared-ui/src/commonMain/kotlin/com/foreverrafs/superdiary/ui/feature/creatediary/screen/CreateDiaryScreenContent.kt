@@ -94,17 +94,19 @@ fun CreateDiaryScreenContent(
                         return@SuperDiaryAppBar
                     }
 
-                    IconButton(
-                        onClick = {
-                            onSaveDiary(richTextState.toHtml())
-                        },
-                    ) {
-                        Icon(
-                            modifier = Modifier
-                                .clip(CircleShape),
-                            imageVector = Icons.Default.Check,
-                            contentDescription = "Save entry",
-                        )
+                    if (richTextState.annotatedString.isNotEmpty()) {
+                        IconButton(
+                            onClick = {
+                                onSaveDiary(richTextState.toHtml())
+                            },
+                        ) {
+                            Icon(
+                                modifier = Modifier
+                                    .clip(CircleShape),
+                                imageVector = Icons.Default.Check,
+                                contentDescription = "Save entry",
+                            )
+                        }
                     }
                 },
             )
