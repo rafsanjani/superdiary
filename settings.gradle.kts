@@ -9,6 +9,7 @@ pluginManagement {
         mavenLocal()
     }
 }
+System.setProperty("sonar.gradle.skipCompile", "true")
 
 dependencyResolutionManagement {
     repositories {
