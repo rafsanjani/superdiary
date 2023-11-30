@@ -76,4 +76,9 @@ interface DataSource {
      * Obtains the latest [count] entries from the datasource
      */
     fun getLatestEntries(count: Int): Flow<List<Diary>>
+
+    /**
+     * Count all the entries available in the database
+     */
+    fun countEntries(): Long
 }

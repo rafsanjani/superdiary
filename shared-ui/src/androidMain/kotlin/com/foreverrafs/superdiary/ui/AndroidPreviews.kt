@@ -274,6 +274,7 @@ fun DashboardPreview() {
                         isFavorite = false,
                     )
                 },
+                20,
             ),
             onSeeAll = {},
         )
