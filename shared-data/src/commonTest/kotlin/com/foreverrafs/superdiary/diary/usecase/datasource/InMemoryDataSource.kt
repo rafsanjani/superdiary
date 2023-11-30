@@ -99,4 +99,6 @@ internal class InMemoryDataSource : DataSource {
         }
             .take(count)
     }
+
+    override fun countEntries(): Long = diaries.size.toLong()
 }

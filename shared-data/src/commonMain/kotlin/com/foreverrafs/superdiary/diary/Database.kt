@@ -101,4 +101,6 @@ class Database(databaseDriver: DatabaseDriver) {
         queries.getLatestEntries(count.toLong(), diaryMapper)
             .asFlow()
             .mapToList(Dispatchers.Main)
+
+    fun countEntries(): Long = queries.countEntries().executeAsOne()
 }
