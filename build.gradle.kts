@@ -18,7 +18,6 @@ subprojects {
 sonar {
     properties {
         property("sonar.projectKey", "rafsanjani_superdiary")
-        property("sonar.gradle.skipCompile", "true")
         property("sonar.organization", "rafsanjani")
         property("sonar.host.url", "https://sonarcloud.io")
     }
