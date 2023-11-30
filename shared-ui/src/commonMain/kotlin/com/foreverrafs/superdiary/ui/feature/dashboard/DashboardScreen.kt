@@ -64,6 +64,8 @@ class DashboardScreenModel(
     }
 
     fun fetchLatestEntries() = screenModelScope.launch {
+        if (mutableState.value is DashboardScreenState.Content) return@launch
+
         getLatestEntriesUseCase(2).collect { latestEntries ->
             mutableState.update {
                 DashboardScreenState.Content(latestEntries)
@@ -71,4 +73,3 @@ class DashboardScreenModel(
         }
     }
 }
-
