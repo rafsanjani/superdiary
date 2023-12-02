@@ -142,8 +142,14 @@ fun DashboardScreenContent(
             SectionCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(150.dp),
+                    .height(230.dp),
                 title = {
+                },
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                ) {
                     Text(
                         text = "Weekly Summary",
                         modifier = Modifier.fillMaxWidth()
@@ -151,18 +157,17 @@ fun DashboardScreenContent(
                         textAlign = TextAlign.Start,
                         style = MaterialTheme.typography.headlineMedium,
                     )
-                },
-            ) {
-                Text(
-                    modifier = Modifier
-                        .verticalScroll(state = rememberScrollState())
-                        .padding(4.dp)
-                        .padding(top = 28.dp),
-                    text = "You have been to the gym 10 times and have eaten lots of potatoes. You have also danced about 120 hours.",
-                    style = MaterialTheme.typography.bodySmall,
-                    textAlign = TextAlign.Justify,
-                    lineHeight = 28.sp,
-                )
+
+                    Text(
+                        modifier = Modifier
+                            .verticalScroll(rememberScrollState())
+                            .padding(start = 4.dp, end = 4.dp, top = 40.dp, bottom = 4.dp),
+                        text = state.weeklySummary,
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.Justify,
+                        lineHeight = 28.sp,
+                    )
+                }
             }
 
             Spacer(
@@ -170,7 +175,9 @@ fun DashboardScreenContent(
                     .height(4.dp),
             )
 
-            LatestEntries(diaries = state.latestEntries, onSeeAll = onSeeAll)
+            if (state.latestEntries.isNotEmpty()) {
+                LatestEntries(diaries = state.latestEntries, onSeeAll = onSeeAll)
+            }
         }
     }
 }
@@ -192,7 +199,7 @@ private fun LatestEntries(
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(text = "Latest Entries", style = MaterialTheme.typography.headlineMedium)
+            Text(text = "Latest Entry", style = MaterialTheme.typography.headlineMedium)
 
             Spacer(modifier = Modifier.weight(1f))
             Icon(
@@ -206,6 +213,7 @@ private fun LatestEntries(
         ) {
             items(diaries) {
                 DiaryItem(
+                    modifier = Modifier.clickable { onSeeAll() },
                     inSelectionMode = false,
                     onToggleFavorite = {},
                     selected = false,

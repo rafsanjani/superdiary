@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.diary.usecase.datasource
 
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.model.WeeklySummary
 import com.foreverrafs.superdiary.diary.utils.toDate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -101,4 +102,8 @@ internal class InMemoryDataSource : DataSource {
     }
 
     override fun countEntries(): Long = diaries.size.toLong()
+
+    override fun insertWeeklySummary(summary: WeeklySummary) {
+        TODO("Not yet implemented")
+    }
 }

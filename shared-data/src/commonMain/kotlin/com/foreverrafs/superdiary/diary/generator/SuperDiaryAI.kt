@@ -7,6 +7,7 @@ import com.aallam.openai.api.http.Timeout
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
 import com.foreverrafs.superdiary.buildKonfig.BuildKonfig
+import com.foreverrafs.superdiary.diary.model.Diary
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
@@ -67,5 +68,35 @@ class SuperDiaryAI : DiaryAI {
                     )
                 }
             }
+    }
+
+    override suspend fun generateWeeklySummary(diaries: List<Diary>): String {
+        // Add the instruction
+        messages.add(
+            ChatMessage(
+                role = ChatRole.System,
+                content = """
+                    You are Journal AI. I will give you a combined list of entries written over a period of 
+                    one week and you write a brief, concise and informative 50 word summary for me. The summary
+                     should be in the first person narrative.
+                """.trimIndent(),
+            ),
+        )
+
+        // Add the prompt
+        messages.add(
+            ChatMessage(
+                role = ChatRole.User,
+                content = diaries.map { it.entry }.joinToString(),
+            ),
+        )
+
+        val chatCompletionRequest = ChatCompletionRequest(
+            model = ModelId("gpt-4-1106-preview"),
+            messages = messages.toList(),
+        )
+
+        return openAi.chatCompletion(chatCompletionRequest).choices.first().message.content
+            ?: "Error"
     }
 }

@@ -4,6 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.foreverrafs.superdiary.database.SuperDiaryDatabase
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.model.WeeklySummary
 import com.foreverrafs.superdiary.diary.utils.toDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -103,4 +104,14 @@ class Database(databaseDriver: DatabaseDriver) {
             .mapToList(Dispatchers.Main)
 
     fun countEntries(): Long = queries.countEntries().executeAsOne()
+
+    fun getWeeklySummary(): WeeklySummary = queries.getWeeklySummary(mapper = { date, summary ->
+        WeeklySummary(
+            summary = summary,
+            date = Instant.parse(date),
+        )
+    }).executeAsOne()
+
+    fun insertWeeklySummary(summary: WeeklySummary) =
+        queries.insertSummary(summary.summary, summary.date.toString())
 }

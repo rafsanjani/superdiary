@@ -1,6 +1,7 @@
 package com.foreverrafs.superdiary.diary.datasource
 
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.model.WeeklySummary
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 
@@ -81,4 +82,9 @@ interface DataSource {
      * Count all the entries available in the database
      */
     fun countEntries(): Long
+
+    /**
+     * Insert a weekly summary
+     */
+    fun insertWeeklySummary(summary: WeeklySummary)
 }

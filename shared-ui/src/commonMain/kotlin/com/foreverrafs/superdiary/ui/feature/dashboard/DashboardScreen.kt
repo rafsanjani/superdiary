@@ -13,9 +13,10 @@ import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.foreverrafs.superdiary.diary.generator.DiaryAI
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.CountDiariesUseCase
-import com.foreverrafs.superdiary.diary.usecase.GetLatestEntriesUseCase
+import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
@@ -56,8 +57,9 @@ object DashboardScreen : SuperDiaryScreen() {
 }
 
 class DashboardScreenModel(
-    private val getLatestEntriesUseCase: GetLatestEntriesUseCase,
+    private val getAllDiariesUseCase: GetAllDiariesUseCase,
     private val countDiariesUseCase: CountDiariesUseCase,
+    private val diaryAI: DiaryAI,
 ) :
     StateScreenModel<DashboardScreenModel.DashboardScreenState>(DashboardScreenState.Loading) {
     sealed interface DashboardScreenState {
@@ -65,17 +67,24 @@ class DashboardScreenModel(
         data class Content(
             val latestEntries: List<Diary>,
             val totalEntries: Long,
+            val weeklySummary: String,
         ) : DashboardScreenState
     }
 
     fun loadDashboardContent() = screenModelScope.launch {
-        getLatestEntriesUseCase(2).collect { latestEntries ->
-            val totalDiariesCount = countDiariesUseCase()
+        getAllDiariesUseCase().collect { diaries ->
 
             mutableState.update {
                 DashboardScreenState.Content(
-                    latestEntries = latestEntries,
-                    totalEntries = totalDiariesCount,
+                    latestEntries = diaries.sortedByDescending { it.date }.take(1),
+                    totalEntries = diaries.size.toLong(),
+                    weeklySummary = if (diaries.isEmpty()) {
+                        "In this panel, your weekly diary entries will be summarized. Try adding your first entry to see how it works"
+                    } else {
+                        diaryAI.generateWeeklySummary(
+                            diaries,
+                        )
+                    },
                 )
             }
         }
