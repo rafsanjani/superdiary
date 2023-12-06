@@ -50,6 +50,8 @@ fun DashboardScreenContent(
     onAddEntry: () -> Unit,
     onSeeAll: () -> Unit,
 ) {
+    if (state !is DashboardScreenModel.DashboardScreenState.Content) return
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -78,7 +80,7 @@ fun DashboardScreenContent(
             )
 
             val totalEntries by animateIntAsState(
-                targetValue = if (animationState.targetState) 120 else 0,
+                targetValue = if (animationState.targetState) state.totalEntries.toInt() else 0,
                 animationSpec = tween(durationMillis = 1000),
             )
 
@@ -108,16 +110,6 @@ fun DashboardScreenContent(
                         modifier = Modifier.align(Alignment.Center),
                         text = totalEntries.toString(),
                         style = MaterialTheme.typography.displayLarge,
-                    )
-
-                    Text(
-                        modifier = Modifier.align(Alignment.BottomCenter),
-                        text = "Nov 26, 2023",
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                        ),
                     )
                 }
 
@@ -177,9 +169,8 @@ fun DashboardScreenContent(
                 modifier = Modifier
                     .height(4.dp),
             )
-            if (state is DashboardScreenModel.DashboardScreenState.Content) {
-                LatestEntries(diaries = state.data, onSeeAll = onSeeAll)
-            }
+
+            LatestEntries(diaries = state.latestEntries, onSeeAll = onSeeAll)
         }
     }
 }

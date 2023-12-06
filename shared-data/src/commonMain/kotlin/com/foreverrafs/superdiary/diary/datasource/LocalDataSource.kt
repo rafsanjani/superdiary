@@ -55,4 +55,6 @@ class LocalDataSource(private val database: Database) : DataSource {
     override fun getLatestEntries(count: Int): Flow<List<Diary>> {
         return database.getLatestEntries(count)
     }
+
+    override fun countEntries(): Long = database.countEntries()
 }

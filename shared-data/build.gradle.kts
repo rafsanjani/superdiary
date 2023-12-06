@@ -1,5 +1,7 @@
 @file:Suppress("UnusedPrivateProperty")
 
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+
 plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
@@ -7,6 +9,19 @@ plugins {
     kotlin("multiplatform")
     id("kotlin-parcelize")
     id("org.jetbrains.kotlinx.kover") version "0.7.5"
+    id("com.codingfeline.buildkonfig")
+}
+
+buildkonfig {
+    packageName = "com.foreverrafs.superdiary.buildKonfig"
+
+    val openAiKey =
+        project.findProperty("openAiKey") ?: throw Exception("OpenAI API key not provided!")
+
+    // default config is required
+    defaultConfigs {
+        buildConfigField(STRING, "openAIKey", openAiKey.toString())
+    }
 }
 
 sqldelight {

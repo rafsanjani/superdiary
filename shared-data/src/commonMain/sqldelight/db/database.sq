@@ -30,3 +30,12 @@ SELECT * FROM diary WHERE diary.favorite == 1;
 
 getAffectedRows:
 SELECT changes();
+
+countEntries:
+SELECT COUNT(*) FROM diary;
+
+insertSummary:
+INSERT INTO summary(summary, date) VALUES (?, ?);
+
+getWeeklySummary:
+SELECT * FROM summary;

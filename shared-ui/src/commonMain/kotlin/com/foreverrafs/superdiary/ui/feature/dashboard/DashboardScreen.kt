@@ -14,6 +14,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.usecase.CountDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetLatestEntriesUseCase
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import com.foreverrafs.superdiary.ui.SuperDiaryScreen
@@ -31,7 +32,7 @@ object DashboardScreen : SuperDiaryScreen() {
         val screenState by screenModel.state.collectAsState()
 
         LaunchedEffect(Unit) {
-            screenModel.fetchLatestEntries()
+            screenModel.loadDashboardContent()
         }
 
         DashboardScreenContent(
@@ -56,19 +57,27 @@ object DashboardScreen : SuperDiaryScreen() {
 
 class DashboardScreenModel(
     private val getLatestEntriesUseCase: GetLatestEntriesUseCase,
+    private val countDiariesUseCase: CountDiariesUseCase,
 ) :
     StateScreenModel<DashboardScreenModel.DashboardScreenState>(DashboardScreenState.Loading) {
     sealed interface DashboardScreenState {
         data object Loading : DashboardScreenState
-        data class Content(val data: List<Diary>) : DashboardScreenState
+        data class Content(
+            val latestEntries: List<Diary>,
+            val totalEntries: Long,
+        ) : DashboardScreenState
     }
 
-    fun fetchLatestEntries() = screenModelScope.launch {
+    fun loadDashboardContent() = screenModelScope.launch {
         getLatestEntriesUseCase(2).collect { latestEntries ->
+            val totalDiariesCount = countDiariesUseCase()
+
             mutableState.update {
-                DashboardScreenState.Content(latestEntries)
+                DashboardScreenState.Content(
+                    latestEntries = latestEntries,
+                    totalEntries = totalDiariesCount,
+                )
             }
         }
     }
 }
-

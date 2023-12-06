@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.dokka)
     alias(libs.plugins.compose.multiplatform).apply(false)
     id("org.sonarqube").version("4.4.1.3373")
+    id("com.codingfeline.buildkonfig").version("0.15.1").apply(false)
 }
 
 subprojects {

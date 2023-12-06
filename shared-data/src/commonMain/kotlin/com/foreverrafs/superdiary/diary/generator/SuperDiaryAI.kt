@@ -6,6 +6,7 @@ import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.http.Timeout
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
+import com.foreverrafs.superdiary.buildKonfig.BuildKonfig
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
@@ -14,7 +15,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class SuperDiaryAI : DiaryAI {
     private val openAi = OpenAI(
-        token = "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",
+        token = BuildKonfig.openAIKey,
         timeout = Timeout(socket = 15.seconds),
     )
 
