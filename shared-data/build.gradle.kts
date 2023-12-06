@@ -62,7 +62,7 @@ kotlin {
                 implementation(libs.kotlin.coroutines.core)
                 implementation(libs.kotlin.coroutines.native)
                 implementation(libs.kotlin.datetime)
-                implementation("co.touchlab:stately-common:2.0.5") // Because sqldelight is misbehaving
+                implementation("co.touchlab:stately-common:2.0.6") // Because sqldelight is misbehaving
                 implementation(libs.koin.core)
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.square.sqldelight.coroutinesExt)
