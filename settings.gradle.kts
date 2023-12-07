@@ -23,8 +23,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2023.11.30")
-            version("sqldelight", "2.0.1")
+            from("io.github.rafsanjani:versions:2023.12.07")
         }
     }
 }
