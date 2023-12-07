@@ -43,7 +43,7 @@ kotlin {
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.koin.compose)
                 implementation(libs.richTextEditor)
-                implementation("co.touchlab:stately-common:2.0.5")
+                implementation("co.touchlab:stately-common:2.0.6")
             }
         }
 
