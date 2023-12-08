@@ -278,6 +278,8 @@ private fun DashboardPreview() {
                 },
                 20,
                 "",
+                streak = 0,
+                streakDates = "Jun 20 - Jul 20",
             ),
             onSeeAll = {},
         )

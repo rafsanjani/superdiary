@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,10 +21,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -52,16 +49,7 @@ fun DashboardScreenContent(
 ) {
     if (state !is DashboardScreenModel.DashboardScreenState.Content) return
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                modifier = Modifier.offset(y = 30.dp),
-                onClick = onAddEntry,
-            ) {
-                Icon(Icons.Default.Add, null)
-            }
-        },
-    ) {
+    Scaffold {
         Column(
             modifier = Modifier
                 .padding(8.dp),
@@ -75,7 +63,7 @@ fun DashboardScreenContent(
             val animationState = remember { MutableTransitionState(false) }
 
             val streaks by animateIntAsState(
-                targetValue = if (animationState.targetState) 20 else 0,
+                targetValue = if (animationState.targetState) state.streak else 0,
                 animationSpec = tween(durationMillis = 1000),
             )
 
@@ -110,7 +98,7 @@ fun DashboardScreenContent(
                     modifier = dashboardCardModifier,
                     title = "Streak 🔥",
                     content = "$streaks days",
-                    caption = "Jun 20 - Jul 20",
+                    caption = state.streakDates,
                 )
                 GlanceCard(
                     modifier = dashboardCardModifier,
@@ -194,7 +182,8 @@ private fun LatestEntries(
                 .clickable(
                     indication = null,
                     interactionSource = MutableInteractionSource(),
-                ) { onSeeAll() }
+                    onClick = onSeeAll,
+                )
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -213,7 +202,7 @@ private fun LatestEntries(
         ) {
             items(diaries) {
                 DiaryItem(
-                    modifier = Modifier.clickable { onSeeAll() },
+                    modifier = Modifier.clickable(onClick = onSeeAll),
                     inSelectionMode = false,
                     onToggleFavorite = {},
                     selected = false,

@@ -16,13 +16,16 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.foreverrafs.superdiary.diary.generator.DiaryAI
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.diary.utils.toDate
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
+import com.foreverrafs.superdiary.ui.format
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.minus
 
 object DashboardScreen : SuperDiaryScreen() {
     @Composable
@@ -67,12 +70,17 @@ class DashboardScreenModel(
             val latestEntries: List<Diary>,
             val totalEntries: Long,
             val weeklySummary: String?,
+            val streak: Int,
+            val streakDates: String,
         ) : DashboardScreenState
     }
 
     fun loadDashboardContent() = screenModelScope.launch {
         getAllDiariesUseCase().collect { diaries ->
-            if (diaries.isNotEmpty()) generateWeeklySummary(diaries)
+            if (diaries.isNotEmpty()) {
+                generateWeeklySummary(diaries)
+                calculateStreak(diaries)
+            }
 
             mutableState.update {
                 DashboardScreenState.Content(
@@ -84,14 +92,14 @@ class DashboardScreenModel(
                     } else {
                         "Generating weekly summary..."
                     },
+                    streak = 0,
+                    streakDates = "-",
                 )
             }
         }
     }
 
     private fun generateWeeklySummary(diaries: List<Diary>) = screenModelScope.launch {
-        var summary = ""
-
         diaryAI.generateWeeklySummaryAsync(diaries)
             .catch {
                 mutableState.update { state ->
@@ -101,13 +109,28 @@ class DashboardScreenModel(
                 }
             }
             .collect {
-                summary += it
-
                 mutableState.update { state ->
                     (state as? DashboardScreenState.Content)?.copy(
-                        weeklySummary = summary,
+                        weeklySummary = state.weeklySummary + it,
                     ) ?: state
                 }
             }
+    }
+
+    private fun calculateStreak(diaries: List<Diary>) = screenModelScope.launch {
+        val streak = diaries
+            .sortedBy { it.date }
+            .windowed(size = 2, step = 1)
+            .filter { (first, second) ->
+                (second.date.toDate() - first.date.toDate()).days == 1
+            }
+            .flatten()
+
+        mutableState.update { state ->
+            (state as? DashboardScreenState.Content)?.copy(
+                streak = streak.count(),
+                streakDates = streak.joinToString(" - ") { it.date.toDate().format("MMM dd") },
+            ) ?: state
+        }
     }
 }
