@@ -26,6 +26,10 @@ kotlin {
         }
     }
 
+    sourceSets.all {
+        languageSettings.enableLanguageFeature("DataObjects")
+    }
+
     sourceSets {
         commonMain {
             dependencies {

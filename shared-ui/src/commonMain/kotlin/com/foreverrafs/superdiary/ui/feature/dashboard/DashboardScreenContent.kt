@@ -6,8 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +13,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -100,75 +100,34 @@ fun DashboardScreenContent(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(itemSpacing),
             ) {
-                SectionCard(
+                GlanceCard(
                     modifier = dashboardCardModifier,
-                    title = {
-                        SectionCardTitle("Entries")
-                    },
-                ) {
-                    Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = totalEntries.toString(),
-                        style = MaterialTheme.typography.displayLarge,
-                    )
-                }
+                    title = "Entries",
+                    content = totalEntries.toString(),
+                )
 
-                SectionCard(
+                GlanceCard(
                     modifier = dashboardCardModifier,
-                    title = {
-                        SectionCardTitle(text = "Streak 🔥")
-                    },
-                ) {
-                    Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = "$streaks days",
-                        style = MaterialTheme.typography.displayLarge,
-                    )
-
-                    Text(
-                        modifier = Modifier.align(Alignment.BottomCenter),
-                        text = "Jun 20 - Jul 20",
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                        ),
-                    )
-                }
+                    title = "Streak 🔥",
+                    content = "$streaks days",
+                    caption = "Jun 20 - Jul 20",
+                )
+                GlanceCard(
+                    modifier = dashboardCardModifier,
+                    title = "Best Streak",
+                    content = "$streaks days",
+                    caption = "Jun 20 - Jul 20",
+                )
             }
 
             Spacer(modifier = Modifier.height(itemSpacing))
 
-            SectionCard(
+            WeeklySummaryCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(230.dp),
-                title = {
-                },
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                ) {
-                    Text(
-                        text = "Weekly Summary",
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(horizontal = 4.dp),
-                        textAlign = TextAlign.Start,
-                        style = MaterialTheme.typography.headlineMedium,
-                    )
-
-                    Text(
-                        modifier = Modifier
-                            .verticalScroll(rememberScrollState())
-                            .padding(start = 4.dp, end = 4.dp, top = 40.dp, bottom = 4.dp),
-                        text = state.weeklySummary,
-                        style = MaterialTheme.typography.bodySmall,
-                        textAlign = TextAlign.Justify,
-                        lineHeight = 28.sp,
-                    )
-                }
-            }
+                    .heightIn(max = 200.dp, min = 150.dp),
+                summary = state.weeklySummary,
+            )
 
             Spacer(
                 modifier = Modifier
@@ -178,6 +137,47 @@ fun DashboardScreenContent(
             if (state.latestEntries.isNotEmpty()) {
                 LatestEntries(diaries = state.latestEntries, onSeeAll = onSeeAll)
             }
+        }
+    }
+}
+
+@Composable
+fun GlanceCard(
+    modifier: Modifier = Modifier,
+    title: String,
+    content: String,
+    caption: String = "",
+) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(8.dp),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(8.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = title,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.headlineMedium,
+            )
+
+            Text(
+                text = content,
+                style = MaterialTheme.typography.displayMedium,
+                textAlign = TextAlign.Center,
+            )
+
+            Text(
+                text = caption,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.labelSmall.copy(
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                ),
+            )
         }
     }
 }
@@ -199,7 +199,7 @@ private fun LatestEntries(
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(text = "Latest Entry", style = MaterialTheme.typography.headlineMedium)
+            Text(text = "Latest Entries", style = MaterialTheme.typography.headlineMedium)
 
             Spacer(modifier = Modifier.weight(1f))
             Icon(
@@ -225,38 +225,47 @@ private fun LatestEntries(
 }
 
 @Composable
-private fun SectionCardTitle(
-    text: String,
-    textAlign: TextAlign = TextAlign.Center,
-) {
-    Text(
-        text = text,
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = textAlign,
-        style = MaterialTheme.typography.headlineMedium,
-    )
-}
-
-@Composable
-private fun SectionCard(
+private fun WeeklySummaryCard(
     modifier: Modifier = Modifier,
-    title: @Composable BoxScope.() -> Unit,
-    content: @Composable BoxScope.() -> Unit,
+    summary: String?,
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.verticalScroll(rememberScrollState()),
         shape = RoundedCornerShape(8.dp),
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(8.dp),
-            contentAlignment = Alignment.Center,
+            horizontalAlignment = Alignment.Start,
         ) {
-            Box(modifier = Modifier.align(Alignment.TopCenter)) {
-                title()
+            Text(
+                text = "Weekly Summary",
+                modifier = Modifier.fillMaxWidth()
+                    .padding(4.dp),
+                textAlign = TextAlign.Start,
+                style = MaterialTheme.typography.headlineMedium,
+            )
+
+            Text(
+                modifier = Modifier
+                    .padding(4.dp),
+                text = summary ?: "Error generating weekly summary",
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.Justify,
+                lineHeight = 28.sp,
+            )
+
+            if (summary == null) {
+                TextButton(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 12.dp),
+                    onClick = {},
+                ) {
+                    Text("Retry")
+                }
             }
-            content()
         }
     }
 }

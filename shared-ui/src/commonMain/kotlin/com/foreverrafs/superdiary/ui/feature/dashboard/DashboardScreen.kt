@@ -15,12 +15,12 @@ import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.foreverrafs.superdiary.diary.generator.DiaryAI
 import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.usecase.CountDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -58,7 +58,6 @@ object DashboardScreen : SuperDiaryScreen() {
 
 class DashboardScreenModel(
     private val getAllDiariesUseCase: GetAllDiariesUseCase,
-    private val countDiariesUseCase: CountDiariesUseCase,
     private val diaryAI: DiaryAI,
 ) :
     StateScreenModel<DashboardScreenModel.DashboardScreenState>(DashboardScreenState.Loading) {
@@ -67,26 +66,48 @@ class DashboardScreenModel(
         data class Content(
             val latestEntries: List<Diary>,
             val totalEntries: Long,
-            val weeklySummary: String,
+            val weeklySummary: String?,
         ) : DashboardScreenState
     }
 
     fun loadDashboardContent() = screenModelScope.launch {
         getAllDiariesUseCase().collect { diaries ->
+            if (diaries.isNotEmpty()) generateWeeklySummary(diaries)
 
             mutableState.update {
                 DashboardScreenState.Content(
-                    latestEntries = diaries.sortedByDescending { it.date }.take(1),
+                    latestEntries = diaries.sortedByDescending { it.date }.take(2),
                     totalEntries = diaries.size.toLong(),
                     weeklySummary = if (diaries.isEmpty()) {
-                        "In this panel, your weekly diary entries will be summarized. Try adding your first entry to see how it works"
+                        "In this panel, your weekly diary entries will be summarized." +
+                            "\nAdd your first entry to see how it works"
                     } else {
-                        diaryAI.generateWeeklySummary(
-                            diaries,
-                        )
+                        "Generating weekly summary..."
                     },
                 )
             }
         }
+    }
+
+    private fun generateWeeklySummary(diaries: List<Diary>) = screenModelScope.launch {
+        var summary = ""
+
+        diaryAI.generateWeeklySummaryAsync(diaries)
+            .catch {
+                mutableState.update { state ->
+                    (state as? DashboardScreenState.Content)?.copy(
+                        weeklySummary = null,
+                    ) ?: state
+                }
+            }
+            .collect {
+                summary += it
+
+                mutableState.update { state ->
+                    (state as? DashboardScreenState.Content)?.copy(
+                        weeklySummary = summary,
+                    ) ?: state
+                }
+            }
     }
 }

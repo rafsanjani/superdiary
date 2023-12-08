@@ -10,6 +10,7 @@ import com.foreverrafs.superdiary.buildKonfig.BuildKonfig
 import com.foreverrafs.superdiary.diary.model.Diary
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlin.time.Duration.Companion.seconds
@@ -21,6 +22,12 @@ class SuperDiaryAI : DiaryAI {
     )
 
     private var messages = mutableSetOf<ChatMessage>()
+
+    private val weeklyDiaryGeneratorPrompt = """
+        You are Journal AI. I will give you a combined list of entries written over a period of 
+        one week and you write a brief, concise and informative 50 word summary for me. The summary
+        should be in the first person narrative.
+    """.trimIndent()
 
     override fun generateDiary(
         prompt: String,
@@ -75,11 +82,7 @@ class SuperDiaryAI : DiaryAI {
         messages.add(
             ChatMessage(
                 role = ChatRole.System,
-                content = """
-                    You are Journal AI. I will give you a combined list of entries written over a period of 
-                    one week and you write a brief, concise and informative 50 word summary for me. The summary
-                     should be in the first person narrative.
-                """.trimIndent(),
+                content = weeklyDiaryGeneratorPrompt,
             ),
         )
 
@@ -87,16 +90,47 @@ class SuperDiaryAI : DiaryAI {
         messages.add(
             ChatMessage(
                 role = ChatRole.User,
-                content = diaries.map { it.entry }.joinToString(),
+                content = diaries.joinToString { it.entry },
             ),
         )
 
         val chatCompletionRequest = ChatCompletionRequest(
-            model = ModelId("gpt-4-1106-preview"),
+            model = ModelId(GPT_MODEL),
             messages = messages.toList(),
         )
 
         return openAi.chatCompletion(chatCompletionRequest).choices.first().message.content
             ?: "Error"
+    }
+
+    override fun generateWeeklySummaryAsync(diaries: List<Diary>): Flow<String> {
+        // Add the instruction
+        messages.add(
+            ChatMessage(
+                role = ChatRole.System,
+                content = weeklyDiaryGeneratorPrompt,
+            ),
+        )
+
+        // Add the prompt
+        messages.add(
+            ChatMessage(
+                role = ChatRole.User,
+                content = diaries.joinToString { it.entry },
+            ),
+        )
+
+        val request = ChatCompletionRequest(
+            model = ModelId(GPT_MODEL),
+            messages = messages.toList(),
+        )
+
+        return openAi.chatCompletions(request).mapNotNull {
+            it.choices.first().delta.content
+        }
+    }
+
+    companion object {
+        private const val GPT_MODEL = "gpt-4-1106-preview"
     }
 }
