@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryItem
+import com.foreverrafs.superdiary.ui.format
 
 @Composable
 fun DashboardScreenContent(
@@ -63,7 +64,7 @@ fun DashboardScreenContent(
             val animationState = remember { MutableTransitionState(false) }
 
             val streaks by animateIntAsState(
-                targetValue = if (animationState.targetState) state.streak else 0,
+                targetValue = if (animationState.targetState) state.streak.count else 0,
                 animationSpec = tween(durationMillis = 1000),
             )
 
@@ -98,8 +99,9 @@ fun DashboardScreenContent(
                     modifier = dashboardCardModifier,
                     title = "Streak 🔥",
                     content = "$streaks days",
-                    caption = state.streakDates,
+                    caption = state.streak.dates.joinToString(" - ") { it?.format("MMM dd") ?: "" },
                 )
+
                 GlanceCard(
                     modifier = dashboardCardModifier,
                     title = "Best Streak",

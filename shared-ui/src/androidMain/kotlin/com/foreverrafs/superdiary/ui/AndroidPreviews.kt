@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.model.Streak
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
@@ -278,8 +279,7 @@ private fun DashboardPreview() {
                 },
                 20,
                 "",
-                streak = 0,
-                streakDates = "Jun 20 - Jul 20",
+                Streak(0, emptyList()),
             ),
             onSeeAll = {},
         )

@@ -7,6 +7,8 @@ import com.foreverrafs.superdiary.diary.datasource.LocalDataSource
 import com.foreverrafs.superdiary.diary.generator.DiaryAI
 import com.foreverrafs.superdiary.diary.generator.SuperDiaryAI
 import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
+import com.foreverrafs.superdiary.diary.usecase.CalculateStreakUseCase
+import com.foreverrafs.superdiary.diary.usecase.CountDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.DeleteMultipleDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
@@ -15,7 +17,6 @@ import com.foreverrafs.superdiary.diary.usecase.GetLatestEntriesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryBetweenDatesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByEntryUseCase
-import com.foreverrafs.superdiary.diary.usecase.CountDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.diary.validator.DiaryValidator
 import com.foreverrafs.superdiary.diary.validator.DiaryValidatorImpl
@@ -44,6 +45,7 @@ fun useCaseModule() = module {
     factory<DiaryValidator> { DiaryValidatorImpl(get()) }
     factoryOf(::GetLatestEntriesUseCase)
     factoryOf(::CountDiariesUseCase)
+    factoryOf(::CalculateStreakUseCase)
 }
 
 expect fun platformModule(analytics: Analytics): Module
