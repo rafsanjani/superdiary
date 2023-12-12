@@ -23,7 +23,6 @@ import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import com.foreverrafs.superdiary.ui.SuperDiaryScreen
-import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
@@ -45,9 +44,7 @@ object DashboardScreen : SuperDiaryScreen() {
 
         DashboardScreenContent(
             state = screenState,
-            onAddEntry = { navigator.push(CreateDiaryScreen()) },
-            onSeeAll = { navigator.push(DiaryListScreen) },
-        )
+        ) { navigator.push(DiaryListScreen) }
     }
 
     override val selectedIcon: VectorPainter

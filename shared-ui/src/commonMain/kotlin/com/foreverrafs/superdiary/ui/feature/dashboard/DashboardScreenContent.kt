@@ -45,7 +45,6 @@ import com.foreverrafs.superdiary.ui.format
 @Composable
 fun DashboardScreenContent(
     state: DashboardScreenModel.DashboardScreenState,
-    onAddEntry: () -> Unit,
     onSeeAll: () -> Unit,
 ) {
     if (state !is DashboardScreenModel.DashboardScreenState.Content) return

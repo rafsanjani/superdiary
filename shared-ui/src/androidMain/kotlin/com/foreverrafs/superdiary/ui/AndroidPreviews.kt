@@ -267,7 +267,6 @@ private fun DeleteDialogPreview() {
 private fun DashboardPreview() {
     TestAppContainer {
         DashboardScreenContent(
-            onAddEntry = {},
             state = DashboardScreenModel.DashboardScreenState.Content(
                 (0..1).map {
                     Diary(
@@ -281,8 +280,7 @@ private fun DashboardPreview() {
                 "",
                 Streak(0, emptyList()),
             ),
-            onSeeAll = {},
-        )
+        ) {}
     }
 }
 
