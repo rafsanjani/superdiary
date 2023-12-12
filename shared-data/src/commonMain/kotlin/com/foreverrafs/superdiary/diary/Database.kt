@@ -16,7 +16,7 @@ class Database(databaseDriver: DatabaseDriver) {
     private val superDiaryDatabase = SuperDiaryDatabase(driver)
     private val queries = superDiaryDatabase.databaseQueries
 
-    private val diaryMapper = { id: Long, entry: String, date: String, favorite: Long ->
+    private val mapper = { id: Long, entry: String, date: String, favorite: Long ->
         Diary(
             id = id,
             entry = entry,
@@ -52,19 +52,19 @@ class Database(databaseDriver: DatabaseDriver) {
     }
 
     fun getAllDiaries(): Flow<List<Diary>> = queries.selectAll(
-        mapper = diaryMapper,
+        mapper = mapper,
     )
         .asFlow()
         .mapToList(Dispatchers.Main)
 
     fun findDiaryByEntry(query: String): Flow<List<Diary>> =
-        queries.findByEntry(name = query, mapper = diaryMapper)
+        queries.findByEntry(name = query, mapper = mapper)
             .asFlow()
             .mapToList(Dispatchers.Main)
 
     fun findByDate(date: Instant): Flow<List<Diary>> = queries.findByDate(
         date = date.toDate().toString(),
-        mapper = diaryMapper,
+        mapper = mapper,
     )
         .asFlow()
         .mapToList(Dispatchers.Main)
@@ -73,7 +73,7 @@ class Database(databaseDriver: DatabaseDriver) {
         queries.findByDateRange(
             from.toDate().toString(),
             to.toDate().toString(),
-            diaryMapper,
+            mapper,
         )
             .asFlow()
             .mapToList(Dispatchers.Main)
@@ -90,7 +90,7 @@ class Database(databaseDriver: DatabaseDriver) {
     }
 
     fun getFavoriteDiaries(): Flow<List<Diary>> =
-        queries.getFavoriteDiaries(diaryMapper)
+        queries.getFavoriteDiaries(mapper)
             .asFlow()
             .mapToList(Dispatchers.Main)
 
@@ -99,7 +99,7 @@ class Database(databaseDriver: DatabaseDriver) {
     private fun Boolean.asLong(): Long = if (this) 1 else 0
     private fun Long.asBoolean(): Boolean = this != 0L
     fun getLatestEntries(count: Int): Flow<List<Diary>> =
-        queries.getLatestEntries(count.toLong(), diaryMapper)
+        queries.getLatestEntries(count.toLong(), mapper)
             .asFlow()
             .mapToList(Dispatchers.Main)
 
@@ -112,6 +112,10 @@ class Database(databaseDriver: DatabaseDriver) {
         )
     }).executeAsOne()
 
-    fun insertWeeklySummary(summary: WeeklySummary) =
-        queries.insertSummary(summary.summary, summary.date.toString())
+    fun insertWeeklySummary(summary: WeeklySummary) {
+        queries.transaction {
+            queries.clearWeeklySummary()
+            queries.insertSummary(summary.summary, summary.date.toString())
+        }
+    }
 }

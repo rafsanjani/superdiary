@@ -24,6 +24,7 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
             from("io.github.rafsanjani:versions:2023.12.07")
+            version("voyager", "1.0.0")
         }
     }
 }

@@ -39,3 +39,6 @@ INSERT INTO summary(summary, date) VALUES (?, ?);
 
 getWeeklySummary:
 SELECT * FROM summary;
+
+clearWeeklySummary:
+DELETE FROM summary;

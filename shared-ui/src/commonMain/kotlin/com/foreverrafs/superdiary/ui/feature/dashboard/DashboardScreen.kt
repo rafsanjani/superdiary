@@ -16,15 +16,20 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.foreverrafs.superdiary.diary.generator.DiaryAI
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.model.Streak
+import com.foreverrafs.superdiary.diary.model.WeeklySummary
+import com.foreverrafs.superdiary.diary.usecase.AddWeeklySummaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.diary.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 
 object DashboardScreen : SuperDiaryScreen() {
     @Composable
@@ -61,6 +66,8 @@ object DashboardScreen : SuperDiaryScreen() {
 class DashboardScreenModel(
     private val getAllDiariesUseCase: GetAllDiariesUseCase,
     private val calculateStreakUseCase: CalculateStreakUseCase,
+    private val addWeeklySummaryUseCase: AddWeeklySummaryUseCase,
+    private val getWeeklySummaryUseCase: GetWeeklySummaryUseCase,
     private val diaryAI: DiaryAI,
 ) :
     StateScreenModel<DashboardScreenModel.DashboardScreenState>(DashboardScreenState.Loading) {
@@ -76,11 +83,6 @@ class DashboardScreenModel(
 
     fun loadDashboardContent() = screenModelScope.launch {
         getAllDiariesUseCase().collect { diaries ->
-            if (diaries.isNotEmpty()) {
-                generateWeeklySummary(diaries)
-                calculateStreak(diaries)
-            }
-
             mutableState.update {
                 DashboardScreenState.Content(
                     latestEntries = diaries.sortedByDescending { it.date }.take(2),
@@ -94,10 +96,36 @@ class DashboardScreenModel(
                     streak = Streak(0, emptyList()),
                 )
             }
+
+            if (diaries.isNotEmpty()) {
+                generateWeeklySummary(diaries)
+                calculateStreak(diaries)
+            }
+        }
+    }
+
+    private fun updateContentState(func: (current: DashboardScreenState.Content) -> DashboardScreenState.Content) {
+        mutableState.update { state ->
+            val currentState = state as? DashboardScreenState.Content
+            if (currentState != null) {
+                func(currentState)
+            } else {
+                state
+            }
         }
     }
 
     private fun generateWeeklySummary(diaries: List<Diary>) = screenModelScope.launch {
+        val latestWeeklySummary = getWeeklySummaryUseCase()
+        val difference = Clock.System.now() - latestWeeklySummary.date
+
+        if (difference.inWholeDays <= 7L) {
+            updateContentState { currentState ->
+                currentState.copy(weeklySummary = latestWeeklySummary.summary)
+            }
+            return@launch
+        }
+
         diaryAI.generateWeeklySummaryAsync(diaries)
             .catch {
                 mutableState.update { state ->
@@ -106,15 +134,27 @@ class DashboardScreenModel(
                     ) ?: state
                 }
             }
+            .onCompletion { exception ->
+                (mutableState.value as? DashboardScreenState.Content)?.let {
+                    if (exception == null) {
+                        addWeeklySummaryUseCase(
+                            WeeklySummary(
+                                summary = it.weeklySummary.orEmpty(),
+                                date = Clock.System.now(),
+                            ),
+                        )
+                    }
+                }
+            }
             .collect { chunk ->
-                mutableState.update { state ->
-                    (state as? DashboardScreenState.Content)?.copy(
+                updateContentState { state ->
+                    state.copy(
                         weeklySummary = if (state.weeklySummary == DEFAULT_SUMMARY_TEXT) {
                             chunk
                         } else {
                             state.weeklySummary + chunk
                         },
-                    ) ?: state
+                    )
                 }
             }
     }

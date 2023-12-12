@@ -61,4 +61,8 @@ class LocalDataSource(private val database: Database) : DataSource {
 
     override fun insertWeeklySummary(summary: WeeklySummary) =
         database.insertWeeklySummary(summary = summary)
+
+    override fun getWeeklySummary(): WeeklySummary {
+        return database.getWeeklySummary()
+    }
 }

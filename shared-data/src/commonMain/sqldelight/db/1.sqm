@@ -4,8 +4,3 @@ CREATE TABLE IF NOT EXISTS diary (
   date TEXT NOT NULL,
   favorite INTEGER NOT NULL
 );
-
-CREATE TABLE IF NOT EXISTS summary(
- date TEXT NOT NULL,
- summary TEXT NOT NULL
-);

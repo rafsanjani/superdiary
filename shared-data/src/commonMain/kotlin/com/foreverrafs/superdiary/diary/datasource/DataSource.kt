@@ -87,4 +87,9 @@ interface DataSource {
      * Insert a weekly summary
      */
     fun insertWeeklySummary(summary: WeeklySummary)
+
+    /**
+     *Fetch all weekly summary entries
+     */
+    fun getWeeklySummary(): WeeklySummary
 }
