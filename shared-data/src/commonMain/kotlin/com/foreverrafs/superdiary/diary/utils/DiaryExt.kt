@@ -39,6 +39,13 @@ private fun getDurationString(diary: Diary, clock: Clock = Clock.System): Priori
         )
     }
 
+    if (difference.days == 1 && difference.months == 0 && difference.years == 0) {
+        return PrioritizedDuration(
+            label = "Yesterday",
+            priority = 0,
+        )
+    }
+
     if (difference.days < 7 && difference.months == 0 && difference.years == 0) {
         val days = difference.days
         return PrioritizedDuration(
