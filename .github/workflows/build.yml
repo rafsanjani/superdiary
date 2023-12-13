@@ -28,11 +28,19 @@ jobs:
           arguments: androidApp:detekt shared-data:detekt shared-ui:detekt
 
       - name: Unit tests (shared-data)
-        id: gradle
+        id: unit_tests
         uses: gradle/gradle-build-action@v2
         with:
           arguments: shared-data:testDebugUnitTest --continue --no-configuration-cache
           gradle-home-cache-cleanup: true
+          cache-read-only: false
+
+      - name: Build Android App (Release)
+        id: release_build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: androidApp:assemble
+          gradle-home-cache-cleanup: false
           cache-read-only: false
 
       - name: Analyze with Sonar
