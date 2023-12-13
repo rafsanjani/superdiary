@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -104,6 +105,12 @@ internal class InMemoryDataSource : DataSource {
     override fun countEntries(): Long = diaries.size.toLong()
 
     override fun insertWeeklySummary(summary: WeeklySummary) {
-        TODO("Not yet implemented")
+    }
+
+    override fun getWeeklySummary(): WeeklySummary {
+        return WeeklySummary(
+            summary = "",
+            date = Clock.System.now(),
+        )
     }
 }
