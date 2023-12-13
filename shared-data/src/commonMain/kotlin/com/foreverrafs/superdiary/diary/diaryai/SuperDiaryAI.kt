@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.diary.generator
+package com.foreverrafs.superdiary.diary.diaryai
 
 import com.aallam.openai.api.chat.ChatCompletionRequest
 import com.aallam.openai.api.chat.ChatMessage
@@ -21,7 +21,8 @@ class SuperDiaryAI : DiaryAI {
         timeout = Timeout(socket = 15.seconds),
     )
 
-    private var messages = mutableSetOf<ChatMessage>()
+    private val generateDiaryMessages = mutableSetOf<ChatMessage>()
+    private val diaryChatMessages = mutableSetOf<ChatMessage>()
 
     private val weeklyDiaryGeneratorPrompt = """
         You are Journal AI. I will give you a combined list of entries written over a period of 
@@ -29,12 +30,20 @@ class SuperDiaryAI : DiaryAI {
         should be in the first person narrative.
     """.trimIndent()
 
+    private val diaryChatPrompt = """
+        You are Journal AI, I will provide you a list of journal entries and their dates and you will 
+        respond to follow up questions based on this information. You are not supposed to respond to 
+        any questions outside of the scope of the data you have been given under any circumstances.
+        Your responses should be very concise and if you don't have the answer to a question, simply say
+        'I'm sorry but I don't know that yet'. 
+    """.trimIndent()
+
     override fun generateDiary(
         prompt: String,
         wordCount: Int,
     ): Flow<String> {
         // Add the instruction
-        messages.add(
+        generateDiaryMessages.add(
             ChatMessage(
                 role = ChatRole.System,
                 content = """
@@ -47,7 +56,7 @@ class SuperDiaryAI : DiaryAI {
         )
 
         // Add the prompt
-        messages.add(
+        generateDiaryMessages.add(
             ChatMessage(
                 role = ChatRole.User,
                 content = prompt,
@@ -56,7 +65,7 @@ class SuperDiaryAI : DiaryAI {
 
         val chatCompletionRequest = ChatCompletionRequest(
             model = ModelId("gpt-4-1106-preview"),
-            messages = messages.toList(),
+            messages = generateDiaryMessages.toList(),
         )
 
         var assistantMessages: String? = null
@@ -67,7 +76,7 @@ class SuperDiaryAI : DiaryAI {
                 assistantMessages += it
             }.onCompletion { error ->
                 if (error == null) {
-                    messages.add(
+                    generateDiaryMessages.add(
                         ChatMessage(
                             role = ChatRole.Assistant,
                             content = assistantMessages,
@@ -79,7 +88,7 @@ class SuperDiaryAI : DiaryAI {
 
     override suspend fun generateWeeklySummary(diaries: List<Diary>): String {
         // Add the instruction
-        messages.add(
+        generateDiaryMessages.add(
             ChatMessage(
                 role = ChatRole.System,
                 content = weeklyDiaryGeneratorPrompt,
@@ -87,7 +96,7 @@ class SuperDiaryAI : DiaryAI {
         )
 
         // Add the prompt
-        messages.add(
+        generateDiaryMessages.add(
             ChatMessage(
                 role = ChatRole.User,
                 content = diaries.joinToString { it.entry },
@@ -96,7 +105,7 @@ class SuperDiaryAI : DiaryAI {
 
         val chatCompletionRequest = ChatCompletionRequest(
             model = ModelId(GPT_MODEL),
-            messages = messages.toList(),
+            messages = generateDiaryMessages.toList(),
         )
 
         return openAi.chatCompletion(chatCompletionRequest).choices.first().message.content
@@ -104,30 +113,59 @@ class SuperDiaryAI : DiaryAI {
     }
 
     override fun generateWeeklySummaryAsync(diaries: List<Diary>): Flow<String> {
+        generateDiaryMessages.clear()
+
         // Add the instruction
-        messages.add(
-            ChatMessage(
-                role = ChatRole.System,
+        generateDiaryMessages.add(
+            ChatMessage.System(
                 content = weeklyDiaryGeneratorPrompt,
             ),
         )
 
         // Add the prompt
-        messages.add(
-            ChatMessage(
-                role = ChatRole.User,
+        generateDiaryMessages.add(
+            ChatMessage.User(
                 content = diaries.joinToString { it.entry },
             ),
         )
 
         val request = ChatCompletionRequest(
             model = ModelId(GPT_MODEL),
-            messages = messages.toList(),
+            messages = generateDiaryMessages.toList(),
         )
 
         return openAi.chatCompletions(request).mapNotNull {
             it.choices.first().delta.content
         }
+    }
+
+    override suspend fun queryDiaries(diaries: List<Diary>, query: String): String {
+        // Add the instruction
+        diaryChatMessages.add(
+            ChatMessage.System(
+                content = diaryChatPrompt,
+            ),
+        )
+        // Add the data
+        diaryChatMessages.add(
+            ChatMessage.User(
+                content = diaries.joinToString(),
+            ),
+        )
+
+        // Add the query
+        diaryChatMessages.add(
+            ChatMessage.User(
+                content = query,
+            ),
+        )
+
+        val request = ChatCompletionRequest(
+            model = ModelId(GPT_MODEL),
+            messages = diaryChatMessages.toList(),
+        )
+
+        return openAi.chatCompletion(request).choices.first().message.content.orEmpty()
     }
 
     companion object {

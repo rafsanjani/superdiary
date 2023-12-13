@@ -91,5 +91,5 @@ interface DataSource {
     /**
      *Fetch all weekly summary entries
      */
-    fun getWeeklySummary(): WeeklySummary
+    fun getWeeklySummary(): WeeklySummary?
 }

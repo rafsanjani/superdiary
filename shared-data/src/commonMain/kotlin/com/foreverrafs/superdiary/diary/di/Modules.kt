@@ -4,8 +4,8 @@ import com.foreverrafs.superdiary.diary.Database
 import com.foreverrafs.superdiary.diary.analytics.Analytics
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.datasource.LocalDataSource
-import com.foreverrafs.superdiary.diary.generator.DiaryAI
-import com.foreverrafs.superdiary.diary.generator.SuperDiaryAI
+import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
+import com.foreverrafs.superdiary.diary.diaryai.SuperDiaryAI
 import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.AddWeeklySummaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.CalculateStreakUseCase

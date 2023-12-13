@@ -1,6 +1,7 @@
 package com.foreverrafs.superdiary.ui.home
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -21,8 +22,7 @@ import com.foreverrafs.superdiary.ui.LocalRootSnackbarHostState
 import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreen
-import com.foreverrafs.superdiary.ui.feature.diaryai.DiaryAiScreen
-import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
+import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatScreen
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreen
 
 /**
@@ -52,7 +52,7 @@ object BottomNavigationScreen : Screen {
                         TabNavigationItem(DashboardScreen)
 //                        TabNavigationItem(DiaryListScreen)
                         TabNavigationItem(FavoriteScreen)
-                        TabNavigationItem(DiaryAiScreen)
+                        TabNavigationItem(DiaryChatScreen)
                     }
                 },
             )

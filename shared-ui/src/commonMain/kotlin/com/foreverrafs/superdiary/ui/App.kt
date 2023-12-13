@@ -6,6 +6,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.SlideTransition
 import com.foreverrafs.superdiary.ui.home.BottomNavigationScreen
 import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 
@@ -24,7 +25,7 @@ fun App() {
                 LocalRootSnackbarHostState provides snackbarHostState,
                 LocalScreenNavigator provides navigator,
             ) {
-                CurrentScreen()
+                SlideTransition(navigator)
             }
         }
     }

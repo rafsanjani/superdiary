@@ -13,7 +13,7 @@ import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.foreverrafs.superdiary.diary.generator.DiaryAI
+import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.model.Streak
 import com.foreverrafs.superdiary.diary.model.WeeklySummary
@@ -114,13 +114,16 @@ class DashboardScreenModel(
 
     private fun generateWeeklySummary(diaries: List<Diary>) = screenModelScope.launch {
         val latestWeeklySummary = getWeeklySummaryUseCase()
-        val difference = Clock.System.now() - latestWeeklySummary.date
 
-        if (difference.inWholeDays <= 7L) {
-            updateContentState { currentState ->
-                currentState.copy(weeklySummary = latestWeeklySummary.summary)
+        latestWeeklySummary?.let {
+            val difference = Clock.System.now() - latestWeeklySummary.date
+
+            if (difference.inWholeDays <= 7L) {
+                updateContentState { currentState ->
+                    currentState.copy(weeklySummary = latestWeeklySummary.summary)
+                }
+                return@launch
             }
-            return@launch
         }
 
         diaryAI.generateWeeklySummaryAsync(diaries)
