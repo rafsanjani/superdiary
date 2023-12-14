@@ -1,7 +1,6 @@
 package com.foreverrafs.superdiary.ui.home
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -42,15 +41,13 @@ object BottomNavigationScreen : Screen {
                     Surface(
                         modifier = Modifier.padding(it),
                         color = MaterialTheme.colorScheme.background,
-                    ) {
-                        CurrentTab()
-                    }
+                        content = { CurrentTab() },
+                    )
                 },
                 topBar = { SuperDiaryAppBar() },
                 bottomBar = {
                     NavigationBar {
                         TabNavigationItem(DashboardScreen)
-//                        TabNavigationItem(DiaryListScreen)
                         TabNavigationItem(FavoriteScreen)
                         TabNavigationItem(DiaryChatScreen)
                     }
