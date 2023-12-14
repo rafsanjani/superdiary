@@ -17,6 +17,7 @@ val diaryAdapter = object : ColumnAdapter<Instant, Long> {
     override fun encode(value: Instant): Long = value.toEpochMilliseconds()
 }
 
+@Suppress("TooManyFunctions")
 class Database(databaseDriver: DatabaseDriver) {
     private val driver = databaseDriver.createDriver()
     private val superDiaryDatabase =
