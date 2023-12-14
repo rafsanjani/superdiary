@@ -20,7 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 #
--dontwarn kotlinx.serialization.KSerializer
--dontwarn kotlinx.serialization.Serializable
+#-dontwarn kotlinx.serialization.KSerializer
+#-dontwarn kotlinx.serialization.Serializable
 -dontwarn org.slf4j.impl.StaticLoggerBinder
--dontwarn io.sentry.compose.viewhierarchy.ComposeViewHierarchyExporter
+-keepattributes EnclosingMethod
