@@ -4,7 +4,9 @@ import com.aallam.openai.api.chat.ChatCompletionRequest
 import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.http.Timeout
+import com.aallam.openai.api.logging.LogLevel
 import com.aallam.openai.api.model.ModelId
+import com.aallam.openai.client.LoggingConfig
 import com.aallam.openai.client.OpenAI
 import com.foreverrafs.superdiary.buildKonfig.BuildKonfig
 import com.foreverrafs.superdiary.diary.model.Diary
@@ -19,6 +21,7 @@ class SuperDiaryAI : DiaryAI {
     private val openAi = OpenAI(
         token = BuildKonfig.openAIKey,
         timeout = Timeout(socket = 15.seconds),
+        logging = LoggingConfig(logLevel = LogLevel.None),
     )
 
     private val generateDiaryMessages = mutableSetOf<ChatMessage>()
