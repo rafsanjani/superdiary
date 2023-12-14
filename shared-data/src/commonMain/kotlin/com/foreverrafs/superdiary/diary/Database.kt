@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 import kotlin.coroutines.suspendCoroutine
 
-val diaryAdapter = object : ColumnAdapter<Instant, Long> {
+private val diaryAdapter = object : ColumnAdapter<Instant, Long> {
     override fun decode(databaseValue: Long): Instant = Instant.fromEpochMilliseconds(databaseValue)
 
     override fun encode(value: Instant): Long = value.toEpochMilliseconds()
@@ -23,7 +23,7 @@ class Database(databaseDriver: DatabaseDriver) {
     private val superDiaryDatabase =
         SuperDiaryDatabase(
             driver = driver,
-            db.Diary.Adapter(dateAdapter = diaryAdapter),
+            diaryAdapter = db.Diary.Adapter(dateAdapter = diaryAdapter),
         )
     private val queries = superDiaryDatabase.databaseQueries
 
@@ -37,7 +37,7 @@ class Database(databaseDriver: DatabaseDriver) {
     }
 
     /**
-     * This is only used on JVM. Schema is created automatically on Android and
+     * This is only used on JVM and in tests. Schema is created automatically on Android and
      * iOS
      */
     fun createDatabase() {
