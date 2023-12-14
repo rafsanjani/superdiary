@@ -62,14 +62,14 @@ jobs:
           cache-read-only: false
 
       - name: Upload Screenshot Test Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: reports
           path: shared-ui/build/reports/paparazzi/
           retention-days: 1
 
       - name: Upload Screenshot Failure Differences
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: reports
