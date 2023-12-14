@@ -18,7 +18,7 @@ import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-object DiaryChatScreen : SuperDiaryScreen() {
+object DiaryChatScreen : SuperDiaryScreen {
     @Composable
     override fun Content() {
         val screenModel = getScreenModel<DiaryChatScreenModel>()

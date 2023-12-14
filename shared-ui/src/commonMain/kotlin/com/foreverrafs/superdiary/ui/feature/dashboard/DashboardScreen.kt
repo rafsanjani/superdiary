@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
-object DashboardScreen : SuperDiaryScreen() {
+object DashboardScreen : SuperDiaryScreen {
     @Composable
     override fun Content() {
         val navigator = LocalScreenNavigator.current

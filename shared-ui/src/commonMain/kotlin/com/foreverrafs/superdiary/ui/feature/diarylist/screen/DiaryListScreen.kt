@@ -25,7 +25,7 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListScreenModel
 
-object DiaryListScreen : SuperDiaryScreen() {
+object DiaryListScreen : SuperDiaryScreen {
     override val options: TabOptions
         @Composable
         get() = TabOptions(

@@ -17,7 +17,7 @@ import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-object FavoriteScreen : SuperDiaryScreen() {
+object FavoriteScreen : SuperDiaryScreen {
     @Composable
     override fun Content() {
         val screenModel: FavoritesTabScreenModel = getScreenModel()
@@ -61,4 +61,3 @@ class FavoritesTabScreenModel(
         }
     }
 }
-
