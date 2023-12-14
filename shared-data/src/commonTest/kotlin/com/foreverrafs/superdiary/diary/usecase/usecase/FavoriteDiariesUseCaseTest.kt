@@ -2,12 +2,12 @@ package com.foreverrafs.superdiary.diary.usecase.usecase
 
 import app.cash.turbine.test
 import assertk.assertThat
-import assertk.assertions.isFalse
-import assertk.assertions.isTrue
+import assertk.assertions.hasSize
 import com.foreverrafs.superdiary.diary.Database
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.datasource.LocalDataSource
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.diary.usecase.GetFavoriteDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.datasource.TestDatabaseDriver
 import com.foreverrafs.superdiary.diary.usecase.insertRandomDiaries
@@ -22,12 +22,13 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class UpdateDiaryUseCaseTest {
+class FavoriteDiariesUseCaseTest {
     private val database = Database(TestDatabaseDriver())
     private val dataSource: DataSource = LocalDataSource(database)
 
-    private val updateDiaryUseCase = UpdateDiaryUseCase(dataSource)
+    private val updateDiariesUseCase = UpdateDiaryUseCase(dataSource)
     private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
+    private val getFavoriteDiariesUseCase = GetFavoriteDiariesUseCase(dataSource)
 
     @BeforeTest
     fun setup() {
@@ -42,29 +43,22 @@ class UpdateDiaryUseCaseTest {
     }
 
     @Test
-    fun `Update valid diary entry returns 1 updated row`() = runTest {
+    fun `Update favorite flag of diaries updates them on db`() = runTest {
         getAllDiariesUseCase().test {
-            val originalList = awaitItem()
+            val diaries = awaitItem()
 
-            var firstEntry = originalList.first()
+            val favoriteDiaries = diaries
+                .take(4)
+                .map { it.copy(isFavorite = true) }
 
-            // verify that it isn't favorited
-            assertThat(firstEntry.isFavorite).isFalse()
+            favoriteDiaries.forEach {
+                updateDiariesUseCase(it)
+            }
+        }
 
-            val updated = updateDiaryUseCase(
-                firstEntry.copy(
-                    isFavorite = true,
-                ),
-            )
-
-            // fetch the remaining diaries
-            val currentList = awaitItem()
-
-            firstEntry = currentList.first()
-
-            // verify that it has been updated and changed to favorite = true
-            assertThat(firstEntry.isFavorite).isTrue()
-            assertThat(updated).isTrue()
+        getFavoriteDiariesUseCase().test {
+            val favorites = awaitItem()
+            assertThat(favorites).hasSize(4)
         }
     }
 }
