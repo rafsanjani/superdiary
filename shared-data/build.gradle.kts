@@ -19,8 +19,12 @@ koverReport {
         excludes {
             packages(
                 "com.foreverrafs.superdiary.database",
+                "*.buildKonfig",
+                "*.di",
                 "db",
             )
+
+            classes("*.*DatabaseDriver")
         }
     }
 }

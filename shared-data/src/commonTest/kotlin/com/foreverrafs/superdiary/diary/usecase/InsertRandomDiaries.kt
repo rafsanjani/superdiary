@@ -7,15 +7,14 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
-import kotlin.random.Random
 
-fun insertRandomDiaries(dataSource: DataSource) {
+fun insertRandomDiaries(dataSource: DataSource, count: Int = 30) {
     runBlocking {
         val relaxedAddDiaryUseCase = AddDiaryUseCase(dataSource) {}
 
         // March 03, 2023
         var currentDate = Instant.parse(isoString = "2023-03-03T02:35:53.049Z")
-        repeat(30) {
+        repeat(count) {
             relaxedAddDiaryUseCase(
                 Diary(
                     entry = "Diary Entry #$it",
