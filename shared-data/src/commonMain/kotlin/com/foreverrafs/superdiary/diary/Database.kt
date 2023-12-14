@@ -72,13 +72,6 @@ class Database(databaseDriver: DatabaseDriver) {
             .asFlow()
             .mapToList(Dispatchers.Main)
 
-    fun findByDate(date: Instant): Flow<List<Diary>> = queries.findByDate(
-        date = date,
-        mapper = mapper,
-    )
-        .asFlow()
-        .mapToList(Dispatchers.Main)
-
     fun findByDateRange(from: Instant, to: Instant): Flow<List<Diary>> =
         queries.findByDateRange(
             from,
