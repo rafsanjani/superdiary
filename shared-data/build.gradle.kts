@@ -11,6 +11,7 @@ plugins {
     id("kotlin-parcelize")
     id("org.jetbrains.kotlinx.kover") version "0.7.5"
     id("com.codingfeline.buildkonfig")
+    id("org.sonarqube").version("4.4.1.3373")
 }
 
 buildkonfig {
@@ -48,6 +49,16 @@ koverReport {
     }
 }
 
+sonar {
+    val reportPath = "${project.buildDir}/reports/kover/reportDebug.xml"
+    properties {
+        property("sonar.projectKey", "rafsanjani_superdiary")
+        property("sonar.organization", "rafsanjani")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.coverage.jacoco.xmlReportPaths", reportPath)
+    }
+}
+
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     androidTarget()
@@ -67,6 +78,7 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.square.sqldelight.coroutinesExt)
+                implementation(libs.kotlin.coroutines.test)
                 implementation(libs.openAiKotlin)
                 runtimeOnly(libs.ktor.client.cio)
             }
@@ -76,6 +88,12 @@ kotlin {
                 implementation(libs.square.sqldelight.driver.android)
                 implementation(libs.square.sqldelight.coroutinesExt)
                 implementation(libs.koin.android)
+            }
+        }
+
+        val androidUnitTest by getting {
+            dependencies {
+                implementation(libs.square.sqldelight.driver.sqlite)
             }
         }
 

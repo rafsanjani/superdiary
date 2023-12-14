@@ -609,7 +609,7 @@ private fun DateCard(date: LocalDate) {
                 },
             text = annotatedString(date),
             textAlign = TextAlign.Center,
-            lineHeight = 24.sp,
+            lineHeight = 20.sp,
             style = MaterialTheme.typography.labelMedium,
         )
     }

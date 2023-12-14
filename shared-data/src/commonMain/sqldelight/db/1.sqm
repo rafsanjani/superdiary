@@ -1,6 +1,8 @@
+import kotlinx.datetime.Instant;
+
 CREATE TABLE IF NOT EXISTS diary (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   entry TEXT NOT NULL,
-  date TEXT NOT NULL,
+  date INTEGER AS Instant NOT NULL,
   favorite INTEGER NOT NULL
 );

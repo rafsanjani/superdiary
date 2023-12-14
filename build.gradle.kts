@@ -6,22 +6,7 @@ plugins {
     alias(libs.plugins.ktlint).apply(false)
     alias(libs.plugins.kotlin.dokka)
     alias(libs.plugins.compose.multiplatform).apply(false)
-    id("org.sonarqube").version("4.4.1.3373")
     id("com.codingfeline.buildkonfig").version("0.15.1").apply(false)
-}
-
-subprojects {
-    apply {
-        plugin("org.sonarqube")
-    }
-}
-
-sonar {
-    properties {
-        property("sonar.projectKey", "rafsanjani_superdiary")
-        property("sonar.organization", "rafsanjani")
-        property("sonar.host.url", "https://sonarcloud.io")
-    }
 }
 
 apply {

@@ -4,7 +4,9 @@ import com.aallam.openai.api.chat.ChatCompletionRequest
 import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.http.Timeout
+import com.aallam.openai.api.logging.LogLevel
 import com.aallam.openai.api.model.ModelId
+import com.aallam.openai.client.LoggingConfig
 import com.aallam.openai.client.OpenAI
 import com.foreverrafs.superdiary.buildKonfig.BuildKonfig
 import com.foreverrafs.superdiary.diary.model.Diary
@@ -19,6 +21,7 @@ class SuperDiaryAI : DiaryAI {
     private val openAi = OpenAI(
         token = BuildKonfig.openAIKey,
         timeout = Timeout(socket = 15.seconds),
+        logging = LoggingConfig(logLevel = LogLevel.None),
     )
 
     private val generateDiaryMessages = mutableSetOf<ChatMessage>()
@@ -34,8 +37,9 @@ class SuperDiaryAI : DiaryAI {
         You are Journal AI, I will provide you a list of journal entries and their dates and you will 
         respond to follow up questions based on this information. You are not supposed to respond to 
         any questions outside of the scope of the data you have been given under any circumstances.
-        Your responses should be very concise and if you don't have the answer to a question, simply say
-        'I'm sorry but I don't know that yet'. 
+        Your responses should be very concise and if you don't have the answer to a question, simply let
+        the user know that you are only able to assist with information contained in their entries.
+        You should also encourage users to write more entries so that you can be more useful to them.
     """.trimIndent()
 
     override fun generateDiary(

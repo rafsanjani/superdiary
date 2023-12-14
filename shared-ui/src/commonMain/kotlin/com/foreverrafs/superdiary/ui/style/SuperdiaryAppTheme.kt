@@ -49,7 +49,7 @@ fun SuperdiaryAppTheme(
         displayLarge = TextStyle(
             fontFamily = righteousFontFamily(),
             fontWeight = FontWeight.Normal,
-            fontSize = 30.sp,
+            fontSize = 24.sp,
         ),
         displayMedium = TextStyle(
             fontFamily = montserratAlternativesFontFamily(),

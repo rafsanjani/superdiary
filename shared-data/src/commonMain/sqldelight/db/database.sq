@@ -2,7 +2,7 @@ selectAll:
 SELECT * FROM diary ORDER BY date DESC;
 
 insert:
-INSERT INTO diary(entry, date, favorite) VALUES (?, ?, ?);
+INSERT INTO diary(id, entry, date, favorite) VALUES (?, ?, ?, ?);
 
 delete:
 DELETE FROM diary WHERE id=?;
@@ -11,7 +11,7 @@ findByEntry:
 SELECT * FROM diary WHERE entry LIKE '%' || :name || '%' ORDER BY date ASC;
 
 findByDate:
-SELECT * FROM diary WHERE date=?;
+SELECT * FROM diary WHERE date = :date  ORDER BY date ASC;
 
 findByDateRange:
 SELECT * FROM diary WHERE date BETWEEN ? AND ?;

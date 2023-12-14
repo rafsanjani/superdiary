@@ -1,8 +1,9 @@
 package com.foreverrafs.superdiary.ui.home
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -13,6 +14,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.tab.CurrentTab
@@ -42,17 +44,15 @@ object BottomNavigationScreen : Screen {
                     Surface(
                         modifier = Modifier.padding(it),
                         color = MaterialTheme.colorScheme.background,
-                    ) {
-                        CurrentTab()
-                    }
+                        content = { CurrentTab() },
+                    )
                 },
                 topBar = { SuperDiaryAppBar() },
                 bottomBar = {
                     NavigationBar {
-                        TabNavigationItem(DashboardScreen)
-//                        TabNavigationItem(DiaryListScreen)
-                        TabNavigationItem(FavoriteScreen)
-                        TabNavigationItem(DiaryChatScreen)
+                        BottomNavigationItem(DashboardScreen)
+                        BottomNavigationItem(FavoriteScreen)
+                        BottomNavigationItem(DiaryChatScreen)
                     }
                 },
             )
@@ -61,7 +61,7 @@ object BottomNavigationScreen : Screen {
 }
 
 @Composable
-private fun RowScope.TabNavigationItem(screen: SuperDiaryScreen) {
+private fun RowScope.BottomNavigationItem(screen: SuperDiaryScreen) {
     val tabNavigator = LocalTabNavigator.current
 
     val selected = tabNavigator.current == screen
@@ -70,7 +70,12 @@ private fun RowScope.TabNavigationItem(screen: SuperDiaryScreen) {
         onClick = { tabNavigator.current = screen },
         icon = {
             Icon(
-                painter = if (selected) screen.selectedIcon else screen.options.icon!!,
+                painter = if (selected) {
+                    screen.selectedIcon
+                } else {
+                    screen.options.icon
+                        ?: rememberVectorPainter(Icons.Default.Home)
+                },
                 contentDescription = screen.options.title,
             )
         },

@@ -6,19 +6,30 @@ import assertk.assertions.doesNotContain
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
+import com.foreverrafs.superdiary.diary.Database
 import com.foreverrafs.superdiary.diary.datasource.DataSource
+import com.foreverrafs.superdiary.diary.datasource.LocalDataSource
 import com.foreverrafs.superdiary.diary.usecase.DeleteAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.DeleteMultipleDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.diary.usecase.datasource.InMemoryDataSource
+import com.foreverrafs.superdiary.diary.usecase.datasource.TestDatabaseDriver
 import com.foreverrafs.superdiary.diary.usecase.insertRandomDiaries
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class DeleteDiaryUseCaseTest {
-    private val dataSource: DataSource = InMemoryDataSource()
+    private val database = Database(TestDatabaseDriver())
+    private val dataSource: DataSource = LocalDataSource(database)
+
     private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
     private val deleteAllDiariesUseCase = DeleteAllDiariesUseCase(dataSource)
     private val deleteMultipleDiariesUseCase = DeleteMultipleDiariesUseCase(dataSource)
@@ -26,20 +37,27 @@ class DeleteDiaryUseCaseTest {
 
     @BeforeTest
     fun setup() {
+        Dispatchers.setMain(StandardTestDispatcher())
+        database.createDatabase()
         insertRandomDiaries(dataSource)
+    }
+
+    @AfterTest
+    fun tearDown() {
+        Dispatchers.resetMain()
     }
 
     @Test
     fun `Delete diary and confirm deletion`() = runTest {
         getAllDiariesUseCase().test {
-            var diaries = expectMostRecentItem().toList()
+            var diaries = awaitItem()
             val firstDiary = diaries.first()
 
             // delete the first entry
             deleteDiaryUseCase(firstDiary)
 
             // get latest diaries again
-            diaries = awaitItem().toList()
+            diaries = awaitItem()
 
             cancelAndConsumeRemainingEvents()
 
@@ -51,7 +69,7 @@ class DeleteDiaryUseCaseTest {
     @Test
     fun `Delete All Diaries Clears Diaries`() = runTest {
         getAllDiariesUseCase().test {
-            val originalDiaryList = expectMostRecentItem().toList()
+            val originalDiaryList = awaitItem()
 
             assertThat(originalDiaryList).isNotEmpty()
 
@@ -72,7 +90,7 @@ class DeleteDiaryUseCaseTest {
         getAllDiariesUseCase().test {
             // Given initial diary items - We need to convert the resulting List to another list again
             // to prevent it from getting overwritten by the subsequent call to awaitItem()
-            val originalList = awaitItem().toList()
+            val originalList = awaitItem()
 
             // Delete the first two entries
             deleteMultipleDiariesUseCase(originalList.take(2))
