@@ -6,7 +6,6 @@ import app.cash.sqldelight.coroutines.mapToList
 import com.foreverrafs.superdiary.database.SuperDiaryDatabase
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.model.WeeklySummary
-import com.foreverrafs.superdiary.diary.utils.toDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
