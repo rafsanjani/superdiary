@@ -19,7 +19,6 @@ import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreenContent
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreenModel
-import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatMessage
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatScreenModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
