@@ -33,32 +33,6 @@ sqldelight {
     }
 }
 
-kover {
-    useJacoco("0.8.10")
-}
-
-koverReport {
-    filters {
-        excludes {
-            packages("com.foreverrafs.superdiary.database", "db")
-        }
-    }
-    defaults {
-        // adds the contents of the reports of `release` Android build variant to default reports
-        mergeWith("release")
-    }
-}
-
-sonar {
-    val reportPath = "${project.buildDir}/reports/kover/reportDebug.xml"
-    properties {
-        property("sonar.projectKey", "rafsanjani_superdiary")
-        property("sonar.organization", "rafsanjani")
-        property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.coverage.jacoco.xmlReportPaths", reportPath)
-    }
-}
-
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     androidTarget()
