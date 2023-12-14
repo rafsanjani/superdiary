@@ -15,8 +15,14 @@ koverReport {
             classes(
                 "*.*Screen",
                 "*.*ScreenContentKt",
+                "*.*ScreenContent*",
                 "*.*Preview*",
                 "*.*AppKt*",
+            )
+            packages(
+                "*.components",
+                "*.di",
+                "*.style",
             )
         }
     }

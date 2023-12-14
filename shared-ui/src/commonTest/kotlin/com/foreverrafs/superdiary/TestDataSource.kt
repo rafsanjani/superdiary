@@ -112,7 +112,7 @@ internal class TestDataSource : DataSource {
 
     override fun getWeeklySummary(): WeeklySummary {
         return WeeklySummary(
-            summary = "",
+            summary = "Weekly Summary",
             date = Clock.System.now(),
         )
     }
