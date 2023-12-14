@@ -6,17 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
-import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
 import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
-import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
@@ -103,23 +97,5 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
 
             navigator.pop()
         }
-    }
-}
-
-class CreateDiaryScreenModel(
-    private val addDiaryUseCase: AddDiaryUseCase,
-    private val deleteDiaryUseCase: DeleteDiaryUseCase,
-    private val diaryAI: DiaryAI,
-) : ScreenModel {
-
-    fun saveDiary(diary: Diary) = screenModelScope.launch {
-        addDiaryUseCase(diary)
-    }
-
-    fun generateAIDiary(prompt: String, wordCount: Int): Flow<String> =
-        diaryAI.generateDiary(prompt, wordCount)
-
-    fun deleteDiary(diary: Diary) = screenModelScope.launch {
-        deleteDiaryUseCase(diary)
     }
 }

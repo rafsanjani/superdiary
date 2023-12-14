@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.mohamedrejeb.richeditor.model.RichTextState
 
-class UndoAbleRichTextState() {
+class UndoableRichTextState() {
     private val undoHistory = ArrayDeque<String>()
     private val redoHistory = ArrayDeque<String>()
 
@@ -28,6 +28,6 @@ class UndoAbleRichTextState() {
 }
 
 @Composable
-fun rememberUndoableRichTextState(): UndoAbleRichTextState = remember {
-    UndoAbleRichTextState()
+fun rememberUndoableRichTextState(): UndoableRichTextState = remember {
+    UndoableRichTextState()
 }
