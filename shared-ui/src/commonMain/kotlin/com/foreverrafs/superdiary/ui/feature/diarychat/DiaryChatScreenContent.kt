@@ -56,10 +56,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.foreverrafs.superdiary.ui.feature.diarychat.model.ChatRole
+import com.foreverrafs.superdiary.ui.feature.diarychat.model.DiaryChatMessage
 import kotlinx.coroutines.delay
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlin.random.Random
 
 @OptIn(ExperimentalLayoutApi::class)
 fun Modifier.positionAwareImePadding() = composed {
@@ -215,33 +214,4 @@ fun ChatBubble(
 fun keyboardAsState(): State<Boolean> {
     val isImeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     return rememberUpdatedState(isImeVisible)
-}
-
-enum class ChatRole {
-    User,
-    DiaryAI,
-}
-
-@Suppress("FunctionName")
-data class DiaryChatMessage(
-    val id: Long,
-    val chatRole: ChatRole,
-    val timestamp: Instant,
-    val content: String,
-) {
-    companion object {
-        fun User(content: String) = DiaryChatMessage(
-            id = Random.nextLong(),
-            timestamp = Clock.System.now(),
-            chatRole = ChatRole.User,
-            content = content,
-        )
-
-        fun DiaryAI(content: String) = DiaryChatMessage(
-            id = Random.nextLong(),
-            timestamp = Clock.System.now(),
-            chatRole = ChatRole.DiaryAI,
-            content = content,
-        )
-    }
 }

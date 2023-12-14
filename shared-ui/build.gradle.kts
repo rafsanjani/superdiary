@@ -6,6 +6,20 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     kotlin("multiplatform")
     id("kotlin-parcelize")
+    id("org.jetbrains.kotlinx.kover")
+}
+
+koverReport {
+    filters {
+        excludes {
+            classes(
+                "*.*Screen",
+                "*.*ScreenContentKt",
+                "*.*Preview*",
+                "*.*AppKt*",
+            )
+        }
+    }
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -51,11 +65,23 @@ kotlin {
             }
         }
 
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.junit)
+                implementation(libs.koin.test)
+                implementation(libs.kotlin.coroutines.test)
+                implementation(libs.turbine)
+                implementation(libs.assertk.common)
+            }
+        }
+
         val androidUnitTest by getting {
             dependencies {
                 implementation(libs.cashapp.paparazzi)
                 implementation(libs.koin.android)
                 implementation(libs.koin.test)
+                implementation(libs.kotlin.coroutines.test)
                 implementation(libs.mockk)
             }
         }

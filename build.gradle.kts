@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.ktlint).apply(false)
     alias(libs.plugins.kotlin.dokka)
     alias(libs.plugins.compose.multiplatform).apply(false)
-    id("org.jetbrains.kotlinx.kover") version "0.7.5"
+    id("org.jetbrains.kotlinx.kover").version("0.7.5")
     id("com.codingfeline.buildkonfig").version("0.15.1").apply(false)
     id("org.sonarqube").version("4.4.1.3373")
 }
@@ -18,7 +18,12 @@ kover {
 koverReport {
     filters {
         excludes {
-            packages("com.foreverrafs.superdiary.database", "db")
+            packages(
+                "com.foreverrafs.superdiary.database",
+                "db",
+                "com.foreverrafs.superdiary.ui",
+            )
+            files("BottomNavigationScreenKt")
         }
     }
 }

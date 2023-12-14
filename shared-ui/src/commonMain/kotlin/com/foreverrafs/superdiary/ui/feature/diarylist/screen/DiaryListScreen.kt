@@ -43,6 +43,10 @@ object DiaryListScreen : SuperDiaryScreen {
         val screenModel: DiaryListScreenModel = getScreenModel()
         val screenState by screenModel.state.collectAsState()
 
+        LaunchedEffect(Unit) {
+            screenModel.observeDiaries()
+        }
+
         var diaryFilters by rememberSaveable(stateSaver = DiaryFilters.Saver) {
             mutableStateOf(DiaryFilters())
         }

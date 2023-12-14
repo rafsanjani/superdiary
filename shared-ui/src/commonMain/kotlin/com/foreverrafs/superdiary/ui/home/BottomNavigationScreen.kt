@@ -58,33 +58,33 @@ object BottomNavigationScreen : Screen {
             )
         }
     }
-}
 
-@Composable
-private fun RowScope.BottomNavigationItem(screen: SuperDiaryScreen) {
-    val tabNavigator = LocalTabNavigator.current
+    @Composable
+    private fun RowScope.BottomNavigationItem(screen: SuperDiaryScreen) {
+        val tabNavigator = LocalTabNavigator.current
 
-    val selected = tabNavigator.current == screen
-    NavigationBarItem(
-        selected = selected,
-        onClick = { tabNavigator.current = screen },
-        icon = {
-            Icon(
-                painter = if (selected) {
-                    screen.selectedIcon
-                } else {
-                    screen.options.icon
-                        ?: rememberVectorPainter(Icons.Default.Home)
-                },
-                contentDescription = screen.options.title,
-            )
-        },
-        label = {
-            Text(
-                text = screen.options.title,
-                style = MaterialTheme.typography.labelSmall,
-                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-            )
-        },
-    )
+        val selected = tabNavigator.current == screen
+        NavigationBarItem(
+            selected = selected,
+            onClick = { tabNavigator.current = screen },
+            icon = {
+                Icon(
+                    painter = if (selected) {
+                        screen.selectedIcon
+                    } else {
+                        screen.options.icon
+                            ?: rememberVectorPainter(Icons.Default.Home)
+                    },
+                    contentDescription = screen.options.title,
+                )
+            },
+            label = {
+                Text(
+                    text = screen.options.title,
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                )
+            },
+        )
+    }
 }

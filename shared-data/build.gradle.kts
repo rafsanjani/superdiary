@@ -9,9 +9,20 @@ plugins {
     alias(libs.plugins.sqldelight)
     kotlin("multiplatform")
     id("kotlin-parcelize")
-    id("org.jetbrains.kotlinx.kover") version "0.7.5"
     id("com.codingfeline.buildkonfig")
+    id("org.jetbrains.kotlinx.kover")
     id("org.sonarqube").version("4.4.1.3373")
+}
+
+koverReport {
+    filters {
+        excludes {
+            packages(
+                "com.foreverrafs.superdiary.database",
+                "db",
+            )
+        }
+    }
 }
 
 buildkonfig {
