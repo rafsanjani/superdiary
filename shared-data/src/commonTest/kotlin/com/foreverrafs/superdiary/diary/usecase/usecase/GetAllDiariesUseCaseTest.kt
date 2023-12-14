@@ -3,22 +3,39 @@ package com.foreverrafs.superdiary.diary.usecase.usecase
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import assertk.assertions.isNotEmpty
+import com.foreverrafs.superdiary.diary.Database
 import com.foreverrafs.superdiary.diary.datasource.DataSource
+import com.foreverrafs.superdiary.diary.datasource.LocalDataSource
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.diary.usecase.datasource.InMemoryDataSource
+import com.foreverrafs.superdiary.diary.usecase.datasource.TestDatabaseDriver
 import com.foreverrafs.superdiary.diary.usecase.insertRandomDiaries
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class GetAllDiariesUseCaseTest {
-    private val dataSource: DataSource = InMemoryDataSource()
+    private val database = Database(TestDatabaseDriver())
+    private val dataSource: DataSource = LocalDataSource(database)
     private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
 
     @BeforeTest
     fun setup() {
+        database.createDatabase()
+        database.clearDiaries()
+        Dispatchers.setMain(StandardTestDispatcher())
         insertRandomDiaries(dataSource)
+    }
+
+    @AfterTest
+    fun teardown() {
+        Dispatchers.resetMain()
     }
 
     @Test
@@ -26,8 +43,8 @@ class GetAllDiariesUseCaseTest {
         getAllDiariesUseCase().test {
             val diaries = awaitItem()
 
-            assertThat(diaries).isNotEmpty()
-            assertThat(diaries[5].entry).isEqualTo("Diary Entry #5")
+            // We inserted 30 items at the beginning
+            assertThat(diaries.size).isEqualTo(30)
         }
     }
 }

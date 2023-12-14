@@ -18,7 +18,6 @@ fun insertRandomDiaries(dataSource: DataSource) {
         repeat(30) {
             relaxedAddDiaryUseCase(
                 Diary(
-                    Random.nextLong(),
                     entry = "Diary Entry #$it",
                     date = currentDate,
                     isFavorite = false,

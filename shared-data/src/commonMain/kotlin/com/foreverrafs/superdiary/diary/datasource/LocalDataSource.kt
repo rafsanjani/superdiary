@@ -5,6 +5,11 @@ import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.model.WeeklySummary
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 
 class LocalDataSource(private val database: Database) : DataSource {
     override suspend fun add(diary: Diary): Long {
@@ -41,8 +46,35 @@ class LocalDataSource(private val database: Database) : DataSource {
         return database.findByDateRange(from, to)
     }
 
+    /**
+     * The dates are currently stored on the database as very high
+     * precision Long, making it almost impossible to perform equality
+     * checks.
+     *
+     * To look for entries on a particular day, we therefore
+     * look for all entries from start of the day 00:00 to midnight 23:59:59
+     */
+
     override fun findByDate(date: Instant): Flow<List<Diary>> {
-        return database.findByDate(date)
+        val timeZone = TimeZone.currentSystemDefault()
+
+        val currentLocalDateTime = date.toLocalDateTime(timeZone)
+        val currentDate = currentLocalDateTime.date
+
+        // Start of day
+        val startOfDay = currentDate.atStartOfDayIn(timeZone)
+
+        // End of day
+        val endOfDay = LocalDateTime(
+            currentDate.year,
+            currentDate.monthNumber,
+            currentDate.dayOfMonth,
+            23,
+            59,
+            59,
+        ).toInstant(timeZone)
+
+        return database.findByDateRange(startOfDay, endOfDay)
     }
 
     override suspend fun update(diary: Diary): Int {
