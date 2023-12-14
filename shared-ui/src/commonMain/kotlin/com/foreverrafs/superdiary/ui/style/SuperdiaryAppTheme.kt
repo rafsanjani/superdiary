@@ -51,6 +51,11 @@ fun SuperdiaryAppTheme(
             fontWeight = FontWeight.Normal,
             fontSize = 30.sp,
         ),
+        displayMedium = TextStyle(
+            fontFamily = montserratAlternativesFontFamily(),
+            fontWeight = FontWeight.Light,
+            fontSize = 20.sp,
+        ),
         headlineMedium = TextStyle(
             fontFamily = montserratAlternativesFontFamily(),
             fontWeight = FontWeight.Bold,

@@ -1,6 +1,7 @@
 @file:Suppress("UnusedPrivateProperty")
 
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import java.io.IOException
 
 plugins {
     alias(libs.plugins.ksp)
@@ -16,7 +17,7 @@ buildkonfig {
     packageName = "com.foreverrafs.superdiary.buildKonfig"
 
     val openAiKey =
-        project.findProperty("openAiKey") ?: throw Exception("OpenAI API key not provided!")
+        project.findProperty("openAiKey") ?: throw IOException("OpenAI API key not provided!")
 
     // default config is required
     defaultConfigs {
@@ -66,8 +67,7 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.square.sqldelight.coroutinesExt)
-                implementation(platform("com.aallam.openai:openai-client-bom:3.6.1"))
-                implementation("com.aallam.openai:openai-client")
+                implementation(libs.openAiKotlin)
                 runtimeOnly(libs.ktor.client.cio)
             }
         }

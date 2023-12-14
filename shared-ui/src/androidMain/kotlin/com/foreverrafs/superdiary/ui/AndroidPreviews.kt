@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package com.foreverrafs.superdiary.ui
 
 import android.content.res.Configuration
@@ -11,11 +13,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.model.Streak
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreenContent
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreenModel
+import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatMessage
+import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatScreenContent
+import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatScreenModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryDatePicker
@@ -56,9 +62,21 @@ internal fun TestAppContainer(content: @Composable () -> Unit) {
     }
 }
 
-@SuperDiaryPreview
+@PreviewSuperDiary
 @Composable
-fun LoadingDiariesPreview() {
+private fun DiaryChatPreview() {
+    TestAppContainer {
+        DiaryChatScreenContent(
+            screenState = DiaryChatScreenModel.ChatScreenState(
+                isResponding = true,
+            ),
+        )
+    }
+}
+
+@PreviewSuperDiary
+@Composable
+private fun LoadingDiariesPreview() {
     SuperdiaryAppTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
@@ -73,9 +91,9 @@ fun LoadingDiariesPreview() {
     }
 }
 
-@SuperDiaryPreview
+@PreviewSuperDiary
 @Composable
-fun ErrorLoadingDiariesPreview() {
+private fun ErrorLoadingDiariesPreview() {
     SuperdiaryAppTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
@@ -90,9 +108,9 @@ fun ErrorLoadingDiariesPreview() {
     }
 }
 
-@SuperDiaryPreview
+@PreviewSuperDiary
 @Composable
-fun EmptySearchDiaryListPreview() {
+private fun EmptySearchDiaryListPreview() {
     TestAppContainer {
         DiaryList(
             diaries = listOf(),
@@ -107,9 +125,9 @@ fun EmptySearchDiaryListPreview() {
     }
 }
 
-@SuperDiaryPreview
+@PreviewSuperDiary
 @Composable
-fun EmptyDiaryListPreview() {
+private fun EmptyDiaryListPreview() {
     SuperdiaryAppTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
@@ -124,9 +142,9 @@ fun EmptyDiaryListPreview() {
     }
 }
 
-@SuperDiaryPreview
+@PreviewSuperDiary
 @Composable
-fun DiaryListPreview() {
+private fun DiaryListPreview() {
     SuperdiaryAppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             DiaryListScreenContent(
@@ -149,9 +167,9 @@ fun DiaryListPreview() {
     }
 }
 
-@SuperDiaryPreview
+@PreviewSuperDiary
 @Composable
-fun CreateDiaryPreview() {
+private fun CreateDiaryPreview() {
     SuperdiaryAppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             CreateDiaryScreenContent(
@@ -166,9 +184,9 @@ fun CreateDiaryPreview() {
     }
 }
 
-@SuperDiaryPreview
+@PreviewSuperDiary
 @Composable
-fun CreateDiaryPreviewNonEditable() {
+private fun CreateDiaryPreviewNonEditable() {
     SuperdiaryAppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             CreateDiaryScreenContent(
@@ -188,9 +206,9 @@ fun CreateDiaryPreviewNonEditable() {
     }
 }
 
-@SuperDiaryPreview
+@PreviewSuperDiary
 @Composable
-fun FilteredEmptyPreview() {
+private fun FilteredEmptyPreview() {
     SuperdiaryAppTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
@@ -212,9 +230,9 @@ fun FilteredEmptyPreview() {
     }
 }
 
-@SuperDiaryPreview
+@PreviewSuperDiary
 @Composable
-fun SelectedDiariesPreview() {
+private fun SelectedDiariesPreview() {
     TestAppContainer {
         DiaryList(
             diaries = (0..10).map {
@@ -237,8 +255,8 @@ fun SelectedDiariesPreview() {
 }
 
 @Composable
-@SuperDiaryPreview
-fun DiaryDatePickerPreview() {
+@PreviewSuperDiary
+private fun DiaryDatePickerPreview() {
     TestAppContainer {
         DiaryDatePicker(
             onDismissRequest = {},
@@ -249,8 +267,8 @@ fun DiaryDatePickerPreview() {
 }
 
 @Composable
-@SuperDiaryPreview
-fun DeleteDialogPreview() {
+@PreviewSuperDiary
+private fun DeleteDialogPreview() {
     TestAppContainer {
         ConfirmDeleteDialog(
             onDismiss = {},
@@ -260,11 +278,10 @@ fun DeleteDialogPreview() {
 }
 
 @Composable
-@SuperDiaryPreview
-fun DashboardPreview() {
+@PreviewSuperDiary
+private fun DashboardPreview() {
     TestAppContainer {
         DashboardScreenContent(
-            onAddEntry = {},
             state = DashboardScreenModel.DashboardScreenState.Content(
                 (0..1).map {
                     Diary(
@@ -275,12 +292,13 @@ fun DashboardPreview() {
                     )
                 },
                 20,
+                "",
+                Streak(0, emptyList()),
             ),
-            onSeeAll = {},
-        )
+        ) {}
     }
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
-annotation class SuperDiaryPreview
+annotation class PreviewSuperDiary

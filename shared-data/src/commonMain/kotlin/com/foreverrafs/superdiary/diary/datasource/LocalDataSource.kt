@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.diary.datasource
 
 import com.foreverrafs.superdiary.diary.Database
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.model.WeeklySummary
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 
@@ -57,4 +58,11 @@ class LocalDataSource(private val database: Database) : DataSource {
     }
 
     override fun countEntries(): Long = database.countEntries()
+
+    override fun insertWeeklySummary(summary: WeeklySummary) =
+        database.insertWeeklySummary(summary = summary)
+
+    override fun getWeeklySummary(): WeeklySummary? {
+        return database.getWeeklySummary()
+    }
 }
