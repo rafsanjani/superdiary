@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.diarylist
+package com.foreverrafs.superdiary.ui.diarylist
 
 import app.cash.turbine.test
 import assertk.assertThat

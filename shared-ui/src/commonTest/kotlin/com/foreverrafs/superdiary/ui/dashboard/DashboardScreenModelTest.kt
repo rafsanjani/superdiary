@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.dashboard
+package com.foreverrafs.superdiary.ui.dashboard
 
 import app.cash.turbine.test
 import assertk.assertThat
@@ -13,6 +13,7 @@ import com.foreverrafs.superdiary.diary.usecase.AddWeeklySummaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetWeeklySummaryUseCase
+import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreenModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

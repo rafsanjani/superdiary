@@ -17,6 +17,7 @@ koverReport {
                 "*.*ScreenContent*",
                 "*.*Preview*",
                 "*.*AppKt*",
+                "*.*CreateDiaryScreen"
             )
             packages(
                 "*.components",
