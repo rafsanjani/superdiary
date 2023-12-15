@@ -30,24 +30,18 @@ koverReport {
 
 sonar {
     val exclusionList = listOf(
-        "com.foreverrafs.superdiary.database",
-        "db",
-        "com.foreverrafs.superdiary.ui",
-        "com.foreverrafs.superdiary.database",
-        "*.buildKonfig",
-        "*.di",
-        "db",
-        "*.*BottomNavigationScreenKt",
-        "**/*Activity",
-        "**/*App",
-        "*.*Screen",
-        "*.*ScreenContentKt",
-        "*.*ScreenContent*",
-        "*.*Preview*",
-        "*.*AppKt*",
-        "*.components",
-        "*.di",
-        "*.style",
+        "**/*Preview*",
+        "**/*Screen*",
+        "**/di/*",
+        "**/ui/ViewController*",
+        // iOS view controller
+        "**/App.kt",
+        // The entry-point UI of the app
+        "**/DiaryApp.kt",
+        // JVM App entrypoint
+        "**/Main.kt",
+        // The application class
+        "**/*DatabaseDriver*",
     )
 
     properties {
