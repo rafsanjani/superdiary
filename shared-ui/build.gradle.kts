@@ -14,7 +14,6 @@ koverReport {
         excludes {
             classes(
                 "*.*Screen",
-                "*.*ScreenContentKt",
                 "*.*ScreenContent*",
                 "*.*Preview*",
                 "*.*AppKt*",
