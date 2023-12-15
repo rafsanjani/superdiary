@@ -29,10 +29,32 @@ koverReport {
 }
 
 sonar {
+    val exclusionList = listOf(
+        "com.foreverrafs.superdiary.database",
+        "db",
+        "com.foreverrafs.superdiary.ui",
+        "com.foreverrafs.superdiary.database",
+        "*.buildKonfig",
+        "*.di",
+        "db",
+        "*.*BottomNavigationScreenKt",
+        "**/*Activity",
+        "**/*App",
+        "*.*Screen",
+        "*.*ScreenContentKt",
+        "*.*ScreenContent*",
+        "*.*Preview*",
+        "*.*AppKt*",
+        "*.components",
+        "*.di",
+        "*.style",
+    )
+
     properties {
         property("sonar.projectKey", "rafsanjani_superdiary")
         property("sonar.organization", "rafsanjani")
         property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.coverage.exclusions", exclusionList)
     }
 }
 
