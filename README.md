@@ -25,8 +25,7 @@ A simple diary app, mostly focused on Clean Architecture design pattern and 100%
 
 | Dashboard | Diary AI  |
 |--|--|
-| <img width="471" alt="Screenshot 2023-12-15 at 11 16 22" src="https://github.com/rafsanjani/superdiary/assets/9197459/e7e61180-a364-4d16-a554-b9304924d3eb"> |  |
-
+| <img width="350" alt="Screenshot 2023-12-15 at 11 16 22" src="https://github.com/rafsanjani/superdiary/assets/9197459/e7e61180-a364-4d16-a554-b9304924d3eb"> | <img width="350" alt="Screenshot 2023-12-15 at 11 21 01" src="https://github.com/rafsanjani/superdiary/assets/9197459/94eab288-6dfa-4c44-94e9-784d16af8f96"> |
 
 
 ### Status: 🚧 In progress
