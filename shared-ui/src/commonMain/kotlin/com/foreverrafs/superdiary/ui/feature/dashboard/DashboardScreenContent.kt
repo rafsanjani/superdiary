@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -51,6 +52,7 @@ import kotlin.random.Random
 @Composable
 fun DashboardScreenContent(
     state: DashboardScreenModel.DashboardScreenState,
+    onAddEntry: () -> Unit,
     onSeeAll: () -> Unit,
 ) {
     if (state !is DashboardScreenModel.DashboardScreenState.Content) return
@@ -86,6 +88,13 @@ fun DashboardScreenContent(
                             diaries = state.latestEntries,
                             onSeeAll = onSeeAll,
                         )
+                    } else {
+                        Button(onClick = onAddEntry) {
+                            Text(
+                                text = "Add Entry",
+                                style = MaterialTheme.typography.labelMedium,
+                            )
+                        }
                     }
                 },
             ),
@@ -98,6 +107,7 @@ fun DashboardScreenContent(
                 .fillMaxSize()
                 .padding(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             items(items = dashboardItems, key = { it.id }) { content ->
                 content.content(this) {

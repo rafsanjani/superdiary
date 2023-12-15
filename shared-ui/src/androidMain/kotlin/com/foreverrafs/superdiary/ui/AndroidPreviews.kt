@@ -294,7 +294,9 @@ private fun DashboardPreview() {
                 "",
                 Streak(0, emptyList()),
             ),
-        ) {}
+            onAddEntry = {},
+            onSeeAll = {},
+        )
     }
 }
 
