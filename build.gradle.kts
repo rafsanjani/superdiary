@@ -31,17 +31,22 @@ koverReport {
 sonar {
     val exclusionList = listOf(
         "**/*Preview*",
+        // Compose screens
         "**/*Screen*",
+        // Koin modules and all that shit
         "**/di/*",
-        "**/ui/ViewController*",
         // iOS view controller
-        "**/App.kt",
+        "**/ui/ViewController*",
         // The entry-point UI of the app
+        "**/App.kt",
+        // The android application class
         "**/DiaryApp.kt",
         // JVM App entrypoint
         "**/Main.kt",
-        // The application class
+        // SqlDelight database driver
         "**/*DatabaseDriver*",
+        // Reusable screen components
+        "**/components/**",
     )
 
     properties {

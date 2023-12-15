@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.diarylist.model
+package com.foreverrafs.superdiary.ui.diarylist
 
 import app.cash.turbine.test
 import assertk.assertThat
@@ -10,6 +10,7 @@ import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.diary.usecase.UpdateDiaryUseCase
+import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListScreenModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

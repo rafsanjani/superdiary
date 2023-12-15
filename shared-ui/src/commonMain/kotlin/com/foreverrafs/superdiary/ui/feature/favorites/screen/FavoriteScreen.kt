@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.VectorPainter
@@ -19,6 +20,10 @@ object FavoriteScreen : SuperDiaryScreen {
         val screenModel: FavoriteScreenModel = getScreenModel()
 
         val screenState by screenModel.state.collectAsState()
+
+        LaunchedEffect(Unit){
+            screenModel.loadFavorites()
+        }
 
         FavoriteScreenContent(
             state = screenState,
