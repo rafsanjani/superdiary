@@ -11,7 +11,7 @@ class DateFormatterTest {
     fun `Verify date formatting works properly`() {
         val date = LocalDate(2020, 10, 10)
         val formattedDate = date.format("YYYY")
-        
+
         assertThat(formattedDate).isEqualTo("2020")
     }
 }
