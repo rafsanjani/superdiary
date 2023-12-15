@@ -8,19 +8,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.foreverrafs.superdiary.diary.usecase.GetFavoriteDiariesUseCase
 import com.foreverrafs.superdiary.ui.SuperDiaryScreen
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import com.foreverrafs.superdiary.ui.feature.favorites.model.FavoriteScreenModel
 
-object FavoriteScreen : SuperDiaryScreen() {
+object FavoriteScreen : SuperDiaryScreen {
     @Composable
     override fun Content() {
-        val screenModel: FavoritesTabScreenModel = getScreenModel()
+        val screenModel: FavoriteScreenModel = getScreenModel()
 
         val screenState by screenModel.state.collectAsState()
 
@@ -41,24 +37,3 @@ object FavoriteScreen : SuperDiaryScreen() {
             icon = rememberVectorPainter(Icons.Default.FavoriteBorder),
         )
 }
-
-class FavoritesTabScreenModel(
-    private val getAllDiariesUseCase: GetFavoriteDiariesUseCase,
-) :
-    StateScreenModel<FavoriteScreenState>(FavoriteScreenState.Idle) {
-
-    init {
-        loadFavorites()
-    }
-
-    private fun loadFavorites() = screenModelScope.launch {
-        getAllDiariesUseCase().collect { diaries ->
-            mutableState.update {
-                FavoriteScreenState.Favorites(
-                    diaries,
-                )
-            }
-        }
-    }
-}
-

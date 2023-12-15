@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.VectorPainter
 import cafe.adriel.voyager.navigator.tab.Tab
 
-abstract class SuperDiaryScreen : Tab {
-    abstract val selectedIcon: VectorPainter
+interface SuperDiaryScreen : Tab {
+    val selectedIcon: VectorPainter
         @Composable get
 }

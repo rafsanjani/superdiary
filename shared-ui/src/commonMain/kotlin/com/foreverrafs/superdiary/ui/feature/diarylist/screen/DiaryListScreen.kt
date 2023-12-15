@@ -25,7 +25,7 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListScreenModel
 
-object DiaryListScreen : SuperDiaryScreen() {
+object DiaryListScreen : SuperDiaryScreen {
     override val options: TabOptions
         @Composable
         get() = TabOptions(
@@ -42,6 +42,10 @@ object DiaryListScreen : SuperDiaryScreen() {
     override fun Content() {
         val screenModel: DiaryListScreenModel = getScreenModel()
         val screenState by screenModel.state.collectAsState()
+
+        LaunchedEffect(Unit) {
+            screenModel.observeDiaries()
+        }
 
         var diaryFilters by rememberSaveable(stateSaver = DiaryFilters.Saver) {
             mutableStateOf(DiaryFilters())

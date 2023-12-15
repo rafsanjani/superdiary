@@ -109,12 +109,14 @@ class Database(databaseDriver: DatabaseDriver) {
 
     fun countEntries(): Long = queries.countEntries().executeAsOne()
 
-    fun getWeeklySummary(): WeeklySummary? = queries.getWeeklySummary(mapper = { date, summary ->
-        WeeklySummary(
-            summary = summary,
-            date = Instant.parse(date),
-        )
-    }).executeAsOneOrNull()
+    fun getWeeklySummary(): WeeklySummary? = queries.getWeeklySummary(
+        mapper = { date, summary ->
+            WeeklySummary(
+                summary = summary,
+                date = Instant.parse(date),
+            )
+        },
+    ).executeAsOneOrNull()
 
     fun insertWeeklySummary(summary: WeeklySummary) {
         queries.transaction {

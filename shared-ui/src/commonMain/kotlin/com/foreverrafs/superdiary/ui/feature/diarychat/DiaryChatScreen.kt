@@ -8,17 +8,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
-import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.ui.SuperDiaryScreen
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
-object DiaryChatScreen : SuperDiaryScreen() {
+object DiaryChatScreen : SuperDiaryScreen {
     @Composable
     override fun Content() {
         val screenModel = getScreenModel<DiaryChatScreenModel>()
@@ -40,55 +34,4 @@ object DiaryChatScreen : SuperDiaryScreen() {
             title = "Diary AI",
             icon = rememberVectorPainter(Icons.Outlined.Chat),
         )
-}
-
-class DiaryChatScreenModel(
-    private val diaryAI: DiaryAI,
-    private val getAllDiariesUseCase: GetAllDiariesUseCase,
-) :
-    StateScreenModel<DiaryChatScreenModel.ChatScreenState>(ChatScreenState()) {
-    data class ChatScreenState(
-        val isResponding: Boolean = false,
-        val messages: List<DiaryChatMessage> = listOf(
-            DiaryChatMessage.DiaryAI(
-                content = """
-                    Welcome to Diary AI.
-                    You can gain insights into your entries through interactive conversations.
-                """.trimIndent(),
-            ),
-        ),
-    )
-
-    private fun <T> List<T>.append(item: T): List<T> {
-        return this.toMutableList().also { it.add(item) }.toList()
-    }
-
-    fun queryDiaries(query: String) = screenModelScope.launch {
-        mutableState.update { state ->
-            state.copy(
-                isResponding = true,
-                messages = state.messages.append(
-                    DiaryChatMessage.User(
-                        content = query,
-                    ),
-                ),
-            )
-        }
-
-        getAllDiariesUseCase().collect {
-            val response = diaryAI.queryDiaries(it, query)
-            mutableState.update { state ->
-                val messages = state.messages.append(
-                    DiaryChatMessage.DiaryAI(
-                        content = response,
-                    ),
-                )
-
-                state.copy(
-                    isResponding = false,
-                    messages = messages,
-                )
-            }
-        }
-    }
 }

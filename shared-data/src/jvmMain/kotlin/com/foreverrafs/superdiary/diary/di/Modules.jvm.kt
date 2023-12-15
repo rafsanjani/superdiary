@@ -8,4 +8,5 @@ import org.koin.dsl.module
 
 actual fun platformModule(analytics: Analytics): Module = module {
     factoryOf<DatabaseDriver>(::JVMDatabaseDriver)
+    factory<Analytics> { analytics }
 }
