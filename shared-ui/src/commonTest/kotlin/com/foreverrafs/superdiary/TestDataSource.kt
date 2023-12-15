@@ -15,7 +15,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.coroutines.EmptyCoroutineContext
 
-internal class TestDataSource : DataSource {
+open class TestDataSource : DataSource {
     private val diaries = mutableListOf(
         Diary(id = 1000L, "Hello World", Clock.System.now(), false),
     )
@@ -41,27 +41,31 @@ internal class TestDataSource : DataSource {
     }
 
     override fun fetchFavorites(): Flow<List<Diary>> {
-        return diariesFlow.map { diaries ->
-            diaries.filter { it.isFavorite }
-        }
+        return diariesFlow
+            .apply { tryEmit(diaries) }.map { diaries ->
+                diaries.filter { it.isFavorite }
+            }
     }
 
     override fun find(entry: String): Flow<List<Diary>> {
-        return diariesFlow.map { diaries ->
-            diaries.filter {
-                it.entry.contains(entry, ignoreCase = true)
+        return diariesFlow
+            .apply { tryEmit(diaries) }.map { diaries ->
+                diaries.filter {
+                    it.entry.contains(entry, ignoreCase = true)
+                }
             }
-        }
     }
 
     override fun find(from: Instant, to: Instant): Flow<List<Diary>> {
-        return diariesFlow.map { diaries ->
-            diaries.filter {
-                val diaryDate = it.date.toDate()
+        return diariesFlow
+            .apply { tryEmit(diaries) }
+            .map { diaries ->
+                diaries.filter {
+                    val diaryDate = it.date.toDate()
 
-                diaryDate in from.toDate()..to.toDate()
+                    diaryDate in from.toDate()..to.toDate()
+                }
             }
-        }
     }
 
     override fun findByDate(date: Instant): Flow<List<Diary>> {
