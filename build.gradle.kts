@@ -29,10 +29,26 @@ koverReport {
 }
 
 sonar {
+    val exclusionList = listOf(
+        "**/*Preview*",
+        "**/*Screen*",
+        "**/di/*",
+        "**/ui/ViewController*",
+        // iOS view controller
+        "**/App.kt",
+        // The entry-point UI of the app
+        "**/DiaryApp.kt",
+        // JVM App entrypoint
+        "**/Main.kt",
+        // The application class
+        "**/*DatabaseDriver*",
+    )
+
     properties {
         property("sonar.projectKey", "rafsanjani_superdiary")
         property("sonar.organization", "rafsanjani")
         property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.coverage.exclusions", exclusionList)
     }
 }
 
