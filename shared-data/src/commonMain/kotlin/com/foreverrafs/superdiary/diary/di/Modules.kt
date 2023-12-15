@@ -22,6 +22,8 @@ import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.diary.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.diary.validator.DiaryValidator
 import com.foreverrafs.superdiary.diary.validator.DiaryValidatorImpl
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.Clock
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
@@ -31,6 +33,8 @@ import org.koin.dsl.module
 fun useCaseModule() = module {
     single<DataSource> { LocalDataSource(get()) }
     factory<Clock> { Clock.System }
+    factory<CoroutineDispatcher> { Dispatchers.Default }
+
     factoryOf<DiaryAI>(::SuperDiaryAI)
     factoryOf(::AddDiaryUseCase)
     factoryOf(::GetAllDiariesUseCase)
