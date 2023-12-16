@@ -4,9 +4,15 @@ plugins {
     alias(libs.plugins.paparazzi)
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.ksp)
     kotlin("multiplatform")
     id("kotlin-parcelize")
+    id("org.kodein.mock.mockmp").version("1.15.0")
     id("org.jetbrains.kotlinx.kover")
+}
+
+mockmp {
+    usesHelper = true
 }
 
 koverReport {
@@ -17,7 +23,7 @@ koverReport {
                 "*.*ScreenContent*",
                 "*.*Preview*",
                 "*.*AppKt*",
-                "*.*CreateDiaryScreen"
+                "*.*CreateDiaryScreen",
             )
             packages(
                 "*.components",
@@ -78,8 +84,11 @@ kotlin {
                 implementation(libs.koin.test)
                 implementation(libs.kotlin.coroutines.test)
                 implementation(libs.turbine)
+                implementation("org.kodein.mock:mockmp-runtime:1.15.0")
                 implementation(libs.assertk.common)
             }
+
+            kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
         }
 
         val androidUnitTest by getting {
@@ -131,4 +140,14 @@ android {
     }
 
     sourceSets["main"].res.srcDirs("src/commonMain/resources")
+}
+
+dependencies {
+    "kspJvmTest"("org.kodein.mock:mockmp-processor:1.15.0")
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().all {
+    if (name.startsWith("compileTestKotlin")) {
+        dependsOn("kspTestKotlinJvm") // (5)
+    }
 }

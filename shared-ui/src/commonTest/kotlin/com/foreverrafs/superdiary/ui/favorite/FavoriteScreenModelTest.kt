@@ -5,7 +5,6 @@ import assertk.assertThat
 import assertk.assertions.isEmpty
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
-import com.foreverrafs.superdiary.TestDataSource
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.GetFavoriteDiariesUseCase
@@ -13,27 +12,34 @@ import com.foreverrafs.superdiary.ui.feature.favorites.model.FavoriteScreenModel
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreenState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kotlinx.datetime.Clock
+import org.kodein.mock.Mock
+import org.kodein.mock.tests.TestsWithMocks
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class FavoriteScreenModelTest {
-    private lateinit var dataSource: DataSource
+class FavoriteScreenModelTest : TestsWithMocks() {
+    override fun setUpMocks() = injectMocks(mocker)
+
+    @Mock
+    lateinit var dataSource: DataSource
+
     private lateinit var favoriteScreenModel: FavoriteScreenModel
 
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
-        dataSource = TestDataSource()
-        favoriteScreenModel = FavoriteScreenModel(GetFavoriteDiariesUseCase(dataSource))
+
+        favoriteScreenModel = FavoriteScreenModel(
+            getFavoriteDiariesUseCase = GetFavoriteDiariesUseCase(dataSource),
+        )
     }
 
     @AfterTest
@@ -43,6 +49,16 @@ class FavoriteScreenModelTest {
 
     @Test
     fun `Verify favorite screen starts from loading state`() = runTest {
+        every { dataSource.fetchFavorites() } returns flowOf(
+            listOf(
+                Diary(
+                    entry = "Fake Diary",
+                    date = Clock.System.now(),
+                    isFavorite = true,
+                ),
+            ),
+        )
+
         favoriteScreenModel.state.test {
             favoriteScreenModel.loadFavorites()
             val loadingState = awaitItem()
@@ -54,21 +70,15 @@ class FavoriteScreenModelTest {
 
     @Test
     fun `Verify success state is emitted after loading favorites`() = runTest {
-        val favoritePresentDataSource = object : TestDataSource() {
-            override fun fetchFavorites(): Flow<List<Diary>> {
-                return flowOf(
-                    listOf(
-                        Diary(
-                            entry = "",
-                            date = Clock.System.now(),
-                            isFavorite = true,
-                        ),
-                    ),
-                )
-            }
-        }
-        favoriteScreenModel =
-            FavoriteScreenModel(GetFavoriteDiariesUseCase(favoritePresentDataSource))
+        every { dataSource.fetchFavorites() } returns flowOf(
+            listOf(
+                Diary(
+                    entry = "Fake Diary",
+                    date = Clock.System.now(),
+                    isFavorite = true,
+                ),
+            ),
+        )
 
         favoriteScreenModel.state.test {
             favoriteScreenModel.loadFavorites()
@@ -86,12 +96,7 @@ class FavoriteScreenModelTest {
 
     @Test
     fun `Verify success state is emitted even when there is no favorite`() = runTest {
-        val noFavoriteDataSource = object : TestDataSource() {
-            override fun fetchFavorites(): Flow<List<Diary>> {
-                return flowOf(emptyList())
-            }
-        }
-        favoriteScreenModel = FavoriteScreenModel(GetFavoriteDiariesUseCase(noFavoriteDataSource))
+        every { dataSource.fetchFavorites() } returns flowOf(emptyList())
 
         favoriteScreenModel.state.test {
             favoriteScreenModel.loadFavorites()
