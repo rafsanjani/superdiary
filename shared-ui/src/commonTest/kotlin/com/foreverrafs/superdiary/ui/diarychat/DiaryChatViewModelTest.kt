@@ -2,6 +2,8 @@ package com.foreverrafs.superdiary.ui.diarychat
 
 import app.cash.turbine.test
 import assertk.assertThat
+import assertk.assertions.hasSize
+import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
@@ -50,8 +52,8 @@ class DiaryChatViewModelTest : TestsWithMocks() {
     }
 
     @Test
-    fun `Update responding state when responding to AI diary queries`() = runTest {
-        everySuspending { diaryAI.queryDiaries(isAny(), isAny()) } returns ""
+    fun `Should update responding to true when generating AI response`() = runTest {
+        everySuspending { diaryAI.queryDiaries(isAny(), isAny()) } returns "hello boss"
 
         diaryChatViewModel.state.test {
             diaryChatViewModel.queryDiaries("hello World")
@@ -63,6 +65,25 @@ class DiaryChatViewModelTest : TestsWithMocks() {
             cancelAndConsumeRemainingEvents()
 
             assertThat(state.isResponding).isTrue()
+            assertThat(state.messages).hasSize(2)
+        }
+    }
+
+    @Test
+    fun `Should update responding to false after generating AI response`() = runTest {
+        everySuspending { diaryAI.queryDiaries(isAny(), isAny()) } returns "hello boss"
+
+        diaryChatViewModel.state.test {
+            diaryChatViewModel.queryDiaries("hello World")
+
+            // Skip the initial state and first emission state
+            skipItems(2)
+            val state = awaitItem()
+
+            cancelAndConsumeRemainingEvents()
+
+            assertThat(state.isResponding).isFalse()
+            assertThat(state.messages).hasSize(3)
         }
     }
 }

@@ -27,14 +27,7 @@ class OpenDiaryAI : DiaryAI {
         logging = LoggingConfig(logLevel = LogLevel.None),
     )
 
-    private val generateDiaryMessages = mutableListOf<ChatMessage>()
     private val diaryChatMessages = mutableListOf<ChatMessage>()
-
-    private val weeklyDiaryGeneratorPrompt = """
-        You are Journal AI. I will give you a combined list of entries written over a period of 
-        one week and you write a brief, concise and informative 50 word summary for me. The summary
-        should be in the first person narrative.
-    """.trimIndent()
 
     private val diaryChatPrompt = """
         You are Journal AI, I will provide you a list of journal entries and their dates and you will 
@@ -49,6 +42,7 @@ class OpenDiaryAI : DiaryAI {
         prompt: String,
         wordCount: Int,
     ): Flow<String> {
+        val generateDiaryMessages = mutableListOf<ChatMessage>()
         // Add the instruction
         generateDiaryMessages.add(
             ChatMessage(
@@ -94,8 +88,13 @@ class OpenDiaryAI : DiaryAI {
     }
 
     override fun getWeeklySummary(diaries: List<Diary>): Flow<String> {
-        generateDiaryMessages.clear()
+        val weeklyDiaryGeneratorPrompt = """
+            You are Journal AI. I will give you a combined list of entries written over a period of 
+            one week and you write a brief, concise and informative 50 word summary for me. The summary
+            should be in the first person narrative.
+        """.trimIndent()
 
+        val generateDiaryMessages = mutableListOf<ChatMessage>()
         // Add the instruction
         generateDiaryMessages.add(
             ChatMessage.System(

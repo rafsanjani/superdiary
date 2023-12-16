@@ -41,8 +41,10 @@ class DashboardViewModel(
                     latestEntries = diaries.sortedByDescending { it.date }.take(2),
                     totalEntries = diaries.size.toLong(),
                     weeklySummary = if (diaries.isEmpty()) {
-                        "In this panel, your weekly diary entries will be summarized." +
-                            "\nAdd your first entry to see how it works"
+                        """
+                            In this panel, your weekly diary entries will be summarized.
+                            Add your first entry to see how it works
+                        """.trimIndent()
                     } else {
                         DEFAULT_SUMMARY_TEXT
                     },
@@ -82,7 +84,7 @@ class DashboardViewModel(
             }
         }
 
-        diaryAI.generateWeeklySummaryAsync(diaries)
+        diaryAI.getWeeklySummary(diaries)
             .catch {
                 mutableState.update { state ->
                     (state as? DashboardScreenState.Content)?.copy(
