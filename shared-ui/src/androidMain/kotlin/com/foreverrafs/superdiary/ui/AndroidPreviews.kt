@@ -18,15 +18,15 @@ import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreenContent
-import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreenModel
+import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatScreenContent
-import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatScreenModel
+import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryDatePicker
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
-import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenState
+import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 import kotlinx.datetime.Clock
 import kotlinx.datetime.toKotlinLocalDate
@@ -66,7 +66,7 @@ internal fun TestAppContainer(content: @Composable () -> Unit) {
 private fun DiaryChatPreview() {
     TestAppContainer {
         DiaryChatScreenContent(
-            screenState = DiaryChatScreenModel.ChatScreenState(
+            screenState = DiaryChatViewModel.ChatScreenState(
                 isResponding = true,
             ),
         )
@@ -81,7 +81,7 @@ private fun LoadingDiariesPreview() {
             color = MaterialTheme.colorScheme.background,
         ) {
             DiaryListScreenContent(
-                state = DiaryListScreenState.Loading,
+                state = DiaryListViewState.Loading,
                 showSearchBar = false,
                 diaryFilters = DiaryFilters(),
                 diaryListActions = diaryListActions,
@@ -98,7 +98,7 @@ private fun ErrorLoadingDiariesPreview() {
             color = MaterialTheme.colorScheme.background,
         ) {
             DiaryListScreenContent(
-                state = DiaryListScreenState.Error(Error()),
+                state = DiaryListViewState.Error(Error()),
                 showSearchBar = false,
                 diaryFilters = DiaryFilters(),
                 diaryListActions = diaryListActions,
@@ -132,7 +132,7 @@ private fun EmptyDiaryListPreview() {
             color = MaterialTheme.colorScheme.background,
         ) {
             DiaryListScreenContent(
-                state = DiaryListScreenState.Content(listOf(), false),
+                state = DiaryListViewState.Content(listOf(), false),
                 showSearchBar = false,
                 diaryFilters = DiaryFilters(),
                 diaryListActions = diaryListActions,
@@ -147,7 +147,7 @@ private fun DiaryListPreview() {
     SuperdiaryAppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             DiaryListScreenContent(
-                state = DiaryListScreenState.Content(
+                state = DiaryListViewState.Content(
                     diaries = (0..10).map {
                         Diary(
                             id = Random.nextLong(),
@@ -216,7 +216,7 @@ private fun FilteredEmptyPreview() {
                 color = MaterialTheme.colorScheme.background,
             ) {
                 DiaryListScreenContent(
-                    state = DiaryListScreenState.Content(
+                    state = DiaryListViewState.Content(
                         diaries = listOf(),
                         filtered = true,
                     ),
@@ -281,7 +281,7 @@ private fun DeleteDialogPreview() {
 private fun DashboardPreview() {
     TestAppContainer {
         DashboardScreenContent(
-            state = DashboardScreenModel.DashboardScreenState.Content(
+            state = DashboardViewModel.DashboardScreenState.Content(
                 (0..1).map {
                     Diary(
                         id = it.toLong(),

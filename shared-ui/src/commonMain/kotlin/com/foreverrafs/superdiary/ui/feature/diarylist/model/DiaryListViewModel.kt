@@ -9,30 +9,27 @@ import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.diary.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.diary.utils.toInstant
-import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenState
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
-class DiaryListScreenModel(
+class DiaryListViewModel(
     private val getAllDiariesUseCase: GetAllDiariesUseCase,
     private val searchDiaryByEntryUseCase: SearchDiaryByEntryUseCase,
     private val searchDiaryByDateUseCase: SearchDiaryByDateUseCase,
     private val deleteMultipleDiariesUseCase: DeleteMultipleDiariesUseCase,
     private val updateDiaryUseCase: UpdateDiaryUseCase,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default,
-) : StateScreenModel<DiaryListScreenState>(DiaryListScreenState.Loading) {
+) : StateScreenModel<DiaryListViewState>(DiaryListViewState.Loading) {
 
-    fun observeDiaries() = screenModelScope.launch(coroutineDispatcher) {
+    fun observeDiaries() = screenModelScope.launch {
         mutableState.update {
-            DiaryListScreenState.Loading
+            DiaryListViewState.Loading
         }
 
         getAllDiariesUseCase().collect { diaries ->
             mutableState.update {
-                DiaryListScreenState.Content(
+                DiaryListViewState.Content(
                     diaries = diaries,
                     filtered = false,
                 )
@@ -40,10 +37,10 @@ class DiaryListScreenModel(
         }
     }
 
-    fun filterByEntry(entry: String) = screenModelScope.launch(coroutineDispatcher) {
-        searchDiaryByEntryUseCase(entry).collect { diaries ->
+    fun filterByEntry(entry: String) = screenModelScope.launch {
+        searchDiaryByEntryUseCase.invoke(entry).collect { diaries ->
             mutableState.update {
-                DiaryListScreenState.Content(
+                DiaryListViewState.Content(
                     diaries = diaries,
                     filtered = true,
                 )
@@ -51,28 +48,27 @@ class DiaryListScreenModel(
         }
     }
 
-    fun filterByDate(date: LocalDate) = screenModelScope.launch(coroutineDispatcher) {
+    fun filterByDate(date: LocalDate) = screenModelScope.launch {
+        searchDiaryByDateUseCase.invoke(date.toInstant()).collect { diaries ->
+            mutableState.update {
+                DiaryListViewState.Content(
+                    diaries = diaries,
+                    filtered = true,
+                )
+            }
+        }
+    }
+
+    fun filterByDateAndEntry(date: LocalDate, entry: String) = screenModelScope.launch {
         searchDiaryByDateUseCase(date.toInstant()).collect { diaries ->
             mutableState.update {
-                DiaryListScreenState.Content(
-                    diaries = diaries,
+                DiaryListViewState.Content(
+                    diaries = diaries.filter { it.entry.contains(entry, false) },
                     filtered = true,
                 )
             }
         }
     }
-
-    fun filterByDateAndEntry(date: LocalDate, entry: String) =
-        screenModelScope.launch(coroutineDispatcher) {
-            searchDiaryByDateUseCase(date.toInstant()).collect { diaries ->
-                mutableState.update {
-                    DiaryListScreenState.Content(
-                        diaries = diaries.filter { it.entry.contains(entry, false) },
-                        filtered = true,
-                    )
-                }
-            }
-        }
 
     suspend fun deleteDiaries(diaries: List<Diary>): Boolean {
         val affectedRows = deleteMultipleDiariesUseCase(diaries)

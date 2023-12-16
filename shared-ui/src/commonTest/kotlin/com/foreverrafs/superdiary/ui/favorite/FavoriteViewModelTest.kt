@@ -8,7 +8,7 @@ import assertk.assertions.isNotEmpty
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.GetFavoriteDiariesUseCase
-import com.foreverrafs.superdiary.ui.feature.favorites.model.FavoriteScreenModel
+import com.foreverrafs.superdiary.ui.feature.favorites.model.FavoriteViewModel
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreenState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,19 +25,19 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class FavoriteScreenModelTest : TestsWithMocks() {
+class FavoriteViewModelTest : TestsWithMocks() {
     override fun setUpMocks() = injectMocks(mocker)
 
     @Mock
     lateinit var dataSource: DataSource
 
-    private lateinit var favoriteScreenModel: FavoriteScreenModel
+    private lateinit var favoriteViewModel: FavoriteViewModel
 
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
 
-        favoriteScreenModel = FavoriteScreenModel(
+        favoriteViewModel = FavoriteViewModel(
             getFavoriteDiariesUseCase = GetFavoriteDiariesUseCase(dataSource),
         )
     }
@@ -59,8 +59,8 @@ class FavoriteScreenModelTest : TestsWithMocks() {
             ),
         )
 
-        favoriteScreenModel.state.test {
-            favoriteScreenModel.loadFavorites()
+        favoriteViewModel.state.test {
+            favoriteViewModel.loadFavorites()
             val loadingState = awaitItem()
             cancelAndIgnoreRemainingEvents()
 
@@ -80,8 +80,8 @@ class FavoriteScreenModelTest : TestsWithMocks() {
             ),
         )
 
-        favoriteScreenModel.state.test {
-            favoriteScreenModel.loadFavorites()
+        favoriteViewModel.state.test {
+            favoriteViewModel.loadFavorites()
 
             // skip loading state
             skipItems(1)
@@ -98,8 +98,8 @@ class FavoriteScreenModelTest : TestsWithMocks() {
     fun `Verify success state is emitted even when there is no favorite`() = runTest {
         every { dataSource.fetchFavorites() } returns flowOf(emptyList())
 
-        favoriteScreenModel.state.test {
-            favoriteScreenModel.loadFavorites()
+        favoriteViewModel.state.test {
+            favoriteViewModel.loadFavorites()
 
             // skip loading state
             skipItems(1)

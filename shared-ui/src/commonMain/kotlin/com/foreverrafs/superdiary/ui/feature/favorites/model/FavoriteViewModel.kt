@@ -7,7 +7,7 @@ import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreenStat
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class FavoriteScreenModel(
+class FavoriteViewModel(
     private val getFavoriteDiariesUseCase: GetFavoriteDiariesUseCase,
 ) :
     StateScreenModel<FavoriteScreenState>(FavoriteScreenState.Loading) {

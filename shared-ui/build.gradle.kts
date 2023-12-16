@@ -9,6 +9,7 @@ plugins {
     id("kotlin-parcelize")
     id("org.kodein.mock.mockmp").version("1.15.0")
     id("org.jetbrains.kotlinx.kover")
+    id("org.sonarqube")
 }
 
 mockmp {
@@ -19,17 +20,21 @@ koverReport {
     filters {
         excludes {
             classes(
-                "*.*Screen",
                 "*.*ScreenContent*",
                 "*.*Preview*",
                 "*.*AppKt*",
                 "*.*CreateDiaryScreen",
+                "*.Resources*",
+                "*.Main*",
+                "*.*ComposableSingletons*",
             )
             packages(
                 "*.components",
                 "*.di",
                 "*.style",
             )
+
+            files("*.*Screen.kt")
         }
     }
 }

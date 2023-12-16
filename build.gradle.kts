@@ -45,8 +45,11 @@ sonar {
         "**/Main.kt",
         // SqlDelight database driver
         "**/*DatabaseDriver*",
+        // Sqlite Database file
+        "**/*Database",
         // Reusable screen components
         "**/components/**",
+        "**/*Resources*",
     )
 
     properties {

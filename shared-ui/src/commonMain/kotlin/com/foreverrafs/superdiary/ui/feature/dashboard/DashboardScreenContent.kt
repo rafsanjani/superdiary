@@ -51,11 +51,11 @@ import kotlin.random.Random
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DashboardScreenContent(
-    state: DashboardScreenModel.DashboardScreenState,
+    state: DashboardViewModel.DashboardScreenState,
     onAddEntry: () -> Unit,
     onSeeAll: () -> Unit,
 ) {
-    if (state !is DashboardScreenModel.DashboardScreenState.Content) return
+    if (state !is DashboardViewModel.DashboardScreenState.Content) return
 
     val dashboardItems = remember {
         mutableStateListOf(
@@ -120,7 +120,7 @@ fun DashboardScreenContent(
 
 @Composable
 private fun AtAGlance(
-    state: DashboardScreenModel.DashboardScreenState.Content,
+    state: DashboardViewModel.DashboardScreenState.Content,
     modifier: Modifier = Modifier,
 ) {
     val animationState = remember { MutableTransitionState(false) }

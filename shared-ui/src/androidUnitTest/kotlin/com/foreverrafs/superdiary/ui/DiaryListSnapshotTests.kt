@@ -7,7 +7,7 @@ import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScree
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
-import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenState
+import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 import com.mohamedrejeb.richeditor.model.RichTextState
 import kotlinx.datetime.Clock
@@ -41,7 +41,7 @@ class DiaryListSnapshotTests : KoinTest {
         paparazzi.snapshot {
             SuperdiaryAppTheme {
                 DiaryListScreenContent(
-                    state = DiaryListScreenState.Loading,
+                    state = DiaryListViewState.Loading,
                     showSearchBar = true,
                     diaryFilters = DiaryFilters(),
                     diaryListActions = diaryListActions,
@@ -98,7 +98,7 @@ class DiaryListSnapshotTests : KoinTest {
         paparazzi.snapshot {
             SuperdiaryAppTheme {
                 DiaryListScreenContent(
-                    state = DiaryListScreenState.Content(
+                    state = DiaryListViewState.Content(
                         (0..5).map {
                             Diary(
                                 id = it.toLong(),
@@ -122,7 +122,7 @@ class DiaryListSnapshotTests : KoinTest {
         paparazzi.snapshot {
             SuperdiaryAppTheme {
                 DiaryListScreenContent(
-                    state = DiaryListScreenState.Content(
+                    state = DiaryListViewState.Content(
                         listOf(),
                         filtered = false,
                     ),
@@ -139,7 +139,7 @@ class DiaryListSnapshotTests : KoinTest {
         paparazzi.snapshot {
             SuperdiaryAppTheme {
                 DiaryListScreenContent(
-                    state = DiaryListScreenState.Content(
+                    state = DiaryListViewState.Content(
                         listOf(),
                         filtered = true,
                     ),
@@ -156,7 +156,7 @@ class DiaryListSnapshotTests : KoinTest {
         paparazzi.snapshot {
             SuperdiaryAppTheme {
                 DiaryListScreenContent(
-                    state = DiaryListScreenState.Error(
+                    state = DiaryListViewState.Error(
                         Error("Error loading diaries"),
                     ),
                     showSearchBar = true,

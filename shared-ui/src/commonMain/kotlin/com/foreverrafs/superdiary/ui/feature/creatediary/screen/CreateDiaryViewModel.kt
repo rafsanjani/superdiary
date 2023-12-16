@@ -9,7 +9,7 @@ import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class CreateDiaryScreenModel(
+class CreateDiaryViewModel(
     private val addDiaryUseCase: AddDiaryUseCase,
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
     private val diaryAI: DiaryAI,

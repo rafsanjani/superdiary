@@ -12,12 +12,12 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.foreverrafs.superdiary.ui.SuperDiaryScreen
-import com.foreverrafs.superdiary.ui.feature.favorites.model.FavoriteScreenModel
+import com.foreverrafs.superdiary.ui.feature.favorites.model.FavoriteViewModel
 
 object FavoriteScreen : SuperDiaryScreen {
     @Composable
     override fun Content() {
-        val screenModel: FavoriteScreenModel = getScreenModel()
+        val screenModel: FavoriteViewModel = getScreenModel()
 
         val screenState by screenModel.state.collectAsState()
 

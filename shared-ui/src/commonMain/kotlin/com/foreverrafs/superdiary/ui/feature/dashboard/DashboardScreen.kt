@@ -21,7 +21,7 @@ object DashboardScreen : SuperDiaryScreen {
     override fun Content() {
         val navigator = LocalScreenNavigator.current
 
-        val screenModel: DashboardScreenModel = getScreenModel()
+        val screenModel: DashboardViewModel = getScreenModel()
         val screenState by screenModel.state.collectAsState()
 
         LaunchedEffect(Unit) {

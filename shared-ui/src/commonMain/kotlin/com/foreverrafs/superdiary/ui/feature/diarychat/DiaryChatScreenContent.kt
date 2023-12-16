@@ -77,7 +77,7 @@ fun Modifier.positionAwareImePadding() = composed {
 
 @Composable
 fun DiaryChatScreenContent(
-    screenState: DiaryChatScreenModel.ChatScreenState,
+    screenState: DiaryChatViewModel.ChatScreenState,
     onQueryDiaries: (query: String) -> Unit = {},
 ) {
     Column(

@@ -11,7 +11,7 @@ plugins {
     id("kotlin-parcelize")
     id("com.codingfeline.buildkonfig")
     id("org.jetbrains.kotlinx.kover")
-    id("org.sonarqube").version("4.4.1.3373")
+    id("org.sonarqube")
 }
 
 koverReport {
@@ -56,6 +56,10 @@ kotlin {
     jvm()
     iosArm64()
     iosSimulatorArm64()
+
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
 
     sourceSets {
         commonMain {

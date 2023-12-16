@@ -15,7 +15,7 @@ import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 object DiaryChatScreen : SuperDiaryScreen {
     @Composable
     override fun Content() {
-        val screenModel = getScreenModel<DiaryChatScreenModel>()
+        val screenModel = getScreenModel<DiaryChatViewModel>()
         val screenState by screenModel.state.collectAsState()
 
         DiaryChatScreenContent(

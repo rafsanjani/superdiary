@@ -23,7 +23,7 @@ import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
-import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListScreenModel
+import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListViewModel
 
 object DiaryListScreen : SuperDiaryScreen {
     override val options: TabOptions
@@ -40,7 +40,7 @@ object DiaryListScreen : SuperDiaryScreen {
 
     @Composable
     override fun Content() {
-        val screenModel: DiaryListScreenModel = getScreenModel()
+        val screenModel: DiaryListViewModel = getScreenModel()
         val screenState by screenModel.state.collectAsState()
 
         LaunchedEffect(Unit) {
@@ -88,7 +88,7 @@ object DiaryListScreen : SuperDiaryScreen {
     @Composable
     private fun observeFilterEvents(
         diaryFilters: DiaryFilters,
-        screenModel: DiaryListScreenModel,
+        screenModel: DiaryListViewModel,
     ) {
         LaunchedEffect(diaryFilters) {
             // Filter by entry only

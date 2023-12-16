@@ -16,14 +16,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
-class DashboardScreenModel(
+class DashboardViewModel(
     private val getAllDiariesUseCase: GetAllDiariesUseCase,
     private val calculateStreakUseCase: CalculateStreakUseCase,
     private val addWeeklySummaryUseCase: AddWeeklySummaryUseCase,
     private val getWeeklySummaryUseCase: GetWeeklySummaryUseCase,
     private val diaryAI: DiaryAI,
 ) :
-    StateScreenModel<DashboardScreenModel.DashboardScreenState>(DashboardScreenState.Loading) {
+    StateScreenModel<DashboardViewModel.DashboardScreenState>(DashboardScreenState.Loading) {
     sealed interface DashboardScreenState {
         data object Loading : DashboardScreenState
         data class Content(

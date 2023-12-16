@@ -97,7 +97,7 @@ val DiaryListActions.Companion.Empty: DiaryListActions
 
 @Composable
 fun DiaryListScreenContent(
-    state: DiaryListScreenState,
+    state: DiaryListViewState,
     modifier: Modifier = Modifier,
     diaryFilters: DiaryFilters,
     showSearchBar: Boolean,
@@ -138,7 +138,7 @@ fun DiaryListScreenContent(
     ) {
         Box(modifier = Modifier.padding(it)) {
             when (state) {
-                is DiaryListScreenState.Content -> {
+                is DiaryListViewState.Content -> {
                     DiaryListContent(
                         modifier = screenModifier,
                         diaries = state.diaries,
@@ -152,11 +152,11 @@ fun DiaryListScreenContent(
                     )
                 }
 
-                is DiaryListScreenState.Error -> ErrorContent(
+                is DiaryListViewState.Error -> ErrorContent(
                     modifier = screenModifier,
                 )
 
-                is DiaryListScreenState.Loading -> LoadingContent(modifier = screenModifier)
+                is DiaryListViewState.Loading -> LoadingContent(modifier = screenModifier)
             }
         }
     }

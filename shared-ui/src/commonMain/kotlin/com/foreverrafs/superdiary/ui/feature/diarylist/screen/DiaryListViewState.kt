@@ -2,10 +2,10 @@ package com.foreverrafs.superdiary.ui.feature.diarylist.screen
 
 import com.foreverrafs.superdiary.diary.model.Diary
 
-sealed interface DiaryListScreenState {
-    data object Loading : DiaryListScreenState
+sealed interface DiaryListViewState {
+    data object Loading : DiaryListViewState
     data class Content(val diaries: List<Diary>, val filtered: Boolean) :
-        DiaryListScreenState
+        DiaryListViewState
 
-    data class Error(val error: Throwable) : DiaryListScreenState
+    data class Error(val error: Throwable) : DiaryListViewState
 }

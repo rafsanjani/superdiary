@@ -21,7 +21,7 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
 
     @Composable
     override fun Content() {
-        val createDiaryScreenModel: CreateDiaryScreenModel = getScreenModel()
+        val createDiaryViewModel: CreateDiaryViewModel = getScreenModel()
         val navigator = LocalScreenNavigator.current
 
         val undoManager = rememberUndoableRichTextState()
@@ -41,7 +41,7 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
                 onDismiss = { showDeleteDialog = false },
                 onConfirm = {
                     if (diary != null) {
-                        createDiaryScreenModel.deleteDiary(diary)
+                        createDiaryViewModel.deleteDiary(diary)
                     }
                     showDeleteDialog = false
                 },
@@ -61,7 +61,7 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
                 var generatedWords = ""
 
                 coroutineScope.launch {
-                    createDiaryScreenModel
+                    createDiaryViewModel
                         .generateAIDiary(
                             prompt = prompt,
                             wordCount = wordCount,
@@ -85,7 +85,7 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
                 }
             },
         ) { entry ->
-            createDiaryScreenModel.saveDiary(
+            createDiaryViewModel.saveDiary(
                 Diary(
                     entry = entry,
                     date = Clock.System

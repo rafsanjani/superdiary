@@ -5,15 +5,13 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.ui.feature.diarychat.model.DiaryChatMessage
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class DiaryChatScreenModel(
+class DiaryChatViewModel(
     private val diaryAI: DiaryAI,
     private val getAllDiariesUseCase: GetAllDiariesUseCase,
-) : StateScreenModel<DiaryChatScreenModel.ChatScreenState>(ChatScreenState()) {
+) : StateScreenModel<DiaryChatViewModel.ChatScreenState>(ChatScreenState()) {
 
     data class ChatScreenState(
         val isResponding: Boolean = false,
