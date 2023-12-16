@@ -89,7 +89,7 @@ kotlin {
                 implementation(libs.koin.test)
                 implementation(libs.kotlin.coroutines.test)
                 implementation(libs.turbine)
-                implementation("org.kodein.mock:mockmp-runtime:1.15.0")
+                implementation("org.kodein.mock:mockmp-runtime:1.16.0")
                 implementation(libs.assertk.common)
             }
 
