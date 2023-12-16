@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.ksp)
     kotlin("multiplatform")
     id("kotlin-parcelize")
-    id("org.kodein.mock.mockmp").version("1.15.0")
+    id("org.kodein.mock.mockmp").version("1.16.0")
     id("org.jetbrains.kotlinx.kover")
     id("org.sonarqube")
 }
