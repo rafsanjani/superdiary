@@ -148,7 +148,7 @@ android {
 }
 
 dependencies {
-    "kspJvmTest"("org.kodein.mock:mockmp-processor:1.15.0")
+    "kspJvmTest"("org.kodein.mock:mockmp-processor:1.16.0")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().all {
