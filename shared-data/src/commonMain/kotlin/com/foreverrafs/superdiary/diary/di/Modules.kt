@@ -5,7 +5,7 @@ import com.foreverrafs.superdiary.diary.analytics.Analytics
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.datasource.LocalDataSource
 import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
-import com.foreverrafs.superdiary.diary.diaryai.SuperDiaryAI
+import com.foreverrafs.superdiary.diary.diaryai.OpenDiaryAI
 import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.AddWeeklySummaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.CalculateStreakUseCase
@@ -35,7 +35,7 @@ fun useCaseModule() = module {
     factory<Clock> { Clock.System }
     factory<CoroutineDispatcher> { Dispatchers.Default }
 
-    factoryOf<DiaryAI>(::SuperDiaryAI)
+    factoryOf<DiaryAI>(::OpenDiaryAI)
     factoryOf(::AddDiaryUseCase)
     factoryOf(::GetAllDiariesUseCase)
     factoryOf(::GetFavoriteDiariesUseCase)

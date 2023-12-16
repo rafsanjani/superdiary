@@ -17,15 +17,18 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlin.time.Duration.Companion.seconds
 
-class SuperDiaryAI : DiaryAI {
+/**
+ * A diary AI implementation using Open AI
+ */
+class OpenDiaryAI : DiaryAI {
     private val openAi = OpenAI(
         token = BuildKonfig.openAIKey,
         timeout = Timeout(socket = 15.seconds),
         logging = LoggingConfig(logLevel = LogLevel.None),
     )
 
-    private val generateDiaryMessages = mutableSetOf<ChatMessage>()
-    private val diaryChatMessages = mutableSetOf<ChatMessage>()
+    private val generateDiaryMessages = mutableListOf<ChatMessage>()
+    private val diaryChatMessages = mutableListOf<ChatMessage>()
 
     private val weeklyDiaryGeneratorPrompt = """
         You are Journal AI. I will give you a combined list of entries written over a period of 
@@ -90,33 +93,7 @@ class SuperDiaryAI : DiaryAI {
             }
     }
 
-    override suspend fun generateWeeklySummary(diaries: List<Diary>): String {
-        // Add the instruction
-        generateDiaryMessages.add(
-            ChatMessage(
-                role = ChatRole.System,
-                content = weeklyDiaryGeneratorPrompt,
-            ),
-        )
-
-        // Add the prompt
-        generateDiaryMessages.add(
-            ChatMessage(
-                role = ChatRole.User,
-                content = diaries.joinToString { it.entry },
-            ),
-        )
-
-        val chatCompletionRequest = ChatCompletionRequest(
-            model = ModelId(GPT_MODEL),
-            messages = generateDiaryMessages.toList(),
-        )
-
-        return openAi.chatCompletion(chatCompletionRequest).choices.first().message.content
-            ?: "Error"
-    }
-
-    override fun generateWeeklySummaryAsync(diaries: List<Diary>): Flow<String> {
+    override fun getWeeklySummary(diaries: List<Diary>): Flow<String> {
         generateDiaryMessages.clear()
 
         // Add the instruction
