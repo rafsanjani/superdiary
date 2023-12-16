@@ -174,10 +174,8 @@ private fun CreateDiaryPreview() {
             CreateDiaryScreenContent(
                 onNavigateBack = {},
                 onGenerateAI = { _, _ -> },
-                diary = null,
                 onSaveDiary = {},
                 isGeneratingFromAi = false,
-                onDeleteDiary = {},
             )
         }
     }
@@ -191,15 +189,8 @@ private fun CreateDiaryPreviewNonEditable() {
             CreateDiaryScreenContent(
                 onNavigateBack = {},
                 onGenerateAI = { _, _ -> },
-                diary = Diary(
-                    id = null,
-                    entry = "Sample diary",
-                    date = Clock.System.now(),
-                    isFavorite = false,
-                ),
                 onSaveDiary = {},
                 isGeneratingFromAi = false,
-                onDeleteDiary = {},
             )
         }
     }

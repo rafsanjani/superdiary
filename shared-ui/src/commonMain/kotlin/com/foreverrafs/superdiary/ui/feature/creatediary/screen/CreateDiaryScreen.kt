@@ -10,18 +10,17 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
-import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
-class CreateDiaryScreen(val diary: Diary? = null) : Screen {
+class CreateDiaryScreen : Screen {
 
     @Composable
     override fun Content() {
-        val createDiaryViewModel: CreateDiaryViewModel = getScreenModel()
+        val createDiaryScreenModel: CreateDiaryViewModel = getScreenModel()
         val navigator = LocalScreenNavigator.current
 
         val undoManager = rememberUndoableRichTextState()
@@ -32,36 +31,16 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
             mutableStateOf(false)
         }
 
-        var showDeleteDialog by remember {
-            mutableStateOf(false)
-        }
-
-        if (showDeleteDialog) {
-            ConfirmDeleteDialog(
-                onDismiss = { showDeleteDialog = false },
-                onConfirm = {
-                    if (diary != null) {
-                        createDiaryViewModel.deleteDiary(diary)
-                    }
-                    showDeleteDialog = false
-                },
-            )
-        }
-
         CreateDiaryScreenContent(
             onNavigateBack = navigator::pop,
             richTextState = richTextState,
-            diary = diary,
             isGeneratingFromAi = isGeneratingFromAI,
-            onDeleteDiary = {
-                showDeleteDialog = true
-            },
             onGenerateAI = { prompt, wordCount ->
                 undoManager.save()
                 var generatedWords = ""
 
                 coroutineScope.launch {
-                    createDiaryViewModel
+                    createDiaryScreenModel
                         .generateAIDiary(
                             prompt = prompt,
                             wordCount = wordCount,
@@ -85,13 +64,12 @@ class CreateDiaryScreen(val diary: Diary? = null) : Screen {
                 }
             },
         ) { entry ->
-            createDiaryViewModel.saveDiary(
+            createDiaryScreenModel.saveDiary(
                 Diary(
                     entry = entry,
                     date = Clock.System
                         .now(),
-                    isFavorite = diary?.isFavorite ?: false,
-                    id = diary?.id,
+                    isFavorite = false,
                 ),
             )
 

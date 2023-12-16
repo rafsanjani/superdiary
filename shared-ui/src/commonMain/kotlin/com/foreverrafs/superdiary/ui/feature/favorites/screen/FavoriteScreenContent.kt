@@ -27,7 +27,7 @@ fun FavoriteScreenContent(state: FavoriteScreenState) {
             onCancelSelection = {},
             diaryListActions = DiaryListActions.Empty.copy(
                 onDiaryClicked = {
-                    navigator.push(CreateDiaryScreen(it))
+//                    navigator.push(CreateDiaryScreen(it))
                 },
             ),
             snackbarHostState = SnackbarHostState(),
