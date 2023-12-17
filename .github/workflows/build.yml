@@ -25,13 +25,13 @@ jobs:
       - name: Lint all modules
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: androidApp:detekt shared-data:detekt shared-ui:detekt
+          arguments: detektJvmMain
 
       - name: Unit tests (shared-data)
         id: unit_tests
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: shared-data:testDebugUnitTest --continue --no-configuration-cache
+          arguments: testDebugUnitTest --continue --no-configuration-cache
           gradle-home-cache-cleanup: true
           cache-read-only: false
 
@@ -41,17 +41,6 @@ jobs:
         with:
           arguments: androidApp:assemble
           gradle-home-cache-cleanup: false
-          cache-read-only: false
-
-      - name: Analyze with Sonar
-        id: sonar
-        uses: gradle/gradle-build-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          arguments: :shared-data:koverXmlReportDebug sonar
-          gradle-home-cache-cleanup: true
           cache-read-only: false
 
       - name: Snapshot tests (shared-ui)
@@ -75,3 +64,14 @@ jobs:
           name: reports
           path: shared-ui/build/paparazzi/failures/
           retention-days: 1
+
+      - name: Analyze with Sonar
+        id: sonar
+        uses: gradle/gradle-build-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          arguments: lint :shared-data:koverXmlReportDebug sonar
+          gradle-home-cache-cleanup: true
+          cache-read-only: false

@@ -83,7 +83,7 @@ class OpenDiaryAiTest : TestsWithMocks() {
     fun `Should query diary entries`() = runTest {
         everySuspending { openAI.chatCompletion(isAny()) } returns chatCompletion
 
-        val response = openDiaryAI.queryDiaries(emptyList(), emptyList())
+        val response = openDiaryAI.queryDiaries(emptyList())
         assertThat(response).isNotEmpty()
     }
 
