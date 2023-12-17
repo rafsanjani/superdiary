@@ -31,7 +31,7 @@ class LocalDataSource(private val database: Database) : DataSource {
     }
 
     override fun fetchAll(): Flow<List<Diary>> {
-       throw IllegalArgumentException()
+        return database.getAllDiaries()
     }
 
     override fun fetchFavorites(): Flow<List<Diary>> {
