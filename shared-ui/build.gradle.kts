@@ -23,6 +23,7 @@ koverReport {
                 "*.*CreateDiaryScreen",
                 "*.Resources*",
                 "*.Main*",
+                "*.*Screen*",
                 "*.*ComposableSingletons*",
             )
             packages(
@@ -30,8 +31,6 @@ koverReport {
                 "*.di",
                 "*.style",
             )
-
-            files("*.*Screen.kt")
         }
     }
 }
