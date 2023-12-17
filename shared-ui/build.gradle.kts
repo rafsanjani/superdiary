@@ -7,13 +7,9 @@ plugins {
     alias(libs.plugins.ksp)
     kotlin("multiplatform")
     id("kotlin-parcelize")
-    id("org.kodein.mock.mockmp").version("1.15.0")
-    id("org.jetbrains.kotlinx.kover")
+    alias(libs.plugins.mockmp)
+    alias(libs.plugins.kotlinx.kover)
     id("org.sonarqube")
-}
-
-mockmp {
-    usesHelper = true
 }
 
 koverReport {
@@ -89,7 +85,7 @@ kotlin {
                 implementation(libs.koin.test)
                 implementation(libs.kotlin.coroutines.test)
                 implementation(libs.turbine)
-                implementation("org.kodein.mock:mockmp-runtime:1.15.0")
+                implementation(libs.mockmp.runtime)
                 implementation(libs.assertk.common)
             }
 
@@ -147,12 +143,7 @@ android {
     sourceSets["main"].res.srcDirs("src/commonMain/resources")
 }
 
-dependencies {
-    "kspJvmTest"("org.kodein.mock:mockmp-processor:1.15.0")
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().all {
-    if (name.startsWith("compileTestKotlin")) {
-        dependsOn("kspTestKotlinJvm") // (5)
-    }
+mockmp {
+    usesHelper = true
+    installWorkaround()
 }

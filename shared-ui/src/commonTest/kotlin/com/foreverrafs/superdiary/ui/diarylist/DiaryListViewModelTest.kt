@@ -147,7 +147,7 @@ class DiaryListViewModelTest : TestsWithMocks() {
             dataSource.update(diary = isAny())
         } returns 1
 
-        diaryListViewModel.toggleFavorite(diary = Diary.Now(entry = ""))
+        diaryListViewModel.toggleFavorite(diary = Diary("hello-boss"))
 
         verifyWithSuspend { dataSource.update(isAny()) }
     }

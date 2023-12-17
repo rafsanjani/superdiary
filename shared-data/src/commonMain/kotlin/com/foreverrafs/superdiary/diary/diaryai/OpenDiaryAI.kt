@@ -3,41 +3,17 @@ package com.foreverrafs.superdiary.diary.diaryai
 import com.aallam.openai.api.chat.ChatCompletionRequest
 import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatRole
-import com.aallam.openai.api.http.Timeout
-import com.aallam.openai.api.logging.LogLevel
 import com.aallam.openai.api.model.ModelId
-import com.aallam.openai.client.LoggingConfig
 import com.aallam.openai.client.OpenAI
-import com.foreverrafs.superdiary.buildKonfig.BuildKonfig
 import com.foreverrafs.superdiary.diary.model.Diary
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
-import kotlin.time.Duration.Companion.seconds
 
-/**
- * A diary AI implementation using Open AI
- */
-class OpenDiaryAI : DiaryAI {
-    private val openAi = OpenAI(
-        token = BuildKonfig.openAIKey,
-        timeout = Timeout(socket = 15.seconds),
-        logging = LoggingConfig(logLevel = LogLevel.None),
-    )
-
-    private val diaryChatMessages = mutableListOf<ChatMessage>()
-
-    private val diaryChatPrompt = """
-        You are Journal AI, I will provide you a list of journal entries and their dates and you will 
-        respond to follow up questions based on this information. You are not supposed to respond to 
-        any questions outside of the scope of the data you have been given under any circumstances.
-        Your responses should be very concise and if you don't have the answer to a question, simply let
-        the user know that you are only able to assist with information contained in their entries.
-        You should also encourage users to write more entries so that you can be more useful to them.
-    """.trimIndent()
-
+/** A diary AI implementation using Open AI */
+class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
     override fun generateDiary(
         prompt: String,
         wordCount: Int,
@@ -70,21 +46,20 @@ class OpenDiaryAI : DiaryAI {
         )
 
         var assistantMessages: String? = null
-        return openAi.chatCompletions(chatCompletionRequest)
-            .map {
-                it.choices.first().delta.content.orEmpty()
-            }.onEach {
-                assistantMessages += it
-            }.onCompletion { error ->
-                if (error == null) {
-                    generateDiaryMessages.add(
-                        ChatMessage(
-                            role = ChatRole.Assistant,
-                            content = assistantMessages,
-                        ),
-                    )
-                }
+        return openAI.chatCompletions(chatCompletionRequest).map {
+            it.choices.first().delta.content.orEmpty()
+        }.onEach {
+            assistantMessages += it
+        }.onCompletion { error ->
+            if (error == null) {
+                generateDiaryMessages.add(
+                    ChatMessage(
+                        role = ChatRole.Assistant,
+                        content = assistantMessages,
+                    ),
+                )
             }
+        }
     }
 
     override fun getWeeklySummary(diaries: List<Diary>): Flow<String> {
@@ -114,38 +89,20 @@ class OpenDiaryAI : DiaryAI {
             messages = generateDiaryMessages.toList(),
         )
 
-        return openAi.chatCompletions(request).mapNotNull {
+        return openAI.chatCompletions(request).mapNotNull {
             it.choices.first().delta.content
         }
     }
 
-    override suspend fun queryDiaries(diaries: List<Diary>, query: String): String {
-        // Add the instruction
-        diaryChatMessages.add(
-            ChatMessage.System(
-                content = diaryChatPrompt,
-            ),
-        )
-        // Add the data
-        diaryChatMessages.add(
-            ChatMessage.User(
-                content = diaries.joinToString(),
-            ),
-        )
-
-        // Add the query
-        diaryChatMessages.add(
-            ChatMessage.User(
-                content = query,
-            ),
-        )
-
+    override suspend fun queryDiaries(
+        messages: List<DiaryChatMessage>,
+    ): String {
         val request = ChatCompletionRequest(
             model = ModelId(GPT_MODEL),
-            messages = diaryChatMessages.toList(),
+            messages = messages.map { it.toOpenAIChatMessage() },
         )
 
-        return openAi.chatCompletion(request).choices.first().message.content.orEmpty()
+        return openAI.chatCompletion(request).choices.first().message.content.orEmpty()
     }
 
     companion object {

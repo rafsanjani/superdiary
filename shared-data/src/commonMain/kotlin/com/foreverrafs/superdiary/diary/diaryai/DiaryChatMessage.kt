@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.diarychat.model
+package com.foreverrafs.superdiary.diary.diaryai
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -7,7 +7,7 @@ import kotlin.random.Random
 @Suppress("FunctionName")
 data class DiaryChatMessage(
     val id: Long,
-    val chatRole: ChatRole,
+    val role: DiaryChatRole,
     val timestamp: Instant,
     val content: String,
 ) {
@@ -15,14 +15,21 @@ data class DiaryChatMessage(
         fun User(content: String) = DiaryChatMessage(
             id = Random.nextLong(),
             timestamp = Clock.System.now(),
-            chatRole = ChatRole.User,
+            role = DiaryChatRole.User,
             content = content,
         )
 
         fun DiaryAI(content: String) = DiaryChatMessage(
             id = Random.nextLong(),
             timestamp = Clock.System.now(),
-            chatRole = ChatRole.DiaryAI,
+            role = DiaryChatRole.DiaryAI,
+            content = content,
+        )
+
+        fun System(content: String) = DiaryChatMessage(
+            id = Random.nextLong(),
+            timestamp = Clock.System.now(),
+            role = DiaryChatRole.System,
             content = content,
         )
     }

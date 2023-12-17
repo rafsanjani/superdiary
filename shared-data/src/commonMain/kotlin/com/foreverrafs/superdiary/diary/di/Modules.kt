@@ -1,5 +1,10 @@
 package com.foreverrafs.superdiary.diary.di
 
+import com.aallam.openai.api.http.Timeout
+import com.aallam.openai.api.logging.LogLevel
+import com.aallam.openai.client.LoggingConfig
+import com.aallam.openai.client.OpenAI
+import com.foreverrafs.superdiary.buildKonfig.BuildKonfig
 import com.foreverrafs.superdiary.diary.Database
 import com.foreverrafs.superdiary.diary.analytics.Analytics
 import com.foreverrafs.superdiary.diary.datasource.DataSource
@@ -29,13 +34,21 @@ import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import kotlin.time.Duration.Companion.seconds
 
 fun useCaseModule() = module {
     single<DataSource> { LocalDataSource(get()) }
     factory<Clock> { Clock.System }
     factory<CoroutineDispatcher> { Dispatchers.Default }
 
-    factoryOf<DiaryAI>(::OpenDiaryAI)
+    single<OpenAI> {
+        OpenAI(
+            token = BuildKonfig.openAIKey,
+            timeout = Timeout(socket = 15.seconds),
+            logging = LoggingConfig(logLevel = LogLevel.None),
+        )
+    }
+    factory<DiaryAI> { OpenDiaryAI(openAI = get()) }
     factoryOf(::AddDiaryUseCase)
     factoryOf(::GetAllDiariesUseCase)
     factoryOf(::GetFavoriteDiariesUseCase)

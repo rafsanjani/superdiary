@@ -56,8 +56,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.ui.feature.diarychat.model.ChatRole
-import com.foreverrafs.superdiary.ui.feature.diarychat.model.DiaryChatMessage
+import com.foreverrafs.superdiary.diary.diaryai.DiaryChatMessage
+import com.foreverrafs.superdiary.diary.diaryai.DiaryChatRole
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -77,7 +77,7 @@ fun Modifier.positionAwareImePadding() = composed {
 
 @Composable
 fun DiaryChatScreenContent(
-    screenState: DiaryChatViewModel.ChatScreenState,
+    screenState: DiaryChatViewModel.DiaryChatViewState,
     onQueryDiaries: (query: String) -> Unit = {},
 ) {
     Column(
@@ -100,13 +100,16 @@ fun DiaryChatScreenContent(
             listState.animateScrollToItem(screenState.messages.size)
         }
 
+        val renderableListItems =
+            remember(screenState.messages) { screenState.messages.filterNot { it.role == DiaryChatRole.System } }
+
         LazyColumn(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             state = listState,
         ) {
             items(
-                items = screenState.messages,
+                items = renderableListItems,
                 key = { item -> item.id },
             ) { item ->
                 ChatBubble(
@@ -183,17 +186,21 @@ fun ChatBubble(
     chatItem: DiaryChatMessage,
     modifier: Modifier = Modifier,
 ) {
-    val backgroundColor = when (chatItem.chatRole) {
-        ChatRole.DiaryAI -> Color(0xFF0047AB)
-        ChatRole.User -> Color(0xFF008080)
+    val backgroundColor = when (chatItem.role) {
+        DiaryChatRole.DiaryAI -> Color(0xFF0047AB)
+        DiaryChatRole.User -> Color(0xFF008080)
+        DiaryChatRole.System -> throw IllegalArgumentException("System chat messages should not be rendered")
     }
+
     Box(modifier = modifier) {
-        val alignmentAndPaddingModifier = when (chatItem.chatRole) {
-            ChatRole.DiaryAI -> Modifier.padding(end = 44.dp)
+        val alignmentAndPaddingModifier = when (chatItem.role) {
+            DiaryChatRole.DiaryAI -> Modifier.padding(end = 44.dp)
                 .align(Alignment.CenterStart)
 
-            ChatRole.User -> Modifier.padding(start = 44.dp)
+            DiaryChatRole.User -> Modifier.padding(start = 44.dp)
                 .align(Alignment.CenterEnd)
+
+            DiaryChatRole.System -> throw IllegalArgumentException("System chat messages should not be rendered")
         }
 
         Text(

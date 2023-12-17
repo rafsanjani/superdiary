@@ -7,6 +7,7 @@ import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
+import com.foreverrafs.superdiary.diary.diaryai.DiaryChatRole
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
 import kotlinx.coroutines.Dispatchers
@@ -39,10 +40,9 @@ class DiaryChatViewModelTest : TestsWithMocks() {
         Dispatchers.setMain(StandardTestDispatcher())
 
         every { dataSource.fetchAll() } returns flowOf(emptyList())
-
         diaryChatViewModel = DiaryChatViewModel(
-            diaryAI = diaryAI,
-            getAllDiariesUseCase = GetAllDiariesUseCase(dataSource),
+            diaryAI,
+            GetAllDiariesUseCase(dataSource),
         )
     }
 
@@ -53,7 +53,7 @@ class DiaryChatViewModelTest : TestsWithMocks() {
 
     @Test
     fun `Should update responding to true when generating AI response`() = runTest {
-        everySuspending { diaryAI.queryDiaries(isAny(), isAny()) } returns "hello boss"
+        everySuspending { diaryAI.queryDiaries(isAny()) } returns "hello boss"
 
         diaryChatViewModel.state.test {
             diaryChatViewModel.queryDiaries("hello World")
@@ -71,7 +71,7 @@ class DiaryChatViewModelTest : TestsWithMocks() {
 
     @Test
     fun `Should update responding to false after generating AI response`() = runTest {
-        everySuspending { diaryAI.queryDiaries(isAny(), isAny()) } returns "hello boss"
+        everySuspending { diaryAI.queryDiaries(isAny()) } returns "hello boss"
 
         diaryChatViewModel.state.test {
             diaryChatViewModel.queryDiaries("hello World")
@@ -83,7 +83,32 @@ class DiaryChatViewModelTest : TestsWithMocks() {
             cancelAndConsumeRemainingEvents()
 
             assertThat(state.isResponding).isFalse()
-            assertThat(state.messages).hasSize(3)
+
+            // At least 5 messages will be present after a single query.
+            // [Welcome message, system instruction, items, query, response]
+            assertThat(state.messages).hasSize(5)
+        }
+    }
+
+    @Test
+    fun `Should prepend message prompt to messages when querying initially`() = runTest {
+        everySuspending {
+            diaryAI.queryDiaries(
+                isAny(),
+            )
+        } returns "You went horse riding on the 20th of June"
+
+        diaryChatViewModel.state.test {
+            diaryChatViewModel.queryDiaries("When did I go horse riding?")
+
+            // Skip the initial state and first emission state
+            skipItems(2)
+            val state = awaitItem()
+
+            cancelAndConsumeRemainingEvents()
+
+            assertThat(state.isResponding).isFalse()
+            assertThat(state.messages.any { it.role == DiaryChatRole.System }).isTrue()
         }
     }
 }

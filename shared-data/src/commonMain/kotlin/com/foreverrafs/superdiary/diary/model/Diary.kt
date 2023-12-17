@@ -7,14 +7,9 @@ import kotlin.jvm.Transient
 
 @Suppress("FunctionName")
 data class Diary(
-    val id: Long? = null,
     val entry: String,
+    val id: Long? = null,
     @Transient
-    val date: Instant,
-    val isFavorite: Boolean,
-) : JavaSerializable {
-    companion object {
-        fun Now(entry: String): Diary =
-            Diary(entry = entry, date = Clock.System.now(), isFavorite = false)
-    }
-}
+    val date: Instant = Clock.System.now(),
+    val isFavorite: Boolean = false,
+) : JavaSerializable

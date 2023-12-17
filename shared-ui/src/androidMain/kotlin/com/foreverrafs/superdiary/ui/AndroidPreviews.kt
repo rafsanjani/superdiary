@@ -66,7 +66,7 @@ internal fun TestAppContainer(content: @Composable () -> Unit) {
 private fun DiaryChatPreview() {
     TestAppContainer {
         DiaryChatScreenContent(
-            screenState = DiaryChatViewModel.ChatScreenState(
+            screenState = DiaryChatViewModel.DiaryChatViewState(
                 isResponding = true,
             ),
         )

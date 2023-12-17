@@ -9,9 +9,10 @@ plugins {
     alias(libs.plugins.sqldelight)
     kotlin("multiplatform")
     id("kotlin-parcelize")
-    id("com.codingfeline.buildkonfig")
-    id("org.jetbrains.kotlinx.kover")
-    id("org.sonarqube")
+    alias(libs.plugins.buildKonfig)
+    alias(libs.plugins.kotlinx.kover)
+    alias(libs.plugins.sonar)
+    alias(libs.plugins.mockmp)
 }
 
 koverReport {
@@ -98,7 +99,9 @@ kotlin {
                 implementation(libs.kotlin.coroutines.test)
                 implementation(libs.turbine)
                 implementation(libs.assertk.common)
+                implementation(libs.mockmp.runtime)
             }
+            kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
         }
 
         iosMain {
@@ -130,4 +133,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         sourceCompatibility = JavaVersion.VERSION_17
     }
+}
+
+mockmp {
+    usesHelper = true
+    installWorkaround()
 }
