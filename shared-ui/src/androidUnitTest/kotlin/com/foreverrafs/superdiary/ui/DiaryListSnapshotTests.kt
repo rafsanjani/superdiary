@@ -57,15 +57,8 @@ class DiaryListSnapshotTests : KoinTest {
                 CreateDiaryScreenContent(
                     onNavigateBack = {},
                     onSaveDiary = {},
-                    diary = Diary(
-                        id = null,
-                        date = testClock.now(),
-                        entry = "Hello World",
-                        isFavorite = false,
-                    ),
                     onGenerateAI = { _, _ -> },
                     isGeneratingFromAi = false,
-                    onDeleteDiary = {},
                 )
             }
         }
@@ -79,15 +72,8 @@ class DiaryListSnapshotTests : KoinTest {
                     richTextState = RichTextState().apply { setHtml("<p>AI generated diary content</p>") },
                     onNavigateBack = {},
                     onSaveDiary = {},
-                    diary = Diary(
-                        id = null,
-                        date = testClock.now(),
-                        entry = "Hello World",
-                        isFavorite = false,
-                    ),
                     onGenerateAI = { _, _ -> },
                     isGeneratingFromAi = true,
-                    onDeleteDiary = {},
                 )
             }
         }

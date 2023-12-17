@@ -69,7 +69,7 @@ object DiaryListScreen : SuperDiaryScreen {
                 },
                 onToggleFavorite = screenModel::toggleFavorite,
                 onDiaryClicked = {
-                    screenNavigator.push(CreateDiaryScreen(it))
+//                    screenNavigator.push(CreateDiaryScreen(it))
                 },
                 onBackPressed = screenNavigator::popUntilRoot,
             )

@@ -31,7 +31,8 @@ object DashboardScreen : SuperDiaryScreen {
         DashboardScreenContent(
             state = screenState,
             onAddEntry = { navigator.push(CreateDiaryScreen()) },
-        ) { navigator.push(DiaryListScreen) }
+            onSeeAll = { navigator.push(DiaryListScreen) },
+        )
     }
 
     override val selectedIcon: VectorPainter
