@@ -23,7 +23,6 @@ import kotlin.test.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class CreateDiaryViewModelTest : TestsWithMocks() {
     override fun setUpMocks() = injectMocks(mocker)
-    private val dispatcher = StandardTestDispatcher()
 
     @Mock
     lateinit var diaryAI: DiaryAI
@@ -35,12 +34,11 @@ class CreateDiaryViewModelTest : TestsWithMocks() {
 
     @BeforeTest
     fun setup() {
-        Dispatchers.setMain(dispatcher)
+        Dispatchers.setMain(StandardTestDispatcher())
 
         createDiaryViewModel = CreateDiaryViewModel(
             addDiaryUseCase = AddDiaryUseCase(dataSource) {},
             diaryAI = diaryAI,
-            coroutineDispatcher = dispatcher,
         )
     }
 
