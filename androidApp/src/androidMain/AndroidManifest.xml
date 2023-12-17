@@ -7,13 +7,16 @@
 
     <application
             android:usesCleartextTraffic="false"
+            android:allowBackup="true"
+            android:dataExtractionRules="@xml/data_extraction_rules"
+            android:fullBackupContent="@xml/full_backup_content"
             android:name="com.foreverrafs.DiaryApp"
-            android:allowBackup="false"
             android:icon="@mipmap/ic_launcher"
             android:label="Superdiary"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/Theme.Material3.DayNight">
+            android:theme="@style/Theme.Material3.DayNight"
+            tools:targetApi="s">
         <profileable
                 android:shell="true"
                 tools:targetApi="29" />
