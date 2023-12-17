@@ -15,6 +15,8 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListViewModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -40,16 +42,16 @@ class DiaryListViewModelTest : TestsWithMocks() {
 
     private val today = Clock.System.now()
 
+    private val diary = Diary(
+        entry = "",
+        date = today,
+        isFavorite = false,
+    )
+
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        val diary = Diary(
-            entry = "",
-            date = today,
-            isFavorite = false,
-        )
 
-        every { dataSource.fetchAll() } returns flowOf(listOf(diary))
         every { dataSource.findByDate(isAny()) } returns flowOf(listOf(diary))
         every { dataSource.find(isAny()) } returns flowOf(listOf(diary))
 
@@ -69,6 +71,7 @@ class DiaryListViewModelTest : TestsWithMocks() {
 
     @Test
     fun `Verify diary list screen starts from loading state`() = runTest {
+        every { dataSource.fetchAll() } returns flowOf(listOf(diary))
         diaryListViewModel.state.test {
             diaryListViewModel.observeDiaries()
             val state = awaitItem()
@@ -80,6 +83,8 @@ class DiaryListViewModelTest : TestsWithMocks() {
 
     @Test
     fun `Verify diary list gets loaded successfully`() = runTest {
+        every { dataSource.fetchAll() } returns flowOf(listOf(diary))
+
         diaryListViewModel.state.test {
             diaryListViewModel.observeDiaries()
 
@@ -150,5 +155,22 @@ class DiaryListViewModelTest : TestsWithMocks() {
         diaryListViewModel.toggleFavorite(diary = Diary("hello-boss"))
 
         verifyWithSuspend { dataSource.update(isAny()) }
+    }
+
+    @Test
+    fun `Verify error screen is shown when an error occurs`() = runTest {
+        every { dataSource.fetchAll() } returns flow {
+            throw Exception("Exception thrown in datasource")
+        }
+
+        diaryListViewModel.state.test {
+            diaryListViewModel.observeDiaries()
+            delay(100)
+            // Skip loading state
+            skipItems(1)
+
+            val state = awaitItem()
+            assertThat(state).isInstanceOf<DiaryListViewState.Error>()
+        }
     }
 }

@@ -5,24 +5,22 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
-import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 class CreateDiaryViewModel(
     private val addDiaryUseCase: AddDiaryUseCase,
-    private val deleteDiaryUseCase: DeleteDiaryUseCase,
     private val diaryAI: DiaryAI,
+    private val coroutineDispatcher: CoroutineDispatcher,
 ) : ScreenModel {
 
-    fun saveDiary(diary: Diary) = screenModelScope.launch {
+    fun saveDiary(diary: Diary) = screenModelScope.launch(coroutineDispatcher) {
         addDiaryUseCase(diary)
     }
 
     fun generateAIDiary(prompt: String, wordCount: Int): Flow<String> =
         diaryAI.generateDiary(prompt, wordCount)
-
-    fun deleteDiary(diary: Diary) = screenModelScope.launch {
-        deleteDiaryUseCase(diary)
-    }
+            .flowOn(coroutineDispatcher)
 }

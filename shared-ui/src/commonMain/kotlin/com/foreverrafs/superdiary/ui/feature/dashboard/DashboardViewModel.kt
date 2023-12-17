@@ -35,28 +35,34 @@ class DashboardViewModel(
     }
 
     fun loadDashboardContent() = screenModelScope.launch {
-        getAllDiariesUseCase().collect { diaries ->
-            mutableState.update {
-                DashboardScreenState.Content(
-                    latestEntries = diaries.sortedByDescending { it.date }.take(2),
-                    totalEntries = diaries.size.toLong(),
-                    weeklySummary = if (diaries.isEmpty()) {
-                        """
+        getAllDiariesUseCase()
+            .catch {
+                mutableState.update {
+                    DashboardScreenState.Loading
+                }
+            }
+            .collect { diaries ->
+                mutableState.update {
+                    DashboardScreenState.Content(
+                        latestEntries = diaries.sortedByDescending { it.date }.take(2),
+                        totalEntries = diaries.size.toLong(),
+                        weeklySummary = if (diaries.isEmpty()) {
+                            """
                             In this panel, your weekly diary entries will be summarized.
                             Add your first entry to see how it works
-                        """.trimIndent()
-                    } else {
-                        DEFAULT_SUMMARY_TEXT
-                    },
-                    streak = Streak(0, emptyList()),
-                )
-            }
+                            """.trimIndent()
+                        } else {
+                            DEFAULT_SUMMARY_TEXT
+                        },
+                        streak = Streak(0, emptyList()),
+                    )
+                }
 
-            if (diaries.isNotEmpty()) {
-                generateWeeklySummary(diaries)
-                calculateStreak(diaries)
+                if (diaries.isNotEmpty()) {
+                    generateWeeklySummary(diaries)
+                    calculateStreak(diaries)
+                }
             }
-        }
     }
 
     private fun updateContentState(func: (current: DashboardScreenState.Content) -> DashboardScreenState.Content) {

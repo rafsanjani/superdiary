@@ -23,7 +23,9 @@ class UndoableRichTextState {
     }
 
     fun save() {
-        undoHistory.addLast(richTextState.toHtml())
+        if (!undoHistory.contains(richTextState.toHtml())) {
+            undoHistory.addLast(richTextState.toHtml())
+        }
     }
 }
 

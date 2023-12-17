@@ -10,6 +10,7 @@ import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.diary.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.diary.utils.toInstant
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -27,14 +28,20 @@ class DiaryListViewModel(
             DiaryListViewState.Loading
         }
 
-        getAllDiariesUseCase().collect { diaries ->
-            mutableState.update {
-                DiaryListViewState.Content(
-                    diaries = diaries,
-                    filtered = false,
-                )
+        getAllDiariesUseCase()
+            .catch { error ->
+                mutableState.update {
+                    DiaryListViewState.Error(error)
+                }
             }
-        }
+            .collect { diaries ->
+                mutableState.update {
+                    DiaryListViewState.Content(
+                        diaries = diaries,
+                        filtered = false,
+                    )
+                }
+            }
     }
 
     fun filterByEntry(entry: String) = screenModelScope.launch {
