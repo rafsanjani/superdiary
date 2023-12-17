@@ -9,7 +9,8 @@ plugins {
     id("kotlin-parcelize")
     alias(libs.plugins.mockmp)
     alias(libs.plugins.kotlinx.kover)
-    id("org.sonarqube")
+    alias(libs.plugins.sonar)
+    id("com.adarshr.test-logger")
 }
 
 koverReport {

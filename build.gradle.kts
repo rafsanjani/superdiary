@@ -6,9 +6,10 @@ plugins {
     alias(libs.plugins.ktlint).apply(false)
     alias(libs.plugins.kotlin.dokka)
     alias(libs.plugins.compose.multiplatform).apply(false)
-    id("org.jetbrains.kotlinx.kover").version("0.7.5")
-    id("com.codingfeline.buildkonfig").version("0.15.1").apply(false)
-    id("org.sonarqube").version("4.4.1.3373")
+    alias(libs.plugins.kotlinx.kover)
+    alias(libs.plugins.buildKonfig).apply(false)
+    alias(libs.plugins.sonar)
+    id("com.adarshr.test-logger").version("4.0.0").apply(false)
 }
 
 kover {
