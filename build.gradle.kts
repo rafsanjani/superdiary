@@ -64,8 +64,11 @@ sonar {
 subprojects {
     sonar {
         val reportPath = "${project.buildDir}/reports/kover/reportDebug.xml"
+        val lintReportPath = "${project.buildDir}/reports/lint-results-debug.xml"
+
         properties {
             property("sonar.coverage.jacoco.xmlReportPaths", reportPath)
+            property("sonar.androidLint.reportPaths", lintReportPath)
         }
     }
 }
