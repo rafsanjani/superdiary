@@ -26,7 +26,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -36,7 +35,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -46,7 +48,6 @@ import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryItem
 import com.foreverrafs.superdiary.ui.format
-import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -56,6 +57,7 @@ fun DashboardScreenContent(
     onSeeAll: () -> Unit,
 ) {
     if (state !is DashboardViewModel.DashboardScreenState.Content) return
+    var isWeeklySummaryDisplayed by rememberSaveable { mutableStateOf(true) }
 
     val dashboardItems = remember {
         mutableStateListOf(
@@ -68,6 +70,7 @@ fun DashboardScreenContent(
                         state = state,
                     )
                 },
+                id = "atAGlance",
             ),
             DashboardSection(
                 content = { onDismiss ->
@@ -79,13 +82,16 @@ fun DashboardScreenContent(
                         onDismiss = onDismiss,
                     )
                 },
+                id = "weeklySummary",
             ),
             DashboardSection(
                 content = {
+                    val itemCount = if (isWeeklySummaryDisplayed) 2 else 4
+
                     if (state.latestEntries.isNotEmpty()) {
                         LatestEntries(
                             modifier = Modifier.animateItemPlacement(),
-                            diaries = state.latestEntries,
+                            diaries = state.latestEntries.take(itemCount),
                             onSeeAll = onSeeAll,
                         )
                     } else {
@@ -97,6 +103,7 @@ fun DashboardScreenContent(
                         }
                     }
                 },
+                id = "latestEntries",
             ),
         )
     }
@@ -111,6 +118,7 @@ fun DashboardScreenContent(
         ) {
             items(items = dashboardItems, key = { it.id }) { content ->
                 content.content(this) {
+                    isWeeklySummaryDisplayed = false
                     dashboardItems.remove(dashboardItems.firstOrNull { it.id == content.id })
                 }
             }
@@ -244,10 +252,6 @@ private fun LatestEntries(
             Spacer(modifier = Modifier.weight(1f))
 
             Text("Show All", style = MaterialTheme.typography.labelSmall)
-//            Icon(
-//                imageVector = Icons.Default.KeyboardArrowRight,
-//                contentDescription = null,
-//            )
         }
 
         Column(
@@ -266,7 +270,6 @@ private fun LatestEntries(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun WeeklySummaryCard(
     modifier: Modifier = Modifier,
@@ -327,5 +330,5 @@ private fun WeeklySummaryCard(
 
 data class DashboardSection(
     val content: @Composable LazyItemScope.(onDismiss: () -> Unit) -> Unit,
-    val id: Long = Random.nextLong(),
+    val id: String,
 )

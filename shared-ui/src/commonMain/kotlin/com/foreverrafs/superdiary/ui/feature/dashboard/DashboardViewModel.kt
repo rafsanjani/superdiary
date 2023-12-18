@@ -44,7 +44,7 @@ class DashboardViewModel(
             .collect { diaries ->
                 mutableState.update {
                     DashboardScreenState.Content(
-                        latestEntries = diaries.sortedByDescending { it.date }.take(2),
+                        latestEntries = diaries.sortedByDescending { it.date }.take(4),
                         totalEntries = diaries.size.toLong(),
                         weeklySummary = if (diaries.isEmpty()) {
                             """
