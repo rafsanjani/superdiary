@@ -13,7 +13,7 @@ plugins {
     alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.sonar)
     alias(libs.plugins.mockmp)
-    id("com.adarshr.test-logger")
+    alias(libs.plugins.testLogger)
 }
 
 koverReport {
