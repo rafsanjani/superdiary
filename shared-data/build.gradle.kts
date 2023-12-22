@@ -76,6 +76,7 @@ kotlin {
                 implementation(libs.kotlin.coroutines.test)
                 implementation(libs.openAiKotlin)
                 runtimeOnly(libs.ktor.client.cio)
+                implementation(libs.touchlab.kermit)
             }
         }
         androidMain {
