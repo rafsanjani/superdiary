@@ -59,7 +59,7 @@ fun DashboardScreenContent(
     if (state !is DashboardViewModel.DashboardScreenState.Content) return
     var isWeeklySummaryDisplayed by rememberSaveable { mutableStateOf(true) }
 
-    val dashboardItems = remember {
+    val dashboardItems = remember(state) {
         mutableStateListOf(
             DashboardSection(
                 content = {
