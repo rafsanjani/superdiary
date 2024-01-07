@@ -13,7 +13,7 @@ plugins {
     alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.sonar)
     alias(libs.plugins.mockmp)
-    id("com.adarshr.test-logger")
+    alias(libs.plugins.testLogger)
 }
 
 koverReport {
@@ -76,6 +76,7 @@ kotlin {
                 implementation(libs.kotlin.coroutines.test)
                 implementation(libs.openAiKotlin)
                 runtimeOnly(libs.ktor.client.cio)
+                implementation(libs.touchlab.kermit)
             }
         }
         androidMain {
