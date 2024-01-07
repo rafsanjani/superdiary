@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package com.foreverrafs.superdiary.ui.feature.diarylist.screen
 
 import androidx.compose.animation.core.animateDp
