@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package com.foreverrafs.superdiary.ui.feature.diarylist.screen
 
 import androidx.compose.animation.core.animateDp
@@ -80,6 +82,7 @@ import com.foreverrafs.superdiary.ui.format
 import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 
 val DiaryListActions.Companion.Empty: DiaryListActions
@@ -102,6 +105,7 @@ fun DiaryListScreenContent(
     diaryFilters: DiaryFilters,
     showSearchBar: Boolean,
     diaryListActions: DiaryListActions,
+    clock: Clock = Clock.System,
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) {
     val screenModifier = modifier
@@ -148,6 +152,7 @@ fun DiaryListScreenContent(
                         diaryListActions = diaryListActions,
                         selectedIds = emptySet(),
                         diaryFilters = diaryFilters,
+                        clock = clock,
                         snackbarHostState = snackbarHostState,
                     )
                 }
@@ -184,6 +189,7 @@ fun DiaryList(
     diaryFilters: DiaryFilters,
     selectedIds: Set<Long>,
     showSearchBar: Boolean = true,
+    clock: Clock = Clock.System,
     diaryListActions: DiaryListActions,
     snackbarHostState: SnackbarHostState,
     onDeleteDiaries: (selectedIds: Set<Long>) -> Unit,
@@ -191,7 +197,7 @@ fun DiaryList(
     onCancelSelection: () -> Unit,
 ) {
     val groupedDiaries = remember(diaries) {
-        diaries.groupByDate()
+        diaries.groupByDate(clock)
     }
 
     val coroutineScope = rememberCoroutineScope()
@@ -338,6 +344,7 @@ private fun DiaryListContent(
     selectedIds: Set<Long>,
     diaryFilters: DiaryFilters,
     snackbarHostState: SnackbarHostState,
+    clock: Clock = Clock.System,
 ) {
     @Suppress("NAME_SHADOWING")
     var selectedIds by rememberSaveable {
@@ -426,6 +433,7 @@ private fun DiaryListContent(
                 diaryListActions = diaryListActions,
                 snackbarHostState = snackbarHostState,
                 listState = listState,
+                clock = clock
             )
         } else {
             EmptyDiaryList(
