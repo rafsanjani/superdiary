@@ -11,15 +11,18 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 import com.mohamedrejeb.richeditor.model.RichTextState
 import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
 import org.junit.Rule
 import org.junit.Test
 import org.koin.test.KoinTest
 
 class DiaryListSnapshotTests : KoinTest {
     private val testClock = object : Clock {
-        // 2023-10-10
-        override fun now(): Instant = Instant.fromEpochSeconds(1697710617)
+        // 2023-11-10
+        override fun now(): Instant = Instant.parse("2023-11-10T00:00:00.850951Z")
     }
 
     @get:Rule
@@ -89,12 +92,17 @@ class DiaryListSnapshotTests : KoinTest {
                             Diary(
                                 id = it.toLong(),
                                 entry = "Hello Diary $it",
-                                date = testClock.now(),
+                                date = testClock.now().minus(
+                                    value = 1,
+                                    unit = DateTimeUnit.MONTH,
+                                    timeZone = TimeZone.UTC,
+                                ),
                                 isFavorite = false,
                             )
                         },
                         filtered = false,
                     ),
+                    clock = testClock,
                     showSearchBar = true,
                     diaryFilters = DiaryFilters(),
                     diaryListActions = diaryListActions,
