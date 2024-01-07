@@ -69,6 +69,7 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.tabNavigator)
+                implementation(libs.touchlab.kermit)
                 implementation(libs.voyager.transitions)
                 implementation(libs.voyager.koin)
                 implementation(libs.kotlin.inject.runtime)

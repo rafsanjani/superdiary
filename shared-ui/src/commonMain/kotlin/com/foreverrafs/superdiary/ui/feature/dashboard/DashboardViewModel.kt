@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.ui.feature.dashboard
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import co.touchlab.kermit.Logger
 import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.model.Streak
@@ -35,48 +36,66 @@ class DashboardViewModel(
     }
 
     fun loadDashboardContent() = screenModelScope.launch {
-        getAllDiariesUseCase()
-            .catch {
-                mutableState.update {
-                    DashboardScreenState.Loading
-                }
+        Logger.i(Tag) {
+            "Loading dashboard content"
+        }
+        getAllDiariesUseCase().catch {
+            Logger.e(Tag, it) {
+                "Error Loading dashboard content"
             }
-            .collect { diaries ->
-                mutableState.update {
-                    DashboardScreenState.Content(
-                        latestEntries = diaries.sortedByDescending { it.date }.take(4),
-                        totalEntries = diaries.size.toLong(),
-                        weeklySummary = if (diaries.isEmpty()) {
-                            """
+            mutableState.update {
+                DashboardScreenState.Loading
+            }
+        }.collect { diaries ->
+            Logger.i(Tag) {
+                "Dashboard content refreshed!"
+            }
+            mutableState.update {
+                DashboardScreenState.Content(
+                    latestEntries = diaries.sortedByDescending { it.date }.take(4),
+                    totalEntries = diaries.size.toLong(),
+                    weeklySummary = if (diaries.isEmpty()) {
+                        """
                             In this panel, your weekly diary entries will be summarized.
                             Add your first entry to see how it works
-                            """.trimIndent()
-                        } else {
-                            DEFAULT_SUMMARY_TEXT
-                        },
-                        streak = Streak(0, emptyList()),
-                    )
-                }
-
-                if (diaries.isNotEmpty()) {
-                    generateWeeklySummary(diaries)
-                    calculateStreak(diaries)
-                }
+                        """.trimIndent()
+                    } else {
+                        DEFAULT_SUMMARY_TEXT
+                    },
+                    streak = Streak(0, emptyList()),
+                )
             }
+
+            if (diaries.isNotEmpty()) {
+                generateWeeklySummary(diaries)
+                calculateStreak(diaries)
+            }
+        }
     }
 
     private fun updateContentState(func: (current: DashboardScreenState.Content) -> DashboardScreenState.Content) {
         mutableState.update { state ->
             val currentState = state as? DashboardScreenState.Content
+
             if (currentState != null) {
-                func(currentState)
+                val newState = func(currentState)
+                Logger.d(Tag) {
+                    "Updating app state: $newState"
+                }
+                newState
             } else {
+                Logger.d(Tag) {
+                    "Current State isn't Content. Not updating!"
+                }
                 state
             }
         }
     }
 
     private fun generateWeeklySummary(diaries: List<Diary>) = screenModelScope.launch {
+        Logger.i(Tag) {
+            "Fetching weekly summary for ${diaries.size} entries"
+        }
         val latestWeeklySummary = getWeeklySummaryUseCase()
 
         latestWeeklySummary?.let {
@@ -91,26 +110,29 @@ class DashboardViewModel(
         }
 
         diaryAI.getWeeklySummary(diaries)
-            .catch {
-                mutableState.update { state ->
-                    (state as? DashboardScreenState.Content)?.copy(
-                        weeklySummary = null,
-                    ) ?: state
+            .catch { exception ->
+                Logger.e(Tag, exception) {
+                    "An error occurred generating weekly summary"
                 }
-            }
-            .onCompletion { exception ->
-                (mutableState.value as? DashboardScreenState.Content)?.let {
-                    if (exception == null) {
+            }.onCompletion {
+                (mutableState.value as? DashboardScreenState.Content)?.let { appState ->
+                    if (appState.weeklySummary == DEFAULT_SUMMARY_TEXT) {
+                        updateContentState { currentState ->
+                            currentState.copy(weeklySummary = "Error generating weekly summary")
+                        }
+                        return@onCompletion
+                    }
+
+                    Logger.d(Tag) {
+                        "Weekly summary generated!"
+                    }
+                    appState.weeklySummary?.let { summary ->
                         addWeeklySummaryUseCase(
-                            WeeklySummary(
-                                summary = it.weeklySummary.orEmpty(),
-                                date = Clock.System.now(),
-                            ),
+                            weeklySummary = WeeklySummary(summary),
                         )
                     }
                 }
-            }
-            .collect { chunk ->
+            }.collect { chunk ->
                 updateContentState { state ->
                     state.copy(
                         weeklySummary = if (state.weeklySummary == DEFAULT_SUMMARY_TEXT) {
@@ -124,6 +146,9 @@ class DashboardViewModel(
     }
 
     private fun calculateStreak(diaries: List<Diary>) = screenModelScope.launch {
+        Logger.i(Tag) {
+            "Calculating streak for ${diaries.size} entries"
+        }
         val streak = calculateStreakUseCase(diaries)
 
         mutableState.update { state ->
@@ -135,5 +160,6 @@ class DashboardViewModel(
 
     companion object {
         private const val DEFAULT_SUMMARY_TEXT = "Generating weekly Summary..."
+        private val Tag = DashboardViewModel::class.simpleName.orEmpty()
     }
 }

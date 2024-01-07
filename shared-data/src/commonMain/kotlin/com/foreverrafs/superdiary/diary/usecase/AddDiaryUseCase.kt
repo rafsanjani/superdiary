@@ -20,10 +20,14 @@ class AddDiaryUseCase(
             }
             Result.Success(data = listOf(diary))
         } catch (ex: IllegalArgumentException) {
-            Logger.e(AddDiaryUseCase::class.simpleName.orEmpty(), ex) {
+            Logger.e(tag = Tag, ex) {
                 "Error saving diary"
             }
             Result.Failure(ex)
         }
+    }
+
+    companion object {
+        private val Tag = AddDiaryUseCase::class.simpleName.orEmpty()
     }
 }
