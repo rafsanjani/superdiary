@@ -3,7 +3,7 @@ package com.foreverrafs.superdiary.ui.feature.diarylist.model
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.usecase.DeleteMultipleDiariesUseCase
+import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByEntryUseCase
@@ -19,7 +19,7 @@ class DiaryListViewModel(
     private val getAllDiariesUseCase: GetAllDiariesUseCase,
     private val searchDiaryByEntryUseCase: SearchDiaryByEntryUseCase,
     private val searchDiaryByDateUseCase: SearchDiaryByDateUseCase,
-    private val deleteMultipleDiariesUseCase: DeleteMultipleDiariesUseCase,
+    private val deleteDiaryUseCase: DeleteDiaryUseCase,
     private val updateDiaryUseCase: UpdateDiaryUseCase,
 ) : StateScreenModel<DiaryListViewState>(DiaryListViewState.Loading) {
 
@@ -78,7 +78,7 @@ class DiaryListViewModel(
     }
 
     suspend fun deleteDiaries(diaries: List<Diary>): Boolean {
-        val affectedRows = deleteMultipleDiariesUseCase(diaries)
+        val affectedRows = deleteDiaryUseCase(diaries)
         return affectedRows == diaries.size
     }
 

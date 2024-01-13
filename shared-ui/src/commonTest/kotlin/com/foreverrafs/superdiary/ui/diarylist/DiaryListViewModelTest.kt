@@ -5,7 +5,7 @@ import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.usecase.DeleteMultipleDiariesUseCase
+import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByEntryUseCase
@@ -60,7 +60,7 @@ class DiaryListViewModelTest : TestsWithMocks() {
             searchDiaryByEntryUseCase = SearchDiaryByEntryUseCase(dataSource),
             searchDiaryByDateUseCase = SearchDiaryByDateUseCase(dataSource),
             updateDiaryUseCase = UpdateDiaryUseCase(dataSource),
-            deleteMultipleDiariesUseCase = DeleteMultipleDiariesUseCase(dataSource),
+            deleteDiaryUseCase = DeleteDiaryUseCase(dataSource),
         )
     }
 

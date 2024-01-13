@@ -11,7 +11,6 @@ import com.foreverrafs.superdiary.diary.datasource.DataSource
 import com.foreverrafs.superdiary.diary.datasource.LocalDataSource
 import com.foreverrafs.superdiary.diary.usecase.DeleteAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
-import com.foreverrafs.superdiary.diary.usecase.DeleteMultipleDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.datasource.TestDatabaseDriver
 import com.foreverrafs.superdiary.diary.usecase.insertRandomDiaries
@@ -32,7 +31,7 @@ class DeleteDiaryUseCaseTest {
 
     private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
     private val deleteAllDiariesUseCase = DeleteAllDiariesUseCase(dataSource)
-    private val deleteMultipleDiariesUseCase = DeleteMultipleDiariesUseCase(dataSource)
+    private val deleteMultipleDiariesUseCase = DeleteDiaryUseCase(dataSource)
     private val deleteDiaryUseCase = DeleteDiaryUseCase(dataSource)
 
     @BeforeTest
@@ -48,58 +47,61 @@ class DeleteDiaryUseCaseTest {
     }
 
     @Test
-    fun `Delete diary and confirm deletion`() = runTest {
-        getAllDiariesUseCase().test {
-            var diaries = awaitItem()
-            val firstDiary = diaries.first()
+    fun `Delete diary and confirm deletion`() =
+        runTest {
+            getAllDiariesUseCase().test {
+                var diaries = awaitItem()
+                val firstDiary = diaries.first()
 
-            // delete the first entry
-            deleteDiaryUseCase(firstDiary)
+                // delete the first entry
+                deleteDiaryUseCase(listOf(firstDiary))
 
-            // get latest diaries again
-            diaries = awaitItem()
+                // get latest diaries again
+                diaries = awaitItem()
 
-            cancelAndConsumeRemainingEvents()
+                cancelAndConsumeRemainingEvents()
 
-            // confirm that the first diary has been deleted
-            assertThat(diaries).doesNotContain(firstDiary)
+                // confirm that the first diary has been deleted
+                assertThat(diaries).doesNotContain(firstDiary)
+            }
         }
-    }
 
     @Test
-    fun `Delete All Diaries Clears Diaries`() = runTest {
-        getAllDiariesUseCase().test {
-            val originalDiaryList = awaitItem()
+    fun `Delete All Diaries Clears Diaries`() =
+        runTest {
+            getAllDiariesUseCase().test {
+                val originalDiaryList = awaitItem()
 
-            assertThat(originalDiaryList).isNotEmpty()
+                assertThat(originalDiaryList).isNotEmpty()
 
-            // clear all the diaries
-            deleteAllDiariesUseCase()
+                // clear all the diaries
+                deleteAllDiariesUseCase()
 
-            // fetch all the diaries
-            val diaries = awaitItem()
-            cancelAndConsumeRemainingEvents()
+                // fetch all the diaries
+                val diaries = awaitItem()
+                cancelAndConsumeRemainingEvents()
 
-            // verify all diaries have been cleared
-            assertThat(diaries).isEmpty()
+                // verify all diaries have been cleared
+                assertThat(diaries).isEmpty()
+            }
         }
-    }
 
     @Test
-    fun `Delete multiple diaries actually deletes them`() = runTest {
-        getAllDiariesUseCase().test {
-            // Given initial diary items - We need to convert the resulting List to another list again
-            // to prevent it from getting overwritten by the subsequent call to awaitItem()
-            val originalList = awaitItem()
+    fun `Delete multiple diaries actually deletes them`() =
+        runTest {
+            getAllDiariesUseCase().test {
+                // Given initial diary items - We need to convert the resulting List to another list again
+                // to prevent it from getting overwritten by the subsequent call to awaitItem()
+                val originalList = awaitItem()
 
-            // Delete the first two entries
-            deleteMultipleDiariesUseCase(originalList.take(2))
+                // Delete the first two entries
+                deleteMultipleDiariesUseCase(originalList.take(2))
 
-            // fetch the remaining diaries
-            val currentList = awaitItem()
+                // fetch the remaining diaries
+                val currentList = awaitItem()
 
-            cancelAndIgnoreRemainingEvents()
-            assertThat(currentList.size).isEqualTo(originalList.size - 2)
+                cancelAndIgnoreRemainingEvents()
+                assertThat(currentList.size).isEqualTo(originalList.size - 2)
+            }
         }
-    }
 }
