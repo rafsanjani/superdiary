@@ -16,7 +16,6 @@ import com.foreverrafs.superdiary.diary.usecase.AddWeeklySummaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.diary.usecase.CountDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
-import com.foreverrafs.superdiary.diary.usecase.DeleteMultipleDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetFavoriteDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetLatestEntriesUseCase
@@ -57,7 +56,6 @@ fun useCaseModule() = module {
     factoryOf(::SearchDiaryByEntryUseCase)
     factoryOf(::SearchDiaryByDateUseCase)
     factoryOf(::DeleteDiaryUseCase)
-    factoryOf(::DeleteMultipleDiariesUseCase)
     singleOf(::UpdateDiaryUseCase)
     singleOf(::Database)
     factory<DiaryValidator> { DiaryValidatorImpl(get()) }
