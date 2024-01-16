@@ -10,7 +10,7 @@ plugins {
     alias(libs.plugins.mockmp)
     alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.sonar)
-    id("com.adarshr.test-logger")
+    alias(libs.plugins.testLogger)
 }
 
 koverReport {
@@ -37,7 +37,7 @@ koverReport {
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    android() // Because paparazzi plugin hasn't been upgraded to support androidTarget() yet
+    androidTarget()
 
     jvm()
     jvmToolchain(17)
