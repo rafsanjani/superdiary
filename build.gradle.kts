@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.buildKonfig).apply(false)
     alias(libs.plugins.sonar)
-    id("com.adarshr.test-logger").version("4.0.0").apply(false)
+    alias(libs.plugins.testLogger).apply(false)
 }
 
 kover {
@@ -61,30 +61,21 @@ sonar {
     }
 }
 
-subprojects {
-    sonar {
-        val reportPath = "${project.buildDir}/reports/kover/reportDebug.xml"
-        val lintReportPath = "${project.buildDir}/reports/lint-results-debug.xml"
-
-        properties {
-            property("sonar.coverage.jacoco.xmlReportPaths", reportPath)
-            property("sonar.androidLint.reportPaths", lintReportPath)
-        }
-    }
-}
-
 apply {
     from("scripts/git-hooks.gradle.kts")
 }
 
 subprojects {
     sonar {
-        val reportPath = "${project.buildDir}/reports/kover/reportDebug.xml"
+        val buildDir = project.layout.buildDirectory.asFile.get()
+        val reportPath = "${buildDir}/reports/kover/reportDebug.xml"
+        val lintReportPath = "${buildDir}/reports/lint-results-debug.xml"
 
         properties {
             property("sonar.projectKey", "rafsanjani_superdiary")
             property("sonar.organization", "rafsanjani")
             property("sonar.host.url", "https://sonarcloud.io")
+            property("sonar.androidLint.reportPaths", lintReportPath)
             property("sonar.coverage.jacoco.xmlReportPaths", reportPath)
         }
     }
