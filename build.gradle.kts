@@ -68,8 +68,8 @@ apply {
 subprojects {
     sonar {
         val buildDir = project.layout.buildDirectory.asFile.get()
-        val reportPath = "${buildDir}/reports/kover/reportDebug.xml"
-        val lintReportPath = "${buildDir}/reports/lint-results-debug.xml"
+        val reportPath = "$buildDir/reports/kover/reportDebug.xml"
+        val lintReportPath = "$buildDir/reports/lint-results-debug.xml"
 
         properties {
             property("sonar.projectKey", "rafsanjani_superdiary")
