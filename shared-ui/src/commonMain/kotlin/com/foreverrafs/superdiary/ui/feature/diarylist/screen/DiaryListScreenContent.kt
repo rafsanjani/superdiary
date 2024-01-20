@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -497,6 +498,7 @@ private fun EmptyDiaryList(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiaryItem(
     modifier: Modifier = Modifier,
@@ -515,13 +517,14 @@ fun DiaryItem(
     }
 
     Box(
-        modifier = modifier
+        modifier = Modifier
             .height(110.dp)
             .padding(padding)
             .clip(RoundedCornerShape(roundedCornerShape))
             .fillMaxWidth(),
     ) {
         Card(
+            onClick = {},
             shape = RoundedCornerShape(
                 topStart = 0.dp,
                 bottomStart = 12.dp,
