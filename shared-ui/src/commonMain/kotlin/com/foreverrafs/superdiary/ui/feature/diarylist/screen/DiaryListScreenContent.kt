@@ -33,12 +33,12 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -107,10 +107,11 @@ fun DiaryListScreenContent(
     showSearchBar: Boolean,
     diaryListActions: DiaryListActions,
     clock: Clock = Clock.System,
-    snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) {
     val screenModifier = modifier
         .fillMaxSize()
+
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         topBar = {
@@ -130,6 +131,9 @@ fun DiaryListScreenContent(
             )
         },
         floatingActionButton = {
+            // Only show FAB when there is an entry
+            if ((state as? DiaryListViewState.Content)?.diaries?.isEmpty() == true)
+                return@Scaffold
             FloatingActionButton(
                 onClick = diaryListActions.onAddEntry,
                 shape = RoundedCornerShape(4.dp),
@@ -140,6 +144,9 @@ fun DiaryListScreenContent(
                 )
             }
         },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
+        }
     ) {
         Box(modifier = Modifier.padding(it)) {
             when (state) {
@@ -498,7 +505,6 @@ private fun EmptyDiaryList(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiaryItem(
     modifier: Modifier = Modifier,
@@ -517,14 +523,13 @@ fun DiaryItem(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .height(110.dp)
             .padding(padding)
             .clip(RoundedCornerShape(roundedCornerShape))
             .fillMaxWidth(),
     ) {
         Card(
-            onClick = {},
             shape = RoundedCornerShape(
                 topStart = 0.dp,
                 bottomStart = 12.dp,

@@ -10,9 +10,9 @@ import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.foreverrafs.superdiary.ui.SuperDiaryScreen
+import com.foreverrafs.superdiary.ui.SuperDiaryTab
 
-object DiaryChatScreen : SuperDiaryScreen {
+object DiaryChatTab : SuperDiaryTab {
     @Composable
     override fun Content() {
         val screenModel = getScreenModel<DiaryChatViewModel>()

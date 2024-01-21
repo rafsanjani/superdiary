@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.foreverrafs.superdiary.ui.SuperDiaryScreen
+import com.foreverrafs.superdiary.ui.SuperDiaryTab
 
-object CalendarScreen : SuperDiaryScreen {
+object CalendarTab : SuperDiaryTab {
     @Composable
     override fun Content() {
         Box(

@@ -21,11 +21,11 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.foreverrafs.superdiary.ui.LocalRootSnackbarHostState
-import com.foreverrafs.superdiary.ui.SuperDiaryScreen
+import com.foreverrafs.superdiary.ui.SuperDiaryTab
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
-import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreen
-import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatScreen
-import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreen
+import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardTab
+import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatTab
+import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteTab
 
 /**
  * Provides a navigation entry point for all the screens that rely on
@@ -37,7 +37,7 @@ object BottomNavigationScreen : Screen {
     override fun Content() {
         val snackbarHostState = LocalRootSnackbarHostState.current
 
-        TabNavigator(DashboardScreen) {
+        TabNavigator(DashboardTab) {
             Scaffold(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
                 content = {
@@ -50,9 +50,9 @@ object BottomNavigationScreen : Screen {
                 topBar = { SuperDiaryAppBar() },
                 bottomBar = {
                     NavigationBar {
-                        BottomNavigationItem(DashboardScreen)
-                        BottomNavigationItem(FavoriteScreen)
-                        BottomNavigationItem(DiaryChatScreen)
+                        BottomNavigationItem(DashboardTab)
+                        BottomNavigationItem(FavoriteTab)
+                        BottomNavigationItem(DiaryChatTab)
                     }
                 },
             )
@@ -60,7 +60,7 @@ object BottomNavigationScreen : Screen {
     }
 
     @Composable
-    private fun RowScope.BottomNavigationItem(screen: SuperDiaryScreen) {
+    private fun RowScope.BottomNavigationItem(screen: SuperDiaryTab) {
         val tabNavigator = LocalTabNavigator.current
 
         val selected = tabNavigator.current == screen
