@@ -10,7 +10,7 @@ plugins {
     alias(libs.plugins.mockmp)
     alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.sonar)
-    id("com.adarshr.test-logger")
+    alias(libs.plugins.testLogger)
 }
 
 koverReport {
@@ -37,7 +37,7 @@ koverReport {
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    android() // Because paparazzi plugin hasn't been upgraded to support androidTarget() yet
+    androidTarget()
 
     jvm()
     jvmToolchain(17)
@@ -147,4 +147,26 @@ android {
 mockmp {
     usesHelper = true
     installWorkaround()
+}
+
+plugins.withId("app.cash.paparazzi") {
+    afterEvaluate {
+        dependencies.constraints {
+            add("testImplementation", "com.google.guava:guava") {
+                attributes {
+                    attribute(
+                        TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE,
+                        objects.named(
+                            TargetJvmEnvironment::class.java,
+                            TargetJvmEnvironment.STANDARD_JVM
+                        )
+                    )
+                }
+                because(
+                    "LayoutLib and sdk-common depend on Guava's -jre published variant." +
+                            "See https://github.com/cashapp/paparazzi/issues/906."
+                )
+            }
+        }
+    }
 }
