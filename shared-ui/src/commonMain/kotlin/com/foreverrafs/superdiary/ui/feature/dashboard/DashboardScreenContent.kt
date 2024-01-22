@@ -46,6 +46,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.ui.LocalScreenNavigator
+import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryItem
 import com.foreverrafs.superdiary.ui.format
 
@@ -58,6 +60,7 @@ fun DashboardScreenContent(
 ) {
     if (state !is DashboardViewModel.DashboardScreenState.Content) return
     var isWeeklySummaryDisplayed by rememberSaveable { mutableStateOf(true) }
+    val navigator = LocalScreenNavigator.current
 
     val dashboardItems = remember(state) {
         mutableStateListOf(
@@ -93,6 +96,9 @@ fun DashboardScreenContent(
                             modifier = Modifier.animateItemPlacement(),
                             diaries = state.latestEntries.take(itemCount),
                             onSeeAll = onSeeAll,
+                            onDiaryClicked = {
+                                navigator.push(DetailScreen(it))
+                            }
                         )
                     } else {
                         Button(onClick = onAddEntry) {
@@ -233,6 +239,7 @@ fun GlanceCard(
 private fun LatestEntries(
     modifier: Modifier = Modifier,
     onSeeAll: () -> Unit,
+    onDiaryClicked: (diary: Diary) -> Unit,
     diaries: List<Diary>,
 ) {
     Column(modifier) {
@@ -259,7 +266,7 @@ private fun LatestEntries(
         ) {
             for (diary in diaries) {
                 DiaryItem(
-                    modifier = Modifier.clickable(onClick = onSeeAll),
+                    modifier = Modifier.clickable(onClick = { onDiaryClicked(diary) }),
                     inSelectionMode = false,
                     onToggleFavorite = {},
                     selected = false,

@@ -1,9 +1,6 @@
 package com.foreverrafs.superdiary.ui.feature.diarylist.screen
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.outlined.List
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -13,30 +10,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.VectorPainter
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
-import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.foreverrafs.superdiary.ui.LocalRootSnackbarHostState
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
-import com.foreverrafs.superdiary.ui.SuperDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
+import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListViewModel
 
-object DiaryListScreen : SuperDiaryScreen {
-    override val options: TabOptions
-        @Composable
-        get() = TabOptions(
-            index = 1u,
-            title = "Entries",
-            icon = rememberVectorPainter(Icons.Outlined.List),
-        )
-
-    override val selectedIcon: VectorPainter
-        @Composable
-        get() = rememberVectorPainter(Icons.Filled.List)
+object DiaryListScreen : Screen {
 
     @Composable
     override fun Content() {
@@ -54,7 +38,6 @@ object DiaryListScreen : SuperDiaryScreen {
         observeFilterEvents(diaryFilters, screenModel)
 
         val screenNavigator = LocalScreenNavigator.current
-        val snackbarHostState = LocalRootSnackbarHostState.current
 
         val diaryListActions = remember {
             DiaryListActions(
@@ -69,7 +52,7 @@ object DiaryListScreen : SuperDiaryScreen {
                 },
                 onToggleFavorite = screenModel::toggleFavorite,
                 onDiaryClicked = {
-//                    screenNavigator.push(CreateDiaryScreen(it))
+                    screenNavigator.push(DetailScreen(it))
                 },
                 onBackPressed = screenNavigator::popUntilRoot,
             )
@@ -81,7 +64,6 @@ object DiaryListScreen : SuperDiaryScreen {
             showSearchBar = true,
             diaryFilters = diaryFilters,
             diaryListActions = diaryListActions,
-            snackbarHostState = snackbarHostState,
         )
     }
 

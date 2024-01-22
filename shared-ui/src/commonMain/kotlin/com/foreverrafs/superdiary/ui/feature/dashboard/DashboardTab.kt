@@ -12,11 +12,11 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
-import com.foreverrafs.superdiary.ui.SuperDiaryScreen
+import com.foreverrafs.superdiary.ui.SuperDiaryTab
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
 
-object DashboardScreen : SuperDiaryScreen {
+object DashboardTab : SuperDiaryTab {
     @Composable
     override fun Content() {
         val navigator = LocalScreenNavigator.current
