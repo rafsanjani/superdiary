@@ -8,6 +8,7 @@ pluginManagement {
         maven("https://jitpack.io")
         mavenLocal()
     }
+    includeBuild("build-logic")
 }
 System.setProperty("sonar.gradle.skipCompile", "true")
 

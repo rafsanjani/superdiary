@@ -42,9 +42,9 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun DiarySearchBar(
-    modifier: Modifier = Modifier,
-    onQueryChanged: (query: String) -> Unit,
     inSelectionMode: Boolean,
+    onQueryChanged: (query: String) -> Unit,
+    modifier: Modifier = Modifier,
     onFilterClicked: () -> Unit,
 ) {
     var query by rememberSaveable { mutableStateOf("") }
@@ -66,7 +66,6 @@ internal fun DiarySearchBar(
 
     AnimatedVisibility(
         visible = inSelectionMode,
-        modifier = modifier,
         enter = fadeIn(),
         exit = fadeOut(),
     ) {

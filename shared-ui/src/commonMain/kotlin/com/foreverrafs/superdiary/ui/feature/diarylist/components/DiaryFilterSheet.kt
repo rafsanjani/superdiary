@@ -51,10 +51,10 @@ import kotlinx.datetime.toLocalDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiaryFilterSheet(
-    modifier: Modifier = Modifier,
-    onDismissRequest: () -> Unit,
-    onApplyFilters: (filters: DiaryFilters) -> Unit,
     diaryFilters: DiaryFilters,
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+    onApplyFilters: (filters: DiaryFilters) -> Unit,
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -246,10 +246,10 @@ private fun DiaryFilterChip(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiaryDatePicker(
-    modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    onDateSelected: (date: LocalDate) -> Unit,
     selectedDate: LocalDate?,
+    modifier: Modifier = Modifier,
+    onDateSelected: (date: LocalDate) -> Unit,
 ) {
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = selectedDate

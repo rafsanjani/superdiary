@@ -21,7 +21,7 @@ object FavoriteTab : SuperDiaryTab {
 
         val screenState by screenModel.state.collectAsState()
 
-        LaunchedEffect(Unit){
+        LaunchedEffect(Unit) {
             screenModel.loadFavorites()
         }
 

@@ -16,13 +16,14 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun RichTextStyleButton(
-    onClick: () -> Unit,
     icon: ImageVector,
+    modifier: Modifier = Modifier,
     tint: Color? = null,
     isSelected: Boolean = false,
+    onClick: () -> Unit,
 ) {
     IconButton(
-        modifier = Modifier
+        modifier = modifier
             // Workaround to prevent the rich editor
             // from losing focus when clicking on the button
             // (Happens only on Desktop)

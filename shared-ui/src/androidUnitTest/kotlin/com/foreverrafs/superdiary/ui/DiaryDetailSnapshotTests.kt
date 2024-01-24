@@ -35,7 +35,7 @@ class DiaryDetailSnapshotTests : KoinTest {
                         I kept eating a very large bowl of rice till I couldn't take
                         it any much longer. I think this will go down in history as 
                         the greatest rice eating bout of all time.
-                    """.trimIndent(),
+                        """.trimIndent(),
                         id = 1000,
                         date = testClock.now(),
                         isFavorite = false

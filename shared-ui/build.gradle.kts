@@ -163,7 +163,8 @@ plugins.withId("app.cash.paparazzi") {
                     )
                 }
                 because(
-                    "LayoutLib and sdk-common depend on Guava's -jre published variant." + "See https://github.com/cashapp/paparazzi/issues/906."
+                    "LayoutLib and sdk-common depend on Guava's -jre published variant."
+                            + "See https://github.com/cashapp/paparazzi/issues/906."
                 )
             }
         }

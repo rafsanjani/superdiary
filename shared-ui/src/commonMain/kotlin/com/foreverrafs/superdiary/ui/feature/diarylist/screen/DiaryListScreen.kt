@@ -12,7 +12,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
-import com.foreverrafs.superdiary.ui.LocalRootSnackbarHostState
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
@@ -35,7 +34,7 @@ object DiaryListScreen : Screen {
             mutableStateOf(DiaryFilters())
         }
 
-        observeFilterEvents(diaryFilters, screenModel)
+        ObserveFilterEvents(diaryFilters, screenModel)
 
         val screenNavigator = LocalScreenNavigator.current
 
@@ -68,7 +67,7 @@ object DiaryListScreen : Screen {
     }
 
     @Composable
-    private fun observeFilterEvents(
+    private fun ObserveFilterEvents(
         diaryFilters: DiaryFilters,
         screenModel: DiaryListViewModel,
     ) {

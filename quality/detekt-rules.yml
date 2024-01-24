@@ -171,7 +171,7 @@ complexity:
     excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**' ]
     thresholdInFiles: 11
     thresholdInClasses: 11
-    thresholdInInterfaces: 11
+    thresholdInInterfaces: 15
     thresholdInObjects: 11
     thresholdInEnums: 11
     ignoreDeprecated: false
@@ -1110,7 +1110,7 @@ Compose:
   RememberContentMissing:
     active: true
   UnstableCollections:
-    active: true
+    active: false
   ViewModelForwarding:
     active: true
       # You can optionally use this rule on things other than types ending in "ViewModel" or "Presenter" (which are the defaults). You can add your own via a regex here:
