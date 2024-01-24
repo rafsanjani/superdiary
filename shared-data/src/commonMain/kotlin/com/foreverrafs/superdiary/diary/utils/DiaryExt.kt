@@ -26,7 +26,7 @@ data class PrioritizedDuration(
     val priority: Int,
 )
 
-@Suppress("ReturnCount")
+@Suppress("ReturnCount", "CyclomaticComplexMethod")
 private fun getDurationString(diary: Diary, clock: Clock = Clock.System): PrioritizedDuration {
     val entryDate = diary.date.toLocalDateTime(TimeZone.UTC).date
 

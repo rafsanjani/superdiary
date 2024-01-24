@@ -160,7 +160,7 @@ class DiaryListViewModelTest : TestsWithMocks() {
     @Test
     fun `Verify error screen is shown when an error occurs`() = runTest {
         every { dataSource.fetchAll() } returns flow {
-            throw Exception("Exception thrown in datasource")
+            throw IllegalArgumentException("Exception thrown in datasource")
         }
 
         diaryListViewModel.state.test {

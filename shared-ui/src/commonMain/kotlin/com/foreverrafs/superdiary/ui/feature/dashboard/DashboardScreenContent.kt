@@ -56,6 +56,7 @@ import com.foreverrafs.superdiary.ui.format
 fun DashboardScreenContent(
     state: DashboardViewModel.DashboardScreenState,
     onAddEntry: () -> Unit,
+    modifier: Modifier = Modifier,
     onSeeAll: () -> Unit,
 ) {
     if (state !is DashboardViewModel.DashboardScreenState.Content) return
@@ -114,11 +115,13 @@ fun DashboardScreenContent(
         )
     }
 
-    Scaffold {
+    Scaffold(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
+            modifier = Modifier.padding(it),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -194,9 +197,9 @@ private fun AtAGlance(
 
 @Composable
 fun GlanceCard(
-    modifier: Modifier = Modifier,
     title: String,
     content: String,
+    modifier: Modifier = Modifier,
     caption: String = "",
 ) {
     Card(
@@ -237,10 +240,10 @@ fun GlanceCard(
 
 @Composable
 private fun LatestEntries(
-    modifier: Modifier = Modifier,
-    onSeeAll: () -> Unit,
-    onDiaryClicked: (diary: Diary) -> Unit,
     diaries: List<Diary>,
+    onSeeAll: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDiaryClicked: (diary: Diary) -> Unit,
 ) {
     Column(modifier) {
         Row(
@@ -279,8 +282,8 @@ private fun LatestEntries(
 
 @Composable
 private fun WeeklySummaryCard(
-    modifier: Modifier = Modifier,
     summary: String?,
+    modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
 ) {
     Card(

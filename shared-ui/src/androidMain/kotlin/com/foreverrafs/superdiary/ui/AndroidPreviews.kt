@@ -259,7 +259,7 @@ private fun DiaryDatePickerPreview() {
 
 @Composable
 @PreviewSuperDiary
-fun DeleteDialogPreview() {
+private fun DeleteDialogPreview() {
     TestAppContainer {
         ConfirmDeleteDialog(
             onDismiss = {},

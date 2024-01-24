@@ -34,14 +34,16 @@ import com.mohamedrejeb.richeditor.ui.material3.RichText
 
 @Composable
 fun DetailScreenContent(
-    onNavigateBack: () -> Unit,
     diary: Diary,
+    modifier: Modifier = Modifier,
+    onNavigateBack: () -> Unit,
 ) {
     val richTextState = rememberRichTextState().apply {
         setHtml(diary.entry)
     }
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             SuperDiaryAppBar(
                 navigationIcon = {

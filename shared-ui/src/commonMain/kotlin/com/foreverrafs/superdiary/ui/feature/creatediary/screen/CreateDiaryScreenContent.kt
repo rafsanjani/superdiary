@@ -40,10 +40,11 @@ import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateDiaryScreenContent(
-    onNavigateBack: () -> Unit,
-    onGenerateAI: (prompt: String, wordCount: Int) -> Unit,
-    richTextState: RichTextState = rememberRichTextState(),
     isGeneratingFromAi: Boolean,
+    onGenerateAI: (prompt: String, wordCount: Int) -> Unit,
+    onNavigateBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    richTextState: RichTextState = rememberRichTextState(),
     onSaveDiary: (entry: String) -> Unit,
 ) {
     Scaffold(
@@ -79,6 +80,7 @@ fun CreateDiaryScreenContent(
                 },
             )
         },
+        modifier = modifier
     ) {
         Surface(
             modifier = Modifier.padding(it),

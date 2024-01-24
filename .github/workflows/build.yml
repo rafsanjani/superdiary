@@ -25,7 +25,7 @@ jobs:
       - name: Lint all modules
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: detektJvmMain
+          arguments: detektAll
 
       - name: Unit tests (shared-data)
         id: unit_tests

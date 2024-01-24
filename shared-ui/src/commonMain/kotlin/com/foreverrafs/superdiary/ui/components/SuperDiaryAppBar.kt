@@ -57,9 +57,9 @@ fun SuperDiaryAppBar(
 }
 
 @Composable
-fun NavigationIcon(onClick: (() -> Unit)) {
+fun NavigationIcon(onClick: (() -> Unit), modifier: Modifier = Modifier) {
     Icon(
-        modifier = Modifier
+        modifier = modifier
             .clip(CircleShape)
             .clickable {
                 onClick()
@@ -71,9 +71,9 @@ fun NavigationIcon(onClick: (() -> Unit)) {
 }
 
 @Composable
-fun SaveIcon(onClick: (() -> Unit)) {
+fun SaveIcon(onClick: (() -> Unit), modifier: Modifier = Modifier) {
     Icon(
-        modifier = Modifier
+        modifier = modifier
             .clip(CircleShape)
             .clickable {
                 onClick()

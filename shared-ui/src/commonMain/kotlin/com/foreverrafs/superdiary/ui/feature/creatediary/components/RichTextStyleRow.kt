@@ -19,8 +19,8 @@ import com.mohamedrejeb.richeditor.model.RichTextState
 
 @Composable
 fun RichTextStyleRow(
-    modifier: Modifier = Modifier,
     state: RichTextState,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
