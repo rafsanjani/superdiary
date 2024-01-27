@@ -29,5 +29,10 @@ gradlePlugin {
             id = "com.superdiary.detekt"
             implementationClass = "codequality.DetektPlugin"
         }
+
+        register("gitHooksPlugin") {
+            id = "com.superdiary.githooks"
+            implementationClass = "codequality.GitHooksPlugin"
+        }
     }
 }

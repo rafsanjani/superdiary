@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.sonar)
     alias(libs.plugins.testLogger).apply(false)
     id("com.superdiary.detekt")
+    id("com.superdiary.githooks")
 }
 
 kover {
@@ -59,10 +60,6 @@ sonar {
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.coverage.exclusions", exclusionList)
     }
-}
-
-apply {
-    from("scripts/git-hooks.gradle.kts")
 }
 
 subprojects {
