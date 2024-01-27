@@ -18,12 +18,12 @@ class GitHooksPlugin : Plugin<Project> {
 private fun Project.configureGitHooksPlugin() {
     tasks.register("copyGitHooks", Copy::class.java) {
         description = "Copies the git hooks from /git-hooks to the .git folder"
-        from("${rootDir}/git-hooks/") {
+        from("$rootDir/git-hooks/") {
             duplicatesStrategy = DuplicatesStrategy.INCLUDE
             include("**/*.sh")
             rename("(.*).sh", "$1")
         }
-        into("${rootDir}/.git/hooks")
+        into("$rootDir/.git/hooks")
         onlyIf {
             isLinuxOrMacOs()
         }
