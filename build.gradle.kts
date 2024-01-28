@@ -80,5 +80,5 @@ subprojects {
 
 dependencies {
     detektPlugins(libs.detekt.formatting)
-    detektPlugins("io.nlopez.compose.rules:detekt:0.3.10")
+    detektPlugins("io.nlopez.compose.rules:detekt:0.3.11")
 }
