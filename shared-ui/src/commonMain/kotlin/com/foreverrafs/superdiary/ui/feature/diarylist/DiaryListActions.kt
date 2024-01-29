@@ -2,6 +2,27 @@ package com.foreverrafs.superdiary.ui.feature.diarylist
 
 import com.foreverrafs.superdiary.diary.model.Diary
 
+/**
+ * Encapsulates all actions that can be performed on a list of diary items
+ *
+ * @param onAddEntry Add a new diary entry to the datasource
+ * @param onDeleteDiaries Delete all the diary entries with the selected
+ *     ids
+ * @param onToggleFavorite Add the specified diary to the favorites if it
+ *     isn't already in there, and remove it otherwise
+ * @param onApplyFilters Apply selection filters to the list
+ * @param onAddSelection Add the entry with the specified id to the
+ *     selected list of items
+ * @param onDiaryClicked Process a click event on a specified diary
+ * @param onRemoveSelection Remove the entry specified with the id from the
+ *     list of selected items
+ * @param onToggleSelection Select the specified diary item if it isn't
+ *     selected and deselect it otherwise
+ * @param onCancelSelection Deselect all selected items and exit selection
+ *     mode
+ * @param onBackPressed When the back action is invoked either through the
+ *     system back button or the AppBar back button
+ */
 data class DiaryListActions(
     val onAddEntry: () -> Unit,
     val onDeleteDiaries: suspend (selectedIds: List<Diary>) -> Boolean,
