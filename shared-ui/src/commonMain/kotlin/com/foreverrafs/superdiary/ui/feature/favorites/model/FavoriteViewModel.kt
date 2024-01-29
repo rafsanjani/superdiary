@@ -12,7 +12,7 @@ class FavoriteViewModel(
 ) :
     StateScreenModel<FavoriteScreenState>(FavoriteScreenState.Loading) {
 
-    fun loadFavorites() = screenModelScope.launch() {
+    fun loadFavorites() = screenModelScope.launch {
         getFavoriteDiariesUseCase().collect { diaries ->
             mutableState.update {
                 FavoriteScreenState.Favorites(

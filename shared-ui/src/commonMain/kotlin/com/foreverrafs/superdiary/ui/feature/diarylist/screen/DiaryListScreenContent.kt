@@ -38,6 +38,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -101,15 +102,13 @@ val DiaryListActions.Companion.Empty: DiaryListActions
 @Composable
 fun DiaryListScreenContent(
     state: DiaryListViewState,
-    modifier: Modifier = Modifier,
     diaryFilters: DiaryFilters,
     showSearchBar: Boolean,
     diaryListActions: DiaryListActions,
+    modifier: Modifier = Modifier,
     clock: Clock = Clock.System,
-    snackbarHostState: SnackbarHostState = SnackbarHostState(),
 ) {
-    val screenModifier = modifier
-        .fillMaxSize()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         topBar = {
@@ -129,6 +128,10 @@ fun DiaryListScreenContent(
             )
         },
         floatingActionButton = {
+            // Only show FAB when there is an entry
+            if ((state as? DiaryListViewState.Content)?.diaries?.isEmpty() == true) {
+                return@Scaffold
+            }
             FloatingActionButton(
                 onClick = diaryListActions.onAddEntry,
                 shape = RoundedCornerShape(4.dp),
@@ -139,12 +142,16 @@ fun DiaryListScreenContent(
                 )
             }
         },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
+        },
+        modifier = modifier
     ) {
         Box(modifier = Modifier.padding(it)) {
             when (state) {
                 is DiaryListViewState.Content -> {
                     DiaryListContent(
-                        modifier = screenModifier,
+                        modifier = Modifier.fillMaxSize(),
                         diaries = state.diaries,
                         isFiltered = state.filtered,
                         showSearchBar = showSearchBar,
@@ -158,10 +165,10 @@ fun DiaryListScreenContent(
                 }
 
                 is DiaryListViewState.Error -> ErrorContent(
-                    modifier = screenModifier,
+                    modifier = Modifier.fillMaxSize(),
                 )
 
-                is DiaryListViewState.Loading -> LoadingContent(modifier = screenModifier)
+                is DiaryListViewState.Loading -> LoadingContent(modifier = Modifier.fillMaxSize())
             }
         }
     }
@@ -182,19 +189,20 @@ fun DiaryListScreenContent(
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
+@Suppress("ModifierReused, ComposableParamOrder")
 fun DiaryList(
-    modifier: Modifier = Modifier,
     diaries: List<Diary>,
     inSelectionMode: Boolean,
     diaryFilters: DiaryFilters,
     selectedIds: Set<Long>,
-    showSearchBar: Boolean = true,
-    clock: Clock = Clock.System,
     diaryListActions: DiaryListActions,
     snackbarHostState: SnackbarHostState,
     onDeleteDiaries: (selectedIds: Set<Long>) -> Unit,
+    modifier: Modifier = Modifier,
+    clock: Clock = Clock.System,
+    showSearchBar: Boolean = true,
     listState: LazyListState = rememberLazyListState(),
-    onCancelSelection: () -> Unit,
+    onCancelSelection: () -> Unit
 ) {
     val groupedDiaries = remember(diaries) {
         diaries.groupByDate(clock)
@@ -319,7 +327,7 @@ fun DiaryList(
         } else {
             // When there is no diary entry from the search screen
             Box(
-                modifier = modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -335,16 +343,16 @@ fun DiaryList(
 
 @Composable
 private fun DiaryListContent(
-    modifier: Modifier = Modifier,
     diaries: List<Diary>,
     isFiltered: Boolean,
     showSearchBar: Boolean,
-    onAddEntry: () -> Unit,
     diaryListActions: DiaryListActions,
     selectedIds: Set<Long>,
     diaryFilters: DiaryFilters,
     snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier,
     clock: Clock = Clock.System,
+    onAddEntry: () -> Unit,
 ) {
     @Suppress("NAME_SHADOWING")
     var selectedIds by rememberSaveable {
@@ -499,10 +507,10 @@ private fun EmptyDiaryList(
 
 @Composable
 fun DiaryItem(
-    modifier: Modifier = Modifier,
     diary: Diary,
     selected: Boolean,
     inSelectionMode: Boolean,
+    modifier: Modifier = Modifier,
     onToggleFavorite: () -> Unit,
 ) {
     val transition = updateTransition(selected, label = "selected")
@@ -678,8 +686,8 @@ private fun annotatedString(date: LocalDate): AnnotatedString = buildAnnotatedSt
 
 @Composable
 fun FavoriteIcon(
-    modifier: Modifier = Modifier,
     isFavorite: Boolean,
+    modifier: Modifier = Modifier,
     onToggleFavorite: () -> Unit,
 ) {
     // favorite icon
@@ -703,7 +711,7 @@ fun FavoriteIcon(
 }
 
 @Composable
-private fun ErrorContent(modifier: Modifier) {
+private fun ErrorContent(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier.padding(bottom = 64.dp),
         contentAlignment = Alignment.Center,

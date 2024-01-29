@@ -3,13 +3,14 @@ plugins {
     alias(libs.plugins.android.library).apply(false)
     alias(libs.plugins.kotlin.android).apply(false)
     alias(libs.plugins.detekt).apply(false)
-    alias(libs.plugins.ktlint).apply(false)
     alias(libs.plugins.kotlin.dokka)
     alias(libs.plugins.compose.multiplatform).apply(false)
     alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.buildKonfig).apply(false)
     alias(libs.plugins.sonar)
     alias(libs.plugins.testLogger).apply(false)
+    id("com.superdiary.detekt")
+    id("com.superdiary.githooks")
 }
 
 kover {
@@ -61,10 +62,6 @@ sonar {
     }
 }
 
-apply {
-    from("scripts/git-hooks.gradle.kts")
-}
-
 subprojects {
     sonar {
         val buildDir = project.layout.buildDirectory.asFile.get()
@@ -79,8 +76,9 @@ subprojects {
             property("sonar.coverage.jacoco.xmlReportPaths", reportPath)
         }
     }
+}
 
-    apply {
-        from("${rootDir.path}/quality/static-check.gradle")
-    }
+dependencies {
+    detektPlugins(libs.detekt.formatting)
+    detektPlugins("io.nlopez.compose.rules:detekt:0.3.11")
 }

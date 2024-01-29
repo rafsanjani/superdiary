@@ -28,12 +28,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 internal fun DiaryHeader(
-    modifier: Modifier = Modifier,
     text: String,
     inSelectionMode: Boolean,
     selectGroup: () -> Unit,
     deSelectGroup: () -> Unit,
     selected: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier

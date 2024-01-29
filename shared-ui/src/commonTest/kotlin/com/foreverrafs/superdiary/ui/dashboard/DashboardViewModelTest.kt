@@ -32,7 +32,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class DashboardScreenModelTest : TestsWithMocks() {
+class DashboardViewModelTest : TestsWithMocks() {
     override fun setUpMocks() = injectMocks(mocker)
 
     @Mock

@@ -46,6 +46,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.ui.LocalScreenNavigator
+import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryItem
 import com.foreverrafs.superdiary.ui.format
 
@@ -54,10 +56,12 @@ import com.foreverrafs.superdiary.ui.format
 fun DashboardScreenContent(
     state: DashboardViewModel.DashboardScreenState,
     onAddEntry: () -> Unit,
+    modifier: Modifier = Modifier,
     onSeeAll: () -> Unit,
 ) {
     if (state !is DashboardViewModel.DashboardScreenState.Content) return
     var isWeeklySummaryDisplayed by rememberSaveable { mutableStateOf(true) }
+    val navigator = LocalScreenNavigator.current
 
     val dashboardItems = remember(state) {
         mutableStateListOf(
@@ -93,6 +97,9 @@ fun DashboardScreenContent(
                             modifier = Modifier.animateItemPlacement(),
                             diaries = state.latestEntries.take(itemCount),
                             onSeeAll = onSeeAll,
+                            onDiaryClicked = {
+                                navigator.push(DetailScreen(it))
+                            }
                         )
                     } else {
                         Button(onClick = onAddEntry) {
@@ -108,11 +115,13 @@ fun DashboardScreenContent(
         )
     }
 
-    Scaffold {
+    Scaffold(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
+            modifier = Modifier.padding(it),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -188,9 +197,9 @@ private fun AtAGlance(
 
 @Composable
 fun GlanceCard(
-    modifier: Modifier = Modifier,
     title: String,
     content: String,
+    modifier: Modifier = Modifier,
     caption: String = "",
 ) {
     Card(
@@ -231,9 +240,10 @@ fun GlanceCard(
 
 @Composable
 private fun LatestEntries(
-    modifier: Modifier = Modifier,
-    onSeeAll: () -> Unit,
     diaries: List<Diary>,
+    onSeeAll: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDiaryClicked: (diary: Diary) -> Unit,
 ) {
     Column(modifier) {
         Row(
@@ -259,7 +269,7 @@ private fun LatestEntries(
         ) {
             for (diary in diaries) {
                 DiaryItem(
-                    modifier = Modifier.clickable(onClick = onSeeAll),
+                    modifier = Modifier.clickable(onClick = { onDiaryClicked(diary) }),
                     inSelectionMode = false,
                     onToggleFavorite = {},
                     selected = false,
@@ -272,8 +282,8 @@ private fun LatestEntries(
 
 @Composable
 private fun WeeklySummaryCard(
-    modifier: Modifier = Modifier,
     summary: String?,
+    modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
 ) {
     Card(

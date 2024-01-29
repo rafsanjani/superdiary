@@ -8,6 +8,7 @@ pluginManagement {
         maven("https://jitpack.io")
         mavenLocal()
     }
+    includeBuild("build-logic")
 }
 System.setProperty("sonar.gradle.skipCompile", "true")
 
@@ -23,7 +24,8 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2024.01.15")
+            from("io.github.rafsanjani:versions:2024.01.28")
+            version("compose-multiplatform", "1.6.0-dev1369")
         }
     }
 }

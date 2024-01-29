@@ -31,16 +31,19 @@ fun App() {
 }
 
 /**
- * In voyager we are not really able to perform screen navigation from within a
- * tab navigator. LocalNavigator.push causes an exception because it expects a Tab
- * when used from within a TabNavigator. This way we are able to implicitly pass
- * the root navigator around to be used for navigation by individual tabs
+ * In voyager we are not really able to perform screen navigation from
+ * within a tab navigator. LocalNavigator.push causes an exception because
+ * it expects a Tab when used from within a TabNavigator. This way we
+ * are able to implicitly pass the root navigator around to be used for
+ * navigation by individual tabs
  */
+@Suppress("CompositionLocalAllowlist")
 val LocalScreenNavigator = staticCompositionLocalOf<Navigator> {
     error("No Navigator provided")
 }
 
 // Use this snackbarhost to show messages on the main screen
+@Suppress("CompositionLocalAllowlist")
 val LocalRootSnackbarHostState = staticCompositionLocalOf<SnackbarHostState> {
     error("Root snackbarhost not provided")
 }
