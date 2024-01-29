@@ -20,7 +20,7 @@ jobs:
           java-version: '17'
 
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/wrapper-validation-action@v2
 
       - name: Lint all modules
         uses: gradle/gradle-build-action@v2
