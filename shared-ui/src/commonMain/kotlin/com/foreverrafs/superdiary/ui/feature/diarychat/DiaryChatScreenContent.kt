@@ -59,6 +59,8 @@ import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.diary.diaryai.DiaryChatRole
 import kotlinx.coroutines.delay
+import kotlinx.datetime.Clock
+import kotlin.random.Random
 
 @OptIn(ExperimentalLayoutApi::class)
 fun Modifier.positionAwareImePadding() = composed {
@@ -120,7 +122,26 @@ fun DiaryChatScreenContent(
             }
 
             if (screenState.isResponding) {
-                item { ChatLoading() }
+                item {
+                    val alphaAnimation = rememberInfiniteTransition("alphaAnimation")
+                    val alpha by alphaAnimation.animateFloat(
+                        initialValue = 0.5f,
+                        targetValue = 1f,
+                        animationSpec = infiniteRepeatable(
+                            tween(1000),
+                            repeatMode = RepeatMode.Reverse,
+                        ),
+                    )
+                    ChatBubble(
+                        modifier = Modifier.alpha(alpha),
+                        chatItem = DiaryChatMessage(
+                            id = Random.nextLong(),
+                            role = DiaryChatRole.DiaryAI,
+                            timestamp = Clock.System.now(),
+                            content = "Gathering thoughts..."
+                        )
+                    )
+                }
             }
         }
 
