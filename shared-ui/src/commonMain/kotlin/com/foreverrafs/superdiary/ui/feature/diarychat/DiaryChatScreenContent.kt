@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.ui.feature.diarychat
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -86,12 +87,14 @@ fun DiaryChatScreenContent(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .animateContentSize()
             .positionAwareImePadding()
             .padding(8.dp),
     ) {
         val listState = rememberLazyListState()
         val isKeyboardOpen by keyboardAsState()
 
+        // Scroll to the bottom of the list when the keyboard opens
         LaunchedEffect(isKeyboardOpen) {
             if (isKeyboardOpen) {
                 delay(200)
