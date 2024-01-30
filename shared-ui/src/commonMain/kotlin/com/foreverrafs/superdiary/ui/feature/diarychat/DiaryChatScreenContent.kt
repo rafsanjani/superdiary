@@ -133,7 +133,7 @@ fun DiaryChatScreenContent(
                         ),
                     )
                     ChatBubble(
-                        modifier = modifier.alpha(alpha),
+                        modifier = Modifier.alpha(alpha),
                         chatItem = DiaryChatMessage(
                             id = Random.nextLong(),
                             role = DiaryChatRole.DiaryAI,
