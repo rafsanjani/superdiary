@@ -46,8 +46,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun DetailScreenContent(
     diary: Diary,
-    modifier: Modifier = Modifier,
     onDeleteDiary: () -> Unit,
+    modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit,
 ) {
     val richTextState = rememberRichTextState().apply {
