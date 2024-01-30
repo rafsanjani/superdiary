@@ -290,6 +290,11 @@ private fun DashboardPreview() {
                     Clock.System.now().toDate(),
                     Clock.System.now().toDate()
                 ),
+                bestStreak = Streak(
+                    0,
+                    Clock.System.now().toDate(),
+                    Clock.System.now().toDate()
+                )
             ),
             onAddEntry = {},
             onSeeAll = {},
