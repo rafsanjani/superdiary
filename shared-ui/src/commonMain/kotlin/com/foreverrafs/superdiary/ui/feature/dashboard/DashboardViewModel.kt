@@ -8,9 +8,11 @@ import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.model.Streak
 import com.foreverrafs.superdiary.diary.model.WeeklySummary
 import com.foreverrafs.superdiary.diary.usecase.AddWeeklySummaryUseCase
+import com.foreverrafs.superdiary.diary.usecase.CalculateBestStreakUseCase
 import com.foreverrafs.superdiary.diary.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetWeeklySummaryUseCase
+import com.foreverrafs.superdiary.diary.utils.toDate
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.update
@@ -20,6 +22,7 @@ import kotlinx.datetime.Clock
 class DashboardViewModel(
     private val getAllDiariesUseCase: GetAllDiariesUseCase,
     private val calculateStreakUseCase: CalculateStreakUseCase,
+    private val calculateBestStreakUseCase: CalculateBestStreakUseCase,
     private val addWeeklySummaryUseCase: AddWeeklySummaryUseCase,
     private val getWeeklySummaryUseCase: GetWeeklySummaryUseCase,
     private val diaryAI: DiaryAI,
@@ -32,6 +35,7 @@ class DashboardViewModel(
             val totalEntries: Long,
             val weeklySummary: String?,
             val streak: Streak,
+            val bestStreak: Streak,
         ) : DashboardScreenState
     }
 
@@ -62,7 +66,16 @@ class DashboardViewModel(
                     } else {
                         DEFAULT_SUMMARY_TEXT
                     },
-                    streak = Streak(0, emptyList()),
+                    streak = Streak(
+                        0,
+                        Clock.System.now().toDate(),
+                        Clock.System.now().toDate()
+                    ),
+                    bestStreak = Streak(
+                        0,
+                        Clock.System.now().toDate(),
+                        Clock.System.now().toDate()
+                    )
                 )
             }
 
@@ -150,10 +163,12 @@ class DashboardViewModel(
             "Calculating streak for ${diaries.size} entries"
         }
         val streak = calculateStreakUseCase(diaries)
+        val bestStreak = calculateBestStreakUseCase(diaries)
 
         mutableState.update { state ->
             (state as? DashboardScreenState.Content)?.copy(
                 streak = streak,
+                bestStreak = bestStreak
             ) ?: state
         }
     }

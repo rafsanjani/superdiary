@@ -10,6 +10,7 @@ import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.model.WeeklySummary
 import com.foreverrafs.superdiary.diary.usecase.AddWeeklySummaryUseCase
+import com.foreverrafs.superdiary.diary.usecase.CalculateBestStreakUseCase
 import com.foreverrafs.superdiary.diary.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.GetWeeklySummaryUseCase
@@ -52,6 +53,7 @@ class DashboardViewModelTest : TestsWithMocks() {
             addWeeklySummaryUseCase = AddWeeklySummaryUseCase(dataSource),
             getWeeklySummaryUseCase = GetWeeklySummaryUseCase(dataSource),
             diaryAI = diaryAI,
+            calculateBestStreakUseCase = CalculateBestStreakUseCase()
         )
     }
 

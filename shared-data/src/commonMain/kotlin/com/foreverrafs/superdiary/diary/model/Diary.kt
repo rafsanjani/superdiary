@@ -5,7 +5,6 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.jvm.Transient
 
-@Suppress("FunctionName")
 data class Diary(
     val entry: String,
     val id: Long? = null,
