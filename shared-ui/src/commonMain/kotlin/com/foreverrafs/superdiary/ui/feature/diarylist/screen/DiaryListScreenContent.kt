@@ -109,13 +109,44 @@ fun DiaryListScreenContent(
     clock: Clock = Clock.System,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    var selectedIds by rememberSaveable {
+        mutableStateOf(setOf<Long>())
+    }
+
+    @Suppress("NAME_SHADOWING")
+    val diaryListActions = remember {
+        diaryListActions.copy(
+            onAddSelection = { diaryId ->
+                diaryId?.let {
+                    selectedIds = selectedIds.plus(diaryId)
+                }
+            },
+            onRemoveSelection = { diaryId ->
+                diaryId?.let {
+                    selectedIds = selectedIds.minus(diaryId)
+                }
+            },
+            onToggleSelection = {
+                selectedIds = selectedIds.addOrRemove(it)
+            },
+            onCancelSelection = {
+                selectedIds = emptySet()
+            },
+        )
+    }
 
     Scaffold(
         topBar = {
             SuperDiaryAppBar(
                 navigationIcon = {
                     IconButton(
-                        onClick = diaryListActions.onBackPressed,
+                        onClick = {
+                            if (selectedIds.isNotEmpty()) {
+                                diaryListActions.onCancelSelection()
+                            } else {
+                                diaryListActions.onBackPressed()
+                            }
+                        },
                     ) {
                         Icon(
                             modifier = Modifier
@@ -157,7 +188,7 @@ fun DiaryListScreenContent(
                         showSearchBar = showSearchBar,
                         onAddEntry = diaryListActions.onAddEntry,
                         diaryListActions = diaryListActions,
-                        selectedIds = emptySet(),
+                        selectedIds = selectedIds,
                         diaryFilters = diaryFilters,
                         clock = clock,
                         snackbarHostState = snackbarHostState,
@@ -184,8 +215,13 @@ fun DiaryListScreenContent(
  * @param inSelectionMode Whether we are actively selecting items or not
  * @param diaryFilters The filters that will be applied to the diary list
  * @param selectedIds The list of ids of the selected diary entries remove
- *     it otherwise.
+ * @param diaryListActions Encapsulates all the actions that can be
+ *     performed on a list of diaries.
  * @param onDeleteDiaries Delete the selected diaries from the list diaries
+ * @param clock This is used to control the time/date for diary groupings
+ * @param showSearchBar Determines whether or not the search/selection
+ *     modifier bar will be showed. This is hidden in favorite screen it
+ *     otherwise.
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -341,6 +377,15 @@ fun DiaryList(
     }
 }
 
+/**
+ * Main content screen of a diary list
+ *
+ * @param diaries List of diaries to display in the list
+ * @param isFiltered Determines whether the rendered list is a result of a
+ *     filter operation
+ * @param showSearchBar Determines whether the search bar should be showed.
+ *     It is hidden
+ */
 @Composable
 private fun DiaryListContent(
     diaries: List<Diary>,
@@ -354,33 +399,6 @@ private fun DiaryListContent(
     clock: Clock = Clock.System,
     onAddEntry: () -> Unit,
 ) {
-    @Suppress("NAME_SHADOWING")
-    var selectedIds by rememberSaveable {
-        mutableStateOf(selectedIds)
-    }
-
-    @Suppress("NAME_SHADOWING")
-    val diaryListActions = remember {
-        diaryListActions.copy(
-            onAddSelection = { diaryId ->
-                diaryId?.let {
-                    selectedIds = selectedIds.plus(diaryId)
-                }
-            },
-            onRemoveSelection = { diaryId ->
-                diaryId?.let {
-                    selectedIds = selectedIds.minus(diaryId)
-                }
-            },
-            onToggleSelection = {
-                selectedIds = selectedIds.addOrRemove(it)
-            },
-            onCancelSelection = {
-                selectedIds = emptySet()
-            },
-        )
-    }
-
     var showConfirmDeleteDialog by remember {
         mutableStateOf(false)
     }
@@ -405,7 +423,7 @@ private fun DiaryListContent(
                         "Error deleting diaries"
                     }
 
-                    selectedIds = emptySet()
+                    diaryListActions.onCancelSelection()
 
                     snackbarHostState.showSnackbar(
                         message,
@@ -434,7 +452,6 @@ private fun DiaryListContent(
                 selectedIds = selectedIds,
                 showSearchBar = showSearchBar,
                 onDeleteDiaries = {
-                    selectedIds = it
                     showConfirmDeleteDialog = true
                 },
                 onCancelSelection = diaryListActions.onCancelSelection,
