@@ -298,7 +298,8 @@ private fun DetailPreview() {
     SuperdiaryAppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             DetailScreenContent(
-                onNavigateBack = { /*TODO*/ },
+                onNavigateBack = {},
+                onDeleteDiary = {},
                 diary = Diary(
                     entry = """
                             <p style="text-align:justify;">
@@ -338,7 +339,7 @@ Hello Diary, I did something awful today too.
                     """.trimIndent(),
                     id = 1000,
                     date = Clock.System.now(),
-                    isFavorite = false
+                    isFavorite = false,
                 )
             )
         }

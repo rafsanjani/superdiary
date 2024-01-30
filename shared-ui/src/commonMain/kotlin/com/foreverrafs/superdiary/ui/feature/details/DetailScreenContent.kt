@@ -16,9 +16,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -27,20 +35,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.utils.toDate
+import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.format
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun DetailScreenContent(
     diary: Diary,
+    onDeleteDiary: () -> Unit,
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit,
 ) {
     val richTextState = rememberRichTextState().apply {
         setHtml(diary.entry)
     }
+
+    var showDeleteDialog by remember {
+        mutableStateOf(false)
+    }
+
+    val hostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier,
@@ -59,7 +78,7 @@ fun DetailScreenContent(
                 },
                 tralingIcon = {
                     IconButton(
-                        onClick = onNavigateBack,
+                        onClick = { showDeleteDialog = true },
                     ) {
                         Icon(
                             modifier = Modifier.clip(CircleShape),
@@ -70,6 +89,9 @@ fun DetailScreenContent(
                 }
             )
         },
+        snackbarHost = {
+            SnackbarHost(hostState)
+        }
     ) {
         Surface(
             modifier = Modifier.padding(it),
@@ -96,6 +118,26 @@ fun DetailScreenContent(
                         .fillMaxWidth(),
                     style = MaterialTheme.typography.bodyMedium,
                     lineHeight = 32.sp
+                )
+            }
+
+            if (showDeleteDialog) {
+                ConfirmDeleteDialog(
+                    onDismiss = { showDeleteDialog = !showDeleteDialog },
+                    onConfirm = {
+                        showDeleteDialog = !showDeleteDialog
+                        onDeleteDiary()
+                        coroutineScope.launch {
+                            // Only show snackbar for 600 milliseconds
+                            val snackbarJob = launch {
+                                hostState.showSnackbar("Deleted!", duration = SnackbarDuration.Short)
+                            }
+                            delay(600)
+
+                            snackbarJob.cancel()
+                            onNavigateBack()
+                        }
+                    }
                 )
             }
         }
