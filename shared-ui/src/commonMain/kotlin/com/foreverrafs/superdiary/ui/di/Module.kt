@@ -5,6 +5,7 @@ import com.foreverrafs.superdiary.diary.di.platformModule
 import com.foreverrafs.superdiary.diary.di.useCaseModule
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryViewModel
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
+import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListViewModel
 import com.foreverrafs.superdiary.ui.feature.favorites.model.FavoriteViewModel
@@ -18,6 +19,7 @@ internal fun screenModules(): Module = module {
     singleOf(::FavoriteViewModel)
     singleOf(::DashboardViewModel)
     singleOf(::DiaryChatViewModel)
+    singleOf(::DetailsViewModel)
 }
 
 fun appModule(analytics: Analytics) =
