@@ -34,7 +34,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.utils.toDate
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.format
@@ -42,6 +41,8 @@ import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun DetailScreenContent(
@@ -105,7 +106,9 @@ fun DetailScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = diary.date.toDate().format("EEE - MMMM dd, yyyy"),
+                    text = diary.date
+                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                        .format("EEE - MMMM dd, yyyy - hh:mm a"),
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.alpha(0.6f)
                 )

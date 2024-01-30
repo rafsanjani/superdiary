@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -77,6 +78,7 @@ fun Modifier.positionAwareImePadding() = composed {
     }.consumeWindowInsets(PaddingValues(bottom = with(density) { bottomPadding.toDp() })).imePadding()
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DiaryChatScreenContent(
     screenState: DiaryChatViewModel.DiaryChatViewState,
