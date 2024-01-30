@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.foreverrafs.superdiary.diary.model.Diary
 import com.foreverrafs.superdiary.diary.model.Streak
+import com.foreverrafs.superdiary.diary.utils.toDate
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
@@ -284,7 +285,11 @@ private fun DashboardPreview() {
                 },
                 20,
                 "",
-                Streak(0, emptyList()),
+                Streak(
+                    0,
+                    Clock.System.now().toDate(),
+                    Clock.System.now().toDate()
+                ),
             ),
             onAddEntry = {},
             onSeeAll = {},
