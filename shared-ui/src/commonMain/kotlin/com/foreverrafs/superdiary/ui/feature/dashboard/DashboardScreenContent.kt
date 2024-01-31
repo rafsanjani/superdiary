@@ -46,6 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.model.Streak
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryItem
@@ -177,6 +178,16 @@ private fun AtAGlance(
             val dashboardCardModifier = Modifier
                 .weight(1f)
                 .aspectRatio(1f)
+
+            fun streakCaption(streak: Streak): String {
+                val dateFormatPattern = "MMM dd"
+                return if (streak.count != 0) {
+                    "${streak.startDate.format(dateFormatPattern)} - ${streak.endDate.format(dateFormatPattern)}"
+                } else {
+                    "-"
+                }
+            }
+
             GlanceCard(
                 modifier = dashboardCardModifier,
                 title = "Entries",
@@ -187,22 +198,14 @@ private fun AtAGlance(
                 modifier = dashboardCardModifier,
                 title = "Streak 🔥",
                 content = "$streakCount days",
-                caption = if (streakCount != 0) {
-                    "${state.streak.startDate.format("MMM dd")} - ${state.streak.endDate.format("MMM dd")}"
-                } else {
-                    "-"
-                },
+                caption = streakCaption(streak = state.streak),
             )
 
             GlanceCard(
                 modifier = dashboardCardModifier,
                 title = "Best Streak",
                 content = "$bestStreakCount days",
-                caption = if (streakCount != 0) {
-                    "${state.bestStreak.startDate.format("MMM dd")} - ${state.bestStreak.endDate.format("MMM dd")}"
-                } else {
-                    "-"
-                },
+                caption = streakCaption(state.bestStreak),
             )
         }
     }

@@ -75,8 +75,8 @@ kotlin {
                 implementation(libs.square.sqldelight.coroutinesExt)
                 implementation(libs.kotlin.coroutines.test)
                 implementation(libs.openAiKotlin)
-                runtimeOnly(libs.ktor.client.cio)
                 implementation(libs.touchlab.kermit)
+                runtimeOnly(libs.ktor.client.cio)
             }
         }
         androidMain {

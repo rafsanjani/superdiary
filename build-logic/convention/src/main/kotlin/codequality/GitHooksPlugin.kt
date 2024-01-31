@@ -40,7 +40,7 @@ private fun Project.configureGitHooksPlugin() {
             isLinuxOrMacOs()
         }
         doLast {
-            logger.info("Git hook installed succesfully.")
+            logger.info("Git hook installed successfully.")
         }
     }
 }
