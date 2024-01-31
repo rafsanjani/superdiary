@@ -13,6 +13,7 @@ import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
 import com.foreverrafs.superdiary.diary.diaryai.OpenDiaryAI
 import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.diary.usecase.AddWeeklySummaryUseCase
+import com.foreverrafs.superdiary.diary.usecase.CalculateBestStreakUseCase
 import com.foreverrafs.superdiary.diary.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.diary.usecase.CountDiariesUseCase
 import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
@@ -64,6 +65,7 @@ fun useCaseModule() = module {
     factoryOf(::CalculateStreakUseCase)
     factoryOf(::AddWeeklySummaryUseCase)
     factoryOf(::GetWeeklySummaryUseCase)
+    factoryOf(::CalculateBestStreakUseCase)
 }
 
 expect fun platformModule(analytics: Analytics): Module

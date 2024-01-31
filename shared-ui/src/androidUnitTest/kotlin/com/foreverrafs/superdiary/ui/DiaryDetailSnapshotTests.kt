@@ -28,6 +28,7 @@ class DiaryDetailSnapshotTests : KoinTest {
         paparazzi.snapshot {
             SuperdiaryAppTheme {
                 DetailScreenContent(
+                    onDeleteDiary = {},
                     onNavigateBack = {},
                     diary = Diary(
                         entry = """

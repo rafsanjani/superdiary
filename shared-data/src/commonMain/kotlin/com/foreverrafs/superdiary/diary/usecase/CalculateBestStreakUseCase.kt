@@ -5,7 +5,7 @@ import com.foreverrafs.superdiary.diary.model.Streak
 import com.foreverrafs.superdiary.diary.utils.toDate
 import kotlinx.datetime.minus
 
-class CalculateStreakUseCase {
+class CalculateBestStreakUseCase {
     operator fun invoke(diaries: List<Diary>): Streak {
         var streak = Streak(
             count = 0,
@@ -13,20 +13,25 @@ class CalculateStreakUseCase {
             endDate = diaries.first().date.toDate()
         )
 
+        var bestStreak = streak
+
         diaries
             .asSequence()
             .sortedBy { it.date }
             .forEach {
                 streak = if ((it.date.toDate() - streak.endDate).days == 1) {
-                    streak.copy(
+                    val currentStreak = streak.copy(
                         count = streak.count + 1,
                         endDate = it.date.toDate()
                     )
+
+                    if (currentStreak.count > bestStreak.count) bestStreak = currentStreak
+                    currentStreak
                 } else {
                     Streak(0, it.date.toDate(), it.date.toDate())
                 }
             }
 
-        return streak
+        return bestStreak
     }
 }

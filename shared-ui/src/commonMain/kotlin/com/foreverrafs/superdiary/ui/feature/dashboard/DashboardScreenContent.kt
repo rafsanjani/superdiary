@@ -142,8 +142,13 @@ private fun AtAGlance(
 ) {
     val animationState = remember { MutableTransitionState(false) }
 
-    val streaks by animateIntAsState(
+    val streakCount by animateIntAsState(
         targetValue = if (animationState.targetState) state.streak.count else 0,
+        animationSpec = tween(durationMillis = 1000),
+    )
+
+    val bestStreakCount by animateIntAsState(
+        targetValue = if (animationState.targetState) state.bestStreak.count else 0,
         animationSpec = tween(durationMillis = 1000),
     )
 
@@ -181,15 +186,23 @@ private fun AtAGlance(
             GlanceCard(
                 modifier = dashboardCardModifier,
                 title = "Streak 🔥",
-                content = "$streaks days",
-                caption = state.streak.dates.joinToString(" - ") { it?.format("MMM dd") ?: "" },
+                content = "$streakCount days",
+                caption = if (streakCount != 0) {
+                    "${state.streak.startDate.format("MMM dd")} - ${state.streak.endDate.format("MMM dd")}"
+                } else {
+                    "-"
+                },
             )
 
             GlanceCard(
                 modifier = dashboardCardModifier,
                 title = "Best Streak",
-                content = "$streaks days",
-                caption = "Jun 20 - Jul 20",
+                content = "$bestStreakCount days",
+                caption = if (streakCount != 0) {
+                    "${state.bestStreak.startDate.format("MMM dd")} - ${state.bestStreak.endDate.format("MMM dd")}"
+                } else {
+                    "-"
+                },
             )
         }
     }

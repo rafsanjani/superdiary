@@ -1,10 +1,12 @@
 package com.foreverrafs.superdiary.ui.feature.diarychat
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -53,12 +55,15 @@ import androidx.compose.ui.layout.findRootCoordinates
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.diary.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.diary.diaryai.DiaryChatRole
 import kotlinx.coroutines.delay
+import kotlinx.datetime.Clock
+import kotlin.random.Random
 
 @OptIn(ExperimentalLayoutApi::class)
 fun Modifier.positionAwareImePadding() = composed {
@@ -70,11 +75,10 @@ fun Modifier.positionAwareImePadding() = composed {
         val bottom = coordinates.positionInWindow().y + coordinates.size.height
 
         bottomPadding = (rootCoordinate.size.height - bottom).toInt()
-    }
-        .consumeWindowInsets(PaddingValues(bottom = with(density) { bottomPadding.toDp() }))
-        .imePadding()
+    }.consumeWindowInsets(PaddingValues(bottom = with(density) { bottomPadding.toDp() })).imePadding()
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DiaryChatScreenContent(
     screenState: DiaryChatViewModel.DiaryChatViewState,
@@ -82,14 +86,12 @@ fun DiaryChatScreenContent(
     onQueryDiaries: (query: String) -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .positionAwareImePadding()
-            .padding(8.dp),
+        modifier = modifier.fillMaxSize().animateContentSize().positionAwareImePadding().padding(8.dp),
     ) {
         val listState = rememberLazyListState()
         val isKeyboardOpen by keyboardAsState()
 
+        // Scroll to the bottom of the list when the keyboard opens
         LaunchedEffect(isKeyboardOpen) {
             if (isKeyboardOpen) {
                 delay(200)
@@ -101,8 +103,9 @@ fun DiaryChatScreenContent(
             listState.animateScrollToItem(screenState.messages.size)
         }
 
-        val renderableListItems =
-            remember(screenState.messages) { screenState.messages.filterNot { it.role == DiaryChatRole.System } }
+        val renderableListItems = remember(screenState.messages) {
+            screenState.messages.filterNot { it.role == DiaryChatRole.System }
+        }
 
         LazyColumn(
             modifier = Modifier.weight(1f),
@@ -120,7 +123,26 @@ fun DiaryChatScreenContent(
             }
 
             if (screenState.isResponding) {
-                item { ChatLoading() }
+                item {
+                    val alphaAnimation = rememberInfiniteTransition("alphaAnimation")
+                    val alpha by alphaAnimation.animateFloat(
+                        initialValue = 0.5f,
+                        targetValue = 1f,
+                        animationSpec = infiniteRepeatable(
+                            tween(1000),
+                            repeatMode = RepeatMode.Reverse,
+                        ),
+                    )
+                    ChatBubble(
+                        modifier = Modifier.alpha(alpha),
+                        chatItem = DiaryChatMessage(
+                            id = Random.nextLong(),
+                            role = DiaryChatRole.DiaryAI,
+                            timestamp = Clock.System.now(),
+                            content = "Gathering thoughts..."
+                        )
+                    )
+                }
             }
         }
 
@@ -128,23 +150,26 @@ fun DiaryChatScreenContent(
 
         Spacer(modifier = Modifier.height(10.dp))
 
+        // Input area and send button
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            // Input area
             OutlinedTextField(
-                modifier = Modifier
-                    .weight(1f)
-                    .heightIn(min = 48.dp),
+                modifier = Modifier.weight(1f).heightIn(min = 48.dp),
                 value = input,
                 onValueChange = { input = it },
             )
 
             Spacer(modifier = Modifier.width(4.dp))
 
+            // Send button
             IconButton(
-                enabled = input.isNotEmpty(),
-                modifier = Modifier.size(48.dp),
+                enabled = input.isNotEmpty() && !screenState.isResponding,
+                modifier = Modifier.size(48.dp).semantics(true) {
+                    contentDescription = "Send Button"
+                },
                 onClick = {
                     onQueryDiaries(input)
                     input = ""
@@ -164,25 +189,6 @@ fun DiaryChatScreenContent(
 }
 
 @Composable
-private fun ChatLoading() {
-    val alphaAnimation = rememberInfiniteTransition("alphaAnimation")
-    val alpha by alphaAnimation.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            tween(1000),
-            repeatMode = RepeatMode.Reverse,
-        ),
-    )
-
-    Text(
-        text = "Thinking...",
-        modifier = Modifier.fillMaxWidth().alpha(alpha),
-        textAlign = TextAlign.Center,
-    )
-}
-
-@Composable
 fun ChatBubble(
     chatItem: DiaryChatMessage,
     modifier: Modifier = Modifier,
@@ -195,23 +201,19 @@ fun ChatBubble(
 
     Box(modifier = modifier) {
         val alignmentAndPaddingModifier = when (chatItem.role) {
-            DiaryChatRole.DiaryAI -> Modifier.padding(end = 44.dp)
-                .align(Alignment.CenterStart)
+            DiaryChatRole.DiaryAI -> Modifier.padding(end = 44.dp).align(Alignment.CenterStart)
 
-            DiaryChatRole.User -> Modifier.padding(start = 44.dp)
-                .align(Alignment.CenterEnd)
+            DiaryChatRole.User -> Modifier.padding(start = 44.dp).align(Alignment.CenterEnd)
 
             DiaryChatRole.System -> throw IllegalArgumentException("System chat messages should not be rendered")
         }
 
         Text(
             text = chatItem.content,
-            modifier = alignmentAndPaddingModifier
-                .background(
-                    color = backgroundColor,
-                    shape = RoundedCornerShape(4.dp),
-                )
-                .padding(8.dp),
+            modifier = alignmentAndPaddingModifier.background(
+                color = backgroundColor,
+                shape = RoundedCornerShape(4.dp),
+            ).padding(8.dp),
             style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp, lineHeight = 24.sp),
             color = Color.White,
         )
