@@ -45,8 +45,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.model.Streak
+import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.diary.model.Streak
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryItem
@@ -80,8 +80,7 @@ fun DashboardScreenContent(
             DashboardSection(
                 content = { onDismiss ->
                     WeeklySummaryCard(
-                        modifier = Modifier
-                            .animateItemPlacement()
+                        modifier = Modifier.animateItemPlacement()
                             .fillMaxWidth()
                             .heightIn(max = 200.dp, min = 150.dp),
                         summary = state.weeklySummary,
