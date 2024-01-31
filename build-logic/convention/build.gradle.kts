@@ -19,7 +19,7 @@ tasks.withType<KotlinCompile>().configureEach {
 }
 
 dependencies {
-    compileOnly("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.4")
+    compileOnly("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.5")
     compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
 }
 
