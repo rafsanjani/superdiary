@@ -2,7 +2,7 @@
 
 
 <div align="left">
-    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/android.yml/badge.svg" />
+    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/build.yml/badge.svg" />
     <a href = "https://github.com/Rafsanjani/superdiary/blob/master/LICENSE">
         <img src = "https://img.shields.io/github/license/pushpalroy/jetstore" />
     </a>
