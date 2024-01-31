@@ -39,8 +39,8 @@ import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.format
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -132,12 +132,10 @@ fun DetailScreenContent(
                         onDeleteDiary()
                         coroutineScope.launch {
                             // Only show snackbar for 600 milliseconds
-                            val snackbarJob = launch {
-                                hostState.showSnackbar("Deleted!", duration = SnackbarDuration.Short)
+                            withTimeout(600) {
+                                hostState.showSnackbar("Deleted!", duration = SnackbarDuration.Indefinite)
                             }
-                            delay(600)
 
-                            snackbarJob.cancel()
                             onNavigateBack()
                         }
                     }
