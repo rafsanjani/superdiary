@@ -25,7 +25,9 @@ class CalculateBestStreakUseCase {
                         endDate = it.date.toDate()
                     )
 
-                    if (currentStreak.count > bestStreak.count) bestStreak = currentStreak
+                    if (currentStreak.count > bestStreak.count) {
+                        bestStreak = currentStreak
+                    }
                     currentStreak
                 } else {
                     Streak(0, it.date.toDate(), it.date.toDate())
