@@ -39,7 +39,8 @@ koverReport {
     }
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class) kotlin {
+@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
+kotlin {
     androidTarget()
 
     jvm()
@@ -63,7 +64,10 @@ koverReport {
     sourceSets {
         commonMain {
             dependencies {
-                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class) implementation(compose.components.resources)
+                @OptIn(
+                    org.jetbrains.compose.ExperimentalComposeLibrary::class
+                )
+                implementation(compose.components.resources)
                 implementation(compose.material3)
                 implementation(compose.materialIconsExtended)
                 implementation(projects.sharedData)
@@ -157,14 +161,16 @@ plugins.withId("app.cash.paparazzi") {
             add("testImplementation", "com.google.guava:guava") {
                 attributes {
                     attribute(
-                        TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(
-                            TargetJvmEnvironment::class.java, TargetJvmEnvironment.STANDARD_JVM
+                        TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE,
+                        objects.named(
+                            TargetJvmEnvironment::class.java,
+                            TargetJvmEnvironment.STANDARD_JVM
                         )
                     )
                 }
                 because(
-                    "LayoutLib and sdk-common depend on Guava's -jre published variant."
-                            + "See https://github.com/cashapp/paparazzi/issues/906."
+                    "LayoutLib and sdk-common depend on Guava's -jre published variant." +
+                        "See https://github.com/cashapp/paparazzi/issues/906."
                 )
             }
         }
