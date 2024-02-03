@@ -21,19 +21,21 @@ koverReport {
     filters {
         excludes {
             classes(
-                "*.*ScreenContent*",
-                "*.*Preview*",
-                "*.*AppKt*",
-                "*.*CreateDiaryScreen",
-                "*.Resources*",
-                "*.Main*",
-                "*.*Screen*",
-                "*.*ComposableSingletons*",
+                "*.*.*ScreenContent*",
+                "*.*.*Preview*",
+                "*.*.*AppKt*",
+                "*.*.*CreateDiaryScreen",
+                "*.*.Resources*",
+                "*.*.Main*",
+                "*.*.*Screen*",
+                "*.*.*Tab",
+                "*.*.*ComposableSingletons*",
             )
             packages(
                 "*.components",
                 "*.di",
                 "*.style",
+                "superdiary.shared-ui.generated.resources"
             )
         }
     }
