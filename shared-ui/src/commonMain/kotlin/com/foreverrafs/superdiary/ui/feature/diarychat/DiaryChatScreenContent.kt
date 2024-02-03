@@ -30,6 +30,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Icon
@@ -50,13 +51,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.findRootCoordinates
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
@@ -85,6 +92,8 @@ fun DiaryChatScreenContent(
     modifier: Modifier = Modifier,
     onQueryDiaries: (query: String) -> Unit = {},
 ) {
+    val focusRequester = remember { FocusRequester() }
+
     Column(
         modifier = modifier.fillMaxSize().animateContentSize().positionAwareImePadding().padding(8.dp),
     ) {
@@ -155,11 +164,26 @@ fun DiaryChatScreenContent(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            LaunchedEffect(Unit) {
+                focusRequester.requestFocus()
+            }
+
             // Input area
             OutlinedTextField(
-                modifier = Modifier.weight(1f).heightIn(min = 48.dp),
+                modifier = Modifier
+                    .focusRequester(focusRequester)
+                    .weight(1f)
+                    .heightIn(min = 48.dp)
+                    .onKeyEvent {
+                        if (it.key == Key.Enter) {
+                            onQueryDiaries(input)
+                            input = ""
+                        }
+                        true
+                    },
                 value = input,
                 onValueChange = { input = it },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send)
             )
 
             Spacer(modifier = Modifier.width(4.dp))

@@ -80,7 +80,8 @@ fun DashboardScreenContent(
             DashboardSection(
                 content = { onDismiss ->
                     WeeklySummaryCard(
-                        modifier = Modifier.animateItemPlacement()
+                        modifier = Modifier
+                            .animateItemPlacement()
                             .fillMaxWidth()
                             .heightIn(max = 200.dp, min = 150.dp),
                         summary = state.weeklySummary,
