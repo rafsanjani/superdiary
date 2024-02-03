@@ -68,9 +68,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.utils.groupByDate
-import com.foreverrafs.superdiary.diary.utils.toDate
+import com.foreverrafs.superdiary.data.model.Diary
+import com.foreverrafs.superdiary.data.utils.groupByDate
+import com.foreverrafs.superdiary.data.utils.toDate
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters

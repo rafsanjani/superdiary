@@ -12,7 +12,7 @@ fi
 echo "Running detekt"
 echo "$CHANGED_FILES"
 
-/gradlew detektAll
+./gradlew detektAll
 
 echo "Completed detekt run."
 

@@ -66,8 +66,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.diary.diaryai.DiaryChatMessage
-import com.foreverrafs.superdiary.diary.diaryai.DiaryChatRole
+import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
+import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
 import kotlin.random.Random

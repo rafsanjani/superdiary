@@ -13,22 +13,6 @@ plugins {
     id("com.superdiary.githooks")
 }
 
-kover {
-    useJacoco("0.8.10")
-}
-
-koverReport {
-    filters {
-        excludes {
-            packages(
-                "com.foreverrafs.superdiary.database",
-                "db",
-                "com.foreverrafs.superdiary.ui",
-            )
-            files("BottomNavigationScreenKt")
-        }
-    }
-}
 
 sonar {
     val exclusionList = listOf(

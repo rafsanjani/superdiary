@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        package="com.foreverrafs.superdiary">
+        xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -10,7 +9,7 @@
             android:allowBackup="true"
             android:dataExtractionRules="@xml/data_extraction_rules"
             android:fullBackupContent="@xml/full_backup_content"
-            android:name="com.foreverrafs.DiaryApp"
+            android:name="com.superdiary.DiaryApp"
             android:icon="@mipmap/ic_launcher"
             android:label="Superdiary"
             android:roundIcon="@mipmap/ic_launcher_round"
@@ -22,7 +21,7 @@
                 tools:targetApi="29" />
 
         <activity
-                android:name="com.foreverrafs.MainActivity"
+                android:name="com.superdiary.MainActivity"
                 android:exported="true"
                 android:windowSoftInputMode="adjustResize">
             <intent-filter>
