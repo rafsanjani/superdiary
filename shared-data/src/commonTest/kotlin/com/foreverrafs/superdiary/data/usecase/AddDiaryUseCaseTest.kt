@@ -10,8 +10,8 @@ import com.foreverrafs.superdiary.data.Database
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
-import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.datasource.TestDatabaseDriver
+import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.validator.DiaryValidator
 import com.foreverrafs.superdiary.data.validator.DiaryValidatorImpl
 import kotlinx.coroutines.Dispatchers

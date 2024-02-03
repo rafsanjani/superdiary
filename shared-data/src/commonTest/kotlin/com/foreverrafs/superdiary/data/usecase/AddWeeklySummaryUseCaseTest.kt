@@ -5,8 +5,8 @@ import assertk.assertions.isNotNull
 import com.foreverrafs.superdiary.data.Database
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
-import com.foreverrafs.superdiary.data.model.WeeklySummary
 import com.foreverrafs.superdiary.data.datasource.TestDatabaseDriver
+import com.foreverrafs.superdiary.data.model.WeeklySummary
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher

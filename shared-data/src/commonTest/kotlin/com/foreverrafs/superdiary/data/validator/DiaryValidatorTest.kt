@@ -4,8 +4,6 @@ import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.validator.DiaryValidator
-import com.foreverrafs.superdiary.data.validator.DiaryValidatorImpl
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.Instant

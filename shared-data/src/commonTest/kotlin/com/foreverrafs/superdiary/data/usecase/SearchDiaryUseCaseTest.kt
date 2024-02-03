@@ -10,9 +10,9 @@ import assertk.assertions.messageContains
 import com.foreverrafs.superdiary.data.Database
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
-import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.datasource.TestDatabaseDriver
 import com.foreverrafs.superdiary.data.insertRandomDiaries
+import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.utils.toInstant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
