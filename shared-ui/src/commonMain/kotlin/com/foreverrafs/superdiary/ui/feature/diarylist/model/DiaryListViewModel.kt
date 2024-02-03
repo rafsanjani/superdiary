@@ -2,13 +2,13 @@ package com.foreverrafs.superdiary.ui.feature.diarylist.model
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
-import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByDateUseCase
-import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByEntryUseCase
-import com.foreverrafs.superdiary.diary.usecase.UpdateDiaryUseCase
-import com.foreverrafs.superdiary.diary.utils.toInstant
+import com.foreverrafs.superdiary.data.model.Diary
+import com.foreverrafs.superdiary.data.usecase.DeleteDiaryUseCase
+import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.data.usecase.SearchDiaryByDateUseCase
+import com.foreverrafs.superdiary.data.usecase.SearchDiaryByEntryUseCase
+import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
+import com.foreverrafs.superdiary.data.utils.toInstant
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update

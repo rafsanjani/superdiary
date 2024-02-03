@@ -1,8 +1,8 @@
 package com.foreverrafs.superdiary
 
 import com.foreverrafs.superdiary.analytics.AndroidAnalytics
-import com.foreverrafs.superdiary.diary.di.platformModule
-import com.foreverrafs.superdiary.diary.di.useCaseModule
+import com.foreverrafs.superdiary.data.di.platformModule
+import com.foreverrafs.superdiary.data.di.useCaseModule
 import io.mockk.mockk
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.koinApplication
