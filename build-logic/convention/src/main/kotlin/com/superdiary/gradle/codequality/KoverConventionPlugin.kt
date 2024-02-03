@@ -1,5 +1,6 @@
 package com.superdiary.gradle.codequality
 
+import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
 import kotlinx.kover.gradle.plugin.dsl.KoverReportExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -10,13 +11,31 @@ class KoverConventionPlugin : Plugin<Project> {
         with(target) {
             pluginManager.apply("org.jetbrains.kotlinx.kover")
 
+            kover {
+                useJacoco("0.8.10")
+            }
+
             koverReport {
                 filters {
                     excludes {
                         packages(
                             "com.foreverrafs.superdiary.database",
                             "db",
-                            "com.foreverrafs.superdiary.ui",
+                            "*.components",
+                            "*.di",
+                            "*.style",
+                            "superdiary.shared-ui.generated.resources"
+                        )
+                        classes(
+                            "*.*.*ScreenContent*",
+                            "*.*.*Preview*",
+                            "*.*.*AppKt*",
+                            "*.*.*CreateDiaryScreen",
+                            "*.*.Resources*",
+                            "*.*.Main*",
+                            "*.*.*Screen*",
+                            "*.*.*Tab",
+                            "*.*.*ComposableSingletons*",
                         )
                         files("BottomNavigationScreenKt")
                     }
@@ -29,3 +48,7 @@ class KoverConventionPlugin : Plugin<Project> {
 private fun Project.koverReport(
     action: KoverReportExtension.() -> Unit
 ) = extensions.configure<KoverReportExtension>(action)
+
+private fun Project.kover(
+    action: KoverProjectExtension.() -> Unit
+) = extensions.configure<KoverProjectExtension>(action)
