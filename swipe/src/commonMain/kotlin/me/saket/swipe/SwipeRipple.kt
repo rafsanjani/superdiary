@@ -1,4 +1,4 @@
-@file:Suppress("NAME_SHADOWING")
+@file:Suppress("NAME_SHADOWING", "MatchingDeclarationName")
 
 package me.saket.swipe
 

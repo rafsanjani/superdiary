@@ -23,6 +23,7 @@ private fun Project.configureDetekt() {
 
     tasks.register("detektAll", Detekt::class.java) {
         config.setFrom(configFile)
+        autoCorrect = true
         buildUponDefaultConfig = true
         reportsDir.set(reportFile)
         setSource(sourceFiles)

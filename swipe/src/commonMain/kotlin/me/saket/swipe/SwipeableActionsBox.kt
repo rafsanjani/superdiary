@@ -39,11 +39,11 @@ import kotlin.math.roundToInt
  * A composable that can be swiped left or right for revealing actions.
  *
  * @param swipeThreshold Minimum drag distance before any [SwipeAction] is
- * activated and can be swiped.
- *
- * @param backgroundUntilSwipeThreshold Color drawn behind the content until
- * [swipeThreshold] is reached. When the threshold is passed, this color is
- * replaced by the currently visible [SwipeAction]'s background.
+ *     activated and can be swiped.
+ * @param backgroundUntilSwipeThreshold Color drawn behind the content
+ *     until [swipeThreshold] is reached. When the threshold is passed,
+ *     this color is replaced by the currently visible [SwipeAction]'s
+ *     background.
  */
 @Composable
 fun SwipeableActionsBox(
@@ -142,7 +142,11 @@ private fun ActionIconBox(
                 val placeable = measurable.measure(constraints)
                 layout(width = placeable.width, height = placeable.height) {
                     // Align icon with the left/right edge of the content being swiped.
-                    val iconOffset = if (action.isOnRightSide) constraints.maxWidth + offset else offset - placeable.width
+                    val iconOffset = if (action.isOnRightSide) {
+                        constraints.maxWidth + offset
+                    } else {
+                        offset - placeable.width
+                    }
                     placeable.placeRelative(x = iconOffset.roundToInt(), y = 0)
                 }
             }
