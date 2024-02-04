@@ -22,6 +22,7 @@ dependencies {
     compileOnly("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.5")
     compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
     compileOnly("org.jetbrains.kotlinx:kover-gradle-plugin:0.7.5")
+    compileOnly("org.jlleitschuh.gradle.ktlint:org.jlleitschuh.gradle.ktlint.gradle.plugin:12.1.0")
 }
 
 gradlePlugin {
@@ -46,6 +47,11 @@ gradlePlugin {
         register("koverConventionPlugin") {
             id = "com.superdiary.kover"
             implementationClass = "$rootPackageName.codequality.KoverConventionPlugin"
+        }
+
+        register("ktlintConventPlugin") {
+            id = "com.superdiary.ktlint"
+            implementationClass = "$rootPackageName.codequality.KtlintConventionPlugin"
         }
     }
 }
