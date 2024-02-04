@@ -12,9 +12,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.model.Streak
-import com.foreverrafs.superdiary.diary.utils.toDate
+import com.foreverrafs.superdiary.data.model.Diary
+import com.foreverrafs.superdiary.data.model.Streak
+import com.foreverrafs.superdiary.data.utils.toDate
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent

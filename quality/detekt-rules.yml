@@ -632,13 +632,6 @@ style:
   MaxChainedCallsOnSameLine:
     active: false
     maxChainedCalls: 5
-  MaxLineLength:
-    active: true
-    maxLineLength: 120
-    excludePackageStatements: true
-    excludeImportStatements: true
-    excludeCommentStatements: false
-    excludeRawStrings: true
   MayBeConst:
     active: true
   ModifierOrder:

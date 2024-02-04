@@ -2,9 +2,9 @@ package com.foreverrafs.superdiary.ui.feature.creatediary.screen
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
-import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
+import com.foreverrafs.superdiary.data.diaryai.DiaryAI
+import com.foreverrafs.superdiary.data.model.Diary
+import com.foreverrafs.superdiary.data.usecase.AddDiaryUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 

@@ -3,7 +3,7 @@ package com.foreverrafs.superdiary.ui.feature.details
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
-import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 
 class DetailScreen(val diary: Diary) : Screen {

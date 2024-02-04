@@ -19,20 +19,33 @@ tasks.withType<KotlinCompile>().configureEach {
 }
 
 dependencies {
-    compileOnly("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.4")
+    compileOnly("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.5")
     compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
+    compileOnly("org.jetbrains.kotlinx:kover-gradle-plugin:0.7.5")
 }
 
 gradlePlugin {
+    val rootPackageName = "com.superdiary.gradle"
+
     plugins {
-        register("detektPlugin") {
+        register("detektConventionPlugin") {
             id = "com.superdiary.detekt"
-            implementationClass = "codequality.DetektPlugin"
+            implementationClass = "$rootPackageName.codequality.DetektConventionPlugin"
         }
 
-        register("gitHooksPlugin") {
+        register("gitHooksConventionPlugin") {
             id = "com.superdiary.githooks"
-            implementationClass = "codequality.GitHooksPlugin"
+            implementationClass = "$rootPackageName.codequality.GitHooksConventionPlugin"
+        }
+
+        register("kotlinAndroidPlugin") {
+            id = "com.superdiary.kotlin.android"
+            implementationClass = "$rootPackageName.kotlinjava.KotlinAndroidConventionPlugin"
+        }
+
+        register("koverConventionPlugin") {
+            id = "com.superdiary.kover"
+            implementationClass = "$rootPackageName.codequality.KoverConventionPlugin"
         }
     }
 }

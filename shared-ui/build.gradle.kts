@@ -11,32 +11,10 @@ plugins {
     alias(libs.plugins.ksp)
     kotlin("multiplatform")
     id("kotlin-parcelize")
+    id("com.superdiary.kover")
     alias(libs.plugins.mockmp)
-    alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.sonar)
     alias(libs.plugins.testLogger)
-}
-
-koverReport {
-    filters {
-        excludes {
-            classes(
-                "*.*ScreenContent*",
-                "*.*Preview*",
-                "*.*AppKt*",
-                "*.*CreateDiaryScreen",
-                "*.Resources*",
-                "*.Main*",
-                "*.*Screen*",
-                "*.*ComposableSingletons*",
-            )
-            packages(
-                "*.components",
-                "*.di",
-                "*.style",
-            )
-        }
-    }
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class) kotlin {

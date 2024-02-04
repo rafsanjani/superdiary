@@ -2,8 +2,8 @@ package com.foreverrafs.superdiary.ui.feature.details
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
+import com.foreverrafs.superdiary.data.model.Diary
+import com.foreverrafs.superdiary.data.usecase.DeleteDiaryUseCase
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 

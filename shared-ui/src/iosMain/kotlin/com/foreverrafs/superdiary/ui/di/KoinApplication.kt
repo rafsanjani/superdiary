@@ -1,8 +1,8 @@
 package com.foreverrafs.superdiary.ui.di
 
-import com.foreverrafs.superdiary.diary.analytics.Analytics
-import com.foreverrafs.superdiary.diary.di.platformModule
-import com.foreverrafs.superdiary.diary.di.useCaseModule
+import com.foreverrafs.superdiary.data.analytics.Analytics
+import com.foreverrafs.superdiary.data.di.platformModule
+import com.foreverrafs.superdiary.data.di.useCaseModule
 import org.koin.core.context.startKoin
 
 @Suppress("unused")

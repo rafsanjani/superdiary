@@ -1,9 +1,9 @@
 package com.foreverrafs.superdiary.ui.creatediary
 
-import com.foreverrafs.superdiary.diary.datasource.DataSource
-import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
-import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.usecase.AddDiaryUseCase
+import com.foreverrafs.superdiary.data.datasource.DataSource
+import com.foreverrafs.superdiary.data.diaryai.DiaryAI
+import com.foreverrafs.superdiary.data.model.Diary
+import com.foreverrafs.superdiary.data.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
