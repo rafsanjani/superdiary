@@ -24,7 +24,6 @@ private fun Project.configureDetekt() {
     tasks.register("detektAll", Detekt::class.java) {
         config.setFrom(configFile)
         buildUponDefaultConfig = true
-        autoCorrect = true
         reportsDir.set(reportFile)
         setSource(sourceFiles)
         include(kotlinFiles)
