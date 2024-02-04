@@ -24,7 +24,7 @@ class KoverConventionPlugin : Plugin<Project> {
                             "*.components",
                             "*.di",
                             "*.style",
-                            "superdiary.shared-ui.generated.resources"
+                            "superdiary.shared-ui.generated.resources",
                         )
                         classes(
                             "*.*.*ScreenContent*",
@@ -45,10 +45,12 @@ class KoverConventionPlugin : Plugin<Project> {
     }
 }
 
-private fun Project.koverReport(
-    action: KoverReportExtension.() -> Unit
-) = extensions.configure<KoverReportExtension>(action)
+private fun Project.koverReport(action: KoverReportExtension.() -> Unit) =
+    extensions.configure<KoverReportExtension>(
+        action,
+    )
 
-private fun Project.kover(
-    action: KoverProjectExtension.() -> Unit
-) = extensions.configure<KoverProjectExtension>(action)
+private fun Project.kover(action: KoverProjectExtension.() -> Unit) =
+    extensions.configure<KoverProjectExtension>(
+        action,
+    )

@@ -1,8 +1,5 @@
 @file:Suppress("UnusedPrivateProperty")
 
-import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
-import java.io.IOException
-
 plugins {
     alias(libs.plugins.android.library)
     kotlin("multiplatform")
