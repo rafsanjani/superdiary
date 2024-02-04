@@ -1,11 +1,11 @@
-@file:Suppress("NAME_SHADOWING")
-
 package me.saket.swipe
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation.Horizontal
 import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -21,9 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -31,9 +29,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.roundToInt
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * A composable that can be swiped left or right for revealing actions.
@@ -48,7 +47,7 @@ import kotlin.math.roundToInt
 @Composable
 fun SwipeableActionsBox(
     modifier: Modifier = Modifier,
-    state: SwipeableActionsState = rememberSwipeableActionsState(),
+    state: SwipeableActionsState,
     startActions: List<SwipeAction> = emptyList(),
     endActions: List<SwipeAction> = emptyList(),
     swipeThreshold: Dp = 40.dp,
@@ -60,9 +59,6 @@ fun SwipeableActionsBox(
     val rightActions = if (isRtl) startActions else endActions
     val swipeThresholdPx = LocalDensity.current.run { swipeThreshold.toPx() }
 
-    val ripple = remember {
-        SwipeRippleState()
-    }
     val actions = remember(leftActions, rightActions) {
         ActionFinder(left = leftActions, right = rightActions)
     }
@@ -92,24 +88,16 @@ fun SwipeableActionsBox(
     )
 
     val scope = rememberCoroutineScope()
+
     Box(
         modifier = Modifier
             .absoluteOffset { IntOffset(x = offset.roundToInt(), y = 0) }
-            .drawOverContent { ripple.draw(scope = this) }
             .draggable(
                 orientation = Horizontal,
                 enabled = !state.isResettingOnRelease,
                 onDragStopped = {
                     scope.launch {
-                        if (thresholdCrossed && visibleAction != null) {
-                            swipedAction = visibleAction
-                            swipedAction!!.value.onSwipe()
-                            ripple.animate(action = swipedAction!!)
-                        }
-                    }
-                    scope.launch {
-                        state.resetOffset()
-                        swipedAction = null
+                        state.snapToEnd()
                     }
                 },
                 state = state.draggableState,
@@ -119,13 +107,23 @@ fun SwipeableActionsBox(
 
     (swipedAction ?: visibleAction)?.let { action ->
         ActionIconBox(
-            modifier = Modifier.matchParentSize(),
+            modifier = Modifier
+                .matchParentSize()
+                .clickable(indication = null, interactionSource = MutableInteractionSource()) {
+                    scope.launch {
+                        swipedAction?.value?.onSwipe?.invoke()
+                        delay(200)
+                        state.resetOffset()
+                        swipedAction = null
+                    }
+                },
             action = action,
             offset = offset,
             backgroundColor = backgroundColor,
             content = { action.value.icon() }
         )
     }
+
 }
 
 @Composable
@@ -158,9 +156,3 @@ private fun ActionIconBox(
     }
 }
 
-private fun Modifier.drawOverContent(onDraw: DrawScope.() -> Unit): Modifier {
-    return drawWithContent {
-        drawContent()
-        onDraw(this)
-    }
-}

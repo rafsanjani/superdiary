@@ -11,25 +11,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import kotlin.math.absoluteValue
 
 @Composable
-fun rememberSwipeableActionsState(): SwipeableActionsState {
-    return remember { SwipeableActionsState() }
+fun rememberSwipeableActionsState(swipeBoxSizePx: Int): SwipeableActionsState {
+    return remember { SwipeableActionsState(swipeBoxSizePx) }
 }
 
-/**
- * The state of a [SwipeableActionsBox].
- */
+/** The state of a [SwipeableActionsBox]. */
 @Stable
-class SwipeableActionsState internal constructor() {
-    /**
-     * The current position (in pixels) of a [SwipeableActionsBox].
-     */
+class SwipeableActionsState internal constructor(private val swipeBoxSizePx: Int) {
+    /** The current position (in pixels) of a [SwipeableActionsBox]. */
     val offset: State<Float> get() = offsetState
-    internal var offsetState = mutableStateOf(0f)
+    private var offsetState = mutableStateOf(0f)
 
     /**
-     * Whether [SwipeableActionsBox] is currently animating to reset its offset after it was swiped.
+     * Whether [SwipeableActionsBox] is currently animating to reset its offset
+     * after it was swiped.
      */
     var isResettingOnRelease: Boolean by mutableStateOf(false)
         private set
@@ -39,6 +37,10 @@ class SwipeableActionsState internal constructor() {
 
     internal val draggableState = DraggableState { delta ->
         var newDelta = offsetState.value + delta
+
+        if (newDelta.absoluteValue >= swipeBoxSizePx)
+            return@DraggableState
+
         if (!canSwipeTowardsRight()) {
             newDelta = newDelta.coerceAtMost(0f)
         }
@@ -47,6 +49,20 @@ class SwipeableActionsState internal constructor() {
         }
         offsetState.value = newDelta
     }
+
+    suspend fun snapToEnd() {
+        if (offset.value == 0f) return
+
+        draggableState.drag(MutatePriority.PreventUserInput) {
+            Animatable(offsetState.value).animateTo(
+                targetValue = swipeBoxSizePx.toFloat() * -1,
+                tween(durationMillis = animationDurationMs)
+            ) {
+                dragBy(value - offsetState.value)
+            }
+        }
+    }
+
 
     internal suspend fun resetOffset() {
         draggableState.drag(MutatePriority.PreventUserInput) {

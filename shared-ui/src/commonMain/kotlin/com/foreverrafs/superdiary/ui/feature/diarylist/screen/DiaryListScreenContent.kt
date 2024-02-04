@@ -31,9 +31,6 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
-import androidx.compose.material.icons.outlined.Cabin
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.twotone.Favorite
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
@@ -45,8 +42,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,6 +55,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -76,6 +74,7 @@ import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.utils.groupByDate
 import com.foreverrafs.superdiary.data.utils.toDate
+import com.foreverrafs.superdiary.ui.SuperDiaryBackPressHandler
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
@@ -92,6 +91,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import me.saket.swipe.SwipeAction
 import me.saket.swipe.SwipeableActionsBox
+import me.saket.swipe.rememberSwipeableActionsState
 
 val DiaryListActions.Companion.Empty: DiaryListActions
     get() =
@@ -144,17 +144,30 @@ fun DiaryListScreenContent(
             )
         }
 
+    val backPressedHandler: SuperDiaryBackPressHandler.OnBackPressed = SuperDiaryBackPressHandler.OnBackPressed {
+        if (selectedIds.isNotEmpty()) {
+            diaryListActions.onCancelSelection()
+        } else {
+            diaryListActions.onBackPressed()
+        }
+        false
+    }
+
+    DisposableEffect(Unit) {
+        SuperDiaryBackPressHandler.addCallback(backPressedHandler)
+
+        onDispose {
+            SuperDiaryBackPressHandler.removeCallback(backPressedHandler)
+        }
+    }
+
     Scaffold(
         topBar = {
             SuperDiaryAppBar(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            if (selectedIds.isNotEmpty()) {
-                                diaryListActions.onCancelSelection()
-                            } else {
-                                diaryListActions.onBackPressed()
-                            }
+                            backPressedHandler.onBackPressed()
                         },
                     ) {
                         Icon(
@@ -546,30 +559,31 @@ fun DiaryItem(
         if (selected) 16.dp else 0.dp
     }
 
-    val favoriteAction =
-        SwipeAction(
-            icon = rememberVectorPainter(
-                Icons.Outlined.Cabin
-            ),
-            background = Color.Yellow,
-            onSwipe = { println("Reply swiped") },
-            isUndo = false,
-        )
+    val favoriteAction = SwipeAction(
+        icon = rememberVectorPainter(
+            if (diary.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder
+        ),
+        background = Color.Transparent,
+        onSwipe = { println("Reply swiped") },
+        isUndo = false,
+    )
+
+    val favoriteIconSize = with(LocalDensity.current) {
+        48.dp.roundToPx()
+    }
 
     SwipeableActionsBox(
+        state = rememberSwipeableActionsState(favoriteIconSize),
         endActions = listOf(favoriteAction),
-        swipeThreshold = 150.dp,
-        backgroundUntilSwipeThreshold = MaterialTheme.colorScheme.surfaceColorAtElevation(40.dp),
-        modifier =
-        modifier
+        backgroundUntilSwipeThreshold = Color.Transparent,
+        modifier = modifier
             .height(110.dp)
             .padding(padding)
             .clip(RoundedCornerShape(roundedCornerShape))
             .fillMaxWidth(),
     ) {
         Card(
-            shape =
-            RoundedCornerShape(
+            shape = RoundedCornerShape(
                 topStart = 0.dp,
                 bottomStart = 12.dp,
                 topEnd = 12.dp,
@@ -598,13 +612,15 @@ fun DiaryItem(
 
                 // Diary Entry
                 Text(
-                    modifier =
-                    Modifier.clearAndSetSemantics { }.padding(
-                        start = 8.dp,
-                        end = 8.dp,
-                        bottom = 8.dp,
-                        top = 16.dp,
-                    ).align(Alignment.Top),
+                    modifier = Modifier
+                        .clearAndSetSemantics { }
+                        .padding(
+                            start = 8.dp,
+                            end = 8.dp,
+                            bottom = 8.dp,
+                            top = 16.dp,
+                        )
+                        .align(Alignment.Top),
                     letterSpacing = (-0.3).sp,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
@@ -639,22 +655,23 @@ fun DiaryItem(
 @Composable
 private fun DateCard(date: LocalDate) {
     Box(
-        modifier =
-        Modifier.fillMaxHeight().background(
-            color = MaterialTheme.colorScheme.secondaryContainer,
-            shape =
-            RoundedCornerShape(
-                topStart = 0.dp,
-                topEnd = 12.dp,
-                bottomStart = 12.dp,
-                bottomEnd = 0.dp,
-            ),
-        ).padding(horizontal = 25.dp),
+        modifier = Modifier
+            .fillMaxHeight()
+            .background(
+                color = MaterialTheme.colorScheme.secondaryContainer,
+                shape =
+                RoundedCornerShape(
+                    topStart = 0.dp,
+                    topEnd = 12.dp,
+                    bottomStart = 12.dp,
+                    bottomEnd = 0.dp,
+                ),
+            )
+            .padding(horizontal = 25.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            modifier =
-            Modifier.semantics {
+            modifier = Modifier.semantics {
                 contentDescription = "Entry for ${date.format("EEE dd MMMM yyyy")}"
             },
             text = annotatedString(date),

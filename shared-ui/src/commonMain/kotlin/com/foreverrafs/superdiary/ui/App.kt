@@ -17,7 +17,13 @@ import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 @Composable
 fun App() {
     SuperdiaryAppTheme {
-        Navigator(BottomNavigationScreen) { navigator ->
+
+        Navigator(
+            screen = BottomNavigationScreen,
+            onBackPressed = {
+                SuperDiaryBackPressHandler.execute()
+            }
+        ) { navigator ->
             val snackbarHostState = SnackbarHostState()
 
             CompositionLocalProvider(
