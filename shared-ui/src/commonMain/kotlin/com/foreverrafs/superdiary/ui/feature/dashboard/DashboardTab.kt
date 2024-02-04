@@ -32,6 +32,7 @@ object DashboardTab : SuperDiaryTab {
             state = screenState,
             onAddEntry = { navigator.push(CreateDiaryScreen()) },
             onSeeAll = { navigator.push(DiaryListScreen) },
+            onToggleFavorite = screenModel::onToggleFavorite
         )
     }
 

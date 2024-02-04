@@ -1,6 +1,5 @@
 package me.saket.swipe
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation.Horizontal
@@ -23,54 +22,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
-import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * A composable that can be swiped left or right for revealing actions.
- *
- * @param swipeThreshold Minimum drag distance before any [SwipeAction] is
- *     activated and can be swiped.
- * @param backgroundUntilSwipeThreshold Color drawn behind the content
- *     until [swipeThreshold] is reached. When the threshold is passed,
- *     this color is replaced by the currently visible [SwipeAction]'s
- *     background.
- */
+/** A composable that can be swiped left or right for revealing actions. */
 @Composable
 fun SwipeableActionsBox(
-    modifier: Modifier = Modifier,
     state: SwipeableActionsState,
-    startActions: List<SwipeAction> = emptyList(),
-    endActions: List<SwipeAction> = emptyList(),
-    swipeThreshold: Dp = 40.dp,
-    backgroundUntilSwipeThreshold: Color = Color.DarkGray,
-    content: @Composable BoxScope.() -> Unit
+    action: SwipeAction,
+    modifier: Modifier = Modifier,
+    content: @Composable (BoxScope.() -> Unit)
 ) = BoxWithConstraints(modifier) {
-    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
-    val leftActions = if (isRtl) endActions else startActions
-    val rightActions = if (isRtl) startActions else endActions
-    val swipeThresholdPx = LocalDensity.current.run { swipeThreshold.toPx() }
 
-    val actions = remember(leftActions, rightActions) {
-        ActionFinder(left = leftActions, right = rightActions)
+    val actions = remember(action) {
+        ActionFinder(left = emptyList(), right = listOf(action))
     }
+
     LaunchedEffect(state, actions) {
         state.run {
-            canSwipeTowardsRight = { leftActions.isNotEmpty() }
-            canSwipeTowardsLeft = { rightActions.isNotEmpty() }
+            canSwipeTowardsRight = { false }
+            canSwipeTowardsLeft = { true }
         }
     }
 
     val offset = state.offset.value
-    val thresholdCrossed = abs(offset) > swipeThresholdPx
 
     var swipedAction: SwipeActionMeta? by remember {
         mutableStateOf(null)
@@ -78,14 +55,6 @@ fun SwipeableActionsBox(
     val visibleAction: SwipeActionMeta? = remember(offset, actions) {
         actions.actionAt(offset, totalWidth = constraints.maxWidth)
     }
-    val backgroundColor: Color by animateColorAsState(
-        when {
-            swipedAction != null -> swipedAction!!.value.background
-            !thresholdCrossed -> backgroundUntilSwipeThreshold
-            visibleAction == null -> Color.Transparent
-            else -> visibleAction.value.background
-        }
-    )
 
     val scope = rememberCoroutineScope()
 
@@ -111,7 +80,7 @@ fun SwipeableActionsBox(
                 .matchParentSize()
                 .clickable(indication = null, interactionSource = MutableInteractionSource()) {
                     scope.launch {
-                        swipedAction?.value?.onSwipe?.invoke()
+                        visibleAction?.value?.onClick?.invoke()
                         delay(200)
                         state.resetOffset()
                         swipedAction = null
@@ -119,11 +88,10 @@ fun SwipeableActionsBox(
                 },
             action = action,
             offset = offset,
-            backgroundColor = backgroundColor,
+            backgroundColor = Color.Transparent,
             content = { action.value.icon() }
         )
     }
-
 }
 
 @Composable

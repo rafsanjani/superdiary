@@ -1,10 +1,7 @@
 package me.saket.swipe
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -31,7 +28,7 @@ import androidx.compose.ui.unit.dp
  * actions that can be toggled on and off.
  */
 class SwipeAction(
-    val onSwipe: () -> Unit,
+    val onClick: () -> Unit,
     val icon: @Composable () -> Unit,
     val background: Color,
     val weight: Double = 1.0,
@@ -42,13 +39,13 @@ class SwipeAction(
     }
 
     fun copy(
-        onSwipe: () -> Unit = this.onSwipe,
+        onSwipe: () -> Unit = this.onClick,
         icon: @Composable () -> Unit = this.icon,
         background: Color = this.background,
         weight: Double = this.weight,
         isUndo: Boolean = this.isUndo,
     ) = SwipeAction(
-        onSwipe = onSwipe,
+        onClick = onSwipe,
         icon = icon,
         background = background,
         weight = weight,
@@ -60,7 +57,7 @@ class SwipeAction(
  * See [SwipeAction] for documentation.
  */
 fun SwipeAction(
-    onSwipe: () -> Unit,
+    onActionClicked: () -> Unit,
     icon: Painter,
     background: Color,
     weight: Double = 1.0,
@@ -77,7 +74,7 @@ fun SwipeAction(
         },
         background = background,
         weight = weight,
-        onSwipe = onSwipe,
+        onClick = onActionClicked,
         isUndo = isUndo
     )
 }

@@ -564,7 +564,7 @@ fun DiaryItem(
             if (diary.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder
         ),
         background = Color.Transparent,
-        onSwipe = { println("Reply swiped") },
+        onActionClicked = onToggleFavorite,
         isUndo = false,
     )
 
@@ -573,14 +573,13 @@ fun DiaryItem(
     }
 
     SwipeableActionsBox(
-        state = rememberSwipeableActionsState(favoriteIconSize),
-        endActions = listOf(favoriteAction),
-        backgroundUntilSwipeThreshold = Color.Transparent,
         modifier = modifier
             .height(110.dp)
             .padding(padding)
             .clip(RoundedCornerShape(roundedCornerShape))
             .fillMaxWidth(),
+        state = rememberSwipeableActionsState(favoriteIconSize),
+        action = favoriteAction,
     ) {
         Card(
             shape = RoundedCornerShape(
