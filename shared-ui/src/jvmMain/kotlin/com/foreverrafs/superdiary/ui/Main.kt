@@ -14,7 +14,7 @@ import org.koin.core.context.startKoin
 
 private class JvmAnalytics : Analytics {
     override fun trackEvent(event: AnalyticsEvents) {
-        TODO("Not yet implemented")
+        TODO("Implement JVM analytics")
     }
 }
 
