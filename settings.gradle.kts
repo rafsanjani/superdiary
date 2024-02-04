@@ -36,3 +36,5 @@ rootProject.name = "superdiary"
 include(":androidApp")
 include(":shared-data")
 include(":shared-ui")
+include(":core:analytics")
+include(":core:logging")
