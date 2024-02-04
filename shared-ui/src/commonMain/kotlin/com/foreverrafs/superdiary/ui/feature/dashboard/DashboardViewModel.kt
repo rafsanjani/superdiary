@@ -175,11 +175,9 @@ class DashboardViewModel(
         }
     }
 
-    fun onToggleFavorite(diary: Diary) = screenModelScope.launch {
-        updateDiaryUseCase(
-            diary.copy(isFavorite = !diary.isFavorite),
-        )
-    }
+    suspend fun toggleFavorite(diary: Diary): Boolean = updateDiaryUseCase(
+        diary.copy(isFavorite = !diary.isFavorite),
+    )
 
     companion object {
         private const val DEFAULT_SUMMARY_TEXT = "Generating weekly Summary..."
