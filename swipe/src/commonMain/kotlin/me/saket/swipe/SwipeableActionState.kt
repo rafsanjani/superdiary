@@ -38,22 +38,19 @@ class SwipeableActionState internal constructor(private val iconWidthPx: Int) {
     suspend fun finalizeDrag() {
         if (offset.value == 0f) return
 
-        draggableState.drag(MutatePriority.PreventUserInput) {
-            val targetValue = if (offset.value.absoluteValue >= iconWidthPx / 2) iconWidthPx.toFloat() * -1 else 0f
+        val targetValue = if (offset.value.absoluteValue >= iconWidthPx / 2) iconWidthPx.toFloat() * -1 else 0f
 
-            Animatable(offset.value).animateTo(
-                targetValue = targetValue,
-                animationSpec = tween(durationMillis = animationDurationMs),
-            ) {
-                dragBy(value - offsetState.value)
-            }
-        }
+        dragBy(targetValue = targetValue)
     }
 
     suspend fun resetDrag() {
+        dragBy(targetValue = 0f)
+    }
+
+    private suspend fun dragBy(targetValue: Float) {
         draggableState.drag(MutatePriority.PreventUserInput) {
             Animatable(offset.value).animateTo(
-                targetValue = 0f,
+                targetValue = targetValue,
                 animationSpec = tween(durationMillis = animationDurationMs),
             ) {
                 dragBy(value - offsetState.value)

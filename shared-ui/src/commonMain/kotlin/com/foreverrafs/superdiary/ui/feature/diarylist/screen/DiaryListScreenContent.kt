@@ -56,6 +56,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -91,6 +92,8 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import me.saket.swipe.SwipeAction
 import me.saket.swipe.SwipeableActionBox
+import me.saket.swipe.defaultSwipeableActionIconSize
+import me.saket.swipe.rememberSwipeableActionsState
 
 val DiaryListActions.Companion.Empty: DiaryListActions
     get() =
@@ -347,32 +350,32 @@ fun DiaryList(
                     ) { diary ->
 
                         DiaryItem(
-                            modifier =
-                            Modifier.animateItemPlacement().combinedClickable(
-                                onClick = {
-                                    if (inSelectionMode) {
-                                        diaryListActions.onToggleSelection(diary.id)
-                                    } else {
-                                        diaryListActions.onDiaryClicked(diary)
-                                    }
-                                },
-                                onLongClick = {
-                                    diaryListActions.onToggleSelection(diary.id)
-                                },
-                            ),
                             diary = diary,
                             selected = diary.id in selectedIds,
                             inSelectionMode = inSelectionMode,
-                            onToggleFavorite = {
-                                coroutineScope.launch {
-                                    if (diaryListActions.onToggleFavorite(diary)) {
-                                        snackbarHostState.showSnackbar(
-                                            message = "Favorite Updated!",
-                                        )
-                                    }
+                            modifier = Modifier
+                                .animateItemPlacement()
+                                .combinedClickable(
+                                    onClick = {
+                                        if (inSelectionMode) {
+                                            diaryListActions.onToggleSelection(diary.id)
+                                        } else {
+                                            diaryListActions.onDiaryClicked(diary)
+                                        }
+                                    },
+                                    onLongClick = {
+                                        diaryListActions.onToggleSelection(diary.id)
+                                    },
+                                ),
+                        ) {
+                            coroutineScope.launch {
+                                if (diaryListActions.onToggleFavorite(diary)) {
+                                    snackbarHostState.showSnackbar(
+                                        message = "Favorite Updated!",
+                                    )
                                 }
-                            },
-                        )
+                            }
+                        }
                     }
                 }
             }
@@ -549,6 +552,11 @@ fun DiaryItem(
     modifier: Modifier = Modifier,
     onToggleFavorite: () -> Unit,
 ) {
+    val iconWidthPx = LocalDensity.current.run { defaultSwipeableActionIconSize.roundToPx() }
+    val swipeableState = rememberSwipeableActionsState(
+        iconWidthPx = iconWidthPx,
+    )
+
     val transition = updateTransition(selected, label = "selected")
     val padding by transition.animateDp(label = "padding") { _ ->
         if (inSelectionMode) 4.dp else 0.dp
@@ -572,6 +580,7 @@ fun DiaryItem(
             .clip(RoundedCornerShape(roundedCornerShape))
             .fillMaxWidth(),
         action = favoriteAction,
+        state = swipeableState,
     ) {
         Card(
             shape = RoundedCornerShape(
@@ -727,30 +736,6 @@ private fun annotatedString(date: LocalDate): AnnotatedString =
             append(date.year.toString())
         }
     }
-
-@Composable
-fun FavoriteIcon(
-    isFavorite: Boolean,
-    modifier: Modifier = Modifier,
-    onToggleFavorite: () -> Unit,
-) {
-    // favorite icon
-    IconButton(
-        onClick = onToggleFavorite,
-        modifier = modifier.clearAndSetSemantics { }.clip(CircleShape).padding(4.dp),
-    ) {
-        Icon(
-            modifier = Modifier.clearAndSetSemantics { },
-            imageVector =
-            if (isFavorite) {
-                Icons.Filled.Favorite
-            } else {
-                Icons.Filled.FavoriteBorder
-            },
-            contentDescription = null,
-        )
-    }
-}
 
 @Composable
 private fun ErrorContent(modifier: Modifier = Modifier) {

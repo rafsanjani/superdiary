@@ -278,12 +278,11 @@ private fun LatestEntries(
         ) {
             for (diary in diaries) {
                 DiaryItem(
-                    modifier = Modifier.clickable(onClick = { onDiaryClicked(diary) }),
-                    inSelectionMode = false,
-                    onToggleFavorite = { onToggleFavorite(diary) },
-                    selected = false,
                     diary = diary,
-                )
+                    selected = false,
+                    inSelectionMode = false,
+                    modifier = Modifier.clickable(onClick = { onDiaryClicked(diary) }),
+                ) { onToggleFavorite(diary) }
             }
         }
     }

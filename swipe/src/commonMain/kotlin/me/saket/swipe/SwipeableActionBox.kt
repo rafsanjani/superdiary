@@ -15,7 +15,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.zIndex
 import kotlin.math.roundToInt
@@ -25,13 +24,11 @@ import kotlinx.coroutines.launch
 /** A composable that can be swiped left or right for revealing actions. */
 @Composable
 fun SwipeableActionBox(
+    state: SwipeableActionState,
     action: SwipeAction,
     modifier: Modifier = Modifier,
     content: @Composable (BoxScope.() -> Unit),
 ) = BoxWithConstraints(modifier) {
-    val iconWidthPx = LocalDensity.current.run { defaultActionIconSize.roundToPx() }
-
-    val state = rememberSwipeableActionsState(iconWidthPx)
     val outerOffset = state.offset.value
     val scope = rememberCoroutineScope()
 
@@ -56,7 +53,7 @@ fun SwipeableActionBox(
             modifier = Modifier
                 .background(color = Color.Transparent)
                 .align(Alignment.CenterEnd)
-                .width(defaultActionIconSize),
+                .width(defaultSwipeableActionIconSize),
             onClick = {
                 scope.launch {
                     action.onClick()

@@ -1,3 +1,4 @@
+#file: noinspection YAMLSchemaValidation
 build:
     maxIssues: 0
     excludeCorrectable: false
