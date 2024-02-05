@@ -14,7 +14,11 @@ import com.foreverrafs.superdiary.data.usecase.CalculateBestStreakUseCase
 import com.foreverrafs.superdiary.data.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.data.usecase.GetWeeklySummaryUseCase
+import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -28,9 +32,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import org.kodein.mock.Mock
 import org.kodein.mock.tests.TestsWithMocks
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DashboardViewModelTest : TestsWithMocks() {
@@ -53,7 +54,8 @@ class DashboardViewModelTest : TestsWithMocks() {
             addWeeklySummaryUseCase = AddWeeklySummaryUseCase(dataSource),
             getWeeklySummaryUseCase = GetWeeklySummaryUseCase(dataSource),
             diaryAI = diaryAI,
-            calculateBestStreakUseCase = CalculateBestStreakUseCase()
+            calculateBestStreakUseCase = CalculateBestStreakUseCase(),
+            updateDiaryUseCase = UpdateDiaryUseCase(dataSource),
         )
     }
 
