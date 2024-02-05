@@ -35,7 +35,7 @@ fun SuperdiaryAppTheme(
             secondaryContainer = Color.LightGray,
             primaryContainer = Color(0xFFECEDFC),
             background = Color(0xFFF5F5F5),
-            surfaceVariant = Color(0x27BDBDBD),
+            surfaceVariant = Color(0xFFECEEF1),
             tertiaryContainer = Color(0xffe3e3e3),
         )
     }
