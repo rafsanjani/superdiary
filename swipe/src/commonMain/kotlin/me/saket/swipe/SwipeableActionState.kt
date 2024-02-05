@@ -20,11 +20,11 @@ fun rememberSwipeableActionsState(iconWidthPx: Int): SwipeableActionState {
 @Stable
 class SwipeableActionState internal constructor(private val iconWidthPx: Int) {
     /** The current position (in pixels) of a [SwipeableActionBox]. */
-    val offset: State<Float> get() = offsetState
-    private var offsetState = mutableStateOf(0f)
+    val offset: State<Float> get() = _offset
+    private var _offset = mutableStateOf(0f)
 
     internal val draggableState = DraggableState { delta ->
-        var newDelta = offsetState.value + delta
+        var newDelta = _offset.value + delta
 
         if (newDelta.absoluteValue >= iconWidthPx) {
             return@DraggableState
@@ -32,13 +32,13 @@ class SwipeableActionState internal constructor(private val iconWidthPx: Int) {
 
         newDelta = newDelta.coerceAtMost(0f)
 
-        offsetState.value = newDelta
+        _offset.value = newDelta
     }
 
     suspend fun finalizeDrag() {
-        if (offset.value == 0f) return
+        if (_offset.value == 0f) return
 
-        val targetValue = if (offset.value.absoluteValue >= iconWidthPx / 2) iconWidthPx.toFloat() * -1 else 0f
+        val targetValue = if (_offset.value.absoluteValue >= iconWidthPx / 2) iconWidthPx.toFloat() * -1 else 0f
 
         dragBy(targetValue = targetValue)
     }
@@ -47,13 +47,13 @@ class SwipeableActionState internal constructor(private val iconWidthPx: Int) {
         dragBy(targetValue = 0f)
     }
 
-    private suspend fun dragBy(targetValue: Float) {
+    suspend fun dragBy(targetValue: Float) {
         draggableState.drag(MutatePriority.PreventUserInput) {
-            Animatable(offset.value).animateTo(
+            Animatable(_offset.value).animateTo(
                 targetValue = targetValue,
                 animationSpec = tween(durationMillis = animationDurationMs),
             ) {
-                dragBy(value - offsetState.value)
+                dragBy(value - _offset.value)
             }
         }
     }

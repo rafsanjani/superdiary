@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.OnBackPressed
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
@@ -37,7 +36,6 @@ object BottomNavigationScreen : Screen {
     @Composable
     override fun Content() {
         val snackbarHostState = LocalRootSnackbarHostState.current
-
 
         TabNavigator(DashboardTab) {
             Scaffold(

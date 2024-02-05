@@ -17,10 +17,21 @@ kotlin {
     iosSimulatorArm64()
 
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 implementation(compose.foundation)
                 implementation(compose.material3)
+            }
+        }
+
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.assertk.common)
+                implementation(libs.junit)
+                implementation(libs.kotlin.coroutines.test)
+                implementation(libs.turbine)
+                implementation(libs.kotlin.coroutines.test)
             }
         }
     }

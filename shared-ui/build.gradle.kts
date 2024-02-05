@@ -43,7 +43,7 @@ kotlin {
         commonMain {
             dependencies {
                 @OptIn(
-                    org.jetbrains.compose.ExperimentalComposeLibrary::class
+                    org.jetbrains.compose.ExperimentalComposeLibrary::class,
                 )
                 implementation(compose.components.resources)
                 implementation(compose.material3)
@@ -68,12 +68,14 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(kotlin("test"))
+                implementation(libs.assertk.common)
                 implementation(libs.junit)
                 implementation(libs.koin.test)
                 implementation(libs.kotlin.coroutines.test)
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                implementation(compose.uiTest)
                 implementation(libs.turbine)
                 implementation(libs.mockmp.runtime)
-                implementation(libs.assertk.common)
             }
 
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
@@ -144,13 +146,13 @@ plugins.withId("app.cash.paparazzi") {
                         TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE,
                         objects.named(
                             TargetJvmEnvironment::class.java,
-                            TargetJvmEnvironment.STANDARD_JVM
-                        )
+                            TargetJvmEnvironment.STANDARD_JVM,
+                        ),
                     )
                 }
                 because(
                     "LayoutLib and sdk-common depend on Guava's -jre published variant." +
-                        "See https://github.com/cashapp/paparazzi/issues/906."
+                        "See https://github.com/cashapp/paparazzi/issues/906.",
                 )
             }
         }

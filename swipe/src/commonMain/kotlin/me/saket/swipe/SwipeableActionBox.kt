@@ -29,7 +29,6 @@ fun SwipeableActionBox(
     modifier: Modifier = Modifier,
     content: @Composable (BoxScope.() -> Unit),
 ) = BoxWithConstraints(modifier) {
-    val outerOffset = state.offset.value
     val scope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -37,7 +36,7 @@ fun SwipeableActionBox(
         Box(
             modifier = Modifier
                 .zIndex(0.3f)
-                .absoluteOffset { IntOffset(x = outerOffset.roundToInt(), y = 0) }
+                .absoluteOffset { IntOffset(x = state.offset.value.roundToInt(), y = 0) }
                 .draggable(
                     state = state.draggableState,
                     onDragStopped = {
