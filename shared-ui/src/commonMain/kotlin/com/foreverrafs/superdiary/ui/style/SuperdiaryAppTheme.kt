@@ -24,7 +24,7 @@ fun SuperdiaryAppTheme(
 ) {
     val colorScheme = if (darkTheme) {
         darkColorScheme(
-            surfaceVariant = Color(0x27BDBDBD),
+            surfaceVariant = Color(0xFF383838),
             background = Color(0xFF1E1E1E),
             secondaryContainer = Color(0x611E1E1E),
             tertiaryContainer = Color.DarkGray,

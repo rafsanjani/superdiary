@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -55,7 +56,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -90,8 +90,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import me.saket.swipe.SwipeAction
-import me.saket.swipe.SwipeableActionsBox
-import me.saket.swipe.rememberSwipeableActionsState
+import me.saket.swipe.SwipeableActionBox
 
 val DiaryListActions.Companion.Empty: DiaryListActions
     get() =
@@ -561,24 +560,17 @@ fun DiaryItem(
 
     val favoriteAction = SwipeAction(
         icon = rememberVectorPainter(
-            if (diary.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder
+            if (diary.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
         ),
-        background = Color.Transparent,
         onActionClicked = onToggleFavorite,
-        isUndo = false,
     )
 
-    val favoriteIconSize = with(LocalDensity.current) {
-        48.dp.roundToPx()
-    }
-
-    SwipeableActionsBox(
+    SwipeableActionBox(
         modifier = modifier
             .height(110.dp)
             .padding(padding)
             .clip(RoundedCornerShape(roundedCornerShape))
             .fillMaxWidth(),
-        state = rememberSwipeableActionsState(favoriteIconSize),
         action = favoriteAction,
     ) {
         Card(
@@ -587,6 +579,9 @@ fun DiaryItem(
                 bottomStart = 12.dp,
                 topEnd = 12.dp,
                 bottomEnd = 0.dp,
+            ),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
             ),
         ) {
             Row(
