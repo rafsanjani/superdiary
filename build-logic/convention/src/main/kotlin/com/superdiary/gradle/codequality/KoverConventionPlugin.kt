@@ -36,8 +36,6 @@ class KoverConventionPlugin : Plugin<Project> {
                             "*.*.*Screen*",
                             "*.*.*Tab",
                             "*.*.*ComposableSingletons*",
-                            "me.saket.swipe.SwipeableActionBox*",
-                            "me.saket.swipe.SwipeAction*",
                         )
                         files("BottomNavigationScreenKt")
                     }

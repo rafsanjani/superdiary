@@ -38,8 +38,6 @@ sonar {
             // Reusable screen components
             "**/components/**",
             "**/*Resources*",
-            "me.saket.swipe.SwipeableActionBox*",
-            "me.saket.swipe.SwipeAction*",
         )
 
     properties {
