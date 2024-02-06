@@ -1,6 +1,6 @@
 package com.foreverrafs.superdiary.ui.feature.diarylist.screen
 
-import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.data.model.Diary
 
 sealed interface DiaryListViewState {
     data object Loading : DiaryListViewState

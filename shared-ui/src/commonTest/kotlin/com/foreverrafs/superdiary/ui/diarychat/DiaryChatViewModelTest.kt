@@ -5,10 +5,10 @@ import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
-import com.foreverrafs.superdiary.diary.datasource.DataSource
-import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
-import com.foreverrafs.superdiary.diary.diaryai.DiaryChatRole
-import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.data.datasource.DataSource
+import com.foreverrafs.superdiary.data.diaryai.DiaryAI
+import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
+import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -21,10 +21,11 @@ actual fun LocalDate.format(format: String): String {
 }
 
 actual fun LocalDateTime.format(format: String): String {
-    val dateFormatter = NSDateFormatter().apply {
+    val formatter = NSDateFormatter().apply {
         dateFormat = format
     }
-    return dateFormatter.stringFromDate(
+
+    return formatter.stringFromDate(
         toNSDateComponents().date
             ?: throw IllegalStateException("Could not convert kotlin date to NSDate $this")
     )

@@ -5,9 +5,9 @@ import assertk.assertThat
 import assertk.assertions.isEmpty
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
-import com.foreverrafs.superdiary.diary.datasource.DataSource
-import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.usecase.GetFavoriteDiariesUseCase
+import com.foreverrafs.superdiary.data.datasource.DataSource
+import com.foreverrafs.superdiary.data.model.Diary
+import com.foreverrafs.superdiary.data.usecase.GetFavoriteDiariesUseCase
 import com.foreverrafs.superdiary.ui.feature.favorites.model.FavoriteViewModel
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreenState
 import kotlinx.coroutines.Dispatchers

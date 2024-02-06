@@ -4,9 +4,9 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.singleWindowApplication
-import com.foreverrafs.superdiary.diary.Database
-import com.foreverrafs.superdiary.diary.analytics.Analytics
-import com.foreverrafs.superdiary.diary.analytics.AnalyticsEvents
+import com.foreverrafs.superdiary.data.Database
+import com.foreverrafs.superdiary.data.analytics.Analytics
+import com.foreverrafs.superdiary.data.analytics.AnalyticsEvents
 import com.foreverrafs.superdiary.ui.di.appModule
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -14,7 +14,7 @@ import org.koin.core.context.startKoin
 
 private class JvmAnalytics : Analytics {
     override fun trackEvent(event: AnalyticsEvents) {
-        TODO("Not yet implemented")
+        TODO("Implement JVM analytics")
     }
 }
 

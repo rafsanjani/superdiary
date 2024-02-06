@@ -10,25 +10,10 @@ plugins {
     kotlin("multiplatform")
     id("kotlin-parcelize")
     alias(libs.plugins.buildKonfig)
-    alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.sonar)
     alias(libs.plugins.mockmp)
     alias(libs.plugins.testLogger)
-}
-
-koverReport {
-    filters {
-        excludes {
-            packages(
-                "com.foreverrafs.superdiary.database",
-                "*.buildKonfig",
-                "*.di",
-                "db",
-            )
-
-            classes("*.*DatabaseDriver")
-        }
-    }
+    id("com.superdiary.kover")
 }
 
 buildkonfig {
@@ -75,8 +60,8 @@ kotlin {
                 implementation(libs.square.sqldelight.coroutinesExt)
                 implementation(libs.kotlin.coroutines.test)
                 implementation(libs.openAiKotlin)
-                runtimeOnly(libs.ktor.client.cio)
                 implementation(libs.touchlab.kermit)
+                runtimeOnly(libs.ktor.client.cio)
             }
         }
         androidMain {

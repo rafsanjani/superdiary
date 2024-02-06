@@ -2,4 +2,4 @@
 
 echo "Running static analysis."
 
-./gradlew androidApp:detekt
+./gradlew detektAll
