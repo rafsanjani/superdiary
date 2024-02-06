@@ -4,6 +4,8 @@
 
 plugins {
     kotlin("multiplatform")
+    id("com.superdiary.kover")
+    alias(libs.plugins.sonar)
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
 }
