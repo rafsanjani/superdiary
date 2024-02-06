@@ -67,9 +67,8 @@ class CreateDiaryScreen : Screen {
             createDiaryScreenModel.saveDiary(
                 Diary(
                     entry = entry,
-                    date = Clock.System
-                        .now(),
-                    isFavorite = false,
+                    date = Clock.System.now(),
+                    isFavorite = false
                 ),
             )
 

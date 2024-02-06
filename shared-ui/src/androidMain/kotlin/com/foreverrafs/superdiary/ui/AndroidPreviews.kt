@@ -30,10 +30,10 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
-import kotlinx.datetime.Clock
-import kotlinx.datetime.toKotlinLocalDate
 import java.time.LocalDate
 import kotlin.random.Random
+import kotlinx.datetime.Clock
+import kotlinx.datetime.toKotlinLocalDate
 
 private val diaryListActions = DiaryListActions(
     onAddEntry = {},
@@ -298,6 +298,7 @@ private fun DashboardPreview() {
             ),
             onAddEntry = {},
             onSeeAll = {},
+            onToggleFavorite = {},
         )
     }
 }
