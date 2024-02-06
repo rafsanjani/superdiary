@@ -12,6 +12,7 @@ import com.foreverrafs.superdiary.data.usecase.CalculateBestStreakUseCase
 import com.foreverrafs.superdiary.data.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.data.usecase.GetWeeklySummaryUseCase
+import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.data.utils.toDate
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
@@ -25,6 +26,7 @@ class DashboardViewModel(
     private val calculateBestStreakUseCase: CalculateBestStreakUseCase,
     private val addWeeklySummaryUseCase: AddWeeklySummaryUseCase,
     private val getWeeklySummaryUseCase: GetWeeklySummaryUseCase,
+    private val updateDiaryUseCase: UpdateDiaryUseCase,
     private val diaryAI: DiaryAI,
 ) :
     StateScreenModel<DashboardViewModel.DashboardScreenState>(DashboardScreenState.Loading) {
@@ -69,13 +71,13 @@ class DashboardViewModel(
                     streak = Streak(
                         0,
                         Clock.System.now().toDate(),
-                        Clock.System.now().toDate()
+                        Clock.System.now().toDate(),
                     ),
                     bestStreak = Streak(
                         0,
                         Clock.System.now().toDate(),
-                        Clock.System.now().toDate()
-                    )
+                        Clock.System.now().toDate(),
+                    ),
                 )
             }
 
@@ -168,10 +170,14 @@ class DashboardViewModel(
         mutableState.update { state ->
             (state as? DashboardScreenState.Content)?.copy(
                 streak = streak,
-                bestStreak = bestStreak
+                bestStreak = bestStreak,
             ) ?: state
         }
     }
+
+    suspend fun toggleFavorite(diary: Diary): Boolean = updateDiaryUseCase(
+        diary.copy(isFavorite = !diary.isFavorite),
+    )
 
     companion object {
         private const val DEFAULT_SUMMARY_TEXT = "Generating weekly Summary..."
