@@ -10,7 +10,7 @@
         <img src = "https://img.shields.io/twitter/url?label=follow&style=social&url=https%3A%2F%2Ftwitter.com%2Fpushpalroy" />
     </a>
 </div>
-A simple diary app, mostly focused on Clean Architecture design pattern and 100% test coverage (unit and instrumentation).
+A simple diary app, mostly focused on good architecture designs and improved code coverage (unit and instrumentation).
 
 ### Screens (Android) - Dark
 | Dashboard | Diary AI  |
