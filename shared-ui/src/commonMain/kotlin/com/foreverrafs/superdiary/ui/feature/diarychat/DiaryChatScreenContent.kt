@@ -31,7 +31,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -146,8 +146,8 @@ fun DiaryChatScreenContent(
                             id = Random.nextLong(),
                             role = DiaryChatRole.DiaryAI,
                             timestamp = Clock.System.now(),
-                            content = "Gathering thoughts..."
-                        )
+                            content = "Gathering thoughts...",
+                        ),
                     )
                 }
             }
@@ -181,7 +181,7 @@ fun DiaryChatScreenContent(
                     },
                 value = input,
                 onValueChange = { input = it },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send)
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
             )
 
             Spacer(modifier = Modifier.width(4.dp))
@@ -202,7 +202,7 @@ fun DiaryChatScreenContent(
                 ),
             ) {
                 Icon(
-                    imageVector = Icons.Default.Send,
+                    imageVector = Icons.AutoMirrored.Filled.Send,
                     contentDescription = null,
                 )
             }
