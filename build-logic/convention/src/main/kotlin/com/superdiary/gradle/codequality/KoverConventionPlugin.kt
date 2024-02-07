@@ -18,26 +18,9 @@ class KoverConventionPlugin : Plugin<Project> {
             koverReport {
                 filters {
                     excludes {
-                        packages(
-                            "com.foreverrafs.superdiary.database",
-                            "db",
-                            "*.components",
-                            "*.di",
-                            "*.style",
-                            "superdiary.shared-ui.generated.resources",
-                        )
-                        classes(
-                            "*.*.*ScreenContent*",
-                            "*.*.*Preview*",
-                            "*.*.*AppKt*",
-                            "*.*.*CreateDiaryScreen",
-                            "*.*.Resources*",
-                            "*.*.Main*",
-                            "*.*.*Screen*",
-                            "*.*.*Tab",
-                            "*.*.*ComposableSingletons*",
-                        )
-                        files("BottomNavigationScreenKt")
+                        packages(KoverExclusionList.packages)
+                        classes(KoverExclusionList.classes)
+                        files(KoverExclusionList.files)
                     }
                 }
             }
