@@ -11,15 +11,15 @@ import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.data.datasource.TestDatabaseDriver
 import com.foreverrafs.superdiary.data.insertRandomDiaries
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DeleteDiaryUseCaseTest {
@@ -44,24 +44,23 @@ class DeleteDiaryUseCaseTest {
     }
 
     @Test
-    fun `Delete diary and confirm deletion`() =
-        runTest {
-            getAllDiariesUseCase().test {
-                var diaries = awaitItem()
-                val firstDiary = diaries.first()
+    fun `Delete diary and confirm deletion`() = runTest {
+        getAllDiariesUseCase().test {
+            var diaries = awaitItem()
+            val firstDiary = diaries.first()
 
-                // delete the first entry
-                deleteDiaryUseCase(listOf(firstDiary))
+            // delete the first entry
+            deleteDiaryUseCase(listOf(firstDiary))
 
-                // get latest diaries again
-                diaries = awaitItem()
+            // get latest diaries again
+            diaries = awaitItem()
 
-                cancelAndConsumeRemainingEvents()
+            cancelAndConsumeRemainingEvents()
 
-                // confirm that the first diary has been deleted
-                assertThat(diaries).doesNotContain(firstDiary)
-            }
+            // confirm that the first diary has been deleted
+            assertThat(diaries).doesNotContain(firstDiary)
         }
+    }
 
     @Test
     fun `Delete All Diaries Clears Diaries`() =
