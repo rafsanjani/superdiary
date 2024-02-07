@@ -19,10 +19,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -94,7 +94,8 @@ fun DiaryFilterSheet(
                 text = "Sort and Filter",
                 style = MaterialTheme.typography.headlineMedium,
             )
-            Divider()
+
+            HorizontalDivider()
 
             Spacer(modifier = Modifier.height(16.dp))
 
