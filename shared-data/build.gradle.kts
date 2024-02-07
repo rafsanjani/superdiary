@@ -9,7 +9,6 @@ plugins {
     kotlin("multiplatform")
     id("kotlin-parcelize")
     alias(libs.plugins.buildKonfig)
-    alias(libs.plugins.sonar)
     alias(libs.plugins.mockmp)
     alias(libs.plugins.testLogger)
     id("com.superdiary.kover")

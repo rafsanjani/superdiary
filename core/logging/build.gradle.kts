@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.library)
     kotlin("multiplatform")
     id("kotlin-parcelize")
-    alias(libs.plugins.sonar)
     alias(libs.plugins.testLogger)
     id("com.superdiary.kover")
 }
