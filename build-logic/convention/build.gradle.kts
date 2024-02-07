@@ -23,6 +23,7 @@ dependencies {
     compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
     compileOnly("org.jetbrains.kotlinx:kover-gradle-plugin:0.7.5")
     compileOnly("org.jlleitschuh.gradle.ktlint:org.jlleitschuh.gradle.ktlint.gradle.plugin:12.1.0")
+    compileOnly("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:4.4.1.3373")
 }
 
 gradlePlugin {
@@ -49,9 +50,14 @@ gradlePlugin {
             implementationClass = "$rootPackageName.codequality.KoverConventionPlugin"
         }
 
-        register("ktlintConventPlugin") {
+        register("ktlintConventionPlugin") {
             id = "com.superdiary.ktlint"
             implementationClass = "$rootPackageName.codequality.KtlintConventionPlugin"
+        }
+
+        register("SonarConventionPlugin") {
+            id = "com.superdiary.sonar"
+            implementationClass = "$rootPackageName.codequality.SonarConventionPlugin"
         }
     }
 }
