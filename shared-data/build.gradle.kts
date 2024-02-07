@@ -1,7 +1,6 @@
 @file:Suppress("UnusedPrivateProperty")
 
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
-import java.io.IOException
 
 plugins {
     alias(libs.plugins.ksp)
@@ -10,37 +9,9 @@ plugins {
     kotlin("multiplatform")
     id("kotlin-parcelize")
     alias(libs.plugins.buildKonfig)
-    alias(libs.plugins.sonar)
     alias(libs.plugins.mockmp)
     alias(libs.plugins.testLogger)
     id("com.superdiary.kover")
-}
-
-//koverReport {
-//    filters {
-//        excludes {
-//            packages(
-//                "com.foreverrafs.superdiary.database",
-//                "*.buildKonfig",
-//                "*.di",
-//                "db",
-//            )
-//
-//            classes("*.*DatabaseDriver")
-//        }
-//    }
-//}
-
-buildkonfig {
-    packageName = "com.foreverrafs.superdiary.buildKonfig"
-
-    val openAiKey =
-        project.findProperty("openAiKey") ?: throw IOException("OpenAI API key not provided!")
-
-    // default config is required
-    defaultConfigs {
-        buildConfigField(STRING, "openAIKey", openAiKey.toString())
-    }
 }
 
 sqldelight {
@@ -140,4 +111,20 @@ android {
 mockmp {
     usesHelper = true
     installWorkaround()
+}
+
+buildkonfig {
+    packageName = "com.foreverrafs.superdiary.buildKonfig"
+
+    val openAiKey =
+        project.findProperty("openAiKey")?.toString()
+
+    if (openAiKey == null) {
+        println("WARN: OpenAI key not provided!")
+    }
+
+    // default config is required
+    defaultConfigs {
+        buildConfigField(STRING, "openAIKey", openAiKey ?: "")
+    }
 }

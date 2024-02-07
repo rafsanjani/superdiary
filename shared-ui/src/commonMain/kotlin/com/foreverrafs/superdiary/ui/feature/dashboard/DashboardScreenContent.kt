@@ -57,6 +57,7 @@ import com.foreverrafs.superdiary.ui.format
 fun DashboardScreenContent(
     state: DashboardViewModel.DashboardScreenState,
     onAddEntry: () -> Unit,
+    onToggleFavorite: (diary: Diary) -> Unit,
     modifier: Modifier = Modifier,
     onSeeAll: () -> Unit,
 ) {
@@ -69,9 +70,7 @@ fun DashboardScreenContent(
             DashboardSection(
                 content = {
                     AtAGlance(
-                        modifier = Modifier
-                            .animateItemPlacement()
-                            .fillMaxWidth(),
+                        modifier = Modifier.animateItemPlacement().fillMaxWidth(),
                         state = state,
                     )
                 },
@@ -80,10 +79,7 @@ fun DashboardScreenContent(
             DashboardSection(
                 content = { onDismiss ->
                     WeeklySummaryCard(
-                        modifier = Modifier
-                            .animateItemPlacement()
-                            .fillMaxWidth()
-                            .heightIn(max = 200.dp, min = 150.dp),
+                        modifier = Modifier.animateItemPlacement().fillMaxWidth().heightIn(max = 200.dp, min = 150.dp),
                         summary = state.weeklySummary,
                         onDismiss = onDismiss,
                     )
@@ -101,7 +97,8 @@ fun DashboardScreenContent(
                             onSeeAll = onSeeAll,
                             onDiaryClicked = {
                                 navigator.push(DetailScreen(it))
-                            }
+                            },
+                            onToggleFavorite = onToggleFavorite,
                         )
                     } else {
                         Button(onClick = onAddEntry) {
@@ -118,9 +115,7 @@ fun DashboardScreenContent(
     }
 
     Scaffold(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(8.dp)
+        modifier = modifier.fillMaxSize().padding(8.dp),
     ) {
         LazyColumn(
             modifier = Modifier.padding(it),
@@ -176,9 +171,7 @@ private fun AtAGlance(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            val dashboardCardModifier = Modifier
-                .weight(1f)
-                .aspectRatio(1f)
+            val dashboardCardModifier = Modifier.weight(1f).aspectRatio(1f)
 
             fun streakCaption(streak: Streak): String {
                 val dateFormatPattern = "MMM dd"
@@ -224,9 +217,7 @@ fun GlanceCard(
         shape = RoundedCornerShape(8.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
+            modifier = Modifier.fillMaxSize().padding(8.dp),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -259,6 +250,7 @@ fun GlanceCard(
 private fun LatestEntries(
     diaries: List<Diary>,
     onSeeAll: () -> Unit,
+    onToggleFavorite: (diary: Diary) -> Unit,
     modifier: Modifier = Modifier,
     onDiaryClicked: (diary: Diary) -> Unit,
 ) {
@@ -286,12 +278,11 @@ private fun LatestEntries(
         ) {
             for (diary in diaries) {
                 DiaryItem(
-                    modifier = Modifier.clickable(onClick = { onDiaryClicked(diary) }),
-                    inSelectionMode = false,
-                    onToggleFavorite = {},
-                    selected = false,
                     diary = diary,
-                )
+                    selected = false,
+                    inSelectionMode = false,
+                    modifier = Modifier.clickable(onClick = { onDiaryClicked(diary) }),
+                ) { onToggleFavorite(diary) }
             }
         }
     }
@@ -308,15 +299,11 @@ private fun WeeklySummaryCard(
         shape = RoundedCornerShape(8.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
+            modifier = Modifier.fillMaxSize().padding(8.dp),
             horizontalAlignment = Alignment.Start,
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp),
+                modifier = Modifier.fillMaxWidth().padding(4.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
@@ -333,8 +320,7 @@ private fun WeeklySummaryCard(
             }
 
             Text(
-                modifier = Modifier
-                    .padding(4.dp),
+                modifier = Modifier.padding(4.dp),
                 text = summary ?: "Error generating weekly summary",
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Justify,
@@ -343,9 +329,7 @@ private fun WeeklySummaryCard(
 
             if (summary == null) {
                 TextButton(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(top = 12.dp),
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 12.dp),
                     onClick = {},
                 ) {
                     Text("Retry")

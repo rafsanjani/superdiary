@@ -30,10 +30,10 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
-import kotlinx.datetime.Clock
-import kotlinx.datetime.toKotlinLocalDate
 import java.time.LocalDate
 import kotlin.random.Random
+import kotlinx.datetime.Clock
+import kotlinx.datetime.toKotlinLocalDate
 
 private val diaryListActions = DiaryListActions(
     onAddEntry = {},
@@ -288,16 +288,17 @@ private fun DashboardPreview() {
                 Streak(
                     0,
                     Clock.System.now().toDate(),
-                    Clock.System.now().toDate()
+                    Clock.System.now().toDate(),
                 ),
                 bestStreak = Streak(
                     0,
                     Clock.System.now().toDate(),
-                    Clock.System.now().toDate()
-                )
+                    Clock.System.now().toDate(),
+                ),
             ),
             onAddEntry = {},
             onSeeAll = {},
+            onToggleFavorite = {},
         )
     }
 }
@@ -314,42 +315,42 @@ private fun DetailPreview() {
                     entry = """
                             <p style="text-align:justify;">Hello Diary, I did something awful today too.
                                 I kept eating a very large bowl of rice till I couldn't take
-                                it any much longer. I think this will go down in history as 
+                                it any much longer. I think this will go down in history as
                                 the greatest rice eating bout of all time.
                                  Hello Diary, I did something awful today too.
                                 I kept eating a very large bowl of rice till I couldn't take
-                                it any much longer. I think this will go down in history as 
+                                it any much longer. I think this will go down in history as
                                 the greatest rice eating bout of all time.
                                  Hello Diary, I did something awful today too.
                                 I kept eating a very large bowl of rice till I couldn't take
-                                it any much longer. I think this will go down in history as 
+                                it any much longer. I think this will go down in history as
                                 the greatest rice eating bout of all time.
                                  Hello Diary, I did something awful today too.
                                 I kept eating a very large bowl of rice till I couldn't take
-                                it any much longer. I think this will go down in history as 
+                                it any much longer. I think this will go down in history as
                                 the greatest rice eating bout of all time.
                                  Hello Diary, I did something awful today too.
                                 I kept eating a very large bowl of rice till I couldn't take
-                                it any much longer. I think this will go down in history as 
+                                it any much longer. I think this will go down in history as
                                 the greatest rice eating bout of all time.
                                  Hello Diary, I did something awful today too.
                                 I kept eating a very large bowl of rice till I couldn't take
-                                it any much longer. I think this will go down in history as 
+                                it any much longer. I think this will go down in history as
                                 the greatest rice eating bout of all time.
                                  Hello Diary, I did something awful today too.
                                 I kept eating a very large bowl of rice till I couldn't take
-                                it any much longer. I think this will go down in history as 
+                                it any much longer. I think this will go down in history as
                                 the greatest rice eating bout of all time.
                                  Hello Diary, I did something awful today too.
                                 I kept eating a very large bowl of rice till I couldn't take
-                                it any much longer. I think this will go down in history as 
+                                it any much longer. I think this will go down in history as
                                 the greatest rice eating bout of all time.
                             <p/>
                     """.trimIndent(),
                     id = 1000,
                     date = Clock.System.now(),
                     isFavorite = false,
-                )
+                ),
             )
         }
     }

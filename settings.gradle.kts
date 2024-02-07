@@ -24,8 +24,8 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2024.01.28")
-            version("compose-multiplatform", "1.6.0-dev1369")
+            from("io.github.rafsanjani:versions:2024.02.04")
+            version("compose-multiplatform", "1.6.0-dev1409")
         }
     }
 }
@@ -35,4 +35,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "superdiary"
 include(":androidApp")
 include(":shared-data")
+include(":swipe")
 include(":shared-ui")
+include(":core:analytics")
+include(":core:logging")

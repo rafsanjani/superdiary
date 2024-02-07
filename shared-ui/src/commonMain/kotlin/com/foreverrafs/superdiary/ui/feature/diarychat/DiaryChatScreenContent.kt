@@ -6,7 +6,6 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,7 +31,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -68,9 +67,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
+import kotlin.random.Random
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
-import kotlin.random.Random
 
 @OptIn(ExperimentalLayoutApi::class)
 fun Modifier.positionAwareImePadding() = composed {
@@ -85,7 +84,6 @@ fun Modifier.positionAwareImePadding() = composed {
     }.consumeWindowInsets(PaddingValues(bottom = with(density) { bottomPadding.toDp() })).imePadding()
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DiaryChatScreenContent(
     screenState: DiaryChatViewModel.DiaryChatViewState,
@@ -148,8 +146,8 @@ fun DiaryChatScreenContent(
                             id = Random.nextLong(),
                             role = DiaryChatRole.DiaryAI,
                             timestamp = Clock.System.now(),
-                            content = "Gathering thoughts..."
-                        )
+                            content = "Gathering thoughts...",
+                        ),
                     )
                 }
             }
@@ -183,7 +181,7 @@ fun DiaryChatScreenContent(
                     },
                 value = input,
                 onValueChange = { input = it },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send)
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
             )
 
             Spacer(modifier = Modifier.width(4.dp))
@@ -204,7 +202,7 @@ fun DiaryChatScreenContent(
                 ),
             ) {
                 Icon(
-                    imageVector = Icons.Default.Send,
+                    imageVector = Icons.AutoMirrored.Filled.Send,
                     contentDescription = null,
                 )
             }
