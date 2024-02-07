@@ -11,10 +11,11 @@ plugins {
     alias(libs.plugins.ksp)
     kotlin("multiplatform")
     id("kotlin-parcelize")
-    id("com.superdiary.kover")
     alias(libs.plugins.mockmp)
-    alias(libs.plugins.sonar)
     alias(libs.plugins.testLogger)
+
+    // Build logic
+    id("com.superdiary.kover")
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
