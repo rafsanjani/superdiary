@@ -81,12 +81,12 @@ interface DataSource {
     /**
      * Count all the entries available in the database
      */
-    fun countEntries(): Long
+    suspend fun countEntries(): Long
 
     /**
      * Insert a weekly summary
      */
-    fun insertWeeklySummary(summary: WeeklySummary)
+    suspend fun insertWeeklySummary(summary: WeeklySummary)
 
     /**
      *Fetch all weekly summary entries

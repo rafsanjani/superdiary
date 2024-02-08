@@ -51,6 +51,7 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.materialIconsExtended)
                 implementation(projects.sharedData)
+                implementation(projects.core.utils)
                 implementation(libs.kotlin.datetime)
                 implementation(libs.koin.core)
                 implementation(libs.voyager.navigator)
