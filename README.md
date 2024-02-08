@@ -10,6 +10,7 @@
     </a>
     <img src="https://sonarcloud.io/api/project_badges/measure?project=rafsanjani_superdiary&metric=sqale_rating" alt="Maintainability badge"/>
     <img src="https://sonarcloud.io/api/project_badges/measure?project=rafsanjani_superdiary&metric=security_rating" alt="Security badge" />
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=rafsanjani_superdiary&metric=coverage" alt="code coverage" />
 </div>
 A simple diary app, mostly focused on quality architectural patterns and improved testing strategies (unit, snapshot and instrumentation).
 
