@@ -27,19 +27,16 @@ import com.foreverrafs.superdiary.data.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.data.validator.DiaryValidator
 import com.foreverrafs.superdiary.data.validator.DiaryValidatorImpl
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.datetime.Clock
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import kotlin.time.Duration.Companion.seconds
 
 fun useCaseModule() = module {
     single<DataSource> { LocalDataSource(get()) }
     factory<Clock> { Clock.System }
-    factory<CoroutineDispatcher> { Dispatchers.Default }
 
     single<OpenAI> {
         OpenAI(
@@ -49,6 +46,8 @@ fun useCaseModule() = module {
         )
     }
     factory<DiaryAI> { OpenDiaryAI(openAI = get()) }
+    factory<DiaryValidator> { DiaryValidatorImpl(get()) }
+
     factoryOf(::AddDiaryUseCase)
     factoryOf(::GetAllDiariesUseCase)
     factoryOf(::GetFavoriteDiariesUseCase)
@@ -59,7 +58,6 @@ fun useCaseModule() = module {
     factoryOf(::DeleteDiaryUseCase)
     singleOf(::UpdateDiaryUseCase)
     singleOf(::Database)
-    factory<DiaryValidator> { DiaryValidatorImpl(get()) }
     factoryOf(::GetLatestEntriesUseCase)
     factoryOf(::CountDiariesUseCase)
     factoryOf(::CalculateStreakUseCase)

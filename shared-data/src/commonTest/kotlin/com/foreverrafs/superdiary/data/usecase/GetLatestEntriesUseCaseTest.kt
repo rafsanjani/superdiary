@@ -5,10 +5,14 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
 import com.foreverrafs.superdiary.data.Database
+import com.foreverrafs.superdiary.data.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.data.datasource.TestDatabaseDriver
 import com.foreverrafs.superdiary.data.model.Diary
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -19,19 +23,16 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class GetLatestEntriesUseCaseTest {
     private val database = Database(TestDatabaseDriver())
     private val dataSource: DataSource = LocalDataSource(database)
 
-    private val addDiaryUseCase = AddDiaryUseCase(dataSource) {
+    private val addDiaryUseCase = AddDiaryUseCase(dataSource, TestAppDispatchers) {
         // no-op validator
     }
-    private val getLatestEntriesUseCase = GetLatestEntriesUseCase(dataSource)
+    private val getLatestEntriesUseCase = GetLatestEntriesUseCase(dataSource, TestAppDispatchers)
 
     @BeforeTest
     fun setup() {

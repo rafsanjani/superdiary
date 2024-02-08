@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.ui.di
 
+import com.foreverrafs.superdiary.core.utils.utilsModule
 import com.foreverrafs.superdiary.data.analytics.Analytics
 import com.foreverrafs.superdiary.data.di.platformModule
 import com.foreverrafs.superdiary.data.di.useCaseModule
@@ -22,5 +23,10 @@ internal fun screenModules(): Module = module {
     singleOf(::DetailsViewModel)
 }
 
-fun appModule(analytics: Analytics) =
-    listOf(useCaseModule(), screenModules(), platformModule(analytics))
+/** This is the only component that is exposed outside of this module */
+fun compositeModule(analytics: Analytics): List<Module> = listOf(
+    utilsModule(),
+    useCaseModule(),
+    screenModules(),
+    platformModule(analytics),
+)

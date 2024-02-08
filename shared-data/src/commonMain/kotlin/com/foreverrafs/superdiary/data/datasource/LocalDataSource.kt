@@ -90,9 +90,9 @@ class LocalDataSource(private val database: Database) : DataSource {
         return database.getLatestEntries(count)
     }
 
-    override fun countEntries(): Long = database.countEntries()
+    override suspend fun countEntries(): Long = database.countEntries()
 
-    override fun insertWeeklySummary(summary: WeeklySummary) =
+    override suspend fun insertWeeklySummary(summary: WeeklySummary) =
         database.insertWeeklySummary(summary = summary)
 
     override fun getWeeklySummary(): WeeklySummary? {

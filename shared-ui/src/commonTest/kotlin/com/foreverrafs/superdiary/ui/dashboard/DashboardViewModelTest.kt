@@ -5,6 +5,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
+import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.model.Diary
@@ -49,13 +50,13 @@ class DashboardViewModelTest : TestsWithMocks() {
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
         dashboardViewModel = DashboardViewModel(
-            getAllDiariesUseCase = GetAllDiariesUseCase(dataSource),
-            calculateStreakUseCase = CalculateStreakUseCase(),
-            addWeeklySummaryUseCase = AddWeeklySummaryUseCase(dataSource),
-            getWeeklySummaryUseCase = GetWeeklySummaryUseCase(dataSource),
+            getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers),
+            calculateStreakUseCase = CalculateStreakUseCase(TestAppDispatchers),
+            addWeeklySummaryUseCase = AddWeeklySummaryUseCase(dataSource, TestAppDispatchers),
+            getWeeklySummaryUseCase = GetWeeklySummaryUseCase(dataSource, TestAppDispatchers),
             diaryAI = diaryAI,
-            calculateBestStreakUseCase = CalculateBestStreakUseCase(),
-            updateDiaryUseCase = UpdateDiaryUseCase(dataSource),
+            calculateBestStreakUseCase = CalculateBestStreakUseCase(TestAppDispatchers),
+            updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
         )
     }
 
@@ -116,7 +117,7 @@ class DashboardViewModelTest : TestsWithMocks() {
     @Test
     fun `Should generate weekly summary when weekly summary is older than a week`() = runTest {
         every { dataSource.fetchAll() } returns flowOf(listOf(Diary("Hello World")))
-        every { dataSource.insertWeeklySummary(isAny()) } returns Unit
+        everySuspending { dataSource.insertWeeklySummary(isAny()) } returns Unit
         every { dataSource.getWeeklySummary() } returns WeeklySummary(
             summary = "Old diary summary",
             date = Clock.System.now()

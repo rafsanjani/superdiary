@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.ui.details
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isInstanceOf
+import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.DeleteDiaryUseCase
@@ -31,7 +32,7 @@ class DetailsViewModelTest : TestsWithMocks() {
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
-        detailsViewModel = DetailsViewModel(DeleteDiaryUseCase(dataSource))
+        detailsViewModel = DetailsViewModel(DeleteDiaryUseCase(dataSource, TestAppDispatchers))
     }
 
     @AfterTest

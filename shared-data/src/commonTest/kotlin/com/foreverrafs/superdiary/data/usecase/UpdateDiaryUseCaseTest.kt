@@ -5,33 +5,33 @@ import assertk.assertThat
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import com.foreverrafs.superdiary.data.Database
+import com.foreverrafs.superdiary.data.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.data.datasource.TestDatabaseDriver
 import com.foreverrafs.superdiary.data.insertRandomDiaries
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UpdateDiaryUseCaseTest {
     private val database = Database(TestDatabaseDriver())
     private val dataSource: DataSource = LocalDataSource(database)
 
-    private val updateDiaryUseCase = UpdateDiaryUseCase(dataSource)
-    private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
+    private val updateDiaryUseCase = UpdateDiaryUseCase(dataSource = dataSource, dispatchers = TestAppDispatchers)
+    private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource = dataSource, dispatchers = TestAppDispatchers)
 
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
         database.createDatabase()
-        insertRandomDiaries(dataSource)
     }
 
     @AfterTest
@@ -41,6 +41,8 @@ class UpdateDiaryUseCaseTest {
 
     @Test
     fun `Update valid diary entry returns 1 updated row`() = runTest {
+        insertRandomDiaries(dataSource)
+
         getAllDiariesUseCase().test {
             val originalList = awaitItem()
 
