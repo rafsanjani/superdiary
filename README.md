@@ -2,11 +2,8 @@
 
 <div align="left">
     <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/build.yml/badge.svg"  alt="Link to CI build status"/>
-    <a href = "https://github.com/Rafsanjani/superdiary/blob/master/LICENSE">
-        <img src = "https://img.shields.io/github/license/pushpalroy/jetstore"  alt="Link to licence"/>
-    </a>
-    <a href = "https://twitter.com/coded_raf">
-        <img src = "https://img.shields.io/twitter/url?label=follow&style=social&url=https%3A%2F%2Ftwitter.com%2Fpushpalroy"  alt="Link to Twitter profile"/>
+    <a href = "https://twitter.com/coded_rafs">
+        <img src = "https://img.shields.io/twitter/follow/coded_rafs"/>
     </a>
     <img src="https://sonarcloud.io/api/project_badges/measure?project=rafsanjani_superdiary&metric=sqale_rating" alt="Maintainability badge"/>
     <img src="https://sonarcloud.io/api/project_badges/measure?project=rafsanjani_superdiary&metric=security_rating" alt="Security badge" />
