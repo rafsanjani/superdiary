@@ -25,9 +25,12 @@ object FavoriteTab : SuperDiaryTab {
             screenModel.loadFavorites()
         }
 
-        FavoriteScreenContent(
-            state = screenState,
-        )
+        screenState?.let {
+            FavoriteScreenContent(
+                it,
+                onToggleFavorite = screenModel::toggleFavorite,
+            )
+        }
     }
 
     override val selectedIcon: VectorPainter
