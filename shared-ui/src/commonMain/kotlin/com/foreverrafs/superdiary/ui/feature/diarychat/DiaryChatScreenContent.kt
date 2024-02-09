@@ -70,6 +70,9 @@ import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
 import kotlin.random.Random
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
+import superdiary.`shared-ui`.generated.resources.Res
 
 @OptIn(ExperimentalLayoutApi::class)
 fun Modifier.positionAwareImePadding() = composed {
@@ -84,6 +87,7 @@ fun Modifier.positionAwareImePadding() = composed {
     }.consumeWindowInsets(PaddingValues(bottom = with(density) { bottomPadding.toDp() })).imePadding()
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun DiaryChatScreenContent(
     screenState: DiaryChatViewModel.DiaryChatViewState,
@@ -187,10 +191,11 @@ fun DiaryChatScreenContent(
             Spacer(modifier = Modifier.width(4.dp))
 
             // Send button
+            val description = stringResource(Res.string.content_description_button_send)
             IconButton(
                 enabled = input.isNotEmpty() && !screenState.isResponding,
                 modifier = Modifier.size(48.dp).semantics(true) {
-                    contentDescription = "Send Button"
+                    this.contentDescription = description
                 },
                 onClick = {
                     onQueryDiaries(input)
@@ -232,10 +237,12 @@ fun ChatBubble(
 
         Text(
             text = chatItem.content,
-            modifier = alignmentAndPaddingModifier.background(
-                color = backgroundColor,
-                shape = RoundedCornerShape(4.dp),
-            ).padding(8.dp),
+            modifier = alignmentAndPaddingModifier
+                .background(
+                    color = backgroundColor,
+                    shape = RoundedCornerShape(4.dp),
+                )
+                .padding(8.dp),
             style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp, lineHeight = 24.sp),
             color = Color.White,
         )

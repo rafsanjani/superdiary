@@ -32,7 +32,7 @@ class GetLatestEntriesUseCaseTest {
     private val addDiaryUseCase = AddDiaryUseCase(dataSource, TestAppDispatchers) {
         // no-op validator
     }
-    private val getLatestEntriesUseCase = GetLatestEntriesUseCase(dataSource, TestAppDispatchers)
+    private val getLatestEntriesUseCase = GetLatestEntriesUseCase(dataSource)
 
     @BeforeTest
     fun setup() {

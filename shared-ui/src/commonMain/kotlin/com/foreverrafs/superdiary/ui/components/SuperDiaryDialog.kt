@@ -5,7 +5,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
+import superdiary.`shared-ui`.generated.resources.Res
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ConfirmDeleteDialog(
     onDismiss: () -> Unit,
@@ -15,20 +19,20 @@ fun ConfirmDeleteDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = "Confirm deletion",
+                text = stringResource(Res.string.confirm_delete_diary_dialog_title),
                 style = MaterialTheme.typography.titleMedium,
             )
         },
         text = {
             Text(
-                text = "Are you sure you want to delete?",
+                text = stringResource(Res.string.confirm_delete_diary_dialog_message),
                 style = MaterialTheme.typography.bodyMedium,
             )
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
                 Text(
-                    text = "Confirm",
+                    text = stringResource(Res.string.confirm_delete_diary_positive_button),
                     style = MaterialTheme.typography.labelMedium,
                 )
             }
@@ -36,8 +40,8 @@ fun ConfirmDeleteDialog(
         dismissButton = {
             TextButton(onClick = onDismiss) {
                 Text(
+                    text = stringResource(Res.string.confirm_delete_diary_negative_button),
                     style = MaterialTheme.typography.labelMedium,
-                    text = "Cancel",
                     color = MaterialTheme.colorScheme.error,
                 )
             }

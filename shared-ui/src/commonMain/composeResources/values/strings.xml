@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Super Diary</string>
+    <string name="confirm_delete_diary_dialog_title">Confirm Deletion</string>
+    <string name="confirm_delete_diary_dialog_message">Are you sure you want to delete?</string>
+    <string name="confirm_delete_diary_positive_button">Confirm</string>
+    <string name="confirm_delete_diary_negative_button">Cancel</string>
+
+
+    <!--  Labels  -->
+    <string name="label_diary_ai">Diary AI:</string>
+    <string name="label_add_entry">Add entry</string>
+    <string name="label_entries">Entries</string>
+    <string name="label_glance_header_streak">Streak 🔥</string>
+    <string name="label_glance_header_best_streak">Best Streak</string>
+    <string name="label_glance_header_weekly_summary">Weekly Summary</string>
+    <string name="label_glance_header_latest_entries">Latest Entries</string>
+    <string name="label_weekly_summary_error">Error generating weekly summary</string>
+    <string name="label_button_retry">Retry</string>
+    <string name="label_button_show_all">Show All</string>
+    <string name="label_diary_deleted">Diary Deleted!</string>
+
+    <!--  Accessibility Content Descriptions  -->
+    <string name="content_description_navigate_back">Navigate back</string>
+    <string name="content_description_save_entry">Save entry</string>
+    <string name="content_description_delete_entry">Delete entry</string>
+    <string name="content_description_button_send">Send</string>
+
+    <!--  Formatted Strings  -->
+    <string name="formatted_streak_days">%1$s days</string>
+
+
+</resources>
