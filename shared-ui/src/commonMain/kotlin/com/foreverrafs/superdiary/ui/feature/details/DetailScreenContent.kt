@@ -40,7 +40,7 @@ import com.foreverrafs.superdiary.ui.format
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -87,12 +87,12 @@ fun DetailScreenContent(
                             contentDescription = "Navigate back",
                         )
                     }
-                }
+                },
             )
         },
         snackbarHost = {
             SnackbarHost(hostState)
-        }
+        },
     ) {
         Surface(
             modifier = Modifier.padding(it),
@@ -103,14 +103,14 @@ fun DetailScreenContent(
                     .verticalScroll(rememberScrollState())
                     .fillMaxSize()
                     .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = diary.date
                         .toLocalDateTime(TimeZone.currentSystemDefault())
                         .format("EEE - MMMM dd, yyyy - hh:mm a"),
                     style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.alpha(0.6f)
+                    modifier = Modifier.alpha(0.6f),
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -120,7 +120,7 @@ fun DetailScreenContent(
                     modifier = Modifier
                         .fillMaxWidth(),
                     style = MaterialTheme.typography.bodyMedium,
-                    lineHeight = 32.sp
+                    lineHeight = 32.sp,
                 )
             }
 
@@ -132,13 +132,13 @@ fun DetailScreenContent(
                         onDeleteDiary()
                         coroutineScope.launch {
                             // Only show snackbar for 600 milliseconds
-                            withTimeout(600) {
+                            withTimeoutOrNull(600) {
                                 hostState.showSnackbar("Deleted!", duration = SnackbarDuration.Indefinite)
                             }
 
                             onNavigateBack()
                         }
-                    }
+                    },
                 )
             }
         }
