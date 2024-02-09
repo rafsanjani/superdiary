@@ -11,7 +11,9 @@ import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import com.foreverrafs.superdiary.ui.SuperDiaryTab
+import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.favorites.model.FavoriteViewModel
 
 object FavoriteTab : SuperDiaryTab {
@@ -20,6 +22,7 @@ object FavoriteTab : SuperDiaryTab {
         val screenModel: FavoriteViewModel = getScreenModel()
 
         val screenState by screenModel.state.collectAsState()
+        val navigator = LocalScreenNavigator.current
 
         LaunchedEffect(Unit) {
             screenModel.loadFavorites()
@@ -29,6 +32,9 @@ object FavoriteTab : SuperDiaryTab {
             FavoriteScreenContent(
                 it,
                 onToggleFavorite = screenModel::toggleFavorite,
+                onFavoriteClicked = { favorite ->
+                    navigator.push(DetailScreen(favorite))
+                },
             )
         }
     }
