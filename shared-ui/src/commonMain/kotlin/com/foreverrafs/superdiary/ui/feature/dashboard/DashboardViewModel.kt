@@ -36,7 +36,7 @@ class DashboardViewModel(
             val latestEntries: List<Diary>,
             val totalEntries: Long,
             val weeklySummary: String?,
-            val streak: Streak,
+            val currentStreak: Streak,
             val bestStreak: Streak,
         ) : DashboardScreenState
     }
@@ -68,7 +68,7 @@ class DashboardViewModel(
                     } else {
                         DEFAULT_SUMMARY_TEXT
                     },
-                    streak = Streak(
+                    currentStreak = Streak(
                         0,
                         Clock.System.now().toDate(),
                         Clock.System.now().toDate(),
@@ -169,7 +169,7 @@ class DashboardViewModel(
 
         mutableState.update { state ->
             (state as? DashboardScreenState.Content)?.copy(
-                streak = streak,
+                currentStreak = streak,
                 bestStreak = bestStreak,
             ) ?: state
         }

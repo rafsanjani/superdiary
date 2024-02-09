@@ -43,7 +43,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
+import superdiary.`shared-ui`.generated.resources.Res
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun DetailScreenContent(
     diary: Diary,
@@ -73,7 +77,7 @@ fun DetailScreenContent(
                         Icon(
                             modifier = Modifier.clip(CircleShape),
                             imageVector = Icons.Default.ArrowBackIosNew,
-                            contentDescription = "Navigate back",
+                            contentDescription = stringResource(Res.string.content_description_navigate_back),
                         )
                     }
                 },
@@ -84,7 +88,7 @@ fun DetailScreenContent(
                         Icon(
                             modifier = Modifier.clip(CircleShape),
                             imageVector = Icons.Default.Delete,
-                            contentDescription = "Navigate back",
+                            contentDescription = stringResource(Res.string.content_description_delete_entry),
                         )
                     }
                 },
@@ -125,6 +129,8 @@ fun DetailScreenContent(
             }
 
             if (showDeleteDialog) {
+                val deletedString = stringResource(Res.string.label_diary_deleted)
+
                 ConfirmDeleteDialog(
                     onDismiss = { showDeleteDialog = !showDeleteDialog },
                     onConfirm = {
@@ -133,7 +139,10 @@ fun DetailScreenContent(
                         coroutineScope.launch {
                             // Only show snackbar for 600 milliseconds
                             withTimeoutOrNull(600) {
-                                hostState.showSnackbar("Deleted!", duration = SnackbarDuration.Indefinite)
+                                hostState.showSnackbar(
+                                    message = deletedString,
+                                    duration = SnackbarDuration.Indefinite,
+                                )
                             }
 
                             onNavigateBack()

@@ -41,8 +41,11 @@ import com.foreverrafs.superdiary.ui.feature.creatediary.components.RichTextStyl
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
+import superdiary.`shared-ui`.generated.resources.Res
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 fun CreateDiaryScreenContent(
     isGeneratingFromAi: Boolean,
@@ -63,7 +66,7 @@ fun CreateDiaryScreenContent(
                             modifier = Modifier
                                 .clip(CircleShape),
                             imageVector = Icons.Default.ArrowBackIosNew,
-                            contentDescription = "Navigate back",
+                            contentDescription = stringResource(Res.string.content_description_navigate_back),
                         )
                     }
                 },
@@ -78,14 +81,14 @@ fun CreateDiaryScreenContent(
                                 modifier = Modifier
                                     .clip(CircleShape),
                                 imageVector = Icons.Default.Check,
-                                contentDescription = "Save entry",
+                                contentDescription = stringResource(Res.string.content_description_save_entry),
                             )
                         }
                     }
                 },
             )
         },
-        modifier = modifier
+        modifier = modifier,
     ) {
         Surface(
             modifier = Modifier.padding(it),
@@ -117,7 +120,7 @@ fun CreateDiaryScreenContent(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Text(
-                        text = "Diary AI:",
+                        text = stringResource(Res.string.label_diary_ai),
                         style = MaterialTheme.typography.bodyMedium,
                     )
 
