@@ -19,8 +19,9 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.screen.Empty
 @Composable
 fun FavoriteScreenContent(
     state: FavoriteScreenState,
-    modifier: Modifier = Modifier,
     onToggleFavorite: suspend (diary: Diary) -> Boolean,
+    modifier: Modifier = Modifier,
+    onFavoriteClicked: (diary: Diary) -> Unit,
 ) {
     val snackbarHostState = LocalRootSnackbarHostState.current
 
@@ -35,8 +36,7 @@ fun FavoriteScreenContent(
             onDeleteDiaries = {},
             onCancelSelection = {},
             diaryListActions = DiaryListActions.Empty.copy(
-                onDiaryClicked = {
-                },
+                onDiaryClicked = onFavoriteClicked,
                 onToggleFavorite = {
                     if (onToggleFavorite(it)) {
                         snackbarHostState.showSnackbar("Favorite removed")
