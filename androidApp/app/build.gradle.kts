@@ -22,7 +22,7 @@ kotlin {
     androidTarget()
 
     sourceSets {
-        val androidMain by getting {
+        androidMain {
             dependencies {
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.kotlin.datetime)
@@ -55,6 +55,11 @@ android {
             signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = true
             proguardFile("proguard-rules.pro")
+        }
+        create("benchmark") {
+            initWith(buildTypes.getByName("release"))
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
         }
     }
 }
