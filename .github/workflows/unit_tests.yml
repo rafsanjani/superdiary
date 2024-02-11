@@ -8,7 +8,7 @@ concurrency:
 
 jobs:
   lint:
-    runs-on: self-hosted
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,7 +27,7 @@ jobs:
         with:
           arguments: detektAll
   snapshot:
-    runs-on: self-hosted
+    runs-on: macos-14
     needs: lint
     steps:
       - uses: actions/checkout@v4
