@@ -13,7 +13,7 @@ A simple diary app, mostly focused on quality architectural patterns and improve
 
 ### Android - Light
 
-| Dashboard                                                                                                  | Diary AI                                                                                              |
+| Dashboard                                                                                                  | Create Diary                                                                                      |
 |------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
 |  <img width="350" alt="Screenshot 2023-12-15 at 11 16 22" src="https://github.com/rafsanjani/superdiary/assets/9197459/192494b8-162f-4cc2-a416-aebe5ea11da8"> |<img width="350" alt="Screenshot 2023-12-15 at 11 16 22" src="https://github.com/rafsanjani/superdiary/assets/9197459/a5f608c5-d526-41f4-b382-7abfbaea1b9f"> |
 
