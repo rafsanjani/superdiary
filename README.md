@@ -11,25 +11,31 @@
 </div>
 A simple diary app, mostly focused on quality architectural patterns and improved testing strategies (unit, snapshot and instrumentation).
 
-### Screens (Android) - Dark
+### Android - Light
 
 | Dashboard                                                                                                  | Diary AI                                                                                              |
 |------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
-| ![dashboard](https://github.com/rafsanjani/superdiary/assets/9197459/9264a3e6-0e57-49b8-9e46-c0c2695f78b1) | ![chat](https://github.com/rafsanjani/superdiary/assets/9197459/a745bc69-0bdd-4ab3-8503-3315ad8b4443) |
+|  <img width="350" alt="Screenshot 2023-12-15 at 11 16 22" src="https://github.com/rafsanjani/superdiary/assets/9197459/192494b8-162f-4cc2-a416-aebe5ea11da8"> |<img width="350" alt="Screenshot 2023-12-15 at 11 16 22" src="https://github.com/rafsanjani/superdiary/assets/9197459/a5f608c5-d526-41f4-b382-7abfbaea1b9f"> |
 
-### Screens (Android) - Light
+
+
+
+
+
+### Android - Dark
 
 | Dashboard                                                                                                        | Diary AI                                                                                                    |
-|------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
-| ![dashboard-light](https://github.com/rafsanjani/superdiary/assets/9197459/f191a467-56b4-42d2-9c27-98a9f2c8a815) | ![chat_light](https://github.com/rafsanjani/superdiary/assets/9197459/a1b865cb-d12e-49ed-a92e-c3964d18efff) |
+|----------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+|<img width="350" src="https://github.com/rafsanjani/superdiary/assets/9197459/f84e64fd-daba-4663-ba8e-55a2a27b7280" /> | <img width="350" src="https://github.com/rafsanjani/superdiary/assets/9197459/cc10b064-9b1a-43be-8bcd-53e9d9fbbfa5" /> |
 
-### Screens (iOS) - Dark
 
-| Dashboard                                                                                                                                                    | Diary AI                                                                                                                                                     |
+### iOS - Dark
+
+| Diary AI                                                                                                                                                    | Dashboard                                                                                                                                                    |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <img width="350" alt="Screenshot 2023-12-15 at 11 16 22" src="https://github.com/rafsanjani/superdiary/assets/9197459/e7e61180-a364-4d16-a554-b9304924d3eb"> | <img width="350" alt="Screenshot 2023-12-15 at 11 21 01" src="https://github.com/rafsanjani/superdiary/assets/9197459/94eab288-6dfa-4c44-94e9-784d16af8f96"> |
+| <img width="350" alt="Screenshot 2023-12-15 at 11 16 22" src="https://github.com/rafsanjani/superdiary/assets/9197459/f84e64fd-daba-4663-ba8e-55a2a27b7280"> | <img width="350" alt="Screenshot 2023-12-15 at 11 21 01" src="https://github.com/rafsanjani/superdiary/assets/9197459/af89bd19-bf17-4f31-8515-0e0cdddc40db"> |
 
-### Screens (iOS) - Light
+### iOS - Light
 
 | Dashboard                                                                                                                                                    | Diary AI                                                                                                                                                     |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
