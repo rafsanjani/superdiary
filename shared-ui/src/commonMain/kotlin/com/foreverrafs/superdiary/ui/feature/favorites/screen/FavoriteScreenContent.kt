@@ -7,6 +7,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.data.model.Diary
@@ -47,7 +48,9 @@ fun FavoriteScreenContent(
             snackbarHostState = SnackbarHostState(),
             emptyContent = {
                 Text(
-                    modifier = Modifier.padding(bottom = 64.dp),
+                    modifier = Modifier
+                        .padding(bottom = 64.dp)
+                        .testTag("empty_favorite_text"),
                     text = "No favorite diary!",
                     style = MaterialTheme.typography.titleMedium,
                     fontSize = 14.sp,

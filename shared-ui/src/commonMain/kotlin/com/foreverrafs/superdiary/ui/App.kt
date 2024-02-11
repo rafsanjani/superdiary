@@ -1,9 +1,11 @@
 package com.foreverrafs.superdiary.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import com.foreverrafs.superdiary.ui.home.BottomNavigationScreen
@@ -15,14 +17,13 @@ import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
  */
 
 @Composable
-fun App() {
+fun App(modifier: Modifier = Modifier) {
     SuperdiaryAppTheme {
-
         Navigator(
             screen = BottomNavigationScreen,
             onBackPressed = {
                 SuperDiaryBackPressHandler.execute()
-            }
+            },
         ) { navigator ->
             val snackbarHostState = SnackbarHostState()
 
@@ -30,7 +31,11 @@ fun App() {
                 LocalRootSnackbarHostState provides snackbarHostState,
                 LocalScreenNavigator provides navigator,
             ) {
-                SlideTransition(navigator)
+                // Wrap it inside this box just to allow setting
+                // testTagAsResourceId from Android land
+                Box(modifier = modifier) {
+                    SlideTransition(navigator)
+                }
             }
         }
     }

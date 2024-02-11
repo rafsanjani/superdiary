@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.tab.CurrentTab
@@ -60,27 +61,28 @@ object BottomNavigationScreen : Screen {
     }
 
     @Composable
-    private fun RowScope.BottomNavigationItem(screen: SuperDiaryTab) {
+    private fun RowScope.BottomNavigationItem(tab: SuperDiaryTab) {
         val tabNavigator = LocalTabNavigator.current
 
-        val selected = tabNavigator.current == screen
+        val selected = tabNavigator.current == tab
         NavigationBarItem(
+            modifier = Modifier.testTag(tab.options.title),
             selected = selected,
-            onClick = { tabNavigator.current = screen },
+            onClick = { tabNavigator.current = tab },
             icon = {
                 Icon(
                     painter = if (selected) {
-                        screen.selectedIcon
+                        tab.selectedIcon
                     } else {
-                        screen.options.icon
+                        tab.options.icon
                             ?: rememberVectorPainter(Icons.Default.Home)
                     },
-                    contentDescription = screen.options.title,
+                    contentDescription = tab.options.title,
                 )
             },
             label = {
                 Text(
-                    text = screen.options.title,
+                    text = tab.options.title,
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
                 )
