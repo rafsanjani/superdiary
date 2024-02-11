@@ -40,10 +40,14 @@ import com.foreverrafs.superdiary.ui.format
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
+import superdiary.`shared-ui`.generated.resources.Res
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun DetailScreenContent(
     diary: Diary,
@@ -73,7 +77,7 @@ fun DetailScreenContent(
                         Icon(
                             modifier = Modifier.clip(CircleShape),
                             imageVector = Icons.Default.ArrowBackIosNew,
-                            contentDescription = "Navigate back",
+                            contentDescription = stringResource(Res.string.content_description_navigate_back),
                         )
                     }
                 },
@@ -84,15 +88,15 @@ fun DetailScreenContent(
                         Icon(
                             modifier = Modifier.clip(CircleShape),
                             imageVector = Icons.Default.Delete,
-                            contentDescription = "Navigate back",
+                            contentDescription = stringResource(Res.string.content_description_delete_entry),
                         )
                     }
-                }
+                },
             )
         },
         snackbarHost = {
             SnackbarHost(hostState)
-        }
+        },
     ) {
         Surface(
             modifier = Modifier.padding(it),
@@ -103,14 +107,14 @@ fun DetailScreenContent(
                     .verticalScroll(rememberScrollState())
                     .fillMaxSize()
                     .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = diary.date
                         .toLocalDateTime(TimeZone.currentSystemDefault())
                         .format("EEE - MMMM dd, yyyy - hh:mm a"),
                     style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.alpha(0.6f)
+                    modifier = Modifier.alpha(0.6f),
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -120,11 +124,13 @@ fun DetailScreenContent(
                     modifier = Modifier
                         .fillMaxWidth(),
                     style = MaterialTheme.typography.bodyMedium,
-                    lineHeight = 32.sp
+                    lineHeight = 32.sp,
                 )
             }
 
             if (showDeleteDialog) {
+                val deletedString = stringResource(Res.string.label_diary_deleted)
+
                 ConfirmDeleteDialog(
                     onDismiss = { showDeleteDialog = !showDeleteDialog },
                     onConfirm = {
@@ -132,13 +138,16 @@ fun DetailScreenContent(
                         onDeleteDiary()
                         coroutineScope.launch {
                             // Only show snackbar for 600 milliseconds
-                            withTimeout(600) {
-                                hostState.showSnackbar("Deleted!", duration = SnackbarDuration.Indefinite)
+                            withTimeoutOrNull(600) {
+                                hostState.showSnackbar(
+                                    message = deletedString,
+                                    duration = SnackbarDuration.Indefinite,
+                                )
                             }
 
                             onNavigateBack()
                         }
-                    }
+                    },
                 )
             }
         }

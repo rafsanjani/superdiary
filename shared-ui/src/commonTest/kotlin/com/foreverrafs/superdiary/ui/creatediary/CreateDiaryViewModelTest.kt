@@ -1,10 +1,14 @@
 package com.foreverrafs.superdiary.ui.creatediary
 
+import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryViewModel
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -16,9 +20,6 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.kodein.mock.Mock
 import org.kodein.mock.tests.TestsWithMocks
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CreateDiaryViewModelTest : TestsWithMocks() {
@@ -37,7 +38,11 @@ class CreateDiaryViewModelTest : TestsWithMocks() {
         Dispatchers.setMain(StandardTestDispatcher())
 
         createDiaryViewModel = CreateDiaryViewModel(
-            addDiaryUseCase = AddDiaryUseCase(dataSource) {},
+            addDiaryUseCase = AddDiaryUseCase(
+                dataSource = dataSource,
+                dispatchers = TestAppDispatchers,
+                validator = {},
+            ),
             diaryAI = diaryAI,
         )
     }

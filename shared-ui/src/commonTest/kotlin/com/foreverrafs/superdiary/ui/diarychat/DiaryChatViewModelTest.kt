@@ -5,11 +5,15 @@ import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
+import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
 import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -19,9 +23,6 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.kodein.mock.Mock
 import org.kodein.mock.tests.TestsWithMocks
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiaryChatViewModelTest : TestsWithMocks() {
@@ -42,7 +43,7 @@ class DiaryChatViewModelTest : TestsWithMocks() {
         every { dataSource.fetchAll() } returns flowOf(emptyList())
         diaryChatViewModel = DiaryChatViewModel(
             diaryAI,
-            GetAllDiariesUseCase(dataSource),
+            GetAllDiariesUseCase(dataSource, TestAppDispatchers),
         )
     }
 

@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.ui.diarylist
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isInstanceOf
+import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.DeleteDiaryUseCase
@@ -13,6 +14,9 @@ import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.data.utils.toDate
 import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListViewModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -25,9 +29,6 @@ import kotlinx.coroutines.test.setMain
 import kotlinx.datetime.Clock
 import org.kodein.mock.Mock
 import org.kodein.mock.tests.TestsWithMocks
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiaryListViewModelTest : TestsWithMocks() {
@@ -56,11 +57,11 @@ class DiaryListViewModelTest : TestsWithMocks() {
         every { dataSource.find(isAny()) } returns flowOf(listOf(diary))
 
         diaryListViewModel = DiaryListViewModel(
-            getAllDiariesUseCase = GetAllDiariesUseCase(dataSource),
-            searchDiaryByEntryUseCase = SearchDiaryByEntryUseCase(dataSource),
-            searchDiaryByDateUseCase = SearchDiaryByDateUseCase(dataSource),
-            updateDiaryUseCase = UpdateDiaryUseCase(dataSource),
-            deleteDiaryUseCase = DeleteDiaryUseCase(dataSource),
+            getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers),
+            searchDiaryByEntryUseCase = SearchDiaryByEntryUseCase(dataSource, TestAppDispatchers),
+            searchDiaryByDateUseCase = SearchDiaryByDateUseCase(dataSource, TestAppDispatchers),
+            updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
+            deleteDiaryUseCase = DeleteDiaryUseCase(dataSource, TestAppDispatchers),
         )
     }
 

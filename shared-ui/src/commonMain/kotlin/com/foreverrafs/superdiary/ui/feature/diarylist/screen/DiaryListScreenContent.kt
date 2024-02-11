@@ -249,7 +249,7 @@ fun DiaryListScreenContent(
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-@Suppress("ModifierReused, ComposableParamOrder")
+@Suppress("ModifierReused")
 fun DiaryList(
     diaries: List<Diary>,
     inSelectionMode: Boolean,
@@ -261,6 +261,7 @@ fun DiaryList(
     modifier: Modifier = Modifier,
     clock: Clock = Clock.System,
     showSearchBar: Boolean = true,
+    emptyContent: @Composable (() -> Unit)? = null,
     listState: LazyListState = rememberLazyListState(),
     onCancelSelection: () -> Unit,
 ) {
@@ -385,12 +386,16 @@ fun DiaryList(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(
-                    modifier = Modifier.padding(bottom = 64.dp),
-                    text = "No entry found!",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontSize = 14.sp,
-                )
+                if (emptyContent != null) {
+                    emptyContent()
+                } else {
+                    Text(
+                        modifier = Modifier.padding(bottom = 64.dp),
+                        text = "No entry found!",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontSize = 14.sp,
+                    )
+                }
             }
         }
     }

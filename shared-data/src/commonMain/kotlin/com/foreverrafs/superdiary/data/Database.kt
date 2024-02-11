@@ -6,10 +6,10 @@ import app.cash.sqldelight.coroutines.mapToList
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.model.WeeklySummary
 import com.foreverrafs.superdiary.database.SuperDiaryDatabase
+import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
-import kotlin.coroutines.suspendCoroutine
 
 private val diaryAdapter = object : ColumnAdapter<Instant, Long> {
     override fun decode(databaseValue: Long): Instant = Instant.fromEpochMilliseconds(databaseValue)
@@ -37,8 +37,8 @@ class Database(databaseDriver: DatabaseDriver) {
     }
 
     /**
-     * This is only used on JVM and in tests. Schema is created automatically on Android and
-     * iOS
+     * This is only used on JVM and in tests. Schema is created automatically
+     * on Android and iOS
      */
     fun createDatabase() {
         SuperDiaryDatabase.Schema.create(driver)

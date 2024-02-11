@@ -2,18 +2,36 @@ package com.foreverrafs.superdiary.data.usecase
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.foreverrafs.superdiary.data.TestAppDispatchers
 import com.foreverrafs.superdiary.data.model.Diary
+import kotlin.random.Random
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
-import kotlin.random.Random
-import kotlin.test.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class CalculateBestStreakUseCaseTest {
 
-    private val calculateBestStreakUseCase: CalculateBestStreakUseCase = CalculateBestStreakUseCase()
+    private val calculateBestStreakUseCase: CalculateBestStreakUseCase = CalculateBestStreakUseCase(TestAppDispatchers)
+
+    @BeforeTest
+    fun setup() {
+        Dispatchers.setMain(TestAppDispatchers.main)
+    }
+
+    @AfterTest
+    fun teardown() {
+        Dispatchers.resetMain()
+    }
 
     @Test
     fun `Best streak returns the highest streak count`() = runTest {

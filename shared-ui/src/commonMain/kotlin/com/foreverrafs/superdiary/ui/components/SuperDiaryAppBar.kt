@@ -1,28 +1,22 @@
 package com.foreverrafs.superdiary.ui.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
+import superdiary.`shared-ui`.generated.resources.Res
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 fun SuperDiaryAppBar(
     modifier: Modifier = Modifier,
@@ -33,7 +27,7 @@ fun SuperDiaryAppBar(
         modifier = modifier,
         title = {
             Text(
-                text = "Super Diary",
+                text = stringResource(Res.string.app_name),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .semantics {
@@ -53,33 +47,5 @@ fun SuperDiaryAppBar(
         navigationIcon = {
             navigationIcon?.invoke()
         },
-    )
-}
-
-@Composable
-fun NavigationIcon(onClick: (() -> Unit), modifier: Modifier = Modifier) {
-    Icon(
-        modifier = modifier
-            .clip(CircleShape)
-            .clickable {
-                onClick()
-            }
-            .padding(8.dp),
-        imageVector = Icons.Default.ArrowBackIosNew,
-        contentDescription = null,
-    )
-}
-
-@Composable
-fun SaveIcon(onClick: (() -> Unit), modifier: Modifier = Modifier) {
-    Icon(
-        modifier = modifier
-            .clip(CircleShape)
-            .clickable {
-                onClick()
-            }
-            .padding(8.dp),
-        imageVector = Icons.Default.Check,
-        contentDescription = null,
     )
 }

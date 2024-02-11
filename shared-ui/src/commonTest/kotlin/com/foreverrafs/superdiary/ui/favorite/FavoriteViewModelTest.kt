@@ -5,11 +5,17 @@ import assertk.assertThat
 import assertk.assertions.isEmpty
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
+import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.GetFavoriteDiariesUseCase
+import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.favorites.model.FavoriteViewModel
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreenState
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertNotNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -20,9 +26,6 @@ import kotlinx.coroutines.test.setMain
 import kotlinx.datetime.Clock
 import org.kodein.mock.Mock
 import org.kodein.mock.tests.TestsWithMocks
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class FavoriteViewModelTest : TestsWithMocks() {
@@ -38,7 +41,8 @@ class FavoriteViewModelTest : TestsWithMocks() {
         Dispatchers.setMain(StandardTestDispatcher())
 
         favoriteViewModel = FavoriteViewModel(
-            getFavoriteDiariesUseCase = GetFavoriteDiariesUseCase(dataSource),
+            getFavoriteDiariesUseCase = GetFavoriteDiariesUseCase(dataSource, TestAppDispatchers),
+            updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
         )
     }
 
@@ -48,28 +52,7 @@ class FavoriteViewModelTest : TestsWithMocks() {
     }
 
     @Test
-    fun `Verify favorite screen starts from loading state`() = runTest {
-        every { dataSource.fetchFavorites() } returns flowOf(
-            listOf(
-                Diary(
-                    entry = "Fake Diary",
-                    date = Clock.System.now(),
-                    isFavorite = true,
-                ),
-            ),
-        )
-
-        favoriteViewModel.state.test {
-            favoriteViewModel.loadFavorites()
-            val loadingState = awaitItem()
-            cancelAndIgnoreRemainingEvents()
-
-            assertThat(loadingState).isInstanceOf<FavoriteScreenState.Loading>()
-        }
-    }
-
-    @Test
-    fun `Verify success state is emitted after loading favorites`() = runTest {
+    fun `Success state is emitted after loading favorites`() = runTest {
         every { dataSource.fetchFavorites() } returns flowOf(
             listOf(
                 Diary(
@@ -89,13 +72,15 @@ class FavoriteViewModelTest : TestsWithMocks() {
             val successState = awaitItem()
             cancelAndIgnoreRemainingEvents()
 
-            assertThat(successState).isInstanceOf<FavoriteScreenState.Favorites>()
-            assertThat((successState as FavoriteScreenState.Favorites).diaries).isNotEmpty()
+            assertNotNull(successState)
+
+            assertThat(successState).isInstanceOf<FavoriteScreenState.Content>()
+            assertThat((successState as FavoriteScreenState.Content).diaries).isNotEmpty()
         }
     }
 
     @Test
-    fun `Verify success state is emitted even when there is no favorite`() = runTest {
+    fun `Success state is emitted even when there is no favorite`() = runTest {
         every { dataSource.fetchFavorites() } returns flowOf(emptyList())
 
         favoriteViewModel.state.test {
@@ -106,9 +91,19 @@ class FavoriteViewModelTest : TestsWithMocks() {
 
             val successState = awaitItem()
             cancelAndIgnoreRemainingEvents()
+            assertNotNull(successState)
 
-            assertThat(successState).isInstanceOf<FavoriteScreenState.Favorites>()
-            assertThat((successState as FavoriteScreenState.Favorites).diaries).isEmpty()
+            assertThat(successState).isInstanceOf<FavoriteScreenState.Content>()
+            assertThat((successState as FavoriteScreenState.Content).diaries).isEmpty()
         }
+    }
+
+    @Test
+    fun `Removing favorite actually removes it`() = runTest {
+        everySuspending { dataSource.update(isAny()) } returns 1
+
+        favoriteViewModel.toggleFavorite(Diary("Hello"))
+
+        verifyWithSuspend { dataSource.update(isAny()) }
     }
 }

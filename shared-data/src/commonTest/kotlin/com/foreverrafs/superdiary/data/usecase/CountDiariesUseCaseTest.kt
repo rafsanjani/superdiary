@@ -3,31 +3,30 @@ package com.foreverrafs.superdiary.data.usecase
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.foreverrafs.superdiary.data.Database
+import com.foreverrafs.superdiary.data.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.data.datasource.TestDatabaseDriver
 import com.foreverrafs.superdiary.data.insertRandomDiaries
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CountDiariesUseCaseTest {
     private val database = Database(TestDatabaseDriver())
     private val dataSource: DataSource = LocalDataSource(database)
-    private val countDiariesUseCase = CountDiariesUseCase(dataSource)
+    private val countDiariesUseCase = CountDiariesUseCase(dataSource = dataSource, dispatchers = TestAppDispatchers)
 
     @BeforeTest
     fun setup() {
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(TestAppDispatchers.main)
         database.createDatabase()
-        insertRandomDiaries(dataSource, ITEMS_COUNT)
     }
 
     @AfterTest
@@ -37,6 +36,8 @@ class CountDiariesUseCaseTest {
 
     @Test
     fun `Verify that counting all entries returns total added entries`() = runTest {
+        insertRandomDiaries(dataSource, ITEMS_COUNT)
+
         val totalEntries = countDiariesUseCase()
 
         assertThat(totalEntries).isEqualTo(ITEMS_COUNT.toLong())

@@ -8,15 +8,18 @@ import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
 import com.foreverrafs.superdiary.data.Database
 import com.foreverrafs.superdiary.data.Result
+import com.foreverrafs.superdiary.data.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.data.datasource.TestDatabaseDriver
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.validator.DiaryValidator
 import com.foreverrafs.superdiary.data.validator.DiaryValidatorImpl
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -26,22 +29,19 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 
 class AddDiaryUseCaseTest {
     private val database = Database(TestDatabaseDriver())
     private val dataSource: DataSource = LocalDataSource(database)
     private val validator: DiaryValidator = DiaryValidatorImpl(Clock.System)
 
-    private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
-    private val addDiaryUseCase = AddDiaryUseCase(dataSource, validator)
+    private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers)
+    private val addDiaryUseCase = AddDiaryUseCase(dataSource, TestAppDispatchers, validator)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @BeforeTest
     fun setup() {
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(TestAppDispatchers.main)
         database.createDatabase()
     }
 
@@ -102,7 +102,11 @@ class AddDiaryUseCaseTest {
 
     @Test
     fun `Add new relaxed diary and confirm saved`() = runTest {
-        val relaxedAddDiaryUseCase = AddDiaryUseCase(dataSource) {}
+        val relaxedAddDiaryUseCase = AddDiaryUseCase(
+            dataSource = dataSource,
+            dispatchers = TestAppDispatchers,
+            validator = {},
+        )
 
         val diary = Diary(
             id = 1200L,

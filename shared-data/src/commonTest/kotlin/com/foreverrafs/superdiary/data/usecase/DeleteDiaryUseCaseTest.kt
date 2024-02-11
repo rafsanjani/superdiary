@@ -3,10 +3,9 @@ package com.foreverrafs.superdiary.data.usecase
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.doesNotContain
-import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
-import assertk.assertions.isNotEmpty
 import com.foreverrafs.superdiary.data.Database
+import com.foreverrafs.superdiary.data.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.data.datasource.TestDatabaseDriver
@@ -26,16 +25,14 @@ class DeleteDiaryUseCaseTest {
     private val database = Database(TestDatabaseDriver())
     private val dataSource: DataSource = LocalDataSource(database)
 
-    private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource)
-    private val deleteAllDiariesUseCase = DeleteAllDiariesUseCase(dataSource)
-    private val deleteMultipleDiariesUseCase = DeleteDiaryUseCase(dataSource)
-    private val deleteDiaryUseCase = DeleteDiaryUseCase(dataSource)
+    private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers)
+    private val deleteMultipleDiariesUseCase = DeleteDiaryUseCase(dataSource, TestAppDispatchers)
+    private val deleteDiaryUseCase = DeleteDiaryUseCase(dataSource, TestAppDispatchers)
 
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
         database.createDatabase()
-        insertRandomDiaries(dataSource)
     }
 
     @AfterTest
@@ -45,6 +42,7 @@ class DeleteDiaryUseCaseTest {
 
     @Test
     fun `Delete diary and confirm deletion`() = runTest {
+        insertRandomDiaries(dataSource)
         getAllDiariesUseCase().test {
             var diaries = awaitItem()
             val firstDiary = diaries.first()
@@ -63,41 +61,22 @@ class DeleteDiaryUseCaseTest {
     }
 
     @Test
-    fun `Delete All Diaries Clears Diaries`() =
-        runTest {
-            getAllDiariesUseCase().test {
-                val originalDiaryList = awaitItem()
+    fun `Delete multiple diaries actually deletes them`() = runTest {
+        insertRandomDiaries(dataSource)
 
-                assertThat(originalDiaryList).isNotEmpty()
+        getAllDiariesUseCase().test {
+            // Given initial diary items - We need to convert the resulting List to another list again
+            // to prevent it from getting overwritten by the subsequent call to awaitItem()
+            val originalList = awaitItem()
 
-                // clear all the diaries
-                deleteAllDiariesUseCase()
+            // Delete the first two entries
+            deleteMultipleDiariesUseCase(originalList.take(2))
 
-                // fetch all the diaries
-                val diaries = awaitItem()
-                cancelAndConsumeRemainingEvents()
+            // fetch the remaining diaries
+            val currentList = awaitItem()
 
-                // verify all diaries have been cleared
-                assertThat(diaries).isEmpty()
-            }
+            cancelAndIgnoreRemainingEvents()
+            assertThat(currentList.size).isEqualTo(originalList.size - 2)
         }
-
-    @Test
-    fun `Delete multiple diaries actually deletes them`() =
-        runTest {
-            getAllDiariesUseCase().test {
-                // Given initial diary items - We need to convert the resulting List to another list again
-                // to prevent it from getting overwritten by the subsequent call to awaitItem()
-                val originalList = awaitItem()
-
-                // Delete the first two entries
-                deleteMultipleDiariesUseCase(originalList.take(2))
-
-                // fetch the remaining diaries
-                val currentList = awaitItem()
-
-                cancelAndIgnoreRemainingEvents()
-                assertThat(currentList.size).isEqualTo(originalList.size - 2)
-            }
-        }
+    }
 }
