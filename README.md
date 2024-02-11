@@ -1,7 +1,7 @@
 # Superdiary ❤️
 
 <div align="left">
-    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/build.yml/badge.svg"  alt="Link to CI build status"/>
+    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/build_release.yml/badge.svg"  alt="Link to CI build status"/>
     <a href = "https://twitter.com/coded_rafs">
         <img src = "https://img.shields.io/twitter/follow/coded_rafs"/>
     </a>

@@ -1,0 +1,57 @@
+name: Build Release
+
+on: [ push, pull_request ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Gradle Wrapper Validation
+        uses: gradle/wrapper-validation-action@v2
+
+      - name: Lint all modules
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: detektAll
+
+  build:
+    runs-on: macos-14
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Gradle Wrapper Validation
+        uses: gradle/wrapper-validation-action@v2
+
+      - name: Lint all modules
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: detektAll
+
+      - name: Build Android App (Release)
+        id: release_build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: androidApp:app:assemble
+          gradle-home-cache-cleanup: false
+          cache-read-only: false
