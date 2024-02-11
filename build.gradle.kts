@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.testLogger).apply(false)
     alias(libs.plugins.ktlint).apply(false)
     alias(libs.plugins.sonar).apply(false)
+    alias(libs.plugins.android.test).apply(false)
     id("com.superdiary.detekt")
     id("com.superdiary.ktlint")
     id("com.superdiary.githooks")

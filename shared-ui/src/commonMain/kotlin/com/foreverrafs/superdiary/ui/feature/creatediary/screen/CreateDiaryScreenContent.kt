@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
@@ -73,6 +74,7 @@ fun CreateDiaryScreenContent(
                 tralingIcon = {
                     if (richTextState.annotatedString.isNotEmpty()) {
                         IconButton(
+                            modifier = Modifier.testTag("button_save_diary"),
                             onClick = {
                                 onSaveDiary(richTextState.toHtml())
                             },
@@ -163,6 +165,7 @@ fun CreateDiaryScreenContent(
                 OutlinedRichTextEditor(
                     state = richTextState,
                     modifier = Modifier
+                        .testTag("diary_text_field")
                         .focusRequester(focusRequester)
                         .weight(1f)
                         .fillMaxWidth(),

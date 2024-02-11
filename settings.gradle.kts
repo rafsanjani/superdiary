@@ -33,7 +33,8 @@ dependencyResolutionManagement {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "superdiary"
-include(":androidApp")
+include(":androidApp:app")
+include(":androidApp:benchmark")
 include(":shared-data")
 include(":swipe")
 include(":shared-ui")
