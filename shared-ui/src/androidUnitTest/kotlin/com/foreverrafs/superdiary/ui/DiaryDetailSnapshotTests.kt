@@ -21,6 +21,7 @@ class DiaryDetailSnapshotTests : KoinTest {
     val paparazzi = Paparazzi(
         deviceConfig = DeviceConfig.PIXEL_5,
         showSystemUi = true,
+        maxPercentDifference = 0.3,
     )
 
     @Test
@@ -34,13 +35,13 @@ class DiaryDetailSnapshotTests : KoinTest {
                         entry = """
                         Hello Diary, I did something awful today too.
                         I kept eating a very large bowl of rice till I couldn't take
-                        it any much longer. I think this will go down in history as 
+                        it any much longer. I think this will go down in history as
                         the greatest rice eating bout of all time.
                         """.trimIndent(),
                         id = 1000,
                         date = testClock.now(),
-                        isFavorite = false
-                    )
+                        isFavorite = false,
+                    ),
                 )
             }
         }

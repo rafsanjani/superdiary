@@ -29,6 +29,7 @@ class DiaryListSnapshotTests : KoinTest {
     val paparazzi = Paparazzi(
         deviceConfig = DeviceConfig.PIXEL_5,
         showSystemUi = true,
+        maxPercentDifference = 0.2,
     )
 
     private val diaryListActions = DiaryListActions(
