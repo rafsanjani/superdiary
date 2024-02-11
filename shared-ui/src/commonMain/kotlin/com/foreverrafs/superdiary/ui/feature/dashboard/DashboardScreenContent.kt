@@ -40,6 +40,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -54,7 +55,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import superdiary.`shared-ui`.generated.resources.Res
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
 @Composable
 fun DashboardScreenContent(
     state: DashboardViewModel.DashboardScreenState,
@@ -103,9 +104,12 @@ fun DashboardScreenContent(
                             onToggleFavorite = onToggleFavorite,
                         )
                     } else {
-                        Button(onClick = onAddEntry) {
+                        Button(
+                            onClick = onAddEntry,
+                            modifier = Modifier.testTag("button_add_entry"),
+                        ) {
                             Text(
-                                text = "Add Entry",
+                                text = stringResource(Res.string.label_add_entry),
                                 style = MaterialTheme.typography.labelMedium,
                             )
                         }
@@ -118,6 +122,7 @@ fun DashboardScreenContent(
 
     LazyColumn(
         modifier = modifier
+            .testTag("dashboard_content_list")
             .fillMaxSize()
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -287,12 +292,14 @@ private fun LatestEntries(
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            for (diary in diaries) {
+            diaries.forEachIndexed { index, diary ->
                 DiaryItem(
                     diary = diary,
                     selected = false,
                     inSelectionMode = false,
-                    modifier = Modifier.clickable(onClick = { onDiaryClicked(diary) }),
+                    modifier = Modifier
+                        .clickable(onClick = { onDiaryClicked(diary) })
+                        .testTag("diary_list_item_$index"),
                     onToggleFavorite = { onToggleFavorite(diary) },
                 )
             }

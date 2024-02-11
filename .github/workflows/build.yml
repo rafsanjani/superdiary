@@ -39,7 +39,7 @@ jobs:
         id: release_build
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: androidApp:assemble
+          arguments: androidApp:app:assemble
           gradle-home-cache-cleanup: false
           cache-read-only: false
 
