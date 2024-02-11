@@ -7,8 +7,28 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  lint:
     runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Gradle Wrapper Validation
+        uses: gradle/wrapper-validation-action@v2
+
+      - name: Lint all modules
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: detektAll
+  snapshot:
+    runs-on: self-hosted
+    needs: lint
     steps:
       - uses: actions/checkout@v4
         with:
@@ -35,14 +55,6 @@ jobs:
           gradle-home-cache-cleanup: true
           cache-read-only: false
 
-      - name: Build Android App (Release)
-        id: release_build
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: androidApp:assemble
-          gradle-home-cache-cleanup: false
-          cache-read-only: false
-
       - name: Snapshot tests (shared-ui)
         uses: gradle/gradle-build-action@v2
         with:
@@ -57,21 +69,10 @@ jobs:
           path: shared-ui/build/reports/paparazzi/
           retention-days: 1
 
-      - name: Upload Screenshot Failure Differences
+      - name: Upload Snapshot Failure Differences
         uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: reports
           path: shared-ui/build/paparazzi/failures/
           retention-days: 1
-
-      - name: Analyze with Sonar
-        id: sonar
-        uses: gradle/gradle-build-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          arguments: lint koverXmlReport sonar
-          gradle-home-cache-cleanup: true
-          cache-read-only: false
