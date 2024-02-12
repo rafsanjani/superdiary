@@ -28,12 +28,11 @@ A simple diary app, mostly focused on quality architectural patterns and improve
 |----------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
 |<img width="350" src="https://github.com/rafsanjani/superdiary/assets/9197459/f84e64fd-daba-4663-ba8e-55a2a27b7280" /> | <img width="350" src="https://github.com/rafsanjani/superdiary/assets/9197459/cc10b064-9b1a-43be-8bcd-53e9d9fbbfa5" /> |
 
-
 ### iOS - Dark
 
 | Diary AI                                                                                                                                                    | Dashboard                                                                                                                                                    |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <img width="350" alt="Screenshot 2023-12-15 at 11 16 22" src="https://github.com/rafsanjani/superdiary/assets/9197459/f84e64fd-daba-4663-ba8e-55a2a27b7280"> | <img width="350" alt="Screenshot 2023-12-15 at 11 21 01" src="https://github.com/rafsanjani/superdiary/assets/9197459/af89bd19-bf17-4f31-8515-0e0cdddc40db"> |
+| <img width="350" alt="Screenshot 2023-12-15 at 11 16 22" src="https://github.com/rafsanjani/superdiary/assets/9197459/a736d7b0-ed27-422b-af4e-58317a7af47d"> | <img width="350" alt="Screenshot 2023-12-15 at 11 21 01" src="https://github.com/rafsanjani/superdiary/assets/9197459/98c012b9-3690-4148-a911-9a0ea1ac51fc"> |
 
 ### iOS - Light
 
