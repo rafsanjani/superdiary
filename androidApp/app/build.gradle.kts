@@ -48,7 +48,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    namespace = "com.foreverrafs.superdiary"
+    namespace = "com.foreverrafs.superdiary.app"
 
     buildTypes {
         getByName("release") {

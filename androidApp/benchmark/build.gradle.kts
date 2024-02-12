@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.foreverrafs.benchmark"
+    namespace = "com.foreverrafs.superdiary.benchmark"
     compileSdk = 34
 
     compileOptions {
