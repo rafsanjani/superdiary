@@ -15,7 +15,7 @@ class BaselineProfileGenerator {
     @Test
     fun generateBaselineProfile() {
         rule.collect(
-            packageName = "com.foreverrafs.superdiary",
+            packageName = "com.foreverrafs.superdiary.app",
             includeInStartupProfile = true,
         ) {
             startActivityAndWait()
