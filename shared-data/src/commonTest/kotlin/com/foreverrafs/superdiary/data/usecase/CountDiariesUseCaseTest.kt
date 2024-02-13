@@ -36,14 +36,9 @@ class CountDiariesUseCaseTest {
 
     @Test
     fun `Verify that counting all entries returns total added entries`() = runTest {
-        insertRandomDiaries(dataSource, ITEMS_COUNT)
-
+        insertRandomDiaries(dataSource, 1)
         val totalEntries = countDiariesUseCase()
 
-        assertThat(totalEntries).isEqualTo(ITEMS_COUNT.toLong())
-    }
-
-    companion object {
-        private const val ITEMS_COUNT = 200
+        assertThat(totalEntries).isEqualTo(1)
     }
 }

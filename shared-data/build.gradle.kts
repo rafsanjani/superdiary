@@ -6,11 +6,10 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
     alias(libs.plugins.sqldelight)
-    kotlin("multiplatform")
-    id("kotlin-parcelize")
     alias(libs.plugins.buildKonfig)
-    alias(libs.plugins.mockmp)
     alias(libs.plugins.testLogger)
+    id("kotlin-parcelize")
+    kotlin("multiplatform")
     id("com.superdiary.kover")
 }
 
@@ -31,7 +30,10 @@ kotlin {
     iosSimulatorArm64()
 
     compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
+        freeCompilerArgs.addAll(
+            "-Xexpect-actual-classes",
+            "-Xopt-in=com.aallam.openai.api.BetaOpenAI",
+        )
     }
 
     sourceSets {
@@ -48,6 +50,7 @@ kotlin {
                 implementation(projects.core.utils)
                 implementation(libs.openAiKotlin)
                 implementation(libs.touchlab.kermit)
+                implementation("com.benasher44:uuid:0.8.2")
                 runtimeOnly(libs.ktor.client.cio)
             }
         }
@@ -74,6 +77,7 @@ kotlin {
                 implementation(libs.turbine)
                 implementation(libs.assertk.common)
                 implementation(libs.mockmp.runtime)
+                implementation("io.mockative:mockative:2.0.1")
             }
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
         }
@@ -109,11 +113,6 @@ android {
     }
 }
 
-mockmp {
-    usesHelper = true
-    installWorkaround()
-}
-
 buildkonfig {
     packageName = "com.foreverrafs.superdiary.buildKonfig"
 
@@ -128,4 +127,12 @@ buildkonfig {
     defaultConfigs {
         buildConfigField(STRING, "openAIKey", openAiKey ?: "")
     }
+}
+
+dependencies {
+    configurations
+        .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
+        .forEach {
+            add(it.name, "io.mockative:mockative-processor:2.0.1")
+        }
 }
