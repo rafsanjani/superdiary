@@ -11,7 +11,6 @@ plugins {
     alias(libs.plugins.ksp)
     kotlin("multiplatform")
     id("kotlin-parcelize")
-    alias(libs.plugins.mockmp)
     alias(libs.plugins.testLogger)
 
     // Build logic
@@ -73,11 +72,11 @@ kotlin {
                 implementation(libs.assertk.common)
                 implementation(libs.junit)
                 implementation(libs.koin.test)
+                implementation("io.mockative:mockative:2.0.1")
                 implementation(libs.kotlin.coroutines.test)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.uiTest)
                 implementation(libs.turbine)
-                implementation(libs.mockmp.runtime)
             }
 
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
@@ -93,7 +92,7 @@ kotlin {
             }
         }
 
-        jvmMain {
+        val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(libs.koin.jvm)
@@ -101,7 +100,7 @@ kotlin {
             }
         }
 
-        androidMain {
+        val androidMain by getting {
             dependencies {
                 implementation(libs.compose.ui.tooling)
             }
@@ -134,11 +133,6 @@ android {
     sourceSets["main"].res.srcDirs("src/commonMain/resources")
 }
 
-mockmp {
-    usesHelper = true
-    installWorkaround()
-}
-
 plugins.withId("app.cash.paparazzi") {
     afterEvaluate {
         dependencies.constraints {
@@ -169,4 +163,12 @@ tasks.withType<AndroidLintAnalysisTask> {
 
 tasks.withType<LintModelWriterTask> {
     dependsOn("copyFontsToAndroidAssets")
+}
+
+dependencies {
+    configurations
+        .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
+        .forEach {
+            add(it.name, "io.mockative:mockative-processor:2.0.1")
+        }
 }

@@ -8,6 +8,9 @@ import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
+import io.mockative.Mock
+import io.mockative.coEvery
+import io.mockative.mock
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -17,15 +20,12 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.kodein.mock.Mock
-import org.kodein.mock.tests.TestsWithMocks
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class DetailsViewModelTest : TestsWithMocks() {
-    override fun setUpMocks() = injectMocks(mocker)
+class DetailsViewModelTest {
 
     @Mock
-    lateinit var dataSource: DataSource
+    private val dataSource: DataSource = mock(DataSource::class)
 
     private lateinit var detailsViewModel: DetailsViewModel
 
@@ -44,8 +44,8 @@ class DetailsViewModelTest : TestsWithMocks() {
     fun `Successfully deleting a diary should emit deleted state`() = runTest {
         val diary = Diary("Hello world")
 
-        everySuspending { dataSource.delete(diary) } returns 1
-        everySuspending { dataSource.delete(listOf(diary)) } returns 1
+        coEvery { dataSource.delete(diary) }.returns(1)
+        coEvery { dataSource.delete(listOf(diary)) }.returns(1)
 
         detailsViewModel.state.test {
             detailsViewModel.deleteDiary(diary)
@@ -61,8 +61,8 @@ class DetailsViewModelTest : TestsWithMocks() {
     fun `Failing to delete shouldn't emit Deleted state`() = runTest {
         val diary = Diary("Hello world")
 
-        everySuspending { dataSource.delete(diary) } returns 0
-        everySuspending { dataSource.delete(listOf(diary)) } returns 0
+        coEvery { dataSource.delete(diary) }.returns(0)
+        coEvery { dataSource.delete(listOf(diary)) }.returns(0)
 
         detailsViewModel.state.test {
             detailsViewModel.deleteDiary(diary)

@@ -13,6 +13,13 @@ import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
 import com.foreverrafs.superdiary.data.diaryai.OpenDiaryAI
+import io.mockative.any
+import io.mockative.coEvery
+import io.mockative.every
+import io.mockative.mock
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -20,18 +27,12 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.kodein.mock.Mock
-import org.kodein.mock.tests.TestsWithMocks
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class OpenDiaryAiTest : TestsWithMocks() {
-    override fun setUpMocks() = injectMocks(mocker)
-
-    @Mock
-    lateinit var openAI: OpenAI
+class OpenDiaryAiTest {
+    @io.mockative.Mock
+    @com.aallam.openai.api.BetaOpenAI
+    private val openAI: OpenAI = mock(OpenAI::class)
 
     private val openDiaryAI by lazy { OpenDiaryAI(openAI) }
 
@@ -61,7 +62,11 @@ class OpenDiaryAiTest : TestsWithMocks() {
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
-        every { openAI.chatCompletions(isAny()) } returns flowOf(chatCompletionChunk)
+        every {
+            openAI.chatCompletions(any())
+        }.returns(
+            flowOf(chatCompletionChunk),
+        )
     }
 
     @AfterTest
@@ -81,7 +86,7 @@ class OpenDiaryAiTest : TestsWithMocks() {
 
     @Test
     fun `Should query diary entries`() = runTest {
-        everySuspending { openAI.chatCompletion(isAny()) } returns chatCompletion
+        coEvery { openAI.chatCompletion(any()) }.returns(chatCompletion)
 
         val response = openDiaryAI.queryDiaries(emptyList())
         assertThat(response).isNotEmpty()

@@ -39,13 +39,23 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Unit tests (shared-data)
-        id: unit_tests
+      - name: Unit tests JVM
+        id: unit_tests_jvm
         uses: gradle/gradle-build-action@v2
         with:
           arguments: testDebugUnitTest --continue --no-configuration-cache
           gradle-home-cache-cleanup: true
           cache-read-only: false
+
+      - name: Unit tests iOS
+        id: unit_tests_ios
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: iosSimulatorArm64Test --no-configuration-cache
+          gradle-home-cache-cleanup: true
+          cache-read-only: false
+
+
 
       - name: Snapshot tests (shared-ui)
         uses: gradle/gradle-build-action@v2

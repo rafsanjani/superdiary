@@ -6,30 +6,32 @@ import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryViewModel
+import io.mockative.Mock
+import io.mockative.any
+import io.mockative.coEvery
+import io.mockative.coVerify
+import io.mockative.every
+import io.mockative.mock
+import io.mockative.verify
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.kodein.mock.Mock
-import org.kodein.mock.tests.TestsWithMocks
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class CreateDiaryViewModelTest : TestsWithMocks() {
-    override fun setUpMocks() = injectMocks(mocker)
+class CreateDiaryViewModelTest {
 
     @Mock
-    lateinit var diaryAI: DiaryAI
+    private val diaryAI: DiaryAI = mock(DiaryAI::class)
 
     @Mock
-    lateinit var dataSource: DataSource
+    private val dataSource: DataSource = mock(DataSource::class)
 
     private lateinit var createDiaryViewModel: CreateDiaryViewModel
 
@@ -55,28 +57,19 @@ class CreateDiaryViewModelTest : TestsWithMocks() {
     @Test
     fun `Should save diary when user clicks on save button`() = runTest {
         val diary = Diary("Hello World!!")
-        everySuspending { dataSource.add(diary) } returns 100L
+        coEvery { dataSource.add(diary) }.returns(100L)
 
-        runBlocking {
-            createDiaryViewModel.saveDiary(diary)
-        }
+        createDiaryViewModel.saveDiary(diary)
 
-        // The monotonic clock seems out of sync with MockMP so put in a superficial
-        // delay here to prevent verifications from happening before dataSource is
-        // engaged
-        delay(1)
-
-        verifyWithSuspend {
-            dataSource.add(diary)
-        }
+        coVerify { dataSource.add(diary) }
     }
 
     @Test
     fun `Should generate AI diary when generate AI button is clicked`() = runTest {
-        every { diaryAI.generateDiary(isAny(), isAny()) } returns flowOf()
+        every { diaryAI.generateDiary("hello", 100) }.returns(flowOf())
 
-        createDiaryViewModel.generateAIDiary("", 100)
+        createDiaryViewModel.generateAIDiary("hello", 100)
 
-        verify { diaryAI.generateDiary(isAny(), isAny()) }
+        verify { diaryAI.generateDiary(any(), any()) }
     }
 }
