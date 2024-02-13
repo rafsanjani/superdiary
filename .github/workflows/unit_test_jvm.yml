@@ -1,4 +1,4 @@
-name: Unit/Snapshot Tests
+name: JVM Unit & Snapshot Tests
 
 on: [ push, pull_request ]
 
@@ -47,17 +47,7 @@ jobs:
           gradle-home-cache-cleanup: true
           cache-read-only: false
 
-      - name: Unit tests iOS
-        id: unit_tests_ios
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: iosSimulatorArm64Test --no-configuration-cache
-          gradle-home-cache-cleanup: true
-          cache-read-only: false
-
-
-
-      - name: Snapshot tests (shared-ui)
+      - name: Snapshot test (shared-ui)
         uses: gradle/gradle-build-action@v2
         with:
           arguments: verifyPaparazziDebug
@@ -78,14 +68,3 @@ jobs:
           name: reports
           path: shared-ui/build/paparazzi/failures/
           retention-days: 1
-
-      - name: Analyze with Sonar
-        id: sonar
-        uses: gradle/gradle-build-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          arguments: lint koverXmlReportDebug sonar
-          gradle-home-cache-cleanup: true
-          cache-read-only: false
