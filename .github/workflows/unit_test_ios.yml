@@ -26,7 +26,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: detektAll
-  snapshot:
+  test:
     runs-on: macos-14
     needs: lint
     steps:
