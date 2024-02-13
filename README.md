@@ -2,11 +2,10 @@
 
 <div align="left">
     <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/build.yml/badge.svg"  alt="Link to CI build status"/>
-    <a href = "https://twitter.com/coded_rafs">
-        <img src = "https://img.shields.io/twitter/follow/coded_rafs"/>
-    </a>
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=rafsanjani_superdiary&metric=sqale_rating" alt="Maintainability badge"/>
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=rafsanjani_superdiary&metric=security_rating" alt="Security badge" />
+      <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/unit_test_jvm.yml/badge.svg"  alt="Link to CI build status"/>
+    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/unit_test_ios.yml/badge.svg"  alt="Link to CI build status"/>
+    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/sonar.yml/badge.svg"  alt="Link to CI build status"/>
+    <br/>
     <img src="https://sonarcloud.io/api/project_badges/measure?project=rafsanjani_superdiary&metric=coverage" alt="code coverage" />
 </div>
 A simple diary app, mostly focused on quality architectural patterns and improved testing strategies (unit, snapshot and instrumentation).
