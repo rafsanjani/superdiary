@@ -29,6 +29,7 @@ kotlin {
                 implementation(libs.material)
                 implementation(projects.sharedUi)
                 implementation(projects.sharedData)
+                implementation(projects.core.analytics)
                 implementation(libs.koin.android)
             }
         }

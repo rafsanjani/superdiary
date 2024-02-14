@@ -5,8 +5,8 @@ import com.aallam.openai.api.logging.LogLevel
 import com.aallam.openai.client.LoggingConfig
 import com.aallam.openai.client.OpenAI
 import com.foreverrafs.superdiary.buildKonfig.BuildKonfig
+import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.data.Database
-import com.foreverrafs.superdiary.data.analytics.Analytics
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
@@ -66,4 +66,4 @@ fun useCaseModule() = module {
     factoryOf(::CalculateBestStreakUseCase)
 }
 
-expect fun platformModule(analytics: Analytics): Module
+expect fun platformModule(analyticsTracker: AnalyticsTracker): Module

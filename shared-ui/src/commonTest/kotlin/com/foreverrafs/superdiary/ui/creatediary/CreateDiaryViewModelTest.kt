@@ -1,6 +1,7 @@
 package com.foreverrafs.superdiary.ui.creatediary
 
 import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.core.logging.Logger
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.model.Diary
@@ -46,6 +47,7 @@ class CreateDiaryViewModelTest {
                 validator = {},
             ),
             diaryAI = diaryAI,
+            logger = Logger,
         )
     }
 

@@ -6,5 +6,5 @@ import kotlinx.datetime.LocalDate
 data class Streak(
     val count: Int,
     val startDate: LocalDate,
-    val endDate: LocalDate
+    val endDate: LocalDate,
 )
