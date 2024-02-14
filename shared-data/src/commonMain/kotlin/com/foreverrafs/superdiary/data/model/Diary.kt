@@ -1,9 +1,9 @@
 package com.foreverrafs.superdiary.data.model
 
 import com.foreverrafs.superdiary.data.serializable.JavaSerializable
+import kotlin.jvm.Transient
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlin.jvm.Transient
 
 data class Diary(
     val entry: String,

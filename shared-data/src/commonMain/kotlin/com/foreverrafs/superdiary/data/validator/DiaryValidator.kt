@@ -1,6 +1,5 @@
 package com.foreverrafs.superdiary.data.validator
 
-import co.touchlab.kermit.Logger
 import com.foreverrafs.superdiary.data.model.Diary
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -27,6 +26,5 @@ class DiaryValidatorImpl(
             "Saving a diary entry in the $placeHolder is an error.," +
                 "[diary date = $diaryDate, today = $today]"
         }
-        Logger.i("Diary validated successfully. $diary")
     }
 }

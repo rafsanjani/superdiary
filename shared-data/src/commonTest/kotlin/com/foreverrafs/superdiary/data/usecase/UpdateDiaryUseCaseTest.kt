@@ -5,6 +5,7 @@ import assertk.assertThat
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import com.foreverrafs.superdiary.data.Database
+import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
@@ -64,7 +65,9 @@ class UpdateDiaryUseCaseTest {
 
             // verify that it has been updated and changed to favorite = true
             assertThat(firstEntry.isFavorite).isTrue()
-            assertThat(updated).isTrue()
+
+            val result = updated as Result.Success
+            assertThat(result.data).isTrue()
         }
     }
 }

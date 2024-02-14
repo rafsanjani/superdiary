@@ -1,8 +1,8 @@
 package com.foreverrafs.superdiary.data.diaryai
 
+import kotlin.random.Random
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlin.random.Random
 
 @Suppress("FunctionName")
 data class DiaryChatMessage(

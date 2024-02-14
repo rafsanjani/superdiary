@@ -61,6 +61,8 @@ kotlin {
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.koin.compose)
                 implementation(projects.swipe)
+                implementation(projects.core.logging)
+                implementation(projects.core.analytics)
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
             }

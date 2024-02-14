@@ -2,7 +2,8 @@ package com.foreverrafs.superdiary.ui.feature.dashboard
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import co.touchlab.kermit.Logger
+import com.foreverrafs.superdiary.core.logging.Logger
+import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.model.Streak
@@ -28,6 +29,7 @@ class DashboardViewModel(
     private val getWeeklySummaryUseCase: GetWeeklySummaryUseCase,
     private val updateDiaryUseCase: UpdateDiaryUseCase,
     private val diaryAI: DiaryAI,
+    private val logger: Logger,
 ) :
     StateScreenModel<DashboardViewModel.DashboardScreenState>(DashboardScreenState.Loading) {
     sealed interface DashboardScreenState {
@@ -42,18 +44,19 @@ class DashboardViewModel(
     }
 
     fun loadDashboardContent() = screenModelScope.launch {
-        Logger.i(Tag) {
+        logger.i(Tag) {
             "Loading dashboard content"
         }
+
         getAllDiariesUseCase().catch {
-            Logger.e(Tag, it) {
+            logger.e(Tag, it) {
                 "Error Loading dashboard content"
             }
             mutableState.update {
                 DashboardScreenState.Loading
             }
         }.collect { diaries ->
-            Logger.i(Tag) {
+            logger.i(Tag) {
                 "Dashboard content refreshed!"
             }
             mutableState.update {
@@ -94,21 +97,15 @@ class DashboardViewModel(
 
             if (currentState != null) {
                 val newState = func(currentState)
-                Logger.d(Tag) {
-                    "Updating app state: $newState"
-                }
                 newState
             } else {
-                Logger.d(Tag) {
-                    "Current State isn't Content. Not updating!"
-                }
                 state
             }
         }
     }
 
     private fun generateWeeklySummary(diaries: List<Diary>) = screenModelScope.launch {
-        Logger.i(Tag) {
+        logger.i(Tag) {
             "Fetching weekly summary for ${diaries.size} entries"
         }
         val latestWeeklySummary = getWeeklySummaryUseCase()
@@ -126,7 +123,7 @@ class DashboardViewModel(
 
         diaryAI.getWeeklySummary(diaries)
             .catch { exception ->
-                Logger.e(Tag, exception) {
+                logger.e(Tag, exception) {
                     "An error occurred generating weekly summary"
                 }
             }.onCompletion {
@@ -138,7 +135,7 @@ class DashboardViewModel(
                         return@onCompletion
                     }
 
-                    Logger.d(Tag) {
+                    logger.d(Tag) {
                         "Weekly summary generated!"
                     }
                     appState.weeklySummary?.let { summary ->
@@ -161,11 +158,15 @@ class DashboardViewModel(
     }
 
     private fun calculateStreak(diaries: List<Diary>) = screenModelScope.launch {
-        Logger.i(Tag) {
+        logger.i(Tag) {
             "Calculating streak for ${diaries.size} entries"
         }
         val streak = calculateStreakUseCase(diaries)
         val bestStreak = calculateBestStreakUseCase(diaries)
+
+        logger.i(Tag) {
+            "Streak: $streak\nBest Streak: $bestStreak"
+        }
 
         mutableState.update { state ->
             (state as? DashboardScreenState.Content)?.copy(
@@ -175,9 +176,27 @@ class DashboardViewModel(
         }
     }
 
-    suspend fun toggleFavorite(diary: Diary): Boolean = updateDiaryUseCase(
-        diary.copy(isFavorite = !diary.isFavorite),
-    )
+    suspend fun toggleFavorite(diary: Diary): Boolean {
+        val result = updateDiaryUseCase(
+            diary.copy(isFavorite = !diary.isFavorite),
+        )
+
+        return when (result) {
+            is Result.Failure -> {
+                logger.e(Tag, result.error) {
+                    "Error toggling favorite"
+                }
+                false
+            }
+
+            is Result.Success -> {
+                logger.d(Tag) {
+                    "Favorite toggled: $diary"
+                }
+                result.data
+            }
+        }
+    }
 
     companion object {
         private const val DEFAULT_SUMMARY_TEXT = "Generating weekly Summary..."

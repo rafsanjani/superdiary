@@ -1,6 +1,5 @@
 package com.foreverrafs.superdiary.data.usecase
 
-import co.touchlab.kermit.Logger
 import com.foreverrafs.superdiary.core.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.DataSource
@@ -18,19 +17,9 @@ class AddDiaryUseCase(
             validator.validate(diary)
 
             dataSource.add(diary)
-            Logger.i(AddDiaryUseCase::class.simpleName.orEmpty()) {
-                "Saved Diary: $diary"
-            }
             Result.Success(data = listOf(diary))
         } catch (ex: IllegalArgumentException) {
-            Logger.e(tag = Tag, ex) {
-                "Error saving diary"
-            }
             Result.Failure(ex)
         }
-    }
-
-    companion object {
-        private val Tag = AddDiaryUseCase::class.simpleName.orEmpty()
     }
 }

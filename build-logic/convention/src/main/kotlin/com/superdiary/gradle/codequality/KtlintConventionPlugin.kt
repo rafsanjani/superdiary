@@ -8,11 +8,13 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 class KtlintConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            pluginManager.apply("org.jlleitschuh.gradle.ktlint")
+            subprojects {
+                pluginManager.apply("org.jlleitschuh.gradle.ktlint")
 
-            ktlint {
-                filter {
-                    exclude { it.file.path.contains("${layout.buildDirectory.get()}/generated/") }
+                ktlint {
+                    filter {
+                        exclude { it.file.path.contains("${layout.buildDirectory.get()}/generated/") }
+                    }
                 }
             }
         }

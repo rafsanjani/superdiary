@@ -48,8 +48,9 @@ kotlin {
                 implementation(libs.square.sqldelight.coroutinesExt)
                 implementation(libs.kotlin.coroutines.test)
                 implementation(projects.core.utils)
+                implementation(projects.core.analytics)
+                implementation(projects.core.logging)
                 implementation(libs.openAiKotlin)
-                implementation(libs.touchlab.kermit)
                 implementation("com.benasher44:uuid:0.8.2")
                 runtimeOnly(libs.ktor.client.cio)
             }
@@ -76,7 +77,6 @@ kotlin {
                 implementation(libs.kotlin.coroutines.test)
                 implementation(libs.turbine)
                 implementation(libs.assertk.common)
-                implementation(libs.mockmp.runtime)
                 implementation("io.mockative:mockative:2.0.1")
             }
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
