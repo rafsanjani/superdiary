@@ -8,4 +8,4 @@ captures
 .cxx
 local.properties
 xcuserdata
-shared-ui/diary.db
+desktopApp/diary.db

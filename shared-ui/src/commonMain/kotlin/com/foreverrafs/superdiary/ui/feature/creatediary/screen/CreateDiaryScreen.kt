@@ -52,7 +52,6 @@ class CreateDiaryScreen : Screen {
                         .catch {
                             isGeneratingFromAI = false
                             richTextState.setHtml("<p style=\"color:red\">Error generating entry</p>")
-                            println(it)
                         }
                         .onCompletion {
                             isGeneratingFromAI = false

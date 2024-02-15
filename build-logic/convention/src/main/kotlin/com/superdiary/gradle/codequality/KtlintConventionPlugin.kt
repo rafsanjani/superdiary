@@ -13,7 +13,7 @@ class KtlintConventionPlugin : Plugin<Project> {
 
                 ktlint {
                     filter {
-                        exclude { it.file.path.contains("${layout.buildDirectory.get()}/generated/") }
+                        exclude { it.file.path.contains("${layout.buildDirectory.get()}") }
                     }
                 }
             }
