@@ -23,7 +23,7 @@ jobs:
         uses: gradle/wrapper-validation-action@v2
 
       - name: Lint all modules
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
           arguments: detektAll
 
@@ -45,7 +45,7 @@ jobs:
 
       - name: Analyze with Sonar
         id: sonar
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

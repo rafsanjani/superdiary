@@ -23,7 +23,7 @@ jobs:
         uses: gradle/wrapper-validation-action@v2
 
       - name: Lint all modules
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
           arguments: detektAll
   test:
@@ -41,7 +41,7 @@ jobs:
 
       - name: Unit test iOS
         id: unit_tests_ios
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
           arguments: iosSimulatorArm64Test --no-configuration-cache
           gradle-home-cache-cleanup: true

@@ -23,7 +23,7 @@ jobs:
         uses: gradle/wrapper-validation-action@v2
 
       - name: Lint all modules
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
           arguments: detektAll
   snapshot:
@@ -41,14 +41,14 @@ jobs:
 
       - name: Unit tests JVM
         id: unit_tests_jvm
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
           arguments: testDebugUnitTest --continue --no-configuration-cache
           gradle-home-cache-cleanup: true
           cache-read-only: false
 
       - name: Snapshot test (shared-ui)
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
           arguments: verifyPaparazziDebug
           gradle-home-cache-cleanup: true
