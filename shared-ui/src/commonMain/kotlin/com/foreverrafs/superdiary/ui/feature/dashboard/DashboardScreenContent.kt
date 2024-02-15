@@ -155,10 +155,6 @@ private fun AtAGlance(
         animationSpec = tween(durationMillis = 1000),
     )
 
-    LaunchedEffect(state.bestStreak, state.currentStreak) {
-        println("Best: ${state.bestStreak.count}")
-    }
-
     val totalEntries by animateIntAsState(
         targetValue = if (animationState.targetState) state.totalEntries.toInt() else 0,
         animationSpec = tween(durationMillis = 1000),
