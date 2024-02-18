@@ -1,10 +1,10 @@
 package com.foreverrafs.superdiary.analytics
 
-import com.foreverrafs.superdiary.diary.analytics.Analytics
-import com.foreverrafs.superdiary.diary.analytics.AnalyticsEvents
+import com.foreverrafs.superdiary.core.analytics.AnalyticsEvents
+import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 
-class AndroidAnalytics : Analytics {
+class AndroidAnalytics : AnalyticsTracker {
     override fun trackEvent(event: AnalyticsEvents) {
-        TODO("Not yet implemented")
+        TODO("Implement Android Analytics using Firebase")
     }
 }

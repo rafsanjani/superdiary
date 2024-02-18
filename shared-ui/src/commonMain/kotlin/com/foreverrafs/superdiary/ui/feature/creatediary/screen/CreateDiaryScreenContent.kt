@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
@@ -41,8 +42,11 @@ import com.foreverrafs.superdiary.ui.feature.creatediary.components.RichTextStyl
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
+import superdiary.`shared-ui`.generated.resources.Res
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 fun CreateDiaryScreenContent(
     isGeneratingFromAi: Boolean,
@@ -63,13 +67,14 @@ fun CreateDiaryScreenContent(
                             modifier = Modifier
                                 .clip(CircleShape),
                             imageVector = Icons.Default.ArrowBackIosNew,
-                            contentDescription = "Navigate back",
+                            contentDescription = stringResource(Res.string.content_description_navigate_back),
                         )
                     }
                 },
                 tralingIcon = {
                     if (richTextState.annotatedString.isNotEmpty()) {
                         IconButton(
+                            modifier = Modifier.testTag("button_save_diary"),
                             onClick = {
                                 onSaveDiary(richTextState.toHtml())
                             },
@@ -78,14 +83,14 @@ fun CreateDiaryScreenContent(
                                 modifier = Modifier
                                     .clip(CircleShape),
                                 imageVector = Icons.Default.Check,
-                                contentDescription = "Save entry",
+                                contentDescription = stringResource(Res.string.content_description_save_entry),
                             )
                         }
                     }
                 },
             )
         },
-        modifier = modifier
+        modifier = modifier,
     ) {
         Surface(
             modifier = Modifier.padding(it),
@@ -117,7 +122,7 @@ fun CreateDiaryScreenContent(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Text(
-                        text = "Diary AI:",
+                        text = stringResource(Res.string.label_diary_ai),
                         style = MaterialTheme.typography.bodyMedium,
                     )
 
@@ -160,6 +165,7 @@ fun CreateDiaryScreenContent(
                 OutlinedRichTextEditor(
                     state = richTextState,
                     modifier = Modifier
+                        .testTag("diary_text_field")
                         .focusRequester(focusRequester)
                         .weight(1f)
                         .fillMaxWidth(),

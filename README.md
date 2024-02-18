@@ -1,50 +1,54 @@
 # Superdiary ❤️
 
-
 <div align="left">
-    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/android.yml/badge.svg" />
-    <a href = "https://github.com/Rafsanjani/superdiary/blob/master/LICENSE">
-        <img src = "https://img.shields.io/github/license/pushpalroy/jetstore" />
-    </a>
-    <a href = "https://twitter.com/coded_raf">
-        <img src = "https://img.shields.io/twitter/url?label=follow&style=social&url=https%3A%2F%2Ftwitter.com%2Fpushpalroy" />
-    </a>
+    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/build.yml/badge.svg"  alt="Link to CI build status"/>
+      <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/unit_test_jvm.yml/badge.svg"  alt="Link to CI build status"/>
+    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/unit_test_ios.yml/badge.svg"  alt="Link to CI build status"/>
+    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/sonar.yml/badge.svg"  alt="Link to CI build status"/>
+    <br/>
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=rafsanjani_superdiary&metric=coverage" alt="code coverage" />
 </div>
-A simple diary app, mostly focused on Clean Architecture design pattern and 100% test coverage (unit and instrumentation).
+A simple diary app, mostly focused on quality architectural patterns and improved testing strategies (unit, snapshot and instrumentation).
 
-### Screens (Android) - Dark
-| Dashboard | Diary AI  |
-|--|--|
-| ![dashboard](https://github.com/rafsanjani/superdiary/assets/9197459/9264a3e6-0e57-49b8-9e46-c0c2695f78b1) | ![chat](https://github.com/rafsanjani/superdiary/assets/9197459/a745bc69-0bdd-4ab3-8503-3315ad8b4443) |
+### Android - Light
 
-### Screens (Android) - Light
-| Dashboard | Diary AI  |
-|--|--|
-|![dashboard-light](https://github.com/rafsanjani/superdiary/assets/9197459/f191a467-56b4-42d2-9c27-98a9f2c8a815)  | ![chat_light](https://github.com/rafsanjani/superdiary/assets/9197459/a1b865cb-d12e-49ed-a92e-c3964d18efff) |
-
-### Screens (iOS) - Dark
-
-| Dashboard | Diary AI  |
-|--|--|
-| <img width="350" alt="Screenshot 2023-12-15 at 11 16 22" src="https://github.com/rafsanjani/superdiary/assets/9197459/e7e61180-a364-4d16-a554-b9304924d3eb"> | <img width="350" alt="Screenshot 2023-12-15 at 11 21 01" src="https://github.com/rafsanjani/superdiary/assets/9197459/94eab288-6dfa-4c44-94e9-784d16af8f96"> |
+| Dashboard                                                                                                  | Create Diary                                                                                      |
+|------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+|  <img width="350" alt="Screenshot 2023-12-15 at 11 16 22" src="https://github.com/rafsanjani/superdiary/assets/9197459/192494b8-162f-4cc2-a416-aebe5ea11da8"> |<img width="350" alt="Screenshot 2023-12-15 at 11 16 22" src="https://github.com/rafsanjani/superdiary/assets/9197459/a5f608c5-d526-41f4-b382-7abfbaea1b9f"> |
 
 
-### Screens (iOS) - Light
-| Dashboard | Diary AI  |
-|--|--|
-| <img width="350" alt="Screenshot 2023-12-15 at 11 24 10" src="https://github.com/rafsanjani/superdiary/assets/9197459/d81df92c-69b8-4a6c-8717-d5959250afe7"> | <img width="350" alt="Screenshot 2023-12-15 at 11 24 17" src="https://github.com/rafsanjani/superdiary/assets/9197459/1ce75c99-e498-4e66-afc0-a32ac4bac8f2">  |
 
 
+
+
+### Android - Dark
+
+| Dashboard                                                                                                        | Diary AI                                                                                                    |
+|----------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+|<img width="350" src="https://github.com/rafsanjani/superdiary/assets/9197459/f84e64fd-daba-4663-ba8e-55a2a27b7280" /> | <img width="350" src="https://github.com/rafsanjani/superdiary/assets/9197459/cc10b064-9b1a-43be-8bcd-53e9d9fbbfa5" /> |
+
+### iOS - Dark
+
+| Diary AI                                                                                                                                                    | Dashboard                                                                                                                                                    |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| <img width="350" alt="Screenshot 2023-12-15 at 11 16 22" src="https://github.com/rafsanjani/superdiary/assets/9197459/a736d7b0-ed27-422b-af4e-58317a7af47d"> | <img width="350" alt="Screenshot 2023-12-15 at 11 21 01" src="https://github.com/rafsanjani/superdiary/assets/9197459/98c012b9-3690-4148-a911-9a0ea1ac51fc"> |
+
+### iOS - Light
+
+| Dashboard                                                                                                                                                    | Diary AI                                                                                                                                                     |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| <img width="350" alt="Screenshot 2023-12-15 at 11 24 10" src="https://github.com/rafsanjani/superdiary/assets/9197459/d81df92c-69b8-4a6c-8717-d5959250afe7"> | <img width="350" alt="Screenshot 2023-12-15 at 11 24 17" src="https://github.com/rafsanjani/superdiary/assets/9197459/1ce75c99-e498-4e66-afc0-a32ac4bac8f2"> |
 
 ### Status: 🚧 In progress
+
 <p>Superdiary is still under heavy development and some screens are yet to be designed. This app is highly experimental and meant to serve as my personal playground for Kotlin multiplatform </p>
 
-
 ### License
+
 ```
 MIT License
 
-Copyright (c) 2020 Rafsanjani Aziz
+Copyright (c) 2024 Rafsanjani Aziz
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

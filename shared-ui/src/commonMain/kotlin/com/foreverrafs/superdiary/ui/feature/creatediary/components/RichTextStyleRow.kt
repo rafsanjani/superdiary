@@ -3,9 +3,9 @@ package com.foreverrafs.superdiary.ui.feature.creatediary.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.FormatListBulleted
 import androidx.compose.material.icons.outlined.FormatBold
 import androidx.compose.material.icons.outlined.FormatItalic
-import androidx.compose.material.icons.outlined.FormatListBulleted
 import androidx.compose.material.icons.outlined.FormatListNumbered
 import androidx.compose.material.icons.outlined.FormatStrikethrough
 import androidx.compose.material.icons.outlined.FormatUnderlined
@@ -79,7 +79,7 @@ fun RichTextStyleRow(
                 state.toggleUnorderedList()
             },
             isSelected = state.isUnorderedList,
-            icon = Icons.Outlined.FormatListBulleted,
+            icon = Icons.AutoMirrored.Outlined.FormatListBulleted,
         )
 
         RichTextStyleButton(

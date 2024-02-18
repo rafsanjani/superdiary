@@ -1,0 +1,70 @@
+name: JVM Unit & Snapshot Tests
+
+on: [ push, pull_request ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Gradle Wrapper Validation
+        uses: gradle/wrapper-validation-action@v2
+
+      - name: Lint all modules
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: detektAll
+  snapshot:
+    runs-on: macos-14
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Unit tests JVM
+        id: unit_tests_jvm
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: testDebugUnitTest --continue --no-configuration-cache
+          gradle-home-cache-cleanup: true
+          cache-read-only: false
+
+      - name: Snapshot test (shared-ui)
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: verifyPaparazziDebug
+          gradle-home-cache-cleanup: true
+          cache-read-only: false
+
+      - name: Upload Screenshot Test Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: shared-ui/build/reports/paparazzi/
+          retention-days: 1
+
+      - name: Upload Snapshot Failure Differences
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: reports
+          path: shared-ui/build/paparazzi/failures/
+          retention-days: 1

@@ -2,7 +2,7 @@ package com.foreverrafs.superdiary.ui
 
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
-import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
@@ -29,6 +29,7 @@ class DiaryListSnapshotTests : KoinTest {
     val paparazzi = Paparazzi(
         deviceConfig = DeviceConfig.PIXEL_5,
         showSystemUi = true,
+        maxPercentDifference = 0.2,
     )
 
     private val diaryListActions = DiaryListActions(

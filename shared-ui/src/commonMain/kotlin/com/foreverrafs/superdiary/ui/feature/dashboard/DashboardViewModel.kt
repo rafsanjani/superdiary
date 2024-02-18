@@ -2,15 +2,19 @@ package com.foreverrafs.superdiary.ui.feature.dashboard
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import co.touchlab.kermit.Logger
-import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
-import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.model.Streak
-import com.foreverrafs.superdiary.diary.model.WeeklySummary
-import com.foreverrafs.superdiary.diary.usecase.AddWeeklySummaryUseCase
-import com.foreverrafs.superdiary.diary.usecase.CalculateStreakUseCase
-import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.diary.usecase.GetWeeklySummaryUseCase
+import com.foreverrafs.superdiary.core.logging.Logger
+import com.foreverrafs.superdiary.data.Result
+import com.foreverrafs.superdiary.data.diaryai.DiaryAI
+import com.foreverrafs.superdiary.data.model.Diary
+import com.foreverrafs.superdiary.data.model.Streak
+import com.foreverrafs.superdiary.data.model.WeeklySummary
+import com.foreverrafs.superdiary.data.usecase.AddWeeklySummaryUseCase
+import com.foreverrafs.superdiary.data.usecase.CalculateBestStreakUseCase
+import com.foreverrafs.superdiary.data.usecase.CalculateStreakUseCase
+import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.data.usecase.GetWeeklySummaryUseCase
+import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
+import com.foreverrafs.superdiary.data.utils.toDate
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.update
@@ -20,9 +24,12 @@ import kotlinx.datetime.Clock
 class DashboardViewModel(
     private val getAllDiariesUseCase: GetAllDiariesUseCase,
     private val calculateStreakUseCase: CalculateStreakUseCase,
+    private val calculateBestStreakUseCase: CalculateBestStreakUseCase,
     private val addWeeklySummaryUseCase: AddWeeklySummaryUseCase,
     private val getWeeklySummaryUseCase: GetWeeklySummaryUseCase,
+    private val updateDiaryUseCase: UpdateDiaryUseCase,
     private val diaryAI: DiaryAI,
+    private val logger: Logger,
 ) :
     StateScreenModel<DashboardViewModel.DashboardScreenState>(DashboardScreenState.Loading) {
     sealed interface DashboardScreenState {
@@ -31,23 +38,25 @@ class DashboardViewModel(
             val latestEntries: List<Diary>,
             val totalEntries: Long,
             val weeklySummary: String?,
-            val streak: Streak,
+            val currentStreak: Streak,
+            val bestStreak: Streak,
         ) : DashboardScreenState
     }
 
     fun loadDashboardContent() = screenModelScope.launch {
-        Logger.i(Tag) {
+        logger.i(Tag) {
             "Loading dashboard content"
         }
+
         getAllDiariesUseCase().catch {
-            Logger.e(Tag, it) {
+            logger.e(Tag, it) {
                 "Error Loading dashboard content"
             }
             mutableState.update {
                 DashboardScreenState.Loading
             }
         }.collect { diaries ->
-            Logger.i(Tag) {
+            logger.i(Tag) {
                 "Dashboard content refreshed!"
             }
             mutableState.update {
@@ -62,7 +71,16 @@ class DashboardViewModel(
                     } else {
                         DEFAULT_SUMMARY_TEXT
                     },
-                    streak = Streak(0, emptyList()),
+                    currentStreak = Streak(
+                        0,
+                        Clock.System.now().toDate(),
+                        Clock.System.now().toDate(),
+                    ),
+                    bestStreak = Streak(
+                        0,
+                        Clock.System.now().toDate(),
+                        Clock.System.now().toDate(),
+                    ),
                 )
             }
 
@@ -79,21 +97,15 @@ class DashboardViewModel(
 
             if (currentState != null) {
                 val newState = func(currentState)
-                Logger.d(Tag) {
-                    "Updating app state: $newState"
-                }
                 newState
             } else {
-                Logger.d(Tag) {
-                    "Current State isn't Content. Not updating!"
-                }
                 state
             }
         }
     }
 
     private fun generateWeeklySummary(diaries: List<Diary>) = screenModelScope.launch {
-        Logger.i(Tag) {
+        logger.i(Tag) {
             "Fetching weekly summary for ${diaries.size} entries"
         }
         val latestWeeklySummary = getWeeklySummaryUseCase()
@@ -111,7 +123,7 @@ class DashboardViewModel(
 
         diaryAI.getWeeklySummary(diaries)
             .catch { exception ->
-                Logger.e(Tag, exception) {
+                logger.e(Tag, exception) {
                     "An error occurred generating weekly summary"
                 }
             }.onCompletion {
@@ -123,7 +135,7 @@ class DashboardViewModel(
                         return@onCompletion
                     }
 
-                    Logger.d(Tag) {
+                    logger.d(Tag) {
                         "Weekly summary generated!"
                     }
                     appState.weeklySummary?.let { summary ->
@@ -146,15 +158,43 @@ class DashboardViewModel(
     }
 
     private fun calculateStreak(diaries: List<Diary>) = screenModelScope.launch {
-        Logger.i(Tag) {
+        logger.i(Tag) {
             "Calculating streak for ${diaries.size} entries"
         }
         val streak = calculateStreakUseCase(diaries)
+        val bestStreak = calculateBestStreakUseCase(diaries)
+
+        logger.i(Tag) {
+            "Streak: $streak\nBest Streak: $bestStreak"
+        }
 
         mutableState.update { state ->
             (state as? DashboardScreenState.Content)?.copy(
-                streak = streak,
+                currentStreak = streak,
+                bestStreak = bestStreak,
             ) ?: state
+        }
+    }
+
+    suspend fun toggleFavorite(diary: Diary): Boolean {
+        val result = updateDiaryUseCase(
+            diary.copy(isFavorite = !diary.isFavorite),
+        )
+
+        return when (result) {
+            is Result.Failure -> {
+                logger.e(Tag, result.error) {
+                    "Error toggling favorite"
+                }
+                false
+            }
+
+            is Result.Success -> {
+                logger.d(Tag) {
+                    "Favorite toggled: $diary"
+                }
+                result.data
+            }
         }
     }
 

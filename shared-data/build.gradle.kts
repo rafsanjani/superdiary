@@ -1,46 +1,16 @@
 @file:Suppress("UnusedPrivateProperty")
 
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
-import java.io.IOException
 
 plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
     alias(libs.plugins.sqldelight)
-    kotlin("multiplatform")
-    id("kotlin-parcelize")
     alias(libs.plugins.buildKonfig)
-    alias(libs.plugins.kotlinx.kover)
-    alias(libs.plugins.sonar)
-    alias(libs.plugins.mockmp)
     alias(libs.plugins.testLogger)
-}
-
-koverReport {
-    filters {
-        excludes {
-            packages(
-                "com.foreverrafs.superdiary.database",
-                "*.buildKonfig",
-                "*.di",
-                "db",
-            )
-
-            classes("*.*DatabaseDriver")
-        }
-    }
-}
-
-buildkonfig {
-    packageName = "com.foreverrafs.superdiary.buildKonfig"
-
-    val openAiKey =
-        project.findProperty("openAiKey") ?: throw IOException("OpenAI API key not provided!")
-
-    // default config is required
-    defaultConfigs {
-        buildConfigField(STRING, "openAIKey", openAiKey.toString())
-    }
+    id("kotlin-parcelize")
+    kotlin("multiplatform")
+    id("com.superdiary.kover")
 }
 
 sqldelight {
@@ -60,7 +30,10 @@ kotlin {
     iosSimulatorArm64()
 
     compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
+        freeCompilerArgs.addAll(
+            "-Xexpect-actual-classes",
+            "-Xopt-in=com.aallam.openai.api.BetaOpenAI",
+        )
     }
 
     sourceSets {
@@ -74,9 +47,12 @@ kotlin {
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.square.sqldelight.coroutinesExt)
                 implementation(libs.kotlin.coroutines.test)
+                implementation(projects.core.utils)
+                implementation(projects.core.analytics)
+                implementation(projects.core.logging)
                 implementation(libs.openAiKotlin)
+                implementation("com.benasher44:uuid:0.8.2")
                 runtimeOnly(libs.ktor.client.cio)
-                implementation(libs.touchlab.kermit)
             }
         }
         androidMain {
@@ -101,7 +77,7 @@ kotlin {
                 implementation(libs.kotlin.coroutines.test)
                 implementation(libs.turbine)
                 implementation(libs.assertk.common)
-                implementation(libs.mockmp.runtime)
+                implementation("io.mockative:mockative:2.0.1")
             }
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
         }
@@ -137,7 +113,26 @@ android {
     }
 }
 
-mockmp {
-    usesHelper = true
-    installWorkaround()
+buildkonfig {
+    packageName = "com.foreverrafs.superdiary.buildKonfig"
+
+    val openAiKey =
+        project.findProperty("openAiKey")?.toString()
+
+    if (openAiKey == null) {
+        println("WARN: OpenAI key not provided!")
+    }
+
+    // default config is required
+    defaultConfigs {
+        buildConfigField(STRING, "openAIKey", openAiKey ?: "")
+    }
+}
+
+dependencies {
+    configurations
+        .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
+        .forEach {
+            add(it.name, "io.mockative:mockative-processor:2.0.1")
+        }
 }

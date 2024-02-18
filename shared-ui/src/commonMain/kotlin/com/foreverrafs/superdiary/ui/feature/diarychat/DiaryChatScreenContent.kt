@@ -6,7 +6,6 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,8 +29,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -50,20 +50,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.findRootCoordinates
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.diary.diaryai.DiaryChatMessage
-import com.foreverrafs.superdiary.diary.diaryai.DiaryChatRole
+import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
+import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
+import kotlin.random.Random
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
-import kotlin.random.Random
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
+import superdiary.`shared-ui`.generated.resources.Res
 
 @OptIn(ExperimentalLayoutApi::class)
 fun Modifier.positionAwareImePadding() = composed {
@@ -78,13 +87,15 @@ fun Modifier.positionAwareImePadding() = composed {
     }.consumeWindowInsets(PaddingValues(bottom = with(density) { bottomPadding.toDp() })).imePadding()
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun DiaryChatScreenContent(
     screenState: DiaryChatViewModel.DiaryChatViewState,
     modifier: Modifier = Modifier,
     onQueryDiaries: (query: String) -> Unit = {},
 ) {
+    val focusRequester = remember { FocusRequester() }
+
     Column(
         modifier = modifier.fillMaxSize().animateContentSize().positionAwareImePadding().padding(8.dp),
     ) {
@@ -139,8 +150,8 @@ fun DiaryChatScreenContent(
                             id = Random.nextLong(),
                             role = DiaryChatRole.DiaryAI,
                             timestamp = Clock.System.now(),
-                            content = "Gathering thoughts..."
-                        )
+                            content = "Gathering thoughts...",
+                        ),
                     )
                 }
             }
@@ -155,20 +166,36 @@ fun DiaryChatScreenContent(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            LaunchedEffect(Unit) {
+                focusRequester.requestFocus()
+            }
+
             // Input area
             OutlinedTextField(
-                modifier = Modifier.weight(1f).heightIn(min = 48.dp),
+                modifier = Modifier
+                    .focusRequester(focusRequester)
+                    .weight(1f)
+                    .heightIn(min = 48.dp)
+                    .onKeyEvent {
+                        if (it.key == Key.Enter) {
+                            onQueryDiaries(input)
+                            input = ""
+                        }
+                        true
+                    },
                 value = input,
                 onValueChange = { input = it },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
             )
 
             Spacer(modifier = Modifier.width(4.dp))
 
             // Send button
+            val description = stringResource(Res.string.content_description_button_send)
             IconButton(
                 enabled = input.isNotEmpty() && !screenState.isResponding,
                 modifier = Modifier.size(48.dp).semantics(true) {
-                    contentDescription = "Send Button"
+                    this.contentDescription = description
                 },
                 onClick = {
                     onQueryDiaries(input)
@@ -180,7 +207,7 @@ fun DiaryChatScreenContent(
                 ),
             ) {
                 Icon(
-                    imageVector = Icons.Default.Send,
+                    imageVector = Icons.AutoMirrored.Filled.Send,
                     contentDescription = null,
                 )
             }
@@ -210,10 +237,12 @@ fun ChatBubble(
 
         Text(
             text = chatItem.content,
-            modifier = alignmentAndPaddingModifier.background(
-                color = backgroundColor,
-                shape = RoundedCornerShape(4.dp),
-            ).padding(8.dp),
+            modifier = alignmentAndPaddingModifier
+                .background(
+                    color = backgroundColor,
+                    shape = RoundedCornerShape(4.dp),
+                )
+                .padding(8.dp),
             style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp, lineHeight = 24.sp),
             color = Color.White,
         )

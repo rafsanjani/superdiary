@@ -8,7 +8,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
-import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
@@ -52,7 +52,6 @@ class CreateDiaryScreen : Screen {
                         .catch {
                             isGeneratingFromAI = false
                             richTextState.setHtml("<p style=\"color:red\">Error generating entry</p>")
-                            println(it)
                         }
                         .onCompletion {
                             isGeneratingFromAI = false
@@ -67,9 +66,8 @@ class CreateDiaryScreen : Screen {
             createDiaryScreenModel.saveDiary(
                 Diary(
                     entry = entry,
-                    date = Clock.System
-                        .now(),
-                    isFavorite = false,
+                    date = Clock.System.now(),
+                    isFavorite = false
                 ),
             )
 

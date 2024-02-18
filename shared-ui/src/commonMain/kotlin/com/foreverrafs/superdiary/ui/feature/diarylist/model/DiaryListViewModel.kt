@@ -2,13 +2,15 @@ package com.foreverrafs.superdiary.ui.feature.diarylist.model
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.foreverrafs.superdiary.diary.model.Diary
-import com.foreverrafs.superdiary.diary.usecase.DeleteDiaryUseCase
-import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByDateUseCase
-import com.foreverrafs.superdiary.diary.usecase.SearchDiaryByEntryUseCase
-import com.foreverrafs.superdiary.diary.usecase.UpdateDiaryUseCase
-import com.foreverrafs.superdiary.diary.utils.toInstant
+import com.foreverrafs.superdiary.core.logging.Logger
+import com.foreverrafs.superdiary.data.Result
+import com.foreverrafs.superdiary.data.model.Diary
+import com.foreverrafs.superdiary.data.usecase.DeleteDiaryUseCase
+import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.data.usecase.SearchDiaryByDateUseCase
+import com.foreverrafs.superdiary.data.usecase.SearchDiaryByEntryUseCase
+import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
+import com.foreverrafs.superdiary.data.utils.toInstant
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
@@ -21,6 +23,7 @@ class DiaryListViewModel(
     private val searchDiaryByDateUseCase: SearchDiaryByDateUseCase,
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
     private val updateDiaryUseCase: UpdateDiaryUseCase,
+    private val logger: Logger,
 ) : StateScreenModel<DiaryListViewState>(DiaryListViewState.Loading) {
 
     fun observeDiaries() = screenModelScope.launch {
@@ -78,15 +81,37 @@ class DiaryListViewModel(
     }
 
     suspend fun deleteDiaries(diaries: List<Diary>): Boolean {
-        val affectedRows = deleteDiaryUseCase(diaries)
-        return affectedRows == diaries.size
+        return when (val result = deleteDiaryUseCase(diaries)) {
+            is Result.Success -> result.data == diaries.size
+            is Result.Failure -> false
+        }
     }
 
     suspend fun toggleFavorite(diary: Diary): Boolean {
-        return updateDiaryUseCase(
+        val result = updateDiaryUseCase(
             diary.copy(
                 isFavorite = !diary.isFavorite,
             ),
         )
+
+        return when (result) {
+            is Result.Failure -> {
+                logger.e(Tag, result.error) {
+                    "Error toggling favorite"
+                }
+                false
+            }
+
+            is Result.Success -> {
+                logger.d(Tag) {
+                    "Favorite toggled"
+                }
+                result.data
+            }
+        }
+    }
+
+    companion object {
+        private val Tag = DiaryListViewModel::class.simpleName.orEmpty()
     }
 }

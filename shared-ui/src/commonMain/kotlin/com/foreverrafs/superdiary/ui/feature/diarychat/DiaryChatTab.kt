@@ -1,8 +1,8 @@
 package com.foreverrafs.superdiary.ui.feature.diarychat
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Chat
-import androidx.compose.material.icons.outlined.Chat
+import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,12 +26,12 @@ object DiaryChatTab : SuperDiaryTab {
 
     override val selectedIcon: VectorPainter
         @Composable
-        get() = rememberVectorPainter(Icons.Filled.Chat)
+        get() = rememberVectorPainter(Icons.AutoMirrored.Filled.Chat)
     override val options: TabOptions
         @Composable
         get() = TabOptions(
             index = 4u,
             title = "Diary AI",
-            icon = rememberVectorPainter(Icons.Outlined.Chat),
+            icon = rememberVectorPainter(Icons.AutoMirrored.Outlined.Chat),
         )
 }

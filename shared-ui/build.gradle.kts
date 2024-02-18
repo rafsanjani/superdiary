@@ -11,35 +11,14 @@ plugins {
     alias(libs.plugins.ksp)
     kotlin("multiplatform")
     id("kotlin-parcelize")
-    alias(libs.plugins.mockmp)
-    alias(libs.plugins.kotlinx.kover)
-    alias(libs.plugins.sonar)
     alias(libs.plugins.testLogger)
+
+    // Build logic
+    id("com.superdiary.kover")
 }
 
-koverReport {
-    filters {
-        excludes {
-            classes(
-                "*.*ScreenContent*",
-                "*.*Preview*",
-                "*.*AppKt*",
-                "*.*CreateDiaryScreen",
-                "*.Resources*",
-                "*.Main*",
-                "*.*Screen*",
-                "*.*ComposableSingletons*",
-            )
-            packages(
-                "*.components",
-                "*.di",
-                "*.style",
-            )
-        }
-    }
-}
-
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class) kotlin {
+@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
+kotlin {
     androidTarget()
 
     jvm()
@@ -63,10 +42,15 @@ koverReport {
     sourceSets {
         commonMain {
             dependencies {
-                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class) implementation(compose.components.resources)
+                @OptIn(
+                    org.jetbrains.compose.ExperimentalComposeLibrary::class,
+                )
+                implementation(compose.components.resources)
                 implementation(compose.material3)
+                implementation(compose.foundation)
                 implementation(compose.materialIconsExtended)
                 implementation(projects.sharedData)
+                implementation(projects.core.utils)
                 implementation(libs.kotlin.datetime)
                 implementation(libs.koin.core)
                 implementation(libs.voyager.navigator)
@@ -76,6 +60,9 @@ koverReport {
                 implementation(libs.voyager.koin)
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.koin.compose)
+                implementation(projects.swipe)
+                implementation(projects.core.logging)
+                implementation(projects.core.analytics)
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
             }
@@ -84,12 +71,14 @@ koverReport {
         commonTest {
             dependencies {
                 implementation(kotlin("test"))
+                implementation(libs.assertk.common)
                 implementation(libs.junit)
                 implementation(libs.koin.test)
+                implementation("io.mockative:mockative:2.0.1")
                 implementation(libs.kotlin.coroutines.test)
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                implementation(compose.uiTest)
                 implementation(libs.turbine)
-                implementation(libs.mockmp.runtime)
-                implementation(libs.assertk.common)
             }
 
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
@@ -105,7 +94,7 @@ koverReport {
             }
         }
 
-        jvmMain {
+        val jvmMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(libs.koin.jvm)
@@ -113,7 +102,7 @@ koverReport {
             }
         }
 
-        androidMain {
+        val androidMain by getting {
             dependencies {
                 implementation(libs.compose.ui.tooling)
             }
@@ -146,25 +135,22 @@ android {
     sourceSets["main"].res.srcDirs("src/commonMain/resources")
 }
 
-mockmp {
-    usesHelper = true
-    installWorkaround()
-}
-
 plugins.withId("app.cash.paparazzi") {
     afterEvaluate {
         dependencies.constraints {
             add("testImplementation", "com.google.guava:guava") {
                 attributes {
                     attribute(
-                        TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(
-                            TargetJvmEnvironment::class.java, TargetJvmEnvironment.STANDARD_JVM
-                        )
+                        TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE,
+                        objects.named(
+                            TargetJvmEnvironment::class.java,
+                            TargetJvmEnvironment.STANDARD_JVM,
+                        ),
                     )
                 }
                 because(
-                    "LayoutLib and sdk-common depend on Guava's -jre published variant."
-                            + "See https://github.com/cashapp/paparazzi/issues/906."
+                    "LayoutLib and sdk-common depend on Guava's -jre published variant." +
+                        "See https://github.com/cashapp/paparazzi/issues/906.",
                 )
             }
         }
@@ -179,4 +165,12 @@ tasks.withType<AndroidLintAnalysisTask> {
 
 tasks.withType<LintModelWriterTask> {
     dependsOn("copyFontsToAndroidAssets")
+}
+
+dependencies {
+    configurations
+        .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
+        .forEach {
+            add(it.name, "io.mockative:mockative-processor:2.0.1")
+        }
 }

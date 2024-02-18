@@ -2,10 +2,10 @@ package com.foreverrafs.superdiary.ui.feature.diarychat
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
-import com.foreverrafs.superdiary.diary.diaryai.DiaryChatMessage
-import com.foreverrafs.superdiary.diary.diaryai.DiaryChatRole
-import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.data.diaryai.DiaryAI
+import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
+import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
+import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 

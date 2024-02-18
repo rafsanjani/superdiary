@@ -1,8 +1,10 @@
 package com.foreverrafs.superdiary.ui.di
 
-import com.foreverrafs.superdiary.diary.analytics.Analytics
-import com.foreverrafs.superdiary.diary.di.platformModule
-import com.foreverrafs.superdiary.diary.di.useCaseModule
+import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
+import com.foreverrafs.superdiary.core.logging.Logger
+import com.foreverrafs.superdiary.core.utils.utilsModule
+import com.foreverrafs.superdiary.data.di.platformModule
+import com.foreverrafs.superdiary.data.di.useCaseModule
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryViewModel
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
@@ -14,6 +16,10 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 internal fun screenModules(): Module = module {
+    single<Logger> {
+        // TODO: Replace with Kermit Logger
+        Logger
+    }
     singleOf(::DiaryListViewModel)
     singleOf(::CreateDiaryViewModel)
     singleOf(::FavoriteViewModel)
@@ -22,5 +28,10 @@ internal fun screenModules(): Module = module {
     singleOf(::DetailsViewModel)
 }
 
-fun appModule(analytics: Analytics) =
-    listOf(useCaseModule(), screenModules(), platformModule(analytics))
+/** This is the only component that is exposed outside of this module */
+fun compositeModule(analytics: AnalyticsTracker): List<Module> = listOf(
+    utilsModule(),
+    useCaseModule(),
+    screenModules(),
+    platformModule(analytics),
+)

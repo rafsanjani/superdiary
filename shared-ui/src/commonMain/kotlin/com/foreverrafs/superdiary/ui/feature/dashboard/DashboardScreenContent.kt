@@ -28,7 +28,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -41,21 +40,27 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.diary.model.Diary
+import com.foreverrafs.superdiary.data.model.Diary
+import com.foreverrafs.superdiary.data.model.Streak
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryItem
 import com.foreverrafs.superdiary.ui.format
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
+import superdiary.`shared-ui`.generated.resources.Res
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
 @Composable
 fun DashboardScreenContent(
     state: DashboardViewModel.DashboardScreenState,
     onAddEntry: () -> Unit,
+    onToggleFavorite: (diary: Diary) -> Unit,
     modifier: Modifier = Modifier,
     onSeeAll: () -> Unit,
 ) {
@@ -68,9 +73,7 @@ fun DashboardScreenContent(
             DashboardSection(
                 content = {
                     AtAGlance(
-                        modifier = Modifier
-                            .animateItemPlacement()
-                            .fillMaxWidth(),
+                        modifier = Modifier.animateItemPlacement().fillMaxWidth(),
                         state = state,
                     )
                 },
@@ -79,9 +82,7 @@ fun DashboardScreenContent(
             DashboardSection(
                 content = { onDismiss ->
                     WeeklySummaryCard(
-                        modifier = Modifier.animateItemPlacement()
-                            .fillMaxWidth()
-                            .heightIn(max = 200.dp, min = 150.dp),
+                        modifier = Modifier.animateItemPlacement().fillMaxWidth().heightIn(max = 200.dp, min = 150.dp),
                         summary = state.weeklySummary,
                         onDismiss = onDismiss,
                     )
@@ -99,12 +100,16 @@ fun DashboardScreenContent(
                             onSeeAll = onSeeAll,
                             onDiaryClicked = {
                                 navigator.push(DetailScreen(it))
-                            }
+                            },
+                            onToggleFavorite = onToggleFavorite,
                         )
                     } else {
-                        Button(onClick = onAddEntry) {
+                        Button(
+                            onClick = onAddEntry,
+                            modifier = Modifier.testTag("button_add_entry"),
+                        ) {
                             Text(
-                                text = "Add Entry",
+                                text = stringResource(Res.string.label_add_entry),
                                 style = MaterialTheme.typography.labelMedium,
                             )
                         }
@@ -115,26 +120,24 @@ fun DashboardScreenContent(
         )
     }
 
-    Scaffold(
+    LazyColumn(
         modifier = modifier
+            .testTag("dashboard_content_list")
             .fillMaxSize()
-            .padding(8.dp)
+            .padding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        LazyColumn(
-            modifier = Modifier.padding(it),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            items(items = dashboardItems, key = { it.id }) { content ->
-                content.content(this) {
-                    isWeeklySummaryDisplayed = false
-                    dashboardItems.remove(dashboardItems.firstOrNull { it.id == content.id })
-                }
+        items(items = dashboardItems, key = { it.id }) { content ->
+            content.content(this) {
+                isWeeklySummaryDisplayed = false
+                dashboardItems.remove(dashboardItems.firstOrNull { it.id == content.id })
             }
         }
     }
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun AtAGlance(
     state: DashboardViewModel.DashboardScreenState.Content,
@@ -142,8 +145,13 @@ private fun AtAGlance(
 ) {
     val animationState = remember { MutableTransitionState(false) }
 
-    val streaks by animateIntAsState(
-        targetValue = if (animationState.targetState) state.streak.count else 0,
+    val currentStreakCount by animateIntAsState(
+        targetValue = if (animationState.targetState) state.currentStreak.count else 0,
+        animationSpec = tween(durationMillis = 1000),
+    )
+
+    val bestStreakCount by animateIntAsState(
+        targetValue = if (animationState.targetState) state.bestStreak.count else 0,
         animationSpec = tween(durationMillis = 1000),
     )
 
@@ -169,27 +177,37 @@ private fun AtAGlance(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            val dashboardCardModifier = Modifier
-                .weight(1f)
-                .aspectRatio(1f)
+            val dashboardCardModifier = Modifier.weight(1f).aspectRatio(1f)
+
+            fun streakCaption(streak: Streak): String {
+                val dateFormatPattern = "MMM dd"
+                return if (streak.count != 0) {
+                    "${streak.startDate.format(dateFormatPattern)} - ${streak.endDate.format(dateFormatPattern)}"
+                } else {
+                    "-"
+                }
+            }
+
             GlanceCard(
                 modifier = dashboardCardModifier,
-                title = "Entries",
+                title = stringResource(Res.string.label_entries),
                 content = totalEntries.toString(),
             )
 
             GlanceCard(
                 modifier = dashboardCardModifier,
-                title = "Streak 🔥",
-                content = "$streaks days",
-                caption = state.streak.dates.joinToString(" - ") { it?.format("MMM dd") ?: "" },
+                title = stringResource(Res.string.label_glance_header_streak),
+                // Because formatted string resources doesn't cause recomposition
+                content = "$currentStreakCount days",
+                caption = streakCaption(streak = state.currentStreak),
             )
 
             GlanceCard(
                 modifier = dashboardCardModifier,
-                title = "Best Streak",
-                content = "$streaks days",
-                caption = "Jun 20 - Jul 20",
+                title = stringResource(Res.string.label_glance_header_best_streak),
+                // Because formatted string resources doesn't cause recomposition
+                content = "$bestStreakCount days",
+                caption = streakCaption(state.bestStreak),
             )
         }
     }
@@ -207,9 +225,7 @@ fun GlanceCard(
         shape = RoundedCornerShape(8.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
+            modifier = Modifier.fillMaxSize().padding(8.dp),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -238,10 +254,12 @@ fun GlanceCard(
     }
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun LatestEntries(
     diaries: List<Diary>,
     onSeeAll: () -> Unit,
+    onToggleFavorite: (diary: Diary) -> Unit,
     modifier: Modifier = Modifier,
     onDiaryClicked: (diary: Diary) -> Unit,
 ) {
@@ -257,29 +275,35 @@ private fun LatestEntries(
                 .padding(bottom = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(text = "Latest Entries", style = MaterialTheme.typography.headlineMedium)
+            Text(
+                text = stringResource(Res.string.label_glance_header_latest_entries),
+                style = MaterialTheme.typography.headlineMedium,
+            )
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Text("Show All", style = MaterialTheme.typography.labelSmall)
+            Text(stringResource(Res.string.label_button_show_all), style = MaterialTheme.typography.labelSmall)
         }
 
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            for (diary in diaries) {
+            diaries.forEachIndexed { index, diary ->
                 DiaryItem(
-                    modifier = Modifier.clickable(onClick = { onDiaryClicked(diary) }),
-                    inSelectionMode = false,
-                    onToggleFavorite = {},
-                    selected = false,
                     diary = diary,
+                    selected = false,
+                    inSelectionMode = false,
+                    modifier = Modifier
+                        .clickable(onClick = { onDiaryClicked(diary) })
+                        .testTag("diary_list_item_$index"),
+                    onToggleFavorite = { onToggleFavorite(diary) },
                 )
             }
         }
     }
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun WeeklySummaryCard(
     summary: String?,
@@ -303,7 +327,7 @@ private fun WeeklySummaryCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = "Weekly Summary",
+                    text = stringResource(Res.string.label_glance_header_weekly_summary),
                     textAlign = TextAlign.Start,
                     style = MaterialTheme.typography.headlineMedium,
                 )
@@ -316,9 +340,8 @@ private fun WeeklySummaryCard(
             }
 
             Text(
-                modifier = Modifier
-                    .padding(4.dp),
-                text = summary ?: "Error generating weekly summary",
+                modifier = Modifier.padding(4.dp),
+                text = summary ?: stringResource(Res.string.label_weekly_summary_error),
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Justify,
                 lineHeight = 28.sp,
@@ -331,7 +354,7 @@ private fun WeeklySummaryCard(
                         .padding(top = 12.dp),
                     onClick = {},
                 ) {
-                    Text("Retry")
+                    Text(stringResource(Res.string.label_button_retry))
                 }
             }
         }

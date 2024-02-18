@@ -5,11 +5,20 @@ import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
-import com.foreverrafs.superdiary.diary.datasource.DataSource
-import com.foreverrafs.superdiary.diary.diaryai.DiaryAI
-import com.foreverrafs.superdiary.diary.diaryai.DiaryChatRole
-import com.foreverrafs.superdiary.diary.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.data.datasource.DataSource
+import com.foreverrafs.superdiary.data.diaryai.DiaryAI
+import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
+import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
+import io.mockative.Mock
+import io.mockative.any
+import io.mockative.coEvery
+import io.mockative.every
+import io.mockative.mock
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -17,21 +26,15 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.kodein.mock.Mock
-import org.kodein.mock.tests.TestsWithMocks
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class DiaryChatViewModelTest : TestsWithMocks() {
-    override fun setUpMocks() = injectMocks(mocker)
+class DiaryChatViewModelTest {
 
     @Mock
-    lateinit var diaryAI: DiaryAI
+    private val dataSource: DataSource = mock(DataSource::class)
 
     @Mock
-    lateinit var dataSource: DataSource
+    private val diaryAI: DiaryAI = mock(DiaryAI::class)
 
     private lateinit var diaryChatViewModel: DiaryChatViewModel
 
@@ -39,10 +42,10 @@ class DiaryChatViewModelTest : TestsWithMocks() {
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
 
-        every { dataSource.fetchAll() } returns flowOf(emptyList())
+        every { dataSource.fetchAll() }.returns(flowOf(emptyList()))
         diaryChatViewModel = DiaryChatViewModel(
             diaryAI,
-            GetAllDiariesUseCase(dataSource),
+            GetAllDiariesUseCase(dataSource, TestAppDispatchers),
         )
     }
 
@@ -53,7 +56,7 @@ class DiaryChatViewModelTest : TestsWithMocks() {
 
     @Test
     fun `Should update responding to true when generating AI response`() = runTest {
-        everySuspending { diaryAI.queryDiaries(isAny()) } returns "hello boss"
+        coEvery { diaryAI.queryDiaries(any()) }.returns("hello boss")
 
         diaryChatViewModel.state.test {
             diaryChatViewModel.queryDiaries("hello World")
@@ -71,7 +74,7 @@ class DiaryChatViewModelTest : TestsWithMocks() {
 
     @Test
     fun `Should update responding to false after generating AI response`() = runTest {
-        everySuspending { diaryAI.queryDiaries(isAny()) } returns "hello boss"
+        coEvery { diaryAI.queryDiaries(any()) }.returns("hello boss")
 
         diaryChatViewModel.state.test {
             diaryChatViewModel.queryDiaries("hello World")
@@ -92,11 +95,11 @@ class DiaryChatViewModelTest : TestsWithMocks() {
 
     @Test
     fun `Should prepend message prompt to messages when querying initially`() = runTest {
-        everySuspending {
+        coEvery {
             diaryAI.queryDiaries(
-                isAny(),
+                any(),
             )
-        } returns "You went horse riding on the 20th of June"
+        }.returns("You went horse riding on the 20th of June")
 
         diaryChatViewModel.state.test {
             diaryChatViewModel.queryDiaries("When did I go horse riding?")

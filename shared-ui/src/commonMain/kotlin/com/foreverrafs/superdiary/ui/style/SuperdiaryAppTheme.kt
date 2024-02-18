@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalResourceApi::class)
+
 package com.foreverrafs.superdiary.ui.style
 
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -15,7 +17,9 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.ui.font
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.Font
+import superdiary.`shared-ui`.generated.resources.Res
 
 @Composable
 fun SuperdiaryAppTheme(
@@ -24,7 +28,7 @@ fun SuperdiaryAppTheme(
 ) {
     val colorScheme = if (darkTheme) {
         darkColorScheme(
-            surfaceVariant = Color(0x27BDBDBD),
+            surfaceVariant = Color(0xFF383838),
             background = Color(0xFF1E1E1E),
             secondaryContainer = Color(0x611E1E1E),
             tertiaryContainer = Color.DarkGray,
@@ -35,7 +39,7 @@ fun SuperdiaryAppTheme(
             secondaryContainer = Color.LightGray,
             primaryContainer = Color(0xFFECEDFC),
             background = Color(0xFFF5F5F5),
-            surfaceVariant = Color(0x27BDBDBD),
+            surfaceVariant = Color(0xFFECEEF1),
             tertiaryContainer = Color(0xffe3e3e3),
         )
     }
@@ -99,29 +103,29 @@ fun SuperdiaryAppTheme(
 @Composable
 fun righteousFontFamily(): FontFamily = FontFamily(
     listOf(
-        font(
-            resource = "righteous_regular",
+        Font(
+            resource = Res.font.righteous_regular,
             weight = FontWeight.Normal,
-            style = FontStyle.Normal,
-        ),
+            style = FontStyle.Normal
+        )
     ),
 )
 
 @Composable
 fun montserratAlternativesFontFamily(): FontFamily = FontFamily(
     listOf(
-        font(
-            resource = "montserrat_alternatives_regular",
+        Font(
+            resource = Res.font.montserrat_alternatives_regular,
             weight = FontWeight.Normal,
             style = FontStyle.Normal,
         ),
-        font(
-            resource = "montserrat_alternatives_bold",
+        Font(
+            resource = Res.font.montserrat_alternatives_bold,
             weight = FontWeight.Bold,
             style = FontStyle.Normal,
         ),
-        font(
-            resource = "montserrat_alternatives_semibold",
+        Font(
+            resource = Res.font.montserrat_alternatives_semibold,
             weight = FontWeight.Bold,
             style = FontStyle.Normal,
         ),

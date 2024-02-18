@@ -1,0 +1,48 @@
+name: iOS Unit Tests
+
+on: [ push, pull_request ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Gradle Wrapper Validation
+        uses: gradle/wrapper-validation-action@v2
+
+      - name: Lint all modules
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: detektAll
+  test:
+    runs-on: macos-14
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Unit test iOS
+        id: unit_tests_ios
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: iosSimulatorArm64Test --no-configuration-cache
+          gradle-home-cache-cleanup: true
+          cache-read-only: false
