@@ -1,8 +1,8 @@
 import Foundation
 import shared
 
-class AppleAnalytics: Shared_dataAnalytics {
-    func trackEvent(event: Shared_dataAnalyticsEvents) {
+class AppleAnalytics: AnalyticsTracker {
+    func trackEvent(event: AnalyticsEvent) {
         // Implement this soon
     }
 }

@@ -32,6 +32,7 @@ kotlin {
         it.binaries.framework {
             baseName = "shared"
             linkerOpts += "-lsqlite3"
+            export(projects.core.analytics)
         }
     }
 
@@ -62,7 +63,7 @@ kotlin {
                 implementation(libs.koin.compose)
                 implementation(projects.swipe)
                 implementation(projects.core.logging)
-                implementation(projects.core.analytics)
+                api(projects.core.analytics)
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
             }
