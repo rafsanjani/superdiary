@@ -1,6 +1,11 @@
 name: Sonar Analysis
 
-on: [ push, pull_request ]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -44,7 +49,7 @@ jobs:
         uses: gradle/wrapper-validation-action@v2
 
       - name: Generate XML test reports
-        id: sonar
+        id: reports
         uses: gradle/gradle-build-action@v3
         with:
           arguments: lint koverXmlReport
