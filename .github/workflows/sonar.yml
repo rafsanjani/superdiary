@@ -43,13 +43,19 @@ jobs:
       - name: Gradle Wrapper Validation
         uses: gradle/wrapper-validation-action@v2
 
-      - name: Analyze with Sonar
+      - name: Generate XML test reports
+        id: sonar
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: lint koverXmlReport
+          gradle-home-cache-cleanup: true
+          cache-read-only: false
+
+      - name: Run sonar analysis
         id: sonar
         uses: gradle/gradle-build-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          arguments: lint koverXmlReport sonar
-          gradle-home-cache-cleanup: true
-          cache-read-only: false
+          arguments: sonar

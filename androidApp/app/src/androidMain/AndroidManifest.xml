@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-            android:name="com.superdiary.DiaryApp"
+            android:name="com.foreverrafs.superdiary.DiaryApp"
             android:allowBackup="true"
             android:dataExtractionRules="@xml/data_extraction_rules"
             android:fullBackupContent="@xml/full_backup_content"
@@ -21,7 +21,7 @@
                 tools:targetApi="29" />
 
         <activity
-                android:name="com.superdiary.MainActivity"
+                android:name="com.foreverrafs.superdiary.MainActivity"
                 android:exported="true"
                 android:windowSoftInputMode="adjustResize">
             <intent-filter>
