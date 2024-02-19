@@ -32,14 +32,19 @@ object KoverExclusionList {
         // Reusable screen components
         "**/components/**",
         "**/*Resources*",
-        "me.saket.swipe.SwipeableActionBox*",
-        "me.saket.swipe.SwipeAction*",
         "*.*.*ComposableSingletons*",
-        "SwipeableActionBox*",
-        "SwipeAction*",
+        "**/app/**",
+        "**/androidApp/**"
     )
 
     val files = listOf(
         "BottomNavigationScreenKt",
+        "desktopApp.*",
+        "desktopApp/**",
+        "androidApp/**",
+        "swipe/src/commonMain/kotlin/me/saket/swipe/SwipeableActionBox.kt",
+        "swipe/src/commonMain/kotlin/me/saket/swipe/SwipeAction.kt",
+        "**/Module.kt",
+        "**/defaults.kt"
     )
 }

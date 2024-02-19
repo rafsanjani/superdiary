@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.analytics
+package com.foreverrafs.superdiary
 
 import com.foreverrafs.superdiary.core.analytics.AnalyticsEvents
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker

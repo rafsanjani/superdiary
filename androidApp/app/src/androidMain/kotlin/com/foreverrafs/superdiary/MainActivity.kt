@@ -1,4 +1,4 @@
-package com.superdiary
+package com.foreverrafs.superdiary
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
