@@ -24,7 +24,7 @@ class SonarConventionPlugin : Plugin<Project> {
             subprojects {
                 sonar {
                     val buildDir = project.layout.buildDirectory.asFile.get()
-                    val reportPath = "$buildDir/reports/kover/reportDebug.xml"
+                    val reportPath = "$buildDir/reports/kover/report.xml"
                     val lintReportPath = "$buildDir/reports/lint-results-debug.xml"
 
                     properties {
