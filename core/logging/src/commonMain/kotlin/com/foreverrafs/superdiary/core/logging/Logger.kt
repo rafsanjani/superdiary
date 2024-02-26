@@ -9,7 +9,7 @@ interface Logger {
 
     fun e(tag: String, throwable: Throwable? = null, message: () -> String = { "" }) = Unit
 
-    fun w(tag: String, message: () -> String = { "" }) = Unit
+    fun w(tag: String, throwable: Throwable? = null, message: () -> String = { "" }) = Unit
 
     companion object : Logger
 }
