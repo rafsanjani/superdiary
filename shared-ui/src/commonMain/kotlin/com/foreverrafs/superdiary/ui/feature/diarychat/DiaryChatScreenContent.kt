@@ -73,6 +73,7 @@ import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import superdiary.`shared-ui`.generated.resources.Res
+import superdiary.`shared-ui`.generated.resources.content_description_button_send
 
 @OptIn(ExperimentalLayoutApi::class)
 fun Modifier.positionAwareImePadding() = composed {
@@ -194,9 +195,11 @@ fun DiaryChatScreenContent(
             val description = stringResource(Res.string.content_description_button_send)
             IconButton(
                 enabled = input.isNotEmpty() && !screenState.isResponding,
-                modifier = Modifier.size(48.dp).semantics(true) {
-                    this.contentDescription = description
-                },
+                modifier = Modifier
+                    .size(48.dp)
+                    .semantics(true) {
+                        this.contentDescription = description
+                    },
                 onClick = {
                     onQueryDiaries(input)
                     input = ""
