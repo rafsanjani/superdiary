@@ -45,6 +45,9 @@ import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import superdiary.`shared-ui`.generated.resources.Res
+import superdiary.`shared-ui`.generated.resources.content_description_navigate_back
+import superdiary.`shared-ui`.generated.resources.content_description_save_entry
+import superdiary.`shared-ui`.generated.resources.label_diary_ai
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
