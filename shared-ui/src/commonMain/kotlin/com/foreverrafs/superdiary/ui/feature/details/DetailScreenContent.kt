@@ -46,6 +46,9 @@ import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import superdiary.`shared-ui`.generated.resources.Res
+import superdiary.`shared-ui`.generated.resources.content_description_delete_entry
+import superdiary.`shared-ui`.generated.resources.content_description_navigate_back
+import superdiary.`shared-ui`.generated.resources.label_diary_deleted
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable

@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import superdiary.`shared-ui`.generated.resources.Res
+import superdiary.`shared-ui`.generated.resources.app_name
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable

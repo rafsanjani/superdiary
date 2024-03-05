@@ -54,6 +54,15 @@ import com.foreverrafs.superdiary.ui.format
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import superdiary.`shared-ui`.generated.resources.Res
+import superdiary.`shared-ui`.generated.resources.label_add_entry
+import superdiary.`shared-ui`.generated.resources.label_button_retry
+import superdiary.`shared-ui`.generated.resources.label_button_show_all
+import superdiary.`shared-ui`.generated.resources.label_entries
+import superdiary.`shared-ui`.generated.resources.label_glance_header_best_streak
+import superdiary.`shared-ui`.generated.resources.label_glance_header_latest_entries
+import superdiary.`shared-ui`.generated.resources.label_glance_header_streak
+import superdiary.`shared-ui`.generated.resources.label_glance_header_weekly_summary
+import superdiary.`shared-ui`.generated.resources.label_weekly_summary_error
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
 @Composable

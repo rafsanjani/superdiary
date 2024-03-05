@@ -20,6 +20,10 @@ import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.Font
 import superdiary.`shared-ui`.generated.resources.Res
+import superdiary.`shared-ui`.generated.resources.montserrat_alternatives_bold
+import superdiary.`shared-ui`.generated.resources.montserrat_alternatives_regular
+import superdiary.`shared-ui`.generated.resources.montserrat_alternatives_semibold
+import superdiary.`shared-ui`.generated.resources.righteous_regular
 
 @Composable
 fun SuperdiaryAppTheme(
@@ -106,8 +110,8 @@ fun righteousFontFamily(): FontFamily = FontFamily(
         Font(
             resource = Res.font.righteous_regular,
             weight = FontWeight.Normal,
-            style = FontStyle.Normal
-        )
+            style = FontStyle.Normal,
+        ),
     ),
 )
 

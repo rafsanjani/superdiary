@@ -1,9 +1,5 @@
 @file:Suppress("UnusedPrivateProperty")
 
-import com.android.build.gradle.internal.lint.AndroidLintAnalysisTask
-import com.android.build.gradle.internal.lint.LintModelWriterTask
-
-
 plugins {
     alias(libs.plugins.paparazzi)
     alias(libs.plugins.android.library)
@@ -75,7 +71,7 @@ kotlin {
                 implementation(libs.assertk.common)
                 implementation(libs.junit)
                 implementation(libs.koin.test)
-                implementation("io.mockative:mockative:2.0.1")
+                implementation(libs.mockative.runtime)
                 implementation(libs.kotlin.coroutines.test)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.uiTest)
@@ -158,20 +154,10 @@ plugins.withId("app.cash.paparazzi") {
     }
 }
 
-// Workaround for https://github.com/JetBrains/compose-multiplatform/issues/4085
-
-tasks.withType<AndroidLintAnalysisTask> {
-    dependsOn("copyFontsToAndroidAssets")
-}
-
-tasks.withType<LintModelWriterTask> {
-    dependsOn("copyFontsToAndroidAssets")
-}
-
 dependencies {
     configurations
         .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
         .forEach {
-            add(it.name, "io.mockative:mockative-processor:2.0.1")
+            add(it.name, libs.mockative.processor)
         }
 }

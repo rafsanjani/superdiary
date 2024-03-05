@@ -8,6 +8,10 @@ import androidx.compose.runtime.Composable
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import superdiary.`shared-ui`.generated.resources.Res
+import superdiary.`shared-ui`.generated.resources.confirm_delete_diary_dialog_message
+import superdiary.`shared-ui`.generated.resources.confirm_delete_diary_dialog_title
+import superdiary.`shared-ui`.generated.resources.confirm_delete_diary_negative_button
+import superdiary.`shared-ui`.generated.resources.confirm_delete_diary_positive_button
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
