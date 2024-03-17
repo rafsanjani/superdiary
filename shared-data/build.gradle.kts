@@ -51,7 +51,7 @@ kotlin {
                 implementation(projects.core.analytics)
                 implementation(projects.core.logging)
                 implementation(libs.openAiKotlin)
-                implementation("com.benasher44:uuid:0.8.2")
+                implementation("com.benasher44:uuid:0.8.3")
                 runtimeOnly(libs.ktor.client.cio)
             }
         }
