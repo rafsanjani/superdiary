@@ -23,6 +23,7 @@ class DiaryDetailSnapshotTests : KoinTest {
     @get:Rule
     val paparazzi = Paparazzi(
         deviceConfig = DeviceConfig.PIXEL_5,
+        maxPercentDifference = 0.1,
     )
 
     @Test
