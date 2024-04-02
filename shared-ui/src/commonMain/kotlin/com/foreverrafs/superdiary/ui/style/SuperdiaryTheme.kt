@@ -19,14 +19,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.Font
-import superdiary.`shared-ui`.generated.resources.Res
-import superdiary.`shared-ui`.generated.resources.montserrat_alternatives_bold
-import superdiary.`shared-ui`.generated.resources.montserrat_alternatives_regular
-import superdiary.`shared-ui`.generated.resources.montserrat_alternatives_semibold
-import superdiary.`shared-ui`.generated.resources.righteous_regular
+import superdiary.shared_ui.generated.resources.Res
+import superdiary.shared_ui.generated.resources.montserrat_alternatives_bold
+import superdiary.shared_ui.generated.resources.montserrat_alternatives_regular
+import superdiary.shared_ui.generated.resources.montserrat_alternatives_semibold
+import superdiary.shared_ui.generated.resources.righteous_regular
 
 @Composable
-fun SuperdiaryAppTheme(
+fun SuperdiaryTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {

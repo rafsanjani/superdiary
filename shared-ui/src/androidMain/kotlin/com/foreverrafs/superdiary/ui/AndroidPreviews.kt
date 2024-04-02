@@ -29,7 +29,7 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryDatePicke
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
-import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
+import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import java.time.LocalDate
 import kotlin.random.Random
 import kotlinx.datetime.Clock
@@ -45,7 +45,7 @@ private val diaryListActions = DiaryListActions(
 
 @Composable
 internal fun TestAppContainer(content: @Composable () -> Unit) {
-    SuperdiaryAppTheme {
+    SuperdiaryTheme {
         Scaffold(
             topBar = {
                 SuperDiaryAppBar()
@@ -78,7 +78,7 @@ private fun DiaryChatPreview() {
 @PreviewSuperDiary
 @Composable
 private fun LoadingDiariesPreview() {
-    SuperdiaryAppTheme {
+    SuperdiaryTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
@@ -95,7 +95,7 @@ private fun LoadingDiariesPreview() {
 @PreviewSuperDiary
 @Composable
 private fun ErrorLoadingDiariesPreview() {
-    SuperdiaryAppTheme {
+    SuperdiaryTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
@@ -129,7 +129,7 @@ private fun EmptySearchDiaryListPreview() {
 @PreviewSuperDiary
 @Composable
 private fun EmptyDiaryListPreview() {
-    SuperdiaryAppTheme {
+    SuperdiaryTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
@@ -146,7 +146,7 @@ private fun EmptyDiaryListPreview() {
 @PreviewSuperDiary
 @Composable
 private fun DiaryListPreview() {
-    SuperdiaryAppTheme {
+    SuperdiaryTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             DiaryListScreenContent(
                 state = DiaryListViewState.Content(
@@ -171,7 +171,7 @@ private fun DiaryListPreview() {
 @PreviewSuperDiary
 @Composable
 private fun CreateDiaryPreview() {
-    SuperdiaryAppTheme {
+    SuperdiaryTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             CreateDiaryScreenContent(
                 onNavigateBack = {},
@@ -186,7 +186,7 @@ private fun CreateDiaryPreview() {
 @PreviewSuperDiary
 @Composable
 private fun CreateDiaryPreviewNonEditable() {
-    SuperdiaryAppTheme {
+    SuperdiaryTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             CreateDiaryScreenContent(
                 onNavigateBack = {},
@@ -201,7 +201,7 @@ private fun CreateDiaryPreviewNonEditable() {
 @PreviewSuperDiary
 @Composable
 private fun FilteredEmptyPreview() {
-    SuperdiaryAppTheme {
+    SuperdiaryTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
@@ -306,7 +306,7 @@ private fun DashboardPreview() {
 @Composable
 @PreviewSuperDiary
 private fun DetailPreview() {
-    SuperdiaryAppTheme {
+    SuperdiaryTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             DetailScreenContent(
                 onNavigateBack = {},

@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import com.foreverrafs.superdiary.ui.home.BottomNavigationScreen
-import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
+import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 
 /**
  * Entry point into the whole app. In an ideal world we'll only just render
@@ -18,7 +18,7 @@ import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
 
 @Composable
 fun App(modifier: Modifier = Modifier) {
-    SuperdiaryAppTheme {
+    SuperdiaryTheme {
         Navigator(
             screen = BottomNavigationScreen,
             onBackPressed = {

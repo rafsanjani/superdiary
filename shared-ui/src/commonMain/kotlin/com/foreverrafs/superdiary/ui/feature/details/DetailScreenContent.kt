@@ -45,10 +45,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
-import superdiary.`shared-ui`.generated.resources.Res
-import superdiary.`shared-ui`.generated.resources.content_description_delete_entry
-import superdiary.`shared-ui`.generated.resources.content_description_navigate_back
-import superdiary.`shared-ui`.generated.resources.label_diary_deleted
+import superdiary.shared_ui.generated.resources.Res
+import superdiary.shared_ui.generated.resources.label_diary_deleted
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
@@ -80,7 +78,7 @@ fun DetailScreenContent(
                         Icon(
                             modifier = Modifier.clip(CircleShape),
                             imageVector = Icons.Default.ArrowBackIosNew,
-                            contentDescription = stringResource(Res.string.content_description_navigate_back),
+                            contentDescription = "",
                         )
                     }
                 },
@@ -91,7 +89,7 @@ fun DetailScreenContent(
                         Icon(
                             modifier = Modifier.clip(CircleShape),
                             imageVector = Icons.Default.Delete,
-                            contentDescription = stringResource(Res.string.content_description_delete_entry),
+                            contentDescription = "",
                         )
                     }
                 },
@@ -115,7 +113,8 @@ fun DetailScreenContent(
                 Text(
                     text = diary.date
                         .toLocalDateTime(TimeZone.currentSystemDefault())
-                        .format("EEE - MMMM dd, yyyy - hh:mm a"),
+                        .format("EEE - MMMM dd, yyyy - hh:mm a")
+                        .lowercase(),
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.alpha(0.6f),
                 )
