@@ -30,8 +30,7 @@ class DiaryListSnapshotTests {
 
     @get:Rule
     val paparazzi = Paparazzi(
-        deviceConfig = DeviceConfig.PIXEL_5,
-        showSystemUi = true,
+        deviceConfig = DeviceConfig.PIXEL_6,
         renderingMode = SessionParams.RenderingMode.NORMAL,
     )
 

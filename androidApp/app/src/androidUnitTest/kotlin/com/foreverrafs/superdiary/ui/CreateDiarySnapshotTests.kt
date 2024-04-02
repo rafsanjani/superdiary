@@ -13,7 +13,6 @@ class CreateDiarySnapshotTests {
     @get:Rule
     val paparazzi = Paparazzi(
         deviceConfig = DeviceConfig.PIXEL_5,
-        showSystemUi = true,
     )
 
     @Test
