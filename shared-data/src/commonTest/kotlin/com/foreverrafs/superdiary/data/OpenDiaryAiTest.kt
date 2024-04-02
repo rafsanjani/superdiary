@@ -20,7 +20,6 @@ import io.mockative.every
 import io.mockative.mock
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,9 +28,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 
-// TODO: Fix OpenDiaryAiTest and get it to pass
 @OptIn(ExperimentalCoroutinesApi::class)
-@Ignore
 class OpenDiaryAiTest {
     @Mock
     private val openAI: OpenAI = mock(OpenAI::class)
@@ -64,7 +61,7 @@ class OpenDiaryAiTest {
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(TestAppDispatchers.main)
-        //        every { openAI.chatCompletions(any()) }.returns(flowOf(chatCompletionChunk))
+        every { openAI.chatCompletions(any(), any()) }.returns(flowOf(chatCompletionChunk))
     }
 
     @AfterTest
@@ -74,7 +71,7 @@ class OpenDiaryAiTest {
 
     @Test
     fun `Should return weekly summary`() = runTest {
-        every { openAI.chatCompletions(any()) }.returns(flowOf(chatCompletionChunk))
+        every { openAI.chatCompletions(any(), any()) }.returns(flowOf(chatCompletionChunk))
 
         openDiaryAI.getWeeklySummary(emptyList()).test {
             val summary = awaitItem()
@@ -86,7 +83,7 @@ class OpenDiaryAiTest {
 
     @Test
     fun `Should query diary entries`() = runTest {
-        coEvery { openAI.chatCompletion(any()) }.returns(chatCompletion)
+        coEvery { openAI.chatCompletion(any(), any()) }.returns(chatCompletion)
 
         val response = openDiaryAI.queryDiaries(emptyList())
         assertThat(response).isNotEmpty()

@@ -128,9 +128,29 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    sourceSets["main"].res.srcDirs(
-        "src/commonMain/composeResources",
-    )
+    sourceSets["main"].res.srcDirs("src/commonMain/resources")
+}
+
+plugins.withId("app.cash.paparazzi") {
+    afterEvaluate {
+        dependencies.constraints {
+            add("testImplementation", "com.google.guava:guava") {
+                attributes {
+                    attribute(
+                        TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE,
+                        objects.named(
+                            TargetJvmEnvironment::class.java,
+                            TargetJvmEnvironment.STANDARD_JVM,
+                        ),
+                    )
+                }
+                because(
+                    "LayoutLib and sdk-common depend on Guava's -jre published variant." +
+                        "See https://github.com/cashapp/paparazzi/issues/906.",
+                )
+            }
+        }
+    }
 }
 
 dependencies {
