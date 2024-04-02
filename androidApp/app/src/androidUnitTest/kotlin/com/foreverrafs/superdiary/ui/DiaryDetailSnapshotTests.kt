@@ -4,15 +4,16 @@ import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.ui.feature.details.DetailScreenContent
-import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
+import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
+import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.koin.test.KoinTest
 
-@Ignore("Because paparazzi is failing for material3 1.2.0")
+@RunWith(TestParameterInjector::class)
 class DiaryDetailSnapshotTests : KoinTest {
     private val testClock = object : Clock {
         // 2023-11-10
@@ -22,14 +23,13 @@ class DiaryDetailSnapshotTests : KoinTest {
     @get:Rule
     val paparazzi = Paparazzi(
         deviceConfig = DeviceConfig.PIXEL_5,
-        showSystemUi = true,
-        maxPercentDifference = 0.3,
+        maxPercentDifference = 0.1,
     )
 
     @Test
     fun `Diary detail screen`() {
         paparazzi.snapshot {
-            SuperdiaryAppTheme {
+            SuperdiaryTheme {
                 DetailScreenContent(
                     onDeleteDiary = {},
                     onNavigateBack = {},

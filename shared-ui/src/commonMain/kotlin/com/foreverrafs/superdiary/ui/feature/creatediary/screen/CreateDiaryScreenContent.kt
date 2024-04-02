@@ -44,10 +44,10 @@ import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
-import superdiary.`shared-ui`.generated.resources.Res
-import superdiary.`shared-ui`.generated.resources.content_description_navigate_back
-import superdiary.`shared-ui`.generated.resources.content_description_save_entry
-import superdiary.`shared-ui`.generated.resources.label_diary_ai
+import superdiary.shared_ui.generated.resources.Res
+import superdiary.shared_ui.generated.resources.content_description_navigate_back
+import superdiary.shared_ui.generated.resources.content_description_save_entry
+import superdiary.shared_ui.generated.resources.label_diary_ai
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
@@ -197,3 +197,4 @@ private fun DiaryAISuggestionChip(words: Int, enabled: Boolean, onClick: () -> U
         enabled = enabled,
     )
 }
+

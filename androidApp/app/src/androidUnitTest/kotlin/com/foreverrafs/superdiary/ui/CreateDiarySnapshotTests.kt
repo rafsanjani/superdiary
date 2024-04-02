@@ -3,27 +3,22 @@ package com.foreverrafs.superdiary.ui
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
-import com.foreverrafs.superdiary.ui.style.SuperdiaryAppTheme
+import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 
-
-@Ignore("Because paparazzi is failing for material3 1.2.0")
 class CreateDiarySnapshotTests {
 
     @get:Rule
     val paparazzi = Paparazzi(
         deviceConfig = DeviceConfig.PIXEL_5,
-        showSystemUi = true,
-        maxPercentDifference = 0.2,
     )
 
     @Test
     fun `Create Diary Screen - empty`() {
         paparazzi.snapshot {
-            SuperdiaryAppTheme {
+            SuperdiaryTheme {
                 CreateDiaryScreenContent(
                     onNavigateBack = {},
                     isGeneratingFromAi = false,
@@ -38,7 +33,7 @@ class CreateDiarySnapshotTests {
     @Test
     fun `Create Diary Screen - very few words`() {
         paparazzi.snapshot {
-            SuperdiaryAppTheme {
+            SuperdiaryTheme {
                 CreateDiaryScreenContent(
                     onNavigateBack = {},
                     isGeneratingFromAi = false,
@@ -57,7 +52,7 @@ class CreateDiarySnapshotTests {
     @Test
     fun `Create Diary Screen - with content`() {
         paparazzi.snapshot {
-            SuperdiaryAppTheme {
+            SuperdiaryTheme {
                 CreateDiaryScreenContent(
                     onNavigateBack = {},
                     isGeneratingFromAi = false,
@@ -85,7 +80,7 @@ class CreateDiarySnapshotTests {
     @Test
     fun `Create Diary Screen - with content - generating from AI`() {
         paparazzi.snapshot {
-            SuperdiaryAppTheme {
+            SuperdiaryTheme {
                 CreateDiaryScreenContent(
                     onNavigateBack = {},
                     isGeneratingFromAi = true,

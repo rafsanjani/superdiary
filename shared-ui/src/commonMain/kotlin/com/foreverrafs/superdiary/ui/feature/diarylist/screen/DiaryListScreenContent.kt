@@ -85,7 +85,6 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryHeader
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiarySearchBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiarySelectionModifierBar
 import com.foreverrafs.superdiary.ui.format
-import com.foreverrafs.superdiary.ui.style.montserratAlternativesFontFamily
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -693,23 +692,14 @@ private fun DateCard(date: LocalDate) {
 @Composable
 private fun annotatedString(date: LocalDate): AnnotatedString =
     buildAnnotatedString {
-        withStyle(
-            SpanStyle(
-                fontFamily = montserratAlternativesFontFamily(),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
-            ),
-        ) {
-            append(
-                date.format("E").uppercase(),
-            )
-        }
+        append(
+            date.format("E").uppercase(),
+        )
 
         appendLine()
 
         withStyle(
             SpanStyle(
-                fontFamily = montserratAlternativesFontFamily(),
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 16.sp,
             ),
@@ -720,7 +710,6 @@ private fun annotatedString(date: LocalDate): AnnotatedString =
 
         withStyle(
             SpanStyle(
-                fontFamily = montserratAlternativesFontFamily(),
                 fontWeight = FontWeight.Normal,
                 fontSize = 14.sp,
             ),
@@ -733,7 +722,6 @@ private fun annotatedString(date: LocalDate): AnnotatedString =
 
         withStyle(
             SpanStyle(
-                fontFamily = montserratAlternativesFontFamily(),
                 fontWeight = FontWeight.Normal,
                 fontSize = 14.sp,
             ),
