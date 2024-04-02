@@ -8,7 +8,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2024.03.10")
+            from("io.github.rafsanjani:versions:2024.03.31")
             version("compose-multiplatform", "1.6.0-dev1369")
         }
     }
