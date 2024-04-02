@@ -63,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: reports
-          path: shared-ui/build/reports/paparazzi/
+          path: AndroidApp/app/build/reports/paparazzi/
           retention-days: 1
 
       - name: Upload Snapshot Failure Differences
