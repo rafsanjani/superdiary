@@ -113,7 +113,8 @@ fun DetailScreenContent(
                 Text(
                     text = diary.date
                         .toLocalDateTime(TimeZone.currentSystemDefault())
-                        .format("EEE - MMMM dd, yyyy - hh:mm a"),
+                        .format("EEE - MMMM dd, yyyy - hh:mm a")
+                        .lowercase(),
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.alpha(0.6f),
                 )
