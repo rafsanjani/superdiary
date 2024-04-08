@@ -77,7 +77,7 @@ kotlin {
                 implementation(libs.kotlin.coroutines.test)
                 implementation(libs.turbine)
                 implementation(libs.assertk.common)
-                implementation("io.mockative:mockative:2.0.1")
+                implementation("io.mockative:mockative:2.1.0")
             }
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
         }
