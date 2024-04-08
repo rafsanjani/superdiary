@@ -73,6 +73,7 @@ import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.content_description_button_send
 
+@Suppress("ModifierComposed")
 fun Modifier.positionAwareImePadding() = composed {
     var bottomPadding by remember { mutableStateOf(0) }
     val density = LocalDensity.current

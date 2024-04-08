@@ -11,6 +11,6 @@ class ViewController {
         configure = {
             onFocusBehavior = OnFocusBehavior.DoNothing
         },
-        content = { App() }
+        content = { App() },
     )
 }
