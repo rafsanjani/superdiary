@@ -1,18 +1,23 @@
 package com.foreverrafs.superdiary.ui
 
-import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
+import com.google.testing.junit.testparameterinjector.TestParameter
+import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
-class CreateDiarySnapshotTests {
+@RunWith(TestParameterInjector::class)
+class CreateDiarySnapshotTests(
+    @TestParameter val snapshotDevice: SnapshotDevice,
+) {
 
     @get:Rule
     val paparazzi = Paparazzi(
-        deviceConfig = DeviceConfig.PIXEL_5,
+        deviceConfig = snapshotDevice.config,
     )
 
     @Test
