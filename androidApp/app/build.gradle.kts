@@ -46,7 +46,7 @@ kotlin {
                 implementation(libs.koin.test)
                 implementation(libs.kotlin.coroutines.test)
                 implementation(libs.mockk)
-                implementation("com.google.testparameterinjector:test-parameter-injector:1.15")
+                implementation(libs.google.testparameterinjector)
             }
         }
     }
