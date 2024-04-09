@@ -51,7 +51,7 @@ kotlin {
                 implementation(projects.core.analytics)
                 implementation(projects.core.logging)
                 implementation(libs.openAiKotlin)
-                implementation("com.benasher44:uuid:0.8.4")
+                implementation(libs.uuid)
                 runtimeOnly(libs.ktor.client.cio)
             }
         }
@@ -77,7 +77,7 @@ kotlin {
                 implementation(libs.kotlin.coroutines.test)
                 implementation(libs.turbine)
                 implementation(libs.assertk.common)
-                implementation("io.mockative:mockative:2.1.0")
+                implementation(libs.mockative.runtime)
             }
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
         }
@@ -133,6 +133,6 @@ dependencies {
     configurations
         .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
         .forEach {
-            add(it.name, "io.mockative:mockative-processor:2.0.1")
+            add(it.name, libs.mockative.processor)
         }
 }
