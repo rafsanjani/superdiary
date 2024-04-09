@@ -1,20 +1,21 @@
 package com.foreverrafs.superdiary.ui
 
-import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.ui.feature.details.DetailScreenContent
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
+import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.test.KoinTest
 
 @RunWith(TestParameterInjector::class)
-class DiaryDetailSnapshotTests : KoinTest {
+class DiaryDetailSnapshotTests(
+    @TestParameter val snapshotDevice: SnapshotDevice,
+) {
     private val testClock = object : Clock {
         // 2023-11-10
         override fun now(): Instant = Instant.parse("2023-11-10T00:00:00.850951Z")
@@ -22,7 +23,7 @@ class DiaryDetailSnapshotTests : KoinTest {
 
     @get:Rule
     val paparazzi = Paparazzi(
-        deviceConfig = DeviceConfig.PIXEL_5,
+        deviceConfig = snapshotDevice.config,
         maxPercentDifference = 0.1,
     )
 

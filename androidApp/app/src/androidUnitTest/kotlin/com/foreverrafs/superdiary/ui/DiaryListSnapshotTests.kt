@@ -1,6 +1,5 @@
 package com.foreverrafs.superdiary.ui
 
-import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
 import com.android.ide.common.rendering.api.SessionParams
 import com.foreverrafs.superdiary.data.model.Diary
@@ -10,6 +9,7 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
+import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import com.mohamedrejeb.richeditor.model.RichTextState
 import kotlinx.datetime.Clock
@@ -22,7 +22,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(TestParameterInjector::class)
-class DiaryListSnapshotTests {
+class DiaryListSnapshotTests(
+    @TestParameter val snapshotDevice: SnapshotDevice,
+) {
     private val testClock = object : Clock {
         // 2023-11-10
         override fun now(): Instant = Instant.parse("2023-11-10T00:00:00.850951Z")
@@ -30,7 +32,7 @@ class DiaryListSnapshotTests {
 
     @get:Rule
     val paparazzi = Paparazzi(
-        deviceConfig = DeviceConfig.PIXEL_6,
+        deviceConfig = snapshotDevice.config,
         renderingMode = SessionParams.RenderingMode.NORMAL,
     )
 
@@ -84,25 +86,6 @@ class DiaryListSnapshotTests {
             }
         }
     }
-
-//
-//    fun Paparazzi.customSnapshot(
-//        name: String? = null,
-//        composable: @Composable () -> Unit,
-//    ) {
-//        val hostView = ComposeView(context)
-//        // During onAttachedToWindow, AbstractComposeView will attempt to resolve its parent's
-//        // CompositionContext, which requires first finding the "content view", then using that to
-//        // find a root view with a ViewTreeLifecycleOwner
-//        val parent = FrameLayout(context).apply { id = android.R.id.content }
-//        parent.addView(hostView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-//        parent.layoutParams = FrameLayout.LayoutParams(
-//            FrameLayout.LayoutParams.WRAP_CONTENT,
-//            FrameLayout.LayoutParams.WRAP_CONTENT,
-//        )
-//        hostView.setContent(composable)
-//        snapshot(view = parent, name = name)
-//    }
 
     @Test
     fun `Unfiltered non-empty diary list`() {
