@@ -19,5 +19,5 @@ plugins {
 
 dependencies {
     detektPlugins(libs.detekt.composeRules)
-    ktlintRuleset("io.nlopez.compose.rules:ktlint:0.3.13")
+    ktlintRuleset("io.nlopez.compose.rules:ktlint:0.3.15")
 }
