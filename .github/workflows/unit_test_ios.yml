@@ -13,6 +13,7 @@ concurrency:
 
 jobs:
   lint:
+    if: ${{ github.event_name != 'push' || github.event.pull_request.number }}
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
@@ -32,6 +33,7 @@ jobs:
         with:
           arguments: detektAll
   test:
+    if: ${{ github.event_name != 'push' || github.event.pull_request.number }}
     runs-on: macos-14
     needs: lint
     steps:
