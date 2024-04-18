@@ -10,7 +10,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -67,15 +66,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
-import kotlin.random.Random
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
-import superdiary.`shared-ui`.generated.resources.Res
-import superdiary.`shared-ui`.generated.resources.content_description_button_send
+import superdiary.shared_ui.generated.resources.Res
+import superdiary.shared_ui.generated.resources.content_description_button_send
 
-@OptIn(ExperimentalLayoutApi::class)
+@Suppress("ModifierComposed")
 fun Modifier.positionAwareImePadding() = composed {
     var bottomPadding by remember { mutableStateOf(0) }
     val density = LocalDensity.current
@@ -148,7 +146,7 @@ fun DiaryChatScreenContent(
                     ChatBubble(
                         modifier = Modifier.alpha(alpha),
                         chatItem = DiaryChatMessage(
-                            id = Random.nextLong(),
+                            id = 20L,
                             role = DiaryChatRole.DiaryAI,
                             timestamp = Clock.System.now(),
                             content = "Gathering thoughts...",

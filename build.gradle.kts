@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.buildKonfig).apply(false)
     alias(libs.plugins.testLogger).apply(false)
-    alias(libs.plugins.ktlint).apply(false)
+    alias(libs.plugins.ktlint)
     alias(libs.plugins.sonar).apply(false)
     alias(libs.plugins.android.test).apply(false)
     id("com.superdiary.detekt")
@@ -19,4 +19,5 @@ plugins {
 
 dependencies {
     detektPlugins(libs.detekt.composeRules)
+    ktlintRuleset("io.nlopez.compose.rules:ktlint:0.3.15")
 }

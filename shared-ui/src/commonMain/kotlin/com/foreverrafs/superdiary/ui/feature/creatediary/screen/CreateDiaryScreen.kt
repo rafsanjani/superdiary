@@ -67,7 +67,7 @@ class CreateDiaryScreen : Screen {
                 Diary(
                     entry = entry,
                     date = Clock.System.now(),
-                    isFavorite = false
+                    isFavorite = false,
                 ),
             )
 
