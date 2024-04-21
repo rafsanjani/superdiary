@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -52,6 +53,8 @@ internal fun DiarySearchBar(
     val focusManager = LocalFocusManager.current
     var isFocused by remember { mutableStateOf(false) }
 
+    val currentOnQueryChanged by rememberUpdatedState(onQueryChanged)
+
     val cornerRadius by animateDpAsState(
         if (isFocused) 8.dp else 4.dp,
     )
@@ -61,7 +64,7 @@ internal fun DiarySearchBar(
     )
 
     LaunchedEffect(query) {
-        onQueryChanged(query)
+        currentOnQueryChanged(query)
     }
 
     AnimatedVisibility(

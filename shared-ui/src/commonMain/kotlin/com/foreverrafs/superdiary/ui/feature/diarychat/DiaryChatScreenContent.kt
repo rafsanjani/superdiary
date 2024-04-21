@@ -41,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -75,7 +76,7 @@ import superdiary.shared_ui.generated.resources.content_description_button_send
 
 @Suppress("ModifierComposed")
 fun Modifier.positionAwareImePadding() = composed {
-    var bottomPadding by remember { mutableStateOf(0) }
+    var bottomPadding by remember { mutableIntStateOf(0) }
     val density = LocalDensity.current
 
     onPlaced { coordinates ->

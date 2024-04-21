@@ -37,7 +37,6 @@ import org.koin.dsl.module
 fun useCaseModule() = module {
     single<DataSource> { LocalDataSource(get()) }
     factory<Clock> { Clock.System }
-
     single<OpenAI> {
         OpenAI(
             token = BuildKonfig.openAIKey,
@@ -52,7 +51,6 @@ fun useCaseModule() = module {
     factoryOf(::GetAllDiariesUseCase)
     factoryOf(::GetFavoriteDiariesUseCase)
     factoryOf(::SearchDiaryBetweenDatesUseCase)
-    factoryOf(::SearchDiaryByEntryUseCase)
     factoryOf(::SearchDiaryByEntryUseCase)
     factoryOf(::SearchDiaryByDateUseCase)
     factoryOf(::DeleteDiaryUseCase)
