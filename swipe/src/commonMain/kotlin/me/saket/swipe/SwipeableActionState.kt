@@ -5,9 +5,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.gestures.DraggableState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.FloatState
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import kotlin.math.absoluteValue
 
@@ -20,8 +20,8 @@ fun rememberSwipeableActionsState(iconWidthPx: Int): SwipeableActionState {
 @Stable
 class SwipeableActionState internal constructor(private val iconWidthPx: Int) {
     /** The current position (in pixels) of a [SwipeableActionBox]. */
-    val offset: State<Float> get() = _offset
-    private var _offset = mutableStateOf(0f)
+    val offset: FloatState get() = _offset
+    private var _offset = mutableFloatStateOf(0f)
 
     internal val draggableState = DraggableState { delta ->
         var newDelta = _offset.value + delta
