@@ -25,7 +25,7 @@ jobs:
           java-version: '17'
 
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v3
+        uses: gradle/actions/wrapper-validation@v3
 
       - name: Lint all modules
         uses: gradle/gradle-build-action@v3
@@ -47,7 +47,7 @@ jobs:
           java-version: '17'
 
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v3
+        uses: gradle/actions/wrapper-validation@v3
 
       - name: Generate XML test reports
         id: reports
