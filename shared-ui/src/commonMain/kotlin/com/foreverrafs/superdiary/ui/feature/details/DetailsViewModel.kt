@@ -11,23 +11,31 @@ import kotlinx.coroutines.launch
 class DetailsViewModel(
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
 ) :
-    StateScreenModel<DetailsViewModel.DetailsScreenState>(DetailsScreenState.Idle) {
-    sealed interface DetailsScreenState {
-        data object Idle : DetailsScreenState
-        data object DiaryDeleted : DetailsScreenState
+    StateScreenModel<DetailsViewModel.DeleteDiaryState?>(null) {
+
+    sealed interface DeleteDiaryState {
+        data class Success(val count: Int) : DeleteDiaryState
+        data object Failure : DeleteDiaryState
     }
 
     fun deleteDiary(diary: Diary) = screenModelScope.launch {
         when (val result = deleteDiaryUseCase(listOf(diary))) {
             is Result.Failure -> {
-                // TODO: Handle unhappy path gracefully when deleting diary from details
+                mutableState.update {
+                    DeleteDiaryState.Failure
+                }
             }
 
             is Result.Success -> {
                 val deletedItems = result.data
+
                 if (deletedItems != 0) {
                     mutableState.update {
-                        DetailsScreenState.DiaryDeleted
+                        DeleteDiaryState.Success(deletedItems)
+                    }
+                } else {
+                    mutableState.update {
+                        DeleteDiaryState.Failure
                     }
                 }
             }

@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.ui.details
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isInstanceOf
+import assertk.assertions.isNotNull
 import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.model.Diary
@@ -50,15 +51,17 @@ class DetailsViewModelTest {
         detailsViewModel.state.test {
             detailsViewModel.deleteDiary(diary)
 
-            // Skip the initial idle state
+            // Skip the initial null idle state
             skipItems(1)
             val state = awaitItem()
-            assertThat(state).isInstanceOf<DetailsViewModel.DetailsScreenState.DiaryDeleted>()
+            assertThat(state)
+                .isNotNull()
+                .isInstanceOf<DetailsViewModel.DeleteDiaryState.Success>()
         }
     }
 
     @Test
-    fun `Failing to delete shouldn't emit Deleted state`() = runTest {
+    fun `Failing to delete should emit failure deleting state`() = runTest {
         val diary = Diary("Hello world")
 
         coEvery { dataSource.delete(diary) }.returns(0)
@@ -67,9 +70,14 @@ class DetailsViewModelTest {
         detailsViewModel.state.test {
             detailsViewModel.deleteDiary(diary)
 
+            // Skip initial null idle state
+            skipItems(1)
+
             val state = awaitItem()
             cancelAndIgnoreRemainingEvents()
-            assertThat(state).isInstanceOf<DetailsViewModel.DetailsScreenState.Idle>()
+            assertThat(state)
+                .isNotNull()
+                .isInstanceOf<DetailsViewModel.DeleteDiaryState.Failure>()
         }
     }
 }
