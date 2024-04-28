@@ -17,6 +17,7 @@ import com.foreverrafs.superdiary.data.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.data.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
+import com.foreverrafs.superdiary.data.utils.DiaryPreference
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import io.mockative.Mock
 import io.mockative.any
@@ -48,6 +49,10 @@ class DashboardViewModelTest {
     @Mock
     private val diaryAI: DiaryAI = mock(DiaryAI::class)
 
+    private val diaryPreference: DiaryPreference = object : DiaryPreference() {
+        override fun getDataStorePath(filename: String): String = "datastore_path"
+    }
+
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
@@ -60,6 +65,7 @@ class DashboardViewModelTest {
             calculateBestStreakUseCase = CalculateBestStreakUseCase(TestAppDispatchers),
             updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
             logger = Logger,
+            preference = diaryPreference
         )
     }
 

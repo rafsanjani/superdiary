@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.internal.SynchronizedObject
 import kotlinx.coroutines.internal.synchronized
-import okio.Path
+import okio.Path.Companion.toPath
 
 @OptIn(InternalCoroutinesApi::class)
 abstract class DiaryPreference {
@@ -23,7 +23,9 @@ abstract class DiaryPreference {
             if (this::dataStore.isInitialized) {
                 dataStore
             } else {
-                PreferenceDataStoreFactory.createWithPath { getDataStorePath(filename = "datastore.preferences_pb") }
+                PreferenceDataStoreFactory.createWithPath {
+                    getDataStorePath(filename = "datastore.preferences_pb").toPath()
+                }
             }
         }
     }
@@ -49,7 +51,7 @@ abstract class DiaryPreference {
         }
     }
 
-    abstract fun getDataStorePath(filename: String): Path
+    abstract fun getDataStorePath(filename: String): String
 }
 
 data class DiarySettings(
