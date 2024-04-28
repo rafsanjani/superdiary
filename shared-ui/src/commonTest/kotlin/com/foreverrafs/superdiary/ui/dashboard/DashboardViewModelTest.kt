@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.ui.dashboard
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import com.foreverrafs.superdiary.TestAppDispatchers
@@ -18,6 +19,7 @@ import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.data.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.data.utils.DiaryPreference
+import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import io.mockative.Mock
 import io.mockative.any
@@ -50,7 +52,7 @@ class DashboardViewModelTest {
     private val diaryAI: DiaryAI = mock(DiaryAI::class)
 
     private val diaryPreference: DiaryPreference = object : DiaryPreference() {
-        override fun getDataStorePath(filename: String): String = "datastore_path"
+        override fun getDataStorePath(filename: String): String = "rafs.preferences_pb"
     }
 
     @BeforeTest
@@ -65,7 +67,7 @@ class DashboardViewModelTest {
             calculateBestStreakUseCase = CalculateBestStreakUseCase(TestAppDispatchers),
             updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
             logger = Logger,
-            preference = diaryPreference
+            preference = diaryPreference,
         )
     }
 
@@ -156,6 +158,27 @@ class DashboardViewModelTest {
             cancelAndIgnoreRemainingEvents()
             assertThat(state).isNotNull()
             assertThat(state?.weeklySummary).isEqualTo("New Diary Summary")
+        }
+    }
+
+    @Test
+    fun `Should update preferences when settings is updated`() = runTest {
+        dashboardViewModel.settings.test {
+            dashboardViewModel.updateSettings(
+                DiarySettings.Empty.copy(
+                    isFirstLaunch = false,
+                    showWeeklySummary = false,
+                    showAtAGlance = false,
+                    showLatestEntries = false
+                )
+            )
+
+            val settings = awaitItem()
+
+            assertThat(settings.isFirstLaunch).isFalse()
+            assertThat(settings.showWeeklySummary).isFalse()
+            assertThat(settings.showAtAGlance).isFalse()
+            assertThat(settings.showLatestEntries).isFalse()
         }
     }
 }

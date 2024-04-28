@@ -48,6 +48,8 @@ abstract class DiaryPreference {
         dataStore.edit {
             it[isFirstLaunchKey] = settings.isFirstLaunch
             it[showWeeklySummaryKey] = settings.showWeeklySummary
+            it[showAtAGlanceKey] = settings.showAtAGlance
+            it[showLatestEntriesKey] = settings.showLatestEntries
         }
     }
 
