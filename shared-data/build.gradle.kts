@@ -53,6 +53,8 @@ kotlin {
                 implementation(libs.openAiKotlin)
                 implementation(libs.uuid)
                 runtimeOnly(libs.ktor.client.cio)
+                implementation(libs.androidx.datastore.preferences)
+                implementation("androidx.datastore:datastore-core-okio:1.1.0-alpha03")
             }
         }
         androidMain {

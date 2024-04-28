@@ -14,7 +14,10 @@ import com.foreverrafs.superdiary.data.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.data.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
+import com.foreverrafs.superdiary.data.utils.DiaryPreference
+import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.data.utils.toDate
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.update
@@ -28,6 +31,7 @@ class DashboardViewModel(
     private val addWeeklySummaryUseCase: AddWeeklySummaryUseCase,
     private val getWeeklySummaryUseCase: GetWeeklySummaryUseCase,
     private val updateDiaryUseCase: UpdateDiaryUseCase,
+    private val preference: DiaryPreference,
     private val diaryAI: DiaryAI,
     private val logger: Logger,
 ) :
@@ -42,6 +46,8 @@ class DashboardViewModel(
             val bestStreak: Streak,
         ) : DashboardScreenState
     }
+
+    val settings: Flow<DiarySettings> get() = preference.settings
 
     fun loadDashboardContent() = screenModelScope.launch {
         logger.i(Tag) {
@@ -196,6 +202,13 @@ class DashboardViewModel(
                 result.data
             }
         }
+    }
+
+    fun updateSettings(settings: DiarySettings) = screenModelScope.launch {
+        logger.i(Tag) {
+            "Updating settings with values $settings"
+        }
+        preference.save(settings)
     }
 
     companion object {

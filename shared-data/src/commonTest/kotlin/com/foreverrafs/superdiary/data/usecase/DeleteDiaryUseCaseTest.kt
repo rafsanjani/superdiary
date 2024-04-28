@@ -65,8 +65,7 @@ class DeleteDiaryUseCaseTest {
         insertRandomDiaries(dataSource)
 
         getAllDiariesUseCase().test {
-            // Given initial diary items - We need to convert the resulting List to another list again
-            // to prevent it from getting overwritten by the subsequent call to awaitItem()
+            // Given initial diary items
             val originalList = awaitItem()
 
             // Delete the first two entries

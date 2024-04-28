@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.ui.LocalRootSnackbarHostState
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import com.foreverrafs.superdiary.ui.SuperDiaryTab
@@ -33,6 +34,8 @@ object DashboardTab : SuperDiaryTab {
             screenModel.loadDashboardContent()
         }
 
+        val settings by screenModel.settings.collectAsState(initial = DiarySettings.Empty)
+
         DashboardScreenContent(
             state = screenState,
             onAddEntry = { navigator.push(CreateDiaryScreen()) },
@@ -44,6 +47,8 @@ object DashboardTab : SuperDiaryTab {
                     }
                 }
             },
+            settings = settings,
+            onChangeSettings = screenModel::updateSettings
         )
     }
 

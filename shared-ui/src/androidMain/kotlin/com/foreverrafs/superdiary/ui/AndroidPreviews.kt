@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.model.Streak
+import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.data.utils.toDate
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
@@ -299,6 +300,8 @@ private fun DashboardPreview() {
             onAddEntry = {},
             onSeeAll = {},
             onToggleFavorite = {},
+            settings = DiarySettings.Empty,
+            onChangeSettings = {}
         )
     }
 }

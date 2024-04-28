@@ -39,7 +39,7 @@ class GetAllDiariesUseCaseTest {
 
     @Test
     fun `Getting all diaries should return all entries`() = runTest {
-        insertRandomDiaries(dataSource)
+        insertRandomDiaries(dataSource, 30)
 
         getAllDiariesUseCase().test {
             val diaries = awaitItem()
