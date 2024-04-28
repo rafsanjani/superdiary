@@ -5,30 +5,15 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.internal.SynchronizedObject
-import kotlinx.coroutines.internal.synchronized
 import okio.Path.Companion.toPath
 
-@OptIn(InternalCoroutinesApi::class)
 abstract class DiaryPreference {
-    private val lock = SynchronizedObject()
-
-    private lateinit var dataStore: DataStore<Preferences>
-
-    init {
-        dataStore = synchronized(lock) {
-            if (this::dataStore.isInitialized) {
-                dataStore
-            } else {
-                PreferenceDataStoreFactory.createWithPath {
-                    getDataStorePath(filename = "datastore.preferences_pb").toPath()
-                }
-            }
+    private val dataStore: DataStore<Preferences> =
+        PreferenceDataStoreFactory.createWithPath {
+            getDataStorePath(filename = "datastore.preferences_pb").toPath()
         }
-    }
 
     private val isFirstLaunchKey = booleanPreferencesKey("isFirstLaunch")
     private val showWeeklySummaryKey = booleanPreferencesKey("showWeeklySummary")
