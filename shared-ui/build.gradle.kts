@@ -61,6 +61,8 @@ kotlin {
                 api(projects.core.analytics)
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
+                implementation(libs.androidx.datastore.preferences)
+                implementation(libs.androidx.datastore.core)
             }
         }
 

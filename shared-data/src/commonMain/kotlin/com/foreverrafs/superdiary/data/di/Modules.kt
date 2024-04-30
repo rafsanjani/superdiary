@@ -25,6 +25,8 @@ import com.foreverrafs.superdiary.data.usecase.SearchDiaryBetweenDatesUseCase
 import com.foreverrafs.superdiary.data.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.data.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
+import com.foreverrafs.superdiary.data.utils.DiaryPreference
+import com.foreverrafs.superdiary.data.utils.DiaryPreferenceImpl
 import com.foreverrafs.superdiary.data.validator.DiaryValidator
 import com.foreverrafs.superdiary.data.validator.DiaryValidatorImpl
 import kotlin.time.Duration.Companion.seconds
@@ -46,6 +48,7 @@ fun useCaseModule() = module {
     }
     factory<DiaryAI> { OpenDiaryAI(openAI = get()) }
     factory<DiaryValidator> { DiaryValidatorImpl(get()) }
+    factory<DiaryPreference> { DiaryPreferenceImpl() }
 
     factoryOf(::AddDiaryUseCase)
     factoryOf(::GetAllDiariesUseCase)

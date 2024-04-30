@@ -32,7 +32,7 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.addAll(
             "-Xexpect-actual-classes",
-            "-Xopt-in=com.aallam.openai.api.BetaOpenAI",
+            "-opt-in=com.aallam.openai.api.BetaOpenAI",
         )
     }
 
@@ -52,11 +52,12 @@ kotlin {
                 implementation(projects.core.logging)
                 implementation(libs.openAiKotlin)
                 implementation(libs.uuid)
-                runtimeOnly(libs.ktor.client.cio)
                 implementation(libs.androidx.datastore.preferences)
-                implementation("androidx.datastore:datastore-core-okio:1.1.0-alpha03")
+                implementation(libs.androidx.datastore.okio)
+                runtimeOnly(libs.ktor.client.cio)
             }
         }
+
         androidMain {
             dependencies {
                 implementation(libs.square.sqldelight.driver.android)

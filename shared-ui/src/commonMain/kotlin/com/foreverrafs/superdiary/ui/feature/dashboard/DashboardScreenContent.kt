@@ -35,6 +35,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -66,7 +67,6 @@ private const val LATEST_ENTRIES_ID = "latestentries"
 private const val AT_A_GLANCE_ID = "ataglance"
 private const val WEEKLY_SUMMARY_ID = "weeklysummary"
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
 @Composable
 fun DashboardScreenContent(
     state: DashboardViewModel.DashboardScreenState,
@@ -81,72 +81,16 @@ fun DashboardScreenContent(
     val navigator = LocalScreenNavigator.current
 
     val dashboardItems = remember(state) {
-        mutableStateListOf<DashboardSection>().apply {
-            if (settings.showAtAGlance) {
-                add(
-                    DashboardSection(
-                        content = {
-                            AtAGlance(
-                                modifier = Modifier
-                                    .animateItemPlacement()
-                                    .fillMaxWidth(),
-                                state = state,
-                            )
-                        },
-                        id = AT_A_GLANCE_ID,
-                    )
-                )
-            }
-
-            if (settings.showWeeklySummary) {
-                DashboardSection(
-                    content = { onDismiss ->
-                        WeeklySummaryCard(
-                            modifier = Modifier
-                                .animateItemPlacement()
-                                .fillMaxWidth()
-                                .heightIn(max = 200.dp, min = 150.dp),
-                            summary = state.weeklySummary,
-                            onDismiss = onDismiss,
-                        )
-                    },
-                    id = WEEKLY_SUMMARY_ID,
-                )
-            }
-
-            if (settings.showLatestEntries) {
-                DashboardSection(
-                    content = {
-                        val itemCount = if (settings.showWeeklySummary) 2 else 4
-
-                        if (state.latestEntries.isNotEmpty()) {
-                            LatestEntries(
-                                modifier = Modifier
-                                    .animateItemPlacement(),
-                                diaries = state.latestEntries.take(itemCount),
-                                onSeeAll = onSeeAll,
-                                onDiaryClicked = {
-                                    navigator.push(DetailScreen(it))
-                                },
-                                onToggleFavorite = onToggleFavorite,
-                            )
-                        } else {
-                            Button(
-                                onClick = onAddEntry,
-                                modifier = Modifier
-                                    .testTag("button_add_entry"),
-                            ) {
-                                Text(
-                                    text = stringResource(Res.string.label_add_entry),
-                                    style = MaterialTheme.typography.labelMedium,
-                                )
-                            }
-                        }
-                    },
-                    id = LATEST_ENTRIES_ID,
-                )
-            }
-        }
+        dashboardItems(
+            state = state,
+            onAddEntry = onAddEntry,
+            onSeeAll = onSeeAll,
+            onDiaryClicked = {
+                navigator.push(DetailScreen(it))
+            },
+            onToggleFavorite = onToggleFavorite,
+            settings = settings
+        )
     }
 
     LazyColumn(
@@ -171,6 +115,80 @@ fun DashboardScreenContent(
                 dashboardItems.remove(dashboardItems.firstOrNull { it.id == content.id })
             }
         }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Suppress("LongMethod")
+private fun dashboardItems(
+    state: DashboardViewModel.DashboardScreenState.Content,
+    settings: DiarySettings,
+    onAddEntry: () -> Unit,
+    onSeeAll: () -> Unit,
+    onToggleFavorite: (diary: Diary) -> Unit,
+    onDiaryClicked: (diary: Diary) -> Unit,
+): SnapshotStateList<DashboardSection> = mutableStateListOf<DashboardSection>().apply {
+    if (settings.showAtAGlance) {
+        add(
+            DashboardSection(
+                content = {
+                    AtAGlance(
+                        modifier = Modifier
+                            .animateItemPlacement()
+                            .fillMaxWidth(),
+                        state = state,
+                    )
+                },
+                id = AT_A_GLANCE_ID,
+            )
+        )
+    }
+
+    if (settings.showWeeklySummary) {
+        DashboardSection(
+            content = { onDismiss ->
+                WeeklySummaryCard(
+                    modifier = Modifier
+                        .animateItemPlacement()
+                        .fillMaxWidth()
+                        .heightIn(max = 200.dp, min = 150.dp),
+                    summary = state.weeklySummary,
+                    onDismiss = onDismiss,
+                )
+            },
+            id = WEEKLY_SUMMARY_ID,
+        )
+    }
+
+    if (settings.showLatestEntries) {
+        DashboardSection(
+            content = {
+                val itemCount = if (settings.showWeeklySummary) 2 else 4
+
+                if (state.latestEntries.isNotEmpty()) {
+                    LatestEntries(
+                        modifier = Modifier
+                            .animateItemPlacement(),
+                        diaries = state.latestEntries.take(itemCount),
+                        onSeeAll = onSeeAll,
+                        onDiaryClicked = onDiaryClicked,
+                        onToggleFavorite = onToggleFavorite,
+                    )
+                } else {
+                    Button(
+                        onClick = onAddEntry,
+                        modifier = Modifier
+                            .testTag("button_add_entry"),
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.label_add_entry),
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                    }
+                }
+            },
+            id = LATEST_ENTRIES_ID,
+        )
     }
 }
 
