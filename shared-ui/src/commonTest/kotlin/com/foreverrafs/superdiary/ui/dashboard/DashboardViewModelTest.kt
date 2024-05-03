@@ -18,10 +18,12 @@ import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.data.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.data.utils.DiaryPreference
+import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import io.mockative.Mock
 import io.mockative.any
 import io.mockative.coEvery
+import io.mockative.coVerify
 import io.mockative.every
 import io.mockative.mock
 import kotlin.test.AfterTest
@@ -161,5 +163,11 @@ class DashboardViewModelTest {
             assertThat(state).isNotNull()
             assertThat(state?.weeklySummary).isEqualTo("New Diary Summary")
         }
+    }
+
+    @Test
+    fun `Should save settings when dashboard ordering is changed`() = runTest {
+        dashboardViewModel.updateSettings(DiarySettings.Empty)
+        coVerify { diaryPreference.save(any()) }
     }
 }
