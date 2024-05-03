@@ -1,3 +1,3 @@
 package com.foreverrafs.superdiary.data
 
-actual fun getDatastorePath(filename: String): String = "datastorepath/$filename"
+actual fun getDatastorePath(filename: String): String = filename

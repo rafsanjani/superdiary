@@ -29,7 +29,7 @@ class DiaryPreferenceTest {
 
     @AfterTest
     fun teardown() {
-        fileSystem.delete(filename.toPath(), true)
+        fileSystem.delete(filename.toPath())
         Dispatchers.resetMain()
     }
 
