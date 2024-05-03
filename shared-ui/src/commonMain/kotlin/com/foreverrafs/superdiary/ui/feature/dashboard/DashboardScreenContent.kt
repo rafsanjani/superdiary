@@ -34,10 +34,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -47,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.model.Streak
+import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.ui.LocalScreenNavigator
 import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryItem
@@ -64,68 +63,33 @@ import superdiary.shared_ui.generated.resources.label_glance_header_streak
 import superdiary.shared_ui.generated.resources.label_glance_header_weekly_summary
 import superdiary.shared_ui.generated.resources.label_weekly_summary_error
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
+private const val LATEST_ENTRIES_ID = "latestentries"
+private const val AT_A_GLANCE_ID = "ataglance"
+private const val WEEKLY_SUMMARY_ID = "weeklysummary"
+
 @Composable
 fun DashboardScreenContent(
     state: DashboardViewModel.DashboardScreenState,
+    settings: DiarySettings,
+    onChangeSettings: (DiarySettings) -> Unit,
     onAddEntry: () -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
     modifier: Modifier = Modifier,
     onSeeAll: () -> Unit,
 ) {
     if (state !is DashboardViewModel.DashboardScreenState.Content) return
-    var isWeeklySummaryDisplayed by rememberSaveable { mutableStateOf(true) }
     val navigator = LocalScreenNavigator.current
 
     val dashboardItems = remember(state) {
-        mutableStateListOf(
-            DashboardSection(
-                content = {
-                    AtAGlance(
-                        modifier = Modifier.animateItemPlacement().fillMaxWidth(),
-                        state = state,
-                    )
-                },
-                id = "atAGlance",
-            ),
-            DashboardSection(
-                content = { onDismiss ->
-                    WeeklySummaryCard(
-                        modifier = Modifier.animateItemPlacement().fillMaxWidth().heightIn(max = 200.dp, min = 150.dp),
-                        summary = state.weeklySummary,
-                        onDismiss = onDismiss,
-                    )
-                },
-                id = "weeklySummary",
-            ),
-            DashboardSection(
-                content = {
-                    val itemCount = if (isWeeklySummaryDisplayed) 2 else 4
-
-                    if (state.latestEntries.isNotEmpty()) {
-                        LatestEntries(
-                            modifier = Modifier.animateItemPlacement(),
-                            diaries = state.latestEntries.take(itemCount),
-                            onSeeAll = onSeeAll,
-                            onDiaryClicked = {
-                                navigator.push(DetailScreen(it))
-                            },
-                            onToggleFavorite = onToggleFavorite,
-                        )
-                    } else {
-                        Button(
-                            onClick = onAddEntry,
-                            modifier = Modifier.testTag("button_add_entry"),
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.label_add_entry),
-                                style = MaterialTheme.typography.labelMedium,
-                            )
-                        }
-                    }
-                },
-                id = "latestEntries",
-            ),
+        dashboardItems(
+            state = state,
+            onAddEntry = onAddEntry,
+            onSeeAll = onSeeAll,
+            onDiaryClicked = {
+                navigator.push(DetailScreen(it))
+            },
+            onToggleFavorite = onToggleFavorite,
+            settings = settings
         )
     }
 
@@ -139,14 +103,95 @@ fun DashboardScreenContent(
     ) {
         items(items = dashboardItems, key = { it.id }) { content ->
             content.content(this) {
-                isWeeklySummaryDisplayed = false
+                when (content.id) {
+                    AT_A_GLANCE_ID -> {
+                        onChangeSettings(settings.copy(showAtAGlance = false))
+                    }
+
+                    WEEKLY_SUMMARY_ID -> {
+                        onChangeSettings(settings.copy(showWeeklySummary = false))
+                    }
+                }
                 dashboardItems.remove(dashboardItems.firstOrNull { it.id == content.id })
             }
         }
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
+@OptIn(ExperimentalFoundationApi::class)
+@Suppress("LongMethod")
+private fun dashboardItems(
+    state: DashboardViewModel.DashboardScreenState.Content,
+    settings: DiarySettings,
+    onAddEntry: () -> Unit,
+    onSeeAll: () -> Unit,
+    onToggleFavorite: (diary: Diary) -> Unit,
+    onDiaryClicked: (diary: Diary) -> Unit,
+): SnapshotStateList<DashboardSection> = mutableStateListOf<DashboardSection>().apply {
+    if (settings.showAtAGlance) {
+        add(
+            DashboardSection(
+                content = {
+                    AtAGlance(
+                        modifier = Modifier
+                            .animateItemPlacement()
+                            .fillMaxWidth(),
+                        state = state,
+                    )
+                },
+                id = AT_A_GLANCE_ID,
+            )
+        )
+    }
+
+    if (settings.showWeeklySummary) {
+        DashboardSection(
+            content = { onDismiss ->
+                WeeklySummaryCard(
+                    modifier = Modifier
+                        .animateItemPlacement()
+                        .fillMaxWidth()
+                        .heightIn(max = 200.dp, min = 150.dp),
+                    summary = state.weeklySummary,
+                    onDismiss = onDismiss,
+                )
+            },
+            id = WEEKLY_SUMMARY_ID,
+        )
+    }
+
+    if (settings.showLatestEntries) {
+        DashboardSection(
+            content = {
+                val itemCount = if (settings.showWeeklySummary) 2 else 4
+
+                if (state.latestEntries.isNotEmpty()) {
+                    LatestEntries(
+                        modifier = Modifier
+                            .animateItemPlacement(),
+                        diaries = state.latestEntries.take(itemCount),
+                        onSeeAll = onSeeAll,
+                        onDiaryClicked = onDiaryClicked,
+                        onToggleFavorite = onToggleFavorite,
+                    )
+                } else {
+                    Button(
+                        onClick = onAddEntry,
+                        modifier = Modifier
+                            .testTag("button_add_entry"),
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.label_add_entry),
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                    }
+                }
+            },
+            id = LATEST_ENTRIES_ID,
+        )
+    }
+}
+
 @Composable
 private fun AtAGlance(
     state: DashboardViewModel.DashboardScreenState.Content,
@@ -191,7 +236,11 @@ private fun AtAGlance(
             fun streakCaption(streak: Streak): String {
                 val dateFormatPattern = "MMM dd"
                 return if (streak.count != 0) {
-                    "${streak.startDate.format(dateFormatPattern)} - ${streak.endDate.format(dateFormatPattern)}"
+                    "${streak.startDate.format(dateFormatPattern)} - ${
+                        streak.endDate.format(
+                            dateFormatPattern
+                        )
+                    }"
                 } else {
                     "-"
                 }
@@ -291,7 +340,10 @@ private fun LatestEntries(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Text(stringResource(Res.string.label_button_show_all), style = MaterialTheme.typography.labelSmall)
+            Text(
+                stringResource(Res.string.label_button_show_all),
+                style = MaterialTheme.typography.labelSmall
+            )
         }
 
         Column(
@@ -312,7 +364,6 @@ private fun LatestEntries(
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun WeeklySummaryCard(
     summary: String?,

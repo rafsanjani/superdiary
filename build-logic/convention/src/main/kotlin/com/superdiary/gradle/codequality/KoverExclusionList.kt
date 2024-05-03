@@ -45,6 +45,9 @@ object KoverExclusionList {
         "swipe/src/commonMain/kotlin/me/saket/swipe/SwipeableActionBox.kt",
         "swipe/src/commonMain/kotlin/me/saket/swipe/SwipeAction.kt",
         "**/Module.kt",
-        "**/defaults.kt"
+        "**/defaults.kt",
+        "**/*.ios.kt",
+        "**/*.jvm.kt",
+        "**/*.android.kt",
     )
 }
