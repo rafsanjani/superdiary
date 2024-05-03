@@ -1,10 +1,10 @@
-package com.foreverrafs.superdiary.utils
+package com.foreverrafs.superdiary.data.utils
 
+import assertk.assertFailure
 import assertk.assertThat
+import assertk.assertions.hasClass
 import assertk.assertions.isEqualTo
-import com.foreverrafs.superdiary.data.utils.DiaryPreference
-import com.foreverrafs.superdiary.data.utils.DiaryPreferenceImpl
-import com.foreverrafs.superdiary.data.utils.DiarySettings
+import kotlin.random.Random
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -14,11 +14,13 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import okio.Path.Companion.toPath
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiaryPreferenceTest {
 
-    private val  diaryPreference: DiaryPreference =  DiaryPreferenceImpl()
+    private val filename: String = "${Random.nextInt()}.preferences_pb"
+    private val diaryPreference: DiaryPreference = DiaryPreferenceImpl.getInstance(filename)
 
     @BeforeTest
     fun setup() {
@@ -27,6 +29,7 @@ class DiaryPreferenceTest {
 
     @AfterTest
     fun teardown() {
+        fileSystem.delete(filename.toPath(), true)
         Dispatchers.resetMain()
     }
 
@@ -56,5 +59,25 @@ class DiaryPreferenceTest {
         diaryPreference.save(updatedSettings)
         val finalState = diaryPreference.snapshot
         assertThat(finalState).isEqualTo(updatedSettings)
+    }
+
+    @Test
+    fun `Should reset settings when clear function is invoked`() = runTest {
+        val initialSettings = DiarySettings(
+            isFirstLaunch = true,
+            showWeeklySummary = true,
+            showAtAGlance = true,
+            showLatestEntries = true,
+        )
+
+        diaryPreference.save(
+            settings = initialSettings,
+        )
+
+        diaryPreference.clear()
+
+        assertFailure {
+            diaryPreference.snapshot
+        }.hasClass(IllegalStateException::class)
     }
 }

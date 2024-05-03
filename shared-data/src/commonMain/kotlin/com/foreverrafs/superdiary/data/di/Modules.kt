@@ -48,7 +48,7 @@ fun useCaseModule() = module {
     }
     factory<DiaryAI> { OpenDiaryAI(openAI = get()) }
     factory<DiaryValidator> { DiaryValidatorImpl(get()) }
-    factory<DiaryPreference> { DiaryPreferenceImpl() }
+    factory<DiaryPreference> { DiaryPreferenceImpl.getInstance() }
 
     factoryOf(::AddDiaryUseCase)
     factoryOf(::GetAllDiariesUseCase)

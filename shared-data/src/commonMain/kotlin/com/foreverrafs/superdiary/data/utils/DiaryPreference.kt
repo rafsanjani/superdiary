@@ -6,9 +6,12 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import com.foreverrafs.superdiary.data.getDatastorePath
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.internal.SynchronizedObject
+import kotlinx.coroutines.internal.synchronized
 import kotlinx.coroutines.runBlocking
 import okio.Path.Companion.toPath
 
@@ -19,9 +22,10 @@ interface DiaryPreference {
     suspend fun clear()
 }
 
-class DiaryPreferenceImpl(
+class DiaryPreferenceImpl private constructor(
+    filename: String,
     private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.createWithPath {
-        getDatastorePath(filename = "datastore.preferences_pb").toPath()
+        getDatastorePath(filename = filename).toPath()
     },
 ) : DiaryPreference {
 
@@ -46,11 +50,16 @@ class DiaryPreferenceImpl(
     override val snapshot: DiarySettings
         get() {
             val prefs = runBlocking { dataStore.data.first() }
+
+            val exception =
+                IllegalStateException("Attempting to access snapshot without saving first")
+
             return DiarySettings(
-                isFirstLaunch = prefs[isFirstLaunchKey] as Boolean,
-                showWeeklySummary = prefs[showWeeklySummaryKey] as Boolean,
-                showAtAGlance = prefs[showAtAGlanceKey] as Boolean,
-                showLatestEntries = prefs[showLatestEntriesKey] as Boolean,
+                isFirstLaunch = prefs[isFirstLaunchKey]
+                    ?: throw exception,
+                showWeeklySummary = prefs[showWeeklySummaryKey] ?: throw exception,
+                showAtAGlance = prefs[showAtAGlanceKey] ?: throw exception,
+                showLatestEntries = prefs[showLatestEntriesKey] ?: throw exception,
             )
         }
 
@@ -68,6 +77,16 @@ class DiaryPreferenceImpl(
             it.clear()
         }
     }
+
+    @OptIn(InternalCoroutinesApi::class)
+    companion object {
+        private val instance: DiaryPreference? = null
+        private val lock = SynchronizedObject()
+
+        fun getInstance(filename: String = "datastore.preferences_pb") = synchronized(lock) {
+            instance ?: DiaryPreferenceImpl(filename)
+        }
+    }
 }
 
 data class DiarySettings(
@@ -76,7 +95,6 @@ data class DiarySettings(
     val showAtAGlance: Boolean,
     val showLatestEntries: Boolean,
 ) {
-
     companion object {
         val Empty: DiarySettings = DiarySettings(
             isFirstLaunch = false,
