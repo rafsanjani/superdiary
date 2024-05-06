@@ -12,9 +12,28 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  lint:
+    if: ${{ github.event_name != 'push' || github.event.pull_request.number }}
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Detekt on all modules
+        run: ./gradlew detektAll
   test:
     if: ${{ github.event_name != 'push' || github.event.pull_request.number }} # Run for pull requests and workflow dispatches, or if it's not a push without pull request
     runs-on: macos-14
+    needs: lint
     steps:
       - uses: actions/checkout@v4
         with:
@@ -33,13 +52,6 @@ jobs:
           gradle-home-cache-cleanup: true
           cache-read-only: false
 
-      - name: Upload JVM test artifacts
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: 'testReport'
-          path: '**/test-results/**/'
-          retention-days: 1
 
       - name: Snapshot test (shared-ui)
         uses: gradle/gradle-build-action@v3
@@ -55,31 +67,4 @@ jobs:
           name: reports
           path: AndroidApp/app/build/paparazzi/failures/
           retention-days: 1
-
-  danger:
-    if: always()
-    runs-on: macos-14
-    needs: [test]
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          lfs: true
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.3
-
-      - name: Download unit test report
-        uses: actions/download-artifact@v4
-        with:
-          name: 'testReport'
-
-      - name: Danger Checks
-        run: |
-            gem install bundler
-            bundle install
-            bundle exec danger
-        env:
-          DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

@@ -25,14 +25,11 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Gradle Wrapper Validation
-        uses: gradle/actions/wrapper-validation@v3
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
-      - name: Lint all modules
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: detektAll
-
+      - name: Detekt on all modules
+        run: ./gradlew detektAll
   build:
     if: ${{ github.event_name != 'push' || github.event.pull_request.number }}
     runs-on: macos-14

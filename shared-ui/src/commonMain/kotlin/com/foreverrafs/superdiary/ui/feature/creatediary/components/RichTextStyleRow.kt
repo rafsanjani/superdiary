@@ -20,9 +20,10 @@ import com.mohamedrejeb.richeditor.model.RichTextState
 @Composable
 fun RichTextStyleRow(
     state: RichTextState,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = Modifier,
+        modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         RichTextStyleButton(

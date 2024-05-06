@@ -10,7 +10,7 @@ Dir[lint_dir].each do |file_name|
   android_lint.lint
 end
 
-junit_tests_dir = "testReport/**/*.xml"
+junit_tests_dir = "build/**/*.xml"
 Dir[junit_tests_dir].each do |file_name|
   junit.parse file_name
   junit.report
