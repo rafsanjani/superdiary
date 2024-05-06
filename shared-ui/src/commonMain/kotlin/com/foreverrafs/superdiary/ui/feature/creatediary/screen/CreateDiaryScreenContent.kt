@@ -197,4 +197,3 @@ private fun DiaryAISuggestionChip(words: Int, enabled: Boolean, onClick: () -> U
         enabled = enabled,
     )
 }
-

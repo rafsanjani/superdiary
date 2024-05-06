@@ -25,15 +25,12 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Gradle Wrapper Validation
-        uses: gradle/actions/wrapper-validation@v3
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
-      - name: Lint all modules
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: detektAll
-
-  snapshot:
+      - name: Detekt on all modules
+        run: ./gradlew detektAll
+  test:
     if: ${{ github.event_name != 'push' || github.event.pull_request.number }} # Run for pull requests and workflow dispatches, or if it's not a push without pull request
     runs-on: macos-14
     needs: lint
@@ -51,9 +48,10 @@ jobs:
         id: unit_tests_jvm
         uses: gradle/gradle-build-action@v3
         with:
-          arguments: testDebugUnitTest --continue --no-configuration-cache
+          arguments: testDebugUnitTest
           gradle-home-cache-cleanup: true
           cache-read-only: false
+
 
       - name: Snapshot test (shared-ui)
         uses: gradle/gradle-build-action@v3
@@ -62,13 +60,6 @@ jobs:
           gradle-home-cache-cleanup: true
           cache-read-only: false
 
-      - name: Upload Screenshot Test Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: reports
-          path: AndroidApp/app/build/reports/paparazzi/
-          retention-days: 1
-
       - name: Upload Snapshot Failure Differences
         uses: actions/upload-artifact@v4
         if: failure()
@@ -76,3 +67,4 @@ jobs:
           name: reports
           path: AndroidApp/app/build/paparazzi/failures/
           retention-days: 1
+

@@ -1,4 +1,4 @@
-name: iOS Unit Tests
+name: Danger Checks
 
 on:
   push:
@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
+  danger:
     if: ${{ github.event_name != 'push' || github.event.pull_request.number }}
     runs-on: macos-14
     steps:
@@ -29,25 +29,17 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Detekt on all modules
-        run: ./gradlew detektAll
-  test:
-    if: ${{ github.event_name != 'push' || github.event.pull_request.number }}
-    runs-on: macos-14
-    needs: lint
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          lfs: true
+        run: ./gradlew detektAll -PignoreFailures=true
 
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
+      - name: Unit test on all modules
+        run: ./gradlew testDebugUnitTest
 
-      - name: Unit test iOS
-        id: unit_tests_ios
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: iosSimulatorArm64Test
-          gradle-home-cache-cleanup: true
-          cache-read-only: false
+      - name: Danger Checks
+        run: |
+            gem install bundler
+            bundle install
+            bundle exec danger
+        env:
+          DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+

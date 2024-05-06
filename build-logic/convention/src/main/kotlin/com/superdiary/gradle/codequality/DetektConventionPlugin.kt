@@ -14,6 +14,7 @@ class DetektConventionPlugin : Plugin<Project> {
 }
 
 private fun Project.configureDetekt() {
+    println("Rafsanjani $name")
     val configFile = files("$rootDir/quality/detekt-rules.yml")
     val sourceFiles = file(rootDir)
     val reportFile = file("${layout.buildDirectory.asFile.get()}/reports/detekt")
@@ -25,13 +26,14 @@ private fun Project.configureDetekt() {
         config.setFrom(configFile)
         buildUponDefaultConfig = true
         reportsDir.set(reportFile)
+        ignoreFailures = project.hasProperty("ignoreFailures")
         setSource(sourceFiles)
         include(kotlinFiles)
         exclude(resourceFiles, buildFiles)
 
         reports {
             html.required.set(true)
-            xml.required.set(false)
+            xml.required.set(true)
             txt.required.set(false)
         }
     }
