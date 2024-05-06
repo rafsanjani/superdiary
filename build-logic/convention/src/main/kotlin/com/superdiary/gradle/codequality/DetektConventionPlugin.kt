@@ -31,7 +31,7 @@ private fun Project.configureDetekt() {
 
         reports {
             html.required.set(true)
-            xml.required.set(false)
+            xml.required.set(true)
             txt.required.set(false)
         }
     }

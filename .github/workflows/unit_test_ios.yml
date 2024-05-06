@@ -50,6 +50,6 @@ jobs:
         id: unit_tests_ios
         uses: gradle/gradle-build-action@v3
         with:
-          arguments: iosSimulatorArm64Test --no-configuration-cache
+          arguments: iosSimulatorArm64Test
           gradle-home-cache-cleanup: true
           cache-read-only: false
