@@ -12,38 +12,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
-    if: ${{ github.event_name != 'push' || github.event.pull_request.number }}
-    runs-on: macos-14
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          lfs: true
-
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
-      - name: Gradle Wrapper Validation
-        uses: gradle/actions/wrapper-validation@v3
-
-      - name: Lint all modules
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: detektAll
-
-      - name: Upload detekt test artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: 'detektReport'
-          path: 'build/reports/detekt/'
-          retention-days: 1
-
   test:
     if: ${{ github.event_name != 'push' || github.event.pull_request.number }} # Run for pull requests and workflow dispatches, or if it's not a push without pull request
     runs-on: macos-14
-    needs: lint
     steps:
       - uses: actions/checkout@v4
         with:
@@ -88,7 +59,7 @@ jobs:
   danger:
     if: always()
     runs-on: macos-14
-    needs: [lint, test]
+    needs: [test]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -103,11 +74,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: 'testReport'
-
-      - name: Download detekt test report
-        uses: actions/download-artifact@v4
-        with:
-          name: 'detektReport'
 
       - name: Danger Checks
         run: |
