@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import com.foreverrafs.superdiary.data.getDatastorePath
+import kotlin.concurrent.Volatile
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -44,8 +45,8 @@ class DiaryPreferenceImpl private constructor(
     }
 
     /**
-     * Obtains a snapshot of the settings at a particular point in time. This is a blocking
-     * operation and shouldn't be used in production code
+     * Obtains a snapshot of the settings at a particular point in time. This
+     * is a blocking operation and shouldn't be used in production code
      */
     override val snapshot: DiarySettings
         get() {
@@ -80,11 +81,12 @@ class DiaryPreferenceImpl private constructor(
 
     @OptIn(InternalCoroutinesApi::class)
     companion object {
-        private val instance: DiaryPreference? = null
+        @Volatile
+        private var instance: DiaryPreference? = null
         private val lock = SynchronizedObject()
 
         fun getInstance(filename: String = "datastore.preferences_pb") = synchronized(lock) {
-            instance ?: DiaryPreferenceImpl(filename)
+            instance ?: DiaryPreferenceImpl(filename).also { instance = it }
         }
     }
 }

@@ -19,12 +19,7 @@ class LocalDataSource(private val database: Database) : DataSource {
     }
 
     override suspend fun delete(diary: Diary): Int {
-        diary.id?.let {
-            database.deleteDiary(it)
-            return 1
-        }
-
-        return 0
+        return delete(listOf(diary))
     }
 
     override suspend fun delete(diaries: List<Diary>): Int {
@@ -48,12 +43,11 @@ class LocalDataSource(private val database: Database) : DataSource {
     }
 
     /**
-     * The dates are currently stored on the database as very high
-     * precision Long, making it almost impossible to perform equality
-     * checks.
+     * The dates are currently stored on the database as very high precision
+     * Long, making it almost impossible to perform equality checks.
      *
-     * To look for entries on a particular day, we therefore
-     * look for all entries from start of the day 00:00 to midnight 23:59:59
+     * To look for entries on a particular day, we therefore look for all
+     * entries from start of the day 00:00 to midnight 23:59:59
      */
 
     override fun findByDate(date: Instant): Flow<List<Diary>> {
