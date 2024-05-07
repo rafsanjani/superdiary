@@ -4,7 +4,6 @@ import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.hasClass
 import assertk.assertions.isEqualTo
-import kotlin.random.Random
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -14,13 +13,11 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import okio.Path.Companion.toPath
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiaryPreferenceTest {
 
-    private val filename: String = "${Random.nextInt()}.preferences_pb"
-    private val diaryPreference: DiaryPreference = DiaryPreferenceImpl.getInstance(filename)
+    private val diaryPreference: DiaryPreference = DiaryPreferenceImpl.getInstance("superdiary.preferences_pb")
 
     @BeforeTest
     fun setup() {
@@ -29,7 +26,6 @@ class DiaryPreferenceTest {
 
     @AfterTest
     fun teardown() {
-        fileSystem.delete(filename.toPath())
         Dispatchers.resetMain()
     }
 
@@ -46,6 +42,9 @@ class DiaryPreferenceTest {
             settings = initialSettings,
         )
 
+        // The settings flow is not emitting immediately after a call to save
+        // in testing. Use the snapshot to get the latest value from it and test that
+        // instead.
         val initialState = diaryPreference.snapshot
         assertThat(initialState).isEqualTo(initialSettings)
 
@@ -79,5 +78,13 @@ class DiaryPreferenceTest {
         assertFailure {
             diaryPreference.snapshot
         }.hasClass(IllegalStateException::class)
+    }
+
+    @Test
+    fun `Should return the same instance of diary preference`() = runTest {
+        val first = DiaryPreferenceImpl.getInstance()
+        val second = DiaryPreferenceImpl.getInstance()
+
+        assertThat(first).isEqualTo(second)
     }
 }
