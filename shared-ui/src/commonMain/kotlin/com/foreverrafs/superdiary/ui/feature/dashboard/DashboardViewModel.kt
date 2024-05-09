@@ -54,47 +54,41 @@ class DashboardViewModel(
             "Loading dashboard content"
         }
 
-        getAllDiariesUseCase().catch {
-            logger.e(Tag, it) {
-                "Error Loading dashboard content"
-            }
-            mutableState.update {
-                DashboardScreenState.Loading
-            }
-        }.collect { diaries ->
-            logger.i(Tag) {
-                "Dashboard content refreshed!"
-            }
-            mutableState.update {
-                DashboardScreenState.Content(
-                    latestEntries = diaries.sortedByDescending { it.date }.take(4),
-                    totalEntries = diaries.size.toLong(),
-                    weeklySummary = if (diaries.isEmpty()) {
-                        """
+        getAllDiariesUseCase()
+            .collect { diaries ->
+                logger.i(Tag) {
+                    "Dashboard content refreshed!"
+                }
+                mutableState.update {
+                    DashboardScreenState.Content(
+                        latestEntries = diaries.sortedByDescending { it.date }.take(4),
+                        totalEntries = diaries.size.toLong(),
+                        weeklySummary = if (diaries.isEmpty()) {
+                            """
                             In this panel, your weekly diary entries will be summarized.
                             Add your first entry to see how it works
-                        """.trimIndent()
-                    } else {
-                        DEFAULT_SUMMARY_TEXT
-                    },
-                    currentStreak = Streak(
-                        0,
-                        Clock.System.now().toDate(),
-                        Clock.System.now().toDate(),
-                    ),
-                    bestStreak = Streak(
-                        0,
-                        Clock.System.now().toDate(),
-                        Clock.System.now().toDate(),
-                    ),
-                )
-            }
+                            """.trimIndent()
+                        } else {
+                            DEFAULT_SUMMARY_TEXT
+                        },
+                        currentStreak = Streak(
+                            0,
+                            Clock.System.now().toDate(),
+                            Clock.System.now().toDate(),
+                        ),
+                        bestStreak = Streak(
+                            0,
+                            Clock.System.now().toDate(),
+                            Clock.System.now().toDate(),
+                        ),
+                    )
+                }
 
-            if (diaries.isNotEmpty()) {
-                generateWeeklySummary(diaries)
-                calculateStreak(diaries)
+                if (diaries.isNotEmpty()) {
+                    generateWeeklySummary(diaries)
+                    calculateStreak(diaries)
+                }
             }
-        }
     }
 
     private fun updateContentState(func: (current: DashboardScreenState.Content) -> DashboardScreenState.Content) {
