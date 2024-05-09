@@ -170,4 +170,15 @@ class DashboardViewModelTest {
         dashboardViewModel.updateSettings(DiarySettings.Empty)
         coVerify { diaryPreference.save(any()) }
     }
+
+    @Test
+    fun `Should toggle favorite when favorite is toggled`() = runTest {
+        val diary = Diary("Hello World")
+        every { dataSource.fetchAll() }.returns(flowOf(listOf(diary)))
+        coEvery { dataSource.update(any()) }.returns(1)
+
+        dashboardViewModel.toggleFavorite(diary)
+
+        coVerify { dataSource.update(diary) }
+    }
 }

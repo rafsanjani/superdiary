@@ -7,7 +7,7 @@ object KoverExclusionList {
         "*.components",
         "*.di",
         "*.style",
-        "superdiary.shared-ui.generated.resources",
+        "*.generated.resources",
     )
 
     val classes = listOf(
@@ -20,7 +20,8 @@ object KoverExclusionList {
         // iOS view controller
         "**/ui/ViewController*",
         // The entry-point UI of the app
-        "**/App.kt",
+        "**/AppKt",
+        "**/AppKt*",
         // The android application class
         "**/DiaryApp.kt",
         // JVM App entrypoint
@@ -34,7 +35,8 @@ object KoverExclusionList {
         "**/*Resources*",
         "*.*.*ComposableSingletons*",
         "**/app/**",
-        "**/androidApp/**"
+        "**/androidApp/**",
+        "**/DiaryListActions",
     )
 
     val files = listOf(

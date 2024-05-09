@@ -20,7 +20,7 @@ class DiaryValidatorTest {
     private val validator: DiaryValidator = DiaryValidatorImpl(clock = testClock)
 
     @Test
-    fun `fail validation for past date`() {
+    fun `Should fail validation for past date`() {
         val diary = Diary(
             entry = "Bad Diary",
             date = testClock.now().minus(
@@ -38,7 +38,7 @@ class DiaryValidatorTest {
     }
 
     @Test
-    fun `fail validation for future date`() {
+    fun `Should fail validation for future date`() {
         val diary = Diary(
             entry = "Bad Diary",
             date = testClock.now().plus(
@@ -56,7 +56,7 @@ class DiaryValidatorTest {
     }
 
     @Test
-    fun `pass validation for today's date`() {
+    fun `Should pass validation for today's date`() {
         val diary = Diary(
             entry = "Bad Diary",
             date = testClock.now(),
