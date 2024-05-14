@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.sonar).apply(false)
     alias(libs.plugins.android.test).apply(false)
+    alias(libs.plugins.compose.compiler).apply(false)
     id("com.superdiary.detekt")
     id("com.superdiary.ktlint")
     id("com.superdiary.githooks")

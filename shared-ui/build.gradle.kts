@@ -4,9 +4,10 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.testLogger)
     kotlin("multiplatform")
     id("kotlin-parcelize")
-    alias(libs.plugins.testLogger)
 
     // Build logic
     id("com.superdiary.kover")

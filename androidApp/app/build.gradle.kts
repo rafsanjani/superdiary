@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.android.application)
     alias(libs.plugins.paparazzi)
+    alias(libs.plugins.compose.compiler)
     id("org.jetbrains.kotlinx.kover")
 }
 
@@ -28,7 +29,7 @@ kotlin {
                 implementation(libs.richTextEditor)
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.kotlin.datetime)
-                implementation(libs.material)
+                implementation(libs.google.material)
                 implementation(projects.sharedUi)
                 implementation(compose.material3)
                 implementation(compose.uiTooling)
@@ -68,10 +69,6 @@ android {
 
     buildFeatures {
         compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     namespace = "com.foreverrafs.superdiary.app"
