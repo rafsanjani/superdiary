@@ -6,6 +6,9 @@ build
 captures
 .externalNativeBuild
 .cxx
+/.kotlin
+
 local.properties
 xcuserdata
 desktopApp/diary.db
+shared-data/superdiary.preferences_pb

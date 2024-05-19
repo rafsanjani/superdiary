@@ -2,7 +2,6 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.kotlinx.kover")
     alias(libs.plugins.compose.multiplatform)
 }

@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.sonar)
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.compose.compiler)
 }
 
 kotlin {

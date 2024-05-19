@@ -14,7 +14,6 @@ class DetektConventionPlugin : Plugin<Project> {
 }
 
 private fun Project.configureDetekt() {
-    println("Rafsanjani $name")
     val configFile = files("$rootDir/quality/detekt-rules.yml")
     val sourceFiles = file(rootDir)
     val reportFile = file("${layout.buildDirectory.asFile.get()}/reports/detekt")
