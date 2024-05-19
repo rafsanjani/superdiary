@@ -28,7 +28,7 @@ kotlin {
                 implementation(libs.richTextEditor)
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.kotlin.datetime)
-                implementation(libs.material)
+                implementation(libs.google.material)
                 implementation(projects.sharedUi)
                 implementation(compose.material3)
                 implementation(compose.uiTooling)
@@ -70,7 +70,7 @@ android {
         compose = true
     }
 
-    composeOptions {
+    composeOptions{
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 

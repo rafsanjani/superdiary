@@ -12,7 +12,7 @@ suspend fun insertRandomDiaries(dataSource: DataSource, count: Int = 30) {
     val relaxedAddDiaryUseCase = AddDiaryUseCase(dataSource, TestAppDispatchers) {}
 
     // March 03, 2023
-    var currentDate = Instant.parse(isoString = "2023-03-03T02:35:53.049Z")
+    var currentDate = Instant.parse(input = "2023-03-03T02:35:53.049Z")
     repeat(count) {
         relaxedAddDiaryUseCase(
             Diary(
