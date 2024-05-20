@@ -32,13 +32,15 @@ import com.foreverrafs.superdiary.data.validator.DiaryValidatorImpl
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.datetime.Clock
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 fun useCaseModule() = module {
-    single<DataSource> { LocalDataSource(get()) }
+    singleOf(::LocalDataSource) { bind<DataSource>() }
     factory<Clock> { Clock.System }
+
     single<OpenAI> {
         OpenAI(
             token = BuildKonfig.openAIKey,
@@ -46,10 +48,10 @@ fun useCaseModule() = module {
             logging = LoggingConfig(logLevel = LogLevel.None),
         )
     }
-    factory<DiaryAI> { OpenDiaryAI(openAI = get()) }
-    factory<DiaryValidator> { DiaryValidatorImpl(get()) }
-    factory<DiaryPreference> { DiaryPreferenceImpl.getInstance() }
 
+    factory<DiaryPreference> { DiaryPreferenceImpl.getInstance() }
+    factoryOf(::DiaryValidatorImpl) { bind<DiaryValidator>() }
+    factoryOf(::OpenDiaryAI) { bind<DiaryAI>() }
     factoryOf(::AddDiaryUseCase)
     factoryOf(::GetAllDiariesUseCase)
     factoryOf(::GetFavoriteDiariesUseCase)
