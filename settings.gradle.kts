@@ -24,11 +24,10 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2024.05.19")
-            version("compose-multiplatform", "1.6.10-dev1640")
+            from("io.github.rafsanjani:versions:2024.05.26")
+            // dial these guys down because mockative isn't ready for them yet
             version("kotlin", "1.9.24")
             version("ksp", "1.9.24-1.0.20")
-            version("paparazzi", "1.3.4-SNAPSHOT")
             version("kover", "0.7.6")
         }
     }
