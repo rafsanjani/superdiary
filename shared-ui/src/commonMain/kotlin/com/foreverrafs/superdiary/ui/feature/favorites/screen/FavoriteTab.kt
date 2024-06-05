@@ -32,7 +32,7 @@ object FavoriteTab : SuperDiaryTab {
             FavoriteScreenContent(
                 it,
                 onToggleFavorite = screenModel::toggleFavorite,
-                onFavoriteClicked = { favorite ->
+                onFavoriteClick = { favorite ->
                     navigator.push(DetailScreen(favorite))
                 },
             )

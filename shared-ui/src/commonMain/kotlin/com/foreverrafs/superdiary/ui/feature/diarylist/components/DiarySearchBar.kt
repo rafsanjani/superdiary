@@ -44,16 +44,16 @@ import androidx.compose.ui.unit.dp
 @Composable
 internal fun DiarySearchBar(
     inSelectionMode: Boolean,
-    onQueryChanged: (query: String) -> Unit,
+    onQueryChange: (query: String) -> Unit,
     modifier: Modifier = Modifier,
-    onFilterClicked: () -> Unit,
+    onFilterClick: () -> Unit,
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     var isFocused by remember { mutableStateOf(false) }
 
-    val currentOnQueryChanged by rememberUpdatedState(onQueryChanged)
+    val currentOnQueryChanged by rememberUpdatedState(onQueryChange)
 
     val cornerRadius by animateDpAsState(
         if (isFocused) 8.dp else 4.dp,
@@ -103,7 +103,7 @@ internal fun DiarySearchBar(
             trailingIcon = {
                 Icon(
                     modifier = Modifier
-                        .clickable { onFilterClicked() }
+                        .clickable { onFilterClick() }
                         .padding(8.dp),
                     imageVector = Icons.AutoMirrored.Filled.Sort,
                     contentDescription = "Sort diary entries",

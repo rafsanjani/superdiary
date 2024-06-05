@@ -89,7 +89,7 @@ fun DashboardScreenContent(
                 navigator.push(DetailScreen(it))
             },
             onToggleFavorite = onToggleFavorite,
-            settings = settings
+            settings = settings,
         )
     }
 
@@ -140,7 +140,7 @@ private fun dashboardItems(
                     )
                 },
                 id = AT_A_GLANCE_ID,
-            )
+            ),
         )
     }
 
@@ -171,7 +171,7 @@ private fun dashboardItems(
                             .animateItemPlacement(),
                         diaries = state.latestEntries.take(itemCount),
                         onSeeAll = onSeeAll,
-                        onDiaryClicked = onDiaryClicked,
+                        onDiaryClick = onDiaryClicked,
                         onToggleFavorite = onToggleFavorite,
                     )
                 } else {
@@ -238,7 +238,7 @@ private fun AtAGlance(
                 return if (streak.count != 0) {
                     "${streak.startDate.format(dateFormatPattern)} - ${
                         streak.endDate.format(
-                            dateFormatPattern
+                            dateFormatPattern,
                         )
                     }"
                 } else {
@@ -319,7 +319,7 @@ private fun LatestEntries(
     onSeeAll: () -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
     modifier: Modifier = Modifier,
-    onDiaryClicked: (diary: Diary) -> Unit,
+    onDiaryClick: (diary: Diary) -> Unit,
 ) {
     Column(modifier) {
         Row(
@@ -342,7 +342,7 @@ private fun LatestEntries(
 
             Text(
                 stringResource(Res.string.label_button_show_all),
-                style = MaterialTheme.typography.labelSmall
+                style = MaterialTheme.typography.labelSmall,
             )
         }
 
@@ -355,7 +355,7 @@ private fun LatestEntries(
                     selected = false,
                     inSelectionMode = false,
                     modifier = Modifier
-                        .clickable(onClick = { onDiaryClicked(diary) })
+                        .clickable(onClick = { onDiaryClick(diary) })
                         .testTag("diary_list_item_$index"),
                     onToggleFavorite = { onToggleFavorite(diary) },
                 )

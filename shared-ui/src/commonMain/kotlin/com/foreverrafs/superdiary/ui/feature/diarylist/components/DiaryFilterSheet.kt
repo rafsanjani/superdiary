@@ -153,7 +153,7 @@ fun DiaryFilterSheet(
                 if (showDatePickerDialog) {
                     DiaryDatePicker(
                         onDismissRequest = { showDatePickerDialog = false },
-                        onDateSelected = {
+                        onDateSelect = {
                             selectedDate = it
                         },
                         selectedDate = selectedDate,
@@ -250,7 +250,7 @@ fun DiaryDatePicker(
     onDismissRequest: () -> Unit,
     selectedDate: LocalDate?,
     modifier: Modifier = Modifier,
-    onDateSelected: (date: LocalDate) -> Unit,
+    onDateSelect: (date: LocalDate) -> Unit,
 ) {
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = selectedDate
@@ -267,7 +267,7 @@ fun DiaryDatePicker(
                         val instant = Instant.fromEpochMilliseconds(dateMillis)
                         val date = instant.toLocalDateTime(TimeZone.UTC).date
 
-                        onDateSelected(date)
+                        onDateSelect(date)
                         onDismissRequest()
                     }
                 },

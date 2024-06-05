@@ -284,10 +284,10 @@ fun DiaryList(
                 DiarySearchBar(
                     inSelectionMode = !inSelectionMode,
                     modifier = Modifier.fillMaxWidth().align(Alignment.TopCenter),
-                    onQueryChanged = {
+                    onQueryChange = {
                         diaryListActions.onApplyFilters(diaryFilters.copy(entry = it))
                     },
-                    onFilterClicked = {
+                    onFilterClick = {
                         showFilterDiariesBottomSheet = true
                     },
                 )
