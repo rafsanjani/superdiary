@@ -3,6 +3,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.testLogger)
     kotlin("multiplatform")
@@ -12,8 +13,7 @@ plugins {
     id("com.superdiary.kover")
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
-kotlin {
+@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class) kotlin {
     androidTarget()
 
     jvm()
@@ -40,8 +40,7 @@ kotlin {
             dependencies {
                 @OptIn(
                     org.jetbrains.compose.ExperimentalComposeLibrary::class,
-                )
-                implementation(compose.components.resources)
+                ) implementation(compose.components.resources)
                 implementation(compose.material3)
                 implementation(compose.foundation)
                 implementation(compose.materialIconsExtended)
@@ -74,8 +73,9 @@ kotlin {
                 implementation(libs.koin.test)
                 implementation(libs.mockative.runtime)
                 implementation(libs.kotlin.coroutines.test)
-                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-                implementation(compose.uiTest)
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class) implementation(
+                    compose.uiTest
+                )
                 implementation(libs.turbine)
             }
 
@@ -133,10 +133,12 @@ android {
     sourceSets["main"].res.srcDirs("src/commonMain/resources")
 }
 
-dependencies {
-    configurations
-        .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
-        .forEach {
-            add(it.name, libs.mockative.processor)
+afterEvaluate {
+    tasks.named("iosSimulatorArm64ResolveResourcesFromDependencies") {
+        doFirst {
+            rootProject.subprojects.forEach {
+                delete(it.layout.buildDirectory.file("kover/default.artifact"))
+            }
         }
+    }
 }

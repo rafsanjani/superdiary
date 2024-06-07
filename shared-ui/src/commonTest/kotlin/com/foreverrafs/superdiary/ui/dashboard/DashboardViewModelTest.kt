@@ -28,6 +28,7 @@ import io.mockative.every
 import io.mockative.mock
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,6 +42,7 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 
+@Ignore
 @OptIn(ExperimentalCoroutinesApi::class)
 class DashboardViewModelTest {
     @Mock

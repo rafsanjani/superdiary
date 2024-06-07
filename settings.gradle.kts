@@ -24,10 +24,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2024.05.26")
-            // dial these guys down because mockative isn't ready for them yet
-            version("kotlin", "1.9.24")
-            version("ksp", "1.9.24-1.0.20")
+            from("io.github.rafsanjani:versions:2024.06.02")
             version("kover", "0.7.6")
         }
     }

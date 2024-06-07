@@ -253,7 +253,7 @@ private fun DiaryDatePickerPreview() {
     TestAppContainer {
         DiaryDatePicker(
             onDismissRequest = {},
-            onDateSelected = {},
+            onDateSelect = {},
             selectedDate = LocalDate.now().toKotlinLocalDate(),
         )
     }
@@ -301,7 +301,7 @@ private fun DashboardPreview() {
             onSeeAll = {},
             onToggleFavorite = {},
             settings = DiarySettings.Empty,
-            onChangeSettings = {}
+            onChangeSettings = {},
         )
     }
 }

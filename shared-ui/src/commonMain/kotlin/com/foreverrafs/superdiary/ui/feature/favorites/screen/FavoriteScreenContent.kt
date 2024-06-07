@@ -22,7 +22,7 @@ fun FavoriteScreenContent(
     state: FavoriteScreenState,
     onToggleFavorite: suspend (diary: Diary) -> Boolean,
     modifier: Modifier = Modifier,
-    onFavoriteClicked: (diary: Diary) -> Unit,
+    onFavoriteClick: (diary: Diary) -> Unit,
 ) {
     val snackbarHostState = LocalRootSnackbarHostState.current
 
@@ -37,7 +37,7 @@ fun FavoriteScreenContent(
             onDeleteDiaries = {},
             onCancelSelection = {},
             diaryListActions = DiaryListActions.Empty.copy(
-                onDiaryClicked = onFavoriteClicked,
+                onDiaryClicked = onFavoriteClick,
                 onToggleFavorite = {
                     if (onToggleFavorite(it)) {
                         snackbarHostState.showSnackbar("Favorite removed")

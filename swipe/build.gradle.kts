@@ -6,6 +6,7 @@ plugins {
     kotlin("multiplatform")
     id("com.superdiary.kover")
     alias(libs.plugins.sonar)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
 }
@@ -17,6 +18,8 @@ kotlin {
     jvm()
     iosArm64()
     iosSimulatorArm64()
+
+    applyDefaultHierarchyTemplate()
 
     sourceSets {
         commonMain {
@@ -31,7 +34,6 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(libs.assertk.common)
                 implementation(libs.junit)
-                implementation(libs.kotlin.coroutines.test)
                 implementation(libs.turbine)
                 implementation(libs.kotlin.coroutines.test)
             }
