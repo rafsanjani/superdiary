@@ -9,13 +9,15 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
 }
 
-koverReport {
-    filters {
-        excludes {
-            // Exclude everything in the android app
-            packages(
-                "com.foreverrafs",
-            )
+kover {
+    reports {
+        filters {
+            excludes {
+                // Exclude everything in the android app
+                packages(
+                    "com.foreverrafs",
+                )
+            }
         }
     }
 }
@@ -71,7 +73,7 @@ android {
         compose = true
     }
 
-    composeOptions{
+    composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
