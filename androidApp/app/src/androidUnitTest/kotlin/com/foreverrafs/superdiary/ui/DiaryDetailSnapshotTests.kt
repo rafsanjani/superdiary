@@ -25,6 +25,7 @@ class DiaryDetailSnapshotTests(
     val paparazzi = Paparazzi(
         deviceConfig = snapshotDevice.config,
         maxPercentDifference = 0.1,
+        useDeviceResolution = true,
     )
 
     @Test

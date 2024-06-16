@@ -18,6 +18,7 @@ class CreateDiarySnapshotTests(
     @get:Rule
     val paparazzi = Paparazzi(
         deviceConfig = snapshotDevice.config,
+        useDeviceResolution = true,
     )
 
     @Test
