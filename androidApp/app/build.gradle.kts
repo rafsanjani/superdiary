@@ -1,11 +1,15 @@
 @file:Suppress("UnusedPrivateProperty")
 
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+
+
 plugins {
     kotlin("multiplatform")
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.paparazzi)
+    id("io.sentry.android.gradle") version "4.7.1"
     id("org.jetbrains.kotlinx.kover")
 }
 
@@ -23,6 +27,13 @@ koverReport {
 kotlin {
     androidTarget()
 
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-Xskip-prerelease-check",
+        )
+    }
+
     sourceSets {
         androidMain {
             dependencies {
@@ -31,6 +42,7 @@ kotlin {
                 implementation(libs.kotlin.datetime)
                 implementation(libs.google.material)
                 implementation(projects.sharedUi)
+                implementation(projects.core.logging)
                 implementation(compose.material3)
                 implementation(compose.uiTooling)
                 implementation(libs.compose.ui.tooling.preview)
@@ -61,6 +73,12 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+
+        val sentryBaseUrl = project.findProperty("sentryBaseUrl") as? String
+            ?: System.getenv("sentryBaseUrl")
+            ?: throw IllegalArgumentException("Sentry base url hasn't been set")
+
+        manifestPlaceholders["sentryBaseUrl"] = sentryBaseUrl
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -71,7 +89,7 @@ android {
         compose = true
     }
 
-    composeOptions{
+    composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 

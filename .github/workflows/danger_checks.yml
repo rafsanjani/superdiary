@@ -13,6 +13,8 @@ concurrency:
 
 jobs:
   danger:
+    env:
+        SENTRY_BASE_URL: ${{secrets.SENTRY_BASE_URL}}
     if: ${{ github.event_name != 'push' || github.event.pull_request.number }}
     runs-on: macos-14
     steps:

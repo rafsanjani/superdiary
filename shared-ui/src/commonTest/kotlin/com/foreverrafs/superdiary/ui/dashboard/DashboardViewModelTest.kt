@@ -6,7 +6,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import com.foreverrafs.superdiary.TestAppDispatchers
-import com.foreverrafs.superdiary.core.logging.Logger
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.model.Diary
@@ -66,7 +66,7 @@ class DashboardViewModelTest {
             diaryAI = diaryAI,
             calculateBestStreakUseCase = CalculateBestStreakUseCase(TestAppDispatchers),
             updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
-            logger = Logger,
+            logger = AggregateLogger(emptyList()),
             preference = diaryPreference,
         )
     }

@@ -13,6 +13,8 @@ concurrency:
 
 jobs:
   lint:
+    env:
+        SENTRY_BASE_URL: ${{secrets.SENTRY_BASE_URL}}
     if: ${{ github.event_name != 'push' || github.event.pull_request.number }}
     runs-on: macos-14
     steps:
@@ -31,6 +33,8 @@ jobs:
       - name: Detekt on all modules
         run: ./gradlew detektAll
   test:
+    env:
+        SENTRY_BASE_URL: ${{secrets.SENTRY_BASE_URL}}
     if: ${{ github.event_name != 'push' || github.event.pull_request.number }} # Run for pull requests and workflow dispatches, or if it's not a push without pull request
     runs-on: macos-14
     needs: lint

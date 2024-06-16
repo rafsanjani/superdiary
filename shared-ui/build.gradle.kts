@@ -14,6 +14,10 @@ plugins {
     id("com.superdiary.kover")
 }
 
+kotlin.sourceSets.all{
+    languageSettings.enableLanguageFeature("ExplicitBackingFields")
+}
+
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     androidTarget()
