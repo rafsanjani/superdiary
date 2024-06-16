@@ -20,18 +20,18 @@ import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.data.utils.DiaryPreference
 import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
-import io.mockative.Mock
-import io.mockative.any
-import io.mockative.coEvery
-import io.mockative.coVerify
-import io.mockative.every
-import io.mockative.mock
+import dev.mokkery.answering.returns
+import dev.mokkery.every
+import dev.mokkery.everySuspend
+import dev.mokkery.matcher.any
+import dev.mokkery.mock
+import dev.mokkery.verifySuspend
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -42,19 +42,17 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 
-@Ignore
 @OptIn(ExperimentalCoroutinesApi::class)
 class DashboardViewModelTest {
-    @Mock
-    private val dataSource: DataSource = mock(DataSource::class)
+    private val dataSource: DataSource = mock<DataSource>()
 
     private lateinit var dashboardViewModel: DashboardViewModel
 
-    @Mock
-    private val diaryAI: DiaryAI = mock(DiaryAI::class)
+    private val diaryAI: DiaryAI = mock<DiaryAI>()
 
-    @Mock
-    private val diaryPreference: DiaryPreference = mock(DiaryPreference::class)
+    private val diaryPreference: DiaryPreference = mock<DiaryPreference> {
+        everySuspend { save(any()) }.returns(Unit)
+    }
 
     @BeforeTest
     fun setup() {
@@ -145,7 +143,7 @@ class DashboardViewModelTest {
     @Test
     fun `Should generate weekly summary when weekly summary is older than a week`() = runTest {
         every { dataSource.fetchAll() }.returns(flowOf(listOf(Diary("Hello World"))))
-        coEvery { dataSource.insertWeeklySummary(any()) }.returns(Unit)
+        everySuspend { dataSource.insertWeeklySummary(any()) }.returns(Unit)
         every { dataSource.getWeeklySummary() }.returns(
             WeeklySummary(
                 summary = "Old diary summary",
@@ -170,17 +168,18 @@ class DashboardViewModelTest {
     @Test
     fun `Should save settings when dashboard ordering is changed`() = runTest {
         dashboardViewModel.updateSettings(DiarySettings.Empty)
-        coVerify { diaryPreference.save(any()) }
+        delay(100)
+        verifySuspend { diaryPreference.save(any()) }
     }
 
     @Test
     fun `Should toggle favorite when favorite is toggled`() = runTest {
         val diary = Diary("Hello World")
         every { dataSource.fetchAll() }.returns(flowOf(listOf(diary)))
-        coEvery { dataSource.update(any()) }.returns(1)
+        everySuspend { dataSource.update(any()) }.returns(1)
 
         dashboardViewModel.toggleFavorite(diary)
 
-        coVerify { dataSource.update(diary) }
+        verifySuspend { dataSource.update(any()) }
     }
 }

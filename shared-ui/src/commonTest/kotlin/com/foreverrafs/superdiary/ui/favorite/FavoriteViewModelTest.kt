@@ -13,15 +13,14 @@ import com.foreverrafs.superdiary.data.usecase.GetFavoriteDiariesUseCase
 import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.favorites.model.FavoriteViewModel
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreenState
-import io.mockative.Mock
-import io.mockative.any
-import io.mockative.coEvery
-import io.mockative.coVerify
-import io.mockative.every
-import io.mockative.mock
+import dev.mokkery.answering.returns
+import dev.mokkery.every
+import dev.mokkery.everySuspend
+import dev.mokkery.matcher.any
+import dev.mokkery.mock
+import dev.mokkery.verifySuspend
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import kotlinx.coroutines.Dispatchers
@@ -33,11 +32,9 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kotlinx.datetime.Clock
 
-@Ignore
 @OptIn(ExperimentalCoroutinesApi::class)
 class FavoriteViewModelTest {
-    @Mock
-    private val dataSource: DataSource = mock(DataSource::class)
+    private val dataSource: DataSource = mock<DataSource>()
 
     private lateinit var favoriteViewModel: FavoriteViewModel
 
@@ -108,10 +105,10 @@ class FavoriteViewModelTest {
 
     @Test
     fun `Removing favorite actually removes it`() = runTest {
-        coEvery { dataSource.update(any()) }.returns(1)
+        everySuspend { dataSource.update(any()) }.returns(1)
 
         favoriteViewModel.toggleFavorite(Diary("Hello"))
 
-        coVerify { dataSource.update(any()) }
+        verifySuspend { dataSource.update(any()) }
     }
 }
