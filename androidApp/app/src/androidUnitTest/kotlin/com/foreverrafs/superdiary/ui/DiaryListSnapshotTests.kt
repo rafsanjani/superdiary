@@ -34,6 +34,7 @@ class DiaryListSnapshotTests(
     val paparazzi = Paparazzi(
         deviceConfig = snapshotDevice.config,
         renderingMode = SessionParams.RenderingMode.NORMAL,
+        useDeviceResolution = true,
     )
 
     private val diaryListActions = DiaryListActions(
