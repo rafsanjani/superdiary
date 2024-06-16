@@ -112,3 +112,7 @@ android {
         }
     }
 }
+
+sentry {
+    org.set("rafsanjani-inc")
+}
