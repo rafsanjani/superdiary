@@ -8,12 +8,14 @@ plugins {
     alias(libs.plugins.testLogger)
     kotlin("multiplatform")
     id("kotlin-parcelize")
+    id("dev.mokkery") version "2.0.0"
 
     // Build logic
     id("com.superdiary.kover")
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class) kotlin {
+@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
+kotlin {
     androidTarget()
 
     jvm()
@@ -40,7 +42,8 @@ plugins {
             dependencies {
                 @OptIn(
                     org.jetbrains.compose.ExperimentalComposeLibrary::class,
-                ) implementation(compose.components.resources)
+                )
+                implementation(compose.components.resources)
                 implementation(compose.material3)
                 implementation(compose.foundation)
                 implementation(compose.materialIconsExtended)
@@ -71,10 +74,10 @@ plugins {
                 implementation(libs.assertk.common)
                 implementation(libs.junit)
                 implementation(libs.koin.test)
-                implementation(libs.mockative.runtime)
                 implementation(libs.kotlin.coroutines.test)
-                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class) implementation(
-                    compose.uiTest
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                implementation(
+                    compose.uiTest,
                 )
                 implementation(libs.turbine)
             }

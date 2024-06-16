@@ -11,6 +11,7 @@ plugins {
     id("kotlin-parcelize")
     kotlin("multiplatform")
     id("com.superdiary.kover")
+    id("dev.mokkery") version "2.0.0"
 }
 
 sqldelight {
@@ -80,7 +81,6 @@ kotlin {
                 implementation(libs.kotlin.coroutines.test)
                 implementation(libs.turbine)
                 implementation(libs.assertk.common)
-                implementation(libs.mockative.runtime)
             }
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
         }
