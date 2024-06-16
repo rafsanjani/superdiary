@@ -2,7 +2,7 @@ package com.foreverrafs.superdiary.ui.feature.favorites.model
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.foreverrafs.superdiary.core.logging.Logger
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.GetFavoriteDiariesUseCase
@@ -14,13 +14,18 @@ import kotlinx.coroutines.launch
 class FavoriteViewModel(
     private val getFavoriteDiariesUseCase: GetFavoriteDiariesUseCase,
     private val updateDiaryUseCase: UpdateDiaryUseCase,
-    private val logger: Logger,
-) :
-    StateScreenModel<FavoriteScreenState?>(null) {
+    private val logger: AggregateLogger,
+) : StateScreenModel<FavoriteScreenState?>(null) {
 
     fun loadFavorites() = screenModelScope.launch {
+        logger.i(Tag) {
+            "Loading favorites"
+        }
         getFavoriteDiariesUseCase().collect { diaries ->
             mutableState.update {
+                logger.i(Tag) {
+                    "Loaded ${diaries.size} favorite entries"
+                }
                 FavoriteScreenState.Content(
                     diaries,
                 )
@@ -29,6 +34,10 @@ class FavoriteViewModel(
     }
 
     suspend fun toggleFavorite(diary: Diary): Boolean {
+        logger.i(Tag) {
+            "Toggling favorite from favorite=${diary.isFavorite} to favorite=${!diary.isFavorite}"
+        }
+
         val result = updateDiaryUseCase(
             diary.copy(
                 isFavorite = !diary.isFavorite,
@@ -38,14 +47,14 @@ class FavoriteViewModel(
         return when (result) {
             is Result.Failure -> {
                 logger.e(Tag, result.error) {
-                    "Error toggling favorite"
+                    "Error toggling favorite from ${diary.isFavorite} to ${!diary.isFavorite}"
                 }
                 false
             }
 
             is Result.Success -> {
                 logger.d(Tag) {
-                    "Favorite toggled"
+                    "Favorite toggled from ${!diary.isFavorite} to ${diary.isFavorite}"
                 }
                 result.data
             }

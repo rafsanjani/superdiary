@@ -6,7 +6,7 @@ import assertk.assertions.isEmpty
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
 import com.foreverrafs.superdiary.TestAppDispatchers
-import com.foreverrafs.superdiary.core.logging.Logger
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.GetFavoriteDiariesUseCase
@@ -45,7 +45,7 @@ class FavoriteViewModelTest {
         favoriteViewModel = FavoriteViewModel(
             getFavoriteDiariesUseCase = GetFavoriteDiariesUseCase(dataSource, TestAppDispatchers),
             updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
-            logger = Logger,
+            logger = AggregateLogger(emptyList()),
         )
     }
 

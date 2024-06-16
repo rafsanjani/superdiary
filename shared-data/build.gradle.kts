@@ -34,6 +34,7 @@ kotlin {
         freeCompilerArgs.addAll(
             "-Xexpect-actual-classes",
             "-opt-in=com.aallam.openai.api.BetaOpenAI",
+            "-Xskip-prerelease-check"
         )
     }
 

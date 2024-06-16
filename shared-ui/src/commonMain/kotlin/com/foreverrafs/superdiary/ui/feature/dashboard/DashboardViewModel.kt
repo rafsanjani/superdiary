@@ -2,7 +2,7 @@ package com.foreverrafs.superdiary.ui.feature.dashboard
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.foreverrafs.superdiary.core.logging.Logger
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.model.Diary
@@ -33,9 +33,8 @@ class DashboardViewModel(
     private val updateDiaryUseCase: UpdateDiaryUseCase,
     private val preference: DiaryPreference,
     private val diaryAI: DiaryAI,
-    private val logger: Logger,
-) :
-    StateScreenModel<DashboardViewModel.DashboardScreenState>(DashboardScreenState.Loading) {
+    private val logger: AggregateLogger,
+) : StateScreenModel<DashboardViewModel.DashboardScreenState>(DashboardScreenState.Loading) {
     sealed interface DashboardScreenState {
         data object Loading : DashboardScreenState
         data class Content(
@@ -97,8 +96,16 @@ class DashboardViewModel(
 
             if (currentState != null) {
                 val newState = func(currentState)
+
+                logger.d(Tag) {
+                    "Updating content state from $currentState to $newState"
+                }
+
                 newState
             } else {
+                logger.i(Tag) {
+                    "Current state is null, cannot update"
+                }
                 state
             }
         }
