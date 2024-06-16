@@ -6,6 +6,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.singleWindowApplication
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Database
 import com.foreverrafs.superdiary.ui.App
 import com.foreverrafs.superdiary.ui.di.compositeModule
@@ -27,7 +28,7 @@ private fun onCreate() {
 
 private fun initializeKoin() {
     startKoin {
-        modules(compositeModule(JvmAnalytics()))
+        modules(compositeModule(JvmAnalytics(), AggregateLogger(emptyList())))
     }
 }
 
