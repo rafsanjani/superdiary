@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     kotlin("multiplatform")
@@ -16,11 +17,21 @@ kotlin {
                 implementation(compose.material3)
                 implementation(libs.koin.jvm)
                 implementation(projects.core.analytics)
+                implementation(projects.core.logging)
                 implementation(projects.sharedUi)
                 implementation(projects.sharedData)
             }
         }
     }
+
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-Xskip-prerelease-check",
+        )
+    }
+
+
 }
 
 compose.desktop {
