@@ -11,14 +11,13 @@ import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
 import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
-import io.mockative.Mock
-import io.mockative.any
-import io.mockative.coEvery
-import io.mockative.every
-import io.mockative.mock
+import dev.mokkery.answering.returns
+import dev.mokkery.every
+import dev.mokkery.everySuspend
+import dev.mokkery.matcher.any
+import dev.mokkery.mock
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,15 +27,12 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 
-@Ignore
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiaryChatViewModelTest {
 
-    @Mock
-    private val dataSource: DataSource = mock(DataSource::class)
+    private val dataSource: DataSource = mock<DataSource>()
 
-    @Mock
-    private val diaryAI: DiaryAI = mock(DiaryAI::class)
+    private val diaryAI: DiaryAI = mock<DiaryAI>()
 
     private lateinit var diaryChatViewModel: DiaryChatViewModel
 
@@ -58,7 +54,7 @@ class DiaryChatViewModelTest {
 
     @Test
     fun `Should update responding to true when generating AI response`() = runTest {
-        coEvery { diaryAI.queryDiaries(any()) }.returns("hello boss")
+        everySuspend { diaryAI.queryDiaries(any()) }.returns("hello boss")
 
         diaryChatViewModel.state.test {
             diaryChatViewModel.queryDiaries("hello World")
@@ -76,7 +72,7 @@ class DiaryChatViewModelTest {
 
     @Test
     fun `Should update responding to false after generating AI response`() = runTest {
-        coEvery { diaryAI.queryDiaries(any()) }.returns("hello boss")
+        everySuspend { diaryAI.queryDiaries(any()) }.returns("hello boss")
 
         diaryChatViewModel.state.test {
             diaryChatViewModel.queryDiaries("hello World")
@@ -97,7 +93,7 @@ class DiaryChatViewModelTest {
 
     @Test
     fun `Should prepend message prompt to messages when querying initially`() = runTest {
-        coEvery {
+        everySuspend {
             diaryAI.queryDiaries(
                 any(),
             )

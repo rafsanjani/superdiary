@@ -15,15 +15,14 @@ import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.data.utils.toDate
 import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListViewModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
-import io.mockative.Mock
-import io.mockative.any
-import io.mockative.coEvery
-import io.mockative.coVerify
-import io.mockative.every
-import io.mockative.mock
+import dev.mokkery.answering.returns
+import dev.mokkery.every
+import dev.mokkery.everySuspend
+import dev.mokkery.matcher.any
+import dev.mokkery.mock
+import dev.mokkery.verifySuspend
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -36,14 +35,12 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kotlinx.datetime.Clock
 
-@Ignore
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiaryListViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
 
-    @Mock
-    private val dataSource: DataSource = mock(DataSource::class)
+    private val dataSource: DataSource = mock<DataSource>()
 
     private val diaryListViewModel = DiaryListViewModel(
         getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers),
@@ -149,24 +146,24 @@ class DiaryListViewModelTest {
 
     @Test
     fun `Verify delete diaries actually deletes them`() = runTest {
-        coEvery {
+        everySuspend {
             dataSource.delete(diaries = any())
         }.returns(1)
 
         diaryListViewModel.deleteDiaries(diaries = listOf())
 
-        coVerify { dataSource.delete(diaries = any()) }
+        verifySuspend { dataSource.delete(diaries = any()) }
     }
 
     @Test
     fun `Verify toggle favorite actually updates the entry`() = runTest {
-        coEvery {
+        everySuspend {
             dataSource.update(diary = any())
         }.returns(1)
 
         diaryListViewModel.toggleFavorite(diary = Diary("hello-boss"))
 
-        coVerify { dataSource.update(any()) }
+        verifySuspend { dataSource.update(any()) }
     }
 
     @Test

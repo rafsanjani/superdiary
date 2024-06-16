@@ -7,34 +7,31 @@ import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryViewModel
-import io.mockative.Mock
-import io.mockative.any
-import io.mockative.coEvery
-import io.mockative.coVerify
-import io.mockative.every
-import io.mockative.mock
-import io.mockative.verify
+import dev.mokkery.answering.returns
+import dev.mokkery.every
+import dev.mokkery.everySuspend
+import dev.mokkery.matcher.any
+import dev.mokkery.mock
+import dev.mokkery.verify
+import dev.mokkery.verifySuspend
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 
-@Ignore
 @OptIn(ExperimentalCoroutinesApi::class)
 class CreateDiaryViewModelTest {
 
-    @Mock
-    private val diaryAI: DiaryAI = mock(DiaryAI::class)
+    private val diaryAI: DiaryAI = mock<DiaryAI>()
 
-    @Mock
-    private val dataSource: DataSource = mock(DataSource::class)
+    private val dataSource: DataSource = mock<DataSource>()
 
     private lateinit var createDiaryViewModel: CreateDiaryViewModel
 
@@ -61,11 +58,12 @@ class CreateDiaryViewModelTest {
     @Test
     fun `Should save diary when user clicks on save button`() = runTest {
         val diary = Diary("Hello World!!")
-        coEvery { dataSource.add(diary) }.returns(100L)
+        everySuspend { dataSource.add(diary) }.returns(100L)
 
         createDiaryViewModel.saveDiary(diary)
+        delay(100)
 
-        coVerify { dataSource.add(diary) }
+        verifySuspend { dataSource.add(diary) }
     }
 
     @Test

@@ -13,14 +13,13 @@ import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
 import com.foreverrafs.superdiary.data.diaryai.OpenDiaryAI
-import io.mockative.Mock
-import io.mockative.any
-import io.mockative.coEvery
-import io.mockative.every
-import io.mockative.mock
+import dev.mokkery.answering.returns
+import dev.mokkery.every
+import dev.mokkery.everySuspend
+import dev.mokkery.matcher.any
+import dev.mokkery.mock
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,11 +28,9 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 
-@Ignore
 @OptIn(ExperimentalCoroutinesApi::class)
 class OpenDiaryAiTest {
-    @Mock
-    private val openAI: OpenAI = mock(OpenAI::class)
+    private val openAI: OpenAI = mock<OpenAI>()
 
     private val openDiaryAI = OpenDiaryAI(openAI)
 
@@ -85,7 +82,7 @@ class OpenDiaryAiTest {
 
     @Test
     fun `Should query diary entries`() = runTest {
-        coEvery { openAI.chatCompletion(any(), any()) }.returns(chatCompletion)
+        everySuspend { openAI.chatCompletion(any(), any()) }.returns(chatCompletion)
 
         val response = openDiaryAI.queryDiaries(emptyList())
         assertThat(response).isNotEmpty()
