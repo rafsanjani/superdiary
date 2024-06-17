@@ -24,7 +24,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2024.06.02")
+            from("io.github.rafsanjani:versions:2024.06.16")
             version("kover", "0.7.6")
         }
     }
