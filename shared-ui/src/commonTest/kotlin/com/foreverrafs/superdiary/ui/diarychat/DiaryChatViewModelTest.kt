@@ -6,6 +6,7 @@ import assertk.assertions.hasSize
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
@@ -44,6 +45,7 @@ class DiaryChatViewModelTest {
         diaryChatViewModel = DiaryChatViewModel(
             diaryAI,
             GetAllDiariesUseCase(dataSource, TestAppDispatchers),
+            AggregateLogger(emptyList()),
         )
     }
 

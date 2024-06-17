@@ -98,7 +98,7 @@ class DashboardViewModel(
                 val newState = func(currentState)
 
                 logger.d(Tag) {
-                    "Updating content state from $currentState to $newState"
+                    "updateContentState: Updating content state"
                 }
 
                 newState
@@ -113,7 +113,7 @@ class DashboardViewModel(
 
     private fun generateWeeklySummary(diaries: List<Diary>) = screenModelScope.launch {
         logger.i(Tag) {
-            "Fetching weekly summary for ${diaries.size} entries"
+            "generateWeeklySummary: Fetching weekly summary for ${diaries.size} entries"
         }
         val latestWeeklySummary = getWeeklySummaryUseCase()
 
@@ -121,6 +121,10 @@ class DashboardViewModel(
             val difference = Clock.System.now() - latestWeeklySummary.date
 
             if (difference.inWholeDays <= 7L) {
+                logger.i(Tag) {
+                    "generateWeeklySummary: Weekly summary was generated ${difference.inWholeDays} days ago." +
+                        " Skip generation for now"
+                }
                 updateContentState { currentState ->
                     currentState.copy(weeklySummary = latestWeeklySummary.summary)
                 }
@@ -131,7 +135,7 @@ class DashboardViewModel(
         diaryAI.getWeeklySummary(diaries)
             .catch { exception ->
                 logger.e(Tag, exception) {
-                    "An error occurred generating weekly summary"
+                    "generateWeeklySummary: An error occurred generating weekly summary"
                 }
             }.onCompletion {
                 (mutableState.value as? DashboardScreenState.Content)?.let { appState ->
@@ -143,7 +147,7 @@ class DashboardViewModel(
                     }
 
                     logger.d(Tag) {
-                        "Weekly summary generated!"
+                        "generateWeeklySummary: Weekly summary generated!"
                     }
                     appState.weeklySummary?.let { summary ->
                         addWeeklySummaryUseCase(
@@ -166,13 +170,13 @@ class DashboardViewModel(
 
     private fun calculateStreak(diaries: List<Diary>) = screenModelScope.launch {
         logger.i(Tag) {
-            "Calculating streak for ${diaries.size} entries"
+            "calculateStreak: Calculating streak for ${diaries.size} entries"
         }
         val streak = calculateStreakUseCase(diaries)
         val bestStreak = calculateBestStreakUseCase(diaries)
 
         logger.i(Tag) {
-            "Streak: $streak\nBest Streak: $bestStreak"
+            "calculateStreak: Streak: ${streak.count}\nBest Streak: ${bestStreak.count}"
         }
 
         mutableState.update { state ->
@@ -191,14 +195,20 @@ class DashboardViewModel(
         return when (result) {
             is Result.Failure -> {
                 logger.e(Tag, result.error) {
-                    "Error toggling favorite"
+                    "toggleFavorite: Error adding/removing favorite for diary ${diary.id}"
                 }
                 false
             }
 
             is Result.Success -> {
                 logger.d(Tag) {
-                    "Favorite toggled: $diary"
+                    val message = if (diary.isFavorite) {
+                        "toggleFavorite: Successfully added diary: ${diary.id} to favorites"
+                    } else {
+                        "toggleFavorite: Successfully removed diary: ${diary.id} from favorites"
+                    }
+
+                    message
                 }
                 result.data
             }
@@ -207,7 +217,7 @@ class DashboardViewModel(
 
     fun updateSettings(settings: DiarySettings) = screenModelScope.launch {
         logger.i(Tag) {
-            "Updating settings with values $settings"
+            "updateSettings: Updating settings from ${preference.snapshot} with values $settings"
         }
         preference.save(settings)
     }

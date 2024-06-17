@@ -111,8 +111,11 @@ fun DashboardScreenContent(
                     WEEKLY_SUMMARY_ID -> {
                         onChangeSettings(settings.copy(showWeeklySummary = false))
                     }
+
+                    LATEST_ENTRIES_ID -> {
+                        onChangeSettings(settings.copy(showLatestEntries = false))
+                    }
                 }
-                dashboardItems.remove(dashboardItems.firstOrNull { it.id == content.id })
             }
         }
     }
@@ -145,49 +148,53 @@ private fun dashboardItems(
     }
 
     if (settings.showWeeklySummary) {
-        DashboardSection(
-            content = { onDismiss ->
-                WeeklySummaryCard(
-                    modifier = Modifier
-                        .animateItemPlacement()
-                        .fillMaxWidth()
-                        .heightIn(max = 200.dp, min = 150.dp),
-                    summary = state.weeklySummary,
-                    onDismiss = onDismiss,
-                )
-            },
-            id = WEEKLY_SUMMARY_ID,
+        add(
+            DashboardSection(
+                content = { onDismiss ->
+                    WeeklySummaryCard(
+                        modifier = Modifier
+                            .animateItemPlacement()
+                            .fillMaxWidth()
+                            .heightIn(max = 200.dp, min = 150.dp),
+                        summary = state.weeklySummary,
+                        onDismiss = onDismiss,
+                    )
+                },
+                id = WEEKLY_SUMMARY_ID,
+            ),
         )
     }
 
     if (settings.showLatestEntries) {
-        DashboardSection(
-            content = {
-                val itemCount = if (settings.showWeeklySummary) 2 else 4
+        add(
+            DashboardSection(
+                content = {
+                    val itemCount = if (settings.showWeeklySummary) 2 else 4
 
-                if (state.latestEntries.isNotEmpty()) {
-                    LatestEntries(
-                        modifier = Modifier
-                            .animateItemPlacement(),
-                        diaries = state.latestEntries.take(itemCount),
-                        onSeeAll = onSeeAll,
-                        onDiaryClick = onDiaryClicked,
-                        onToggleFavorite = onToggleFavorite,
-                    )
-                } else {
-                    Button(
-                        onClick = onAddEntry,
-                        modifier = Modifier
-                            .testTag("button_add_entry"),
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.label_add_entry),
-                            style = MaterialTheme.typography.labelMedium,
+                    if (state.latestEntries.isNotEmpty()) {
+                        LatestEntries(
+                            modifier = Modifier
+                                .animateItemPlacement(),
+                            diaries = state.latestEntries.take(itemCount),
+                            onSeeAll = onSeeAll,
+                            onDiaryClick = onDiaryClicked,
+                            onToggleFavorite = onToggleFavorite,
                         )
+                    } else {
+                        Button(
+                            onClick = onAddEntry,
+                            modifier = Modifier
+                                .testTag("button_add_entry"),
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.label_add_entry),
+                                style = MaterialTheme.typography.labelMedium,
+                            )
+                        }
                     }
-                }
-            },
-            id = LATEST_ENTRIES_ID,
+                },
+                id = LATEST_ENTRIES_ID,
+            ),
         )
     }
 }

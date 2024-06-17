@@ -43,6 +43,10 @@
             android:name="io.sentry.traces.profiling.sample-rate"
             android:value="1.0" />
 
+        <!-- Set the environment    -->
+        <meta-data
+            android:name="io.sentry.environment"
+            android:value="${sentryEnvironment}" />
 
         <profileable
             android:shell="true"
