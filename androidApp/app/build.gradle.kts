@@ -73,13 +73,8 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
-        val sentryBaseUrl = project.findProperty("sentryBaseUrl") as? String
-            ?: System.getenv("sentryBaseUrl")
-            ?: throw IllegalArgumentException("Sentry base url hasn't been set")
-
-        manifestPlaceholders["sentryBaseUrl"] = sentryBaseUrl
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -87,6 +82,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {
@@ -100,10 +96,28 @@ android {
     )
 
     buildTypes {
-        getByName("release") {
+        release {
             signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = true
             proguardFile("proguard-rules.pro")
+
+            val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_RELEASE")
+                ?: throw IllegalArgumentException(
+                    "Sentry base url hasn't been set. Please add SENTRY_BASE_URL_RELEASE to your environment variables",
+                )
+
+            manifestPlaceholders["sentryBaseUrl"] = sentryBaseUrl
+            manifestPlaceholders["sentryEnvironment"] = "production"
+        }
+
+        debug {
+            val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_DEBUG")
+                ?: throw IllegalArgumentException(
+                    "Sentry base url hasn't been set. Please add SENTRY_BASE_URL_DEBUG to your environment variables",
+                )
+
+            manifestPlaceholders["sentryBaseUrl"] = sentryBaseUrl
+            manifestPlaceholders["sentryEnvironment"] = "debug"
         }
         create("benchmark") {
             initWith(buildTypes.getByName("release"))
@@ -113,6 +127,27 @@ android {
     }
 }
 
+tasks.getByName("generateResourceAccessorsForAndroidMain")
+    .dependsOn(
+        "sentryCollectSourcesRelease",
+        "generateSentryBundleIdRelease",
+        "generateSentryBundleIdDebug",
+        "generateSentryBundleIdBenchmark",
+    )
+
 sentry {
+    val sentryToken = System.getenv("SENTRY_AUTH_TOKEN")
+        ?: throw IllegalArgumentException(
+            "Sentry token hasn't been set. Please add SENTRY_AUTH_TOKEN to your environment variables",
+        )
+
     org.set("rafsanjani-inc")
+    projectName.set("superdiary-debug")
+    authToken.set(sentryToken)
+
+    // this will upload your source code to Sentry to show it as part of the stack traces
+    // disable if you don't want to expose your sources
+    includeSourceContext.set(true)
+    autoUploadProguardMapping.set(true)
+    uploadNativeSymbols.set(true)
 }

@@ -4,7 +4,7 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import com.foreverrafs.superdiary.TestAppDispatchers
-import com.foreverrafs.superdiary.core.logging.Logger
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.DeleteDiaryUseCase
@@ -48,7 +48,7 @@ class DiaryListViewModelTest {
         searchDiaryByDateUseCase = SearchDiaryByDateUseCase(dataSource, TestAppDispatchers),
         updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
         deleteDiaryUseCase = DeleteDiaryUseCase(dataSource, TestAppDispatchers),
-        logger = Logger,
+        logger = AggregateLogger(emptyList()),
     )
 
     private val today = Clock.System.now()

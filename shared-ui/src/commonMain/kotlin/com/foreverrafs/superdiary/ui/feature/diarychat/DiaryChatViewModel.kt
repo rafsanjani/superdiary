@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.ui.feature.diarychat
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
@@ -12,6 +13,7 @@ import kotlinx.coroutines.launch
 class DiaryChatViewModel(
     private val diaryAI: DiaryAI,
     private val getAllDiariesUseCase: GetAllDiariesUseCase,
+    private val logger: AggregateLogger,
 ) : StateScreenModel<DiaryChatViewModel.DiaryChatViewState>(DiaryChatViewState()) {
     data class DiaryChatViewState(
         val isResponding: Boolean = false,
@@ -25,11 +27,14 @@ class DiaryChatViewModel(
         ),
     )
 
-    private fun <T> List<T>.append(item: T): List<T> {
-        return this.toMutableList().also { it.add(item) }.toList()
-    }
+    private fun <T> List<T>.append(item: T): List<T> =
+        this.toMutableList().also { it.add(item) }.toList()
 
     fun queryDiaries(query: String) = screenModelScope.launch {
+        logger.d(TAG) {
+            "queryDiaries: Querying all diaries for: $query"
+        }
+
         // Let's grab all the messages in the system
         val diaryChatList = mutableState.value.messages.toMutableList()
 
@@ -51,8 +56,8 @@ class DiaryChatViewModel(
                 diaryChatList.add(
                     DiaryChatMessage.System(
                         """
-                            You are Journal AI, I will provide you a list of journal entries and their dates and you will 
-                            respond to follow up questions based on this information. You are not supposed to respond to 
+                            You are Journal AI, I will provide you a list of journal entries and their dates and you will
+                            respond to follow up questions based on this information. You are not supposed to respond to
                             any questions outside of the scope of the data you have been given under any circumstances.
                             Your responses should be very concise and if you don't have the answer to a question, simply let
                             the user know that you are only able to assist with information contained in their entries.
@@ -72,6 +77,10 @@ class DiaryChatViewModel(
             )
 
             mutableState.update { state ->
+                logger.d(TAG) {
+                    "queryDiaries: Finished responding to query"
+                }
+
                 diaryChatList.add(DiaryChatMessage.DiaryAI(content = response))
 
                 state.copy(
@@ -80,5 +89,9 @@ class DiaryChatViewModel(
                 )
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "DiaryChatViewModel"
     }
 }

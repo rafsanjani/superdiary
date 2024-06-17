@@ -2,7 +2,7 @@ package com.foreverrafs.superdiary.ui.feature.diarylist.model
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.foreverrafs.superdiary.core.logging.Logger
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.DeleteDiaryUseCase
@@ -23,7 +23,7 @@ class DiaryListViewModel(
     private val searchDiaryByDateUseCase: SearchDiaryByDateUseCase,
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
     private val updateDiaryUseCase: UpdateDiaryUseCase,
-    private val logger: Logger,
+    private val logger: AggregateLogger,
 ) : StateScreenModel<DiaryListViewState>(DiaryListViewState.Loading) {
 
     fun observeDiaries() = screenModelScope.launch {
@@ -71,6 +71,9 @@ class DiaryListViewModel(
 
     fun filterByDateAndEntry(date: LocalDate, entry: String) = screenModelScope.launch {
         searchDiaryByDateUseCase(date.toInstant()).collect { diaries ->
+            logger.d(Tag) {
+                "Filtered diaries by Date and Entry $date $entry"
+            }
             mutableState.update {
                 DiaryListViewState.Content(
                     diaries = diaries.filter { it.entry.contains(entry, false) },
@@ -80,11 +83,9 @@ class DiaryListViewModel(
         }
     }
 
-    suspend fun deleteDiaries(diaries: List<Diary>): Boolean {
-        return when (val result = deleteDiaryUseCase(diaries)) {
-            is Result.Success -> result.data == diaries.size
-            is Result.Failure -> false
-        }
+    suspend fun deleteDiaries(diaries: List<Diary>): Boolean = when (val result = deleteDiaryUseCase(diaries)) {
+        is Result.Success -> result.data == diaries.size
+        is Result.Failure -> false
     }
 
     suspend fun toggleFavorite(diary: Diary): Boolean {

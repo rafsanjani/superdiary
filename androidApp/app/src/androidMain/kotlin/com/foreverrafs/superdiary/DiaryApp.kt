@@ -11,6 +11,10 @@ import org.koin.core.context.startKoin
 class DiaryApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        initializeKoin()
+    }
+
+    private fun initializeKoin() {
         startKoin {
             androidContext(this@DiaryApp)
 
