@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.testLogger)
     kotlin("multiplatform")
     id("kotlin-parcelize")
-    id("dev.mokkery") version "2.0.0"
+    id("dev.mokkery") version "2.1.0"
 
     // Build logic
     id("com.superdiary.kover")
