@@ -1,5 +1,6 @@
 @file:Suppress("UnusedPrivateProperty")
 
+import com.superdiary.gradle.codequality.koverReport
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 
