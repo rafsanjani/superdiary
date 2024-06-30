@@ -1,7 +1,7 @@
 package com.superdiary.gradle.codequality
 
 import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
-import kotlinx.kover.gradle.plugin.dsl.KoverReportExtension
+import kotlinx.kover.gradle.plugin.dsl.KoverReportsConfig
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -13,14 +13,13 @@ class KoverConventionPlugin : Plugin<Project> {
 
             kover {
                 useJacoco("0.8.10")
-            }
-
-            koverReport {
-                filters {
-                    excludes {
-                        packages(KoverExclusionList.packages)
-                        classes(KoverExclusionList.classes)
-                        files(KoverExclusionList.files)
+                reports {
+                    filters {
+                        excludes {
+                            packages(KoverExclusionList.packages)
+                            classes(KoverExclusionList.classes)
+                            files(KoverExclusionList.files)
+                        }
                     }
                 }
             }
@@ -28,12 +27,15 @@ class KoverConventionPlugin : Plugin<Project> {
     }
 }
 
-private fun Project.koverReport(action: KoverReportExtension.() -> Unit) =
-    extensions.configure<KoverReportExtension>(
-        action,
-    )
-
-private fun Project.kover(action: KoverProjectExtension.() -> Unit) =
+private fun Project.kover(action: KoverProjectExtension.() -> Unit): Unit =
     extensions.configure<KoverProjectExtension>(
         action,
     )
+
+fun Project.koverReport(action: KoverReportsConfig.() -> Unit) {
+    extensions.configure<KoverProjectExtension> {
+        reports {
+            action()
+        }
+    }
+}
