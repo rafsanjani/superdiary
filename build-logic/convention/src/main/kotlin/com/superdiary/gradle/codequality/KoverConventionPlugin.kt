@@ -12,7 +12,7 @@ class KoverConventionPlugin : Plugin<Project> {
             pluginManager.apply("org.jetbrains.kotlinx.kover")
 
             kover {
-                useJacoco("0.8.10")
+                useJacoco("0.8.12")
                 reports {
                     filters {
                         excludes {
