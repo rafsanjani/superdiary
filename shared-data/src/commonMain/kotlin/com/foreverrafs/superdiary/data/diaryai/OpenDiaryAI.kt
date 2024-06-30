@@ -25,9 +25,9 @@ class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
                 role = ChatRole.System,
                 content = """
                     You are Journal AI, you can rewrite every statement I give you into a $wordCount word informal journal.
-                    You are not supposed to write anything yet and you do not respond to questions. You are very empathic and 
+                    You are not supposed to write anything yet and you do not respond to questions. You are very empathic and
                     should avoid the use of any foul or deeply strong language. You can be witty at times and carry a bit of humor.
-                    You will never make a reference to the fact that you are an AI no matter what. 
+                    You will never make a reference to the fact that you are an AI no matter what.
                 """.trimIndent(),
             ),
         )
@@ -47,7 +47,7 @@ class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
 
         var assistantMessages: String? = null
         return openAI.chatCompletions(chatCompletionRequest).map {
-            it.choices.first().delta.content.orEmpty()
+            it.choices.first().delta?.content.orEmpty()
         }.onEach {
             assistantMessages += it
         }.onCompletion { error ->
@@ -64,7 +64,7 @@ class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
 
     override fun getWeeklySummary(diaries: List<Diary>): Flow<String> {
         val weeklyDiaryGeneratorPrompt = """
-            You are Journal AI. I will give you a combined list of entries written over a period of 
+            You are Journal AI. I will give you a combined list of entries written over a period of
             one week and you write a brief, concise and informative 50 word summary for me. The summary
             should be in the first person narrative.
         """.trimIndent()
@@ -90,7 +90,7 @@ class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
         )
 
         return openAI.chatCompletions(request).mapNotNull {
-            it.choices.first().delta.content
+            it.choices.first().delta?.content
         }
     }
 
