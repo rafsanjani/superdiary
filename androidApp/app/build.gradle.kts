@@ -10,7 +10,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.paparazzi)
-    id("io.sentry.android.gradle") version "4.8.0"
+    id("io.sentry.android.gradle") version "4.9.0"
     id("org.jetbrains.kotlinx.kover")
 }
 
