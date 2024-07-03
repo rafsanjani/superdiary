@@ -24,8 +24,8 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2024.06.30")
-            version("kover", "0.8.2")
+            from("io.github.rafsanjani:versions:2024.07.03")
+            version("compose-multiplatform", "1.7.0-alpha01")
         }
     }
 }

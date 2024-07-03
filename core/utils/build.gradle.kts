@@ -24,13 +24,12 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(libs.kotlin.coroutines.core)
-                implementation(libs.kotlin.coroutines.native)
+                implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlin.datetime)
                 implementation(libs.touchlab.stately)
                 implementation(libs.koin.core)
                 implementation(libs.kotlin.inject.runtime)
-                implementation(libs.kotlin.coroutines.test)
+                implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.touchlab.kermit)
             }
         }
@@ -45,7 +44,7 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(libs.junit)
                 implementation(libs.koin.test)
-                implementation(libs.kotlin.coroutines.test)
+                implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.turbine)
                 implementation(libs.assertk.common)
             }
@@ -53,7 +52,7 @@ kotlin {
 
         iosMain {
             dependencies {
-                implementation(libs.kotlin.coroutines.core)
+                implementation(libs.kotlinx.coroutines.core)
             }
         }
     }

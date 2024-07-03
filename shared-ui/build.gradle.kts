@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.testLogger)
+    alias(libs.plugins.kotlin.serialization)
     kotlin("multiplatform")
     id("kotlin-parcelize")
     id("dev.mokkery") version "2.1.1"
@@ -14,7 +15,7 @@ plugins {
     id("com.superdiary.kover")
 }
 
-kotlin.sourceSets.all{
+kotlin.sourceSets.all {
     languageSettings.enableLanguageFeature("ExplicitBackingFields")
 }
 
@@ -69,6 +70,8 @@ kotlin {
                 implementation(libs.touchlab.stately)
                 implementation(libs.androidx.datastore.preferences)
                 implementation(libs.androidx.datastore.core)
+                implementation(libs.jetbrains.navigation.compose)
+                implementation(libs.kotlinx.serialization.json)
             }
         }
 
@@ -78,7 +81,7 @@ kotlin {
                 implementation(libs.assertk.common)
                 implementation(libs.junit)
                 implementation(libs.koin.test)
-                implementation(libs.kotlin.coroutines.test)
+                implementation(libs.kotlinx.coroutines.test)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(
                     compose.uiTest,
@@ -94,7 +97,7 @@ kotlin {
                 implementation(libs.cashapp.paparazzi)
                 implementation(libs.koin.android)
                 implementation(libs.koin.test)
-                implementation(libs.kotlin.coroutines.test)
+                implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.mockk)
             }
         }
@@ -103,7 +106,7 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(libs.koin.jvm)
-                implementation(libs.kotlin.coroutines.swing)
+                implementation(libs.kotlinx.coroutines.swing)
             }
         }
 

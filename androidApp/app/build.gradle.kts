@@ -50,6 +50,10 @@ kotlin {
                 implementation(projects.sharedData)
                 implementation(projects.core.analytics)
                 implementation(libs.koin.android)
+                val nav_version = "2.8.0-beta04"
+
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
+                implementation("androidx.navigation:navigation-compose:$nav_version")
             }
         }
 
@@ -58,7 +62,7 @@ kotlin {
                 implementation(libs.cashapp.paparazzi)
                 implementation(libs.koin.android)
                 implementation(libs.koin.test)
-                implementation(libs.kotlin.coroutines.test)
+                implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.mockk)
                 implementation(libs.google.testparameterinjector)
             }
