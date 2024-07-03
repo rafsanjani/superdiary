@@ -327,7 +327,7 @@ fun DiaryList(
                         }
 
                         DiaryHeader(
-                            modifier = Modifier.animateItemPlacement(),
+                            modifier = Modifier.animateItem(),
                             text = date.label,
                             inSelectionMode = inSelectionMode,
                             selected = isGroupSelected,
@@ -353,8 +353,7 @@ fun DiaryList(
                             diary = diary,
                             selected = diary.id in selectedIds,
                             inSelectionMode = inSelectionMode,
-                            modifier = Modifier
-                                .animateItemPlacement()
+                            modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null)
                                 .combinedClickable(
                                     onClick = {
                                         if (inSelectionMode) {

@@ -80,18 +80,16 @@ fun DashboardScreenContent(
     if (state !is DashboardViewModel.DashboardScreenState.Content) return
     val navigator = LocalScreenNavigator.current
 
-    val dashboardItems = remember(state) {
-        dashboardItems(
-            state = state,
-            onAddEntry = onAddEntry,
-            onSeeAll = onSeeAll,
-            onDiaryClicked = {
-                navigator.push(DetailScreen(it))
-            },
-            onToggleFavorite = onToggleFavorite,
-            settings = settings,
-        )
-    }
+    val dashboardItems = dashboardItems(
+        state = state,
+        onAddEntry = onAddEntry,
+        onSeeAll = onSeeAll,
+        onDiaryClicked = {
+            navigator.push(DetailScreen(it))
+        },
+        onToggleFavorite = onToggleFavorite,
+        settings = settings,
+    )
 
     LazyColumn(
         modifier = modifier
@@ -136,8 +134,7 @@ private fun dashboardItems(
             DashboardSection(
                 content = {
                     AtAGlance(
-                        modifier = Modifier
-                            .animateItemPlacement()
+                        modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null)
                             .fillMaxWidth(),
                         state = state,
                     )
@@ -152,8 +149,7 @@ private fun dashboardItems(
             DashboardSection(
                 content = { onDismiss ->
                     WeeklySummaryCard(
-                        modifier = Modifier
-                            .animateItemPlacement()
+                        modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null)
                             .fillMaxWidth()
                             .heightIn(max = 200.dp, min = 150.dp),
                         summary = state.weeklySummary,
@@ -173,8 +169,7 @@ private fun dashboardItems(
 
                     if (state.latestEntries.isNotEmpty()) {
                         LatestEntries(
-                            modifier = Modifier
-                                .animateItemPlacement(),
+                            modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
                             diaries = state.latestEntries.take(itemCount),
                             onSeeAll = onSeeAll,
                             onDiaryClick = onDiaryClicked,

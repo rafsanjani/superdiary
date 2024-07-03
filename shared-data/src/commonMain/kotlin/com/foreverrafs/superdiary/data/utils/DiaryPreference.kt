@@ -52,15 +52,12 @@ class DiaryPreferenceImpl private constructor(
         get() {
             val prefs = runBlocking { dataStore.data.first() }
 
-            val exception =
-                IllegalStateException("Attempting to access snapshot without saving first")
-
+            // Default to true if the preference is not set
             return DiarySettings(
-                isFirstLaunch = prefs[isFirstLaunchKey]
-                    ?: throw exception,
-                showWeeklySummary = prefs[showWeeklySummaryKey] ?: throw exception,
-                showAtAGlance = prefs[showAtAGlanceKey] ?: throw exception,
-                showLatestEntries = prefs[showLatestEntriesKey] ?: throw exception,
+                isFirstLaunch = prefs[isFirstLaunchKey] ?: true,
+                showWeeklySummary = prefs[showWeeklySummaryKey] ?: true,
+                showAtAGlance = prefs[showAtAGlanceKey] ?: true,
+                showLatestEntries = prefs[showLatestEntriesKey] ?: true,
             )
         }
 
