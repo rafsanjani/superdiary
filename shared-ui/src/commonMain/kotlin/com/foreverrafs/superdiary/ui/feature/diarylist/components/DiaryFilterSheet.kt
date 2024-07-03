@@ -62,7 +62,6 @@ fun DiaryFilterSheet(
             initialValue = SheetValue.Hidden,
             skipHiddenState = false,
         ),
-        windowInsets = WindowInsets(0),
         containerColor = MaterialTheme.colorScheme.background,
         modifier = modifier,
     ) {
