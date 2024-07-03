@@ -41,14 +41,13 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(libs.kotlin.coroutines.core)
-                implementation(libs.kotlin.coroutines.native)
+                implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlin.datetime)
                 implementation(libs.touchlab.stately)
                 implementation(libs.koin.core)
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.square.sqldelight.coroutinesExt)
-                implementation(libs.kotlin.coroutines.test)
+                implementation(libs.kotlinx.coroutines.test)
                 implementation(projects.core.utils)
                 implementation(projects.core.analytics)
                 implementation(projects.core.logging)
@@ -79,7 +78,7 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(libs.junit)
                 implementation(libs.koin.test)
-                implementation(libs.kotlin.coroutines.test)
+                implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.turbine)
                 implementation(libs.assertk.common)
             }
@@ -89,7 +88,7 @@ kotlin {
         iosMain {
             dependencies {
                 implementation(libs.square.sqldelight.driver.native)
-                implementation(libs.kotlin.coroutines.core)
+                implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.ktor.client.darwin)
                 implementation(libs.ktor.client.ios)
             }

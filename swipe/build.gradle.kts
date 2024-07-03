@@ -35,7 +35,7 @@ kotlin {
                 implementation(libs.assertk.common)
                 implementation(libs.junit)
                 implementation(libs.turbine)
-                implementation(libs.kotlin.coroutines.test)
+                implementation(libs.kotlinx.coroutines.test)
             }
         }
     }
