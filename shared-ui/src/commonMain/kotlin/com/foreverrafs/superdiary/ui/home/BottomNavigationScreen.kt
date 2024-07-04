@@ -48,7 +48,10 @@ object BottomNavigationScreen {
         rootNavController: NavHostController,
         modifier: Modifier = Modifier,
     ) {
+        // This nav controller is used to navigate between the tabs
         val tabNavController = rememberNavController()
+
+        // This snackbar host state is used to show snackbars on the main screen
         val snackbarHostState = remember { SnackbarHostState() }
 
         Scaffold(
@@ -68,7 +71,10 @@ object BottomNavigationScreen {
                         startDestination = DashboardTab,
                     ) {
                         composable<DashboardTab> {
-                            DashboardTab.Content(rootNavController)
+                            DashboardTab.Content(
+                                navController = rootNavController,
+                                snackbarHostState = snackbarHostState,
+                            )
                         }
 
                         composable<FavoriteTab> {
