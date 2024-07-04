@@ -1,38 +1,30 @@
 package com.foreverrafs.superdiary.ui.home
 
-// import com.foreverrafs.superdiary.ui.LocalRootSnackbarHostState
-import androidx.compose.foundation.layout.RowScope
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontWeight
-import androidx.navigation.NavController
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
+import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardTab
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatTab
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteTab
-import com.foreverrafs.superdiary.ui.navigation.SuperDiaryTab
 import kotlinx.serialization.Serializable
 
 /**
@@ -70,21 +62,21 @@ object BottomNavigationScreen {
                         navController = tabNavController,
                         startDestination = DashboardTab,
                     ) {
-                        composable<DashboardTab> {
+                        animatedComposable<DashboardTab> {
                             DashboardTab.Content(
                                 navController = rootNavController,
                                 snackbarHostState = snackbarHostState,
                             )
                         }
 
-                        composable<FavoriteTab> {
+                        animatedComposable<FavoriteTab> {
                             FavoriteTab.Content(
                                 snackbarHostState = snackbarHostState,
                                 navController = rootNavController,
                             )
                         }
 
-                        composable<DiaryChatTab> {
+                        animatedComposable<DiaryChatTab> {
                             DiaryChatTab.Content()
                         }
                     }
@@ -93,58 +85,27 @@ object BottomNavigationScreen {
         }
     }
 
-    @Composable
-    private fun SuperDiaryBottomBar(navController: NavController) {
-        val items = listOf(DashboardTab, FavoriteTab, DiaryChatTab)
-        var selectedItem by remember { mutableStateOf<SuperDiaryTab>(DashboardTab) }
+    private inline fun <reified T : Any> NavGraphBuilder.animatedComposable(
+        noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
+    ) = composable<T>(
+        content = content,
+        enterTransition = { enterTransition() },
+        exitTransition = { exitTransition() },
+        popEnterTransition = { enterTransition() },
+        popExitTransition = { exitTransition() },
+    )
 
-        NavigationBar {
-            items.forEach { tab ->
-                BottomNavigationItem(
-                    tab = tab,
-                    selected = selectedItem == tab,
-                ) {
-                    selectedItem = tab
-                    navController.navigate(tab) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            }
-        }
-    }
+    private fun enterTransition() = fadeIn(
+        animationSpec = tween(
+            300,
+            easing = LinearEasing,
+        ),
+    )
 
-    @Composable
-    private fun RowScope.BottomNavigationItem(
-        tab: SuperDiaryTab,
-        selected: Boolean,
-        onClick: () -> Unit,
-    ) {
-        NavigationBarItem(
-            modifier = Modifier.testTag(tab.options.title),
-            selected = selected,
-            onClick = onClick,
-            icon = {
-                Icon(
-                    painter = if (selected) {
-                        tab.selectedIcon
-                    } else {
-                        tab.options.icon
-                            ?: rememberVectorPainter(Icons.Default.Home)
-                    },
-                    contentDescription = tab.options.title,
-                )
-            },
-            label = {
-                Text(
-                    text = tab.options.title,
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-                )
-            },
-        )
-    }
+    private fun exitTransition() = fadeOut(
+        animationSpec = tween(
+            300,
+            easing = LinearEasing,
+        ),
+    )
 }
