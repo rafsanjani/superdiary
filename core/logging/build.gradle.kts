@@ -36,7 +36,7 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(libs.koin.android)
-                implementation("io.sentry:sentry-android:7.10.0")
+                implementation(libs.sentry.android)
             }
         }
 
