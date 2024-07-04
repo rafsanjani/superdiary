@@ -5,9 +5,12 @@ import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.DeleteDiaryUseCase
+import com.foreverrafs.superdiary.data.usecase.GetDiaryByIdUseCase
+import com.foreverrafs.superdiary.ui.feature.details.DeleteDiaryState
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
 import dev.mokkery.answering.returns
 import dev.mokkery.everySuspend
@@ -32,7 +35,17 @@ class DetailsViewModelTest {
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
-        detailsViewModel = DetailsViewModel(DeleteDiaryUseCase(dataSource, TestAppDispatchers))
+        detailsViewModel = DetailsViewModel(
+            DeleteDiaryUseCase(
+                dataSource = dataSource,
+                dispatchers = TestAppDispatchers,
+            ),
+            getDiaryByIdUseCase = GetDiaryByIdUseCase(
+                dataSource = dataSource,
+                dispatchers = TestAppDispatchers,
+            ),
+            logger = AggregateLogger(emptyList()),
+        )
     }
 
     @AfterTest
@@ -47,7 +60,7 @@ class DetailsViewModelTest {
         everySuspend { dataSource.delete(diary) }.returns(1)
         everySuspend { dataSource.delete(listOf(diary)) }.returns(1)
 
-        detailsViewModel.state.test {
+        detailsViewModel.deleteDiaryState.test {
             detailsViewModel.deleteDiary(diary)
 
             // Skip the initial null idle state
@@ -55,7 +68,7 @@ class DetailsViewModelTest {
             val state = awaitItem()
             assertThat(state)
                 .isNotNull()
-                .isInstanceOf<DetailsViewModel.DeleteDiaryState.Success>()
+                .isInstanceOf<DeleteDiaryState.Success>()
         }
     }
 
@@ -66,17 +79,14 @@ class DetailsViewModelTest {
         everySuspend { dataSource.delete(diary) }.returns(0)
         everySuspend { dataSource.delete(listOf(diary)) }.returns(0)
 
-        detailsViewModel.state.test {
+        detailsViewModel.deleteDiaryState.test {
             detailsViewModel.deleteDiary(diary)
-
-            // Skip initial null idle state
-            skipItems(1)
 
             val state = awaitItem()
             cancelAndIgnoreRemainingEvents()
             assertThat(state)
                 .isNotNull()
-                .isInstanceOf<DetailsViewModel.DeleteDiaryState.Failure>()
+                .isInstanceOf<DeleteDiaryState.Failure>()
         }
     }
 }

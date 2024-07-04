@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.ui.feature.dashboard
 
+// import com.foreverrafs.superdiary.ui.LocalRootSnackbarHostState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.StackedBarChart
 import androidx.compose.material.icons.outlined.BarChart
@@ -10,23 +11,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import cafe.adriel.voyager.koin.getScreenModel
-import cafe.adriel.voyager.navigator.tab.TabOptions
+import androidx.navigation.NavHostController
 import com.foreverrafs.superdiary.data.utils.DiarySettings
-import com.foreverrafs.superdiary.ui.LocalRootSnackbarHostState
-import com.foreverrafs.superdiary.ui.LocalScreenNavigator
-import com.foreverrafs.superdiary.ui.SuperDiaryTab
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
+import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
+import com.foreverrafs.superdiary.ui.navigation.SuperDiaryTab
+import com.foreverrafs.superdiary.ui.navigation.TabOptions
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+import org.koin.compose.koinInject
 
+@Serializable
 object DashboardTab : SuperDiaryTab {
     @Composable
-    override fun Content() {
-        val navigator = LocalScreenNavigator.current
-        val rootSnackBarState = LocalRootSnackbarHostState.current
+    fun Content(navController: NavHostController) {
+//        val rootSnackBarState = LocalRootSnackbarHostState.current
 
-        val screenModel: DashboardViewModel = getScreenModel()
+        val screenModel: DashboardViewModel = koinInject()
         val screenState by screenModel.state.collectAsState()
         val coroutineScope = rememberCoroutineScope()
 
@@ -38,17 +40,28 @@ object DashboardTab : SuperDiaryTab {
 
         DashboardScreenContent(
             state = screenState,
-            onAddEntry = { navigator.push(CreateDiaryScreen()) },
-            onSeeAll = { navigator.push(DiaryListScreen) },
+            onAddEntry = {
+                navController.navigate(CreateDiaryScreen)
+            },
+            onSeeAll = {
+                navController.navigate(DiaryListScreen)
+            },
             onToggleFavorite = {
                 coroutineScope.launch {
                     if (screenModel.toggleFavorite(it)) {
-                        rootSnackBarState.showSnackbar("Favorite Updated")
+//                        rootSnackBarState.showSnackbar("Favorite Updated")
                     }
                 }
             },
             settings = settings,
-            onChangeSettings = screenModel::updateSettings
+            onChangeSettings = screenModel::updateSettings,
+            onDiaryClick = { diary ->
+                diary.id?.let {
+                    navController.navigate(
+                        DetailScreen(it.toString()),
+                    )
+                }
+            },
         )
     }
 

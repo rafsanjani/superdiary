@@ -3,7 +3,6 @@ package com.foreverrafs.superdiary.ui.feature.dashboard
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -46,8 +45,6 @@ import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.model.Streak
 import com.foreverrafs.superdiary.data.utils.DiarySettings
-import com.foreverrafs.superdiary.ui.LocalScreenNavigator
-import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryItem
 import com.foreverrafs.superdiary.ui.format
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -73,20 +70,18 @@ fun DashboardScreenContent(
     settings: DiarySettings,
     onChangeSettings: (DiarySettings) -> Unit,
     onAddEntry: () -> Unit,
+    onDiaryClick: (diary: Diary) -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
     modifier: Modifier = Modifier,
     onSeeAll: () -> Unit,
 ) {
     if (state !is DashboardViewModel.DashboardScreenState.Content) return
-    val navigator = LocalScreenNavigator.current
 
     val dashboardItems = dashboardItems(
         state = state,
         onAddEntry = onAddEntry,
         onSeeAll = onSeeAll,
-        onDiaryClicked = {
-            navigator.push(DetailScreen(it))
-        },
+        onDiaryClicked = onDiaryClick,
         onToggleFavorite = onToggleFavorite,
         settings = settings,
     )
@@ -119,7 +114,6 @@ fun DashboardScreenContent(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Suppress("LongMethod")
 private fun dashboardItems(
     state: DashboardViewModel.DashboardScreenState.Content,

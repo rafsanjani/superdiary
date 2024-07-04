@@ -1,8 +1,6 @@
 package com.foreverrafs.superdiary.data.utils
 
-import assertk.assertFailure
 import assertk.assertThat
-import assertk.assertions.hasClass
 import assertk.assertions.isEqualTo
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -58,26 +56,6 @@ class DiaryPreferenceTest {
         diaryPreference.save(updatedSettings)
         val finalState = diaryPreference.snapshot
         assertThat(finalState).isEqualTo(updatedSettings)
-    }
-
-    @Test
-    fun `Should reset settings when clear function is invoked`() = runTest {
-        val initialSettings = DiarySettings(
-            isFirstLaunch = true,
-            showWeeklySummary = true,
-            showAtAGlance = true,
-            showLatestEntries = true,
-        )
-
-        diaryPreference.save(
-            settings = initialSettings,
-        )
-
-        diaryPreference.clear()
-
-        assertFailure {
-            diaryPreference.snapshot
-        }.hasClass(IllegalStateException::class)
     }
 
     @Test

@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.data
 import app.cash.sqldelight.ColumnAdapter
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
+import app.cash.sqldelight.coroutines.mapToOneOrNull
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.model.WeeklySummary
 import com.foreverrafs.superdiary.database.SuperDiaryDatabase
@@ -61,6 +62,9 @@ class Database(databaseDriver: DatabaseDriver) {
             }
         }
     }
+
+    fun findById(id: Long): Flow<Diary?> =
+        queries.findById(id, mapper).asFlow().mapToOneOrNull(Dispatchers.Main)
 
     fun getAllDiaries(): Flow<List<Diary>> = queries.selectAll(
         mapper = mapper,

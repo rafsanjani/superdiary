@@ -42,6 +42,10 @@ class LocalDataSource(private val database: Database) : DataSource {
         return database.findByDateRange(from, to)
     }
 
+    override fun find(id: Long): Flow<Diary?> {
+        return database.findById(id)
+    }
+
     /**
      * The dates are currently stored on the database as very high precision
      * Long, making it almost impossible to perform equality checks.

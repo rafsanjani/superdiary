@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.buildKonfig)
     alias(libs.plugins.testLogger)
+    alias(libs.plugins.kotlin.serialization)
     id("kotlin-parcelize")
     kotlin("multiplatform")
     id("com.superdiary.kover")

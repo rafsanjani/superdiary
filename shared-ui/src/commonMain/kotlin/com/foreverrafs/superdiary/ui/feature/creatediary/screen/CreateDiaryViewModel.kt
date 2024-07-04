@@ -1,7 +1,7 @@
 package com.foreverrafs.superdiary.ui.feature.creatediary.screen
 
-import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.model.Diary
@@ -13,9 +13,9 @@ class CreateDiaryViewModel(
     private val addDiaryUseCase: AddDiaryUseCase,
     private val diaryAI: DiaryAI,
     private val logger: AggregateLogger,
-) : ScreenModel {
+) : ViewModel() {
 
-    fun saveDiary(diary: Diary) = screenModelScope.launch {
+    fun saveDiary(diary: Diary) = viewModelScope.launch {
         addDiaryUseCase(diary)
         logger.i(Tag) {
             "Diary entry successfully saved: $diary"

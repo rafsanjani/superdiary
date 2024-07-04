@@ -6,22 +6,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
+import androidx.navigation.NavController
 import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.ui.LocalScreenNavigator
+import com.foreverrafs.superdiary.ui.navigation.SuperDiaryScreen
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.serialization.Serializable
+import org.koin.compose.koinInject
 
-class CreateDiaryScreen : Screen {
+@Serializable
+object CreateDiaryScreen : SuperDiaryScreen {
 
     @Composable
-    override fun Content() {
-        val createDiaryScreenModel: CreateDiaryViewModel = getScreenModel()
-        val navigator = LocalScreenNavigator.current
+    fun Content(navController: NavController) {
+        val createDiaryScreenModel: CreateDiaryViewModel = koinInject()
+//        val navigator = LocalScreenNavigator.current
 
         val undoManager = rememberUndoableRichTextState()
         val richTextState = undoManager.richTextState
@@ -32,7 +34,7 @@ class CreateDiaryScreen : Screen {
         }
 
         CreateDiaryScreenContent(
-            onNavigateBack = navigator::pop,
+            onNavigateBack = navController::popBackStack,
             richTextState = richTextState,
             isGeneratingFromAi = isGeneratingFromAI,
             onGenerateAI = { prompt, wordCount ->
@@ -71,7 +73,7 @@ class CreateDiaryScreen : Screen {
                 ),
             )
 
-            navigator.pop()
+            navController.popBackStack()
         }
     }
 }

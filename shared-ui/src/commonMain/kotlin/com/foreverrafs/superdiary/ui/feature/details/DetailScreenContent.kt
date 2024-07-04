@@ -49,11 +49,13 @@ import superdiary.shared_ui.generated.resources.label_diary_deleted
 
 @Composable
 fun DetailScreenContent(
-    diary: Diary,
-    onDeleteDiary: () -> Unit,
-    modifier: Modifier = Modifier,
+    onDeleteDiary: (diary: Diary) -> Unit,
     onNavigateBack: () -> Unit,
+    viewState: DetailsViewState.DiarySelected,
+    modifier: Modifier = Modifier,
 ) {
+    val diary = viewState.diary
+
     val richTextState = rememberRichTextState().apply {
         setHtml(diary.entry)
     }
@@ -135,7 +137,8 @@ fun DetailScreenContent(
                     onDismiss = { showDeleteDialog = !showDeleteDialog },
                     onConfirm = {
                         showDeleteDialog = !showDeleteDialog
-                        onDeleteDiary()
+                        onDeleteDiary(diary)
+
                         coroutineScope.launch {
                             // Only show snackbar for 600 milliseconds
                             withTimeoutOrNull(600) {

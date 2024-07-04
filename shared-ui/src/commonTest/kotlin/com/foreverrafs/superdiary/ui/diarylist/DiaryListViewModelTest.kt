@@ -67,7 +67,7 @@ class DiaryListViewModelTest {
             flowOf(listOf(diary)),
         )
 
-        every { dataSource.find(any()) }.returns(
+        every { dataSource.find(any() as String) }.returns(
             flowOf(listOf(diary)),
         )
     }

@@ -1,27 +1,43 @@
 package com.foreverrafs.superdiary.ui.feature.details
 
-import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.DeleteDiaryUseCase
+import com.foreverrafs.superdiary.data.usecase.GetDiaryByIdUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+sealed interface DeleteDiaryState {
+    data class Success(val count: Int) : DeleteDiaryState
+    data object Failure : DeleteDiaryState
+}
+
+sealed interface DetailsViewState {
+    data class DiarySelected(val diary: Diary) : DetailsViewState
+}
+
 class DetailsViewModel(
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
-) :
-    StateScreenModel<DetailsViewModel.DeleteDiaryState?>(null) {
+    private val getDiaryByIdUseCase: GetDiaryByIdUseCase,
+    private val logger: AggregateLogger,
+) : ViewModel() {
 
-    sealed interface DeleteDiaryState {
-        data class Success(val count: Int) : DeleteDiaryState
-        data object Failure : DeleteDiaryState
-    }
+    private val _deleteDiaryState = MutableStateFlow<DeleteDiaryState>(DeleteDiaryState.Failure)
+    val deleteDiaryState: StateFlow<DeleteDiaryState> = _deleteDiaryState.asStateFlow()
 
-    fun deleteDiary(diary: Diary) = screenModelScope.launch {
+    private val _detailsViewState = MutableStateFlow<DetailsViewState?>(null)
+    val detailsViewState: StateFlow<DetailsViewState?> = _detailsViewState.asStateFlow()
+
+    fun deleteDiary(diary: Diary) = viewModelScope.launch {
         when (val result = deleteDiaryUseCase(listOf(diary))) {
             is Result.Failure -> {
-                mutableState.update {
+                _deleteDiaryState.update {
                     DeleteDiaryState.Failure
                 }
             }
@@ -30,15 +46,36 @@ class DetailsViewModel(
                 val deletedItems = result.data
 
                 if (deletedItems != 0) {
-                    mutableState.update {
+                    _deleteDiaryState.update {
                         DeleteDiaryState.Success(deletedItems)
                     }
                 } else {
-                    mutableState.update {
+                    _deleteDiaryState.update {
                         DeleteDiaryState.Failure
                     }
                 }
             }
         }
+    }
+
+    fun selectDiary(diaryId: Long) = viewModelScope.launch {
+        logger.d(TAG) {
+            "Selecting diary with id $diaryId"
+        }
+
+        getDiaryByIdUseCase(diaryId)
+            .collect { diary ->
+                _detailsViewState.update {
+                    if (diary != null) {
+                        DetailsViewState.DiarySelected(diary)
+                    } else {
+                        it
+                    }
+                }
+            }
+    }
+
+    companion object {
+        private const val TAG = "DetailsViewModel"
     }
 }

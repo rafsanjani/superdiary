@@ -22,6 +22,7 @@ import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScree
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreenContent
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.details.DetailScreenContent
+import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
@@ -302,6 +303,7 @@ private fun DashboardPreview() {
             onToggleFavorite = {},
             settings = DiarySettings.Empty,
             onChangeSettings = {},
+            onDiaryClick = {},
         )
     }
 }
@@ -312,10 +314,11 @@ private fun DetailPreview() {
     SuperdiaryTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             DetailScreenContent(
-                onNavigateBack = {},
                 onDeleteDiary = {},
-                diary = Diary(
-                    entry = """
+                onNavigateBack = {},
+                viewState = DetailsViewState.DiarySelected(
+                    Diary(
+                        entry = """
                             <p style="text-align:justify;">Hello Diary, I did something awful today too.
                                 I kept eating a very large bowl of rice till I couldn't take
                                 it any much longer. I think this will go down in history as
@@ -349,10 +352,11 @@ private fun DetailPreview() {
                                 it any much longer. I think this will go down in history as
                                 the greatest rice eating bout of all time.
                             <p/>
-                    """.trimIndent(),
-                    id = 1000,
-                    date = Clock.System.now(),
-                    isFavorite = false,
+                        """.trimIndent(),
+                        id = 1000,
+                        date = Clock.System.now(),
+                        isFavorite = false,
+                    ),
                 ),
             )
         }

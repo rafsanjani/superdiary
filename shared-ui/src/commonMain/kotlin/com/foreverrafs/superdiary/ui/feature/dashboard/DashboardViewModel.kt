@@ -1,7 +1,7 @@
 package com.foreverrafs.superdiary.ui.feature.dashboard
 
-import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
@@ -18,6 +18,9 @@ import com.foreverrafs.superdiary.data.utils.DiaryPreference
 import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.data.utils.toDate
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.update
@@ -34,7 +37,7 @@ class DashboardViewModel(
     private val preference: DiaryPreference,
     private val diaryAI: DiaryAI,
     private val logger: AggregateLogger,
-) : StateScreenModel<DashboardViewModel.DashboardScreenState>(DashboardScreenState.Loading) {
+) : ViewModel() {
     sealed interface DashboardScreenState {
         data object Loading : DashboardScreenState
         data class Content(
@@ -48,7 +51,10 @@ class DashboardViewModel(
 
     val settings: Flow<DiarySettings> get() = preference.settings
 
-    fun loadDashboardContent() = screenModelScope.launch {
+    private val mutableState = MutableStateFlow<DashboardScreenState>(DashboardScreenState.Loading)
+    val state: StateFlow<DashboardScreenState> = mutableState.asStateFlow()
+
+    fun loadDashboardContent() = viewModelScope.launch {
         logger.i(Tag) {
             "Loading dashboard content"
         }
@@ -111,7 +117,7 @@ class DashboardViewModel(
         }
     }
 
-    private fun generateWeeklySummary(diaries: List<Diary>) = screenModelScope.launch {
+    private fun generateWeeklySummary(diaries: List<Diary>) = viewModelScope.launch {
         logger.i(Tag) {
             "generateWeeklySummary: Fetching weekly summary for ${diaries.size} entries"
         }
@@ -168,7 +174,7 @@ class DashboardViewModel(
             }
     }
 
-    private fun calculateStreak(diaries: List<Diary>) = screenModelScope.launch {
+    private fun calculateStreak(diaries: List<Diary>) = viewModelScope.launch {
         logger.i(Tag) {
             "calculateStreak: Calculating streak for ${diaries.size} entries"
         }
@@ -215,7 +221,7 @@ class DashboardViewModel(
         }
     }
 
-    fun updateSettings(settings: DiarySettings) = screenModelScope.launch {
+    fun updateSettings(settings: DiarySettings) = viewModelScope.launch {
         logger.i(Tag) {
             "updateSettings: Updating settings from ${preference.snapshot} with values $settings"
         }

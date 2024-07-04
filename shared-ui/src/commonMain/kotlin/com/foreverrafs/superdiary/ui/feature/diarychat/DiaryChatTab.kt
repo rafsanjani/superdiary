@@ -8,14 +8,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import cafe.adriel.voyager.koin.getScreenModel
-import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.foreverrafs.superdiary.ui.SuperDiaryTab
+import com.foreverrafs.superdiary.ui.navigation.SuperDiaryTab
+import com.foreverrafs.superdiary.ui.navigation.TabOptions
+import kotlinx.serialization.Serializable
+import org.koin.compose.koinInject
 
+@Serializable
 object DiaryChatTab : SuperDiaryTab {
     @Composable
-    override fun Content() {
-        val screenModel = getScreenModel<DiaryChatViewModel>()
+    fun Content() {
+        val screenModel: DiaryChatViewModel = koinInject()
         val screenState by screenModel.state.collectAsState()
 
         DiaryChatScreenContent(

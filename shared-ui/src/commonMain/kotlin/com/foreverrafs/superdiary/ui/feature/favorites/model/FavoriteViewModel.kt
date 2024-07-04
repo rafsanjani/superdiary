@@ -1,13 +1,16 @@
 package com.foreverrafs.superdiary.ui.feature.favorites.model
 
-import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.GetFavoriteDiariesUseCase
 import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreenState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -15,9 +18,11 @@ class FavoriteViewModel(
     private val getFavoriteDiariesUseCase: GetFavoriteDiariesUseCase,
     private val updateDiaryUseCase: UpdateDiaryUseCase,
     private val logger: AggregateLogger,
-) : StateScreenModel<FavoriteScreenState?>(null) {
+) : ViewModel() {
+    private val mutableState = MutableStateFlow<FavoriteScreenState?>(null)
+    val state: StateFlow<FavoriteScreenState?> = mutableState.asStateFlow()
 
-    fun loadFavorites() = screenModelScope.launch {
+    fun loadFavorites() = viewModelScope.launch {
         logger.i(Tag) {
             "Loading favorites"
         }

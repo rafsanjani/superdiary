@@ -1,12 +1,15 @@
 package com.foreverrafs.superdiary.ui.feature.diarychat
 
-import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
 import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -14,7 +17,7 @@ class DiaryChatViewModel(
     private val diaryAI: DiaryAI,
     private val getAllDiariesUseCase: GetAllDiariesUseCase,
     private val logger: AggregateLogger,
-) : StateScreenModel<DiaryChatViewModel.DiaryChatViewState>(DiaryChatViewState()) {
+) : ViewModel() {
     data class DiaryChatViewState(
         val isResponding: Boolean = false,
         val messages: List<DiaryChatMessage> = listOf(
@@ -27,10 +30,13 @@ class DiaryChatViewModel(
         ),
     )
 
+    private val mutableState = MutableStateFlow(DiaryChatViewState())
+    val state: StateFlow<DiaryChatViewState> = mutableState.asStateFlow()
+
     private fun <T> List<T>.append(item: T): List<T> =
         this.toMutableList().also { it.add(item) }.toList()
 
-    fun queryDiaries(query: String) = screenModelScope.launch {
+    fun queryDiaries(query: String) = viewModelScope.launch {
         logger.d(TAG) {
             "queryDiaries: Querying all diaries for: $query"
         }
