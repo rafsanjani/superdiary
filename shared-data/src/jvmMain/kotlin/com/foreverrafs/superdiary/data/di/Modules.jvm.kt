@@ -14,4 +14,5 @@ actual fun platformModule(
 ): Module = module {
     factoryOf<DatabaseDriver>(::JVMDatabaseDriver)
     factory<AnalyticsTracker> { analyticsTracker }
+    factory<AggregateLogger> { aggregateLogger }
 }
