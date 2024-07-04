@@ -52,7 +52,9 @@ object DiaryListScreen {
                 onDiaryClicked = {
                     navController.navigate(DetailScreen(it.toString()))
                 },
-                onBackPressed = navController::popBackStack,
+                onBackPressed = {
+                    navController.popBackStack()
+                },
             )
         }
 
