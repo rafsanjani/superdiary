@@ -10,6 +10,9 @@ DELETE FROM diary WHERE id=?;
 findByEntry:
 SELECT * FROM diary WHERE entry LIKE '%' || :name || '%' ORDER BY date ASC;
 
+findById:
+SELECT * FROM diary WHERE id=? LIMIT 1;
+
 findByDate:
 SELECT * FROM diary WHERE date = :date  ORDER BY date ASC;
 

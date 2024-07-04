@@ -1,13 +1,13 @@
 package com.foreverrafs.superdiary.ui
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
-import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.transitions.SlideTransition
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
+import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
+import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
 import com.foreverrafs.superdiary.ui.home.BottomNavigationScreen
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 
@@ -19,42 +19,35 @@ import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 @Composable
 fun App(modifier: Modifier = Modifier) {
     SuperdiaryTheme {
-        Navigator(
-            screen = BottomNavigationScreen,
-            onBackPressed = {
-                SuperDiaryBackPressHandler.execute()
-            },
-        ) { navigator ->
-            val snackbarHostState = SnackbarHostState()
+        val navController = rememberNavController()
 
-            CompositionLocalProvider(
-                LocalRootSnackbarHostState provides snackbarHostState,
-                LocalScreenNavigator provides navigator,
-            ) {
-                // Wrap it inside this box just to allow setting
-                // testTagAsResourceId from Android land
-                Box(modifier = modifier) {
-                    SlideTransition(navigator)
+        NavHost(
+            modifier = modifier,
+            navController = navController,
+            startDestination = BottomNavigationScreen,
+        ) {
+            composable<BottomNavigationScreen> {
+                BottomNavigationScreen.Content(navController)
+            }
+
+            composable<CreateDiaryScreen> {
+                CreateDiaryScreen.Content(navController)
+            }
+
+            composable<DiaryListScreen> {
+                DiaryListScreen.Content(navController)
+            }
+
+            composable<DetailScreen> { backstackEntry ->
+                val diaryId: String? = backstackEntry.arguments?.getString("diaryId")
+
+                diaryId?.let {
+                    DetailScreen.Content(
+                        diaryId = diaryId,
+                        navController = navController,
+                    )
                 }
             }
         }
     }
-}
-
-/**
- * In voyager we are not really able to perform screen navigation from
- * within a tab navigator. LocalNavigator.push causes an exception because
- * it expects a Tab when used from within a TabNavigator. This way we
- * are able to implicitly pass the root navigator around to be used for
- * navigation by individual tabs
- */
-@Suppress("CompositionLocalAllowlist")
-val LocalScreenNavigator = staticCompositionLocalOf<Navigator> {
-    error("No Navigator provided")
-}
-
-// Use this snackbarhost to show messages on the main screen
-@Suppress("CompositionLocalAllowlist")
-val LocalRootSnackbarHostState = staticCompositionLocalOf<SnackbarHostState> {
-    error("Root snackbarhost not provided")
 }

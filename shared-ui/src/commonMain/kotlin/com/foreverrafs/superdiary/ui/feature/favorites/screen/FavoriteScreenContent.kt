@@ -11,7 +11,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.ui.LocalRootSnackbarHostState
+// import com.foreverrafs.superdiary.ui.LocalRootSnackbarHostState
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryList
@@ -21,11 +21,10 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.screen.Empty
 fun FavoriteScreenContent(
     state: FavoriteScreenState,
     onToggleFavorite: suspend (diary: Diary) -> Boolean,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
-    onFavoriteClick: (diary: Diary) -> Unit,
+    onFavoriteClick: (diary: Long) -> Unit,
 ) {
-    val snackbarHostState = LocalRootSnackbarHostState.current
-
     if (state is FavoriteScreenState.Content) {
         DiaryList(
             modifier = modifier.fillMaxSize(),
@@ -40,7 +39,7 @@ fun FavoriteScreenContent(
                 onDiaryClicked = onFavoriteClick,
                 onToggleFavorite = {
                     if (onToggleFavorite(it)) {
-                        snackbarHostState.showSnackbar("Favorite removed")
+                        snackbarHostState.showSnackbar("Favorite Removed")
                     }
                     true
                 },

@@ -19,6 +19,7 @@ import com.foreverrafs.superdiary.data.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.data.usecase.CountDiariesUseCase
 import com.foreverrafs.superdiary.data.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.data.usecase.GetDiaryByIdUseCase
 import com.foreverrafs.superdiary.data.usecase.GetFavoriteDiariesUseCase
 import com.foreverrafs.superdiary.data.usecase.GetLatestEntriesUseCase
 import com.foreverrafs.superdiary.data.usecase.GetWeeklySummaryUseCase
@@ -60,14 +61,16 @@ fun useCaseModule() = module {
     factoryOf(::SearchDiaryByEntryUseCase)
     factoryOf(::SearchDiaryByDateUseCase)
     factoryOf(::DeleteDiaryUseCase)
-    singleOf(::UpdateDiaryUseCase)
-    singleOf(::Database)
+    factoryOf(::UpdateDiaryUseCase)
     factoryOf(::GetLatestEntriesUseCase)
     factoryOf(::CountDiariesUseCase)
     factoryOf(::CalculateStreakUseCase)
     factoryOf(::AddWeeklySummaryUseCase)
     factoryOf(::GetWeeklySummaryUseCase)
     factoryOf(::CalculateBestStreakUseCase)
+    factoryOf(::GetDiaryByIdUseCase)
+
+    singleOf(::Database)
 }
 
 expect fun platformModule(

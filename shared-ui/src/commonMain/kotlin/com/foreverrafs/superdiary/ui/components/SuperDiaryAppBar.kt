@@ -13,6 +13,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
+import superdiary.shared_ui.generated.resources.Res
+import superdiary.shared_ui.generated.resources.app_name
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
@@ -25,7 +28,7 @@ fun SuperDiaryAppBar(
         modifier = modifier,
         title = {
             Text(
-                text = "",
+                text = stringResource(Res.string.app_name),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .semantics {

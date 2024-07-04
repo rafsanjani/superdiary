@@ -50,10 +50,6 @@ kotlin {
                 implementation(projects.sharedData)
                 implementation(projects.core.analytics)
                 implementation(libs.koin.android)
-                val nav_version = "2.8.0-beta04"
-
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
-                implementation("androidx.navigation:navigation-compose:$nav_version")
             }
         }
 
@@ -106,20 +102,26 @@ android {
             isMinifyEnabled = true
             proguardFile("proguard-rules.pro")
 
-            val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_RELEASE")
-                ?: throw IllegalArgumentException(
+            val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_RELEASE") ?: ""
+
+            if (sentryBaseUrl.isEmpty()) {
+                logger.warn(
                     "Sentry base url hasn't been set. Please add SENTRY_BASE_URL_RELEASE to your environment variables",
                 )
+            }
 
             manifestPlaceholders["sentryBaseUrl"] = sentryBaseUrl
             manifestPlaceholders["sentryEnvironment"] = "production"
         }
 
         debug {
-            val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_DEBUG")
-                ?: throw IllegalArgumentException(
+            val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_DEBUG") ?: ""
+
+            if (sentryBaseUrl.isEmpty()) {
+                logger.warn(
                     "Sentry base url hasn't been set. Please add SENTRY_BASE_URL_DEBUG to your environment variables",
                 )
+            }
 
             manifestPlaceholders["sentryBaseUrl"] = sentryBaseUrl
             manifestPlaceholders["sentryEnvironment"] = "debug"
@@ -141,10 +143,13 @@ tasks.getByName("generateResourceAccessorsForAndroidMain")
     )
 
 sentry {
-    val sentryToken = System.getenv("SENTRY_AUTH_TOKEN")
-        ?: throw IllegalArgumentException(
+    val sentryToken = System.getenv("SENTRY_AUTH_TOKEN") ?: ""
+
+    if (sentryToken.isEmpty()) {
+        logger.warn(
             "Sentry token hasn't been set. Please add SENTRY_AUTH_TOKEN to your environment variables",
         )
+    }
 
     org.set("rafsanjani-inc")
     projectName.set("superdiary-debug")
