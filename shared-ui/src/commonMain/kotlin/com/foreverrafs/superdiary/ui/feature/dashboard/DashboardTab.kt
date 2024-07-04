@@ -4,6 +4,7 @@ package com.foreverrafs.superdiary.ui.feature.dashboard
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.StackedBarChart
 import androidx.compose.material.icons.outlined.BarChart
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,9 +26,10 @@ import org.koin.compose.koinInject
 @Serializable
 object DashboardTab : SuperDiaryTab {
     @Composable
-    fun Content(navController: NavHostController) {
-//        val rootSnackBarState = LocalRootSnackbarHostState.current
-
+    fun Content(
+        navController: NavHostController,
+        snackbarHostState: SnackbarHostState,
+    ) {
         val screenModel: DashboardViewModel = koinInject()
         val screenState by screenModel.state.collectAsState()
         val coroutineScope = rememberCoroutineScope()
@@ -49,7 +51,7 @@ object DashboardTab : SuperDiaryTab {
             onToggleFavorite = {
                 coroutineScope.launch {
                     if (screenModel.toggleFavorite(it)) {
-//                        rootSnackBarState.showSnackbar("Favorite Updated")
+                        snackbarHostState.showSnackbar("Favorite Updated")
                     }
                 }
             },
