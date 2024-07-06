@@ -60,6 +60,12 @@ jobs:
           gradle-home-cache-cleanup: true
           cache-read-only: false
 
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v4
+        if: success() || failure()
+        with:
+          report_paths: '**/build/test-results/testDebugUnitTest/TEST-*.xml'
+
 
       - name: Snapshot test (shared-ui)
         uses: gradle/gradle-build-action@v3
