@@ -7,5 +7,4 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 gem 'danger'
 gem 'danger-kotlin_detekt'
 gem 'fastlane'
-gem 'danger-junit'
 gem 'danger-android_lint'
