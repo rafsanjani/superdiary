@@ -9,7 +9,6 @@ import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
 import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -30,8 +29,8 @@ class DiaryChatViewModel(
         ),
     )
 
-    private val mutableState = MutableStateFlow(DiaryChatViewState())
-    val state: StateFlow<DiaryChatViewState> = mutableState.asStateFlow()
+    val state: StateFlow<DiaryChatViewState>
+        field = MutableStateFlow(DiaryChatViewModel.DiaryChatViewState())
 
     private fun <T> List<T>.append(item: T): List<T> =
         this.toMutableList().also { it.add(item) }.toList()
@@ -42,10 +41,10 @@ class DiaryChatViewModel(
         }
 
         // Let's grab all the messages in the system
-        val diaryChatList = mutableState.value.messages.toMutableList()
+        val diaryChatList = state.value.messages.toMutableList()
 
         // Update state to reflect responding state in the UI
-        mutableState.update { state ->
+        state.update { state ->
             state.copy(
                 isResponding = true,
                 messages = state.messages.append(
@@ -82,7 +81,7 @@ class DiaryChatViewModel(
                 messages = diaryChatList,
             )
 
-            mutableState.update { state ->
+            state.update { state ->
                 logger.d(TAG) {
                     "queryDiaries: Finished responding to query"
                 }

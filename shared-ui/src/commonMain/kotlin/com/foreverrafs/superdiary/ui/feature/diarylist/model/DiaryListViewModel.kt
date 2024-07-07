@@ -13,7 +13,7 @@ import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.data.utils.toInstant
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,22 +28,22 @@ class DiaryListViewModel(
     private val logger: AggregateLogger,
 ) : ViewModel() {
 
-    private val mutableState = MutableStateFlow<DiaryListViewState>(DiaryListViewState.Loading)
-    val state = mutableState.asStateFlow()
+    val state: StateFlow<DiaryListViewState>
+        field = MutableStateFlow<DiaryListViewState>(DiaryListViewState.Loading)
 
     fun observeDiaries() = viewModelScope.launch {
-        mutableState.update {
+        state.update {
             DiaryListViewState.Loading
         }
 
         getAllDiariesUseCase()
             .catch { error ->
-                mutableState.update {
+                state.update {
                     DiaryListViewState.Error(error)
                 }
             }
             .collect { diaries ->
-                mutableState.update {
+                state.update {
                     DiaryListViewState.Content(
                         diaries = diaries,
                         filtered = false,
@@ -54,7 +54,7 @@ class DiaryListViewModel(
 
     fun filterByEntry(entry: String) = viewModelScope.launch {
         searchDiaryByEntryUseCase.invoke(entry).collect { diaries ->
-            mutableState.update {
+            state.update {
                 DiaryListViewState.Content(
                     diaries = diaries,
                     filtered = true,
@@ -65,7 +65,7 @@ class DiaryListViewModel(
 
     fun filterByDate(date: LocalDate) = viewModelScope.launch {
         searchDiaryByDateUseCase.invoke(date.toInstant()).collect { diaries ->
-            mutableState.update {
+            state.update {
                 DiaryListViewState.Content(
                     diaries = diaries,
                     filtered = true,
@@ -79,7 +79,7 @@ class DiaryListViewModel(
             logger.d(Tag) {
                 "Filtered diaries by Date and Entry $date $entry"
             }
-            mutableState.update {
+            state.update {
                 DiaryListViewState.Content(
                     diaries = diaries.filter { it.entry.contains(entry, false) },
                     filtered = true,

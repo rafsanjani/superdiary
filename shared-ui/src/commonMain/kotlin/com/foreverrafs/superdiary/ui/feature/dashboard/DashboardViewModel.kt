@@ -20,7 +20,6 @@ import com.foreverrafs.superdiary.data.utils.toDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.update
@@ -51,8 +50,8 @@ class DashboardViewModel(
 
     val settings: Flow<DiarySettings> get() = preference.settings
 
-    private val mutableState = MutableStateFlow<DashboardScreenState>(DashboardScreenState.Loading)
-    val state: StateFlow<DashboardScreenState> = mutableState.asStateFlow()
+    val state: StateFlow<DashboardScreenState>
+        field = MutableStateFlow<DashboardScreenState>(DashboardScreenState.Loading)
 
     fun loadDashboardContent() = viewModelScope.launch {
         logger.i(Tag) {
@@ -64,7 +63,8 @@ class DashboardViewModel(
                 logger.i(Tag) {
                     "Dashboard content refreshed!"
                 }
-                mutableState.update {
+
+                state.update {
                     DashboardScreenState.Content(
                         latestEntries = diaries.sortedByDescending { it.date }.take(4),
                         totalEntries = diaries.size.toLong(),
@@ -97,7 +97,7 @@ class DashboardViewModel(
     }
 
     private fun updateContentState(func: (current: DashboardScreenState.Content) -> DashboardScreenState.Content) {
-        mutableState.update { state ->
+        state.update { state ->
             val currentState = state as? DashboardScreenState.Content
 
             if (currentState != null) {
@@ -144,7 +144,7 @@ class DashboardViewModel(
                     "generateWeeklySummary: An error occurred generating weekly summary"
                 }
             }.onCompletion {
-                (mutableState.value as? DashboardScreenState.Content)?.let { appState ->
+                (state.value as? DashboardScreenState.Content)?.let { appState ->
                     if (appState.weeklySummary == DEFAULT_SUMMARY_TEXT) {
                         updateContentState { currentState ->
                             currentState.copy(weeklySummary = "Error generating weekly summary")
@@ -185,7 +185,7 @@ class DashboardViewModel(
             "calculateStreak: Streak: ${streak.count}\nBest Streak: ${bestStreak.count}"
         }
 
-        mutableState.update { state ->
+        state.update { state ->
             (state as? DashboardScreenState.Content)?.copy(
                 currentStreak = streak,
                 bestStreak = bestStreak,
