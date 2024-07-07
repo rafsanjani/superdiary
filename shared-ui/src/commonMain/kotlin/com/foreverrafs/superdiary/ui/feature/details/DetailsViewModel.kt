@@ -9,7 +9,6 @@ import com.foreverrafs.superdiary.data.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.data.usecase.GetDiaryByIdUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -28,16 +27,16 @@ class DetailsViewModel(
     private val logger: AggregateLogger,
 ) : ViewModel() {
 
-    private val _deleteDiaryState = MutableStateFlow<DeleteDiaryState>(DeleteDiaryState.Failure)
-    val deleteDiaryState: StateFlow<DeleteDiaryState> = _deleteDiaryState.asStateFlow()
+    val deleteDiaryState: StateFlow<DeleteDiaryState>
+        field = MutableStateFlow<DeleteDiaryState>(DeleteDiaryState.Failure)
 
-    private val _detailsViewState = MutableStateFlow<DetailsViewState?>(null)
-    val detailsViewState: StateFlow<DetailsViewState?> = _detailsViewState.asStateFlow()
+    val detailsViewState: StateFlow<DetailsViewState?>
+        field = MutableStateFlow<DetailsViewState?>(null)
 
     fun deleteDiary(diary: Diary) = viewModelScope.launch {
         when (val result = deleteDiaryUseCase(listOf(diary))) {
             is Result.Failure -> {
-                _deleteDiaryState.update {
+                deleteDiaryState.update {
                     DeleteDiaryState.Failure
                 }
             }
@@ -46,11 +45,11 @@ class DetailsViewModel(
                 val deletedItems = result.data
 
                 if (deletedItems != 0) {
-                    _deleteDiaryState.update {
+                    deleteDiaryState.update {
                         DeleteDiaryState.Success(deletedItems)
                     }
                 } else {
-                    _deleteDiaryState.update {
+                    deleteDiaryState.update {
                         DeleteDiaryState.Failure
                     }
                 }
@@ -65,7 +64,7 @@ class DetailsViewModel(
 
         getDiaryByIdUseCase(diaryId)
             .collect { diary ->
-                _detailsViewState.update {
+                detailsViewState.update {
                     if (diary != null) {
                         DetailsViewState.DiarySelected(diary)
                     } else {

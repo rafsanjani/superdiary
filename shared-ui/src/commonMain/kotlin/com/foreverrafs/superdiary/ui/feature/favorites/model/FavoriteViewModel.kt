@@ -10,7 +10,6 @@ import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -19,15 +18,15 @@ class FavoriteViewModel(
     private val updateDiaryUseCase: UpdateDiaryUseCase,
     private val logger: AggregateLogger,
 ) : ViewModel() {
-    private val mutableState = MutableStateFlow<FavoriteScreenState?>(null)
-    val state: StateFlow<FavoriteScreenState?> = mutableState.asStateFlow()
+    val state: StateFlow<FavoriteScreenState?>
+        field = MutableStateFlow<FavoriteScreenState?>(null)
 
     fun loadFavorites() = viewModelScope.launch {
         logger.i(Tag) {
             "Loading favorites"
         }
         getFavoriteDiariesUseCase().collect { diaries ->
-            mutableState.update {
+            state.update {
                 logger.i(Tag) {
                     "Loaded ${diaries.size} favorite entries"
                 }
