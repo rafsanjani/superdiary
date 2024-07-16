@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalResourceApi::class)
-
 package com.foreverrafs.superdiary.ui.style
 
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -17,7 +15,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.Font
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.montserrat_alternatives_bold
