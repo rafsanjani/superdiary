@@ -15,7 +15,7 @@ plugins {
     id("com.superdiary.kover")
 }
 
-kotlin.sourceSets.all {
+kotlin.sourceSets.all{
     languageSettings.enableLanguageFeature("ExplicitBackingFields")
 }
 
