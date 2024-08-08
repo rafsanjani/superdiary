@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     kotlin("multiplatform")
     id("kotlin-parcelize")
-    id("dev.mokkery") version "2.1.1"
+    id("dev.mokkery") version "2.2.0"
 
     // Build logic
     id("com.superdiary.kover")
