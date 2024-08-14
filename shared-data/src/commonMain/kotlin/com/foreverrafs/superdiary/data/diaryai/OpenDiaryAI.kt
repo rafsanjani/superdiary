@@ -41,7 +41,7 @@ class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
         )
 
         val chatCompletionRequest = ChatCompletionRequest(
-            model = ModelId("gpt-4-1106-preview"),
+            model = ModelId(GPT_MODEL),
             messages = generateDiaryMessages.toList(),
         )
 
@@ -58,6 +58,8 @@ class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
                         content = assistantMessages,
                     ),
                 )
+            } else {
+                println(error)
             }
         }
     }
@@ -65,8 +67,9 @@ class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
     override fun getWeeklySummary(diaries: List<Diary>): Flow<String> {
         val weeklyDiaryGeneratorPrompt = """
             You are Journal AI. I will give you a combined list of entries written over a period of
-            one week and you write a brief, concise and informative 50 word summary for me. The summary
-            should be in the first person narrative.
+            one week and you write a brief, concise and informative summary for me. It should be at
+            least 50 words and at most 100. The grammar should be spot on without any mistakes or errors.
+            Make sure you punctuate it properly as well. This should be in the first person narrative.
         """.trimIndent()
 
         val generateDiaryMessages = mutableListOf<ChatMessage>()
@@ -106,6 +109,6 @@ class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
     }
 
     companion object {
-        private const val GPT_MODEL = "gpt-4-1106-preview"
+        private const val GPT_MODEL = "chatgpt-4o-latest"
     }
 }
