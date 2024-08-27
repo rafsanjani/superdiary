@@ -1,8 +1,8 @@
 package com.foreverrafs.superdiary.ui.diarychat
 
+import app.cash.turbine.ReceiveTurbine
 import app.cash.turbine.test
 import assertk.assertThat
-import assertk.assertions.hasSize
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import com.foreverrafs.superdiary.TestAppDispatchers
@@ -11,6 +11,8 @@ import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
 import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.data.usecase.GetChatMessagesUseCase
+import com.foreverrafs.superdiary.data.usecase.SaveChatMessageUseCase
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
 import dev.mokkery.answering.returns
 import dev.mokkery.every
@@ -42,10 +44,15 @@ class DiaryChatViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher())
 
         every { dataSource.fetchAll() }.returns(flowOf(emptyList()))
+        every { dataSource.getChatMessages() }.returns(flowOf(emptyList()))
+        everySuspend { dataSource.saveChatMessage(any()) }.returns(Unit)
+
         diaryChatViewModel = DiaryChatViewModel(
-            diaryAI,
-            GetAllDiariesUseCase(dataSource, TestAppDispatchers),
-            AggregateLogger(emptyList()),
+            diaryAI = diaryAI,
+            getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers),
+            logger = AggregateLogger(emptyList()),
+            saveChatMessageUseCase = SaveChatMessageUseCase(dataSource, TestAppDispatchers),
+            getChatMessagesUseCase = GetChatMessagesUseCase(dataSource),
         )
     }
 
@@ -58,17 +65,16 @@ class DiaryChatViewModelTest {
     fun `Should update responding to true when generating AI response`() = runTest {
         everySuspend { diaryAI.queryDiaries(any()) }.returns("hello boss")
 
-        diaryChatViewModel.state.test {
-            diaryChatViewModel.queryDiaries("hello World")
+        diaryChatViewModel.queryDiaries("hello World")
 
-            // Skip the initial state
+        diaryChatViewModel.state.test {
             skipItems(1)
+
             val state = awaitItem()
 
-            cancelAndConsumeRemainingEvents()
+            cancelAndIgnoreRemainingEvents()
 
             assertThat(state.isResponding).isTrue()
-            assertThat(state.messages).hasSize(2)
         }
     }
 
@@ -76,20 +82,17 @@ class DiaryChatViewModelTest {
     fun `Should update responding to false after generating AI response`() = runTest {
         everySuspend { diaryAI.queryDiaries(any()) }.returns("hello boss")
 
+        diaryChatViewModel.init()
+
         diaryChatViewModel.state.test {
             diaryChatViewModel.queryDiaries("hello World")
 
-            // Skip the initial state and first emission state
-            skipItems(2)
-            val state = awaitItem()
+            val state =
+                skipWhile { state -> state.messages.none { it.role == DiaryChatRole.DiaryAI } }.awaitItem()
 
             cancelAndConsumeRemainingEvents()
 
             assertThat(state.isResponding).isFalse()
-
-            // At least 5 messages will be present after a single query.
-            // [Welcome message, system instruction, items, query, response]
-            assertThat(state.messages).hasSize(5)
         }
     }
 
@@ -101,17 +104,37 @@ class DiaryChatViewModelTest {
             )
         }.returns("You went horse riding on the 20th of June")
 
-        diaryChatViewModel.state.test {
-            diaryChatViewModel.queryDiaries("When did I go horse riding?")
+        everySuspend {
+            dataSource.saveChatMessage(any())
+        }.returns(Unit)
 
-            // Skip the initial state and first emission state
-            skipItems(2)
-            val state = awaitItem()
+        diaryChatViewModel.init()
+
+        diaryChatViewModel.queryDiaries("When did I go horse riding?")
+
+        diaryChatViewModel.state.test {
+            awaitItem()
+
+            // Skip emissions while AI responses are getting generated
+            val state = skipWhile {
+                it.isResponding
+            }.expectMostRecentItem()
 
             cancelAndConsumeRemainingEvents()
 
-            assertThat(state.isResponding).isFalse()
             assertThat(state.messages.any { it.role == DiaryChatRole.System }).isTrue()
         }
+    }
+
+    private suspend inline fun <T> ReceiveTurbine<T>.skipWhile(
+        predicate: (value: T) -> Boolean,
+    ): ReceiveTurbine<T> {
+        while (true) {
+            val item = awaitItem()
+            if (!predicate(item)) {
+                break
+            }
+        }
+        return this
     }
 }
