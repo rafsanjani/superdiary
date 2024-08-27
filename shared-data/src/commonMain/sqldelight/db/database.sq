@@ -45,3 +45,12 @@ SELECT * FROM summary;
 
 clearWeeklySummary:
 DELETE FROM summary;
+
+saveChat:
+INSERT INTO chat(id, date, content, role) VALUES (?, ?,?,?);
+
+clearChat:
+DELETE FROM chat;
+
+getChatMessages:
+SELECT * FROM chat;

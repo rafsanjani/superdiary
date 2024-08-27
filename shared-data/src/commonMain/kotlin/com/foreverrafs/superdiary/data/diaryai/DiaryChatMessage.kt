@@ -1,33 +1,33 @@
 package com.foreverrafs.superdiary.data.diaryai
 
-import kotlin.random.Random
+import com.benasher44.uuid.uuid4
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 
 @Suppress("FunctionName")
 data class DiaryChatMessage(
-    val id: Long,
+    val id: String,
     val role: DiaryChatRole,
     val timestamp: Instant,
     val content: String,
 ) {
     companion object {
         fun User(content: String) = DiaryChatMessage(
-            id = Random.nextLong(),
+            id = uuid4().toString(),
             timestamp = Clock.System.now(),
             role = DiaryChatRole.User,
             content = content,
         )
 
         fun DiaryAI(content: String) = DiaryChatMessage(
-            id = Random.nextLong(),
+            id = uuid4().toString(),
             timestamp = Clock.System.now(),
             role = DiaryChatRole.DiaryAI,
             content = content,
         )
 
         fun System(content: String) = DiaryChatMessage(
-            id = Random.nextLong(),
+            id = uuid4().toString(),
             timestamp = Clock.System.now(),
             role = DiaryChatRole.System,
             content = content,

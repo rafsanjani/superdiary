@@ -19,10 +19,12 @@ import com.foreverrafs.superdiary.data.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.data.usecase.CountDiariesUseCase
 import com.foreverrafs.superdiary.data.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.data.usecase.GetChatMessagesUseCase
 import com.foreverrafs.superdiary.data.usecase.GetDiaryByIdUseCase
 import com.foreverrafs.superdiary.data.usecase.GetFavoriteDiariesUseCase
 import com.foreverrafs.superdiary.data.usecase.GetLatestEntriesUseCase
 import com.foreverrafs.superdiary.data.usecase.GetWeeklySummaryUseCase
+import com.foreverrafs.superdiary.data.usecase.SaveChatMessageUseCase
 import com.foreverrafs.superdiary.data.usecase.SearchDiaryBetweenDatesUseCase
 import com.foreverrafs.superdiary.data.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.data.usecase.SearchDiaryByEntryUseCase
@@ -69,6 +71,8 @@ fun useCaseModule() = module {
     factoryOf(::GetWeeklySummaryUseCase)
     factoryOf(::CalculateBestStreakUseCase)
     factoryOf(::GetDiaryByIdUseCase)
+    factoryOf(::SaveChatMessageUseCase)
+    factoryOf(::GetChatMessagesUseCase)
 
     singleOf(::Database)
 }
