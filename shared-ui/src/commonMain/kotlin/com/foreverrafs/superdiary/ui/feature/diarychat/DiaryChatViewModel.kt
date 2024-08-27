@@ -105,7 +105,11 @@ class DiaryChatViewModel(
         }
 
         // Add the diaries
-        mutableListMessages.add(DiaryChatMessage.System(diaries.joinToString()))
+        val aggregatedDiaries = diaries.joinToString()
+
+        if (aggregatedDiaries.isNotEmpty()) {
+            mutableListMessages.add(DiaryChatMessage.System(diaries.joinToString()))
+        }
 
         mutableState.update {
             it.copy(
@@ -144,6 +148,12 @@ class DiaryChatViewModel(
     }
 
     fun queryDiaries(query: String) = viewModelScope.launch {
+        mutableState.update { state ->
+            state.copy(
+                isResponding = true,
+            )
+        }
+
         logger.d(TAG) {
             "queryDiaries: Querying all diaries for: $query"
         }
