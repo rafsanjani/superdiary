@@ -1,6 +1,7 @@
 package com.foreverrafs.superdiary.data.datasource
 
 import com.foreverrafs.superdiary.data.Database
+import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.model.WeeklySummary
 import kotlinx.coroutines.flow.Flow
@@ -18,33 +19,21 @@ class LocalDataSource(private val database: Database) : DataSource {
         return 1
     }
 
-    override suspend fun delete(diary: Diary): Int {
-        return delete(listOf(diary))
-    }
+    override suspend fun delete(diary: Diary): Int = delete(listOf(diary))
 
-    override suspend fun delete(diaries: List<Diary>): Int {
-        return database.deleteDiaries(diaries.mapNotNull { it.id })
-    }
+    override suspend fun delete(diaries: List<Diary>): Int =
+        database.deleteDiaries(diaries.mapNotNull { it.id })
 
-    override fun fetchAll(): Flow<List<Diary>> {
-        return database.getAllDiaries()
-    }
+    override fun fetchAll(): Flow<List<Diary>> = database.getAllDiaries()
 
-    override fun fetchFavorites(): Flow<List<Diary>> {
-        return database.getFavoriteDiaries()
-    }
+    override fun fetchFavorites(): Flow<List<Diary>> = database.getFavoriteDiaries()
 
-    override fun find(entry: String): Flow<List<Diary>> {
-        return database.findDiaryByEntry(entry)
-    }
+    override fun find(entry: String): Flow<List<Diary>> = database.findDiaryByEntry(entry)
 
-    override fun find(from: Instant, to: Instant): Flow<List<Diary>> {
-        return database.findByDateRange(from, to)
-    }
+    override fun find(from: Instant, to: Instant): Flow<List<Diary>> =
+        database.findByDateRange(from, to)
 
-    override fun find(id: Long): Flow<Diary?> {
-        return database.findById(id)
-    }
+    override fun find(id: Long): Flow<Diary?> = database.findById(id)
 
     /**
      * The dates are currently stored on the database as very high precision
@@ -76,24 +65,26 @@ class LocalDataSource(private val database: Database) : DataSource {
         return database.findByDateRange(startOfDay, endOfDay)
     }
 
-    override suspend fun update(diary: Diary): Int {
-        return database.update(diary)
-    }
+    override suspend fun update(diary: Diary): Int = database.update(diary)
 
-    override suspend fun deleteAll() {
-        return database.clearDiaries()
-    }
+    override suspend fun deleteAll() = database.clearDiaries()
 
-    override fun getLatestEntries(count: Int): Flow<List<Diary>> {
-        return database.getLatestEntries(count)
-    }
+    override fun getLatestEntries(count: Int): Flow<List<Diary>> = database.getLatestEntries(count)
 
     override suspend fun countEntries(): Long = database.countEntries()
 
     override suspend fun insertWeeklySummary(summary: WeeklySummary) =
         database.insertWeeklySummary(summary = summary)
 
-    override fun getWeeklySummary(): WeeklySummary? {
-        return database.getWeeklySummary()
+    override fun getWeeklySummary(): WeeklySummary? = database.getWeeklySummary()
+
+    override suspend fun saveChatMessage(message: DiaryChatMessage) {
+        database.saveChatMessage(message)
     }
+
+    override suspend fun clearChatMessages() {
+        database.clearChatMessages()
+    }
+
+    override fun getChatMessages(): Flow<List<DiaryChatMessage>> = database.getChatMessages()
 }

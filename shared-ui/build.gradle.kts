@@ -60,6 +60,7 @@ kotlin {
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.koin.compose)
                 implementation(projects.swipe)
+                implementation(libs.uuid)
                 implementation(projects.core.logging)
                 api(projects.core.analytics)
                 implementation(libs.richTextEditor)

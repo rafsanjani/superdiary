@@ -28,6 +28,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
@@ -53,9 +54,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.findRootCoordinates
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.positionInWindow
@@ -65,11 +63,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.benasher44.uuid.uuid4
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.content_description_button_send
@@ -84,10 +82,10 @@ fun Modifier.positionAwareImePadding() = composed {
         val bottom = coordinates.positionInWindow().y + coordinates.size.height
 
         bottomPadding = (rootCoordinate.size.height - bottom).toInt()
-    }.consumeWindowInsets(PaddingValues(bottom = with(density) { bottomPadding.toDp() })).imePadding()
+    }.consumeWindowInsets(PaddingValues(bottom = with(density) { bottomPadding.toDp() }))
+        .imePadding()
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun DiaryChatScreenContent(
     screenState: DiaryChatViewModel.DiaryChatViewState,
@@ -97,7 +95,8 @@ fun DiaryChatScreenContent(
     val focusRequester = remember { FocusRequester() }
 
     Column(
-        modifier = modifier.fillMaxSize().animateContentSize().positionAwareImePadding().padding(8.dp),
+        modifier = modifier.fillMaxSize().animateContentSize().positionAwareImePadding()
+            .padding(8.dp),
     ) {
         val listState = rememberLazyListState()
         val isKeyboardOpen by keyboardAsState()
@@ -147,7 +146,7 @@ fun DiaryChatScreenContent(
                     ChatBubble(
                         modifier = Modifier.alpha(alpha),
                         chatItem = DiaryChatMessage(
-                            id = 20L,
+                            id = uuid4().toString(),
                             role = DiaryChatRole.DiaryAI,
                             timestamp = Clock.System.now(),
                             content = "Gathering thoughts...",
@@ -175,17 +174,17 @@ fun DiaryChatScreenContent(
                 modifier = Modifier
                     .focusRequester(focusRequester)
                     .weight(1f)
-                    .heightIn(min = 48.dp)
-                    .onKeyEvent {
-                        if (it.key == Key.Enter) {
-                            onQueryDiaries(input)
-                            input = ""
-                        }
-                        true
-                    },
+                    .heightIn(min = 48.dp),
+                maxLines = 1,
                 value = input,
                 onValueChange = { input = it },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
+                keyboardActions = KeyboardActions(
+                    onSend = {
+                        onQueryDiaries(input)
+                        input = ""
+                    },
+                ),
             )
 
             Spacer(modifier = Modifier.width(4.dp))
