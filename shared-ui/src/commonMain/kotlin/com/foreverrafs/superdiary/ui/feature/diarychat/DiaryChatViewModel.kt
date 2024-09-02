@@ -94,9 +94,9 @@ class DiaryChatViewModel(
         if (mutableListMessages.none { it.role == DiaryChatRole.System }) {
             val systemMessage = DiaryChatMessage.System(
                 """
-                            You are Journal AI, I will provide you a list of journal entries and their dates and you will
-                            respond to follow up questions based on this information. You are not supposed to respond to
-                            any questions outside of the scope of the data you have been given under any circumstances.
+                    You are Journal AI, I will provide you a list of journal entries and their dates and you will
+                    respond to follow up questions based on this information. You are not supposed to respond to
+                    any questions outside of the scope of the data you have been given under any circumstances.
                 """.trimIndent(),
             )
             mutableListMessages.add(
@@ -107,6 +107,7 @@ class DiaryChatViewModel(
         // Add the diaries
         val aggregatedDiaries = diaries.joinToString()
 
+        // joinToString() will return and add an empty string if the list is empty but we don't want that.
         if (aggregatedDiaries.isNotEmpty()) {
             mutableListMessages.add(DiaryChatMessage.System(diaries.joinToString()))
         }
