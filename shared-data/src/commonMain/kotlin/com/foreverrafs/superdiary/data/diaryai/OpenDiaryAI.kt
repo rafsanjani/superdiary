@@ -5,6 +5,7 @@ import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.model.Diary
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -13,7 +14,10 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 
 /** A diary AI implementation using Open AI */
-class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
+class OpenDiaryAI(
+    private val openAI: OpenAI,
+    private val logger: AggregateLogger,
+) : DiaryAI {
     override fun generateDiary(
         prompt: String,
         wordCount: Int,
@@ -51,16 +55,16 @@ class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
         }.onEach {
             assistantMessages += it
         }.onCompletion { error ->
-            if (error == null) {
-                generateDiaryMessages.add(
-                    ChatMessage(
-                        role = ChatRole.Assistant,
-                        content = assistantMessages,
-                    ),
-                )
-            } else {
-                println(error)
+            if (error != null) {
+                logger.e(tag = TAG, throwable = error)
+                return@onCompletion
             }
+            generateDiaryMessages.add(
+                ChatMessage(
+                    role = ChatRole.Assistant,
+                    content = assistantMessages,
+                ),
+            )
         }
     }
 
@@ -110,5 +114,6 @@ class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
 
     companion object {
         private const val GPT_MODEL = "chatgpt-4o-latest"
+        private const val TAG = "OpenDiaryAI"
     }
 }
