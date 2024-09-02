@@ -12,6 +12,7 @@ import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.diaryai.OpenDiaryAI
 import dev.mokkery.answering.returns
 import dev.mokkery.every
@@ -32,7 +33,10 @@ import kotlinx.coroutines.test.setMain
 class OpenDiaryAiTest {
     private val openAI: OpenAI = mock<OpenAI>()
 
-    private val openDiaryAI = OpenDiaryAI(openAI)
+    private val openDiaryAI = OpenDiaryAI(
+        openAI = openAI,
+        logger = AggregateLogger(emptyList()),
+    )
 
     private val chatCompletionChunk = ChatCompletionChunk(
         id = "id",

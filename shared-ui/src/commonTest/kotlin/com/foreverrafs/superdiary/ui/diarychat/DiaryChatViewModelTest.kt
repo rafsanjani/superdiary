@@ -49,10 +49,13 @@ class DiaryChatViewModelTest {
 
         diaryChatViewModel = DiaryChatViewModel(
             diaryAI = diaryAI,
-            getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers),
+            getAllDiariesUseCase = GetAllDiariesUseCase(
+                dataSource = dataSource,
+                dispatchers = TestAppDispatchers,
+            ),
             logger = AggregateLogger(emptyList()),
-            saveChatMessageUseCase = SaveChatMessageUseCase(dataSource, TestAppDispatchers),
-            getChatMessagesUseCase = GetChatMessagesUseCase(dataSource),
+            saveChatMessageUseCase = SaveChatMessageUseCase(dataSource = dataSource),
+            getChatMessagesUseCase = GetChatMessagesUseCase(dataSource = dataSource),
         )
     }
 
