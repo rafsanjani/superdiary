@@ -22,7 +22,7 @@ data class DetailScreen(val diaryId: String) {
             val viewState by viewModel.detailsViewState.collectAsState()
 
             LaunchedEffect(diaryId) {
-                viewModel.selectDiary(diaryId.toLong())
+                viewModel.initForDiary(diaryId.toLong())
             }
 
             when (val state = viewState) {
