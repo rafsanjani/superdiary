@@ -12,6 +12,7 @@ import com.foreverrafs.superdiary.data.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.data.usecase.GetDiaryByIdUseCase
 import com.foreverrafs.superdiary.ui.feature.details.DeleteDiaryState
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
+import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
 import dev.mokkery.answering.returns
 import dev.mokkery.everySuspend
 import dev.mokkery.mock
@@ -20,6 +21,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -87,6 +89,26 @@ class DetailsViewModelTest {
             assertThat(state)
                 .isNotNull()
                 .isInstanceOf<DeleteDiaryState.Failure>()
+        }
+    }
+
+    @Test
+    fun `Should emit state when diary is supplied`() = runTest {
+        val diaryId = 12345L
+
+        everySuspend { dataSource.find(diaryId) }
+            .returns(flowOf(Diary("Wonky diary")))
+
+        detailsViewModel.initForDiary(diaryId)
+
+        detailsViewModel.detailsViewState.test {
+            // This state is initialized as null so skip the first emission
+            skipItems(1)
+
+            val state = awaitItem()
+            assertThat(state)
+                .isNotNull()
+                .isInstanceOf<DetailsViewState.DiarySelected>()
         }
     }
 }
