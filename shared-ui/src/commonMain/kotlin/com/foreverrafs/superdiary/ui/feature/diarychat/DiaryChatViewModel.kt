@@ -13,17 +13,19 @@ import com.foreverrafs.superdiary.data.usecase.SaveChatMessageUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 
 class DiaryChatViewModel(
     private val diaryAI: DiaryAI,
-    getAllDiariesUseCase: GetAllDiariesUseCase,
+    private val getAllDiariesUseCase: GetAllDiariesUseCase,
     private val logger: AggregateLogger,
     private val saveChatMessageUseCase: SaveChatMessageUseCase,
-    getChatMessagesUseCase: GetChatMessagesUseCase,
+    private val getChatMessagesUseCase: GetChatMessagesUseCase,
 ) : ViewModel() {
     data class DiaryChatViewState(
         val isResponding: Boolean = false,
@@ -33,30 +35,31 @@ class DiaryChatViewModel(
     )
 
     private val mutableState = MutableStateFlow(DiaryChatViewState())
-    val state: StateFlow<DiaryChatViewState> = mutableState.asStateFlow()
 
-    private val chatMessages = getChatMessagesUseCase().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = emptyList(),
-    )
-
-    private val localDiaries = getAllDiariesUseCase().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
-        initialValue = emptyList(),
-    )
-
-    fun init() {
-        loadDiaries()
-    }
+    val state: StateFlow<DiaryChatViewState> = mutableState
+        .onStart {
+            logger.d(TAG) {
+                "MutableState::New subscription to DiaryChatViewModel"
+            }
+            loadDiaries()
+        }
+        .onCompletion {
+            logger.d(TAG) {
+                "MutableState::All subscriptions to DiaryChatViewModel removed"
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = DiaryChatViewState(),
+        )
 
     private fun updateChatMessageList(diaries: List<Diary>) = viewModelScope.launch {
         logger.i(TAG) {
             "Loading chat messages from DB"
         }
 
-        chatMessages.collect {
+        getChatMessagesUseCase().collect {
             val messages = it.toMutableList()
 
             logger.i(TAG) {
@@ -130,7 +133,7 @@ class DiaryChatViewModel(
             )
         }
 
-        localDiaries.collect { diaries ->
+        getAllDiariesUseCase().collect { diaries ->
             mutableState.update { state ->
                 logger.i(TAG) {
                     "Loaded all diaries for chat screen: Size = ${diaries.size}"
@@ -149,12 +152,13 @@ class DiaryChatViewModel(
     }
 
     fun queryDiaries(query: String) = viewModelScope.launch {
-        mutableState.update { state ->
-            state.copy(
+        mutableState.update {
+            DiaryChatViewState(
                 isResponding = true,
             )
         }
 
+        yield()
         logger.d(TAG) {
             "queryDiaries: Querying all diaries for: $query"
         }

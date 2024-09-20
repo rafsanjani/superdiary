@@ -23,7 +23,6 @@ object CreateDiaryScreen : SuperDiaryScreen {
     @Composable
     fun Content(navController: NavController) {
         val createDiaryScreenModel: CreateDiaryViewModel = koinInject()
-//        val navigator = LocalScreenNavigator.current
 
         val undoManager = rememberUndoableRichTextState()
         val richTextState = undoManager.richTextState
