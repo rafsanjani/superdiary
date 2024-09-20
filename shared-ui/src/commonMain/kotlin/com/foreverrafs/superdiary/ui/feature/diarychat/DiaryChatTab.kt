@@ -4,7 +4,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.VectorPainter
@@ -20,10 +19,6 @@ object DiaryChatTab : SuperDiaryTab {
     fun Content() {
         val screenModel: DiaryChatViewModel = koinInject()
         val screenState by screenModel.state.collectAsState()
-
-        LaunchedEffect(Unit) {
-            screenModel.init()
-        }
 
         DiaryChatScreenContent(
             screenState = screenState,
