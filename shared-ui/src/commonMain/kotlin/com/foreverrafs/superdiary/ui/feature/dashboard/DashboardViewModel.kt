@@ -19,16 +19,18 @@ import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.data.utils.toDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
 class DashboardViewModel(
-    private val getAllDiariesUseCase: GetAllDiariesUseCase,
+    val getAllDiariesUseCase: GetAllDiariesUseCase,
     private val calculateStreakUseCase: CalculateStreakUseCase,
     private val calculateBestStreakUseCase: CalculateBestStreakUseCase,
     private val addWeeklySummaryUseCase: AddWeeklySummaryUseCase,
@@ -52,6 +54,11 @@ class DashboardViewModel(
     val settings: Flow<DiarySettings> get() = preference.settings
 
     private val mutableState = MutableStateFlow<DashboardScreenState>(DashboardScreenState.Loading)
+
+    private val diaries: Flow<List<Diary>> =
+        getAllDiariesUseCase()
+            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(5000L))
+
     val state: StateFlow<DashboardScreenState> = mutableState.asStateFlow()
 
     fun loadDashboardContent() = viewModelScope.launch {
@@ -59,41 +66,40 @@ class DashboardViewModel(
             "Loading dashboard content"
         }
 
-        getAllDiariesUseCase()
-            .collect { diaries ->
-                logger.i(Tag) {
-                    "Dashboard content refreshed!"
-                }
-                mutableState.update {
-                    DashboardScreenState.Content(
-                        latestEntries = diaries.sortedByDescending { it.date }.take(4),
-                        totalEntries = diaries.size.toLong(),
-                        weeklySummary = if (diaries.isEmpty()) {
-                            """
+        diaries.collect { diaries ->
+            logger.i(Tag) {
+                "Dashboard content refreshed!"
+            }
+            mutableState.update {
+                DashboardScreenState.Content(
+                    latestEntries = diaries.sortedByDescending { it.date }.take(4),
+                    totalEntries = diaries.size.toLong(),
+                    weeklySummary = if (diaries.isEmpty()) {
+                        """
                             In this panel, your weekly diary entries will be summarized.
                             Add your first entry to see how it works
-                            """.trimIndent()
-                        } else {
-                            DEFAULT_SUMMARY_TEXT
-                        },
-                        currentStreak = Streak(
-                            0,
-                            Clock.System.now().toDate(),
-                            Clock.System.now().toDate(),
-                        ),
-                        bestStreak = Streak(
-                            0,
-                            Clock.System.now().toDate(),
-                            Clock.System.now().toDate(),
-                        ),
-                    )
-                }
-
-                if (diaries.isNotEmpty()) {
-                    generateWeeklySummary(diaries)
-                    calculateStreak(diaries)
-                }
+                        """.trimIndent()
+                    } else {
+                        DEFAULT_SUMMARY_TEXT
+                    },
+                    currentStreak = Streak(
+                        0,
+                        Clock.System.now().toDate(),
+                        Clock.System.now().toDate(),
+                    ),
+                    bestStreak = Streak(
+                        0,
+                        Clock.System.now().toDate(),
+                        Clock.System.now().toDate(),
+                    ),
+                )
             }
+
+            if (diaries.isNotEmpty()) {
+                generateWeeklySummary(diaries)
+                calculateStreak(diaries)
+            }
+        }
     }
 
     private fun updateContentState(func: (current: DashboardScreenState.Content) -> DashboardScreenState.Content) {

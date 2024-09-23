@@ -12,15 +12,18 @@ import com.foreverrafs.superdiary.data.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.data.utils.toInstant
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
 class DiaryListViewModel(
-    private val getAllDiariesUseCase: GetAllDiariesUseCase,
+    getAllDiariesUseCase: GetAllDiariesUseCase,
     private val searchDiaryByEntryUseCase: SearchDiaryByEntryUseCase,
     private val searchDiaryByDateUseCase: SearchDiaryByDateUseCase,
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
@@ -29,6 +32,10 @@ class DiaryListViewModel(
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow<DiaryListViewState>(DiaryListViewState.Loading)
+
+    private val diaries: Flow<List<Diary>> = getAllDiariesUseCase()
+        .shareIn(viewModelScope, SharingStarted.WhileSubscribed())
+
     val state = mutableState.asStateFlow()
 
     fun observeDiaries() = viewModelScope.launch {
@@ -36,12 +43,11 @@ class DiaryListViewModel(
             DiaryListViewState.Loading
         }
 
-        getAllDiariesUseCase()
-            .catch { error ->
-                mutableState.update {
-                    DiaryListViewState.Error(error)
-                }
+        diaries.catch { error ->
+            mutableState.update {
+                DiaryListViewState.Error(error)
             }
+        }
             .collect { diaries ->
                 mutableState.update {
                     DiaryListViewState.Content(
