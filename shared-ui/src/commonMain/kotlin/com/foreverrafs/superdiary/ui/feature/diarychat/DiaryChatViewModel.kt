@@ -10,11 +10,13 @@ import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.data.usecase.GetChatMessagesUseCase
 import com.foreverrafs.superdiary.data.usecase.SaveChatMessageUseCase
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -22,10 +24,10 @@ import kotlinx.coroutines.yield
 
 class DiaryChatViewModel(
     private val diaryAI: DiaryAI,
-    private val getAllDiariesUseCase: GetAllDiariesUseCase,
+    getAllDiariesUseCase: GetAllDiariesUseCase,
     private val logger: AggregateLogger,
     private val saveChatMessageUseCase: SaveChatMessageUseCase,
-    private val getChatMessagesUseCase: GetChatMessagesUseCase,
+    getChatMessagesUseCase: GetChatMessagesUseCase,
 ) : ViewModel() {
     data class DiaryChatViewState(
         val isResponding: Boolean = false,
@@ -35,6 +37,12 @@ class DiaryChatViewModel(
     )
 
     private val mutableState = MutableStateFlow(DiaryChatViewState())
+
+    private val diaries: Flow<List<Diary>> = getAllDiariesUseCase()
+        .shareIn(viewModelScope, SharingStarted.WhileSubscribed(5000L))
+
+    private val chatMessages: Flow<List<DiaryChatMessage>> = getChatMessagesUseCase()
+        .shareIn(viewModelScope, SharingStarted.WhileSubscribed(5000L))
 
     val state: StateFlow<DiaryChatViewState> = mutableState
         .onStart {
@@ -59,7 +67,7 @@ class DiaryChatViewModel(
             "Loading chat messages from DB"
         }
 
-        getChatMessagesUseCase().collect {
+        chatMessages.collect {
             val messages = it.toMutableList()
 
             logger.i(TAG) {
@@ -133,7 +141,7 @@ class DiaryChatViewModel(
             )
         }
 
-        getAllDiariesUseCase().collect { diaries ->
+        diaries.collect { diaries ->
             mutableState.update { state ->
                 logger.i(TAG) {
                     "Loaded all diaries for chat screen: Size = ${diaries.size}"
