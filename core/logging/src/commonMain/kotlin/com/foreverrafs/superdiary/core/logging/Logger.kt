@@ -1,5 +1,10 @@
 package com.foreverrafs.superdiary.core.logging
 
+import kotlin.experimental.ExperimentalObjCName
+import kotlin.native.ObjCName
+
+@OptIn(ExperimentalObjCName::class)
+@ObjCName(swiftName = "Logger")
 interface Logger {
     fun v(tag: String, throwable: Throwable? = null, message: () -> String = { "" }) = Unit
 

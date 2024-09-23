@@ -9,9 +9,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     kotlin("multiplatform")
     id("kotlin-parcelize")
-    id("dev.mokkery") version "2.3.0"
-
-    // Build logic
+    alias(libs.plugins.mokkery)
     id("com.superdiary.kover")
 }
 
@@ -35,6 +33,7 @@ kotlin {
             baseName = "shared"
             linkerOpts += "-lsqlite3"
             export(projects.core.analytics)
+            export(projects.core.logging)
         }
     }
 
@@ -61,7 +60,7 @@ kotlin {
                 implementation(libs.koin.compose)
                 implementation(projects.swipe)
                 implementation(libs.uuid)
-                implementation(projects.core.logging)
+                api(projects.core.logging)
                 api(projects.core.analytics)
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
