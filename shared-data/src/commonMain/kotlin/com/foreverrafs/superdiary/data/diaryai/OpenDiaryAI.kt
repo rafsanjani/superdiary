@@ -96,8 +96,11 @@ class OpenDiaryAI(
             messages = generateDiaryMessages.toList(),
         )
 
+        var response = ""
+
         return openAI.chatCompletions(request).mapNotNull {
-            it.choices.first().delta?.content
+            response += it.choices.first().delta?.content
+            response
         }
     }
 

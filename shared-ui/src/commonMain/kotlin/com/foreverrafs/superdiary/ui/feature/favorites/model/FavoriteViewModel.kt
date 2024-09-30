@@ -12,24 +12,30 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class FavoriteViewModel(
-    getFavoriteDiariesUseCase: GetFavoriteDiariesUseCase,
+    private val getFavoriteDiariesUseCase: GetFavoriteDiariesUseCase,
     private val updateDiaryUseCase: UpdateDiaryUseCase,
     private val logger: AggregateLogger,
 ) : ViewModel() {
-    private val mutableState = MutableStateFlow<FavoriteScreenState?>(null)
+
+    private val mutableState = MutableStateFlow<FavoriteScreenState?>(FavoriteScreenState.Loading)
 
     private val favoriteDiaries: Flow<List<Diary>> = getFavoriteDiariesUseCase()
-        .shareIn(viewModelScope, SharingStarted.WhileSubscribed())
 
-    val state: StateFlow<FavoriteScreenState?> = mutableState.asStateFlow()
+    val state: StateFlow<FavoriteScreenState?> = mutableState
+        .onStart { loadFavorites() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = FavoriteScreenState.Loading,
+        )
 
-    fun loadFavorites() = viewModelScope.launch {
+    private fun loadFavorites() = viewModelScope.launch {
         logger.i(Tag) {
             "Loading favorites"
         }

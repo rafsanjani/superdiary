@@ -5,7 +5,6 @@ import androidx.compose.material.icons.filled.StackedBarChart
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -32,10 +31,6 @@ object DashboardTab : SuperDiaryTab {
         val screenModel: DashboardViewModel = koinInject()
         val screenState by screenModel.state.collectAsState()
         val coroutineScope = rememberCoroutineScope()
-
-        LaunchedEffect(Unit) {
-            screenModel.loadDashboardContent()
-        }
 
         val settings by screenModel.settings.collectAsState(initial = DiarySettings.Empty)
 

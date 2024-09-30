@@ -21,16 +21,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
+@Suppress("LongParameterList")
 class DashboardViewModel(
-    val getAllDiariesUseCase: GetAllDiariesUseCase,
+    private val getAllDiariesUseCase: GetAllDiariesUseCase,
     private val calculateStreakUseCase: CalculateStreakUseCase,
     private val calculateBestStreakUseCase: CalculateBestStreakUseCase,
     private val addWeeklySummaryUseCase: AddWeeklySummaryUseCase,
@@ -39,6 +40,7 @@ class DashboardViewModel(
     private val preference: DiaryPreference,
     private val diaryAI: DiaryAI,
     private val logger: AggregateLogger,
+    private val clock: Clock = Clock.System,
 ) : ViewModel() {
     sealed interface DashboardScreenState {
         data object Loading : DashboardScreenState
@@ -57,11 +59,21 @@ class DashboardViewModel(
 
     private val diaries: Flow<List<Diary>> =
         getAllDiariesUseCase()
-            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(5000L))
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000L),
+                initialValue = emptyList(),
+            )
 
-    val state: StateFlow<DashboardScreenState> = mutableState.asStateFlow()
+    val state: StateFlow<DashboardScreenState> = mutableState
+        .onStart { loadDashboardContent() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = DashboardScreenState.Loading,
+        )
 
-    fun loadDashboardContent() = viewModelScope.launch {
+    private fun loadDashboardContent() = viewModelScope.launch {
         logger.i(Tag) {
             "Loading dashboard content"
         }
@@ -84,13 +96,13 @@ class DashboardViewModel(
                     },
                     currentStreak = Streak(
                         0,
-                        Clock.System.now().toDate(),
-                        Clock.System.now().toDate(),
+                        clock.now().toDate(),
+                        clock.now().toDate(),
                     ),
                     bestStreak = Streak(
                         0,
-                        Clock.System.now().toDate(),
-                        Clock.System.now().toDate(),
+                        clock.now().toDate(),
+                        clock.now().toDate(),
                     ),
                 )
             }
@@ -130,7 +142,7 @@ class DashboardViewModel(
         val latestWeeklySummary = getWeeklySummaryUseCase()
 
         latestWeeklySummary?.let {
-            val difference = Clock.System.now() - latestWeeklySummary.date
+            val difference = clock.now() - latestWeeklySummary.date
 
             if (difference.inWholeDays <= 7L) {
                 logger.i(Tag) {
@@ -167,14 +179,11 @@ class DashboardViewModel(
                         )
                     }
                 }
-            }.collect { chunk ->
+            }
+            .collect { summary ->
                 updateContentState { state ->
                     state.copy(
-                        weeklySummary = if (state.weeklySummary == DEFAULT_SUMMARY_TEXT) {
-                            chunk
-                        } else {
-                            state.weeklySummary + chunk
-                        },
+                        weeklySummary = summary,
                     )
                 }
             }

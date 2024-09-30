@@ -8,5 +8,6 @@ import com.foreverrafs.superdiary.data.model.Diary
  * sort to occur so it's either we are loading or we have 0 or n favorites
  */
 sealed interface FavoriteScreenState {
+    data object Loading : FavoriteScreenState
     data class Content(val diaries: List<Diary>) : FavoriteScreenState
 }

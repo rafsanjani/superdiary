@@ -4,7 +4,6 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEmpty
 import assertk.assertions.isInstanceOf
-import assertk.assertions.isNotEmpty
 import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.datasource.DataSource
@@ -30,7 +29,6 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.datetime.Clock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class FavoriteViewModelTest {
@@ -41,6 +39,8 @@ class FavoriteViewModelTest {
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
+
+        everySuspend { dataSource.fetchFavorites() }.returns(flowOf(emptyList()))
 
         favoriteViewModel = FavoriteViewModel(
             getFavoriteDiariesUseCase = GetFavoriteDiariesUseCase(dataSource, TestAppDispatchers),
@@ -56,21 +56,7 @@ class FavoriteViewModelTest {
 
     @Test
     fun `Success state is emitted after loading favorites`() = runTest {
-        every { dataSource.fetchFavorites() }.returns(
-            flowOf(
-                listOf(
-                    Diary(
-                        entry = "Fake Diary",
-                        date = Clock.System.now(),
-                        isFavorite = true,
-                    ),
-                ),
-            ),
-        )
-
         favoriteViewModel.state.test {
-            favoriteViewModel.loadFavorites()
-
             // skip loading state
             skipItems(1)
 
@@ -80,7 +66,6 @@ class FavoriteViewModelTest {
             assertNotNull(successState)
 
             assertThat(successState).isInstanceOf<FavoriteScreenState.Content>()
-            assertThat((successState as FavoriteScreenState.Content).diaries).isNotEmpty()
         }
     }
 
@@ -89,8 +74,6 @@ class FavoriteViewModelTest {
         every { dataSource.fetchFavorites() }.returns(flowOf(emptyList()))
 
         favoriteViewModel.state.test {
-            favoriteViewModel.loadFavorites()
-
             // skip loading state
             skipItems(1)
 

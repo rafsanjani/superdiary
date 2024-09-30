@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.ui.dashboard
 
 import app.cash.turbine.test
 import assertk.assertThat
+import assertk.assertions.contains
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
@@ -33,7 +34,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -44,9 +44,7 @@ import kotlinx.datetime.minus
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DashboardViewModelTest {
-    private val dataSource: DataSource = mock<DataSource>()
-
-    private lateinit var dashboardViewModel: DashboardViewModel
+    private lateinit var dataSource: DataSource
 
     private val diaryAI: DiaryAI = mock<DiaryAI>()
 
@@ -56,19 +54,11 @@ class DashboardViewModelTest {
 
     @BeforeTest
     fun setup() {
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(TestAppDispatchers.main)
+        dataSource = mock()
 
-        dashboardViewModel = DashboardViewModel(
-            getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers),
-            calculateStreakUseCase = CalculateStreakUseCase(TestAppDispatchers),
-            addWeeklySummaryUseCase = AddWeeklySummaryUseCase(dataSource, TestAppDispatchers),
-            getWeeklySummaryUseCase = GetWeeklySummaryUseCase(dataSource, TestAppDispatchers),
-            diaryAI = diaryAI,
-            calculateBestStreakUseCase = CalculateBestStreakUseCase(TestAppDispatchers),
-            updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
-            logger = AggregateLogger(emptyList()),
-            preference = diaryPreference,
-        )
+        every { dataSource.fetchAll() }.returns(flowOf())
+        everySuspend { diaryPreference.save(any()) }.returns(Unit)
     }
 
     @AfterTest
@@ -76,9 +66,22 @@ class DashboardViewModelTest {
         Dispatchers.resetMain()
     }
 
+    private fun createDashboardViewModel(): DashboardViewModel = DashboardViewModel(
+        getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers),
+        calculateStreakUseCase = CalculateStreakUseCase(TestAppDispatchers),
+        addWeeklySummaryUseCase = AddWeeklySummaryUseCase(dataSource, TestAppDispatchers),
+        getWeeklySummaryUseCase = GetWeeklySummaryUseCase(dataSource, TestAppDispatchers),
+        diaryAI = diaryAI,
+        calculateBestStreakUseCase = CalculateBestStreakUseCase(TestAppDispatchers),
+        updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
+        logger = AggregateLogger(emptyList()),
+        preference = diaryPreference,
+    )
+
     @Test
     fun `Should load dashboard from loading state`() = runTest {
-        dashboardViewModel.state.test {
+        val viewModel = createDashboardViewModel()
+        viewModel.state.test {
             val state = awaitItem()
 
             assertThat(state).isInstanceOf<DashboardViewModel.DashboardScreenState.Loading>()
@@ -92,20 +95,22 @@ class DashboardViewModelTest {
                 listOf(Diary("Hello World")),
             ),
         )
-        every { dataSource.getWeeklySummary() }.returns(
-            WeeklySummary("This is your summary for the week"),
+        everySuspend { dataSource.getWeeklySummary() }.returns(
+            WeeklySummary("This is your weekly summary"),
         )
 
-        dashboardViewModel.state.test {
-            dashboardViewModel.loadDashboardContent()
-            // Skip the loading state and the initial success state
-            skipItems(2)
+        val viewModel = createDashboardViewModel()
 
+        viewModel.state.test {
+            skipItems(3)
             val state = awaitItem()
             cancelAndIgnoreRemainingEvents()
 
             assertThat(state).isInstanceOf<DashboardViewModel.DashboardScreenState.Content>()
-            assertThat((state as DashboardViewModel.DashboardScreenState.Content).weeklySummary).isNotNull()
+            val content: DashboardViewModel.DashboardScreenState.Content =
+                state as DashboardViewModel.DashboardScreenState.Content
+
+            assertThat(content.weeklySummary!!).contains("This is your weekly summary")
         }
     }
 
@@ -128,10 +133,11 @@ class DashboardViewModelTest {
         )
         every { diaryAI.getWeeklySummary(any()) }.returns(flowOf("New Diary Summary"))
 
-        dashboardViewModel.state.test {
-            dashboardViewModel.loadDashboardContent()
+        val viewModel = createDashboardViewModel()
+
+        viewModel.state.test {
             // Skip the loading state
-            skipItems(2)
+            skipItems(3)
             val state = awaitItem() as? DashboardViewModel.DashboardScreenState.Content
 
             cancelAndIgnoreRemainingEvents()
@@ -153,10 +159,22 @@ class DashboardViewModelTest {
         )
         every { diaryAI.getWeeklySummary(any()) }.returns(flowOf("New Diary Summary"))
 
-        dashboardViewModel.state.test {
-            dashboardViewModel.loadDashboardContent()
+        val viewModel = createDashboardViewModel()
+
+//        dashboardViewModel = DashboardViewModel(
+//            getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers),
+//            calculateStreakUseCase = CalculateStreakUseCase(TestAppDispatchers),
+//            addWeeklySummaryUseCase = AddWeeklySummaryUseCase(dataSource, TestAppDispatchers),
+//            getWeeklySummaryUseCase = GetWeeklySummaryUseCase(dataSource, TestAppDispatchers),
+//            diaryAI = diaryAI,
+//            calculateBestStreakUseCase = CalculateBestStreakUseCase(TestAppDispatchers),
+//            updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
+//            logger = AggregateLogger(emptyList()),
+//            preference = diaryPreference,
+//        )
+        viewModel.state.test {
             // Skip the loading state
-            skipItems(2)
+            skipItems(3)
             val state = awaitItem() as? DashboardViewModel.DashboardScreenState.Content
 
             cancelAndIgnoreRemainingEvents()
@@ -167,7 +185,9 @@ class DashboardViewModelTest {
 
     @Test
     fun `Should save settings when dashboard ordering is changed`() = runTest {
-        dashboardViewModel.updateSettings(DiarySettings.Empty)
+        val viewModel = createDashboardViewModel()
+
+        viewModel.updateSettings(DiarySettings.Empty)
         delay(100)
         verifySuspend { diaryPreference.save(any()) }
     }
@@ -178,8 +198,21 @@ class DashboardViewModelTest {
         every { dataSource.fetchAll() }.returns(flowOf(listOf(diary)))
         everySuspend { dataSource.update(any()) }.returns(1)
 
-        dashboardViewModel.toggleFavorite(diary)
+        val viewModel = createDashboardViewModel()
+
+        viewModel.toggleFavorite(diary)
 
         verifySuspend { dataSource.update(any()) }
+    }
+
+    @Test
+    fun `Should transition to content state on dashboard after loading`() = runTest {
+        val viewModel = createDashboardViewModel()
+
+        viewModel.state.test {
+            skipItems(1)
+
+            assertThat(awaitItem()).isInstanceOf(DashboardViewModel.DashboardScreenState.Content::class)
+        }
     }
 }
