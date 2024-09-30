@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -39,10 +38,8 @@ class DiaryChatViewModel(
     private val mutableState = MutableStateFlow(DiaryChatViewState())
 
     private val diaries: Flow<List<Diary>> = getAllDiariesUseCase()
-        .shareIn(viewModelScope, SharingStarted.WhileSubscribed(5000L))
 
     private val chatMessages: Flow<List<DiaryChatMessage>> = getChatMessagesUseCase()
-        .shareIn(viewModelScope, SharingStarted.WhileSubscribed(5000L))
 
     val state: StateFlow<DiaryChatViewState> = mutableState
         .onStart {

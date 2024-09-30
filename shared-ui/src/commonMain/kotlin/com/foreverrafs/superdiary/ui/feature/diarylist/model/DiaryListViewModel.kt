@@ -11,17 +11,21 @@ import com.foreverrafs.superdiary.data.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.data.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.data.utils.toInstant
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class DiaryListViewModel(
     getAllDiariesUseCase: GetAllDiariesUseCase,
     private val searchDiaryByEntryUseCase: SearchDiaryByEntryUseCase,
@@ -31,68 +35,60 @@ class DiaryListViewModel(
     private val logger: AggregateLogger,
 ) : ViewModel() {
 
-    private val mutableState = MutableStateFlow<DiaryListViewState>(DiaryListViewState.Loading)
+    private val filters: MutableStateFlow<DiaryFilters> = MutableStateFlow(DiaryFilters())
 
-    private val diaries: Flow<List<Diary>> = getAllDiariesUseCase()
-        .shareIn(viewModelScope, SharingStarted.WhileSubscribed())
-
-    val state = mutableState.asStateFlow()
-
-    fun observeDiaries() = viewModelScope.launch {
-        mutableState.update {
-            DiaryListViewState.Loading
-        }
-
-        diaries.catch { error ->
-            mutableState.update {
-                DiaryListViewState.Error(error)
+    val state: StateFlow<DiaryListViewState> = filters
+        .flatMapLatest { filters ->
+            if (filters.entry.isNotEmpty() && filters.date != null) {
+                return@flatMapLatest searchByDateAndEntry(
+                    entry = filters.entry,
+                    date = filters.date,
+                )
             }
+
+            if (filters.entry.isNotEmpty()) {
+                return@flatMapLatest searchByEntry(entry = filters.entry)
+            }
+
+            if (filters.date != null) return@flatMapLatest searchByDate(date = filters.date)
+
+            // No filter applied, return all the diaries
+            getAllDiariesUseCase()
         }
-            .collect { diaries ->
-                mutableState.update {
-                    DiaryListViewState.Content(
-                        diaries = diaries,
-                        filtered = false,
+        .map {
+            DiaryListViewState.Content(diaries = it, filtered = true) as DiaryListViewState
+        }
+        .catch {
+            emit(DiaryListViewState.Error(it))
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = DiaryListViewState.Loading,
+        )
+
+    fun applyFilter(newFilters: DiaryFilters) {
+        this.filters.update {
+            newFilters
+        }
+    }
+
+    private fun searchByEntry(entry: String): Flow<List<Diary>> =
+        searchDiaryByEntryUseCase.invoke(entry)
+
+    private fun searchByDate(date: LocalDate): Flow<List<Diary>> =
+        searchDiaryByDateUseCase.invoke(date.toInstant())
+
+    private fun searchByDateAndEntry(date: LocalDate, entry: String): Flow<List<Diary>> =
+        searchDiaryByDateUseCase(date = date.toInstant())
+            .map { list ->
+                list.filter {
+                    it.entry.contains(
+                        entry,
+                        false,
                     )
                 }
             }
-    }
-
-    fun filterByEntry(entry: String) = viewModelScope.launch {
-        searchDiaryByEntryUseCase.invoke(entry).collect { diaries ->
-            mutableState.update {
-                DiaryListViewState.Content(
-                    diaries = diaries,
-                    filtered = true,
-                )
-            }
-        }
-    }
-
-    fun filterByDate(date: LocalDate) = viewModelScope.launch {
-        searchDiaryByDateUseCase.invoke(date.toInstant()).collect { diaries ->
-            mutableState.update {
-                DiaryListViewState.Content(
-                    diaries = diaries,
-                    filtered = true,
-                )
-            }
-        }
-    }
-
-    fun filterByDateAndEntry(date: LocalDate, entry: String) = viewModelScope.launch {
-        searchDiaryByDateUseCase(date.toInstant()).collect { diaries ->
-            logger.d(Tag) {
-                "Filtered diaries by Date and Entry $date $entry"
-            }
-            mutableState.update {
-                DiaryListViewState.Content(
-                    diaries = diaries.filter { it.entry.contains(entry, false) },
-                    filtered = true,
-                )
-            }
-        }
-    }
 
     suspend fun deleteDiaries(diaries: List<Diary>): Boolean =
         when (val result = deleteDiaryUseCase(diaries)) {

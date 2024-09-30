@@ -145,14 +145,15 @@ fun DiaryListScreenContent(
             )
         }
 
-    val backPressedHandler: SuperDiaryBackPressHandler.OnBackPressed = SuperDiaryBackPressHandler.OnBackPressed {
-        if (selectedIds.isNotEmpty()) {
-            diaryListActions.onCancelSelection()
-        } else {
-            diaryListActions.onBackPressed()
+    val backPressedHandler: SuperDiaryBackPressHandler.OnBackPressed =
+        SuperDiaryBackPressHandler.OnBackPressed {
+            if (selectedIds.isNotEmpty()) {
+                diaryListActions.onCancelSelection()
+            } else {
+                diaryListActions.onBackPressed()
+            }
+            false
         }
-        false
-    }
 
     DisposableEffect(Unit) {
         SuperDiaryBackPressHandler.addCallback(backPressedHandler)
@@ -230,7 +231,7 @@ fun DiaryListScreenContent(
 
 /**
  * Display a list of diaries from the database. We have different functions
- * for adding and removing instead of just using the toggl. There are
+ * for adding and removing instead of just using the toggle. There are
  * instances where we just want to add entries whether they exist or
  * not and other times where we want to remove entries at all costs.
  *
@@ -239,12 +240,12 @@ fun DiaryListScreenContent(
  * @param diaryFilters The filters that will be applied to the diary list
  * @param selectedIds The list of ids of the selected diary entries remove
  * @param diaryListActions Encapsulates all the actions that can be
- *     performed on a list of diaries.
+ *    performed on a list of diaries.
  * @param onDeleteDiaries Delete the selected diaries from the list diaries
  * @param clock This is used to control the time/date for diary groupings
  * @param showSearchBar Determines whether or not the search/selection
- *     modifier bar will be showed. This is hidden in favorite screen it
- *     otherwise.
+ *    modifier bar will be showed. This is hidden in favorite screen it
+ *    otherwise.
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -403,9 +404,9 @@ fun DiaryList(
  *
  * @param diaries List of diaries to display in the list
  * @param isFiltered Determines whether the rendered list is a result of a
- *     filter operation
+ *    filter operation
  * @param showSearchBar Determines whether the search bar should be showed.
- *     It is hidden
+ *    It is hidden
  */
 @Composable
 private fun DiaryListContent(

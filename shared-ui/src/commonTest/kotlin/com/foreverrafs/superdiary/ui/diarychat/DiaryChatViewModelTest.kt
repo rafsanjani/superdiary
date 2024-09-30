@@ -130,7 +130,7 @@ class DiaryChatViewModelTest {
         }
     }
 
-    private suspend inline fun <T> ReceiveTurbine<T>.awaitUntil(
+    suspend inline fun <T> ReceiveTurbine<T>.awaitUntil(
         predicate: (value: T) -> Boolean,
     ): T {
         var value = awaitItem()
