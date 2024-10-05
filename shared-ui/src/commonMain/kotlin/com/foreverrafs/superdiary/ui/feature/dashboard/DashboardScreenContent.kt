@@ -47,7 +47,6 @@ import com.foreverrafs.superdiary.data.model.Streak
 import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryItem
 import com.foreverrafs.superdiary.ui.format
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.label_add_entry
@@ -308,7 +307,6 @@ fun GlanceCard(
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 private fun LatestEntries(
     diaries: List<Diary>,

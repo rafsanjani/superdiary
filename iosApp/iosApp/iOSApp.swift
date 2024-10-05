@@ -2,9 +2,10 @@ import SwiftUI
 import Sentry
 
 import shared
+import CoreLocation
 
 @main
-struct iOSApp: App {
+struct iOSApp: App  {
     init() {
         KoinApplication.shared.initialize(
             analytics: AppleAnalytics(),
@@ -24,6 +25,7 @@ struct iOSApp: App {
             options.enableTracing = true
         }
     }
+
 
     var body: some Scene {
         WindowGroup {
