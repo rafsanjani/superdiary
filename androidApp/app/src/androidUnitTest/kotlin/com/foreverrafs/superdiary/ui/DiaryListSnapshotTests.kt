@@ -66,10 +66,10 @@ class DiaryListSnapshotTests(
         paparazzi.snapshot {
             SuperdiaryTheme {
                 CreateDiaryScreenContent(
+                    isGeneratingFromAi = false,
+                    onGenerateAI = { _, _ -> },
                     onNavigateBack = {},
                     onSaveDiary = {},
-                    onGenerateAI = { _, _ -> },
-                    isGeneratingFromAi = false,
                 )
             }
         }
@@ -80,11 +80,11 @@ class DiaryListSnapshotTests(
         paparazzi.snapshot {
             SuperdiaryTheme {
                 CreateDiaryScreenContent(
-                    richTextState = RichTextState().apply { setHtml("<p>AI generated diary content</p>") },
-                    onNavigateBack = {},
-                    onSaveDiary = {},
-                    onGenerateAI = { _, _ -> },
                     isGeneratingFromAi = true,
+                    onGenerateAI = { _, _ -> },
+                    onNavigateBack = {},
+                    richTextState = RichTextState().apply { setHtml("<p>AI generated diary content</p>") },
+                    onSaveDiary = {},
                 )
             }
         }

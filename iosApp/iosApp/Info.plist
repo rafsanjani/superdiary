@@ -4,6 +4,8 @@
 <dict>
 	<key>SENTRY_BASE_URL</key>
 	<string>${SENTRY_BASE_URL}</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location is required to tag your entries when they are made</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
