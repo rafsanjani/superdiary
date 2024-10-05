@@ -1,6 +1,7 @@
 package com.foreverrafs.superdiary.ui.di
 
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
+import com.foreverrafs.superdiary.core.location.di.locationModule
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.core.utils.utilsModule
 import com.foreverrafs.superdiary.data.di.platformModule
@@ -30,6 +31,7 @@ fun compositeModule(
     logger: AggregateLogger,
 ): List<Module> = listOf(
     utilsModule(),
+    locationModule(),
     useCaseModule(),
     screenModules(),
     platformModule(analyticsTracker = analytics, aggregateLogger = logger),

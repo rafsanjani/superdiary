@@ -42,14 +42,13 @@ import com.foreverrafs.superdiary.ui.feature.creatediary.components.RichTextStyl
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.content_description_navigate_back
 import superdiary.shared_ui.generated.resources.content_description_save_entry
 import superdiary.shared_ui.generated.resources.label_diary_ai
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateDiaryScreenContent(
     isGeneratingFromAi: Boolean,
@@ -83,8 +82,7 @@ fun CreateDiaryScreenContent(
                             },
                         ) {
                             Icon(
-                                modifier = Modifier
-                                    .clip(CircleShape),
+                                modifier = Modifier.clip(CircleShape),
                                 imageVector = Icons.Default.Check,
                                 contentDescription = stringResource(Res.string.content_description_save_entry),
                             )
@@ -167,11 +165,8 @@ fun CreateDiaryScreenContent(
                 // editable state
                 OutlinedRichTextEditor(
                     state = richTextState,
-                    modifier = Modifier
-                        .testTag("diary_text_field")
-                        .focusRequester(focusRequester)
-                        .weight(1f)
-                        .fillMaxWidth(),
+                    modifier = Modifier.testTag("diary_text_field").focusRequester(focusRequester)
+                        .weight(1f).fillMaxWidth(),
                     textStyle = MaterialTheme.typography.bodyMedium.copy(
                         lineHeight = 25.sp,
                     ),

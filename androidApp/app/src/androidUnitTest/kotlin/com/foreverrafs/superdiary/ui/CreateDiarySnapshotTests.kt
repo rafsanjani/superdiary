@@ -28,9 +28,9 @@ class CreateDiarySnapshotTests(
         paparazzi.snapshot {
             SuperdiaryTheme {
                 CreateDiaryScreenContent(
-                    onNavigateBack = {},
                     isGeneratingFromAi = false,
                     onGenerateAI = { _: String, _: Int -> },
+                    onNavigateBack = {},
                     richTextState = rememberRichTextState().apply {},
                     onSaveDiary = {},
                 )
@@ -43,9 +43,9 @@ class CreateDiarySnapshotTests(
         paparazzi.snapshot {
             SuperdiaryTheme {
                 CreateDiaryScreenContent(
-                    onNavigateBack = {},
                     isGeneratingFromAi = false,
                     onGenerateAI = { _: String, _: Int -> },
+                    onNavigateBack = {},
                     richTextState = rememberRichTextState().apply {
                         setText(
                             "A four word line",
@@ -62,9 +62,9 @@ class CreateDiarySnapshotTests(
         paparazzi.snapshot {
             SuperdiaryTheme {
                 CreateDiaryScreenContent(
-                    onNavigateBack = {},
                     isGeneratingFromAi = false,
                     onGenerateAI = { _: String, _: Int -> },
+                    onNavigateBack = {},
                     richTextState = rememberRichTextState().apply {
                         setText(
                             """
@@ -90,9 +90,9 @@ class CreateDiarySnapshotTests(
         paparazzi.snapshot {
             SuperdiaryTheme {
                 CreateDiaryScreenContent(
-                    onNavigateBack = {},
                     isGeneratingFromAi = true,
                     onGenerateAI = { _: String, _: Int -> },
+                    onNavigateBack = {},
                     richTextState = rememberRichTextState().apply {
                         setText(
                             """

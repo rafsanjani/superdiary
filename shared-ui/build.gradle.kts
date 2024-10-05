@@ -34,6 +34,7 @@ kotlin {
             linkerOpts += "-lsqlite3"
             export(projects.core.analytics)
             export(projects.core.logging)
+            export(projects.core.location)
         }
     }
 
@@ -44,9 +45,6 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                @OptIn(
-                    org.jetbrains.compose.ExperimentalComposeLibrary::class,
-                )
                 implementation(compose.components.resources)
                 implementation(compose.material3)
                 implementation(compose.foundation)
@@ -62,12 +60,14 @@ kotlin {
                 implementation(libs.uuid)
                 api(projects.core.logging)
                 api(projects.core.analytics)
+                api(projects.core.location)
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
                 implementation(libs.androidx.datastore.preferences)
                 implementation(libs.androidx.datastore.core)
                 implementation(libs.jetbrains.navigation.compose)
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.moko.permissions.compose)
             }
         }
 
@@ -88,7 +88,7 @@ kotlin {
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
         }
 
-        val androidUnitTest by getting {
+        androidUnitTest {
             dependencies {
                 implementation(libs.cashapp.paparazzi)
                 implementation(libs.koin.android)
@@ -98,7 +98,7 @@ kotlin {
             }
         }
 
-        val jvmMain by getting {
+        jvmMain {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(libs.koin.jvm)
@@ -106,9 +106,16 @@ kotlin {
             }
         }
 
-        val androidMain by getting {
+        androidMain {
             dependencies {
                 implementation(libs.compose.ui.tooling)
+                implementation(libs.moko.permissions)
+            }
+        }
+
+        iosMain {
+            dependencies {
+                implementation(libs.moko.permissions)
             }
         }
     }

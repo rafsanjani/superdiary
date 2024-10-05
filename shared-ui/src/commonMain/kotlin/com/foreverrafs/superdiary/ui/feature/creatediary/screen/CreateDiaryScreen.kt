@@ -1,14 +1,21 @@
 package com.foreverrafs.superdiary.ui.feature.creatediary.screen
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.ui.navigation.SuperDiaryScreen
+import dev.icerock.moko.permissions.DeniedAlwaysException
+import dev.icerock.moko.permissions.DeniedException
+import dev.icerock.moko.permissions.Permission
+import dev.icerock.moko.permissions.compose.BindEffect
+import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
@@ -22,11 +29,38 @@ object CreateDiaryScreen : SuperDiaryScreen {
 
     @Composable
     fun Content(navController: NavController) {
-        val createDiaryScreenModel: CreateDiaryViewModel = koinInject()
+        val createDiaryViewModel: CreateDiaryViewModel = koinInject()
 
         val undoManager = rememberUndoableRichTextState()
         val richTextState = undoManager.richTextState
         val coroutineScope = rememberCoroutineScope()
+        val screenState by createDiaryViewModel.screenState.collectAsStateWithLifecycle()
+
+        val permissionsControllerFactory = rememberPermissionsControllerFactory()
+        val permissionsController =
+            remember(permissionsControllerFactory) { permissionsControllerFactory.createPermissionsController() }
+
+        LaunchedEffect(Unit) {
+            val isLocationPermissionGranted =
+                permissionsController.isPermissionGranted(Permission.LOCATION)
+
+            if (isLocationPermissionGranted) {
+                createDiaryViewModel.onLocationPermissionGranted(isLocationPermissionGranted)
+                return@LaunchedEffect
+            }
+
+            try {
+                permissionsController.providePermission(Permission.LOCATION)
+                // permission has been granted. request location update
+                createDiaryViewModel.onLocationPermissionGranted(isLocationPermissionGranted)
+            } catch (e: DeniedException) {
+                println(e)
+            } catch (e: DeniedAlwaysException) {
+                println(e)
+            }
+        }
+
+        BindEffect(permissionsController)
 
         var isGeneratingFromAI by remember {
             mutableStateOf(false)
@@ -36,12 +70,13 @@ object CreateDiaryScreen : SuperDiaryScreen {
             onNavigateBack = navController::popBackStack,
             richTextState = richTextState,
             isGeneratingFromAi = isGeneratingFromAI,
-            onGenerateAI = { prompt, wordCount ->
+            onGenerateAI =
+            { prompt, wordCount ->
                 undoManager.save()
                 var generatedWords = ""
 
                 coroutineScope.launch {
-                    createDiaryScreenModel
+                    createDiaryViewModel
                         .generateAIDiary(
                             prompt = prompt,
                             wordCount = wordCount,
@@ -64,7 +99,7 @@ object CreateDiaryScreen : SuperDiaryScreen {
                 }
             },
             onSaveDiary = { entry ->
-                createDiaryScreenModel.saveDiary(
+                createDiaryViewModel.saveDiary(
                     Diary(
                         entry = entry,
                         date = Clock.System.now(),
