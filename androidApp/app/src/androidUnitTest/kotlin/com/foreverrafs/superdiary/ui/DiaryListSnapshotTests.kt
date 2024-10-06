@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.ui
 
 import app.cash.paparazzi.Paparazzi
 import com.android.ide.common.rendering.api.SessionParams
+import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
@@ -12,6 +13,7 @@ import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import com.mohamedrejeb.richeditor.model.RichTextState
+import dev.icerock.moko.permissions.PermissionState
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
@@ -70,6 +72,10 @@ class DiaryListSnapshotTests(
                     onGenerateAI = { _, _ -> },
                     onNavigateBack = {},
                     onSaveDiary = {},
+                    showLocationPermissionRationale = false,
+                    onRequestLocationPermission = {},
+                    onDontAskAgain = {},
+                    permissionState = PermissionState.NotGranted,
                 )
             }
         }
@@ -85,6 +91,10 @@ class DiaryListSnapshotTests(
                     onNavigateBack = {},
                     richTextState = RichTextState().apply { setHtml("<p>AI generated diary content</p>") },
                     onSaveDiary = {},
+                    showLocationPermissionRationale = false,
+                    onRequestLocationPermission = {},
+                    onDontAskAgain = {},
+                    permissionState = PermissionState.NotGranted,
                 )
             }
         }
@@ -106,6 +116,7 @@ class DiaryListSnapshotTests(
                                     timeZone = TimeZone.UTC,
                                 ),
                                 isFavorite = false,
+                                location = Location.Empty,
                             )
                         },
                         filtered = false,

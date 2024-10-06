@@ -6,6 +6,7 @@ import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
+import dev.icerock.moko.permissions.PermissionState
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
@@ -33,6 +34,10 @@ class CreateDiarySnapshotTests(
                     onNavigateBack = {},
                     richTextState = rememberRichTextState().apply {},
                     onSaveDiary = {},
+                    onDontAskAgain = {},
+                    showLocationPermissionRationale = false,
+                    onRequestLocationPermission = {},
+                    permissionState = PermissionState.NotDetermined,
                 )
             }
         }
@@ -52,6 +57,10 @@ class CreateDiarySnapshotTests(
                         )
                     },
                     onSaveDiary = {},
+                    showLocationPermissionRationale = false,
+                    onRequestLocationPermission = {},
+                    onDontAskAgain = {},
+                    permissionState = PermissionState.NotGranted,
                 )
             }
         }
@@ -80,6 +89,10 @@ class CreateDiarySnapshotTests(
                         )
                     },
                     onSaveDiary = {},
+                    showLocationPermissionRationale = false,
+                    onRequestLocationPermission = {},
+                    onDontAskAgain = {},
+                    permissionState = PermissionState.NotGranted,
                 )
             }
         }
@@ -108,6 +121,10 @@ class CreateDiarySnapshotTests(
                         )
                     },
                     onSaveDiary = {},
+                    showLocationPermissionRationale = false,
+                    onRequestLocationPermission = {},
+                    onDontAskAgain = {},
+                    permissionState = PermissionState.NotGranted,
                 )
             }
         }

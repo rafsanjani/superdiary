@@ -34,6 +34,8 @@ class DiaryPreferenceImpl private constructor(
     private val showWeeklySummaryKey = booleanPreferencesKey("showWeeklySummary")
     private val showAtAGlanceKey = booleanPreferencesKey("showAtAGlance")
     private val showLatestEntriesKey = booleanPreferencesKey("showLatestEntries")
+    private val showLocationPermissionDialogKey =
+        booleanPreferencesKey("showLocationPermissionDialog")
 
     override val settings: Flow<DiarySettings> = dataStore.data.map {
         DiarySettings(
@@ -41,6 +43,7 @@ class DiaryPreferenceImpl private constructor(
             showWeeklySummary = it[showWeeklySummaryKey] ?: true,
             showAtAGlance = it[showAtAGlanceKey] ?: true,
             showLatestEntries = it[showLatestEntriesKey] ?: true,
+            showLocationPermissionDialog = it[showLocationPermissionDialogKey] ?: true,
         )
     }
 
@@ -52,12 +55,13 @@ class DiaryPreferenceImpl private constructor(
         get() {
             val prefs = runBlocking { dataStore.data.first() }
 
-            // Default to true if the preference is not set
+            // Use appropriate defaults when the settings hasn't been set
             return DiarySettings(
                 isFirstLaunch = prefs[isFirstLaunchKey] ?: true,
                 showWeeklySummary = prefs[showWeeklySummaryKey] ?: true,
                 showAtAGlance = prefs[showAtAGlanceKey] ?: true,
                 showLatestEntries = prefs[showLatestEntriesKey] ?: true,
+                showLocationPermissionDialog = prefs[showLocationPermissionDialogKey] ?: true,
             )
         }
 
@@ -67,6 +71,7 @@ class DiaryPreferenceImpl private constructor(
             it[showWeeklySummaryKey] = settings.showWeeklySummary
             it[showAtAGlanceKey] = settings.showAtAGlance
             it[showLatestEntriesKey] = settings.showLatestEntries
+            it[showLocationPermissionDialogKey] = settings.showLocationPermissionDialog
         }
     }
 
@@ -93,6 +98,7 @@ data class DiarySettings(
     val showWeeklySummary: Boolean,
     val showAtAGlance: Boolean,
     val showLatestEntries: Boolean,
+    val showLocationPermissionDialog: Boolean,
 ) {
     companion object {
         val Empty: DiarySettings = DiarySettings(
@@ -100,6 +106,7 @@ data class DiarySettings(
             showWeeklySummary = true,
             showAtAGlance = true,
             showLatestEntries = true,
+            showLocationPermissionDialog = true,
         )
     }
 }

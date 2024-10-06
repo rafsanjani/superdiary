@@ -7,6 +7,7 @@ import com.foreverrafs.superdiary.core.utils.utilsModule
 import com.foreverrafs.superdiary.data.di.platformModule
 import com.foreverrafs.superdiary.data.di.useCaseModule
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryViewModel
+import com.foreverrafs.superdiary.ui.feature.creatediary.screen.LocationPermissionManager
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
@@ -17,6 +18,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 internal fun screenModules(): Module = module {
+    singleOf(::LocationPermissionManager)
     singleOf(::DiaryListViewModel)
     singleOf(::CreateDiaryViewModel)
     singleOf(::FavoriteViewModel)
@@ -24,6 +26,8 @@ internal fun screenModules(): Module = module {
     singleOf(::DiaryChatViewModel)
     singleOf(::DetailsViewModel)
 }
+
+expect fun permissionModule(): Module
 
 /** This is the only component that is exposed outside of this module */
 fun compositeModule(
@@ -33,6 +37,7 @@ fun compositeModule(
     utilsModule(),
     locationModule(),
     useCaseModule(),
+    permissionModule(),
     screenModules(),
     platformModule(analyticsTracker = analytics, aggregateLogger = logger),
 )
