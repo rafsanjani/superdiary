@@ -5,6 +5,7 @@ import app.cash.sqldelight.EnumColumnAdapter
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOneOrNull
+import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
 import com.foreverrafs.superdiary.data.model.Diary
@@ -21,13 +22,38 @@ private val dateAdapter = object : ColumnAdapter<Instant, Long> {
     override fun encode(value: Instant): Long = value.toEpochMilliseconds()
 }
 
+private val locationAdapter = object : ColumnAdapter<Location, String> {
+    override fun decode(databaseValue: String): Location {
+        val (latitude, longitude) = databaseValue.split(",")
+
+        return if (latitude.isNotEmpty() && longitude.isNotEmpty()) {
+            Location(
+                latitude = latitude.toDouble(),
+                longitude = longitude.toDouble(),
+            )
+        } else {
+            Location.Empty
+        }
+    }
+
+    override fun encode(value: Location): String =
+        if (!value.isEmpty()) {
+            "${value.latitude},${value.longitude}"
+        } else {
+            "0.0,0.0"
+        }
+}
+
 @Suppress("TooManyFunctions")
 class Database(databaseDriver: DatabaseDriver) {
     private val driver = databaseDriver.createDriver()
     private val superDiaryDatabase =
         SuperDiaryDatabase(
             driver = driver,
-            diaryAdapter = db.Diary.Adapter(dateAdapter = dateAdapter),
+            diaryAdapter = db.Diary.Adapter(
+                dateAdapter = dateAdapter,
+                locationAdapter = locationAdapter,
+            ),
             chatAdapter = db.Chat.Adapter(
                 dateAdapter = dateAdapter,
                 roleAdapter = EnumColumnAdapter<DiaryChatRole>(),
@@ -35,14 +61,16 @@ class Database(databaseDriver: DatabaseDriver) {
         )
     private val queries = superDiaryDatabase.databaseQueries
 
-    private val diaryMapper = { id: Long, entry: String, date: Instant, favorite: Long ->
-        Diary(
-            id = id,
-            entry = entry,
-            date = date,
-            isFavorite = favorite.asBoolean(),
-        )
-    }
+    private val diaryMapper =
+        { id: Long, entry: String, date: Instant, favorite: Long, location: Location? ->
+            Diary(
+                id = id,
+                entry = entry,
+                date = date,
+                isFavorite = favorite.asBoolean(),
+                location = location ?: Location.Empty,
+            )
+        }
 
     /**
      * This is only used on JVM and in tests. Schema is created automatically
@@ -53,7 +81,13 @@ class Database(databaseDriver: DatabaseDriver) {
     }
 
     fun addDiary(diary: Diary) =
-        queries.insert(diary.id, diary.entry, diary.date, diary.isFavorite.asLong())
+        queries.insert(
+            id = diary.id,
+            entry = diary.entry,
+            date = diary.date,
+            favorite = diary.isFavorite.asLong(),
+            location = diary.location,
+        )
 
     fun deleteDiary(id: Long) = queries.delete(id)
 

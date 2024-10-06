@@ -1,0 +1,4 @@
+import com.foreverrafs.superdiary.core.location.Location;
+
+ALTER TABLE diary
+ADD COLUMN location TEXT AS Location NOT NULL DEFAULT "0.0,0.0";

@@ -2,7 +2,7 @@ selectAll:
 SELECT * FROM diary ORDER BY date DESC;
 
 insert:
-INSERT INTO diary(id, entry, date, favorite) VALUES (?, ?, ?, ?);
+INSERT INTO diary(id, entry, date, favorite, location) VALUES (?, ?, ?, ?, ?);
 
 delete:
 DELETE FROM diary WHERE id=?;

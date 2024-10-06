@@ -35,7 +35,7 @@ kotlin {
         freeCompilerArgs.addAll(
             "-Xexpect-actual-classes",
             "-opt-in=com.aallam.openai.api.BetaOpenAI",
-            "-Xskip-prerelease-check"
+            "-Xskip-prerelease-check",
         )
     }
 
@@ -49,14 +49,17 @@ kotlin {
                 implementation(libs.kotlin.inject.runtime)
                 implementation(libs.square.sqldelight.coroutinesExt)
                 implementation(libs.kotlinx.coroutines.test)
-                implementation(projects.core.utils)
-                implementation(projects.core.analytics)
-                implementation(projects.core.logging)
                 implementation(libs.openAiKotlin)
                 implementation(libs.uuid)
                 implementation(libs.androidx.datastore.preferences)
                 implementation(libs.androidx.datastore.okio)
                 runtimeOnly(libs.ktor.client.cio)
+
+                // Project dependencies
+                implementation(projects.core.utils)
+                implementation(projects.core.analytics)
+                implementation(projects.core.logging)
+                implementation(projects.core.location)
             }
         }
 

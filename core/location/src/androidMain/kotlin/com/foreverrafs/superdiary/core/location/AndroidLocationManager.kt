@@ -7,6 +7,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 
@@ -38,7 +39,7 @@ class AndroidLocationManager(
                         latitude = location.latitude,
                         longitude = location.longitude,
                     ),
-                )
+                ).isSuccess
             }
             .addOnFailureListener { exception ->
                 logger.e(tag = TAG, throwable = exception)
@@ -48,6 +49,8 @@ class AndroidLocationManager(
                     message = exception.message ?: "Error getting location",
                 )
             }
+
+        awaitClose {}
     }
 
     override fun stopRequestingLocation() {

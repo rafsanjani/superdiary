@@ -37,17 +37,34 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.foreverrafs.superdiary.ui.components.LocationRationaleDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.creatediary.components.RichTextStyleRow
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
+import dev.icerock.moko.permissions.PermissionState
 import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.content_description_navigate_back
 import superdiary.shared_ui.generated.resources.content_description_save_entry
 import superdiary.shared_ui.generated.resources.label_diary_ai
 
+/**
+ * Main screen the user sees when the try to create a diary entry. It
+ * provides a rich text editor and a few tools for generating entries using
+ * AI.
+ *
+ * @param showLocationPermissionRationale Is used to decide whether the
+ *    location rationale dialog will be displayed or not. It is always
+ *    displayed when the app is first started or permission hasn't been
+ *    granted.
+ * @param onDontAskAgain When the location permission is denied always. We
+ *    attempt to show the user a rationale dialog asking them to enable
+ *    location from their system settings. When the user dismisses this
+ *    dialog, this callback is invoked, signalling that the user doesn't
+ *    want to be disturbed again.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateDiaryScreenContent(
@@ -55,6 +72,10 @@ fun CreateDiaryScreenContent(
     onGenerateAI: (prompt: String, wordCount: Int) -> Unit,
     onNavigateBack: () -> Unit,
     onSaveDiary: (entry: String) -> Unit,
+    showLocationPermissionRationale: Boolean,
+    permissionState: PermissionState,
+    onRequestLocationPermission: () -> Unit,
+    onDontAskAgain: () -> Unit,
     modifier: Modifier = Modifier,
     richTextState: RichTextState = rememberRichTextState(),
 ) {
@@ -97,6 +118,14 @@ fun CreateDiaryScreenContent(
             modifier = Modifier.padding(it),
             color = MaterialTheme.colorScheme.background,
         ) {
+            if (showLocationPermissionRationale) {
+                LocationRationaleDialog(
+                    onRequestLocationPermission = onRequestLocationPermission,
+                    onDontAskAgain = onDontAskAgain,
+                    permissionState = permissionState,
+                )
+            }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
