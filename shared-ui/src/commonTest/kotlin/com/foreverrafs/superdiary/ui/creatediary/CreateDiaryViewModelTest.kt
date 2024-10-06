@@ -1,12 +1,19 @@
 package com.foreverrafs.superdiary.ui.creatediary
 
 import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.core.location.LocationManager
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.AddDiaryUseCase
+import com.foreverrafs.superdiary.data.utils.DiaryPreference
+import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryViewModel
+import com.foreverrafs.superdiary.ui.feature.creatediary.screen.LocationPermissionManager
+import dev.icerock.moko.permissions.Permission
+import dev.icerock.moko.permissions.PermissionState
+import dev.icerock.moko.permissions.PermissionsController
 import dev.mokkery.answering.returns
 import dev.mokkery.every
 import dev.mokkery.everySuspend
@@ -20,6 +27,7 @@ import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -29,15 +37,27 @@ import kotlinx.coroutines.test.setMain
 @OptIn(ExperimentalCoroutinesApi::class)
 class CreateDiaryViewModelTest {
 
-    private val diaryAI: DiaryAI = mock<DiaryAI>()
+    private val diaryAI: DiaryAI = mock()
 
-    private val dataSource: DataSource = mock<DataSource>()
+    private val dataSource: DataSource = mock()
+
+    private val locationManager: LocationManager = mock()
+
+    private val preference: DiaryPreference = mock()
 
     private lateinit var createDiaryViewModel: CreateDiaryViewModel
+
+    private val permissionsController: PermissionsController = mock()
 
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
+
+        every { preference.settings }.returns(emptyFlow())
+        every { preference.snapshot }.returns(DiarySettings.Empty)
+        everySuspend { permissionsController.getPermissionState(Permission.LOCATION) }.returns(
+            PermissionState.Granted,
+        )
 
         createDiaryViewModel = CreateDiaryViewModel(
             addDiaryUseCase = AddDiaryUseCase(
@@ -47,6 +67,15 @@ class CreateDiaryViewModelTest {
             ),
             diaryAI = diaryAI,
             logger = AggregateLogger(emptyList()),
+            locationManager = locationManager,
+            locationPermissionManager = LocationPermissionManager(
+                permissionsController = permissionsController,
+                logger = AggregateLogger(
+                    emptyList(),
+                ),
+            ),
+            preference = preference,
+
         )
     }
 

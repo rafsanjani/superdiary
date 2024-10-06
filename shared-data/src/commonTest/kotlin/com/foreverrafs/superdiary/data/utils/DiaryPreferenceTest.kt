@@ -34,6 +34,7 @@ class DiaryPreferenceTest {
             showWeeklySummary = true,
             showAtAGlance = true,
             showLatestEntries = true,
+            showLocationPermissionDialog = false,
         )
 
         diaryPreference.save(
@@ -51,6 +52,7 @@ class DiaryPreferenceTest {
             showWeeklySummary = false,
             showAtAGlance = false,
             showLatestEntries = true,
+            showLocationPermissionDialog = false,
         )
 
         diaryPreference.save(updatedSettings)
