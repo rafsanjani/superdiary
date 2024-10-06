@@ -63,16 +63,17 @@ object CreateDiaryScreen : SuperDiaryScreen {
                         }
                 }
             },
-        ) { entry ->
-            createDiaryScreenModel.saveDiary(
-                Diary(
-                    entry = entry,
-                    date = Clock.System.now(),
-                    isFavorite = false,
-                ),
-            )
+            onSaveDiary = { entry ->
+                createDiaryScreenModel.saveDiary(
+                    Diary(
+                        entry = entry,
+                        date = Clock.System.now(),
+                        isFavorite = false,
+                    ),
+                )
 
-            navController.popBackStack()
-        }
+                navController.popBackStack()
+            },
+        )
     }
 }
