@@ -2,21 +2,24 @@ package com.foreverrafs.superdiary.ui.feature.creatediary.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.core.location.LocationManager
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.AddDiaryUseCase
+import com.foreverrafs.superdiary.data.utils.DiaryPreference
+import com.foreverrafs.superdiary.data.utils.DiarySettings
+import dev.icerock.moko.permissions.PermissionState
+import dev.icerock.moko.permissions.PermissionsController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CreateDiaryViewModel(
@@ -24,18 +27,28 @@ class CreateDiaryViewModel(
     private val diaryAI: DiaryAI,
     private val logger: AggregateLogger,
     private val locationManager: LocationManager,
+    private val locationPermissionManager: LocationPermissionManager,
+    private val preference: DiaryPreference,
 ) : ViewModel() {
 
-    private val locationUpdateTrigger: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val permissionState = locationPermissionManager.permissionState
+
+    val diarySettings: StateFlow<DiarySettings> = preference.settings.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        preference.snapshot,
+    )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val screenState: StateFlow<CreateDiaryScreenState> = locationUpdateTrigger
-        .flatMapLatest { granted ->
+    val screenState: StateFlow<CreateDiaryScreenState> = permissionState
+        .flatMapConcat { state ->
             // We don't want to start updating location until permissions have been granted.
-            // Trigger wil be incremented when permission is granted making it safe to request location
-            if (granted) {
+            if (state == PermissionState.Granted) {
                 locationManager.requestLocation()
             } else {
+                logger.i(Tag) {
+                    "Permission hasn't been granted yet. Emitting an empty flow"
+                }
                 emptyFlow()
             }
         }
@@ -45,7 +58,7 @@ class CreateDiaryViewModel(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = CreateDiaryScreenState(),
+            initialValue = CreateDiaryScreenState(location = Location.Empty),
         )
 
     fun saveDiary(diary: Diary) = viewModelScope.launch {
@@ -55,14 +68,26 @@ class CreateDiaryViewModel(
         }
     }
 
-    fun onLocationPermissionGranted(granted: Boolean) {
-        locationUpdateTrigger.update {
-            granted
-        }
-    }
-
     fun generateAIDiary(prompt: String, wordCount: Int): Flow<String> =
         diaryAI.generateDiary(prompt, wordCount)
+
+    fun provideLocationPermission() = viewModelScope.launch {
+        locationPermissionManager.provideLocationPermission()
+    }
+
+    // Workaround for getting a handle on the PermissionController for requesting
+    // location permissions. Explored a few alternatives and settled with this
+    // because it provided the most modular solution at a little cost.
+    fun getPermissionsController(): PermissionsController =
+        locationPermissionManager.getPermissionsController()
+
+    fun onPermanentlyDismissLocationPermissionDialog() = viewModelScope.launch {
+        val currentDiarySettings = preference.snapshot
+
+        preference.save(
+            currentDiarySettings.copy(showLocationPermissionDialog = false),
+        )
+    }
 
     companion object {
         private val Tag = CreateDiaryViewModel::class.simpleName.orEmpty()

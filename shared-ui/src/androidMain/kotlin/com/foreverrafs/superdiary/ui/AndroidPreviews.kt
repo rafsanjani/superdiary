@@ -12,6 +12,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.model.Streak
 import com.foreverrafs.superdiary.data.utils.DiarySettings
@@ -32,6 +33,7 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
+import dev.icerock.moko.permissions.PermissionState
 import java.time.LocalDate
 import kotlin.random.Random
 import kotlinx.datetime.Clock
@@ -158,6 +160,7 @@ private fun DiaryListPreview() {
                             entry = "Hello World $it",
                             date = Clock.System.now(),
                             isFavorite = false,
+                            location = Location.Empty,
                         )
                     },
                     filtered = false,
@@ -180,6 +183,10 @@ private fun CreateDiaryPreview() {
                 onGenerateAI = { _, _ -> },
                 onSaveDiary = {},
                 isGeneratingFromAi = false,
+                showLocationPermissionRationale = true,
+                onRequestLocationPermission = {},
+                onDontAskAgain = {},
+                permissionState = PermissionState.Granted,
             )
         }
     }
@@ -195,6 +202,10 @@ private fun CreateDiaryPreviewNonEditable() {
                 onGenerateAI = { _, _ -> },
                 onSaveDiary = {},
                 isGeneratingFromAi = false,
+                onRequestLocationPermission = {},
+                showLocationPermissionRationale = true,
+                onDontAskAgain = {},
+                permissionState = PermissionState.Granted,
             )
         }
     }
@@ -235,6 +246,7 @@ private fun SelectedDiariesPreview() {
                     entry = "Hello World $it",
                     date = Clock.System.now(),
                     isFavorite = false,
+                    location = Location.Empty,
                 )
             },
             inSelectionMode = true,
@@ -283,6 +295,7 @@ private fun DashboardPreview() {
                         entry = "<strong>Awesome</strong> Diary",
                         date = Clock.System.now(),
                         isFavorite = false,
+                        location = Location.Empty,
                     )
                 },
                 20,
@@ -356,6 +369,7 @@ private fun DetailPreview() {
                         id = 1000,
                         date = Clock.System.now(),
                         isFavorite = false,
+                        location = Location.Empty,
                     ),
                 ),
             )

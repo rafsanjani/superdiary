@@ -39,6 +39,7 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(libs.richTextEditor)
+                implementation(libs.moko.permissions)
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.kotlin.datetime)
                 implementation(libs.google.material)
