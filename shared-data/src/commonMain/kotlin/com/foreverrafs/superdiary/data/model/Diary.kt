@@ -12,5 +12,5 @@ data class Diary(
     @kotlinx.serialization.Transient
     val date: Instant = Clock.System.now(),
     val isFavorite: Boolean = false,
-    val location: Location,
+    val location: Location = Location.Empty,
 )

@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.data.validator
 import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.isInstanceOf
+import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.data.model.Diary
 import kotlin.test.Test
 import kotlinx.datetime.Clock
@@ -30,6 +31,7 @@ class DiaryValidatorTest {
                 TimeZone.UTC,
             ),
             isFavorite = false,
+            location = Location.Empty,
         )
 
         assertFailure {
@@ -48,6 +50,7 @@ class DiaryValidatorTest {
                 TimeZone.UTC,
             ),
             isFavorite = false,
+            location = Location.Empty,
         )
 
         assertFailure {
@@ -61,6 +64,7 @@ class DiaryValidatorTest {
             entry = "Bad Diary",
             date = testClock.now(),
             isFavorite = false,
+            location = Location.Empty,
         )
 
         assertThat(validator.validate(diary)).isInstanceOf<Unit>()
