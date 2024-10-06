@@ -7,11 +7,9 @@ import com.foreverrafs.superdiary.data.DatabaseDriver
 import com.foreverrafs.superdiary.database.SuperDiaryDatabase
 
 class AndroidDatabaseDriver(private val context: Context) : DatabaseDriver {
-    override fun createDriver(): SqlDriver {
-        return AndroidSqliteDriver(
-            schema = SuperDiaryDatabase.Schema,
-            context = context,
-            name = "diary.db",
-        )
-    }
+    override fun createDriver(): SqlDriver = AndroidSqliteDriver(
+        schema = SuperDiaryDatabase.Schema,
+        context = context,
+        name = "diary.db",
+    )
 }

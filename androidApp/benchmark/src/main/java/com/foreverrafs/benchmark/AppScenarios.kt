@@ -88,9 +88,7 @@ fun UiDevice.waitForObject(selector: BySelector, timeout: Duration = 5.seconds):
     error("Object with selector [$selector] not found")
 }
 
-fun <R> UiDevice.wait(condition: SearchCondition<R>, timeout: Duration): R {
-    return wait(condition, timeout.inWholeMilliseconds)
-}
+fun <R> UiDevice.wait(condition: SearchCondition<R>, timeout: Duration): R = wait(condition, timeout.inWholeMilliseconds)
 
 private fun UiDevice.runAction(
     selector: BySelector,

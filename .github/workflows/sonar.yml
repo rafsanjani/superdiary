@@ -27,8 +27,8 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Detekt on all modules
-        run: ./gradlew detektAll
+      - name: Ktlint on all modules
+        run: ./gradlew ktlintCheck
 
   quality:
     env:

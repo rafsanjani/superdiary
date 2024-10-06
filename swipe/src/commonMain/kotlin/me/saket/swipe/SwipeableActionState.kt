@@ -12,9 +12,7 @@ import androidx.compose.runtime.remember
 import kotlin.math.absoluteValue
 
 @Composable
-fun rememberSwipeableActionsState(iconWidthPx: Int): SwipeableActionState {
-    return remember { SwipeableActionState(iconWidthPx) }
-}
+fun rememberSwipeableActionsState(iconWidthPx: Int): SwipeableActionState = remember { SwipeableActionState(iconWidthPx) }
 
 /** The state of a [SwipeableActionBox]. */
 @Stable

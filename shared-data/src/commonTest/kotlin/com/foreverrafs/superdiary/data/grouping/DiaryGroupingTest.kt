@@ -89,18 +89,16 @@ class DiaryGroupingTest {
         durationSpacing: DateTimeUnit.DateBased,
         startDate: Instant,
         count: Int,
-    ): List<Diary> {
-        return (0 until count).map {
-            Diary(
-                id = Random.nextLong(),
-                entry = "Diary Entry #$it",
-                date = startDate.plus(
-                    value = it,
-                    unit = durationSpacing,
-                    timeZone = TimeZone.UTC,
-                ),
-                isFavorite = false,
-            )
-        }
+    ): List<Diary> = (0 until count).map {
+        Diary(
+            id = Random.nextLong(),
+            entry = "Diary Entry #$it",
+            date = startDate.plus(
+                value = it,
+                unit = durationSpacing,
+                timeZone = TimeZone.UTC,
+            ),
+            isFavorite = false,
+        )
     }
 }
