@@ -12,7 +12,7 @@ plugins {
     id("kotlin-parcelize")
     kotlin("multiplatform")
     id("com.superdiary.kover")
-    id("dev.mokkery") version "2.3.0"
+    alias(libs.plugins.mokkery)
 }
 
 sqldelight {
