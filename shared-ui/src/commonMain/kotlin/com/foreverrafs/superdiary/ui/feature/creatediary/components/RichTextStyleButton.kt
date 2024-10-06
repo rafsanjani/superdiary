@@ -17,10 +17,10 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun RichTextStyleButton(
     icon: ImageVector,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     tint: Color? = null,
     isSelected: Boolean = false,
-    onClick: () -> Unit,
 ) {
     IconButton(
         modifier = modifier

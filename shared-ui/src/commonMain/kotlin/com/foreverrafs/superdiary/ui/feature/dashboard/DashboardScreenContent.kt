@@ -70,10 +70,10 @@ fun DashboardScreenContent(
     settings: DiarySettings,
     onChangeSettings: (DiarySettings) -> Unit,
     onAddEntry: () -> Unit,
+    onSeeAll: () -> Unit,
     onDiaryClick: (diary: Diary) -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
     modifier: Modifier = Modifier,
-    onSeeAll: () -> Unit,
 ) {
     if (state !is DashboardViewModel.DashboardScreenState.Content) return
 
@@ -314,8 +314,8 @@ private fun LatestEntries(
     diaries: List<Diary>,
     onSeeAll: () -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
-    modifier: Modifier = Modifier,
     onDiaryClick: (diary: Diary) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
         Row(
@@ -363,8 +363,8 @@ private fun LatestEntries(
 @Composable
 private fun WeeklySummaryCard(
     summary: String?,
-    modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier.verticalScroll(rememberScrollState()),

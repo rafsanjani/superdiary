@@ -257,12 +257,12 @@ fun DiaryList(
     diaryListActions: DiaryListActions,
     snackbarHostState: SnackbarHostState,
     onDeleteDiaries: (selectedIds: Set<Long>) -> Unit,
+    onCancelSelection: () -> Unit,
     modifier: Modifier = Modifier,
     clock: Clock = Clock.System,
     showSearchBar: Boolean = true,
     emptyContent: @Composable (() -> Unit)? = null,
     listState: LazyListState = rememberLazyListState(),
-    onCancelSelection: () -> Unit,
 ) {
     val groupedDiaries =
         remember(diaries) {
@@ -366,15 +366,16 @@ fun DiaryList(
                                         diaryListActions.onToggleSelection(diary.id)
                                     },
                                 ),
-                        ) {
-                            coroutineScope.launch {
-                                if (diaryListActions.onToggleFavorite(diary)) {
-                                    snackbarHostState.showSnackbar(
-                                        message = "Favorite Updated!",
-                                    )
+                            onToggleFavorite = {
+                                coroutineScope.launch {
+                                    if (diaryListActions.onToggleFavorite(diary)) {
+                                        snackbarHostState.showSnackbar(
+                                            message = "Favorite Updated!",
+                                        )
+                                    }
                                 }
-                            }
-                        }
+                            },
+                        )
                     }
                 }
             }
@@ -417,9 +418,9 @@ private fun DiaryListContent(
     selectedIds: Set<Long>,
     diaryFilters: DiaryFilters,
     snackbarHostState: SnackbarHostState,
+    onAddEntry: () -> Unit,
     modifier: Modifier = Modifier,
     clock: Clock = Clock.System,
-    onAddEntry: () -> Unit,
 ) {
     var showConfirmDeleteDialog by remember {
         mutableStateOf(false)
@@ -516,8 +517,8 @@ private fun LoadingContent(modifier: Modifier = Modifier) {
 
 @Composable
 private fun EmptyDiaryList(
-    modifier: Modifier = Modifier,
     onAddEntry: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.padding(horizontal = 8.dp),
@@ -552,8 +553,8 @@ fun DiaryItem(
     diary: Diary,
     selected: Boolean,
     inSelectionMode: Boolean,
-    modifier: Modifier = Modifier,
     onToggleFavorite: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val iconWidthPx = LocalDensity.current.run { defaultSwipeableActionIconSize.roundToPx() }
     val swipeableState = rememberSwipeableActionsState(
