@@ -22,8 +22,8 @@ fun FavoriteScreenContent(
     state: FavoriteScreenState,
     onToggleFavorite: suspend (diary: Diary) -> Boolean,
     snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier,
     onFavoriteClick: (diary: Long) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     if (state is FavoriteScreenState.Content) {
         DiaryList(

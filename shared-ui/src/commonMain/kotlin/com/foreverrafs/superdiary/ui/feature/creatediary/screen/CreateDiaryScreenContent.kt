@@ -55,9 +55,9 @@ fun CreateDiaryScreenContent(
     isGeneratingFromAi: Boolean,
     onGenerateAI: (prompt: String, wordCount: Int) -> Unit,
     onNavigateBack: () -> Unit,
+    onSaveDiary: (entry: String) -> Unit,
     modifier: Modifier = Modifier,
     richTextState: RichTextState = rememberRichTextState(),
-    onSaveDiary: (entry: String) -> Unit,
 ) {
     Scaffold(
         topBar = {

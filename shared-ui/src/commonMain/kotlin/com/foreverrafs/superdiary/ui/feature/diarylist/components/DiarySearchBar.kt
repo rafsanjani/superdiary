@@ -45,8 +45,8 @@ import androidx.compose.ui.unit.dp
 internal fun DiarySearchBar(
     inSelectionMode: Boolean,
     onQueryChange: (query: String) -> Unit,
-    modifier: Modifier = Modifier,
     onFilterClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
