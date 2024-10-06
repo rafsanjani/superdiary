@@ -13,15 +13,13 @@ data class SwipeAction(
 fun SwipeAction(
     onActionClicked: () -> Unit,
     icon: Painter,
-): SwipeAction {
-    return SwipeAction(
-        icon = {
-            Icon(
-                painter = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
-            )
-        },
-        onClick = onActionClicked,
-    )
-}
+): SwipeAction = SwipeAction(
+    icon = {
+        Icon(
+            painter = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurface,
+        )
+    },
+    onClick = onActionClicked,
+)

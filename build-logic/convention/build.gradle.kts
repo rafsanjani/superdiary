@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `kotlin-dsl`
-    alias(libs.plugins.detekt)
 }
 
 group = "com.foreverrafs.superdiary.buildlogic"
@@ -20,7 +19,6 @@ tasks.withType<KotlinCompile>().configureEach {
 
 dependencies {
     compileOnly(libs.conventionplugins.kover)
-    compileOnly(libs.conventionplugins.detekt)
     compileOnly(libs.conventionplugins.ktlint)
     compileOnly(libs.conventionplugins.sonar)
 }
@@ -29,10 +27,6 @@ gradlePlugin {
     val rootPackageName = "com.superdiary.gradle"
 
     plugins {
-        register("detektConventionPlugin") {
-            id = "com.superdiary.detekt"
-            implementationClass = "$rootPackageName.codequality.DetektConventionPlugin"
-        }
 
         register("gitHooksConventionPlugin") {
             id = "com.superdiary.githooks"

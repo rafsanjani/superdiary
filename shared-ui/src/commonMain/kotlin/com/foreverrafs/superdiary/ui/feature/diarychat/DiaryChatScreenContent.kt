@@ -72,7 +72,7 @@ import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.content_description_button_send
 
-@Suppress("ModifierComposed")
+@Suppress("ktlint:compose:modifier-composed-check")
 fun Modifier.positionAwareImePadding() = composed {
     var bottomPadding by remember { mutableIntStateOf(0) }
     val density = LocalDensity.current

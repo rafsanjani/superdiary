@@ -10,6 +10,4 @@ Dir[lint_dir].each do |file_name|
   android_lint.lint
 end
 
-kotlin_detekt.gradle_task = "detektAll"
-kotlin_detekt.report_file="build/reports/detekt/detekt.xml"
-kotlin_detekt.detekt(inline_mode: true)
+ktlint.lint(inline_mode: true)
