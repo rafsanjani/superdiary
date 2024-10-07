@@ -5,6 +5,7 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -53,9 +54,11 @@ object BottomNavigationScreen {
                 SuperDiaryBottomBar(tabNavController)
             },
             snackbarHost = { SnackbarHost(snackbarHostState) },
-        ) { innerPadding ->
+        ) { contentPadding ->
             Surface(
-                modifier = Modifier.padding(innerPadding),
+                modifier = Modifier
+                    .padding(contentPadding)
+                    .consumeWindowInsets(contentPadding),
                 color = MaterialTheme.colorScheme.background,
                 content = {
                     NavHost(
