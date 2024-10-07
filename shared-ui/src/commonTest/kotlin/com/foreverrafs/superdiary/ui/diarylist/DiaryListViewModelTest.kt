@@ -13,6 +13,7 @@ import com.foreverrafs.superdiary.data.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.data.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.data.utils.toDate
+import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListViewModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import dev.mokkery.answering.returns
@@ -42,19 +43,12 @@ class DiaryListViewModelTest {
 
     private val dataSource: DataSource = mock<DataSource>()
 
-    private val diaryListViewModel = DiaryListViewModel(
-        getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers),
-        searchDiaryByEntryUseCase = SearchDiaryByEntryUseCase(dataSource, TestAppDispatchers),
-        searchDiaryByDateUseCase = SearchDiaryByDateUseCase(dataSource, TestAppDispatchers),
-        updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
-        deleteDiaryUseCase = DeleteDiaryUseCase(dataSource, TestAppDispatchers),
-        logger = AggregateLogger(emptyList()),
-    )
+    private lateinit var diaryListViewModel: DiaryListViewModel
 
     private val today = Clock.System.now()
 
     private val diary = Diary(
-        entry = "",
+        entry = "today's diary",
         date = today,
         isFavorite = false,
     )
@@ -67,8 +61,20 @@ class DiaryListViewModelTest {
             flowOf(listOf(diary)),
         )
 
+        every { dataSource.fetchAll() }
+            .returns(flowOf(emptyList()))
+
         every { dataSource.find(any() as String) }.returns(
             flowOf(listOf(diary)),
+        )
+
+        diaryListViewModel = DiaryListViewModel(
+            getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers),
+            searchDiaryByEntryUseCase = SearchDiaryByEntryUseCase(dataSource, TestAppDispatchers),
+            searchDiaryByDateUseCase = SearchDiaryByDateUseCase(dataSource, TestAppDispatchers),
+            updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
+            deleteDiaryUseCase = DeleteDiaryUseCase(dataSource, TestAppDispatchers),
+            logger = AggregateLogger(emptyList()),
         )
     }
 
@@ -82,7 +88,6 @@ class DiaryListViewModelTest {
         every { dataSource.fetchAll() }.returns(flowOf(listOf(diary)))
 
         diaryListViewModel.state.test {
-            diaryListViewModel.observeDiaries()
             val state = awaitItem()
             cancelAndIgnoreRemainingEvents()
 
@@ -95,9 +100,6 @@ class DiaryListViewModelTest {
         every { dataSource.fetchAll() }.returns(flowOf(listOf(diary)))
 
         diaryListViewModel.state.test {
-            diaryListViewModel.observeDiaries()
-
-            // Consume and skip loading state
             skipItems(1)
             val state = awaitItem()
             cancelAndIgnoreRemainingEvents()
@@ -109,7 +111,11 @@ class DiaryListViewModelTest {
     @Test
     fun `Verify filter by date  emits success state`() = runTest {
         diaryListViewModel.state.test {
-            diaryListViewModel.filterByDate(today.toDate())
+            diaryListViewModel.applyFilter(
+                DiaryFilters(
+                    date = today.toDate(),
+                ),
+            )
 
             skipItems(1)
             val state = awaitItem()
@@ -119,10 +125,19 @@ class DiaryListViewModelTest {
     }
 
     @Test
-    fun `Verify filter by entry  emits success state`() = runTest {
+    fun `Apply filter with entry emits success state`() = runTest {
+        everySuspend { dataSource.find("entry") }.returns(
+            flowOf(
+                listOf(Diary("hello world")),
+            ),
+        )
+
         diaryListViewModel.state.test {
-            diaryListViewModel.filterByEntry("entry")
+            diaryListViewModel.applyFilter(
+                DiaryFilters(entry = "entry"),
+            )
             skipItems(1)
+
             val state = awaitItem()
 
             assertThat(state).isInstanceOf<DiaryListViewState.Content>()
@@ -130,11 +145,13 @@ class DiaryListViewModelTest {
     }
 
     @Test
-    fun `Verify filter by date and entry  emits success state`() = runTest {
+    fun `Apply filter with entry and date returns Content state`() = runTest {
         diaryListViewModel.state.test {
-            diaryListViewModel.filterByDateAndEntry(
-                entry = "entry",
-                date = today.toDate(),
+            diaryListViewModel.applyFilter(
+                DiaryFilters(
+                    entry = "entry",
+                    date = today.toDate(),
+                ),
             )
             skipItems(1)
             val state = awaitItem()
@@ -145,7 +162,7 @@ class DiaryListViewModelTest {
     }
 
     @Test
-    fun `Verify delete diaries actually deletes them`() = runTest {
+    fun `Deleting a diary calls dataSource delete with correct parameters`() = runTest {
         everySuspend {
             dataSource.delete(diaries = any())
         }.returns(1)
@@ -156,7 +173,7 @@ class DiaryListViewModelTest {
     }
 
     @Test
-    fun `Verify toggle favorite actually updates the entry`() = runTest {
+    fun `Toggle favorite updates diaries in datasource`() = runTest {
         everySuspend {
             dataSource.update(diary = any())
         }.returns(1)
@@ -175,10 +192,8 @@ class DiaryListViewModelTest {
         )
 
         diaryListViewModel.state.test {
-            diaryListViewModel.observeDiaries()
-            delay(100)
-            // Skip loading state
             skipItems(1)
+            delay(100)
 
             val state = awaitItem()
             assertThat(state).isInstanceOf<DiaryListViewState.Error>()

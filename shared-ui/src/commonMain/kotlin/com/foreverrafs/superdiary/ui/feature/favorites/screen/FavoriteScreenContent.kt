@@ -11,7 +11,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.data.model.Diary
-// import com.foreverrafs.superdiary.ui.LocalRootSnackbarHostState
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryList
@@ -22,8 +21,8 @@ fun FavoriteScreenContent(
     state: FavoriteScreenState,
     onToggleFavorite: suspend (diary: Diary) -> Boolean,
     snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier,
     onFavoriteClick: (diary: Long) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     if (state is FavoriteScreenState.Content) {
         DiaryList(

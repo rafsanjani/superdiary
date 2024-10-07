@@ -23,7 +23,6 @@ object CreateDiaryScreen : SuperDiaryScreen {
     @Composable
     fun Content(navController: NavController) {
         val createDiaryScreenModel: CreateDiaryViewModel = koinInject()
-//        val navigator = LocalScreenNavigator.current
 
         val undoManager = rememberUndoableRichTextState()
         val richTextState = undoManager.richTextState
@@ -64,16 +63,17 @@ object CreateDiaryScreen : SuperDiaryScreen {
                         }
                 }
             },
-        ) { entry ->
-            createDiaryScreenModel.saveDiary(
-                Diary(
-                    entry = entry,
-                    date = Clock.System.now(),
-                    isFavorite = false,
-                ),
-            )
+            onSaveDiary = { entry ->
+                createDiaryScreenModel.saveDiary(
+                    Diary(
+                        entry = entry,
+                        date = Clock.System.now(),
+                        isFavorite = false,
+                    ),
+                )
 
-            navController.popBackStack()
-        }
+                navController.popBackStack()
+            },
+        )
     }
 }

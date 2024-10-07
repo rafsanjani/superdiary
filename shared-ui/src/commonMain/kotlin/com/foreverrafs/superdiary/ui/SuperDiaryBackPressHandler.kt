@@ -14,11 +14,9 @@ object SuperDiaryBackPressHandler {
         this.callbacks -= callback
     }
 
-    fun execute(): Boolean {
-        return callbacks
-            .map(OnBackPressed::onBackPressed)
-            .all { it }
-    }
+    fun execute(): Boolean = callbacks
+        .map(OnBackPressed::onBackPressed)
+        .all { it }
 
     fun clear() {
         callbacks.clear()

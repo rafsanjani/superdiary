@@ -58,7 +58,7 @@ class DetailsViewModel(
         }
     }
 
-    fun selectDiary(diaryId: Long) = viewModelScope.launch {
+    fun initForDiary(diaryId: Long) = viewModelScope.launch {
         logger.d(TAG) {
             "Selecting diary with id $diaryId"
         }

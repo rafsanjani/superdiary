@@ -29,15 +29,13 @@ object DiaryListScreen {
         val screenModel: DiaryListViewModel = koinInject()
         val screenState by screenModel.state.collectAsState()
 
-        LaunchedEffect(Unit) {
-            screenModel.observeDiaries()
-        }
-
         var diaryFilters by rememberSaveable(stateSaver = DiaryFilters.Saver) {
             mutableStateOf(DiaryFilters())
         }
 
-        ObserveFilterEvents(diaryFilters, screenModel)
+        LaunchedEffect(diaryFilters) {
+            screenModel.applyFilter(diaryFilters)
+        }
 
         val diaryListActions = remember {
             DiaryListActions(
@@ -65,34 +63,5 @@ object DiaryListScreen {
             diaryFilters = diaryFilters,
             diaryListActions = diaryListActions,
         )
-    }
-}
-
-@Composable
-private fun ObserveFilterEvents(
-    diaryFilters: DiaryFilters,
-    screenModel: DiaryListViewModel,
-) {
-    LaunchedEffect(diaryFilters) {
-        // Filter by entry only
-        if (diaryFilters.entry.isNotEmpty() && diaryFilters.date == null) {
-            screenModel.filterByEntry(diaryFilters.entry)
-            return@LaunchedEffect
-        }
-
-        // Filter by date only
-        if (diaryFilters.date != null && diaryFilters.entry.isEmpty()) {
-            screenModel.filterByDate(diaryFilters.date)
-            return@LaunchedEffect
-        }
-
-        // Filter by both date and entry
-        if (diaryFilters.date != null && diaryFilters.entry.isNotEmpty()) {
-            screenModel.filterByDateAndEntry(diaryFilters.date, diaryFilters.entry)
-            return@LaunchedEffect
-        }
-
-        // No filter applied
-        screenModel.observeDiaries()
     }
 }

@@ -32,8 +32,8 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Detekt on all modules
-        run: ./gradlew detektAll
+      - name: Run ktlint on all modules
+        run: ./gradlew ktlintCheck
   test:
     env:
         SENTRY_BASE_URL_DEBUG: ${{secrets.SENTRY_BASE_URL_DEBUG}}

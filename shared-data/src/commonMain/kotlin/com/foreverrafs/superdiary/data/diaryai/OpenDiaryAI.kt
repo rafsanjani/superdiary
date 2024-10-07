@@ -5,6 +5,7 @@ import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.model.Diary
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -13,7 +14,10 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 
 /** A diary AI implementation using Open AI */
-class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
+class OpenDiaryAI(
+    private val openAI: OpenAI,
+    private val logger: AggregateLogger,
+) : DiaryAI {
     override fun generateDiary(
         prompt: String,
         wordCount: Int,
@@ -41,7 +45,7 @@ class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
         )
 
         val chatCompletionRequest = ChatCompletionRequest(
-            model = ModelId("gpt-4-1106-preview"),
+            model = ModelId(GPT_MODEL),
             messages = generateDiaryMessages.toList(),
         )
 
@@ -51,22 +55,25 @@ class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
         }.onEach {
             assistantMessages += it
         }.onCompletion { error ->
-            if (error == null) {
-                generateDiaryMessages.add(
-                    ChatMessage(
-                        role = ChatRole.Assistant,
-                        content = assistantMessages,
-                    ),
-                )
+            if (error != null) {
+                logger.e(tag = TAG, throwable = error)
+                return@onCompletion
             }
+            generateDiaryMessages.add(
+                ChatMessage(
+                    role = ChatRole.Assistant,
+                    content = assistantMessages,
+                ),
+            )
         }
     }
 
     override fun getWeeklySummary(diaries: List<Diary>): Flow<String> {
         val weeklyDiaryGeneratorPrompt = """
             You are Journal AI. I will give you a combined list of entries written over a period of
-            one week and you write a brief, concise and informative 50 word summary for me. The summary
-            should be in the first person narrative.
+            one week and you write a brief, concise and informative summary for me. It should be at
+            least 50 words and at most 100. The grammar should be spot on without any mistakes or errors.
+            Make sure you punctuate it properly as well. This should be in the first person narrative.
         """.trimIndent()
 
         val generateDiaryMessages = mutableListOf<ChatMessage>()
@@ -89,8 +96,11 @@ class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
             messages = generateDiaryMessages.toList(),
         )
 
+        var response = ""
+
         return openAI.chatCompletions(request).mapNotNull {
-            it.choices.first().delta?.content
+            response += it.choices.first().delta?.content
+            response
         }
     }
 
@@ -106,6 +116,7 @@ class OpenDiaryAI(private val openAI: OpenAI) : DiaryAI {
     }
 
     companion object {
-        private const val GPT_MODEL = "gpt-4-1106-preview"
+        private const val GPT_MODEL = "chatgpt-4o-latest"
+        private const val TAG = "OpenDiaryAI"
     }
 }

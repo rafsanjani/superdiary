@@ -9,6 +9,7 @@ data class DiaryFilters(
     val date: LocalDate? = null,
     val sort: DiarySortCriteria? = null,
 ) {
+
     companion object {
         val Saver: Saver<DiaryFilters, *> = mapSaver(
             save = { diaryFilters ->

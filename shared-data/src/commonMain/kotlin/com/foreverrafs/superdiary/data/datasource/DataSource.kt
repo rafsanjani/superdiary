@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.data.datasource
 
+import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.model.WeeklySummary
 import kotlinx.coroutines.flow.Flow
@@ -81,4 +82,12 @@ interface DataSource {
 
     /** Fetch all weekly summary entries */
     fun getWeeklySummary(): WeeklySummary?
+
+    /** Save chat entry into the database */
+    suspend fun saveChatMessage(message: DiaryChatMessage)
+
+    /** Clear all chat messages from the system */
+    suspend fun clearChatMessages()
+
+    fun getChatMessages(): Flow<List<DiaryChatMessage>>
 }

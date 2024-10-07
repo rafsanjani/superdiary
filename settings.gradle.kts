@@ -24,9 +24,9 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2024.07.21")
-            version("compose-multiplatform", "1.7.0-alpha01")
-            version("paparazzi","1.3.5-SNAPSHOT")
+            from("io.github.rafsanjani:versions:2024.10.06")
+            version("compose-multiplatform", "1.7.0-dev1756")
+            version("paparazzi", "1.3.5-SNAPSHOT")
         }
     }
 }

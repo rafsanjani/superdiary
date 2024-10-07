@@ -1,9 +1,14 @@
 package com.foreverrafs.superdiary.ui
 
-import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -28,23 +33,7 @@ fun App(modifier: Modifier = Modifier) {
             navController = navController,
             startDestination = BottomNavigationScreen,
         ) {
-            composable<BottomNavigationScreen>(
-                enterTransition = {
-                    slideIntoContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.End,
-                        animationSpec = tween(400),
-                    )
-                },
-                exitTransition = {
-                    slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.End)
-                },
-                popExitTransition = {
-                    slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Start)
-                },
-                popEnterTransition = {
-                    slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.End)
-                },
-            ) {
+            animatedComposable<BottomNavigationScreen> {
                 BottomNavigationScreen.Content(navController)
             }
 
@@ -52,31 +41,11 @@ fun App(modifier: Modifier = Modifier) {
                 CreateDiaryScreen.Content(navController)
             }
 
-            composable<DiaryListScreen>(
-                enterTransition = {
-                    slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Start)
-                },
-                exitTransition = {
-                    slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.End)
-                },
-                popExitTransition = {
-                    slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Start)
-                },
-            ) {
+            animatedComposable<DiaryListScreen> {
                 DiaryListScreen.Content(navController)
             }
 
-            composable<DetailScreen>(
-                enterTransition = {
-                    slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Start)
-                },
-                exitTransition = {
-                    slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.End)
-                },
-                popExitTransition = {
-                    slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Start)
-                },
-            ) { backstackEntry ->
+            animatedComposable<DetailScreen> { backstackEntry ->
                 val diaryId: String? = backstackEntry.arguments?.getString("diaryId")
 
                 diaryId?.let {
@@ -89,3 +58,27 @@ fun App(modifier: Modifier = Modifier) {
         }
     }
 }
+
+private inline fun <reified T : Any> NavGraphBuilder.animatedComposable(
+    noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
+) = composable<T>(
+    content = content,
+    enterTransition = { enterTransition() },
+    exitTransition = { exitTransition() },
+    popEnterTransition = { enterTransition() },
+    popExitTransition = { exitTransition() },
+)
+
+private fun enterTransition() = fadeIn(
+    animationSpec = tween(
+        300,
+        easing = LinearEasing,
+    ),
+)
+
+private fun exitTransition() = fadeOut(
+    animationSpec = tween(
+        300,
+        easing = LinearEasing,
+    ),
+)

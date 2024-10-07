@@ -19,14 +19,17 @@ import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.data.utils.toDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
+@Suppress("LongParameterList")
 class DashboardViewModel(
     private val getAllDiariesUseCase: GetAllDiariesUseCase,
     private val calculateStreakUseCase: CalculateStreakUseCase,
@@ -37,6 +40,7 @@ class DashboardViewModel(
     private val preference: DiaryPreference,
     private val diaryAI: DiaryAI,
     private val logger: AggregateLogger,
+    private val clock: Clock = Clock.System,
 ) : ViewModel() {
     sealed interface DashboardScreenState {
         data object Loading : DashboardScreenState
@@ -52,48 +56,62 @@ class DashboardViewModel(
     val settings: Flow<DiarySettings> get() = preference.settings
 
     private val mutableState = MutableStateFlow<DashboardScreenState>(DashboardScreenState.Loading)
-    val state: StateFlow<DashboardScreenState> = mutableState.asStateFlow()
 
-    fun loadDashboardContent() = viewModelScope.launch {
+    private val diaries: Flow<List<Diary>> =
+        getAllDiariesUseCase()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000L),
+                initialValue = emptyList(),
+            )
+
+    val state: StateFlow<DashboardScreenState> = mutableState
+        .onStart { loadDashboardContent() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = DashboardScreenState.Loading,
+        )
+
+    private fun loadDashboardContent() = viewModelScope.launch {
         logger.i(Tag) {
             "Loading dashboard content"
         }
 
-        getAllDiariesUseCase()
-            .collect { diaries ->
-                logger.i(Tag) {
-                    "Dashboard content refreshed!"
-                }
-                mutableState.update {
-                    DashboardScreenState.Content(
-                        latestEntries = diaries.sortedByDescending { it.date }.take(4),
-                        totalEntries = diaries.size.toLong(),
-                        weeklySummary = if (diaries.isEmpty()) {
-                            """
+        diaries.collect { diaries ->
+            logger.i(Tag) {
+                "Dashboard content refreshed!"
+            }
+            mutableState.update {
+                DashboardScreenState.Content(
+                    latestEntries = diaries.sortedByDescending { it.date }.take(4),
+                    totalEntries = diaries.size.toLong(),
+                    weeklySummary = if (diaries.isEmpty()) {
+                        """
                             In this panel, your weekly diary entries will be summarized.
                             Add your first entry to see how it works
-                            """.trimIndent()
-                        } else {
-                            DEFAULT_SUMMARY_TEXT
-                        },
-                        currentStreak = Streak(
-                            0,
-                            Clock.System.now().toDate(),
-                            Clock.System.now().toDate(),
-                        ),
-                        bestStreak = Streak(
-                            0,
-                            Clock.System.now().toDate(),
-                            Clock.System.now().toDate(),
-                        ),
-                    )
-                }
-
-                if (diaries.isNotEmpty()) {
-                    generateWeeklySummary(diaries)
-                    calculateStreak(diaries)
-                }
+                        """.trimIndent()
+                    } else {
+                        DEFAULT_SUMMARY_TEXT
+                    },
+                    currentStreak = Streak(
+                        0,
+                        clock.now().toDate(),
+                        clock.now().toDate(),
+                    ),
+                    bestStreak = Streak(
+                        0,
+                        clock.now().toDate(),
+                        clock.now().toDate(),
+                    ),
+                )
             }
+
+            if (diaries.isNotEmpty()) {
+                generateWeeklySummary(diaries)
+                calculateStreak(diaries)
+            }
+        }
     }
 
     private fun updateContentState(func: (current: DashboardScreenState.Content) -> DashboardScreenState.Content) {
@@ -104,7 +122,7 @@ class DashboardViewModel(
                 val newState = func(currentState)
 
                 logger.d(Tag) {
-                    "updateContentState: Updating content state"
+                    "updateContentState: Updating content state from $currentState to $newState"
                 }
 
                 newState
@@ -124,7 +142,7 @@ class DashboardViewModel(
         val latestWeeklySummary = getWeeklySummaryUseCase()
 
         latestWeeklySummary?.let {
-            val difference = Clock.System.now() - latestWeeklySummary.date
+            val difference = clock.now() - latestWeeklySummary.date
 
             if (difference.inWholeDays <= 7L) {
                 logger.i(Tag) {
@@ -161,14 +179,11 @@ class DashboardViewModel(
                         )
                     }
                 }
-            }.collect { chunk ->
+            }
+            .collect { summary ->
                 updateContentState { state ->
                     state.copy(
-                        weeklySummary = if (state.weeklySummary == DEFAULT_SUMMARY_TEXT) {
-                            chunk
-                        } else {
-                            state.weeklySummary + chunk
-                        },
+                        weeklySummary = summary,
                     )
                 }
             }

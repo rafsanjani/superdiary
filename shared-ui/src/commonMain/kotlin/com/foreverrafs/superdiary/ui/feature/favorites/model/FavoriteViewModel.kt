@@ -8,9 +8,12 @@ import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.GetFavoriteDiariesUseCase
 import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreenState
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -19,14 +22,25 @@ class FavoriteViewModel(
     private val updateDiaryUseCase: UpdateDiaryUseCase,
     private val logger: AggregateLogger,
 ) : ViewModel() {
-    private val mutableState = MutableStateFlow<FavoriteScreenState?>(null)
-    val state: StateFlow<FavoriteScreenState?> = mutableState.asStateFlow()
 
-    fun loadFavorites() = viewModelScope.launch {
+    private val mutableState = MutableStateFlow<FavoriteScreenState?>(FavoriteScreenState.Loading)
+
+    private val favoriteDiaries: Flow<List<Diary>> = getFavoriteDiariesUseCase()
+
+    val state: StateFlow<FavoriteScreenState?> = mutableState
+        .onStart { loadFavorites() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = FavoriteScreenState.Loading,
+        )
+
+    private fun loadFavorites() = viewModelScope.launch {
         logger.i(Tag) {
             "Loading favorites"
         }
-        getFavoriteDiariesUseCase().collect { diaries ->
+
+        favoriteDiaries.collect { diaries ->
             mutableState.update {
                 logger.i(Tag) {
                     "Loaded ${diaries.size} favorite entries"

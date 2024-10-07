@@ -7,7 +7,5 @@ import com.foreverrafs.superdiary.database.SuperDiaryDatabase
 import platform.Foundation.NSUUID
 
 class DarwinDatabaseDriver : DatabaseDriver {
-    override fun createDriver(): SqlDriver {
-        return NativeSqliteDriver(SuperDiaryDatabase.Schema, NSUUID.toString())
-    }
+    override fun createDriver(): SqlDriver = NativeSqliteDriver(SuperDiaryDatabase.Schema, NSUUID.toString())
 }
