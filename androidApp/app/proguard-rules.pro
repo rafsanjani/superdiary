@@ -21,4 +21,5 @@
 #-renamesourcefileattribute SourceFile
 #
 -dontwarn org.slf4j.impl.StaticLoggerBinder
+-dontwarn androidx.test.platform.app.InstrumentationRegistry
 -keepattributes EnclosingMethod
