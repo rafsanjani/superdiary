@@ -24,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.permissions.PermissionState
+import com.foreverrafs.superdiary.core.location.permission.PermissionState
 import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.confirm_delete_diary_dialog_message

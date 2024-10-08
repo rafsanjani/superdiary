@@ -3,6 +3,9 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.serialization)
+
+    alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.compose.compiler)
     kotlin("multiplatform")
     id("kotlin-parcelize")
     alias(libs.plugins.testLogger)
@@ -32,6 +35,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(projects.core.logging)
                 implementation(libs.kotlin.inject.runtime)
+                implementation(compose.foundation)
                 implementation(libs.kotlinx.coroutines.test)
             }
         }
@@ -39,6 +43,7 @@ kotlin {
             dependencies {
                 implementation(libs.koin.android)
                 implementation(libs.google.playservices.location)
+                implementation(libs.moko.permissions.compose)
             }
         }
 
@@ -57,12 +62,21 @@ kotlin {
             dependencies {
                 implementation(libs.square.sqldelight.driver.native)
                 implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.moko.permissions.compose)
             }
         }
     }
 }
 
 android {
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+    }
+
     namespace = "com.foreverrafs.core.location"
     compileSdk = libs.versions.compileSdk.get().toInt()
 

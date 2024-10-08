@@ -4,14 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.core.location.LocationManager
+import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
+import com.foreverrafs.superdiary.core.location.permission.PermissionState
+import com.foreverrafs.superdiary.core.location.permission.PermissionsControllerWrapper
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.data.utils.DiaryPreference
 import com.foreverrafs.superdiary.data.utils.DiarySettings
-import dev.icerock.moko.permissions.PermissionState
-import dev.icerock.moko.permissions.PermissionsController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -78,7 +79,7 @@ class CreateDiaryViewModel(
     // Workaround for getting a handle on the PermissionController for requesting
     // location permissions. Explored a few alternatives and settled with this
     // because it provided the most modular solution at a little cost.
-    fun getPermissionsController(): PermissionsController =
+    fun getPermissionsController(): PermissionsControllerWrapper =
         locationPermissionManager.getPermissionsController()
 
     fun onPermanentlyDismissLocationPermissionDialog() = viewModelScope.launch {

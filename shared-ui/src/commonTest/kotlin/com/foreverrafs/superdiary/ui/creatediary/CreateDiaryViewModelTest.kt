@@ -2,6 +2,10 @@ package com.foreverrafs.superdiary.ui.creatediary
 
 import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.core.location.LocationManager
+import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
+import com.foreverrafs.superdiary.core.location.permission.Permission
+import com.foreverrafs.superdiary.core.location.permission.PermissionState
+import com.foreverrafs.superdiary.core.location.permission.PermissionsControllerWrapper
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
@@ -10,10 +14,6 @@ import com.foreverrafs.superdiary.data.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.data.utils.DiaryPreference
 import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryViewModel
-import com.foreverrafs.superdiary.ui.feature.creatediary.screen.LocationPermissionManager
-import dev.icerock.moko.permissions.Permission
-import dev.icerock.moko.permissions.PermissionState
-import dev.icerock.moko.permissions.PermissionsController
 import dev.mokkery.answering.returns
 import dev.mokkery.every
 import dev.mokkery.everySuspend
@@ -47,7 +47,7 @@ class CreateDiaryViewModelTest {
 
     private lateinit var createDiaryViewModel: CreateDiaryViewModel
 
-    private val permissionsController: PermissionsController = mock()
+    private val permissionsController: PermissionsControllerWrapper = mock()
 
     @BeforeTest
     fun setup() {
