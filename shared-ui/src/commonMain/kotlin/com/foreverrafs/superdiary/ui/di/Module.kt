@@ -4,7 +4,7 @@ import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.location.di.locationModule
 import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.core.utils.utilsModule
+import com.foreverrafs.superdiary.core.utils.di.utilsModule
 import com.foreverrafs.superdiary.data.di.platformModule
 import com.foreverrafs.superdiary.data.di.useCaseModule
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryViewModel
