@@ -44,7 +44,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -75,7 +74,7 @@ import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.utils.groupByDate
 import com.foreverrafs.superdiary.data.utils.toDate
-import com.foreverrafs.superdiary.ui.SuperDiaryBackPressHandler
+import com.foreverrafs.superdiary.ui.BackHandler
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
@@ -145,22 +144,16 @@ fun DiaryListScreenContent(
             )
         }
 
-    val backPressedHandler: SuperDiaryBackPressHandler.OnBackPressed =
-        SuperDiaryBackPressHandler.OnBackPressed {
-            if (selectedIds.isNotEmpty()) {
-                diaryListActions.onCancelSelection()
-            } else {
-                diaryListActions.onBackPressed()
-            }
-            false
+    fun onBack() {
+        if (selectedIds.isNotEmpty()) {
+            diaryListActions.onCancelSelection()
+        } else {
+            diaryListActions.onBackPressed()
         }
+    }
 
-    DisposableEffect(Unit) {
-        SuperDiaryBackPressHandler.addCallback(backPressedHandler)
-
-        onDispose {
-            SuperDiaryBackPressHandler.removeCallback(backPressedHandler)
-        }
+    BackHandler {
+        onBack()
     }
 
     Scaffold(
@@ -168,9 +161,7 @@ fun DiaryListScreenContent(
             SuperDiaryAppBar(
                 navigationIcon = {
                     IconButton(
-                        onClick = {
-                            backPressedHandler.onBackPressed()
-                        },
+                        onClick = ::onBack,
                     ) {
                         Icon(
                             modifier = Modifier.clip(CircleShape),

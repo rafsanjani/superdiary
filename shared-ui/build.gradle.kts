@@ -67,7 +67,6 @@ kotlin {
                 implementation(libs.androidx.datastore.core)
                 implementation(libs.jetbrains.navigation.compose)
                 implementation(libs.kotlinx.serialization.json)
-                implementation(libs.moko.permissions.compose)
             }
         }
 
@@ -110,12 +109,14 @@ kotlin {
             dependencies {
                 implementation(libs.compose.ui.tooling)
                 implementation(libs.moko.permissions)
+                implementation(libs.moko.permissions.compose)
             }
         }
 
         iosMain {
             dependencies {
                 implementation(libs.moko.permissions)
+                implementation(libs.moko.permissions.compose)
             }
         }
     }
