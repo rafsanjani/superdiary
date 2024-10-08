@@ -1,11 +1,6 @@
-package com.foreverrafs.superdiary.ui.feature.creatediary.screen
+package com.foreverrafs.superdiary.core.location.permission
 
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import dev.icerock.moko.permissions.DeniedAlwaysException
-import dev.icerock.moko.permissions.DeniedException
-import dev.icerock.moko.permissions.Permission
-import dev.icerock.moko.permissions.PermissionState
-import dev.icerock.moko.permissions.PermissionsController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +9,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LocationPermissionManager(
-    private val permissionsController: PermissionsController,
+    private val permissionsController: PermissionsControllerWrapper,
     private val logger: AggregateLogger,
 ) {
     private var _permissionState = MutableStateFlow(PermissionState.NotDetermined)
@@ -75,7 +70,7 @@ class LocationPermissionManager(
         }
     }
 
-    fun getPermissionsController(): PermissionsController = permissionsController
+    fun getPermissionsController(): PermissionsControllerWrapper = permissionsController
 
     companion object {
         private val TAG = LocationPermissionManager::class.simpleName.orEmpty()

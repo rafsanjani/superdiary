@@ -17,6 +17,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             enableEdgeToEdge()
+
             App(
                 modifier = Modifier.semantics {
                     testTagsAsResourceId = true
