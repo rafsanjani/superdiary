@@ -5,8 +5,10 @@ object KoverExclusionList {
         "com.foreverrafs.superdiary.database",
         "db",
         "*.components",
-        "*.di",
         "*.style",
+        "*.navigation",
+        "*.screen",
+        "*.di",
         "*.generated.resources",
     )
 
@@ -37,6 +39,16 @@ object KoverExclusionList {
         "**/app/**",
         "**/androidApp/**",
         "**/DiaryListActions",
+        "*Tab*",
+        "*App*",
+        "*AndroidPreviews*",
+        "*BackPressHandler*",
+        "*SnapshotTheme*",
+        "*BottomNavigationScreen*",
+        "*Screen*",
+        "*DiaryListActions*",
+        "*DiaryFilters*",
+        "*DiarySortCriteria*",
     )
 
     val files = listOf(
