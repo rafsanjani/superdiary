@@ -11,7 +11,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     id("kotlin-parcelize")
     kotlin("multiplatform")
-    id("com.superdiary.kover")
     alias(libs.plugins.mokkery)
 }
 
