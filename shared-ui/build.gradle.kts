@@ -10,7 +10,6 @@ plugins {
     kotlin("multiplatform")
     id("kotlin-parcelize")
     alias(libs.plugins.mokkery)
-    id("com.superdiary.kover")
 }
 
 kotlin.sourceSets.all {

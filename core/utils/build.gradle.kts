@@ -5,7 +5,6 @@ plugins {
     kotlin("multiplatform")
     id("kotlin-parcelize")
     alias(libs.plugins.testLogger)
-    id("com.superdiary.kover")
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
