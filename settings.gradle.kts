@@ -33,6 +33,73 @@ dependencyResolutionManagement {
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
+plugins {
+    id("org.jetbrains.kotlinx.kover.aggregation") version "0.8.3"
+}
+
+kover {
+    enableCoverage()
+
+    val classes = listOf(
+        "**/*Preview*",
+        // Compose screens
+        "**/*Screen*",
+        "**/*Tab*",
+        // Koin modules and all that shit
+        "**/di/*",
+        // iOS view controller
+        "**/ui/ViewController*",
+        // The entry-point UI of the app
+        "**/AppKt",
+        "**/AppKt*",
+        // The android application class
+        "**/DiaryApp.kt",
+        // JVM App entrypoint
+        "**/Main.kt",
+        // SqlDelight database driver
+        "**/*DatabaseDriver*",
+        // Sqlite Database file
+        "**/*Database",
+        // Reusable screen components
+        "**/components/**",
+        "**/*Resources*",
+        "*.*.*ComposableSingletons*",
+        "**/app/**",
+        "**/androidApp/**",
+        "**/DiaryListActions",
+        "*Tab*",
+        "*App*",
+        "*AndroidPreviews*",
+        "*BackPressHandler*",
+        "*SnapshotTheme*",
+        "*BottomNavigationScreen*",
+        "*Screen*",
+        "*DiaryListActions*",
+        "*DiaryFilters*",
+        "*DiarySortCriteria*",
+        "*BuildKonfig*",
+        "*DatabaseDriver*",
+        "Modules*",
+        "*Theme*",
+        "*DiaryFilterSheet*",
+        "*DiaryHeader*",
+        "*DiarySearchBar*",
+        "*DiarySelectionModifierBar*",
+        "db.*",
+        "*di.*",
+        "*generated.resources.*",
+        "*components.*",
+    )
+
+    reports {
+        includedProjects.add(":shared-data")
+        includedProjects.add(":shared-ui")
+
+        excludedClasses.addAll(classes)
+        excludesAnnotatedBy.add("androidx.compose.runtime.Composable")
+    }
+}
+
 rootProject.name = "superdiary"
 include(":androidApp:app")
 include(":androidApp:benchmark")

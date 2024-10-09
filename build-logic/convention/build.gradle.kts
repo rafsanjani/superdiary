@@ -38,19 +38,9 @@ gradlePlugin {
             implementationClass = "$rootPackageName.kotlinjava.KotlinAndroidConventionPlugin"
         }
 
-        register("koverConventionPlugin") {
-            id = "com.superdiary.kover"
-            implementationClass = "$rootPackageName.codequality.KoverConventionPlugin"
-        }
-
         register("ktlintConventionPlugin") {
             id = "com.superdiary.ktlint"
             implementationClass = "$rootPackageName.codequality.KtlintConventionPlugin"
-        }
-
-        register("SonarConventionPlugin") {
-            id = "com.superdiary.sonar"
-            implementationClass = "$rootPackageName.codequality.SonarConventionPlugin"
         }
     }
 }

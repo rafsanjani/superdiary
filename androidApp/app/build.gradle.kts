@@ -1,6 +1,5 @@
 @file:Suppress("UnusedPrivateProperty")
 
-import com.superdiary.gradle.codequality.koverReport
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 
@@ -11,19 +10,8 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.paparazzi)
     id("io.sentry.android.gradle") version "4.11.0"
-    id("com.superdiary.kover")
 }
 
-koverReport {
-    filters {
-        excludes {
-            // Exclude everything in the android app
-            packages(
-                "com.foreverrafs",
-            )
-        }
-    }
-}
 
 kotlin {
     androidTarget()
