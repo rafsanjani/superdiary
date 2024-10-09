@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint:
+  coverage:
     env:
         SENTRY_BASE_URL_DEBUG: ${{secrets.SENTRY_BASE_URL_DEBUG}}
         SENTRY_BASE_URL_RELEASE: ${{secrets.SENTRY_BASE_URL_RELEASE}}
