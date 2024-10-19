@@ -23,3 +23,18 @@
 -dontwarn org.slf4j.impl.StaticLoggerBinder
 -dontwarn androidx.test.platform.app.InstrumentationRegistry
 -keepattributes EnclosingMethod
+
+-dontwarn io.ktor.client.network.sockets.SocketTimeoutException
+-dontwarn io.ktor.client.plugins.HttpRequestRetry$Configuration
+-dontwarn io.ktor.client.plugins.HttpRequestRetry$Plugin
+-dontwarn io.ktor.client.plugins.HttpRequestRetry$ShouldRetryContext
+-dontwarn io.ktor.client.plugins.HttpRequestRetry
+-dontwarn io.ktor.client.plugins.HttpTimeout$HttpTimeoutCapabilityConfiguration
+-dontwarn io.ktor.client.plugins.HttpTimeout$Plugin
+-dontwarn io.ktor.client.plugins.HttpTimeout
+-dontwarn io.ktor.client.plugins.observer.ResponseObserver$Plugin
+-dontwarn io.ktor.client.plugins.observer.ResponseObserver
+-dontwarn io.ktor.util.KtorDsl
+-dontwarn io.ktor.utils.io.CoroutinesKt
+-dontwarn io.ktor.utils.io.core.ByteReadPacket
+-dontwarn io.ktor.utils.io.core.Input
