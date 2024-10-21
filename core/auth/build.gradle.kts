@@ -3,11 +3,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.serialization)
-
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
-    kotlin("multiplatform")
-    id("kotlin-parcelize")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.testLogger)
 }
 
@@ -36,11 +35,11 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(libs.kotlinx.coroutines.test)
 
-                implementation(dependencies.platform("io.github.jan-tennert.supabase:bom:3.0.1"))
-                implementation("io.github.jan-tennert.supabase:postgrest-kt")
-                implementation("io.github.jan-tennert.supabase:auth-kt")
-                implementation("io.github.jan-tennert.supabase:realtime-kt")
-                api("io.github.jan-tennert.supabase:compose-auth")
+                implementation(dependencies.platform(libs.supabase.bom))
+                implementation(libs.supabase.posgrest)
+                implementation(libs.supabase.auth)
+                implementation(libs.supabase.realtime)
+                implementation(libs.supabase.compose.auth)
                 implementation(libs.ktor.client.cio)
                 implementation(libs.ktor.client.json)
                 implementation(projects.core.utils)
@@ -53,9 +52,10 @@ kotlin {
                 implementation(libs.moko.permissions.compose)
                 implementation(libs.ktor.client.json)
 
-                implementation("androidx.credentials:credentials:1.3.0")
-                implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
-                implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+                // this isn't a bom
+                implementation(libs.androidx.credentials.bom)
+                implementation(libs.androidx.credentials.playServicesAuth)
+                implementation(libs.google.playservices.identity)
             }
         }
 
