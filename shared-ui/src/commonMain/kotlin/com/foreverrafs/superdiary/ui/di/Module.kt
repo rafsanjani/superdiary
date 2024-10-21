@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.ui.di
 
+import com.foreverrafs.auth.di.authModule
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.location.di.locationModule
 import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
@@ -40,4 +41,5 @@ fun compositeModule(
     permissionModule(),
     screenModules(),
     platformModule(analyticsTracker = analytics, aggregateLogger = logger),
+    authModule(),
 )
