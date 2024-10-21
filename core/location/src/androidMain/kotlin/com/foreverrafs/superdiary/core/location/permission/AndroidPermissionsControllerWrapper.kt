@@ -1,6 +1,7 @@
 package com.foreverrafs.superdiary.core.location.permission
 
 import android.content.Context
+import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 import dev.icerock.moko.permissions.PermissionsController
 import dev.icerock.moko.permissions.PermissionsControllerImpl
 

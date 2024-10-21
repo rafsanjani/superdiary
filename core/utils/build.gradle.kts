@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.android.library)
     kotlin("multiplatform")
     id("kotlin-parcelize")
+    alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.testLogger)
 }
 
@@ -23,6 +25,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(compose.foundation)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlin.datetime)
                 implementation(libs.touchlab.stately)
