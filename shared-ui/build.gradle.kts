@@ -59,6 +59,7 @@ kotlin {
                 implementation(libs.uuid)
                 api(projects.core.logging)
                 api(projects.core.analytics)
+                api(projects.core.auth)
                 api(projects.core.location)
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
@@ -66,6 +67,32 @@ kotlin {
                 implementation(libs.androidx.datastore.core)
                 implementation(libs.jetbrains.navigation.compose)
                 implementation(libs.kotlinx.serialization.json)
+            }
+
+            // build.gradle.kts
+            dependencies {
+                // define the BOM and its version
+                implementation(project.dependencies.platform("org.kotlincrypto.hash:bom:0.5.3"))
+
+                // define artifacts without version
+
+                // MD5
+                implementation("org.kotlincrypto.hash:md")
+
+                // SHA-1
+                implementation("org.kotlincrypto.hash:sha1")
+
+                // SHA-224, SHA-256, SHA-384, SHA-512
+                // SHA-512/t, SHA-512/224, SHA-512/256
+                implementation("org.kotlincrypto.hash:sha2")
+
+                // Keccak-224, Keccak-256, Keccak-384, Keccak-512
+                // SHA3-224, SHA3-256, SHA3-384, SHA3-512
+                // SHAKE128, SHAKE256
+                // CSHAKE128, CSHAKE256
+                // ParallelHash128, ParallelHash256
+                // TupleHash128, TupleHash256
+                implementation("org.kotlincrypto.hash:sha3")
             }
         }
 
@@ -156,7 +183,15 @@ afterEvaluate {
     }
 }
 
-tasks.named("iosSimulatorArm64ResolveResourcesFromDependencies"){
+tasks.named("iosSimulatorArm64ResolveResourcesFromDependencies") {
+    doFirst {
+        rootProject.subprojects.forEach {
+            delete(it.layout.buildDirectory.file("kover/kover.artifact"))
+        }
+    }
+}
+
+tasks.named("iosArm64ResolveResourcesFromDependencies") {
     doFirst {
         rootProject.subprojects.forEach {
             delete(it.layout.buildDirectory.file("kover/kover.artifact"))

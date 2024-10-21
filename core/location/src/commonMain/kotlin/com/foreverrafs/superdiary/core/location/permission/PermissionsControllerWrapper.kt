@@ -1,5 +1,7 @@
 package com.foreverrafs.superdiary.core.location.permission
 
+import com.foreverrafs.superdiary.core.utils.ActivityWrapper
+
 /**
  * Permission Controller Wrapper. This makes it possible to build and use
  * the app on JVM because moko-permissions doesn't provide a JVM target
