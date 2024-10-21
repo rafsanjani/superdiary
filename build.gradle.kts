@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.testLogger).apply(false)
     alias(libs.plugins.sonar).apply(false)
     alias(libs.plugins.android.test).apply(false)
+    alias(libs.plugins.kotlin.parcelize).apply(false)
     alias(libs.plugins.kotlin.dokka)
     alias(libs.plugins.ktlint)
     id("com.superdiary.ktlint")
