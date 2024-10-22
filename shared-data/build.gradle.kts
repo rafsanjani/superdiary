@@ -1,17 +1,15 @@
 @file:Suppress("UnusedPrivateProperty")
 
-import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
-
 plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
     alias(libs.plugins.sqldelight)
-    alias(libs.plugins.buildKonfig)
     alias(libs.plugins.testLogger)
     alias(libs.plugins.kotlin.serialization)
     id("kotlin-parcelize")
     kotlin("multiplatform")
     alias(libs.plugins.mokkery)
+    id("com.superdiary.secrets")
 }
 
 sqldelight {
@@ -52,7 +50,7 @@ kotlin {
                 implementation(libs.uuid)
                 implementation(libs.androidx.datastore.preferences)
                 implementation(libs.androidx.datastore.okio)
-                runtimeOnly(libs.ktor.client.cio)
+                implementation(libs.ktor.client.cio)
 
                 // Project dependencies
                 implementation(projects.core.utils)
@@ -116,21 +114,5 @@ android {
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_17
         sourceCompatibility = JavaVersion.VERSION_17
-    }
-}
-
-buildkonfig {
-    packageName = "com.foreverrafs.superdiary.buildKonfig"
-
-    val openAiKey =
-        project.findProperty("openAiKey")?.toString()
-
-    if (openAiKey == null) {
-        println("WARN: OpenAI key not provided!")
-    }
-
-    // default config is required
-    defaultConfigs {
-        buildConfigField(STRING, "openAIKey", openAiKey ?: "")
     }
 }

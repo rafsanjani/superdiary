@@ -27,6 +27,9 @@ dependencyResolutionManagement {
             from("io.github.rafsanjani:versions:2024.10.20")
             version("compose-multiplatform", "1.7.0-rc01")
             version("paparazzi", "1.3.5-SNAPSHOT")
+
+            // Because 3..0.0 causes a NoClassDefFoundError
+            version("ktor", "2.3.12")
         }
     }
 }

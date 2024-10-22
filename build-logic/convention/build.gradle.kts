@@ -21,6 +21,8 @@ dependencies {
     compileOnly(libs.conventionplugins.kover)
     compileOnly(libs.conventionplugins.ktlint)
     compileOnly(libs.conventionplugins.sonar)
+    compileOnly("com.codingfeline.buildkonfig:buildkonfig-gradle-plugin:0.15.2")
+    compileOnly("com.codingfeline.buildkonfig:buildkonfig-compiler:0.15.2")
 }
 
 gradlePlugin {
@@ -28,19 +30,24 @@ gradlePlugin {
 
     plugins {
 
-        register("gitHooksConventionPlugin") {
+        register("GitHooksConventionPlugin") {
             id = "com.superdiary.githooks"
             implementationClass = "$rootPackageName.codequality.GitHooksConventionPlugin"
         }
 
-        register("kotlinAndroidPlugin") {
+        register("KotlinAndroidConventionPlugin") {
             id = "com.superdiary.kotlin.android"
             implementationClass = "$rootPackageName.kotlinjava.KotlinAndroidConventionPlugin"
         }
 
-        register("ktlintConventionPlugin") {
+        register("KtlintConventionPlugin") {
             id = "com.superdiary.ktlint"
             implementationClass = "$rootPackageName.codequality.KtlintConventionPlugin"
+        }
+
+        register("SecretsConventionPlugin"){
+            id = "com.superdiary.secrets"
+            implementationClass = "$rootPackageName.secrets.SecretsConventionPlugin"
         }
     }
 }
