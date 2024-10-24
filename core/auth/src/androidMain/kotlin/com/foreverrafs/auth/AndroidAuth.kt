@@ -6,6 +6,7 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialException
+import com.foreverrafs.superdiary.core.SuperDiarySecret
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
@@ -30,7 +31,7 @@ class AndroidAuth(
                 GetGoogleIdOption
                     .Builder()
                     .setFilterByAuthorizedAccounts(false)
-                    .setServerClientId("867773535981-mucnrga2bj02k93u811mopubf9hcp0tc.apps.googleusercontent.com")
+                    .setServerClientId(SuperDiarySecret.googleServerClientId)
                     .build(),
             )
             .build()

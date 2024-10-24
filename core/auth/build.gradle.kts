@@ -1,6 +1,7 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
+    alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.multiplatform)
@@ -43,6 +44,7 @@ kotlin {
                 implementation(libs.ktor.client.cio)
                 implementation(libs.ktor.client.json)
                 implementation(projects.core.utils)
+                implementation(projects.core.secrets)
             }
         }
         androidMain {
