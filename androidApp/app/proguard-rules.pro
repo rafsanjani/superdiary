@@ -38,3 +38,8 @@
 -dontwarn io.ktor.utils.io.CoroutinesKt
 -dontwarn io.ktor.utils.io.core.ByteReadPacket
 -dontwarn io.ktor.utils.io.core.Input
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
