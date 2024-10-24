@@ -2,11 +2,13 @@
 
 plugins {
     alias(libs.plugins.android.library)
-    kotlin("multiplatform")
-    id("kotlin-parcelize")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.testLogger)
+    alias(libs.plugins.ksp)
+    id("com.superdiary.secrets")
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)

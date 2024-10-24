@@ -32,7 +32,7 @@ import com.foreverrafs.superdiary.data.utils.DiaryPreference
 import com.foreverrafs.superdiary.data.utils.DiaryPreferenceImpl
 import com.foreverrafs.superdiary.data.validator.DiaryValidator
 import com.foreverrafs.superdiary.data.validator.DiaryValidatorImpl
-import com.foreverrafs.superdiary.`shared-data`.BuildKonfig
+import com.foreverrafs.superdiary.secrets.SuperdiarySecrets
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.datetime.Clock
 import org.koin.core.module.Module
@@ -47,7 +47,7 @@ fun useCaseModule() = module {
 
     single<OpenAI> {
         OpenAI(
-            token = BuildKonfig.OPENAI_URL,
+            token = SuperdiarySecrets.OPENAI_URL,
             timeout = Timeout(socket = 15.seconds),
             logging = LoggingConfig(logLevel = LogLevel.None),
         )

@@ -7,14 +7,19 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 
+/**
+ * These secrets are only consumed in ":core:utils" module which is in turn
+ * used by all other modules in the project
+ */
 class SecretsConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             pluginManager.apply("com.codingfeline.buildkonfig")
 
             buildKonfig {
-                // target.path returns something like ":shared-data" so strip the leading colon
-                packageName = "com.foreverrafs.superdiary.${path.substring(1)}"
+                objectName = "SuperdiarySecrets"
+                exposeObjectWithName = "SuperdiarySecrets"
+                packageName = "com.foreverrafs.superdiary.secrets"
 
                 val props = Properties()
 
@@ -33,11 +38,25 @@ class SecretsConventionPlugin : Plugin<Project> {
                     ""
                 }
 
+                val googleServerClientId: String =
+                    props["GOOGLE_SERVER_CLIENT_ID"]?.toString() ?: run {
+                        logger.error("GOOGLE_SERVER_CLIENT_ID not provided!")
+                        ""
+                    }
+
                 defaultConfigs {
                     buildConfigField(
                         STRING,
                         "OPENAI_URL",
                         openAIUrl,
+                    )
+                }
+
+                defaultConfigs {
+                    buildConfigField(
+                        STRING,
+                        "GOOGLE_SERVER_CLIENT_ID",
+                        googleServerClientId,
                     )
                 }
             }
