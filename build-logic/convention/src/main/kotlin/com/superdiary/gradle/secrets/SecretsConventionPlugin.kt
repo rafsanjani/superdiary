@@ -28,8 +28,8 @@ class SecretsConventionPlugin : Plugin<Project> {
                     )
                 }
 
-                val openAIUrl: String = props["OPENAI_URL"]?.toString() ?: run {
-                    logger.error("OPENAI_URL not provided!")
+                val openAIUrl: String = props["OPENAI_KEY"]?.toString() ?: run {
+                    logger.error("OPENAI_KEY not provided!")
                     ""
                 }
 
