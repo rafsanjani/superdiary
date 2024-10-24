@@ -9,7 +9,6 @@ plugins {
     id("kotlin-parcelize")
     kotlin("multiplatform")
     alias(libs.plugins.mokkery)
-    id("com.superdiary.secrets")
 }
 
 sqldelight {
