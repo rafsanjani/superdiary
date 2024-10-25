@@ -34,7 +34,6 @@ kotlin {
             export(projects.core.analytics)
             export(projects.core.logging)
             export(projects.core.location)
-            export(projects.core.auth)
         }
     }
 
@@ -58,7 +57,6 @@ kotlin {
                 implementation(libs.koin.compose)
                 implementation(projects.swipe)
                 implementation(libs.uuid)
-                api(projects.core.auth)
                 api(projects.core.analytics)
                 api(projects.core.location)
                 api(projects.core.logging)
@@ -149,7 +147,11 @@ android {
 }
 
 afterEvaluate {
-    rootProject.subprojects.forEach {
-        delete(it.layout.buildDirectory.file("kover/default.artifact"))
+    tasks.named("iosSimulatorArm64ResolveResourcesFromDependencies") {
+        doFirst {
+            rootProject.subprojects.forEach {
+                delete(it.layout.buildDirectory.file("kover/kover.artifact"))
+            }
+        }
     }
 }
