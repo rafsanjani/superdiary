@@ -54,6 +54,7 @@ kotlin {
                 // Project dependencies
                 implementation(projects.core.utils)
                 implementation(projects.core.analytics)
+                implementation(projects.core.secrets)
                 implementation(projects.core.logging)
                 implementation(projects.core.location)
             }

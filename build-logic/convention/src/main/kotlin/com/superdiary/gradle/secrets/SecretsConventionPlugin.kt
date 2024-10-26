@@ -17,8 +17,6 @@ class SecretsConventionPlugin : Plugin<Project> {
             pluginManager.apply("com.codingfeline.buildkonfig")
 
             buildKonfig {
-                objectName = "SuperdiarySecrets"
-                exposeObjectWithName = "SuperdiarySecrets"
                 packageName = "com.foreverrafs.superdiary.secrets"
 
                 val props = Properties()
@@ -27,7 +25,7 @@ class SecretsConventionPlugin : Plugin<Project> {
                     props.load(
                         rootProject.file("secrets.properties").inputStream(),
                     )
-                } catch (_: Exception) {
+                } catch (_: Throwable) {
                     logger.warn(
                         "secrets.properties not found. All app features will not work as expected",
                     )

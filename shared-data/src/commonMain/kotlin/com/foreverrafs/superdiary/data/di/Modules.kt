@@ -4,6 +4,7 @@ import com.aallam.openai.api.http.Timeout
 import com.aallam.openai.api.logging.LogLevel
 import com.aallam.openai.client.LoggingConfig
 import com.aallam.openai.client.OpenAI
+import com.foreverrafs.superdiary.core.SuperDiarySecret
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Database
@@ -32,7 +33,6 @@ import com.foreverrafs.superdiary.data.utils.DiaryPreference
 import com.foreverrafs.superdiary.data.utils.DiaryPreferenceImpl
 import com.foreverrafs.superdiary.data.validator.DiaryValidator
 import com.foreverrafs.superdiary.data.validator.DiaryValidatorImpl
-import com.foreverrafs.superdiary.secrets.SuperdiarySecrets
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.datetime.Clock
 import org.koin.core.module.Module
@@ -47,7 +47,7 @@ fun useCaseModule() = module {
 
     single<OpenAI> {
         OpenAI(
-            token = SuperdiarySecrets.OPENAI_URL,
+            token = SuperDiarySecret.openAIKey,
             timeout = Timeout(socket = 15.seconds),
             logging = LoggingConfig(logLevel = LogLevel.None),
         )
