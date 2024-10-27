@@ -28,6 +28,7 @@ dependencyResolutionManagement {
             version("compose-multiplatform", "1.7.0")
             version("paparazzi", "1.3.5-SNAPSHOT")
             version("openaiKotlin", "4.0.0-SNAPSHOT")
+            version("sentry", "7.15.0")
         }
     }
 }
@@ -107,6 +108,7 @@ include(":androidApp:benchmark")
 include(":shared-data")
 include(":swipe")
 include(":shared-ui")
+include(":core:auth")
 include(":core:analytics")
 include(":core:location")
 include(":core:logging")
