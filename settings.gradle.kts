@@ -28,6 +28,7 @@ dependencyResolutionManagement {
             version("compose-multiplatform", "1.7.0")
             version("paparazzi", "1.3.5-SNAPSHOT")
             version("openaiKotlin", "4.0.0-SNAPSHOT")
+            version("sentry", "7.15.0")
         }
     }
 }
