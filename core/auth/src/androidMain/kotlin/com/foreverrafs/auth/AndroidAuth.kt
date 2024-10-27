@@ -1,6 +1,5 @@
 package com.foreverrafs.auth
 
-import android.content.Context
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -8,6 +7,7 @@ import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialException
 import com.foreverrafs.superdiary.core.SuperDiarySecret
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
+import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
@@ -18,12 +18,11 @@ import io.github.jan.supabase.auth.providers.builtin.IDToken
 
 class AndroidAuth(
     private val supabaseClient: SupabaseClient,
-    private val context: Context,
     private val logger: AggregateLogger,
 ) : AuthApi {
 
-    override suspend fun signInWithGoogle(): AuthApi.SignInStatus {
-        val credentialManager = CredentialManager.create(context)
+    override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper): AuthApi.SignInStatus {
+        val credentialManager = CredentialManager.create(activityWrapper)
 
         val request: GetCredentialRequest = GetCredentialRequest
             .Builder()
@@ -39,7 +38,7 @@ class AndroidAuth(
         val googleIdToken = try {
             val result = credentialManager.getCredential(
                 request = request,
-                context = context,
+                context = activityWrapper,
             )
 
             getGoogleIdToken(result)
