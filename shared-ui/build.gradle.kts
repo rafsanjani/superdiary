@@ -155,3 +155,11 @@ afterEvaluate {
         }
     }
 }
+
+tasks.named("iosSimulatorArm64ResolveResourcesFromDependencies"){
+    doFirst {
+        rootProject.subprojects.forEach {
+            delete(it.layout.buildDirectory.file("kover/kover.artifact"))
+        }
+    }
+}
