@@ -24,7 +24,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2024.10.20")
+            from("io.github.rafsanjani:versions:2024.10.27")
             version("compose-multiplatform", "1.7.0")
             version("paparazzi", "1.3.5-SNAPSHOT")
             version("openaiKotlin", "4.0.0-SNAPSHOT")
