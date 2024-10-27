@@ -33,6 +33,7 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(projects.core.logging)
+                implementation(projects.core.utils)
                 implementation(libs.kotlin.inject.runtime)
                 implementation(compose.foundation)
                 implementation(libs.kotlinx.coroutines.test)
