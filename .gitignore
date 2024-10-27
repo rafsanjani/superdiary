@@ -13,3 +13,4 @@ xcuserdata
 desktopApp/diary.db
 shared-data/superdiary.preferences_pb
 desktopApp/datastore.preferences_pb
+secrets.properties

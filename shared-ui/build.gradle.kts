@@ -57,9 +57,9 @@ kotlin {
                 implementation(libs.koin.compose)
                 implementation(projects.swipe)
                 implementation(libs.uuid)
-                api(projects.core.logging)
                 api(projects.core.analytics)
                 api(projects.core.location)
+                api(projects.core.logging)
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
                 implementation(libs.androidx.datastore.preferences)
@@ -150,7 +150,7 @@ afterEvaluate {
     tasks.named("iosSimulatorArm64ResolveResourcesFromDependencies") {
         doFirst {
             rootProject.subprojects.forEach {
-                delete(it.layout.buildDirectory.file("kover/default.artifact"))
+                delete(it.layout.buildDirectory.file("kover/kover.artifact"))
             }
         }
     }

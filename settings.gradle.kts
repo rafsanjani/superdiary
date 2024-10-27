@@ -24,9 +24,10 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2024.10.06")
-            version("compose-multiplatform", "1.7.0-rc01")
+            from("io.github.rafsanjani:versions:2024.10.27")
+            version("compose-multiplatform", "1.7.0")
             version("paparazzi", "1.3.5-SNAPSHOT")
+            version("openaiKotlin", "4.0.0-SNAPSHOT")
         }
     }
 }
@@ -110,4 +111,5 @@ include(":core:analytics")
 include(":core:location")
 include(":core:logging")
 include(":core:utils")
+include(":core:secrets")
 include(":desktopApp")

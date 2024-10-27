@@ -4,7 +4,7 @@ import com.aallam.openai.api.http.Timeout
 import com.aallam.openai.api.logging.LogLevel
 import com.aallam.openai.client.LoggingConfig
 import com.aallam.openai.client.OpenAI
-import com.foreverrafs.superdiary.buildKonfig.BuildKonfig
+import com.foreverrafs.superdiary.core.SuperDiarySecret
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Database
@@ -47,7 +47,7 @@ fun useCaseModule() = module {
 
     single<OpenAI> {
         OpenAI(
-            token = BuildKonfig.openAIKey,
+            token = SuperDiarySecret.openAIKey,
             timeout = Timeout(socket = 15.seconds),
             logging = LoggingConfig(logLevel = LogLevel.None),
         )
