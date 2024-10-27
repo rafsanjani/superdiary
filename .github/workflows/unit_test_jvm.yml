@@ -2,8 +2,7 @@ name: JVM Unit & Snapshot Tests
 
 on:
   push:
-    branches:
-      - main
+    branches: [main, development]
   pull_request:
   workflow_dispatch:
 

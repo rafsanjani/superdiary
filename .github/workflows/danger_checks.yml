@@ -2,8 +2,7 @@ name: Danger Checks
 
 on:
   push:
-    branches:
-      - main
+    branches: [main, development]
   pull_request:
   workflow_dispatch:
 
