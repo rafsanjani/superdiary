@@ -8,7 +8,6 @@ on:
 
 jobs:
   lint:
-    if: ${{ github.event_name != 'push' || github.event.pull_request.number }}
     runs-on: macos-14
     env:
         SENTRY_BASE_URL_DEBUG: ${{secrets.SENTRY_BASE_URL_DEBUG}}
@@ -30,7 +29,6 @@ jobs:
       - name: Run ktlint on all modules
         run: ./gradlew ktlintCheck
   build:
-    if: ${{ github.event_name != 'push' || github.event.pull_request.number }}
     runs-on: macos-14
     needs: lint
     env:
