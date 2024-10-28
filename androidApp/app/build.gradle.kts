@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.paparazzi)
-    id("io.sentry.android.gradle") version "4.12.0"
+    id("io.sentry.android.gradle") version "4.13.0"
 }
 
 
