@@ -2,21 +2,41 @@ package com.foreverrafs.superdiary.ui
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.foreverrafs.auth.TokenExpiredException
+import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
 import com.foreverrafs.superdiary.ui.home.BottomNavigationScreen
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
+import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
+import superdiary.shared_ui.generated.resources.Res
+import superdiary.shared_ui.generated.resources.logo
 
 /**
  * Entry point into the whole app. In an ideal world we'll only just render
@@ -25,35 +45,101 @@ import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 
 @Composable
 fun App(modifier: Modifier = Modifier) {
+    val appViewModel: AppViewModel = koinInject()
+    val appViewState by appViewModel.viewState.collectAsStateWithLifecycle()
+
     SuperdiaryTheme {
-        val navController = rememberNavController()
+        when (appViewState) {
+            is AppSessionState.Processing -> {
+                SuperdiaryTheme {
+                    Surface {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            val imageAnimation = rememberInfiniteTransition()
 
-        NavHost(
-            modifier = modifier,
-            navController = navController,
-            startDestination = BottomNavigationScreen,
-        ) {
-            animatedComposable<BottomNavigationScreen> {
-                BottomNavigationScreen.Content(navController)
-            }
+                            val scale by imageAnimation.animateFloat(
+                                initialValue = 1f,
+                                targetValue = 0.65f,
+                                animationSpec = infiniteRepeatable(
+                                    animation = tween(
+                                        durationMillis = 1000,
+                                    ),
+                                    repeatMode = RepeatMode.Reverse,
+                                ),
+                            )
 
-            composable<CreateDiaryScreen> {
-                CreateDiaryScreen.Content(navController)
-            }
-
-            animatedComposable<DiaryListScreen> {
-                DiaryListScreen.Content(navController)
-            }
-
-            animatedComposable<DetailScreen> { backstackEntry ->
-                val diaryId: String? = backstackEntry.arguments?.getString("diaryId")
-
-                diaryId?.let {
-                    DetailScreen.Content(
-                        diaryId = diaryId,
-                        navController = navController,
-                    )
+                            Image(
+                                modifier = Modifier
+                                    .size(96.dp)
+                                    .graphicsLayer {
+                                        scaleX = scale
+                                        scaleY = scale
+                                    },
+                                painter = painterResource(Res.drawable.logo),
+                                contentDescription = null,
+                            )
+                        }
+                    }
                 }
+                return@SuperdiaryTheme
+            }
+
+            is AppSessionState.Error -> SuperDiaryNavHost(
+                modifier = modifier,
+                isSignedIn = false,
+                isTokenExpired = (appViewState as AppSessionState.Error).exception is TokenExpiredException,
+            )
+
+            is AppSessionState.Success -> SuperDiaryNavHost(
+                modifier = modifier,
+                isSignedIn = true,
+            )
+        }
+    }
+}
+
+@Composable
+private fun SuperDiaryNavHost(
+    isSignedIn: Boolean,
+    modifier: Modifier = Modifier,
+    isTokenExpired: Boolean = false,
+) {
+    val navController = rememberNavController()
+
+    NavHost(
+        modifier = modifier,
+        navController = navController,
+        startDestination = if (isSignedIn) BottomNavigationScreen else LoginScreen,
+    ) {
+        animatedComposable<LoginScreen> {
+            LoginScreen.Content(
+                navController = navController,
+                isTokenExpired = isTokenExpired,
+            )
+        }
+
+        animatedComposable<BottomNavigationScreen> {
+            BottomNavigationScreen.Content(navController)
+        }
+
+        composable<CreateDiaryScreen> {
+            CreateDiaryScreen.Content(navController)
+        }
+
+        animatedComposable<DiaryListScreen> {
+            DiaryListScreen.Content(navController)
+        }
+
+        animatedComposable<DetailScreen> { backstackEntry ->
+            val diaryId: String? = backstackEntry.arguments?.getString("diaryId")
+
+            diaryId?.let {
+                DetailScreen.Content(
+                    diaryId = diaryId,
+                    navController = navController,
+                )
             }
         }
     }
@@ -71,14 +157,14 @@ private inline fun <reified T : Any> NavGraphBuilder.animatedComposable(
 
 private fun enterTransition() = fadeIn(
     animationSpec = tween(
-        300,
+        durationMillis = 300,
         easing = LinearEasing,
     ),
 )
 
 private fun exitTransition() = fadeOut(
     animationSpec = tween(
-        300,
+        durationMillis = 300,
         easing = LinearEasing,
     ),
 )

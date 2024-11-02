@@ -12,15 +12,13 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import io.github.jan.supabase.SupabaseClient
-import io.github.jan.supabase.auth.auth
-import io.github.jan.supabase.auth.providers.Google
-import io.github.jan.supabase.auth.providers.builtin.IDToken
 
 class AndroidAuth(
     private val supabaseClient: SupabaseClient,
     private val logger: AggregateLogger,
-) : AuthApi {
+) : AuthApi by DefaultSupabaseAuth(supabaseClient) {
 
+    /** Use the credentials manager to sign in with Google on Android */
     override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper): AuthApi.SignInStatus {
         val credentialManager = CredentialManager.create(activityWrapper)
 
@@ -49,11 +47,7 @@ class AndroidAuth(
         }
 
         return if (googleIdToken != null) {
-            supabaseClient.auth.signInWith(IDToken) {
-                idToken = googleIdToken
-                provider = Google
-            }
-            AuthApi.SignInStatus.LoggedIn
+            signInWithGoogle(googleIdToken)
         } else {
             AuthApi.SignInStatus.Error(Exception("Error logging in with Google"))
         }

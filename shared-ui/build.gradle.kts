@@ -58,16 +58,17 @@ kotlin {
                 implementation(libs.koin.compose)
                 implementation(projects.swipe)
                 implementation(libs.uuid)
-                api(projects.core.auth)
-                api(projects.core.analytics)
-                api(projects.core.location)
-                api(projects.core.logging)
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
                 implementation(libs.androidx.datastore.preferences)
                 implementation(libs.androidx.datastore.core)
                 implementation(libs.jetbrains.navigation.compose)
                 implementation(libs.kotlinx.serialization.json)
+                implementation(compose.components.uiToolingPreview)
+                api(projects.core.auth)
+                api(projects.core.analytics)
+                api(projects.core.location)
+                api(projects.core.logging)
             }
         }
 
@@ -158,7 +159,7 @@ afterEvaluate {
     }
 }
 
-tasks.named("iosSimulatorArm64ResolveResourcesFromDependencies"){
+tasks.named("iosSimulatorArm64ResolveResourcesFromDependencies") {
     doFirst {
         rootProject.subprojects.forEach {
             delete(it.layout.buildDirectory.file("kover/kover.artifact"))
