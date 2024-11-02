@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.data.utils
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.foreverrafs.superdiary.data.TestAppDispatchers
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -15,7 +16,11 @@ import kotlinx.coroutines.test.setMain
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiaryPreferenceTest {
 
-    private val diaryPreference: DiaryPreference = DiaryPreferenceImpl.getInstance("superdiary.preferences_pb")
+    private val diaryPreference: DiaryPreference =
+        DiaryPreferenceImpl.getInstance(
+            filename = "superdiary.preferences_pb",
+            dispatchers = TestAppDispatchers,
+        )
 
     @BeforeTest
     fun setup() {
@@ -64,8 +69,8 @@ class DiaryPreferenceTest {
 
     @Test
     fun `Should return the same instance of diary preference`() = runTest {
-        val first = DiaryPreferenceImpl.getInstance()
-        val second = DiaryPreferenceImpl.getInstance()
+        val first = DiaryPreferenceImpl.getInstance(dispatchers = TestAppDispatchers)
+        val second = DiaryPreferenceImpl.getInstance(dispatchers = TestAppDispatchers)
 
         assertThat(first).isEqualTo(second)
     }

@@ -53,7 +53,11 @@ fun useCaseModule() = module {
         )
     }
 
-    factory<DiaryPreference> { DiaryPreferenceImpl.getInstance() }
+    factory<DiaryPreference> {
+        DiaryPreferenceImpl.getInstance(
+            dispatchers = get(),
+        )
+    }
     factoryOf(::DiaryValidatorImpl) { bind<DiaryValidator>() }
     factoryOf(::OpenDiaryAI) { bind<DiaryAI>() }
     factoryOf(::AddDiaryUseCase)

@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.foreverrafs.superdiary.core.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.data.getDatastorePath
 import kotlin.concurrent.Volatile
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -26,6 +27,7 @@ interface DiaryPreference {
 
 class DiaryPreferenceImpl private constructor(
     filename: String,
+    private val dispatchers: AppCoroutineDispatchers,
     private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.createWithPath {
         getDatastorePath(filename = filename).toPath()
     },
@@ -56,7 +58,7 @@ class DiaryPreferenceImpl private constructor(
      */
     override val snapshot: DiarySettings
         get() {
-            val prefs = runBlocking { dataStore.data.first() }
+            val prefs = runBlocking(dispatchers.main) { dataStore.data.first() }
 
             // Use appropriate defaults when the settings hasn't been set
             return DiarySettings(
@@ -92,8 +94,11 @@ class DiaryPreferenceImpl private constructor(
         private var instance: DiaryPreference? = null
         private val lock = SynchronizedObject()
 
-        fun getInstance(filename: String = "datastore.preferences_pb") = synchronized(lock) {
-            instance ?: DiaryPreferenceImpl(filename).also { instance = it }
+        fun getInstance(
+            dispatchers: AppCoroutineDispatchers,
+            filename: String = "datastore.preferences_pb",
+        ) = synchronized(lock) {
+            instance ?: DiaryPreferenceImpl(filename, dispatchers).also { instance = it }
         }
     }
 }

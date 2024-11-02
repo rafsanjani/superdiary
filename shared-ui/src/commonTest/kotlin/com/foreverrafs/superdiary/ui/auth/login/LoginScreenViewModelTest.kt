@@ -29,7 +29,9 @@ class LoginScreenViewModelTest {
 
     private val authApi: AuthApi = mock()
 
-    private val diaryPreference: DiaryPreference = DiaryPreferenceImpl.getInstance()
+    private val diaryPreference: DiaryPreference = DiaryPreferenceImpl.getInstance(
+        dispatchers = TestAppDispatchers,
+    )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @BeforeTest
