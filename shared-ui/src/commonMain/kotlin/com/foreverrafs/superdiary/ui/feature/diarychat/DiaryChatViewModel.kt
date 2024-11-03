@@ -28,6 +28,7 @@ class DiaryChatViewModel(
     private val saveChatMessageUseCase: SaveChatMessageUseCase,
     getChatMessagesUseCase: GetChatMessagesUseCase,
 ) : ViewModel() {
+
     data class DiaryChatViewState(
         val isResponding: Boolean = false,
         val isLoadingDiaries: Boolean = false,
@@ -35,198 +36,108 @@ class DiaryChatViewModel(
         val diaries: List<Diary> = emptyList(),
     )
 
-    private val mutableState = MutableStateFlow(DiaryChatViewState())
-
-    private val diaries: Flow<List<Diary>> = getAllDiariesUseCase()
-
-    private val chatMessages: Flow<List<DiaryChatMessage>> = getChatMessagesUseCase()
-
-    val state: StateFlow<DiaryChatViewState> = mutableState
+    private val _viewState = MutableStateFlow(DiaryChatViewState())
+    val viewState: StateFlow<DiaryChatViewState> = _viewState
         .onStart {
-            logger.d(TAG) {
-                "MutableState::New subscription to DiaryChatViewModel"
-            }
+            logger.d(TAG) { "New subscription to DiaryChatViewModel" }
             loadDiaries()
         }
         .onCompletion {
-            logger.d(TAG) {
-                "MutableState::All subscriptions to DiaryChatViewModel removed"
-            }
+            logger.d(TAG) { "All subscriptions to DiaryChatViewModel removed" }
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = DiaryChatViewState(),
-        )
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DiaryChatViewState())
 
-    private fun updateChatMessageList(diaries: List<Diary>) = viewModelScope.launch {
-        logger.i(TAG) {
-            "Loading chat messages from DB"
-        }
-
-        chatMessages.collect {
-            val messages = it.toMutableList()
-
-            logger.i(TAG) {
-                "Chat messages have been loaded from DB: Size = ${messages.size}"
-            }
-
-            val welcomeMessage = DiaryChatMessage.DiaryAI(
-                content = """
-                    Welcome to Diary AI.
-                    You can gain insights into your entries through interactive conversations.
-                """.trimIndent(),
-            )
-
-            if (messages.isEmpty()) {
-                messages.add(welcomeMessage)
-            }
-
-            mutableState.update { state ->
-                state.copy(messages = messages)
-            }
-
-            // We use the previous chat messages, in addition to the diaries to provide the working context
-            updateSystemMessage(messages = messages, diaries = diaries)
-        }
-    }
-
-    private fun updateSystemMessage(
-        messages: List<DiaryChatMessage>,
-        diaries: List<Diary>,
-    ) {
-        // convert the messages to mutable list
-        val mutableListMessages = messages.toMutableList()
-
-        // Only add the system prompt if we are querying for the first time
-        if (mutableListMessages.none { it.role == DiaryChatRole.System }) {
-            val systemMessage = DiaryChatMessage.System(
-                """
-                    You are Journal AI, I will provide you a list of journal entries and their dates and you will
-                    respond to follow up questions based on this information. You are not supposed to respond to
-                    any questions outside of the scope of the data you have been given under any circumstances.
-                """.trimIndent(),
-            )
-            mutableListMessages.add(
-                systemMessage,
-            )
-        }
-
-        // Add the diaries
-        val aggregatedDiaries = diaries.joinToString()
-
-        // joinToString() will return and add an empty string if the list is empty but we don't want that.
-        if (aggregatedDiaries.isNotEmpty()) {
-            mutableListMessages.add(DiaryChatMessage.System(diaries.joinToString()))
-        }
-
-        mutableState.update {
-            it.copy(
-                messages = mutableListMessages,
-            )
-        }
-    }
+    private val diariesFlow: Flow<List<Diary>> = getAllDiariesUseCase()
+    private val chatMessagesFlow: Flow<List<DiaryChatMessage>> = getChatMessagesUseCase()
 
     private fun loadDiaries() = viewModelScope.launch {
-        logger.i(TAG) {
-            "Loading diaries for chat screen"
+        _viewState.updateLoadingDiaries(true)
+        diariesFlow.collect { diaries ->
+            _viewState.update { it.copy(diaries = diaries, isLoadingDiaries = false) }
+            logger.i(TAG) { "Loaded all diaries for chat screen: Size = ${diaries.size}" }
+            updateChatMessageList(diaries)
         }
+    }
 
-        mutableState.update { state ->
-            state.copy(
-                isLoadingDiaries = true,
-            )
+    private fun updateChatMessageList(diaries: List<Diary>) = viewModelScope.launch {
+        chatMessagesFlow.collect { messages ->
+            val updatedMessages = messages.toMutableList()
+            if (updatedMessages.isEmpty()) updatedMessages += welcomeMessage()
+            _viewState.update { it.copy(messages = updatedMessages) }
+            updateSystemMessage(updatedMessages, diaries)
         }
+    }
 
-        diaries.collect { diaries ->
-            mutableState.update { state ->
-                logger.i(TAG) {
-                    "Loaded all diaries for chat screen: Size = ${diaries.size}"
-                }
-
-                state.copy(
-                    diaries = diaries,
-                    isLoadingDiaries = false,
-                )
-            }
-
-            // We want to only update the chat message list after the local diaries have been loaded
-            // to have an up to date diary entries
-            updateChatMessageList(diaries = diaries)
+    private fun updateSystemMessage(messages: List<DiaryChatMessage>, diaries: List<Diary>) {
+        val mutableMessages = messages.toMutableList()
+        if (mutableMessages.none { it.role == DiaryChatRole.System }) {
+            mutableMessages += systemMessage()
         }
+        if (diaries.isNotEmpty()) {
+            mutableMessages += DiaryChatMessage.System(diaries.joinToString())
+        }
+        _viewState.update { it.copy(messages = mutableMessages) }
     }
 
     fun queryDiaries(query: String) = viewModelScope.launch {
-        mutableState.update {
-            DiaryChatViewState(
-                isResponding = true,
-            )
-        }
-
-        yield()
-        logger.d(TAG) {
-            "queryDiaries: Querying all diaries for: $query"
-        }
-
-        // Let's grab all the messages in the system
-        val messages = mutableState.value.messages.toMutableList()
-
-        // Update state to reflect responding state in the UI
         val userQuery = DiaryChatMessage.User(query)
+        val updatedMessages = viewState.value.messages + userQuery
 
-        mutableState.update { state ->
-            state.copy(
-                isResponding = true,
-                messages = state.messages.append(
-                    userQuery,
-                ),
-            )
-        }
-
-        // Add the user query
-        messages.add(userQuery)
-
-        val response = diaryAI.queryDiaries(
-            messages = messages,
+        _viewState.updateRespondingState(
+            isResponding = true,
+            messages = updatedMessages,
         )
 
-        mutableState.update { state ->
-            logger.d(TAG) {
-                "queryDiaries: Finished responding to AI query"
-            }
+        yield()
+        logger.d(TAG) { "queryDiaries: Querying all diaries for: $query" }
 
-            val diaryAiResponse = DiaryChatMessage.DiaryAI(content = response)
-            messages.add(diaryAiResponse)
+        val responseContent = diaryAI.queryDiaries(messages = updatedMessages)
+        val diaryAIResponse = DiaryChatMessage.DiaryAI(responseContent)
 
-            saveChatMessagePair(
-                userQuery = userQuery,
-                diaryAiResponse = diaryAiResponse,
-            )
+        val finalMessages = updatedMessages + diaryAIResponse
+        saveChatMessagePair(userQuery, diaryAIResponse)
 
-            state.copy(
-                isResponding = false,
-                messages = messages,
-            )
-        }
+        _viewState.updateRespondingState(
+            isResponding = false,
+            messages = finalMessages,
+        )
     }
 
     private fun saveChatMessagePair(
         userQuery: DiaryChatMessage,
-        diaryAiResponse: DiaryChatMessage,
+        diaryAIResponse: DiaryChatMessage,
     ) =
         viewModelScope.launch {
             saveChatMessageUseCase(userQuery)
-            saveChatMessageUseCase(diaryAiResponse)
-
-            logger.i(TAG) {
-                "Message pair saved to DB"
-            }
+            saveChatMessageUseCase(diaryAIResponse)
+            logger.i(TAG) { "Message pair saved to DB" }
         }
 
-    private fun <T> List<T>.append(item: T): List<T> =
-        toMutableList().also { it.add(item) }.toList()
+    private fun welcomeMessage() = DiaryChatMessage.DiaryAI(
+        content = """
+            Welcome to Diary AI.
+            You can gain insights into your entries through interactive conversations.
+        """.trimIndent(),
+    )
 
-    companion object {
+    private fun systemMessage() = DiaryChatMessage.System(
+        content = """
+            You are Journal AI. I will provide you a list of journal entries and their dates. You will respond to follow-up questions based on this information. Do not respond to any questions outside the scope of the provided data.
+        """.trimIndent(),
+    )
+
+    private companion object {
         private const val TAG = "DiaryChatViewModel"
+
+        private fun MutableStateFlow<DiaryChatViewState>.updateLoadingDiaries(isLoading: Boolean) {
+            update { it.copy(isLoadingDiaries = isLoading) }
+        }
+
+        private fun MutableStateFlow<DiaryChatViewState>.updateRespondingState(
+            isResponding: Boolean,
+            messages: List<DiaryChatMessage>,
+        ) {
+            update { it.copy(isResponding = isResponding, messages = messages) }
+        }
     }
 }

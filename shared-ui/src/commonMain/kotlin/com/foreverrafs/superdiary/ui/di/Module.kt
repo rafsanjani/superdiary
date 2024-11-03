@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.ui.di
 
+import com.foreverrafs.auth.di.authModule
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.location.di.locationModule
 import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
@@ -7,6 +8,8 @@ import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.core.utils.di.utilsModule
 import com.foreverrafs.superdiary.data.di.platformModule
 import com.foreverrafs.superdiary.data.di.useCaseModule
+import com.foreverrafs.superdiary.ui.AppViewModel
+import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreenViewModel
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryViewModel
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
@@ -25,6 +28,8 @@ internal fun screenModules(): Module = module {
     singleOf(::DashboardViewModel)
     singleOf(::DiaryChatViewModel)
     singleOf(::DetailsViewModel)
+    singleOf(::LoginScreenViewModel)
+    singleOf(::AppViewModel)
 }
 
 expect fun permissionModule(): Module
@@ -40,4 +45,5 @@ fun compositeModule(
     permissionModule(),
     screenModules(),
     platformModule(analyticsTracker = analytics, aggregateLogger = logger),
+    authModule(),
 )

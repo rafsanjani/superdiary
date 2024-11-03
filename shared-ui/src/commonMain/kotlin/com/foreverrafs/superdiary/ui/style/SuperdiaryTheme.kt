@@ -76,6 +76,11 @@ fun SuperdiaryTheme(
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
         ),
+        titleLarge = TextStyle(
+            fontFamily = montserratAlternativesFontFamily(),
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+        ),
         labelMedium = TextStyle(
             fontFamily = montserratAlternativesFontFamily(),
             fontSize = 16.sp,

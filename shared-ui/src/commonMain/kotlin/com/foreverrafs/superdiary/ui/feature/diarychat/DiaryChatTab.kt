@@ -18,7 +18,7 @@ object DiaryChatTab : SuperDiaryTab {
     @Composable
     fun Content() {
         val screenModel: DiaryChatViewModel = koinInject()
-        val screenState by screenModel.state.collectAsState()
+        val screenState by screenModel.viewState.collectAsState()
 
         DiaryChatScreenContent(
             screenState = screenState,
