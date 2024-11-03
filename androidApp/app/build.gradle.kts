@@ -12,7 +12,6 @@ plugins {
     id("io.sentry.android.gradle") version "4.12.0"
 }
 
-
 kotlin {
     androidTarget()
 
@@ -60,7 +59,7 @@ android {
     defaultConfig {
         applicationId = "com.foreverrafs.superdiary"
         minSdk = 28
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
     }
