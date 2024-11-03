@@ -99,7 +99,7 @@ class LoginScreenViewModelTest {
         loginViewModel.viewState.test {
             awaitUntil { it is LoginViewState.Success }
 
-            val preference = diaryPreference.snapshot
+            val preference = diaryPreference.getSnapshot()
 
             assertThat(preference.authorizationToken).isEqualTo("new-session-token")
         }
@@ -147,7 +147,7 @@ class LoginScreenViewModelTest {
      * @param token The previous session token to store.
      */
     private suspend fun savePreviousSessionToken(token: String) {
-        val snapshot = diaryPreference.snapshot
+        val snapshot = diaryPreference.getSnapshot()
         diaryPreference.save(
             snapshot.copy(
                 authorizationToken = token,

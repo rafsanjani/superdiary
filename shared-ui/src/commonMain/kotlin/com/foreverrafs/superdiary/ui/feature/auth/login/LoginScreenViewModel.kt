@@ -28,8 +28,8 @@ class LoginScreenViewModel(
             restoreSession()
         }
 
-    private fun restoreSession() {
-        val preferences = diaryPreference.snapshot
+    private fun restoreSession() = viewModelScope.launch(coroutineDispatchers.main) {
+        val preferences = diaryPreference.getSnapshot()
 
         if (preferences.authorizationToken.isNotEmpty()) {
             logger.d(TAG) {
@@ -80,7 +80,7 @@ class LoginScreenViewModel(
         logger.d(TAG) {
             "Saving Google auth token"
         }
-        val preference = diaryPreference.snapshot
+        val preference = diaryPreference.getSnapshot()
 
         diaryPreference.save(
             preference.copy(

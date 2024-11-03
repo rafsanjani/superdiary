@@ -8,7 +8,6 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -24,7 +23,7 @@ class DiaryPreferenceTest {
 
     @BeforeTest
     fun setup() {
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(TestAppDispatchers.main)
     }
 
     @AfterTest
@@ -50,7 +49,7 @@ class DiaryPreferenceTest {
         // The settings flow is not emitting immediately after a call to save
         // in testing. Use the snapshot to get the latest value from it and test that
         // instead.
-        val initialState = diaryPreference.snapshot
+        val initialState = diaryPreference.getSnapshot()
         assertThat(initialState).isEqualTo(initialSettings)
 
         val updatedSettings = DiarySettings(
@@ -63,7 +62,7 @@ class DiaryPreferenceTest {
         )
 
         diaryPreference.save(updatedSettings)
-        val finalState = diaryPreference.snapshot
+        val finalState = diaryPreference.getSnapshot()
         assertThat(finalState).isEqualTo(updatedSettings)
     }
 

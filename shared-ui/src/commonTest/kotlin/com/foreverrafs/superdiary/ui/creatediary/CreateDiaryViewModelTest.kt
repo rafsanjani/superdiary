@@ -55,6 +55,7 @@ class CreateDiaryViewModelTest {
 
         every { preference.settings }.returns(emptyFlow())
         every { preference.snapshot }.returns(DiarySettings.Empty)
+        everySuspend { preference.getSnapshot() }.returns(DiarySettings.Empty)
         everySuspend { permissionsController.getPermissionState(Permission.LOCATION) }.returns(
             PermissionState.Granted,
         )

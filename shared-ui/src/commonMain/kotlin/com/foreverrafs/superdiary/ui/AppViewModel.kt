@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 sealed interface AppSessionState {
     data object Processing : AppSessionState
@@ -77,9 +76,7 @@ class AppViewModel(
     }
 
     private suspend fun getAuthorizationToken(): String {
-        val preferences = withContext(appCoroutineDispatchers.io) {
-            diaryPreference.snapshot
-        }
+        val preferences = diaryPreference.getSnapshot()
 
         return preferences.authorizationToken
     }

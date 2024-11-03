@@ -16,12 +16,19 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.internal.SynchronizedObject
 import kotlinx.coroutines.internal.synchronized
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import okio.Path.Companion.toPath
 
 interface DiaryPreference {
     val settings: Flow<DiarySettings>
+
+    @Deprecated(
+        "This is a blocking operation and shouldn't be used in production code",
+        replaceWith = ReplaceWith("getSnapshot()"),
+    )
     val snapshot: DiarySettings
     suspend fun save(settings: DiarySettings)
+    suspend fun getSnapshot(): DiarySettings
     suspend fun clear()
 }
 
@@ -58,7 +65,7 @@ class DiaryPreferenceImpl private constructor(
      */
     override val snapshot: DiarySettings
         get() {
-            val prefs = runBlocking(dispatchers.main) { dataStore.data.first() }
+            val prefs = runBlocking { dataStore.data.first() }
 
             // Use appropriate defaults when the settings hasn't been set
             return DiarySettings(
@@ -70,6 +77,19 @@ class DiaryPreferenceImpl private constructor(
                 authorizationToken = prefs[authorizationToken] ?: "",
             )
         }
+
+    override suspend fun getSnapshot(): DiarySettings {
+        val prefs = withContext(dispatchers.io) { dataStore.data.first() }
+
+        return DiarySettings(
+            isFirstLaunch = prefs[isFirstLaunchKey] ?: true,
+            showWeeklySummary = prefs[showWeeklySummaryKey] ?: true,
+            showAtAGlance = prefs[showAtAGlanceKey] ?: true,
+            showLatestEntries = prefs[showLatestEntriesKey] ?: true,
+            showLocationPermissionDialog = prefs[showLocationPermissionDialogKey] ?: true,
+            authorizationToken = prefs[authorizationToken] ?: "",
+        )
+    }
 
     override suspend fun save(settings: DiarySettings) {
         dataStore.edit {

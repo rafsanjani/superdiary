@@ -83,7 +83,7 @@ class CreateDiaryViewModel(
         locationPermissionManager.getPermissionsController()
 
     fun onPermanentlyDismissLocationPermissionDialog() = viewModelScope.launch {
-        val currentDiarySettings = preference.snapshot
+        val currentDiarySettings = preference.getSnapshot()
 
         preference.save(
             currentDiarySettings.copy(showLocationPermissionDialog = false),
