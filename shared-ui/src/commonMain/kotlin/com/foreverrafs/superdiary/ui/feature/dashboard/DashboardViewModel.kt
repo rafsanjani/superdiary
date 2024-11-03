@@ -238,7 +238,7 @@ class DashboardViewModel(
 
     fun updateSettings(settings: DiarySettings) = viewModelScope.launch {
         logger.i(Tag) {
-            "updateSettings: Updating settings from ${preference.snapshot} with values $settings"
+            "updateSettings: Updating settings with values $settings"
         }
         preference.save(settings)
     }

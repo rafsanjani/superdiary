@@ -19,6 +19,8 @@ import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.data.utils.toDate
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
+import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreenContent
+import com.foreverrafs.superdiary.ui.feature.auth.login.LoginViewState
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreenContent
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
@@ -374,6 +376,21 @@ private fun DetailPreview() {
                 ),
             )
         }
+    }
+}
+
+@Composable
+@PreviewSuperDiary
+private fun LoginPreview() {
+    SuperdiaryTheme {
+        LoginScreenContent(
+            onLoginWithGoogle = {},
+            onLoginClick = { _, _ -> },
+            onRegisterClick = {},
+            viewState = LoginViewState.Idle,
+            onSignInSuccess = {},
+            isTokenExpired = true,
+        )
     }
 }
 

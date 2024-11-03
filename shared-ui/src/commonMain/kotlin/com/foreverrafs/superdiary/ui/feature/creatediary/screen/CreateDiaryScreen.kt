@@ -7,7 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.foreverrafs.superdiary.core.location.BindEffect
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
@@ -26,7 +26,7 @@ import org.koin.compose.koinInject
 object CreateDiaryScreen : SuperDiaryScreen {
 
     @Composable
-    fun Content(navController: NavController) {
+    override fun Content(navController: NavHostController) {
         val viewModel: CreateDiaryViewModel = koinInject()
 
         val undoManager = rememberUndoableRichTextState()
