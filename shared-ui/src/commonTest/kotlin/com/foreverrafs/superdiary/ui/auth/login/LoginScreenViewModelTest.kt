@@ -29,18 +29,22 @@ class LoginScreenViewModelTest {
 
     private val authApi: AuthApi = mock()
 
-    private val diaryPreference: DiaryPreference = DiaryPreferenceImpl.getInstance(
-        dispatchers = TestAppDispatchers,
-    )
+    private lateinit var diaryPreference: DiaryPreference
+
+    private val testDispatchers = TestAppDispatchers
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @BeforeTest
     fun setup() {
-        Dispatchers.setMain(TestAppDispatchers.main)
+        Dispatchers.setMain(testDispatchers.main)
+
+        diaryPreference = DiaryPreferenceImpl.getInstance(
+            dispatchers = testDispatchers,
+        )
 
         loginViewModel = LoginScreenViewModel(
             authApi = authApi,
-            coroutineDispatchers = TestAppDispatchers,
+            coroutineDispatchers = testDispatchers,
             diaryPreference = diaryPreference,
             logger = AggregateLogger(emptyList()),
         )
@@ -66,9 +70,9 @@ class LoginScreenViewModelTest {
         )
 
         loginViewModel.viewState.test {
-            val state = awaitUntil { it is LoginViewState.Processing }
+            val state = awaitUntil { it is LoginViewState.Success }
 
-            assertThat(state).isInstanceOf(LoginViewState.Processing::class)
+            assertThat(state).isInstanceOf(LoginViewState.Success::class)
         }
     }
 
@@ -124,7 +128,7 @@ class LoginScreenViewModelTest {
 
     @Test
     fun `Should emit LoginViewState Error when signInWithGoogle fails`() = runTest {
-        val token = "old-auth-session-token"
+        val token = "sample-auth-token"
         savePreviousSessionToken(token)
 
         everySuspend {
@@ -134,6 +138,8 @@ class LoginScreenViewModelTest {
         )
 
         loginViewModel.viewState.test {
+            loginViewModel.signInWithGoogle(token)
+
             val state = awaitUntil { it is LoginViewState.Error }
             assertThat(state).isInstanceOf(LoginViewState.Error::class)
         }

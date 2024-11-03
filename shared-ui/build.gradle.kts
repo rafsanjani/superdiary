@@ -166,3 +166,6 @@ tasks.named("iosSimulatorArm64ResolveResourcesFromDependencies") {
         }
     }
 }
+dependencies {
+    testImplementation(project(":shared-data"))
+}

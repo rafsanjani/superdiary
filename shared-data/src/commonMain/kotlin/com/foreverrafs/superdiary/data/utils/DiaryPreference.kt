@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.internal.SynchronizedObject
 import kotlinx.coroutines.internal.synchronized
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import okio.Path.Companion.toPath
 
 interface DiaryPreference {
@@ -35,7 +34,9 @@ interface DiaryPreference {
 class DiaryPreferenceImpl private constructor(
     filename: String,
     private val dispatchers: AppCoroutineDispatchers,
-    private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.createWithPath {
+    private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.createWithPath(
+//        scope = CoroutineScope(dispatchers.main + SupervisorJob()),
+    ) {
         getDatastorePath(filename = filename).toPath()
     },
 ) : DiaryPreference {
@@ -79,7 +80,7 @@ class DiaryPreferenceImpl private constructor(
         }
 
     override suspend fun getSnapshot(): DiarySettings {
-        val prefs = withContext(dispatchers.io) { dataStore.data.first() }
+        val prefs = dataStore.data.first()
 
         return DiarySettings(
             isFirstLaunch = prefs[isFirstLaunchKey] ?: true,

@@ -57,7 +57,7 @@ class LoginScreenViewModel(
             }
         }
 
-    private fun signInWithGoogle(token: String) = viewModelScope.launch(coroutineDispatchers.main) {
+    fun signInWithGoogle(token: String) = viewModelScope.launch(coroutineDispatchers.main) {
         _viewState.update {
             LoginViewState.Processing
         }
