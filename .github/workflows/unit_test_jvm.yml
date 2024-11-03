@@ -55,7 +55,7 @@ jobs:
           cache-read-only: false
 
       - name: Publish Test Report
-        uses: mikepenz/action-junit-report@v4
+        uses: mikepenz/action-junit-report@v5
         if: success() || failure()
         with:
           report_paths: '**/build/test-results/testDebugUnitTest/TEST-*.xml'
