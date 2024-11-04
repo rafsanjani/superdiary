@@ -5,8 +5,6 @@
       <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/unit_test_jvm.yml/badge.svg"  alt="Link to CI build status"/>
     <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/unit_test_ios.yml/badge.svg"  alt="Link to CI build status"/>
     <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/sonar.yml/badge.svg"  alt="Link to CI build status"/>
-    <br/>
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=rafsanjani_superdiary&metric=coverage" alt="code coverage" />
 </div>
 A simple diary app, mostly focused on quality architectural patterns and improved testing strategies (unit, snapshot and instrumentation).
 
