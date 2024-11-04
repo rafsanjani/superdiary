@@ -27,7 +27,7 @@ class StartupBenchmark {
 
     @Test
     fun startup() = benchmarkRule.measureRepeated(
-        packageName = "com.foreverrafs.superdiary.app",
+        packageName = "com.foreverrafs.superdiary",
         metrics = listOf(StartupTimingMetric()),
         iterations = 5,
         startupMode = StartupMode.COLD,
