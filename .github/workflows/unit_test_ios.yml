@@ -37,7 +37,6 @@ jobs:
         SENTRY_BASE_URL_DEBUG: ${{secrets.SENTRY_BASE_URL_DEBUG}}
         SENTRY_BASE_URL_RELEASE: ${{secrets.SENTRY_BASE_URL_RELEASE}}
         SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
-    if: ${{ github.event_name != 'push' || github.event.pull_request.number }}
     runs-on: macos-latest
     needs: lint
     steps:
