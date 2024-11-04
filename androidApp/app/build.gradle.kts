@@ -5,9 +5,9 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     kotlin("multiplatform")
-    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.paparazzi)
     id("io.sentry.android.gradle") version "4.12.0"
 }
@@ -30,11 +30,9 @@ kotlin {
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.kotlin.datetime)
                 implementation(libs.google.material)
+                implementation(compose.runtime)
                 implementation(projects.sharedUi)
                 implementation(projects.core.logging)
-                implementation(compose.material3)
-                implementation(compose.uiTooling)
-                implementation(libs.compose.ui.tooling.preview)
                 implementation(projects.sharedData)
                 implementation(projects.core.analytics)
                 implementation(libs.koin.android)
@@ -70,12 +68,7 @@ android {
     }
 
     buildFeatures {
-        compose = true
         buildConfig = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     namespace = "com.foreverrafs.superdiary.app"
@@ -121,14 +114,6 @@ android {
         }
     }
 }
-
-tasks.getByName("generateResourceAccessorsForAndroidMain")
-    .dependsOn(
-        "sentryCollectSourcesRelease",
-        "generateSentryBundleIdRelease",
-        "generateSentryBundleIdDebug",
-        "generateSentryBundleIdBenchmark",
-    )
 
 sentry {
     val sentryToken = System.getenv("SENTRY_AUTH_TOKEN") ?: ""
