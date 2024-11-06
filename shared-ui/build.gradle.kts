@@ -112,7 +112,7 @@ kotlin {
                 implementation(libs.compose.ui.tooling)
                 implementation(libs.moko.permissions)
                 implementation(libs.moko.permissions.compose)
-                implementation("com.google.maps.android:maps-compose:6.1.0")
+                implementation("com.google.maps.android:maps-compose:6.2.0")
             }
         }
 
