@@ -33,10 +33,7 @@ interface DiaryPreference {
 
 class DiaryPreferenceImpl private constructor(
     filename: String,
-    private val dispatchers: AppCoroutineDispatchers,
-    private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.createWithPath(
-//        scope = CoroutineScope(dispatchers.main + SupervisorJob()),
-    ) {
+    private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.createWithPath {
         getDatastorePath(filename = filename).toPath()
     },
 ) : DiaryPreference {
@@ -119,7 +116,7 @@ class DiaryPreferenceImpl private constructor(
             dispatchers: AppCoroutineDispatchers,
             filename: String = "datastore.preferences_pb",
         ) = synchronized(lock) {
-            instance ?: DiaryPreferenceImpl(filename, dispatchers).also { instance = it }
+            instance ?: DiaryPreferenceImpl(filename).also { instance = it }
         }
     }
 }

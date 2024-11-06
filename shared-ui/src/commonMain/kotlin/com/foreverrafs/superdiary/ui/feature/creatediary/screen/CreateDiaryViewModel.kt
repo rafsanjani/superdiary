@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -30,7 +31,13 @@ class CreateDiaryViewModel(
     private val preference: DiaryPreference,
 ) : ViewModel() {
 
-    val permissionState = locationPermissionManager.permissionState
+    val permissionState: StateFlow<PermissionState> = locationPermissionManager
+        .permissionState
+        .stateIn(
+            viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = PermissionState.NotDetermined,
+        )
 
     val diarySettings: StateFlow<DiarySettings> = preference.settings.stateIn(
         viewModelScope,
@@ -51,7 +58,7 @@ class CreateDiaryViewModel(
         )
 
     private fun startLocationUpdates() = viewModelScope.launch {
-        permissionState.collect { state ->
+        permissionState.collectLatest { state ->
             if (state == PermissionState.Granted) {
                 logger.i(Tag) {
                     "Location permission granted. Requesting location updates"
@@ -91,7 +98,7 @@ class CreateDiaryViewModel(
     fun generateAIDiary(prompt: String, wordCount: Int): Flow<String> =
         diaryAI.generateDiary(prompt, wordCount)
 
-    fun provideLocationPermission() = viewModelScope.launch {
+    fun onRequestLocationPermission() = viewModelScope.launch {
         locationPermissionManager.provideLocationPermission()
     }
 
