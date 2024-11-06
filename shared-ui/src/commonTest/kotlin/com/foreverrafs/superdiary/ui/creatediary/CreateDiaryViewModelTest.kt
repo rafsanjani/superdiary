@@ -33,11 +33,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.yield
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CreateDiaryViewModelTest {
@@ -48,7 +48,12 @@ class CreateDiaryViewModelTest {
 
     private val locationManager: LocationManager = object : LocationManager {
         override fun requestLocation(onError: (Exception) -> Unit, onLocation: (Location) -> Unit) {
-            onLocation(Location.Empty)
+            onLocation(
+                Location(
+                    latitude = 1.0,
+                    longitude = 1.0,
+                ),
+            )
         }
 
         override fun stopRequestingLocation() {
@@ -64,7 +69,7 @@ class CreateDiaryViewModelTest {
 
     @BeforeTest
     fun setup() {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
+        Dispatchers.setMain(StandardTestDispatcher())
 
         every { preference.snapshot }.returns(DiarySettings.Empty)
         every { preference.settings }.returns(emptyFlow())
@@ -84,6 +89,7 @@ class CreateDiaryViewModelTest {
                 logger = AggregateLogger(
                     emptyList(),
                 ),
+                dispatchers = TestAppDispatchers,
             ),
             preference = preference,
         )
@@ -96,7 +102,10 @@ class CreateDiaryViewModelTest {
 
     @Test
     fun `Should grab users location when they open create screen`() = runTest {
+        permissionsController.permissionStateResult = PermissionState.Granted
+
         createDiaryViewModel.screenState.test {
+            skipItems(1)
             val state = awaitItem()
             assertThat(state.location).isNotNull()
         }
@@ -132,6 +141,8 @@ class CreateDiaryViewModelTest {
 
         createDiaryViewModel.onRequestLocationPermission()
 
+        yield()
+
         assertThat(
             permissionsController.actionPerformed,
         )
@@ -147,6 +158,7 @@ class CreateDiaryViewModelTest {
 
         createDiaryViewModel.onPermanentlyDismissLocationPermissionDialog()
 
+        yield()
         verifySuspend { preference.save(any()) }
     }
 
@@ -155,6 +167,7 @@ class CreateDiaryViewModelTest {
         permissionsController.permissionStateResult = PermissionState.Granted
 
         createDiaryViewModel.screenState.test {
+            skipItems(1)
             val state = awaitItem()
 
             assertThat(state.location).isNotNull()
@@ -162,7 +175,7 @@ class CreateDiaryViewModelTest {
     }
 
     @Test
-    fun `Should NOT fetch location when location permission isn't granted`() = runTest {
+    fun `Should NOT fetch location when location permission is DENIED`() = runTest {
         permissionsController.permissionStateResult = PermissionState.Denied
 
         createDiaryViewModel.screenState.test {

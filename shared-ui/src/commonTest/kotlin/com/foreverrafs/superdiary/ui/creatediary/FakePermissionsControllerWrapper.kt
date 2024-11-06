@@ -10,7 +10,7 @@ class FakePermissionsControllerWrapper : PermissionsControllerWrapper {
         data object OpenAppSettings : ActionPerformed
     }
 
-    var permissionStateResult = PermissionState.Granted
+    var permissionStateResult: PermissionState? = null
     var actionPerformed: ActionPerformed? = null
         private set
 
@@ -21,8 +21,12 @@ class FakePermissionsControllerWrapper : PermissionsControllerWrapper {
     override suspend fun isPermissionGranted(permission: Permission): Boolean =
         permissionStateResult == PermissionState.Granted
 
-    override suspend fun getPermissionState(permission: Permission): PermissionState =
-        permissionStateResult
+    override suspend fun getPermissionState(permission: Permission): PermissionState {
+        require(permissionStateResult != null) {
+            "permissionStateResult must be initialized before calling getPermissionstate"
+        }
+        return permissionStateResult!!
+    }
 
     override fun openAppSettings() {
         actionPerformed = ActionPerformed.OpenAppSettings
