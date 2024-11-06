@@ -31,7 +31,13 @@ class CreateDiaryViewModel(
     private val preference: DiaryPreference,
 ) : ViewModel() {
 
-    val permissionState = locationPermissionManager.permissionState
+    val permissionState: StateFlow<PermissionState> = locationPermissionManager
+        .permissionState
+        .stateIn(
+            viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = PermissionState.NotDetermined,
+        )
 
     val diarySettings: StateFlow<DiarySettings> = preference.settings.stateIn(
         viewModelScope,

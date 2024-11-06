@@ -89,7 +89,6 @@ class CreateDiaryViewModelTest {
                 logger = AggregateLogger(
                     emptyList(),
                 ),
-                dispatchers = TestAppDispatchers,
             ),
             preference = preference,
         )

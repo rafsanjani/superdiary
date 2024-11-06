@@ -1,31 +1,19 @@
 package com.foreverrafs.superdiary.core.location.permission
 
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.core.utils.AppCoroutineDispatchers
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class LocationPermissionManager(
     private val permissionsController: PermissionsControllerWrapper,
     private val logger: AggregateLogger,
-    dispatchers: AppCoroutineDispatchers,
 ) {
     private var _permissionState = MutableStateFlow(PermissionState.NotDetermined)
-    private val coroutineScope = CoroutineScope(dispatchers.main + SupervisorJob())
 
-    val permissionState: StateFlow<PermissionState> = _permissionState
+    val permissionState: Flow<PermissionState> = _permissionState
         .onStart { readInitialPermissionState() }
-        .stateIn(
-            scope = coroutineScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = PermissionState.NotDetermined,
-        )
 
     private suspend fun readInitialPermissionState() {
         _permissionState.update {
@@ -38,8 +26,8 @@ class LocationPermissionManager(
     }
 
     suspend fun provideLocationPermission() {
-        if (permissionState.value == PermissionState.DeniedAlways ||
-            permissionState.value == PermissionState.NotGranted
+        if (_permissionState.value == PermissionState.DeniedAlways ||
+            _permissionState.value == PermissionState.NotGranted
         ) {
             logger.i(TAG) {
                 "Location is permanently denied. Opening app settings"
