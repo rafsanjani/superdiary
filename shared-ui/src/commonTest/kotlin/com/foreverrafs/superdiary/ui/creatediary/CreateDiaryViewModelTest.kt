@@ -1,6 +1,10 @@
 package com.foreverrafs.superdiary.ui.creatediary
 
+import app.cash.turbine.test
+import assertk.assertThat
+import assertk.assertions.isNotNull
 import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.core.location.LocationManager
 import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.location.permission.Permission
@@ -29,7 +33,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -41,7 +45,14 @@ class CreateDiaryViewModelTest {
 
     private val dataSource: DataSource = mock()
 
-    private val locationManager: LocationManager = mock()
+    private val locationManager: LocationManager = object : LocationManager {
+        override fun requestLocation(onError: (Exception) -> Unit, onLocation: (Location) -> Unit) {
+            onLocation(Location.Empty)
+        }
+
+        override fun stopRequestingLocation() {
+        }
+    }
 
     private val preference: DiaryPreference = mock()
 
@@ -51,7 +62,7 @@ class CreateDiaryViewModelTest {
 
     @BeforeTest
     fun setup() {
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(UnconfinedTestDispatcher())
 
         every { preference.settings }.returns(emptyFlow())
         every { preference.snapshot }.returns(DiarySettings.Empty)
@@ -83,6 +94,14 @@ class CreateDiaryViewModelTest {
     @AfterTest
     fun teardown() {
         Dispatchers.resetMain()
+    }
+
+    @Test
+    fun `Should grab users location when they open create screen`() = runTest {
+        createDiaryViewModel.screenState.test {
+            val state = awaitItem()
+            assertThat(state.location).isNotNull()
+        }
     }
 
     @Test
