@@ -35,8 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
+import com.foreverrafs.superdiary.ui.components.MapComponent
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.format
+import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlinx.coroutines.launch
@@ -47,6 +49,7 @@ import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.label_diary_deleted
 
+@OptIn(ExperimentalRichTextApi::class)
 @Composable
 fun DetailScreenContent(
     onDeleteDiary: (diary: Diary) -> Unit,
@@ -106,25 +109,33 @@ fun DetailScreenContent(
             Column(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
-                    .fillMaxSize()
-                    .padding(16.dp),
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                MapComponent(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp),
+                    location = diary.location,
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
                 Text(
                     text = diary.date
                         .toLocalDateTime(TimeZone.currentSystemDefault())
                         .format("EEE - MMMM dd, yyyy - hh:mm a")
                         .lowercase(),
                     style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.alpha(0.6f),
+                    modifier = Modifier.alpha(0.6f)
+                        .padding(12.dp),
                 )
-
-                Spacer(modifier = Modifier.height(20.dp))
 
                 RichText(
                     state = richTextState,
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
                     style = MaterialTheme.typography.bodyMedium,
                     lineHeight = 32.sp,
                 )

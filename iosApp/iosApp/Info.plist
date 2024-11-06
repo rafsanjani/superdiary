@@ -28,6 +28,8 @@
 	<string>Your location is required to tag your entries when they are made</string>
 	<key>SENTRY_BASE_URL</key>
 	<string>${SENTRY_BASE_URL}</string>
+	<key>GOOGLE_MAPS_SDK_KEY</key>
+	<string>${GOOGLE_MAPS_SDK_KEY}</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>font/mont_bold.ttf</string>

@@ -3,9 +3,6 @@ package com.foreverrafs.superdiary.core.location
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
 import platform.CoreLocation.CLLocation
 import platform.CoreLocation.CLLocationManager
 import platform.CoreLocation.CLLocationManagerDelegateProtocol
@@ -19,7 +16,7 @@ class AppleLocationManager(
     private val locationManager = CLLocationManager()
 
     @OptIn(ExperimentalForeignApi::class)
-    override fun requestLocation(): Flow<Location> = channelFlow {
+    override fun requestLocation(onError: (Exception) -> Unit, onLocation: (Location) -> Unit) {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
 
         logger.i(TAG) {
@@ -29,19 +26,14 @@ class AppleLocationManager(
         locationManager.delegate = object : CLLocationManagerDelegateProtocol, NSObject() {
             override fun locationManager(manager: CLLocationManager, didUpdateLocations: List<*>) {
                 val location = didUpdateLocations.last() as? CLLocation
-                val coordinate = location?.coordinate?.useContents { this }
+                val coordinate = location?.coordinate?.useContents { Location(latitude, longitude) }
 
                 coordinate?.let {
                     logger.i(TAG) {
                         "Emitting new Location: [latitude=${it.latitude}, longitude=${it.longitude}]"
                     }
 
-                    trySend(
-                        Location(
-                            latitude = coordinate.latitude,
-                            longitude = coordinate.longitude,
-                        ),
-                    )
+                    onLocation(coordinate)
                 }
             }
 
@@ -53,7 +45,6 @@ class AppleLocationManager(
         }
 
         locationManager.startUpdatingLocation()
-        awaitClose { }
     }
 
     override fun stopRequestingLocation() {

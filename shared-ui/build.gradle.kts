@@ -112,6 +112,7 @@ kotlin {
                 implementation(libs.compose.ui.tooling)
                 implementation(libs.moko.permissions)
                 implementation(libs.moko.permissions.compose)
+                implementation("com.google.maps.android:maps-compose:6.1.0")
             }
         }
 
@@ -160,6 +161,14 @@ afterEvaluate {
 }
 
 tasks.named("iosSimulatorArm64ResolveResourcesFromDependencies") {
+    doFirst {
+        rootProject.subprojects.forEach {
+            delete(it.layout.buildDirectory.file("kover/kover.artifact"))
+        }
+    }
+}
+
+tasks.named("iosArm64ResolveResourcesFromDependencies") {
     doFirst {
         rootProject.subprojects.forEach {
             delete(it.layout.buildDirectory.file("kover/kover.artifact"))
