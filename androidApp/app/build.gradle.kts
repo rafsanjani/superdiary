@@ -54,7 +54,7 @@ kotlin {
 }
 
 android {
-    compileSdk = 34
+    compileSdk = 35
     defaultConfig {
         applicationId = "com.foreverrafs.superdiary"
         minSdk = 28
