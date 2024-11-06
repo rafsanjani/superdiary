@@ -138,7 +138,7 @@ sentry {
 
 secrets {
     propertiesFileName = "secrets.properties"
-    defaultPropertiesFileName = "secrets.properties"
+    defaultPropertiesFileName = "local.defaults.properties"
 
     // These values from secrets.properties are used in :core:secrets module to generate runtime secrets.
     ignoreList.add("OPENAI_KEY")

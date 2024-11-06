@@ -23,5 +23,6 @@ class ViewController(
 }
 
 object SwiftUIViewControllers {
+    @Suppress("ktlint:standard:property-naming")
     lateinit var GoogleMap: (Location) -> UIViewController
 }
