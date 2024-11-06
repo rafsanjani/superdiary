@@ -11,6 +11,7 @@ import Foundation
 public enum Environment{
     enum Keys{
         static let SENTRY_BASE_URL = "SENTRY_BASE_URL"
+        static let GOOGLE_MAPS_SDK_KEY = "GOOGLE_MAPS_SDK_KEY"
     }
     
     private static let infoDictionary: [String: Any] = {
@@ -25,6 +26,14 @@ public enum Environment{
     static let sentryBaseUrl: String = {
         guard let baseUrl = Environment.infoDictionary[Keys.SENTRY_BASE_URL] as? String else {
             fatalError("SENTRY_BASE_URL not set in Info.plist")
+        }
+        
+        return baseUrl
+    }()
+    
+    static let googleMapsSdkKey: String = {
+        guard let baseUrl = Environment.infoDictionary[Keys.GOOGLE_MAPS_SDK_KEY] as? String else {
+            fatalError("GOOGLE_MAPS_SDK_KEY not set in Info.plist")
         }
         
         return baseUrl

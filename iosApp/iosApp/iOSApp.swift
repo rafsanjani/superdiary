@@ -3,6 +3,7 @@ import Sentry
 
 import shared
 import CoreLocation
+import GoogleMaps
 
 @main
 struct iOSApp: App  {
@@ -11,8 +12,8 @@ struct iOSApp: App  {
             analytics: AppleAnalytics(),
             logger: AggregateLogger(loggers: [SentryLogger(), KermitLogger()])
         )
-
-        print("Sentry SDK initialized: \(String(describing: Environment.sentryBaseUrl))")
+        
+        GMSServices.provideAPIKey(Environment.googleMapsSdkKey)
 
         SentrySDK.start { options in
             options.dsn = Environment.sentryBaseUrl

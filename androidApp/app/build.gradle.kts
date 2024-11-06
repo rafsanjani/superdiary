@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.paparazzi)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("io.sentry.android.gradle") version "4.12.0"
 }
 
@@ -133,4 +134,13 @@ sentry {
     includeSourceContext.set(true)
     autoUploadProguardMapping.set(true)
     uploadNativeSymbols.set(true)
+}
+
+secrets {
+    propertiesFileName = "secrets.properties"
+    defaultPropertiesFileName = "secrets.properties"
+
+    // These values from secrets.properties are used in :core:secrets module to generate runtime secrets.
+    ignoreList.add("OPENAI_KEY")
+    ignoreList.add("GOOGLE_SERVER_CLIENT_ID")
 }

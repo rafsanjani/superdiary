@@ -6,10 +6,6 @@ import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
 
 class AndroidLocationManager(
     context: Context,
@@ -19,7 +15,10 @@ class AndroidLocationManager(
     private val locationManager = LocationServices.getFusedLocationProviderClient(context)
 
     @SuppressLint("MissingPermission")
-    override fun requestLocation(): Flow<Location> = channelFlow {
+    override fun requestLocation(
+        onError: (Exception) -> Unit,
+        onLocation: (Location) -> Unit,
+    ) {
         logger.i(TAG) {
             "Location updates started"
         }
@@ -34,23 +33,20 @@ class AndroidLocationManager(
                     "Emitting new Location: $location"
                 }
 
-                trySend(
+                onLocation(
                     Location(
                         latitude = location.latitude,
                         longitude = location.longitude,
                     ),
-                ).isSuccess
+                )
             }
             .addOnFailureListener { exception ->
                 logger.e(tag = TAG, throwable = exception)
 
-                cancel(
-                    cause = exception,
-                    message = exception.message ?: "Error getting location",
+                onError(
+                    exception,
                 )
             }
-
-        awaitClose {}
     }
 
     override fun stopRequestingLocation() {

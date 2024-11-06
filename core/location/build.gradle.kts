@@ -24,6 +24,12 @@ kotlin {
         freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 
+    targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class).all {
+        binaries.all {
+            freeCompilerArgs += "-Xgc=noop"
+        }
+    }
+
     sourceSets {
         commonMain {
             dependencies {
