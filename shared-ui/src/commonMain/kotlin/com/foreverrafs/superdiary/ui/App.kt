@@ -88,7 +88,7 @@ fun App(modifier: Modifier = Modifier) {
 
             is AppSessionState.Error -> SuperDiaryNavHost(
                 modifier = modifier,
-                isSignedIn = true,
+                isSignedIn = false,
                 isTokenExpired = (appViewState as AppSessionState.Error).exception is TokenExpiredException,
             )
 
