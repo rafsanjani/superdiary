@@ -7,10 +7,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.foreverrafs.superdiary.core.utils.localActivityWrapper
 import com.foreverrafs.superdiary.ui.home.BottomNavigationScreen
-import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
 @Serializable
@@ -22,7 +20,7 @@ object LoginScreen {
     ) {
         val screenModel: LoginScreenViewModel = koinInject()
         val signInStatus by screenModel.viewState.collectAsStateWithLifecycle(
-            initialValue = LoginViewState.Initialized,
+            initialValue = LoginViewState.Idle,
         )
         val activityWrapper = localActivityWrapper()
         val scope = rememberCoroutineScope()
@@ -42,21 +40,6 @@ object LoginScreen {
             onSignInSuccess = {
                 navController.navigate(BottomNavigationScreen)
             },
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun LoginScreenPreview() {
-    SuperdiaryTheme {
-        LoginScreenContent(
-            viewState = LoginViewState.Initialized,
-            onSignInSuccess = {},
-            onLoginClick = { _, _ -> },
-            onLoginWithGoogle = {},
-            onRegisterClick = {},
-            isTokenExpired = false,
         )
     }
 }

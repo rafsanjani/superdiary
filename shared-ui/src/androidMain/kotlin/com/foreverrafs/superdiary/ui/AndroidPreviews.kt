@@ -387,7 +387,7 @@ private fun LoginPreview() {
             onLoginWithGoogle = {},
             onLoginClick = { _, _ -> },
             onRegisterClick = {},
-            viewState = LoginViewState.Initialized,
+            viewState = LoginViewState.Idle,
             onSignInSuccess = {},
             isTokenExpired = true,
         )

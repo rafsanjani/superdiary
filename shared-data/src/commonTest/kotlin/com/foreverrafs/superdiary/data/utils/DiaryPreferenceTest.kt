@@ -38,7 +38,6 @@ class DiaryPreferenceTest {
             showAtAGlance = true,
             showLatestEntries = true,
             showLocationPermissionDialog = false,
-            authorizationToken = "",
         )
 
         diaryPreference.save(
@@ -57,7 +56,6 @@ class DiaryPreferenceTest {
             showAtAGlance = false,
             showLatestEntries = true,
             showLocationPermissionDialog = false,
-            authorizationToken = "",
         )
 
         diaryPreference.save(updatedSettings)

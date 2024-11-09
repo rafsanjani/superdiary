@@ -45,7 +45,6 @@ kover {
     val classes = listOf(
         "**/*Preview*",
         // Compose screens
-        "**/*Screen*",
         "**/*Tab*",
         // Koin modules and all that shit
         "**/di/*",
@@ -53,7 +52,6 @@ kover {
         "**/ui/ViewController*",
         // The entry-point UI of the app
         "**/AppKt",
-        "**/AppKt*",
         // The android application class
         "**/DiaryApp.kt",
         // JVM App entrypoint
@@ -75,7 +73,8 @@ kover {
         "*BackPressHandler*",
         "*SnapshotTheme*",
         "*BottomNavigationScreen*",
-        "*Screen*",
+        "*ScreenContent*",
+        "*Screen",
         "*DiaryListActions*",
         "*DiaryFilters*",
         "*DiarySortCriteria*",

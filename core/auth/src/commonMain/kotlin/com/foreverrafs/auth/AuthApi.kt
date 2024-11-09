@@ -6,10 +6,8 @@ import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 class TokenExpiredException(message: String?) : Exception(message)
 
 interface AuthApi {
-    suspend fun signInWithGoogle(activityWrapper: ActivityWrapper): SignInStatus
+    suspend fun signInWithGoogle(activityWrapper: ActivityWrapper?): SignInStatus
     suspend fun signInWithGoogle(googleIdToken: String): SignInStatus
-    suspend fun saveSession() {
-    }
 
     suspend fun restoreSession(): SignInStatus
 

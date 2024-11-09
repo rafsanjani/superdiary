@@ -21,7 +21,7 @@ typealias SessionInfoDto = UserSession
  * functions
  */
 class DefaultSupabaseAuth(private val client: SupabaseClient) : AuthApi {
-    override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper): AuthApi.SignInStatus =
+    override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper?): AuthApi.SignInStatus =
         try {
             client.auth.signInWith(provider = Google)
             getSessionStatus()

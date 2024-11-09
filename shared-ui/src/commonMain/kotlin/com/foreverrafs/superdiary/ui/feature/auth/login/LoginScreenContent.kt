@@ -88,7 +88,7 @@ fun LoginScreenContent(
                 }
             }
 
-            is LoginViewState.Initialized -> {}
+            is LoginViewState.Idle -> {}
             is LoginViewState.Processing -> {}
             is LoginViewState.Success -> currentOnSignInSuccess()
         }
@@ -348,7 +348,7 @@ private fun LoginPreview() {
             onLoginWithGoogle = {},
             onLoginClick = { _, _ -> },
             onRegisterClick = {},
-            viewState = LoginViewState.Initialized,
+            viewState = LoginViewState.Idle,
             onSignInSuccess = {},
             isTokenExpired = true,
         )

@@ -20,9 +20,11 @@ class AndroidAuth(
 ) : AuthApi by DefaultSupabaseAuth(supabaseClient) {
 
     /** Use the credentials manager to sign in with Google on Android */
-    override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper): AuthApi.SignInStatus {
+    override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper?): AuthApi.SignInStatus {
         logger.d(TAG) { "Starting Google sign-in process with CredentialManager" }
-        val credentialManager = CredentialManager.create(activityWrapper)
+        val credentialManager = CredentialManager.create(
+            activityWrapper ?: throw IllegalArgumentException("activityWrapper is null!"),
+        )
 
         val request: GetCredentialRequest = GetCredentialRequest
             .Builder()
