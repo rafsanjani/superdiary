@@ -22,7 +22,7 @@ object LoginScreen {
     ) {
         val screenModel: LoginScreenViewModel = koinInject()
         val signInStatus by screenModel.viewState.collectAsStateWithLifecycle(
-            initialValue = LoginViewState.Idle,
+            initialValue = LoginViewState.Initialized,
         )
         val activityWrapper = localActivityWrapper()
         val scope = rememberCoroutineScope()
@@ -51,7 +51,7 @@ object LoginScreen {
 private fun LoginScreenPreview() {
     SuperdiaryTheme {
         LoginScreenContent(
-            viewState = LoginViewState.Idle,
+            viewState = LoginViewState.Initialized,
             onSignInSuccess = {},
             onLoginClick = { _, _ -> },
             onLoginWithGoogle = {},

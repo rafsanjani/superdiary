@@ -54,7 +54,8 @@ fun App(modifier: Modifier = Modifier) {
                 SuperdiaryTheme {
                     Surface {
                         Box(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize(),
                             contentAlignment = Alignment.Center,
                         ) {
                             val imageAnimation = rememberInfiniteTransition()

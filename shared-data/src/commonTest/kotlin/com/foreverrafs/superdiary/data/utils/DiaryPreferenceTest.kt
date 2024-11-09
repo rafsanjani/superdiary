@@ -18,7 +18,6 @@ class DiaryPreferenceTest {
     private val diaryPreference: DiaryPreference =
         DiaryPreferenceImpl.getInstance(
             filename = "superdiary.preferences_pb",
-            dispatchers = TestAppDispatchers,
         )
 
     @BeforeTest
@@ -68,8 +67,8 @@ class DiaryPreferenceTest {
 
     @Test
     fun `Should return the same instance of diary preference`() = runTest {
-        val first = DiaryPreferenceImpl.getInstance(dispatchers = TestAppDispatchers)
-        val second = DiaryPreferenceImpl.getInstance(dispatchers = TestAppDispatchers)
+        val first = DiaryPreferenceImpl.getInstance()
+        val second = DiaryPreferenceImpl.getInstance()
 
         assertThat(first).isEqualTo(second)
     }

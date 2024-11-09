@@ -38,14 +38,11 @@ class LoginScreenViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatchers.main)
 
-        diaryPreference = DiaryPreferenceImpl.getInstance(
-            dispatchers = testDispatchers,
-        )
+        diaryPreference = DiaryPreferenceImpl.getInstance()
 
         loginViewModel = LoginScreenViewModel(
             authApi = authApi,
             coroutineDispatchers = testDispatchers,
-            diaryPreference = diaryPreference,
             logger = AggregateLogger(emptyList()),
         )
     }
@@ -84,7 +81,7 @@ class LoginScreenViewModelTest {
         loginViewModel.viewState.test {
             val state = awaitItem()
 
-            assertThat(state).isInstanceOf(LoginViewState.Idle::class)
+            assertThat(state).isInstanceOf(LoginViewState.Initialized::class)
             expectNoEvents()
         }
     }

@@ -43,6 +43,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.foreverrafs.auth.NoCredentialsException
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -80,10 +81,14 @@ fun LoginScreenContent(
     LaunchedEffect(viewState) {
         when (viewState) {
             is LoginViewState.Error -> {
-                // no op
+                if (viewState.error is NoCredentialsException) {
+                    snackbarHostState.showSnackbar(
+                        viewState.error.message.orEmpty(),
+                    )
+                }
             }
 
-            is LoginViewState.Idle -> {}
+            is LoginViewState.Initialized -> {}
             is LoginViewState.Processing -> {}
             is LoginViewState.Success -> currentOnSignInSuccess()
         }
@@ -343,7 +348,7 @@ private fun LoginPreview() {
             onLoginWithGoogle = {},
             onLoginClick = { _, _ -> },
             onRegisterClick = {},
-            viewState = LoginViewState.Idle,
+            viewState = LoginViewState.Initialized,
             onSignInSuccess = {},
             isTokenExpired = true,
         )

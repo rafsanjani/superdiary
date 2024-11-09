@@ -5,8 +5,6 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import com.foreverrafs.superdiary.core.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.data.getDatastorePath
 import kotlin.concurrent.Volatile
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -42,7 +40,6 @@ class DiaryPreferenceImpl private constructor(
     private val showWeeklySummaryKey = booleanPreferencesKey("showWeeklySummary")
     private val showAtAGlanceKey = booleanPreferencesKey("showAtAGlance")
     private val showLatestEntriesKey = booleanPreferencesKey("showLatestEntries")
-    private val authorizationToken = stringPreferencesKey("authorizationToken")
     private val showLocationPermissionDialogKey =
         booleanPreferencesKey("showLocationPermissionDialog")
 
@@ -53,7 +50,6 @@ class DiaryPreferenceImpl private constructor(
             showAtAGlance = it[showAtAGlanceKey] ?: true,
             showLatestEntries = it[showLatestEntriesKey] ?: true,
             showLocationPermissionDialog = it[showLocationPermissionDialogKey] ?: true,
-            authorizationToken = it[authorizationToken] ?: "",
         )
     }
 
@@ -72,7 +68,6 @@ class DiaryPreferenceImpl private constructor(
                 showAtAGlance = prefs[showAtAGlanceKey] ?: true,
                 showLatestEntries = prefs[showLatestEntriesKey] ?: true,
                 showLocationPermissionDialog = prefs[showLocationPermissionDialogKey] ?: true,
-                authorizationToken = prefs[authorizationToken] ?: "",
             )
         }
 
@@ -85,7 +80,6 @@ class DiaryPreferenceImpl private constructor(
             showAtAGlance = prefs[showAtAGlanceKey] ?: true,
             showLatestEntries = prefs[showLatestEntriesKey] ?: true,
             showLocationPermissionDialog = prefs[showLocationPermissionDialogKey] ?: true,
-            authorizationToken = prefs[authorizationToken] ?: "",
         )
     }
 
@@ -96,7 +90,6 @@ class DiaryPreferenceImpl private constructor(
             it[showAtAGlanceKey] = settings.showAtAGlance
             it[showLatestEntriesKey] = settings.showLatestEntries
             it[showLocationPermissionDialogKey] = settings.showLocationPermissionDialog
-            it[authorizationToken] = settings.authorizationToken
         }
     }
 
@@ -113,7 +106,6 @@ class DiaryPreferenceImpl private constructor(
         private val lock = SynchronizedObject()
 
         fun getInstance(
-            dispatchers: AppCoroutineDispatchers,
             filename: String = "datastore.preferences_pb",
         ) = synchronized(lock) {
             instance ?: DiaryPreferenceImpl(filename).also { instance = it }
@@ -127,7 +119,6 @@ data class DiarySettings(
     val showAtAGlance: Boolean,
     val showLatestEntries: Boolean,
     val showLocationPermissionDialog: Boolean,
-    val authorizationToken: String,
 ) {
     companion object {
         val Empty: DiarySettings = DiarySettings(
@@ -136,7 +127,6 @@ data class DiarySettings(
             showAtAGlance = true,
             showLatestEntries = true,
             showLocationPermissionDialog = true,
-            authorizationToken = "",
         )
     }
 }
