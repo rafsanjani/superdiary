@@ -44,17 +44,15 @@ class SecretsConventionPlugin : Plugin<Project> {
 
                 defaultConfigs {
                     buildConfigField(
-                        STRING,
-                        "OPENAI_URL",
-                        openAIUrl,
+                        type = STRING,
+                        name = "OPENAI_URL",
+                        value = openAIUrl,
                     )
-                }
 
-                defaultConfigs {
                     buildConfigField(
-                        STRING,
-                        "GOOGLE_SERVER_CLIENT_ID",
-                        googleServerClientId,
+                        type = STRING,
+                        name = "GOOGLE_SERVER_CLIENT_ID",
+                        value = googleServerClientId,
                     )
                 }
             }

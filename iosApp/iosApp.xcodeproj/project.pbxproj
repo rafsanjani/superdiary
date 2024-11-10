@@ -10,9 +10,16 @@
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
+		58072E372CDD90C000B59193 /* GoogleTokenProviderImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58072E362CDD90C000B59193 /* GoogleTokenProviderImpl.swift */; };
+		587B21362CDC0B6B0081E14F /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 587B21352CDC0B6B0081E14F /* GoogleSignIn */; };
+		587B21382CDC0B6B0081E14F /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 587B21372CDC0B6B0081E14F /* GoogleSignInSwift */; };
 		58A8DBF22CA21EC60084B125 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A8DBF12CA21EC60084B125 /* Environment.swift */; };
 		58DACF202C9E2ECE00664937 /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 58DACF1E2C9E2ECE00664937 /* Debug.xcconfig */; };
 		58DACF212C9E2ECE00664937 /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 58DACF1F2C9E2ECE00664937 /* Release.xcconfig */; };
+		58E13CE92CDAEB61007F1210 /* GoogleMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 58E13CE82CDAEB61007F1210 /* GoogleMaps */; };
+		58E13CEC2CDAEBB5007F1210 /* GoogleMapsUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 58E13CEB2CDAEBB5007F1210 /* GoogleMapsUtils */; };
+		58E13CEE2CDAEC04007F1210 /* GoogleMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E13CED2CDAEC04007F1210 /* GoogleMap.swift */; };
+		58E13CF02CDB7DD1007F1210 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E13CEF2CDB7DD1007F1210 /* LocationManager.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 		C98CCA9FD0F556E704236CA0 /* SentryLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98CC057FF70F7A94560708E /* SentryLogger.swift */; };
 		C98CCF64845DD8BB67A3E6A3 /* AppleAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98CCA5351B0C568D0A6027B /* AppleAnalytics.swift */; };
@@ -36,9 +43,12 @@
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
+		58072E362CDD90C000B59193 /* GoogleTokenProviderImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleTokenProviderImpl.swift; sourceTree = "<group>"; };
 		58A8DBF12CA21EC60084B125 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		58DACF1E2C9E2ECE00664937 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		58DACF1F2C9E2ECE00664937 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		58E13CED2CDAEC04007F1210 /* GoogleMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMap.swift; sourceTree = "<group>"; };
+		58E13CEF2CDB7DD1007F1210 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -51,6 +61,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				587B21382CDC0B6B0081E14F /* GoogleSignInSwift in Frameworks */,
+				58E13CEC2CDAEBB5007F1210 /* GoogleMapsUtils in Frameworks */,
+				587B21362CDC0B6B0081E14F /* GoogleSignIn in Frameworks */,
+				58E13CE92CDAEB61007F1210 /* GoogleMaps in Frameworks */,
 				E1507E91C16C4794888C842B /* Sentry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -72,6 +86,14 @@
 				C98CC057FF70F7A94560708E /* SentryLogger.swift */,
 			);
 			path = logging;
+			sourceTree = "<group>";
+		};
+		587B21332CDC0B160081E14F /* auth */ = {
+			isa = PBXGroup;
+			children = (
+				58072E362CDD90C000B59193 /* GoogleTokenProviderImpl.swift */,
+			);
+			path = auth;
 			sourceTree = "<group>";
 		};
 		58DACF1D2C9E2E7400664937 /* Configurations */ = {
@@ -113,6 +135,9 @@
 				058557D7273AAEEB004C7B11 /* Preview Content */,
 				C98CCCB8C5D439AAD6E28F35 /* analytics */,
 				58A8DBF12CA21EC60084B125 /* Environment.swift */,
+				58E13CED2CDAEC04007F1210 /* GoogleMap.swift */,
+				58E13CEF2CDB7DD1007F1210 /* LocationManager.swift */,
+				587B21332CDC0B160081E14F /* auth */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -169,6 +194,10 @@
 			name = iosApp;
 			packageProductDependencies = (
 				87DFA0F460294F61AFDC1588 /* Sentry */,
+				58E13CE82CDAEB61007F1210 /* GoogleMaps */,
+				58E13CEB2CDAEBB5007F1210 /* GoogleMapsUtils */,
+				587B21352CDC0B6B0081E14F /* GoogleSignIn */,
+				587B21372CDC0B6B0081E14F /* GoogleSignInSwift */,
 			);
 			productName = iosApp;
 			productReference = 7555FF7B242A565900829871 /* iosApp.app */;
@@ -201,6 +230,9 @@
 			mainGroup = 7555FF72242A565900829871;
 			packageReferences = (
 				7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
+				58E13CE72CDAEB61007F1210 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
+				58E13CEA2CDAEBB5007F1210 /* XCRemoteSwiftPackageReference "google-maps-ios-utils" */,
+				587B21342CDC0B6B0081E14F /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
 			projectDirPath = "";
@@ -266,7 +298,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				58A8DBF22CA21EC60084B125 /* Environment.swift in Sources */,
+				58E13CEE2CDAEC04007F1210 /* GoogleMap.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
+				58072E372CDD90C000B59193 /* GoogleTokenProviderImpl.swift in Sources */,
+				58E13CF02CDB7DD1007F1210 /* LocationManager.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 				C98CCF64845DD8BB67A3E6A3 /* AppleAnalytics.swift in Sources */,
 				C98CCA9FD0F556E704236CA0 /* SentryLogger.swift in Sources */,
@@ -484,6 +519,30 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		587B21342CDC0B6B0081E14F /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+		58E13CE72CDAEB61007F1210 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googlemaps/ios-maps-sdk";
+			requirement = {
+				kind = exactVersion;
+				version = 9.1.1;
+			};
+		};
+		58E13CEA2CDAEBB5007F1210 /* XCRemoteSwiftPackageReference "google-maps-ios-utils" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googlemaps/google-maps-ios-utils.git";
+			requirement = {
+				kind = exactVersion;
+				version = 6.0.0;
+			};
+		};
 		7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa/";
@@ -495,6 +554,26 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		587B21352CDC0B6B0081E14F /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 587B21342CDC0B6B0081E14F /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		587B21372CDC0B6B0081E14F /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 587B21342CDC0B6B0081E14F /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+		58E13CE82CDAEB61007F1210 /* GoogleMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 58E13CE72CDAEB61007F1210 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */;
+			productName = GoogleMaps;
+		};
+		58E13CEB2CDAEBB5007F1210 /* GoogleMapsUtils */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 58E13CEA2CDAEBB5007F1210 /* XCRemoteSwiftPackageReference "google-maps-ios-utils" */;
+			productName = GoogleMapsUtils;
+		};
 		87DFA0F460294F61AFDC1588 /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;

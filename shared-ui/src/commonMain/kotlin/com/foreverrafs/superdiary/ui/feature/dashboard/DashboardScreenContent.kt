@@ -365,12 +365,13 @@ private fun WeeklySummaryCard(
     modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier.verticalScroll(rememberScrollState()),
+        modifier = modifier,
         shape = RoundedCornerShape(8.dp),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(8.dp),
             horizontalAlignment = Alignment.Start,
         ) {

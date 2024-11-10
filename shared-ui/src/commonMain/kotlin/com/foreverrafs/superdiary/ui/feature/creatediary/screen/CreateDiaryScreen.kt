@@ -14,6 +14,7 @@ import com.foreverrafs.superdiary.core.location.permission.PermissionState
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.ui.navigation.SuperDiaryScreen
+import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
@@ -29,8 +30,7 @@ object CreateDiaryScreen : SuperDiaryScreen {
     override fun Content(navController: NavHostController) {
         val viewModel: CreateDiaryViewModel = koinInject()
 
-        val undoManager = rememberUndoableRichTextState()
-        val richTextState = undoManager.richTextState
+        val richTextState = rememberRichTextState()
         val coroutineScope = rememberCoroutineScope()
 
         val screenState by viewModel.screenState.collectAsStateWithLifecycle()
@@ -58,7 +58,6 @@ object CreateDiaryScreen : SuperDiaryScreen {
             isGeneratingFromAi = isGeneratingFromAI,
             showLocationPermissionRationale = showLocationPermissionRationale,
             onGenerateAI = { prompt, wordCount ->
-                undoManager.save()
                 var generatedWords = ""
 
                 coroutineScope.launch {
@@ -98,7 +97,7 @@ object CreateDiaryScreen : SuperDiaryScreen {
             },
             onRequestLocationPermission = {
                 showLocationPermissionRationale = false
-                viewModel.provideLocationPermission()
+                viewModel.onRequestLocationPermission()
             },
             permissionState = locationPermissionState,
             onDontAskAgain = {

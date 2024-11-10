@@ -2,7 +2,6 @@ package com.foreverrafs.superdiary.ui.feature.creatediary.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.core.location.LocationManager
 import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
@@ -13,14 +12,14 @@ import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.data.utils.DiaryPreference
 import com.foreverrafs.superdiary.data.utils.DiarySettings
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CreateDiaryViewModel(
@@ -32,7 +31,13 @@ class CreateDiaryViewModel(
     private val preference: DiaryPreference,
 ) : ViewModel() {
 
-    val permissionState = locationPermissionManager.permissionState
+    val permissionState: StateFlow<PermissionState> = locationPermissionManager
+        .permissionState
+        .stateIn(
+            viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = PermissionState.NotDetermined,
+        )
 
     val diarySettings: StateFlow<DiarySettings> = preference.settings.stateIn(
         viewModelScope,
@@ -40,27 +45,48 @@ class CreateDiaryViewModel(
         preference.snapshot,
     )
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val screenState: StateFlow<CreateDiaryScreenState> = permissionState
-        .flatMapConcat { state ->
-            // We don't want to start updating location until permissions have been granted.
-            if (state == PermissionState.Granted) {
-                locationManager.requestLocation()
-            } else {
-                logger.i(Tag) {
-                    "Permission hasn't been granted yet. Emitting an empty flow"
-                }
-                emptyFlow()
-            }
-        }
-        .map {
-            CreateDiaryScreenState(it)
-        }
+    private val _screenState: MutableStateFlow<CreateDiaryScreenState> = MutableStateFlow(
+        CreateDiaryScreenState(),
+    )
+
+    val screenState: StateFlow<CreateDiaryScreenState> = _screenState
+        .onStart { startLocationUpdates() }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = CreateDiaryScreenState(location = Location.Empty),
+            initialValue = CreateDiaryScreenState(),
         )
+
+    private fun startLocationUpdates() = viewModelScope.launch {
+        permissionState.collectLatest { state ->
+            if (state == PermissionState.Granted) {
+                logger.i(Tag) {
+                    "Location permission granted. Requesting location updates"
+                }
+                locationManager.requestLocation(
+                    onError = {},
+                    onLocation = { location ->
+                        logger.i(Tag) {
+                            "Updating state with location [${location.latitude}, ${location.longitude}]"
+                        }
+
+                        _screenState.update {
+                            it.copy(location = location)
+                        }
+
+                        logger.i(Tag) {
+                            "Location updated. Cancelling updates!"
+                        }
+                        locationManager.stopRequestingLocation()
+                    },
+                )
+            } else {
+                logger.i(Tag) {
+                    "Permission hasn't been granted"
+                }
+            }
+        }
+    }
 
     fun saveDiary(diary: Diary) = viewModelScope.launch {
         addDiaryUseCase(diary)
@@ -72,7 +98,7 @@ class CreateDiaryViewModel(
     fun generateAIDiary(prompt: String, wordCount: Int): Flow<String> =
         diaryAI.generateDiary(prompt, wordCount)
 
-    fun provideLocationPermission() = viewModelScope.launch {
+    fun onRequestLocationPermission() = viewModelScope.launch {
         locationPermissionManager.provideLocationPermission()
     }
 

@@ -5,10 +5,11 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     kotlin("multiplatform")
-    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.paparazzi)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("io.sentry.android.gradle") version "4.12.0"
 }
 
@@ -30,11 +31,9 @@ kotlin {
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.kotlin.datetime)
                 implementation(libs.google.material)
+                implementation(compose.runtime)
                 implementation(projects.sharedUi)
                 implementation(projects.core.logging)
-                implementation(compose.material3)
-                implementation(compose.uiTooling)
-                implementation(libs.compose.ui.tooling.preview)
                 implementation(projects.sharedData)
                 implementation(projects.core.analytics)
                 implementation(libs.koin.android)
@@ -55,7 +54,7 @@ kotlin {
 }
 
 android {
-    compileSdk = 34
+    compileSdk = 35
     defaultConfig {
         applicationId = "com.foreverrafs.superdiary"
         minSdk = 28
@@ -70,12 +69,7 @@ android {
     }
 
     buildFeatures {
-        compose = true
         buildConfig = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     namespace = "com.foreverrafs.superdiary.app"
@@ -122,14 +116,6 @@ android {
     }
 }
 
-tasks.getByName("generateResourceAccessorsForAndroidMain")
-    .dependsOn(
-        "sentryCollectSourcesRelease",
-        "generateSentryBundleIdRelease",
-        "generateSentryBundleIdDebug",
-        "generateSentryBundleIdBenchmark",
-    )
-
 sentry {
     val sentryToken = System.getenv("SENTRY_AUTH_TOKEN") ?: ""
 
@@ -148,4 +134,13 @@ sentry {
     includeSourceContext.set(true)
     autoUploadProguardMapping.set(true)
     uploadNativeSymbols.set(true)
+}
+
+secrets {
+    propertiesFileName = "secrets.properties"
+    defaultPropertiesFileName = "local.defaults.properties"
+
+    // These values from secrets.properties are used in :core:secrets module to generate runtime secrets.
+    ignoreList.add("OPENAI_KEY")
+    ignoreList.add("GOOGLE_SERVER_CLIENT_ID")
 }

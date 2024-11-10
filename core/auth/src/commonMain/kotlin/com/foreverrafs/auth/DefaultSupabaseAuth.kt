@@ -14,7 +14,7 @@ import io.github.jan.supabase.exceptions.RestException
  * [AuthApi] by using this class as a delegate and overriding some of the
  * functions
  */
-internal class DefaultSupabaseAuth(private val client: SupabaseClient) : AuthApi {
+class DefaultSupabaseAuth(private val client: SupabaseClient) : AuthApi {
     override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper): AuthApi.SignInStatus =
         try {
             client.auth.signInWith(provider = Google)

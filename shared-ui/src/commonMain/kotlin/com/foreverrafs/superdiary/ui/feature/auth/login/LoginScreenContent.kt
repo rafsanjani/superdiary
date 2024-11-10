@@ -43,8 +43,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.google_icon
 import superdiary.shared_ui.generated.resources.label_google_button
@@ -329,6 +331,21 @@ private fun InputField(
                 }
             },
             visualTransformation = visualTransformation,
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun LoginPreview() {
+    SuperdiaryTheme {
+        LoginScreenContent(
+            onLoginWithGoogle = {},
+            onLoginClick = { _, _ -> },
+            onRegisterClick = {},
+            viewState = LoginViewState.Idle,
+            onSignInSuccess = {},
+            isTokenExpired = true,
         )
     }
 }
