@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.core.utils.AppCoroutineDispatchers
-import com.foreverrafs.superdiary.data.utils.DiaryPreference
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +20,6 @@ sealed interface AppSessionState {
 }
 
 class AppViewModel(
-    private val diaryPreference: DiaryPreference,
     private val appCoroutineDispatchers: AppCoroutineDispatchers,
     private val logger: AggregateLogger,
     private val authApi: AuthApi,
@@ -43,42 +41,24 @@ class AppViewModel(
      * automatically sign in
      */
     private fun restoreSession() = viewModelScope.launch(appCoroutineDispatchers.main) {
-        val authorizationToken = getAuthorizationToken()
-
-        if (authorizationToken.isEmpty()) {
-            logger.d(TAG) { "No session token found. Navigating to sign-in screen." }
-            _viewState.update {
-                AppSessionState.Error(
-                    Exception("No session token found"),
-                )
-            }
-            return@launch
-        }
-
-        logger.d(TAG) { "Session token found. Attempting to sign in." }
-        _viewState.update { AppSessionState.Processing }
-
-        val authStatus = authApi.signInWithGoogle(googleIdToken = authorizationToken)
+        val authStatus = authApi.restoreSession()
 
         _viewState.update {
             when (authStatus) {
                 is AuthApi.SignInStatus.Error -> {
-                    logger.e(TAG) { "Sign-in failed: ${authStatus.exception}" }
+                    logger.w(
+                        tag = TAG,
+                        throwable = authStatus.exception,
+                    ) { "Unable to restore previous session" }
                     AppSessionState.Error(authStatus.exception)
                 }
 
                 is AuthApi.SignInStatus.LoggedIn -> {
-                    logger.d(TAG) { "Sign-in successful. Navigating to home screen." }
+                    logger.d(TAG) { "Session restored. Token expires on ${authStatus.sessionInfo.expiresAt}" }
                     AppSessionState.Success
                 }
             }
         }
-    }
-
-    private suspend fun getAuthorizationToken(): String {
-        val preferences = diaryPreference.getSnapshot()
-
-        return preferences.authorizationToken
     }
 
     companion object {

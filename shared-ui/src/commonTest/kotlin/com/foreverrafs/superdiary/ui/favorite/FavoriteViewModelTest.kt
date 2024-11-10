@@ -10,7 +10,7 @@ import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.GetFavoriteDiariesUseCase
 import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
-import com.foreverrafs.superdiary.ui.feature.favorites.model.FavoriteViewModel
+import com.foreverrafs.superdiary.ui.feature.favorites.FavoriteViewModel
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreenState
 import dev.mokkery.answering.returns
 import dev.mokkery.every

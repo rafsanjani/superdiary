@@ -57,13 +57,12 @@ class DashboardViewModel(
 
     private val mutableState = MutableStateFlow<DashboardScreenState>(DashboardScreenState.Loading)
 
-    private val diaries: Flow<List<Diary>> =
-        getAllDiariesUseCase()
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000L),
-                initialValue = emptyList(),
-            )
+    private val diaries: Flow<List<Diary>> = getAllDiariesUseCase()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = emptyList(),
+        )
 
     val state: StateFlow<DashboardScreenState> = mutableState
         .onStart { loadDashboardContent() }

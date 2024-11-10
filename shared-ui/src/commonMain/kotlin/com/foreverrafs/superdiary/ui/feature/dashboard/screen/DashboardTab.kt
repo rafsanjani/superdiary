@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.dashboard
+package com.foreverrafs.superdiary.ui.feature.dashboard.screen
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.StackedBarChart
@@ -13,7 +13,8 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.navigation.NavHostController
 import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
-import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
+import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
+import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
 import com.foreverrafs.superdiary.ui.navigation.SuperDiaryTab
 import com.foreverrafs.superdiary.ui.navigation.TabOptions

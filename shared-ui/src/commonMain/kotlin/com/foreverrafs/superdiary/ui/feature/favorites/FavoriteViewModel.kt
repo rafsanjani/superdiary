@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.favorites.model
+package com.foreverrafs.superdiary.ui.feature.favorites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
