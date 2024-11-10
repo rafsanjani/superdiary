@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.data.utils
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.isTrue
 import com.foreverrafs.superdiary.data.TestAppDispatchers
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -18,7 +19,6 @@ class DiaryPreferenceTest {
     private val diaryPreference: DiaryPreference =
         DiaryPreferenceImpl.getInstance(
             filename = "superdiary.preferences_pb",
-            dispatchers = TestAppDispatchers,
         )
 
     @BeforeTest
@@ -39,7 +39,6 @@ class DiaryPreferenceTest {
             showAtAGlance = true,
             showLatestEntries = true,
             showLocationPermissionDialog = false,
-            authorizationToken = "",
         )
 
         diaryPreference.save(
@@ -58,7 +57,6 @@ class DiaryPreferenceTest {
             showAtAGlance = false,
             showLatestEntries = true,
             showLocationPermissionDialog = false,
-            authorizationToken = "",
         )
 
         diaryPreference.save(updatedSettings)
@@ -68,9 +66,18 @@ class DiaryPreferenceTest {
 
     @Test
     fun `Should return the same instance of diary preference`() = runTest {
-        val first = DiaryPreferenceImpl.getInstance(dispatchers = TestAppDispatchers)
-        val second = DiaryPreferenceImpl.getInstance(dispatchers = TestAppDispatchers)
+        val first = DiaryPreferenceImpl.getInstance()
+        val second = DiaryPreferenceImpl.getInstance()
 
         assertThat(first).isEqualTo(second)
+    }
+
+    @Test
+    fun `Should reset data when preference is cleared`() = runTest {
+        val initial = diaryPreference.getSnapshot()
+
+        diaryPreference.save(initial.copy(isFirstLaunch = false))
+        diaryPreference.clear()
+        assertThat(diaryPreference.getSnapshot().isFirstLaunch).isTrue()
     }
 }

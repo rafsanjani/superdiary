@@ -15,8 +15,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardTab
-import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatTab
+import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardTab
+import com.foreverrafs.superdiary.ui.feature.diarychat.screen.DiaryChatTab
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteTab
 import com.foreverrafs.superdiary.ui.navigation.SuperDiaryTab
 

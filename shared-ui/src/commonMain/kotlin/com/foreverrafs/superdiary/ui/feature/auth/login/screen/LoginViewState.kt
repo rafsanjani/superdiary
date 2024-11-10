@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.auth.login
+package com.foreverrafs.superdiary.ui.feature.auth.login.screen
 
 sealed interface LoginViewState {
     data object Success : LoginViewState

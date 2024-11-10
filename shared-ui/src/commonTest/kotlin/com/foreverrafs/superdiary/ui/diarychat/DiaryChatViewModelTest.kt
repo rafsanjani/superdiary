@@ -121,10 +121,9 @@ class DiaryChatViewModelTest {
         diaryChatViewModel.queryDiaries("When did I go horse riding?")
 
         diaryChatViewModel.viewState.test {
-            val state =
-                awaitUntil {
-                    it.messages.any { message -> message.role == DiaryChatRole.System }
-                }
+            val state = awaitUntil {
+                it.messages.any { message -> message.role == DiaryChatRole.System }
+            }
 
             assertThat(state.messages.any { it.role == DiaryChatRole.System }).isTrue()
         }

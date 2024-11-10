@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.dashboard
+package com.foreverrafs.superdiary.ui.feature.dashboard.screen
 
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateIntAsState
@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.model.Streak
 import com.foreverrafs.superdiary.data.utils.DiarySettings
+import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryItem
 import com.foreverrafs.superdiary.ui.format
 import org.jetbrains.compose.resources.stringResource

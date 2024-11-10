@@ -2,8 +2,8 @@ package com.foreverrafs.superdiary.ui
 
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.ui.feature.details.DetailScreenContent
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
+import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreenContent
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector

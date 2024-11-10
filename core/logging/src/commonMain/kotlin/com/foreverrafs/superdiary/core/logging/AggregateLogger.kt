@@ -29,7 +29,7 @@ class AggregateLogger(
 
     fun w(tag: String, throwable: Throwable? = null, message: () -> String = { "" }) {
         loggers.forEach { logger ->
-            logger.e(tag = tag, message = message, throwable = throwable)
+            logger.w(tag = tag, message = message, throwable = throwable)
         }
     }
 }

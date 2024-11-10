@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.details
+package com.foreverrafs.superdiary.ui.feature.details.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -37,6 +37,7 @@ import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.MapComponent
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
+import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
 import com.foreverrafs.superdiary.ui.format
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
