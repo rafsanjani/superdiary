@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.internal.SynchronizedObject
 import kotlinx.coroutines.internal.synchronized
-import kotlinx.coroutines.runBlocking
 import okio.Path.Companion.toPath
 
 interface DiaryPreference {
@@ -23,7 +22,6 @@ interface DiaryPreference {
         "This is a blocking operation and shouldn't be used in production code",
         replaceWith = ReplaceWith("getSnapshot()"),
     )
-    val snapshot: DiarySettings
     suspend fun save(settings: DiarySettings)
     suspend fun getSnapshot(): DiarySettings
     suspend fun clear()
@@ -52,24 +50,6 @@ class DiaryPreferenceImpl private constructor(
             showLocationPermissionDialog = it[showLocationPermissionDialogKey] ?: true,
         )
     }
-
-    /**
-     * Obtains a snapshot of the settings at a particular point in time. This
-     * is a blocking operation and shouldn't be used in production code
-     */
-    override val snapshot: DiarySettings
-        get() {
-            val prefs = runBlocking { dataStore.data.first() }
-
-            // Use appropriate defaults when the settings hasn't been set
-            return DiarySettings(
-                isFirstLaunch = prefs[isFirstLaunchKey] ?: true,
-                showWeeklySummary = prefs[showWeeklySummaryKey] ?: true,
-                showAtAGlance = prefs[showAtAGlanceKey] ?: true,
-                showLatestEntries = prefs[showLatestEntriesKey] ?: true,
-                showLocationPermissionDialog = prefs[showLocationPermissionDialogKey] ?: true,
-            )
-        }
 
     override suspend fun getSnapshot(): DiarySettings {
         val prefs = dataStore.data.first()

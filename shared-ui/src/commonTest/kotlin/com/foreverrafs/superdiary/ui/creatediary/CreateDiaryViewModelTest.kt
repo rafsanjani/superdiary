@@ -18,7 +18,7 @@ import com.foreverrafs.superdiary.data.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.data.utils.DiaryPreference
 import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.ui.creatediary.FakePermissionsControllerWrapper.ActionPerformed.ProvidePermission
-import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryViewModel
+import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
 import dev.mokkery.answering.returns
 import dev.mokkery.every
 import dev.mokkery.everySuspend
@@ -71,7 +71,6 @@ class CreateDiaryViewModelTest {
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
 
-        every { preference.snapshot }.returns(DiarySettings.Empty)
         every { preference.settings }.returns(emptyFlow())
         everySuspend { preference.getSnapshot() }.returns(DiarySettings.Empty)
 

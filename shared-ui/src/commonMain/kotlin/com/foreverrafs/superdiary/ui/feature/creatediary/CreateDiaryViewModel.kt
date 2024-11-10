@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.creatediary.screen
+package com.foreverrafs.superdiary.ui.feature.creatediary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +12,7 @@ import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.data.utils.DiaryPreference
 import com.foreverrafs.superdiary.data.utils.DiarySettings
+import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -42,7 +43,7 @@ class CreateDiaryViewModel(
     val diarySettings: StateFlow<DiarySettings> = preference.settings.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
-        preference.snapshot,
+        DiarySettings.Empty,
     )
 
     private val _screenState: MutableStateFlow<CreateDiaryScreenState> = MutableStateFlow(

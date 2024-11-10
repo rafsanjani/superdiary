@@ -10,8 +10,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.navigation.NavController
-import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
-import com.foreverrafs.superdiary.ui.feature.favorites.model.FavoriteViewModel
+import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreen
+import com.foreverrafs.superdiary.ui.feature.favorites.FavoriteViewModel
 import com.foreverrafs.superdiary.ui.navigation.SuperDiaryTab
 import com.foreverrafs.superdiary.ui.navigation.TabOptions
 import kotlinx.serialization.Serializable

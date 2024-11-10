@@ -23,8 +23,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
-import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardTab
-import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatTab
+import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardTab
+import com.foreverrafs.superdiary.ui.feature.diarychat.screen.DiaryChatTab
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteTab
 import kotlinx.serialization.Serializable
 

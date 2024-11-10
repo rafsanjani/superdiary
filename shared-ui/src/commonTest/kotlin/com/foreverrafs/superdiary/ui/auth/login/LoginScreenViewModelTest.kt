@@ -8,7 +8,7 @@ import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.ui.awaitUntil
 import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreenViewModel
-import com.foreverrafs.superdiary.ui.feature.auth.login.LoginViewState
+import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.auth.login
+package com.foreverrafs.superdiary.ui.feature.auth.login.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

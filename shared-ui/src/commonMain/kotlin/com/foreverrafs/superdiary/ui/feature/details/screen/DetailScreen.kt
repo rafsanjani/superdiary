@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.details
+package com.foreverrafs.superdiary.ui.feature.details.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -6,6 +6,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
+import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
 import kotlinx.serialization.Serializable
 import org.koin.compose.koinInject
 

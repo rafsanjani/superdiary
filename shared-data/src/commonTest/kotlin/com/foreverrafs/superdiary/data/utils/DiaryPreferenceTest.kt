@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.data.utils
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.isTrue
 import com.foreverrafs.superdiary.data.TestAppDispatchers
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -69,5 +70,14 @@ class DiaryPreferenceTest {
         val second = DiaryPreferenceImpl.getInstance()
 
         assertThat(first).isEqualTo(second)
+    }
+
+    @Test
+    fun `Should reset data when preference is cleared`() = runTest {
+        val initial = diaryPreference.getSnapshot()
+
+        diaryPreference.save(initial.copy(isFirstLaunch = false))
+        diaryPreference.clear()
+        assertThat(diaryPreference.getSnapshot().isFirstLaunch).isTrue()
     }
 }
