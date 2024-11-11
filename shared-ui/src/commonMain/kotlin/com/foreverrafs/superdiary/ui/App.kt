@@ -119,7 +119,6 @@ private fun SuperDiaryNavHost(
     userInfo: UserInfo? = null,
 ) {
     val navController = rememberNavController()
-
     NavHost(
         modifier = modifier,
         navController = navController,
