@@ -163,7 +163,6 @@ private fun SuperDiaryNavHost(
                 DetailScreen.Content(
                     diaryId = diaryId,
                     navController = navController,
-                    userInfo = userInfo,
                 )
             }
         }

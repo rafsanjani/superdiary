@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.testLogger)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.paparazzi)
     kotlin("multiplatform")
     id("kotlin-parcelize")
     alias(libs.plugins.mokkery)
@@ -103,6 +104,7 @@ kotlin {
                 implementation(libs.koin.test)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.mockk)
+                implementation(libs.google.testparameterinjector)
             }
         }
 
