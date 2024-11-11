@@ -17,7 +17,6 @@ object LoginScreen {
     @Composable
     fun Content(
         navController: NavHostController,
-        isTokenExpired: Boolean,
     ) {
         val screenModel: LoginScreenViewModel = koinInject()
         val signInStatus by screenModel.viewState.collectAsStateWithLifecycle(
@@ -27,7 +26,6 @@ object LoginScreen {
         val scope = rememberCoroutineScope()
 
         LoginScreenContent(
-            isTokenExpired = isTokenExpired,
             viewState = signInStatus,
             onLoginClick = { _, _ -> },
             onLoginWithGoogle = {

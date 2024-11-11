@@ -49,13 +49,12 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
       - name: Unit tests JVM
-        id: unit_tests_jvm
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: testDebugUnitTest
-          gradle-home-cache-cleanup: true
-          cache-read-only: false
+        run: ./gradlew testDebugUnitTest
+
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v5
@@ -63,13 +62,11 @@ jobs:
         with:
           report_paths: '**/build/test-results/testDebugUnitTest/TEST-*.xml'
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Snapshot test (shared-ui)
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: verifyPaparazziDebug
-          gradle-home-cache-cleanup: true
-          cache-read-only: false
+        run: ./gradlew verifyPaparazziDebug
 
       - name: Upload Snapshot Failure Differences
         uses: actions/upload-artifact@v4
