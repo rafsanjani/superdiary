@@ -6,12 +6,10 @@ import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import dev.icerock.moko.permissions.PermissionState
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@Ignore("Because this test is failing for 1.7.0-alpha01 of compose multiplatform")
 @RunWith(TestParameterInjector::class)
 class CreateDiarySnapshotTests(
     @TestParameter val snapshotDevice: SnapshotDevice,
@@ -127,6 +125,26 @@ class CreateDiarySnapshotTests(
                     onRequestLocationPermission = {},
                     onDontAskAgain = {},
                     permissionState = PermissionState.NotGranted,
+                    userInfo = null,
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `Create Diary Screen - Location Permission Dialog`() {
+        paparazzi.snapshot {
+            SuperdiaryPreviewTheme {
+                CreateDiaryScreenContent(
+                    isGeneratingFromAi = false,
+                    onGenerateAI = { _: String, _: Int -> },
+                    onNavigateBack = {},
+                    richTextState = rememberRichTextState().apply {},
+                    onSaveDiary = {},
+                    onDontAskAgain = {},
+                    showLocationPermissionRationale = true,
+                    onRequestLocationPermission = {},
+                    permissionState = PermissionState.NotDetermined,
                     userInfo = null,
                 )
             }

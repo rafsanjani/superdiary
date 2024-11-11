@@ -1,29 +1,31 @@
 package com.foreverrafs.superdiary.ui
 
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import app.cash.paparazzi.Paparazzi
 import com.android.ide.common.rendering.api.SessionParams
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
-import com.mohamedrejeb.richeditor.model.RichTextState
-import dev.icerock.moko.permissions.PermissionState
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@Ignore("Because this test is failing for 1.7.0-alpha01 of compose multiplatform")
 @RunWith(TestParameterInjector::class)
 class DiaryListSnapshotTests(
     @TestParameter val snapshotDevice: SnapshotDevice,
@@ -36,7 +38,7 @@ class DiaryListSnapshotTests(
     @get:Rule
     val paparazzi = Paparazzi(
         deviceConfig = snapshotDevice.config,
-        renderingMode = SessionParams.RenderingMode.NORMAL,
+        renderingMode = SessionParams.RenderingMode.V_SCROLL,
         useDeviceResolution = true,
     )
 
@@ -48,10 +50,22 @@ class DiaryListSnapshotTests(
         onDiaryClicked = {},
     )
 
+    private val deviceSize: DpSize
+        @Composable
+        get() {
+            with(LocalDensity.current) {
+                val deviceConfig = snapshotDevice.config
+                return DpSize(
+                    deviceConfig.screenWidth.toDp(),
+                    deviceConfig.screenHeight.toDp(),
+                )
+            }
+        }
+
     @Test
     fun `Loading diary list`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperdiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
                 DiaryListScreenContent(
                     state = DiaryListViewState.Loading,
                     showSearchBar = true,
@@ -63,51 +77,12 @@ class DiaryListSnapshotTests(
     }
 
     @Test
-    fun `Create diary entry`() {
-        paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
-                CreateDiaryScreenContent(
-                    isGeneratingFromAi = false,
-                    onGenerateAI = { _, _ -> },
-                    onNavigateBack = {},
-                    onSaveDiary = {},
-                    showLocationPermissionRationale = false,
-                    onRequestLocationPermission = {},
-                    onDontAskAgain = {},
-                    permissionState = PermissionState.NotGranted,
-                    userInfo = null,
-                )
-            }
-        }
-    }
-
-    @Test
-    fun `Create diary entry AI generated`() {
-        paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
-                CreateDiaryScreenContent(
-                    isGeneratingFromAi = true,
-                    onGenerateAI = { _, _ -> },
-                    onNavigateBack = {},
-                    richTextState = RichTextState().apply { setHtml("<p>AI generated diary content</p>") },
-                    onSaveDiary = {},
-                    showLocationPermissionRationale = false,
-                    onRequestLocationPermission = {},
-                    onDontAskAgain = {},
-                    permissionState = PermissionState.NotGranted,
-                    userInfo = null,
-                )
-            }
-        }
-    }
-
-    @Test
     fun `Unfiltered non-empty diary list`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperdiaryPreviewTheme(modifier = Modifier.height(1500.dp)) {
                 DiaryListScreenContent(
                     state = DiaryListViewState.Content(
-                        (0..5).map {
+                        (0..13).map {
                             Diary(
                                 id = it.toLong(),
                                 entry = "Hello Diary $it",
@@ -134,8 +109,7 @@ class DiaryListSnapshotTests(
     @Test
     fun `Unfiltered empty diary list`() {
         paparazzi.snapshot {
-//            CompositionLocalProvider(LocalInspectionMode provides true) {
-            SuperdiaryPreviewTheme {
+            SuperdiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
                 DiaryListScreenContent(
                     state = DiaryListViewState.Content(
                         listOf(),
@@ -152,7 +126,7 @@ class DiaryListSnapshotTests(
     @Test
     fun `Filtered empty diary list`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperdiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
                 DiaryListScreenContent(
                     state = DiaryListViewState.Content(
                         listOf(),
@@ -169,24 +143,9 @@ class DiaryListSnapshotTests(
     @Test
     fun `Error loading diary list`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperdiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
                 DiaryListScreenContent(
-                    state = DiaryListViewState.Error(
-                        Error("Error loading diaries"),
-                    ),
-                    showSearchBar = true,
-                    diaryFilters = DiaryFilters(),
-                    diaryListActions = diaryListActions,
-                )
-            }
-        }
-    }
 
-    @Test
-    fun `Error loading diary list - rafs`() {
-        paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
-                DiaryListScreenContent(
                     state = DiaryListViewState.Error(
                         Error("Error loading diaries"),
                     ),

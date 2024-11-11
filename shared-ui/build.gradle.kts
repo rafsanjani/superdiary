@@ -13,10 +13,6 @@ plugins {
     alias(libs.plugins.mokkery)
 }
 
-kotlin.sourceSets.all {
-    languageSettings.enableLanguageFeature("ExplicitBackingFields")
-}
-
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     androidTarget()

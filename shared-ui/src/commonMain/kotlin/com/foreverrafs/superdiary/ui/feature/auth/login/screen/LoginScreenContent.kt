@@ -59,7 +59,6 @@ import superdiary.shared_ui.generated.resources.label_register_message
 import superdiary.shared_ui.generated.resources.label_username
 import superdiary.shared_ui.generated.resources.logo
 
-@Suppress("ktlint:compose:modifier-missing-check")
 @Composable
 fun LoginScreenContent(
     viewState: LoginViewState,
@@ -67,6 +66,7 @@ fun LoginScreenContent(
     onLoginClick: (username: String, password: String) -> Unit,
     onLoginWithGoogle: () -> Unit,
     onRegisterClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val currentOnSignInSuccess by rememberUpdatedState(onSignInSuccess)
     val snackbarHostState = remember { SnackbarHostState() }
@@ -88,6 +88,7 @@ fun LoginScreenContent(
     }
 
     Scaffold(
+        modifier = modifier,
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
         Surface(
