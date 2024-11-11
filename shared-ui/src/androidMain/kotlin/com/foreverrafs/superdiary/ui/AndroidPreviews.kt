@@ -402,7 +402,6 @@ private fun LoginPreview() {
             onRegisterClick = {},
             viewState = LoginViewState.Idle,
             onSignInSuccess = {},
-            isTokenExpired = true,
         )
     }
 }

@@ -63,7 +63,6 @@ import superdiary.shared_ui.generated.resources.logo
 @Composable
 fun LoginScreenContent(
     viewState: LoginViewState,
-    isTokenExpired: Boolean,
     onSignInSuccess: () -> Unit,
     onLoginClick: (username: String, password: String) -> Unit,
     onLoginWithGoogle: () -> Unit,
@@ -71,12 +70,6 @@ fun LoginScreenContent(
 ) {
     val currentOnSignInSuccess by rememberUpdatedState(onSignInSuccess)
     val snackbarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(Unit) {
-        if (isTokenExpired) {
-            snackbarHostState.showSnackbar("Session expired. Please log in again!")
-        }
-    }
 
     LaunchedEffect(viewState) {
         when (viewState) {
@@ -350,7 +343,6 @@ private fun LoginPreview() {
             onRegisterClick = {},
             viewState = LoginViewState.Idle,
             onSignInSuccess = {},
-            isTokenExpired = true,
         )
     }
 }

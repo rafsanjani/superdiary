@@ -123,8 +123,7 @@ kotlin {
                 implementation(libs.moko.permissions)
                 implementation(libs.moko.permissions.compose)
                 implementation(libs.kotlinx.coroutines.android)
-                implementation("com.google.maps.android:maps-compose:6.2.0")
-//                implementation(libs.ktor.client.okhttp)
+                implementation(libs.google.maps.compose)
             }
         }
 

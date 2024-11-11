@@ -34,7 +34,6 @@ import coil3.memory.MemoryCache
 import coil3.request.CachePolicy
 import coil3.request.crossfade
 import coil3.util.DebugLogger
-import com.foreverrafs.auth.TokenExpiredException
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
@@ -102,7 +101,6 @@ fun App(modifier: Modifier = Modifier) {
             is AppSessionState.Error -> SuperDiaryNavHost(
                 modifier = modifier,
                 isSignedIn = false,
-                isTokenExpired = (appViewState as AppSessionState.Error).exception is TokenExpiredException,
             )
 
             is AppSessionState.Success -> SuperDiaryNavHost(
@@ -118,7 +116,6 @@ fun App(modifier: Modifier = Modifier) {
 private fun SuperDiaryNavHost(
     isSignedIn: Boolean,
     modifier: Modifier = Modifier,
-    isTokenExpired: Boolean = false,
     userInfo: UserInfo? = null,
 ) {
     val navController = rememberNavController()
@@ -131,7 +128,6 @@ private fun SuperDiaryNavHost(
         animatedComposable<LoginScreen> {
             LoginScreen.Content(
                 navController = navController,
-                isTokenExpired = isTokenExpired,
             )
         }
 
