@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -37,6 +36,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
 import com.foreverrafs.superdiary.ui.components.LocationRationaleDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
@@ -47,7 +47,6 @@ import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
 import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.content_description_navigate_back
-import superdiary.shared_ui.generated.resources.content_description_save_entry
 import superdiary.shared_ui.generated.resources.label_diary_ai
 
 /**
@@ -74,6 +73,7 @@ fun CreateDiaryScreenContent(
     onSaveDiary: (entry: String) -> Unit,
     showLocationPermissionRationale: Boolean,
     permissionState: PermissionState,
+    userInfo: UserInfo?,
     onRequestLocationPermission: () -> Unit,
     onDontAskAgain: () -> Unit,
     modifier: Modifier = Modifier,
@@ -94,22 +94,7 @@ fun CreateDiaryScreenContent(
                         )
                     }
                 },
-                tralingIcon = {
-                    if (richTextState.annotatedString.isNotEmpty()) {
-                        IconButton(
-                            modifier = Modifier.testTag("button_save_diary"),
-                            onClick = {
-                                onSaveDiary(richTextState.toHtml())
-                            },
-                        ) {
-                            Icon(
-                                modifier = Modifier.clip(CircleShape),
-                                imageVector = Icons.Default.Check,
-                                contentDescription = stringResource(Res.string.content_description_save_entry),
-                            )
-                        }
-                    }
-                },
+                userInfo = userInfo,
             )
         },
         modifier = modifier,

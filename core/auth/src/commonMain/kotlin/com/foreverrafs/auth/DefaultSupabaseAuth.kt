@@ -76,7 +76,7 @@ internal fun SessionInfoDto.toSession() = SessionInfo(
 
 internal fun UserInfoDto.toUserInfo(): UserInfo = UserInfo(
     id = id,
-    name = userMetadata?.get("avatar_url").toString(),
+    name = userMetadata?.get("name").toString(),
     email = userMetadata?.get("email").toString(),
-    avatarUrl = userMetadata?.get("avatar_url").toString(),
+    avatarUrl = userMetadata?.get("avatar_url").toString().replace("^\"|\"$".toRegex(), ""),
 )

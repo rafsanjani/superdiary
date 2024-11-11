@@ -21,6 +21,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
 import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardTab
@@ -38,6 +39,7 @@ object BottomNavigationScreen {
 
     @Composable
     fun Content(
+        userInfo: UserInfo?,
         rootNavController: NavHostController,
         modifier: Modifier = Modifier,
     ) {
@@ -49,7 +51,11 @@ object BottomNavigationScreen {
 
         Scaffold(
             modifier = modifier,
-            topBar = { SuperDiaryAppBar() },
+            topBar = {
+                SuperDiaryAppBar(
+                    userInfo = userInfo,
+                )
+            },
             bottomBar = {
                 SuperDiaryBottomBar(tabNavController)
             },

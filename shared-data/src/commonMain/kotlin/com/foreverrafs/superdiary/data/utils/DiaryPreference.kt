@@ -17,11 +17,6 @@ import okio.Path.Companion.toPath
 
 interface DiaryPreference {
     val settings: Flow<DiarySettings>
-
-    @Deprecated(
-        "This is a blocking operation and shouldn't be used in production code",
-        replaceWith = ReplaceWith("getSnapshot()"),
-    )
     suspend fun save(settings: DiarySettings)
     suspend fun getSnapshot(): DiarySettings
     suspend fun clear()

@@ -26,13 +26,23 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import coil3.ImageLoader
+import coil3.PlatformContext
+import coil3.compose.setSingletonImageLoaderFactory
+import coil3.disk.DiskCache
+import coil3.memory.MemoryCache
+import coil3.request.CachePolicy
+import coil3.request.crossfade
+import coil3.util.DebugLogger
 import com.foreverrafs.auth.TokenExpiredException
+import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
 import com.foreverrafs.superdiary.ui.home.BottomNavigationScreen
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
+import okio.FileSystem
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import superdiary.shared_ui.generated.resources.Res
@@ -49,6 +59,8 @@ fun App(modifier: Modifier = Modifier) {
     val appViewState by appViewModel.viewState.collectAsStateWithLifecycle()
 
     SuperdiaryTheme {
+        setSingletonImageLoaderFactory(::getAsyncImageLoader)
+
         when (appViewState) {
             is AppSessionState.Processing -> {
                 SuperdiaryTheme {
@@ -96,6 +108,7 @@ fun App(modifier: Modifier = Modifier) {
             is AppSessionState.Success -> SuperDiaryNavHost(
                 modifier = modifier,
                 isSignedIn = true,
+                userInfo = (appViewState as AppSessionState.Success).userInfo,
             )
         }
     }
@@ -106,6 +119,7 @@ private fun SuperDiaryNavHost(
     isSignedIn: Boolean,
     modifier: Modifier = Modifier,
     isTokenExpired: Boolean = false,
+    userInfo: UserInfo? = null,
 ) {
     val navController = rememberNavController()
 
@@ -122,15 +136,24 @@ private fun SuperDiaryNavHost(
         }
 
         animatedComposable<BottomNavigationScreen> {
-            BottomNavigationScreen.Content(navController)
+            BottomNavigationScreen.Content(
+                rootNavController = navController,
+                userInfo = userInfo,
+            )
         }
 
         composable<CreateDiaryScreen> {
-            CreateDiaryScreen.Content(navController)
+            CreateDiaryScreen.Content(
+                navController = navController,
+                userInfo = userInfo,
+            )
         }
 
         animatedComposable<DiaryListScreen> {
-            DiaryListScreen.Content(navController)
+            DiaryListScreen.Content(
+                navController = navController,
+                userInfo = userInfo,
+            )
         }
 
         animatedComposable<DetailScreen> { backstackEntry ->
@@ -169,3 +192,21 @@ private fun exitTransition() = fadeOut(
         easing = LinearEasing,
     ),
 )
+
+fun getAsyncImageLoader(context: PlatformContext) =
+    ImageLoader.Builder(context)
+        .memoryCachePolicy(CachePolicy.ENABLED)
+        .memoryCache {
+            MemoryCache.Builder().maxSizePercent(context, 0.3).strongReferencesEnabled(true).build()
+        }.diskCachePolicy(CachePolicy.ENABLED)
+        .networkCachePolicy(CachePolicy.ENABLED)
+        .diskCache {
+            newDiskCache()
+        }.crossfade(true)
+        .logger(DebugLogger())
+        .build()
+
+fun newDiskCache(): DiskCache =
+    DiskCache.Builder().directory(FileSystem.SYSTEM_TEMPORARY_DIRECTORY / "image_cache")
+        .maxSizeBytes(1024L * 1024 * 1024) // 512MB
+        .build()

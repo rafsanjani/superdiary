@@ -12,6 +12,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.model.Streak
@@ -189,6 +190,12 @@ private fun CreateDiaryPreview() {
                 onRequestLocationPermission = {},
                 onDontAskAgain = {},
                 permissionState = PermissionState.Granted,
+                userInfo = UserInfo(
+                    id = "",
+                    avatarUrl = "avatar-url",
+                    name = "john@doe.com",
+                    email = "john@email.com",
+                ),
             )
         }
     }
@@ -208,6 +215,12 @@ private fun CreateDiaryPreviewNonEditable() {
                 showLocationPermissionRationale = true,
                 onDontAskAgain = {},
                 permissionState = PermissionState.Granted,
+                userInfo = UserInfo(
+                    id = "",
+                    avatarUrl = "avatar-url",
+                    name = "john@doe.com",
+                    email = "john@email.com",
+                ),
             )
         }
     }

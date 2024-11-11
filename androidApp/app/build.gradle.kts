@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.paparazzi)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("io.sentry.android.gradle") version "4.12.0"
 }
@@ -42,12 +41,9 @@ kotlin {
 
         val androidUnitTest by getting {
             dependencies {
-                implementation(libs.cashapp.paparazzi)
                 implementation(libs.koin.android)
                 implementation(libs.koin.test)
                 implementation(libs.kotlinx.coroutines.test)
-                implementation(libs.mockk)
-                implementation(libs.google.testparameterinjector)
             }
         }
     }

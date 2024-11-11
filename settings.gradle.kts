@@ -26,8 +26,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2024.11.10")
-            version("compose-multiplatform", "1.7.0")
+            from("io.github.rafsanjani:versions:2024.11.11")
             version("openaiKotlin", "4.0.0-SNAPSHOT")
             version("sentry", "7.15.0")
         }

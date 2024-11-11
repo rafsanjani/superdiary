@@ -1,40 +1,43 @@
 package com.foreverrafs.superdiary.ui.components
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import org.jetbrains.compose.resources.ExperimentalResourceApi
+import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
+import com.foreverrafs.auth.model.UserInfo
 import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.app_name
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SuperDiaryAppBar(
     modifier: Modifier = Modifier,
-    navigationIcon: (@Composable () -> Unit)? = null,
-    tralingIcon: (@Composable () -> Unit)? = null,
+    navigationIcon: @Composable (() -> Unit)? = null,
+    userInfo: UserInfo? = null,
 ) {
-    CenterAlignedTopAppBar(
+    TopAppBar(
         modifier = modifier,
         title = {
             Text(
                 text = stringResource(Res.string.app_name),
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Start,
                 modifier = Modifier
                     .semantics {
                         heading()
-                    }
-                    .fillMaxWidth(),
+                    },
                 style = MaterialTheme.typography.displayLarge,
                 fontWeight = FontWeight.Bold,
             )
@@ -43,7 +46,16 @@ fun SuperDiaryAppBar(
             containerColor = MaterialTheme.colorScheme.background,
         ),
         actions = {
-            tralingIcon?.invoke()
+            AsyncImage(
+                modifier = Modifier
+                    .padding(end = 4.dp)
+                    .clip(CircleShape),
+                model = userInfo?.avatarUrl,
+                contentDescription = null,
+                onError = {
+                    println(it)
+                },
+            )
         },
         navigationIcon = {
             navigationIcon?.invoke()
