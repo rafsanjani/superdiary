@@ -7,13 +7,10 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.testLogger)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.paparazzi)
     kotlin("multiplatform")
     id("kotlin-parcelize")
     alias(libs.plugins.mokkery)
-}
-
-kotlin.sourceSets.all {
-    languageSettings.enableLanguageFeature("ExplicitBackingFields")
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -65,6 +62,13 @@ kotlin {
                 implementation(libs.jetbrains.navigation.compose)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(compose.components.uiToolingPreview)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.coil3.compose)
+                implementation(libs.coil3.compose.core)
+                implementation(libs.coil3.network.ktor)
+                implementation(libs.coil3.multiplatform)
+                implementation(libs.ktor.client.core)
+
                 api(projects.core.auth)
                 api(projects.core.analytics)
                 api(projects.core.location)
@@ -96,6 +100,7 @@ kotlin {
                 implementation(libs.koin.test)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.mockk)
+                implementation(libs.google.testparameterinjector)
             }
         }
 
@@ -103,6 +108,7 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(libs.koin.jvm)
+                implementation(libs.ktor.client.cio)
                 implementation(libs.kotlinx.coroutines.swing)
             }
         }
@@ -112,13 +118,15 @@ kotlin {
                 implementation(libs.compose.ui.tooling)
                 implementation(libs.moko.permissions)
                 implementation(libs.moko.permissions.compose)
-                implementation("com.google.maps.android:maps-compose:6.2.0")
+                implementation(libs.kotlinx.coroutines.android)
+                implementation(libs.google.maps.compose)
             }
         }
 
         iosMain {
             dependencies {
                 implementation(libs.moko.permissions)
+                implementation(libs.ktor.client.darwin)
                 implementation(libs.moko.permissions.compose)
             }
         }

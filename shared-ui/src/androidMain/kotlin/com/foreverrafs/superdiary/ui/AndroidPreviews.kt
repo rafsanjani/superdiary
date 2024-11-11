@@ -12,6 +12,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.model.Streak
@@ -19,15 +20,15 @@ import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.data.utils.toDate
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
-import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreenContent
-import com.foreverrafs.superdiary.ui.feature.auth.login.LoginViewState
+import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreenContent
+import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
-import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardScreenContent
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
-import com.foreverrafs.superdiary.ui.feature.details.DetailScreenContent
+import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardScreenContent
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
-import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatScreenContent
+import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
+import com.foreverrafs.superdiary.ui.feature.diarychat.screen.DiaryChatScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryDatePicker
@@ -189,6 +190,12 @@ private fun CreateDiaryPreview() {
                 onRequestLocationPermission = {},
                 onDontAskAgain = {},
                 permissionState = PermissionState.Granted,
+                userInfo = UserInfo(
+                    id = "",
+                    avatarUrl = "avatar-url",
+                    name = "john@doe.com",
+                    email = "john@email.com",
+                ),
             )
         }
     }
@@ -208,6 +215,12 @@ private fun CreateDiaryPreviewNonEditable() {
                 showLocationPermissionRationale = true,
                 onDontAskAgain = {},
                 permissionState = PermissionState.Granted,
+                userInfo = UserInfo(
+                    id = "",
+                    avatarUrl = "avatar-url",
+                    name = "john@doe.com",
+                    email = "john@email.com",
+                ),
             )
         }
     }
@@ -389,7 +402,6 @@ private fun LoginPreview() {
             onRegisterClick = {},
             viewState = LoginViewState.Idle,
             onSignInSuccess = {},
-            isTokenExpired = true,
         )
     }
 }

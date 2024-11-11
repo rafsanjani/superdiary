@@ -63,7 +63,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.foreverrafs.core.utils"
+    namespace = "com.foreverrafs.core.secrets"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

@@ -1,4 +1,4 @@
-name: JVM Unit & Snapshot Tests
+name: JVM Unit Tests
 
 on:
   push:
@@ -11,71 +11,50 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
+  badge:
     env:
         SENTRY_BASE_URL_DEBUG: ${{secrets.SENTRY_BASE_URL_DEBUG}}
         SENTRY_BASE_URL_RELEASE: ${{secrets.SENTRY_BASE_URL_RELEASE}}
         SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          lfs: true
 
-      - uses: actions/setup-java@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
           java-version: '17'
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Run ktlint on all modules
-        run: ./gradlew ktlintCheck
-  test:
-    env:
-        SENTRY_BASE_URL_DEBUG: ${{secrets.SENTRY_BASE_URL_DEBUG}}
-        SENTRY_BASE_URL_RELEASE: ${{secrets.SENTRY_BASE_URL_RELEASE}}
-        SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
-    runs-on: macos-14
-    needs: lint
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          lfs: true
-
-      - uses: actions/setup-java@v4
-        with:
           distribution: 'zulu'
-          java-version: '17'
 
-      - name: Unit tests JVM
-        id: unit_tests_jvm
-        uses: gradle/gradle-build-action@v3
+      - name: Run JVM unit tests
+        run: ./gradlew testDebugUnitTest -Pkover koverXmlReport
+
+      - name: Store code coverage into environment variable
+        if: github.ref == 'refs/heads/development'
+        run: echo "COVERAGE=$(${{github.workspace}}/gradlew -q printLineCoverage)" >> $GITHUB_ENV
+
+      - name: Add coverage Report to PR
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.7.1
         with:
-          arguments: testDebugUnitTest
-          gradle-home-cache-cleanup: true
-          cache-read-only: false
+          paths: |
+              ${{ github.workspace }}/build/reports/kover/report.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          update-comment: true
+          title: Code Coverage
+          min-coverage-overall: 85
+          min-coverage-changed-files: 85
 
-      - name: Publish Test Report
-        uses: mikepenz/action-junit-report@v5
-        if: success() || failure()
+      - name: Update dynamic badge gist
+        if: github.ref == 'refs/heads/development'
+        uses: schneegans/dynamic-badges-action@v1.7.0
         with:
-          report_paths: '**/build/test-results/testDebugUnitTest/TEST-*.xml'
-
-
-      - name: Snapshot test (shared-ui)
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: verifyPaparazziDebug
-          gradle-home-cache-cleanup: true
-          cache-read-only: false
-
-      - name: Upload Snapshot Failure Differences
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: reports
-          path: AndroidApp/app/build/paparazzi/failures/
-          retention-days: 1
+          auth: ${{secrets.SECRET_GITHUB_GIST}}
+          gistID: 129c8d4608ea11b81849152dba085532
+          filename: superdiary-badge.json
+          label: coverage
+          message: ${{env.COVERAGE}}%
+          valColorRange: ${{env.COVERAGE}}
+          minColorRange: 0
+          maxColorRange: 100
 

@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 pluginManagement {
     repositories {
         mavenCentral()
@@ -24,9 +26,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2024.11.03")
-            version("compose-multiplatform", "1.7.0")
-            version("paparazzi", "1.3.5-SNAPSHOT")
+            from("io.github.rafsanjani:versions:2024.11.11")
             version("openaiKotlin", "4.0.0-SNAPSHOT")
             version("sentry", "7.15.0")
         }
@@ -45,7 +45,6 @@ kover {
     val classes = listOf(
         "**/*Preview*",
         // Compose screens
-        "**/*Screen*",
         "**/*Tab*",
         // Koin modules and all that shit
         "**/di/*",
@@ -53,7 +52,6 @@ kover {
         "**/ui/ViewController*",
         // The entry-point UI of the app
         "**/AppKt",
-        "**/AppKt*",
         // The android application class
         "**/DiaryApp.kt",
         // JVM App entrypoint
@@ -62,8 +60,6 @@ kover {
         "**/*DatabaseDriver*",
         // Sqlite Database file
         "**/*Database",
-        // Reusable screen components
-        "**/components/**",
         "**/*Resources*",
         "*.*.*ComposableSingletons*",
         "**/app/**",
@@ -75,7 +71,6 @@ kover {
         "*BackPressHandler*",
         "*SnapshotTheme*",
         "*BottomNavigationScreen*",
-        "*Screen*",
         "*DiaryListActions*",
         "*DiaryFilters*",
         "*DiarySortCriteria*",
@@ -89,6 +84,9 @@ kover {
         "*DiarySelectionModifierBar*",
         "db.*",
         "*di.*",
+        "*screen.*",
+        "*components.*",
+        "*utils.FileSystem_androidKt",
         "*generated.resources.*",
         "*components.*",
     )

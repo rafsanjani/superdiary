@@ -11,8 +11,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
-import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
+import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListViewModel
@@ -23,6 +24,7 @@ import org.koin.compose.koinInject
 object DiaryListScreen {
     @Composable
     fun Content(
+        userInfo: UserInfo?,
         navController: NavController,
         modifier: Modifier = Modifier,
     ) {

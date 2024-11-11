@@ -26,13 +26,22 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.foreverrafs.auth.TokenExpiredException
-import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreen
+import coil3.ImageLoader
+import coil3.PlatformContext
+import coil3.compose.setSingletonImageLoaderFactory
+import coil3.disk.DiskCache
+import coil3.memory.MemoryCache
+import coil3.request.CachePolicy
+import coil3.request.crossfade
+import coil3.util.DebugLogger
+import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
-import com.foreverrafs.superdiary.ui.feature.details.DetailScreen
+import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
 import com.foreverrafs.superdiary.ui.home.BottomNavigationScreen
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
+import okio.FileSystem
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import superdiary.shared_ui.generated.resources.Res
@@ -49,12 +58,15 @@ fun App(modifier: Modifier = Modifier) {
     val appViewState by appViewModel.viewState.collectAsStateWithLifecycle()
 
     SuperdiaryTheme {
+        setSingletonImageLoaderFactory(::getAsyncImageLoader)
+
         when (appViewState) {
             is AppSessionState.Processing -> {
                 SuperdiaryTheme {
                     Surface {
                         Box(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize(),
                             contentAlignment = Alignment.Center,
                         ) {
                             val imageAnimation = rememberInfiniteTransition()
@@ -89,12 +101,12 @@ fun App(modifier: Modifier = Modifier) {
             is AppSessionState.Error -> SuperDiaryNavHost(
                 modifier = modifier,
                 isSignedIn = false,
-                isTokenExpired = (appViewState as AppSessionState.Error).exception is TokenExpiredException,
             )
 
             is AppSessionState.Success -> SuperDiaryNavHost(
                 modifier = modifier,
                 isSignedIn = true,
+                userInfo = (appViewState as AppSessionState.Success).userInfo,
             )
         }
     }
@@ -104,10 +116,9 @@ fun App(modifier: Modifier = Modifier) {
 private fun SuperDiaryNavHost(
     isSignedIn: Boolean,
     modifier: Modifier = Modifier,
-    isTokenExpired: Boolean = false,
+    userInfo: UserInfo? = null,
 ) {
     val navController = rememberNavController()
-
     NavHost(
         modifier = modifier,
         navController = navController,
@@ -116,20 +127,28 @@ private fun SuperDiaryNavHost(
         animatedComposable<LoginScreen> {
             LoginScreen.Content(
                 navController = navController,
-                isTokenExpired = isTokenExpired,
             )
         }
 
         animatedComposable<BottomNavigationScreen> {
-            BottomNavigationScreen.Content(navController)
+            BottomNavigationScreen.Content(
+                rootNavController = navController,
+                userInfo = userInfo,
+            )
         }
 
         composable<CreateDiaryScreen> {
-            CreateDiaryScreen.Content(navController)
+            CreateDiaryScreen.Content(
+                navController = navController,
+                userInfo = userInfo,
+            )
         }
 
         animatedComposable<DiaryListScreen> {
-            DiaryListScreen.Content(navController)
+            DiaryListScreen.Content(
+                navController = navController,
+                userInfo = userInfo,
+            )
         }
 
         animatedComposable<DetailScreen> { backstackEntry ->
@@ -168,3 +187,21 @@ private fun exitTransition() = fadeOut(
         easing = LinearEasing,
     ),
 )
+
+fun getAsyncImageLoader(context: PlatformContext) =
+    ImageLoader.Builder(context)
+        .memoryCachePolicy(CachePolicy.ENABLED)
+        .memoryCache {
+            MemoryCache.Builder().maxSizePercent(context, 0.3).strongReferencesEnabled(true).build()
+        }.diskCachePolicy(CachePolicy.ENABLED)
+        .networkCachePolicy(CachePolicy.ENABLED)
+        .diskCache {
+            newDiskCache()
+        }.crossfade(true)
+        .logger(DebugLogger())
+        .build()
+
+fun newDiskCache(): DiskCache =
+    DiskCache.Builder().directory(FileSystem.SYSTEM_TEMPORARY_DIRECTORY / "image_cache")
+        .maxSizeBytes(1024L * 1024 * 1024) // 512MB
+        .build()

@@ -8,12 +8,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.BindEffect
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.data.utils.DiarySettings
-import com.foreverrafs.superdiary.ui.navigation.SuperDiaryScreen
+import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
@@ -24,10 +25,10 @@ import kotlinx.serialization.Serializable
 import org.koin.compose.koinInject
 
 @Serializable
-object CreateDiaryScreen : SuperDiaryScreen {
+object CreateDiaryScreen {
 
     @Composable
-    override fun Content(navController: NavHostController) {
+    fun Content(navController: NavHostController, userInfo: UserInfo?) {
         val viewModel: CreateDiaryViewModel = koinInject()
 
         val richTextState = rememberRichTextState()
@@ -104,6 +105,7 @@ object CreateDiaryScreen : SuperDiaryScreen {
                 showLocationPermissionRationale = false
                 viewModel.onPermanentlyDismissLocationPermissionDialog()
             },
+            userInfo = userInfo,
         )
     }
 }
