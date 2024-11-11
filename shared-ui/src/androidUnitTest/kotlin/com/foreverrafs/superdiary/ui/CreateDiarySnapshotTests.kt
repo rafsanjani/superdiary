@@ -2,7 +2,6 @@ package com.foreverrafs.superdiary.ui
 
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
-import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
@@ -27,7 +26,7 @@ class CreateDiarySnapshotTests(
     @Test
     fun `Create Diary Screen - empty`() {
         paparazzi.snapshot {
-            SuperdiaryTheme {
+            SuperdiaryPreviewTheme {
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = false,
                     onGenerateAI = { _: String, _: Int -> },
@@ -38,6 +37,7 @@ class CreateDiarySnapshotTests(
                     showLocationPermissionRationale = false,
                     onRequestLocationPermission = {},
                     permissionState = PermissionState.NotDetermined,
+                    userInfo = null,
                 )
             }
         }
@@ -46,7 +46,7 @@ class CreateDiarySnapshotTests(
     @Test
     fun `Create Diary Screen - very few words`() {
         paparazzi.snapshot {
-            SuperdiaryTheme {
+            SuperdiaryPreviewTheme {
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = false,
                     onGenerateAI = { _: String, _: Int -> },
@@ -61,6 +61,7 @@ class CreateDiarySnapshotTests(
                     onRequestLocationPermission = {},
                     onDontAskAgain = {},
                     permissionState = PermissionState.NotGranted,
+                    userInfo = null,
                 )
             }
         }
@@ -69,7 +70,7 @@ class CreateDiarySnapshotTests(
     @Test
     fun `Create Diary Screen - with content`() {
         paparazzi.snapshot {
-            SuperdiaryTheme {
+            SuperdiaryPreviewTheme {
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = false,
                     onGenerateAI = { _: String, _: Int -> },
@@ -93,6 +94,7 @@ class CreateDiarySnapshotTests(
                     onRequestLocationPermission = {},
                     onDontAskAgain = {},
                     permissionState = PermissionState.NotGranted,
+                    userInfo = null,
                 )
             }
         }
@@ -101,7 +103,7 @@ class CreateDiarySnapshotTests(
     @Test
     fun `Create Diary Screen - with content - generating from AI`() {
         paparazzi.snapshot {
-            SuperdiaryTheme {
+            SuperdiaryPreviewTheme {
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = true,
                     onGenerateAI = { _: String, _: Int -> },
@@ -125,6 +127,7 @@ class CreateDiarySnapshotTests(
                     onRequestLocationPermission = {},
                     onDontAskAgain = {},
                     permissionState = PermissionState.NotGranted,
+                    userInfo = null,
                 )
             }
         }

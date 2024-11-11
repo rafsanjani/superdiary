@@ -9,7 +9,6 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
-import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import com.mohamedrejeb.richeditor.model.RichTextState
@@ -52,7 +51,7 @@ class DiaryListSnapshotTests(
     @Test
     fun `Loading diary list`() {
         paparazzi.snapshot {
-            SuperdiaryTheme {
+            SuperdiaryPreviewTheme {
                 DiaryListScreenContent(
                     state = DiaryListViewState.Loading,
                     showSearchBar = true,
@@ -66,7 +65,7 @@ class DiaryListSnapshotTests(
     @Test
     fun `Create diary entry`() {
         paparazzi.snapshot {
-            SuperdiaryTheme {
+            SuperdiaryPreviewTheme {
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = false,
                     onGenerateAI = { _, _ -> },
@@ -76,6 +75,7 @@ class DiaryListSnapshotTests(
                     onRequestLocationPermission = {},
                     onDontAskAgain = {},
                     permissionState = PermissionState.NotGranted,
+                    userInfo = null,
                 )
             }
         }
@@ -84,7 +84,7 @@ class DiaryListSnapshotTests(
     @Test
     fun `Create diary entry AI generated`() {
         paparazzi.snapshot {
-            SuperdiaryTheme {
+            SuperdiaryPreviewTheme {
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = true,
                     onGenerateAI = { _, _ -> },
@@ -95,6 +95,7 @@ class DiaryListSnapshotTests(
                     onRequestLocationPermission = {},
                     onDontAskAgain = {},
                     permissionState = PermissionState.NotGranted,
+                    userInfo = null,
                 )
             }
         }
@@ -103,7 +104,7 @@ class DiaryListSnapshotTests(
     @Test
     fun `Unfiltered non-empty diary list`() {
         paparazzi.snapshot {
-            SuperdiaryTheme {
+            SuperdiaryPreviewTheme {
                 DiaryListScreenContent(
                     state = DiaryListViewState.Content(
                         (0..5).map {
@@ -133,7 +134,8 @@ class DiaryListSnapshotTests(
     @Test
     fun `Unfiltered empty diary list`() {
         paparazzi.snapshot {
-            SuperdiaryTheme {
+//            CompositionLocalProvider(LocalInspectionMode provides true) {
+            SuperdiaryPreviewTheme {
                 DiaryListScreenContent(
                     state = DiaryListViewState.Content(
                         listOf(),
@@ -150,7 +152,7 @@ class DiaryListSnapshotTests(
     @Test
     fun `Filtered empty diary list`() {
         paparazzi.snapshot {
-            SuperdiaryTheme {
+            SuperdiaryPreviewTheme {
                 DiaryListScreenContent(
                     state = DiaryListViewState.Content(
                         listOf(),
@@ -167,7 +169,23 @@ class DiaryListSnapshotTests(
     @Test
     fun `Error loading diary list`() {
         paparazzi.snapshot {
-            SuperdiaryTheme {
+            SuperdiaryPreviewTheme {
+                DiaryListScreenContent(
+                    state = DiaryListViewState.Error(
+                        Error("Error loading diaries"),
+                    ),
+                    showSearchBar = true,
+                    diaryFilters = DiaryFilters(),
+                    diaryListActions = diaryListActions,
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `Error loading diary list - rafs`() {
+        paparazzi.snapshot {
+            SuperdiaryPreviewTheme {
                 DiaryListScreenContent(
                     state = DiaryListViewState.Error(
                         Error("Error loading diaries"),

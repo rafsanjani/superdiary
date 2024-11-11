@@ -65,6 +65,13 @@ kotlin {
                 implementation(libs.jetbrains.navigation.compose)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(compose.components.uiToolingPreview)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.coil3.compose)
+                implementation(libs.coil3.compose.core)
+                implementation(libs.coil3.network.ktor)
+                implementation(libs.coil3.multiplatform)
+                implementation(libs.ktor.client.core)
+
                 api(projects.core.auth)
                 api(projects.core.analytics)
                 api(projects.core.location)
@@ -103,6 +110,7 @@ kotlin {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(libs.koin.jvm)
+                implementation(libs.ktor.client.cio)
                 implementation(libs.kotlinx.coroutines.swing)
             }
         }
@@ -112,13 +120,16 @@ kotlin {
                 implementation(libs.compose.ui.tooling)
                 implementation(libs.moko.permissions)
                 implementation(libs.moko.permissions.compose)
+                implementation(libs.kotlinx.coroutines.android)
                 implementation("com.google.maps.android:maps-compose:6.2.0")
+//                implementation(libs.ktor.client.okhttp)
             }
         }
 
         iosMain {
             dependencies {
                 implementation(libs.moko.permissions)
+                implementation(libs.ktor.client.darwin)
                 implementation(libs.moko.permissions.compose)
             }
         }

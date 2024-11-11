@@ -4,7 +4,6 @@ import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.superdiary.data.model.Diary
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
 import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreenContent
-import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import kotlinx.datetime.Clock
@@ -34,7 +33,7 @@ class DiaryDetailSnapshotTests(
     @Test
     fun `Diary detail screen`() {
         paparazzi.snapshot {
-            SuperdiaryTheme {
+            SuperdiaryPreviewTheme {
                 DetailScreenContent(
                     onDeleteDiary = {},
                     onNavigateBack = {},

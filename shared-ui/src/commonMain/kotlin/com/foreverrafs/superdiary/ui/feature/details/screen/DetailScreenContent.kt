@@ -11,7 +11,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,7 +38,6 @@ import com.foreverrafs.superdiary.ui.components.MapComponent
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
 import com.foreverrafs.superdiary.ui.format
-import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlinx.coroutines.launch
@@ -50,7 +48,6 @@ import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.label_diary_deleted
 
-@OptIn(ExperimentalRichTextApi::class)
 @Composable
 fun DetailScreenContent(
     onDeleteDiary: (diary: Diary) -> Unit,
@@ -82,17 +79,6 @@ fun DetailScreenContent(
                         Icon(
                             modifier = Modifier.clip(CircleShape),
                             imageVector = Icons.Default.ArrowBackIosNew,
-                            contentDescription = "",
-                        )
-                    }
-                },
-                tralingIcon = {
-                    IconButton(
-                        onClick = { showDeleteDialog = true },
-                    ) {
-                        Icon(
-                            modifier = Modifier.clip(CircleShape),
-                            imageVector = Icons.Default.Delete,
                             contentDescription = "",
                         )
                     }

@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
+import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.core.utils.AppCoroutineDispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 
 sealed interface AppSessionState {
     data object Processing : AppSessionState
-    data object Success : AppSessionState
+    data class Success(val userInfo: UserInfo?) : AppSessionState
     data class Error(val exception: Exception) : AppSessionState
 }
 
@@ -55,7 +56,7 @@ class AppViewModel(
 
                 is AuthApi.SignInStatus.LoggedIn -> {
                     logger.d(TAG) { "Session restored. Token expires on ${authStatus.sessionInfo.expiresAt}" }
-                    AppSessionState.Success
+                    AppSessionState.Success(authStatus.sessionInfo.userInfo)
                 }
             }
         }
