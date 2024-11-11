@@ -2,7 +2,9 @@ name: JVM Unit Tests
 
 on:
   push:
-      branches: [main]
+    branches: [main, development]
+  pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -26,7 +28,9 @@ jobs:
 
       - name: Run JVM unit tests
         run: ./gradlew testDebugUnitTest -Pkover koverXmlReport
+
       - name: Store code coverage into environment variable
+        if: github.ref == 'refs/heads/development'
         run: echo "COVERAGE=$(${{github.workspace}}/gradlew -q printLineCoverage)" >> $GITHUB_ENV
 
       - name: Add coverage Report to PR
@@ -42,6 +46,7 @@ jobs:
           min-coverage-changed-files: 85
 
       - name: Update dynamic badge gist
+        if: github.ref == 'refs/heads/development'
         uses: schneegans/dynamic-badges-action@v1.7.0
         with:
           auth: ${{secrets.SECRET_GITHUB_GIST}}
