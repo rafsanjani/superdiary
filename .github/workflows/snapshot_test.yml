@@ -60,6 +60,6 @@ jobs:
         if: failure()
         with:
           name: reports
-          path: AndroidApp/app/build/paparazzi/failures/
+          path: shared-ui/build/paparazzi/failures/
           retention-days: 1
 

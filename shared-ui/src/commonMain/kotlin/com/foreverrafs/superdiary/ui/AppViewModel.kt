@@ -56,6 +56,7 @@ class AppViewModel(
 
                 is AuthApi.SignInStatus.LoggedIn -> {
                     logger.d(TAG) { "Session restored. Token expires on ${authStatus.sessionInfo.expiresAt}" }
+                    logger.d(TAG) { "Session user ${authStatus.sessionInfo.userInfo}" }
                     AppSessionState.Success(authStatus.sessionInfo.userInfo)
                 }
             }

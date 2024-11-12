@@ -13,21 +13,25 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.superdiary.ui.AppSessionState
+import com.foreverrafs.superdiary.ui.AppViewModel
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
 import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardTab
 import com.foreverrafs.superdiary.ui.feature.diarychat.screen.DiaryChatTab
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteTab
 import kotlinx.serialization.Serializable
+import org.koin.compose.koinInject
 
 /**
  * Provides a navigation entry point for all the screens that rely on
@@ -39,12 +43,14 @@ object BottomNavigationScreen {
 
     @Composable
     fun Content(
-        userInfo: UserInfo?,
         rootNavController: NavHostController,
         modifier: Modifier = Modifier,
     ) {
         // This nav controller is used to navigate between the tabs
         val tabNavController = rememberNavController()
+        val appViewModel: AppViewModel = koinInject()
+
+        val viewState by appViewModel.viewState.collectAsStateWithLifecycle()
 
         // This snackbar host state is used to show snackbars on the main screen
         val snackbarHostState = remember { SnackbarHostState() }
@@ -53,7 +59,7 @@ object BottomNavigationScreen {
             modifier = modifier,
             topBar = {
                 SuperDiaryAppBar(
-                    userInfo = userInfo,
+                    userInfo = (viewState as? AppSessionState.Success)?.userInfo,
                 )
             },
             bottomBar = {
