@@ -48,13 +48,15 @@ object CreateDiaryScreen {
                     settings.showLocationPermissionDialog,
             )
         }
+        var showSaveDialog by remember {
+            mutableStateOf(false)
+        }
 
         BindEffect(
             viewModel.getPermissionsController(),
         )
 
         CreateDiaryScreenContent(
-            onNavigateBack = navController::popBackStack,
             richTextState = richTextState,
             isGeneratingFromAi = isGeneratingFromAI,
             showLocationPermissionRationale = showLocationPermissionRationale,
@@ -106,6 +108,10 @@ object CreateDiaryScreen {
                 viewModel.onPermanentlyDismissLocationPermissionDialog()
             },
             userInfo = userInfo,
+            showSaveDialog = showSaveDialog,
+            onShowSaveDialogChange = {
+                showSaveDialog = it
+            },
         )
     }
 }

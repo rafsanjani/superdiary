@@ -5,6 +5,11 @@
     <string name="confirm_delete_diary_positive_button">Confirm</string>
     <string name="confirm_delete_diary_negative_button">Cancel</string>
 
+    <string name="confirm_save_diary_dialog_title">Confirm Save</string>
+    <string name="confirm_save_diary_dialog_message">Do you want to save the entry?</string>
+    <string name="confirm_save_diary_positive_button">Save</string>
+    <string name="confirm_save_diary_negative_button">Don't save</string>
+
 
     <!--  Labels  -->
     <string name="label_diary_ai">Diary AI:</string>

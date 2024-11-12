@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
 import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
@@ -31,6 +32,10 @@ import superdiary.shared_ui.generated.resources.confirm_delete_diary_dialog_mess
 import superdiary.shared_ui.generated.resources.confirm_delete_diary_dialog_title
 import superdiary.shared_ui.generated.resources.confirm_delete_diary_negative_button
 import superdiary.shared_ui.generated.resources.confirm_delete_diary_positive_button
+import superdiary.shared_ui.generated.resources.confirm_save_diary_dialog_message
+import superdiary.shared_ui.generated.resources.confirm_save_diary_dialog_title
+import superdiary.shared_ui.generated.resources.confirm_save_diary_negative_button
+import superdiary.shared_ui.generated.resources.confirm_save_diary_positive_button
 
 @Composable
 fun ConfirmDeleteDialog(
@@ -72,6 +77,68 @@ fun ConfirmDeleteDialog(
     )
 }
 
+@Composable
+fun ConfirmSaveDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+) {
+    BasicSuperDiaryDialog(
+        onDismiss = onDismiss,
+        onConfirm = onConfirm,
+        title = stringResource(Res.string.confirm_save_diary_dialog_title),
+        message = stringResource(Res.string.confirm_save_diary_dialog_message),
+        confirmButtonText = stringResource(Res.string.confirm_save_diary_positive_button),
+        dismissButtonText = stringResource(Res.string.confirm_save_diary_negative_button),
+    )
+}
+
+@Composable
+private fun BasicSuperDiaryDialog(
+    title: String,
+    message: String,
+    dismissButtonText: String,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    confirmButtonText: String,
+    modifier: Modifier = Modifier,
+    properties: DialogProperties = DialogProperties(),
+) {
+    AlertDialog(
+        properties = properties,
+        modifier = modifier,
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+            )
+        },
+        text = {
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(
+                    text = confirmButtonText,
+                    style = MaterialTheme.typography.labelMedium,
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(
+                    text = dismissButtonText,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.error,
+                )
+            }
+        },
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationRationaleDialog(
@@ -84,6 +151,10 @@ fun LocationRationaleDialog(
         permissionState == PermissionState.DeniedAlways || permissionState == PermissionState.NotGranted
 
     BasicAlertDialog(
+        properties = DialogProperties(
+            dismissOnBackPress = false,
+            dismissOnClickOutside = false,
+        ),
         onDismissRequest = {},
         content = {
             Card(

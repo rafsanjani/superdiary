@@ -10,8 +10,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.foreverrafs.superdiary.data.utils.DiarySettings
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreen
@@ -33,33 +33,35 @@ object DashboardTab : SuperDiaryTab {
         val screenState by screenModel.state.collectAsState()
         val coroutineScope = rememberCoroutineScope()
 
-        val settings by screenModel.settings.collectAsState(initial = DiarySettings.Empty)
+        val settings by screenModel.settings.collectAsStateWithLifecycle(initialValue = null)
 
-        DashboardScreenContent(
-            state = screenState,
-            onAddEntry = {
-                navController.navigate(CreateDiaryScreen)
-            },
-            onSeeAll = {
-                navController.navigate(DiaryListScreen)
-            },
-            onToggleFavorite = {
-                coroutineScope.launch {
-                    if (screenModel.toggleFavorite(it)) {
-                        snackbarHostState.showSnackbar("Favorite Updated")
+        settings?.let {
+            DashboardScreenContent(
+                state = screenState,
+                onAddEntry = {
+                    navController.navigate(CreateDiaryScreen)
+                },
+                onSeeAll = {
+                    navController.navigate(DiaryListScreen)
+                },
+                onToggleFavorite = {
+                    coroutineScope.launch {
+                        if (screenModel.toggleFavorite(it)) {
+                            snackbarHostState.showSnackbar("Favorite Updated")
+                        }
                     }
-                }
-            },
-            settings = settings,
-            onChangeSettings = screenModel::updateSettings,
-            onDiaryClick = { diary ->
-                diary.id?.let {
-                    navController.navigate(
-                        DetailScreen(it.toString()),
-                    )
-                }
-            },
-        )
+                },
+                settings = it,
+                onChangeSettings = screenModel::updateSettings,
+                onDiaryClick = { diary ->
+                    diary.id?.let {
+                        navController.navigate(
+                            DetailScreen(it.toString()),
+                        )
+                    }
+                },
+            )
+        }
     }
 
     override val selectedIcon: VectorPainter
