@@ -133,7 +133,6 @@ private fun SuperDiaryNavHost(
         animatedComposable<BottomNavigationScreen> {
             BottomNavigationScreen.Content(
                 rootNavController = navController,
-                userInfo = userInfo,
             )
         }
 
