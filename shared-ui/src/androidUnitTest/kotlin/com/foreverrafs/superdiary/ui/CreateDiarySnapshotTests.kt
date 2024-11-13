@@ -28,7 +28,6 @@ class CreateDiarySnapshotTests(
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = false,
                     onGenerateAI = { _: String, _: Int -> },
-                    onNavigateBack = {},
                     richTextState = rememberRichTextState().apply {},
                     onSaveDiary = {},
                     onDontAskAgain = {},
@@ -36,6 +35,8 @@ class CreateDiarySnapshotTests(
                     onRequestLocationPermission = {},
                     permissionState = PermissionState.NotDetermined,
                     userInfo = null,
+                    showSaveDialog = false,
+                    onShowSaveDialogChange = {},
                 )
             }
         }
@@ -48,7 +49,6 @@ class CreateDiarySnapshotTests(
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = false,
                     onGenerateAI = { _: String, _: Int -> },
-                    onNavigateBack = {},
                     richTextState = rememberRichTextState().apply {
                         setText(
                             "A four word line",
@@ -60,6 +60,8 @@ class CreateDiarySnapshotTests(
                     onDontAskAgain = {},
                     permissionState = PermissionState.NotGranted,
                     userInfo = null,
+                    showSaveDialog = false,
+                    onShowSaveDialogChange = {},
                 )
             }
         }
@@ -72,7 +74,6 @@ class CreateDiarySnapshotTests(
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = false,
                     onGenerateAI = { _: String, _: Int -> },
-                    onNavigateBack = {},
                     richTextState = rememberRichTextState().apply {
                         setText(
                             """
@@ -93,6 +94,8 @@ class CreateDiarySnapshotTests(
                     onDontAskAgain = {},
                     permissionState = PermissionState.NotGranted,
                     userInfo = null,
+                    showSaveDialog = false,
+                    onShowSaveDialogChange = {},
                 )
             }
         }
@@ -105,7 +108,6 @@ class CreateDiarySnapshotTests(
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = true,
                     onGenerateAI = { _: String, _: Int -> },
-                    onNavigateBack = {},
                     richTextState = rememberRichTextState().apply {
                         setText(
                             """
@@ -126,6 +128,8 @@ class CreateDiarySnapshotTests(
                     onDontAskAgain = {},
                     permissionState = PermissionState.NotGranted,
                     userInfo = null,
+                    showSaveDialog = false,
+                    onShowSaveDialogChange = {},
                 )
             }
         }
@@ -138,7 +142,6 @@ class CreateDiarySnapshotTests(
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = false,
                     onGenerateAI = { _: String, _: Int -> },
-                    onNavigateBack = {},
                     richTextState = rememberRichTextState().apply {},
                     onSaveDiary = {},
                     onDontAskAgain = {},
@@ -146,6 +149,29 @@ class CreateDiarySnapshotTests(
                     onRequestLocationPermission = {},
                     permissionState = PermissionState.NotDetermined,
                     userInfo = null,
+                    showSaveDialog = false,
+                    onShowSaveDialogChange = {},
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `Create Diary Screen - Confirm Save Dialog`() {
+        paparazzi.snapshot {
+            SuperdiaryPreviewTheme {
+                CreateDiaryScreenContent(
+                    isGeneratingFromAi = false,
+                    onGenerateAI = { _: String, _: Int -> },
+                    richTextState = rememberRichTextState().apply {},
+                    onSaveDiary = {},
+                    onDontAskAgain = {},
+                    showLocationPermissionRationale = false,
+                    onRequestLocationPermission = {},
+                    permissionState = PermissionState.NotDetermined,
+                    userInfo = null,
+                    showSaveDialog = true,
+                    onShowSaveDialogChange = {},
                 )
             }
         }

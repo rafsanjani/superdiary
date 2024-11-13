@@ -182,7 +182,6 @@ private fun CreateDiaryPreview() {
     SuperdiaryTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             CreateDiaryScreenContent(
-                onNavigateBack = {},
                 onGenerateAI = { _, _ -> },
                 onSaveDiary = {},
                 isGeneratingFromAi = false,
@@ -196,6 +195,8 @@ private fun CreateDiaryPreview() {
                     name = "john@doe.com",
                     email = "john@email.com",
                 ),
+                showSaveDialog = false,
+                onShowSaveDialogChange = {},
             )
         }
     }
@@ -207,7 +208,6 @@ private fun CreateDiaryPreviewNonEditable() {
     SuperdiaryTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             CreateDiaryScreenContent(
-                onNavigateBack = {},
                 onGenerateAI = { _, _ -> },
                 onSaveDiary = {},
                 isGeneratingFromAi = false,
@@ -221,6 +221,8 @@ private fun CreateDiaryPreviewNonEditable() {
                     name = "john@doe.com",
                     email = "john@email.com",
                 ),
+                showSaveDialog = false,
+                onShowSaveDialogChange = {},
             )
         }
     }

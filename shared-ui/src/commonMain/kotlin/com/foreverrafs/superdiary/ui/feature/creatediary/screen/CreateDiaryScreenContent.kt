@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
+import com.foreverrafs.superdiary.ui.components.ConfirmSaveDialog
 import com.foreverrafs.superdiary.ui.components.LocationRationaleDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.creatediary.components.RichTextStyleRow
@@ -68,8 +69,9 @@ import superdiary.shared_ui.generated.resources.label_diary_ai
 @Composable
 fun CreateDiaryScreenContent(
     isGeneratingFromAi: Boolean,
+    showSaveDialog: Boolean,
+    onShowSaveDialogChange: (Boolean) -> Unit,
     onGenerateAI: (prompt: String, wordCount: Int) -> Unit,
-    onNavigateBack: () -> Unit,
     onSaveDiary: (entry: String) -> Unit,
     showLocationPermissionRationale: Boolean,
     permissionState: PermissionState,
@@ -84,7 +86,9 @@ fun CreateDiaryScreenContent(
             SuperDiaryAppBar(
                 navigationIcon = {
                     IconButton(
-                        onClick = onNavigateBack,
+                        onClick = {
+                            onShowSaveDialogChange(true)
+                        },
                     ) {
                         Icon(
                             modifier = Modifier
@@ -108,6 +112,17 @@ fun CreateDiaryScreenContent(
                     onRequestLocationPermission = onRequestLocationPermission,
                     onDontAskAgain = onDontAskAgain,
                     permissionState = permissionState,
+                )
+            }
+
+            if (showSaveDialog) {
+                ConfirmSaveDialog(
+                    onDismiss = {
+                        onShowSaveDialogChange(false)
+                    },
+                    onConfirm = {
+                        onSaveDiary(richTextState.toHtml())
+                    },
                 )
             }
 

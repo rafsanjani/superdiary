@@ -99,7 +99,9 @@ class OpenDiaryAI(
         var response = ""
 
         return openAI.chatCompletions(request).mapNotNull {
-            response += it.choices.first().delta?.content
+            it.choices.first().delta?.content?.let {
+                response += it
+            }
             response
         }
     }
