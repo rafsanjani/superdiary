@@ -161,17 +161,6 @@ class DashboardViewModelTest {
 
         val viewModel = createDashboardViewModel()
 
-//        dashboardViewModel = DashboardViewModel(
-//            getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers),
-//            calculateStreakUseCase = CalculateStreakUseCase(TestAppDispatchers),
-//            addWeeklySummaryUseCase = AddWeeklySummaryUseCase(dataSource, TestAppDispatchers),
-//            getWeeklySummaryUseCase = GetWeeklySummaryUseCase(dataSource, TestAppDispatchers),
-//            diaryAI = diaryAI,
-//            calculateBestStreakUseCase = CalculateBestStreakUseCase(TestAppDispatchers),
-//            updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
-//            logger = AggregateLogger(emptyList()),
-//            preference = diaryPreference,
-//        )
         viewModel.state.test {
             // Skip the loading state
             skipItems(3)
