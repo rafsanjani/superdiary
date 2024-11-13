@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    id("io.sentry.android.gradle") version "4.12.0"
+    id("io.sentry.android.gradle") version "4.13.0"
 }
 
 kotlin {
@@ -57,6 +57,16 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+
+
+        val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_ANDROID") ?: ""
+        if (sentryBaseUrl.isEmpty()) {
+            logger.warn(
+                "Sentry base url hasn't been set. Please add SENTRY_BASE_URL_ANDROID to your environment variables",
+            )
+        }
+
+        manifestPlaceholders["sentryBaseUrl"] = sentryBaseUrl
     }
 
     compileOptions {
@@ -80,30 +90,13 @@ android {
             isMinifyEnabled = true
             proguardFile("proguard-rules.pro")
 
-            val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_RELEASE") ?: ""
-
-            if (sentryBaseUrl.isEmpty()) {
-                logger.warn(
-                    "Sentry base url hasn't been set. Please add SENTRY_BASE_URL_RELEASE to your environment variables",
-                )
-            }
-
-            manifestPlaceholders["sentryBaseUrl"] = sentryBaseUrl
             manifestPlaceholders["sentryEnvironment"] = "production"
         }
 
         debug {
-            val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_DEBUG") ?: ""
-
-            if (sentryBaseUrl.isEmpty()) {
-                logger.warn(
-                    "Sentry base url hasn't been set. Please add SENTRY_BASE_URL_DEBUG to your environment variables",
-                )
-            }
-
-            manifestPlaceholders["sentryBaseUrl"] = sentryBaseUrl
             manifestPlaceholders["sentryEnvironment"] = "debug"
         }
+
         create("benchmark") {
             initWith(buildTypes.getByName("release"))
             matchingFallbacks += listOf("release")
@@ -122,7 +115,7 @@ sentry {
     }
 
     org.set("rafsanjani-inc")
-    projectName.set("superdiary-debug")
+    projectName.set("superdiary-android")
     authToken.set(sentryToken)
 
     // this will upload your source code to Sentry to show it as part of the stack traces
