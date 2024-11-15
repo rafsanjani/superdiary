@@ -56,4 +56,3 @@ jobs:
           valColorRange: ${{env.COVERAGE}}
           minColorRange: 0
           maxColorRange: 100
-
