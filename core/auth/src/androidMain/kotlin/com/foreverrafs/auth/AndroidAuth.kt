@@ -17,7 +17,7 @@ import io.github.jan.supabase.SupabaseClient
 class AndroidAuth(
     private val supabaseClient: SupabaseClient,
     private val logger: AggregateLogger,
-) : AuthApi by DefaultSupabaseAuth(supabaseClient) {
+) : AuthApi by DefaultSupabaseAuth(supabaseClient, logger) {
 
     /** Use the credentials manager to sign in with Google on Android */
     override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper?): AuthApi.SignInStatus {
