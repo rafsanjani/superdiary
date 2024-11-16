@@ -36,6 +36,7 @@ jobs:
         SENTRY_BASE_URL_DEBUG: ${{secrets.SENTRY_BASE_URL_DEBUG}}
         SENTRY_BASE_URL_RELEASE: ${{secrets.SENTRY_BASE_URL_RELEASE}}
         SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
+        BUILD_NUMBER: ${{github.event.number}}
     runs-on: macos-14
     needs: lint
     steps:
@@ -54,11 +55,26 @@ jobs:
       - name: Snapshot test (shared-ui)
         run: ./gradlew verifyPaparazziDebug
 
-      - name: Upload Snapshot Failure Differences
-        uses: actions/upload-artifact@v4
+      - name: Commit and Push Images to GitHub Pages
+        if: failure()
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git checkout --orphan paparazzi-snapshots-$BUILD_NUMBER
+          git reset
+          cp -R shared-ui/build/paparazzi/failures/delta-* .
+          git add delta-*
+          git commit -m "Upload paparazzi failures"
+          git push --force origin paparazzi-snapshots-$BUILD_NUMBER
+
+      - name: Generate snapshot difference markdown
+        if: failure()
+        run: ./gradlew createPaparazziReportComment
+
+      - name: Comment snapshot difference markdown file on PR
+        uses: thollander/actions-comment-pull-request@v3
         if: failure()
         with:
-          name: reports
-          path: shared-ui/build/paparazzi/failures/
-          retention-days: 1
+            file-path: snapshots.md
+            comment-tag: execution
 
