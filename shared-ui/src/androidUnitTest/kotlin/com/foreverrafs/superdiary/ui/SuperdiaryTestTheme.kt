@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 
-@Suppress("ktlint:compose:modifier-missing-check")
 @Composable
 fun SuperdiaryPreviewTheme(
     modifier: Modifier = Modifier,

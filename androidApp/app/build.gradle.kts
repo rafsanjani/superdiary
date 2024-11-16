@@ -58,7 +58,6 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-
         val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_ANDROID") ?: ""
         if (sentryBaseUrl.isEmpty()) {
             logger.warn(

@@ -199,7 +199,6 @@ tasks.register("createPaparazziReportComment") {
 
         val pullRequestNumber = System.getenv("BUILD_NUMBER")
 
-
         val outputFilePath = "snapshots.md"
         val outputFile = FileOutputStream(outputFilePath)
         deltaFiles.forEach { image ->
@@ -211,7 +210,7 @@ tasks.register("createPaparazziReportComment") {
 
             val header = "#### ${image.name}\n"
             val data =
-                "<img alt=\"paparazzi failure\" src=\"https://github.com/rafsanjani/superdiary/raw/paparazzi-snapshots-${pullRequestNumber}/${filePath}\"/>\n\n"
+                "<img alt=\"paparazzi failure\" src=\"https://github.com/rafsanjani/superdiary/raw/paparazzi-snapshots-$pullRequestNumber/$filePath\"/>\n\n"
 
             outputFile.write(header.toByteArray())
             outputFile.write(data.toByteArray())
