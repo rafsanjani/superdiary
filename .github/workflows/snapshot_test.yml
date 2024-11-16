@@ -36,7 +36,7 @@ jobs:
         SENTRY_BASE_URL_DEBUG: ${{secrets.SENTRY_BASE_URL_DEBUG}}
         SENTRY_BASE_URL_RELEASE: ${{secrets.SENTRY_BASE_URL_RELEASE}}
         SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
-        BUILD_NUMBER: ${{github.run_id}}
+        BUILD_NUMBER: ${{github.event.number}}
     runs-on: macos-14
     needs: lint
     steps:

@@ -127,7 +127,7 @@ class DashboardScreenSnapshotTest(
                             )
                         },
                         3,
-                        "This is the weekly summary of all the entries",
+                        "This is the weekly summary of all the fucking entries",
                         Streak(
                             0,
                             testClock.now().toDate(),
