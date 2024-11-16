@@ -2,7 +2,6 @@ package com.foreverrafs.superdiary.ui
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -145,7 +144,15 @@ class DiaryListSnapshotTests(
     fun `Error loading diary list`() {
         paparazzi.snapshot {
             SuperdiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
-                Text("Sample text")
+                DiaryListScreenContent(
+
+                    state = DiaryListViewState.Error(
+                        Error("Error loading diaries"),
+                    ),
+                    showSearchBar = true,
+                    diaryFilters = DiaryFilters(),
+                    diaryListActions = diaryListActions,
+                )
             }
         }
     }
