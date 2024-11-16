@@ -1,0 +1,177 @@
+name: build
+
+on:
+  push:
+    branches: [ main, development ]
+  pull_request:
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  danger:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Install ktlint CLI
+        run: |
+          curl -sSLO https://github.com/pinterest/ktlint/releases/download/0.49.0/ktlint
+          chmod a+x ktlint
+          sudo mv ktlint /usr/local/bin/
+
+      - name: Danger Checks
+        run: |
+          gem install bundler
+          bundle install
+          bundle exec danger
+        env:
+          DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  snapshot:
+    name: Snapshot test with paparazzi
+    env:
+      BUILD_NUMBER: ${{github.event.number}}
+    runs-on: macos-14
+    needs: danger
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Snapshot test (shared-ui)
+        run: ./gradlew verifyPaparazziDebug
+
+      - name: Commit and Push Images to GitHub Pages
+        if: failure()
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git checkout --orphan paparazzi-snapshots-$BUILD_NUMBER
+          git reset
+          cp -R shared-ui/build/paparazzi/failures/delta-* .
+          git add delta-*
+          git commit -m "Upload paparazzi failures"
+          git push --force origin paparazzi-snapshots-$BUILD_NUMBER
+
+      - name: Generate snapshot difference markdown
+        if: failure()
+        run: ./gradlew createPaparazziReportComment
+
+      - name: Comment snapshot difference markdown file on PR
+        uses: thollander/actions-comment-pull-request@v3
+        if: failure()
+        with:
+          file-path: snapshots.md
+          comment-tag: execution
+  iosTest:
+    env:
+      SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
+      SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
+    runs-on: macos-latest
+    needs: danger
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Unit tests iOS
+        run: ./gradlew iosSimulatorArm64Test
+  jvmTest:
+    name: Run JVM unit tests and generate coverage badge
+    env:
+      SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
+      SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
+    runs-on: ubuntu-latest
+    needs: danger
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      - name: Run JVM unit tests
+        run: ./gradlew testDebugUnitTest -Pkover koverXmlReport
+
+      - name: Store code coverage into environment variable
+        if: github.ref == 'refs/heads/development'
+        run: echo "COVERAGE=$(${{github.workspace}}/gradlew -q printLineCoverage)" >> $GITHUB_ENV
+
+      - name: Add coverage Report to PR
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.7.1
+        with:
+          paths: |
+            ${{ github.workspace }}/build/reports/kover/report.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          update-comment: true
+          title: Code Coverage
+          min-coverage-overall: 85
+          min-coverage-changed-files: 85
+
+      - name: Update dynamic badge gist
+        if: github.ref == 'refs/heads/development'
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{secrets.SECRET_GITHUB_GIST}}
+          gistID: 129c8d4608ea11b81849152dba085532
+          filename: superdiary-badge.json
+          label: coverage
+          message: ${{env.COVERAGE}}%
+          valColorRange: ${{env.COVERAGE}}
+          minColorRange: 0
+          maxColorRange: 100
+  androidRelease:
+    name: Build android app (release)
+    runs-on: macos-14
+    needs: jvmTest
+    env:
+      SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_DEBUG}}
+      SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Gradle Wrapper Validation
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build Android App (Release)
+        run: ./gradlew androidApp:app:assemble
