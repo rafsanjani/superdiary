@@ -27,7 +27,7 @@ object LoginScreen {
 
         LoginScreenContent(
             viewState = signInStatus,
-            onLoginClick = { _, _ -> },
+            onLoginClick = screenModel::onLoginClick,
             onLoginWithGoogle = {
                 scope.launch {
                     activityWrapper?.let(screenModel::signInWithGoogle)
