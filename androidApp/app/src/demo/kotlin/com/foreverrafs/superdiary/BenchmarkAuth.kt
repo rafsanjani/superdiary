@@ -4,12 +4,14 @@ import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.DefaultSupabaseAuth
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 import io.github.jan.supabase.SupabaseClient
 import kotlin.time.Duration.Companion.minutes
 import kotlinx.datetime.Clock
 
-class BenchmarkAuth(client: SupabaseClient) : AuthApi by DefaultSupabaseAuth(client) {
+class BenchmarkAuth(client: SupabaseClient, logger: AggregateLogger) :
+    AuthApi by DefaultSupabaseAuth(client, logger) {
     private val session = SessionInfo(
         expiresAt = Clock.System.now().plus(10.minutes),
         accessToken = "access-token",
