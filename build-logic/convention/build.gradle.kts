@@ -45,7 +45,7 @@ gradlePlugin {
             implementationClass = "$rootPackageName.codequality.KtlintConventionPlugin"
         }
 
-        register("SecretsConventionPlugin"){
+        register("SecretsConventionPlugin") {
             id = "com.superdiary.secrets"
             implementationClass = "$rootPackageName.secrets.SecretsConventionPlugin"
         }

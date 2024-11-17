@@ -1,11 +1,11 @@
 package com.superdiary.gradle.codequality
 
+import java.util.Locale
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.Exec
-import java.util.Locale
 
 class GitHooksConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
