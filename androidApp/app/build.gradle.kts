@@ -1,52 +1,12 @@
 @file:Suppress("UnusedPrivateProperty")
 
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-
-
 plugins {
-    kotlin("multiplatform")
+    kotlin("android")
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("io.sentry.android.gradle") version "4.13.0"
-}
-
-kotlin {
-    androidTarget()
-
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    compilerOptions {
-        freeCompilerArgs.addAll(
-            "-Xskip-prerelease-check",
-        )
-    }
-
-    sourceSets {
-        androidMain {
-            dependencies {
-                implementation(libs.richTextEditor)
-                implementation(libs.moko.permissions)
-                implementation(libs.androidx.activity.compose)
-                implementation(libs.kotlin.datetime)
-                implementation(libs.google.material)
-                implementation(compose.runtime)
-                implementation(projects.sharedUi)
-                implementation(projects.core.logging)
-                implementation(projects.sharedData)
-                implementation(projects.core.analytics)
-                implementation(libs.koin.android)
-            }
-        }
-
-        val androidUnitTest by getting {
-            dependencies {
-                implementation(libs.koin.android)
-                implementation(libs.koin.test)
-                implementation(libs.kotlinx.coroutines.test)
-            }
-        }
-    }
 }
 
 android {
@@ -99,7 +59,11 @@ android {
         create("benchmark") {
             initWith(buildTypes.getByName("release"))
             matchingFallbacks += listOf("release")
-            isDebuggable = false
+
+            manifestPlaceholders["sentryEnvironment"] = "benchmark"
+            signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = false
+            isDebuggable = true
         }
     }
 }
@@ -131,4 +95,22 @@ secrets {
     // These values from secrets.properties are used in :core:secrets module to generate runtime secrets.
     ignoreList.add("OPENAI_KEY")
     ignoreList.add("GOOGLE_SERVER_CLIENT_ID")
+}
+
+dependencies {
+    implementation(libs.richTextEditor)
+    implementation(libs.moko.permissions)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.kotlin.datetime)
+    implementation(libs.google.material)
+    implementation(compose.runtime)
+    implementation(projects.sharedUi)
+    implementation(projects.core.logging)
+    implementation(projects.sharedData)
+    implementation(projects.core.analytics)
+    implementation(libs.koin.android)
+    implementation(projects.core.utils)
+    testImplementation(libs.koin.android)
+    testImplementation(libs.koin.test)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
