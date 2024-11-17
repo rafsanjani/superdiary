@@ -18,13 +18,13 @@ plugins {
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
+    applyDefaultHierarchyTemplate()
     androidTarget()
 
     jvm()
     jvmToolchain(17)
 
     listOf(
-        iosX64(),
         iosArm64(),
         iosSimulatorArm64(),
     ).forEach {
@@ -36,10 +36,6 @@ kotlin {
             export(projects.core.location)
             export(projects.core.auth)
         }
-    }
-
-    sourceSets.all {
-        languageSettings.enableLanguageFeature("DataObjects")
     }
 
     sourceSets {

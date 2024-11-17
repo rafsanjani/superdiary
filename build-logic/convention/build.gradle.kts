@@ -21,6 +21,9 @@ dependencies {
     compileOnly(libs.conventionplugins.kover)
     compileOnly(libs.conventionplugins.ktlint)
     compileOnly(libs.conventionplugins.sonar)
+    compileOnly(libs.conventionplugins.android)
+    compileOnly(libs.conventionplugins.compose)
+    compileOnly(libs.conventionplugins.compose.compiler)
     compileOnly("com.codingfeline.buildkonfig:buildkonfig-gradle-plugin:0.15.2")
     compileOnly("com.codingfeline.buildkonfig:buildkonfig-compiler:0.15.2")
 }

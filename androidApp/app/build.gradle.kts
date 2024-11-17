@@ -113,4 +113,23 @@ dependencies {
     testImplementation(libs.koin.android)
     testImplementation(libs.koin.test)
     testImplementation(libs.kotlinx.coroutines.test)
+    kotlin("android")
+}
+
+dependencies {
+    implementation(libs.richTextEditor)
+    implementation(libs.moko.permissions)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.kotlin.datetime)
+    implementation(libs.google.material)
+    implementation(compose.runtime)
+    implementation(projects.sharedUi)
+    implementation(projects.core.logging)
+    implementation(projects.sharedData)
+    implementation(projects.core.analytics)
+    implementation(libs.koin.android)
+    implementation(projects.core.utils)
+    testImplementation(libs.koin.android)
+    testImplementation(libs.koin.test)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

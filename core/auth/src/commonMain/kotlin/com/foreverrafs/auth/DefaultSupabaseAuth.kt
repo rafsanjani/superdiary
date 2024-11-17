@@ -2,14 +2,17 @@ package com.foreverrafs.auth
 
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.Google
 import io.github.jan.supabase.auth.providers.builtin.IDToken
+import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.auth.user.UserSession
 import io.github.jan.supabase.exceptions.BadRequestRestException
 import io.github.jan.supabase.exceptions.RestException
+import kotlinx.coroutines.delay
 
 typealias UserInfoDto = io.github.jan.supabase.auth.user.UserInfo
 typealias SessionInfoDto = UserSession
@@ -20,7 +23,10 @@ typealias SessionInfoDto = UserSession
  * [AuthApi] by using this class as a delegate and overriding some of the
  * functions
  */
-class DefaultSupabaseAuth(private val client: SupabaseClient) : AuthApi {
+class DefaultSupabaseAuth(
+    private val client: SupabaseClient,
+    private val logger: AggregateLogger,
+) : AuthApi {
     override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper?): AuthApi.SignInStatus =
         try {
             client.auth.signInWith(provider = Google)
@@ -55,6 +61,17 @@ class DefaultSupabaseAuth(private val client: SupabaseClient) : AuthApi {
     }
 
     override suspend fun restoreSession(): AuthApi.SignInStatus {
+        // Wait for session to be initialized
+        while (client.auth.sessionStatus.value == SessionStatus.Initializing) {
+            logger.d(Tag) {
+                "Waiting for session to be initialized"
+            }
+            delay(100)
+        }
+
+        logger.d(Tag) {
+            "Session Initialized. Attempting to get current session"
+        }
         val currentSession = client.auth.currentSessionOrNull()
 
         return if (currentSession != null) {
@@ -64,6 +81,10 @@ class DefaultSupabaseAuth(private val client: SupabaseClient) : AuthApi {
         } else {
             AuthApi.SignInStatus.Error(Exception("No session information found!"))
         }
+    }
+
+    companion object {
+        private val Tag = DefaultSupabaseAuth::class.simpleName.orEmpty()
     }
 
     override suspend fun signIn(username: String, password: String): AuthApi.SignInStatus {
@@ -82,5 +103,6 @@ internal fun UserInfoDto.toUserInfo(): UserInfo = UserInfo(
     id = id,
     name = userMetadata?.get("name").toString(),
     email = userMetadata?.get("email").toString(),
+    // Strip leading and ending quotes from avatar url
     avatarUrl = userMetadata?.get("avatar_url").toString().replace("^\"|\"$".toRegex(), ""),
 )
