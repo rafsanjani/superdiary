@@ -31,7 +31,7 @@ class FakeAuthApi(
 
     override suspend fun restoreSession(): AuthApi.SignInStatus = signInResult
 
-    override suspend fun signIn(username: String, password: String): AuthApi.SignInStatus {
+    override suspend fun signIn(email: String, password: String): AuthApi.SignInStatus {
         TODO("Not yet implemented")
     }
 }

@@ -18,6 +18,7 @@ sealed interface AppSessionState {
     data object Processing : AppSessionState
     data class Success(val userInfo: UserInfo?) : AppSessionState
     data class Error(val exception: Exception) : AppSessionState
+    data object UnAuthenticated : AppSessionState
 }
 
 class AppViewModel(
@@ -61,6 +62,11 @@ class AppViewModel(
                 }
             }
         }
+    }
+
+    fun logOut() = viewModelScope.launch {
+        authApi.signOut()
+        _viewState.update { AppSessionState.UnAuthenticated }
     }
 
     companion object {

@@ -36,6 +36,7 @@ import coil3.request.crossfade
 import coil3.util.DebugLogger
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
+import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
@@ -98,7 +99,8 @@ fun App(modifier: Modifier = Modifier) {
                 return@SuperdiaryTheme
             }
 
-            is AppSessionState.Error -> SuperDiaryNavHost(
+            is AppSessionState.Error, AppSessionState.UnAuthenticated,
+            -> SuperDiaryNavHost(
                 modifier = modifier,
                 isSignedIn = false,
             )
@@ -126,6 +128,15 @@ private fun SuperDiaryNavHost(
     ) {
         animatedComposable<LoginScreen> {
             LoginScreen.Content(
+                navController = navController,
+                onRegisterClick = {
+                    navController.navigate(RegisterScreen)
+                },
+            )
+        }
+
+        animatedComposable<RegisterScreen> {
+            RegisterScreen.Content(
                 navController = navController,
             )
         }

@@ -27,6 +27,7 @@
     <string name="label_password">Password</string>
     <string name="label_login">Login</string>
     <string name="label_login_title">Welcome back!</string>
+    <string name="label_register_title">Create an account</string>
     <string name="label_register_message">Don't have an account yet? </string>
     <string name="label_register">Register</string>
     <string name="label_google_button">Continue with Google</string>

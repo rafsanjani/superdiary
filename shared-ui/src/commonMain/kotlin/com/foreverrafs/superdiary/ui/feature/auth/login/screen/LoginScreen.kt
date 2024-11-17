@@ -17,6 +17,7 @@ object LoginScreen {
     @Composable
     fun Content(
         navController: NavHostController,
+        onRegisterClick: () -> Unit,
     ) {
         val screenModel: LoginScreenViewModel = koinInject()
         val signInStatus by screenModel.viewState.collectAsStateWithLifecycle(
@@ -33,9 +34,7 @@ object LoginScreen {
                     activityWrapper?.let(screenModel::signInWithGoogle)
                 }
             },
-            onRegisterClick = {
-                // Navigate to registration screen
-            },
+            onRegisterClick = onRegisterClick,
             onSignInSuccess = {
                 navController.navigate(BottomNavigationScreen)
             },

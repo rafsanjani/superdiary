@@ -27,6 +27,7 @@ import com.foreverrafs.superdiary.ui.AppSessionState
 import com.foreverrafs.superdiary.ui.AppViewModel
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
+import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
 import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardTab
 import com.foreverrafs.superdiary.ui.feature.diarychat.screen.DiaryChatTab
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteTab
@@ -60,6 +61,10 @@ object BottomNavigationScreen {
             topBar = {
                 SuperDiaryAppBar(
                     userInfo = (viewState as? AppSessionState.Success)?.userInfo,
+                    onProfileClick = {
+                        appViewModel.logOut()
+                        rootNavController.popBackStack(inclusive = true, route = LoginScreen)
+                    },
                 )
             },
             bottomBar = {
