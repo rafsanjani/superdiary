@@ -65,6 +65,10 @@ class DefaultSupabaseAuth(private val client: SupabaseClient) : AuthApi {
             AuthApi.SignInStatus.Error(Exception("No session information found!"))
         }
     }
+
+    override suspend fun signIn(username: String, password: String): AuthApi.SignInStatus {
+        TODO("Not yet implemented")
+    }
 }
 
 internal fun SessionInfoDto.toSession() = SessionInfo(

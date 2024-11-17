@@ -23,11 +23,26 @@ class LoginScreenSnapshotTest(
     )
 
     @Test
-    fun `Login Screen`() {
+    fun `Login Screen - Idle`() {
         paparazzi.snapshot {
             SuperdiaryPreviewTheme {
                 LoginScreenContent(
                     viewState = LoginViewState.Idle,
+                    onSignInSuccess = {},
+                    onLoginClick = { _, _ -> },
+                    onLoginWithGoogle = {},
+                    onRegisterClick = {},
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `Login Screen - Processing`() {
+        paparazzi.snapshot {
+            SuperdiaryPreviewTheme {
+                LoginScreenContent(
+                    viewState = LoginViewState.Processing,
                     onSignInSuccess = {},
                     onLoginClick = { _, _ -> },
                     onLoginWithGoogle = {},
