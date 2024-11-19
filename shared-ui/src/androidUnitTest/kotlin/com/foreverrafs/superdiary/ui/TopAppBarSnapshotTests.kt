@@ -44,7 +44,7 @@ class TopAppBarSnapshotTests(
                             .padding(it),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Text("hello friends!")
+                        Text("hello World")
                     }
                 }
             }
