@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -70,6 +71,9 @@ fun LoginScreenContent(
 ) {
     val currentOnSignInSuccess by rememberUpdatedState(onSignInSuccess)
     val snackbarHostState = remember { SnackbarHostState() }
+    var enableLoginButton by remember {
+        mutableStateOf(true)
+    }
 
     LaunchedEffect(viewState) {
         when (viewState) {
@@ -82,7 +86,10 @@ fun LoginScreenContent(
             }
 
             is LoginViewState.Idle -> {}
-            is LoginViewState.Processing -> {}
+            is LoginViewState.Processing -> {
+                enableLoginButton = false
+            }
+
             is LoginViewState.Success -> currentOnSignInSuccess()
         }
     }
@@ -122,7 +129,9 @@ fun LoginScreenContent(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 InputField(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("input_username"),
                     label = stringResource(Res.string.label_username),
                     value = username,
                     onValueChange = {
@@ -134,7 +143,9 @@ fun LoginScreenContent(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 InputField(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("input_password"),
                     label = stringResource(Res.string.label_password),
                     value = password,
                     onValueChange = {
@@ -149,10 +160,13 @@ fun LoginScreenContent(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 LoginButton(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("button_login"),
                     onClick = {
                         onLoginClick(username, password)
                     },
+                    enabled = enableLoginButton,
                 )
 
                 Spacer(modifier = Modifier.height(44.dp))
@@ -180,6 +194,7 @@ fun LoginScreenContent(
 @Composable
 private fun LoginButton(
     onClick: () -> Unit,
+    enabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Button(
@@ -187,6 +202,7 @@ private fun LoginButton(
             .height(52.dp),
         onClick = onClick,
         shape = MaterialTheme.shapes.medium,
+        enabled = enabled,
     ) {
         Text(
             text = stringResource(Res.string.label_login),

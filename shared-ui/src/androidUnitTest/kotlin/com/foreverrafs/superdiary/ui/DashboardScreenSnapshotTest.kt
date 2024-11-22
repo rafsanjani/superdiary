@@ -41,7 +41,7 @@ class DashboardScreenSnapshotTest(
                             Diary(
                                 id = it.toLong(),
                                 entry = "<strong>Awesome</strong> Diary",
-                                date = Clock.System.now(),
+                                date = testClock.now(),
                                 isFavorite = false,
                                 location = Location.Empty,
                             )
@@ -80,7 +80,7 @@ class DashboardScreenSnapshotTest(
                             Diary(
                                 id = it.toLong(),
                                 entry = "<strong>Awesome</strong> Diary",
-                                date = Clock.System.now(),
+                                date = testClock.now(),
                                 isFavorite = false,
                                 location = Location.Empty,
                             )
@@ -121,7 +121,7 @@ class DashboardScreenSnapshotTest(
                             Diary(
                                 id = it.toLong(),
                                 entry = "<strong>Awesome</strong> Diary",
-                                date = Clock.System.now(),
+                                date = testClock.now(),
                                 isFavorite = false,
                                 location = Location.Empty,
                             )

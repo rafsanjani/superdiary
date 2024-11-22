@@ -39,4 +39,23 @@ class LoginScreenViewModel(
                 }
             }
         }
+
+    fun onLoginClick(username: String, password: String) =
+        viewModelScope.launch(coroutineDispatchers.main) {
+            _viewState.update {
+                LoginViewState.Processing
+            }
+
+            when (val result = authApi.signIn(username, password)) {
+                is AuthApi.SignInStatus.Error -> _viewState.update {
+                    LoginViewState.Error(
+                        error = result.exception,
+                    )
+                }
+
+                is AuthApi.SignInStatus.LoggedIn -> _viewState.update {
+                    LoginViewState.Success
+                }
+            }
+        }
 }

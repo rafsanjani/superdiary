@@ -29,8 +29,6 @@ kotlin {
             "-Xskip-prerelease-check",
         )
     }
-
-
 }
 
 compose.desktop {

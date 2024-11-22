@@ -17,19 +17,19 @@ import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListViewModel
 import com.foreverrafs.superdiary.ui.feature.favorites.FavoriteViewModel
 import org.koin.core.module.Module
-import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 internal fun screenModules(): Module = module {
-    singleOf(::LocationPermissionManager)
-    singleOf(::DiaryListViewModel)
-    singleOf(::CreateDiaryViewModel)
-    singleOf(::FavoriteViewModel)
-    singleOf(::DashboardViewModel)
-    singleOf(::DiaryChatViewModel)
-    singleOf(::DetailsViewModel)
-    singleOf(::LoginScreenViewModel)
-    singleOf(::AppViewModel)
+    factoryOf(::LocationPermissionManager)
+    factoryOf(::DiaryListViewModel)
+    factoryOf(::CreateDiaryViewModel)
+    factoryOf(::FavoriteViewModel)
+    factoryOf(::DashboardViewModel)
+    factoryOf(::DiaryChatViewModel)
+    factoryOf(::DetailsViewModel)
+    factoryOf(::LoginScreenViewModel)
+    factoryOf(::AppViewModel)
 }
 
 expect fun permissionModule(): Module

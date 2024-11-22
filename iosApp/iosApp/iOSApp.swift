@@ -38,8 +38,10 @@ struct iOSApp: App  {
             options.dsn = Environment.sentryBaseUrl
 #if DEBUG
             options.debug = false
+            options.environment = "debug"
 #else
             options.debug = false
+            options.environment = "production"
 #endif
             
             options.enableTracing = true

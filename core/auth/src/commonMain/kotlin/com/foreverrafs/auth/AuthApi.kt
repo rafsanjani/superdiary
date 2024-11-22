@@ -10,6 +10,7 @@ interface AuthApi {
     suspend fun signInWithGoogle(googleIdToken: String): SignInStatus
 
     suspend fun restoreSession(): SignInStatus
+    suspend fun signIn(username: String, password: String): SignInStatus
 
     sealed interface SignInStatus {
         data class LoggedIn(val sessionInfo: SessionInfo) : SignInStatus

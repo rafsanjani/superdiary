@@ -1,52 +1,12 @@
 @file:Suppress("UnusedPrivateProperty")
 
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-
-
 plugins {
-    kotlin("multiplatform")
+    kotlin("android")
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    id("io.sentry.android.gradle") version "4.12.0"
-}
-
-kotlin {
-    androidTarget()
-
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    compilerOptions {
-        freeCompilerArgs.addAll(
-            "-Xskip-prerelease-check",
-        )
-    }
-
-    sourceSets {
-        androidMain {
-            dependencies {
-                implementation(libs.richTextEditor)
-                implementation(libs.moko.permissions)
-                implementation(libs.androidx.activity.compose)
-                implementation(libs.kotlin.datetime)
-                implementation(libs.google.material)
-                implementation(compose.runtime)
-                implementation(projects.sharedUi)
-                implementation(projects.core.logging)
-                implementation(projects.sharedData)
-                implementation(projects.core.analytics)
-                implementation(libs.koin.android)
-            }
-        }
-
-        val androidUnitTest by getting {
-            dependencies {
-                implementation(libs.koin.android)
-                implementation(libs.koin.test)
-                implementation(libs.kotlinx.coroutines.test)
-            }
-        }
-    }
+    id("io.sentry.android.gradle") version "4.13.0"
 }
 
 android {
@@ -57,6 +17,15 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+
+        val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_ANDROID") ?: ""
+        if (sentryBaseUrl.isEmpty()) {
+            logger.warn(
+                "Sentry base url hasn't been set. Please add SENTRY_BASE_URL_ANDROID to your environment variables",
+            )
+        }
+
+        manifestPlaceholders["sentryBaseUrl"] = sentryBaseUrl
     }
 
     compileOptions {
@@ -80,34 +49,21 @@ android {
             isMinifyEnabled = true
             proguardFile("proguard-rules.pro")
 
-            val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_RELEASE") ?: ""
-
-            if (sentryBaseUrl.isEmpty()) {
-                logger.warn(
-                    "Sentry base url hasn't been set. Please add SENTRY_BASE_URL_RELEASE to your environment variables",
-                )
-            }
-
-            manifestPlaceholders["sentryBaseUrl"] = sentryBaseUrl
             manifestPlaceholders["sentryEnvironment"] = "production"
         }
 
         debug {
-            val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_DEBUG") ?: ""
-
-            if (sentryBaseUrl.isEmpty()) {
-                logger.warn(
-                    "Sentry base url hasn't been set. Please add SENTRY_BASE_URL_DEBUG to your environment variables",
-                )
-            }
-
-            manifestPlaceholders["sentryBaseUrl"] = sentryBaseUrl
             manifestPlaceholders["sentryEnvironment"] = "debug"
         }
+
         create("benchmark") {
             initWith(buildTypes.getByName("release"))
             matchingFallbacks += listOf("release")
-            isDebuggable = false
+
+            manifestPlaceholders["sentryEnvironment"] = "benchmark"
+            signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = false
+            isDebuggable = true
         }
     }
 }
@@ -122,7 +78,7 @@ sentry {
     }
 
     org.set("rafsanjani-inc")
-    projectName.set("superdiary-debug")
+    projectName.set("superdiary-android")
     authToken.set(sentryToken)
 
     // this will upload your source code to Sentry to show it as part of the stack traces
@@ -139,4 +95,41 @@ secrets {
     // These values from secrets.properties are used in :core:secrets module to generate runtime secrets.
     ignoreList.add("OPENAI_KEY")
     ignoreList.add("GOOGLE_SERVER_CLIENT_ID")
+}
+
+dependencies {
+    implementation(libs.richTextEditor)
+    implementation(libs.moko.permissions)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.kotlin.datetime)
+    implementation(libs.google.material)
+    implementation(compose.runtime)
+    implementation(projects.sharedUi)
+    implementation(projects.core.logging)
+    implementation(projects.sharedData)
+    implementation(projects.core.analytics)
+    implementation(libs.koin.android)
+    implementation(projects.core.utils)
+    testImplementation(libs.koin.android)
+    testImplementation(libs.koin.test)
+    testImplementation(libs.kotlinx.coroutines.test)
+    kotlin("android")
+}
+
+dependencies {
+    implementation(libs.richTextEditor)
+    implementation(libs.moko.permissions)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.kotlin.datetime)
+    implementation(libs.google.material)
+    implementation(compose.runtime)
+    implementation(projects.sharedUi)
+    implementation(projects.core.logging)
+    implementation(projects.sharedData)
+    implementation(projects.core.analytics)
+    implementation(libs.koin.android)
+    implementation(projects.core.utils)
+    testImplementation(libs.koin.android)
+    testImplementation(libs.koin.test)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

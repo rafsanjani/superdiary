@@ -1,8 +1,10 @@
 package com.foreverrafs.superdiary.ui.components
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -15,11 +17,16 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.foreverrafs.auth.model.UserInfo
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.app_name
+import superdiary.shared_ui.generated.resources.default_avatar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,6 +35,14 @@ fun SuperDiaryAppBar(
     navigationIcon: @Composable (() -> Unit)? = null,
     userInfo: UserInfo? = null,
 ) {
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(LocalPlatformContext.current)
+            .data(userInfo?.avatarUrl)
+            .crossfade(true)
+            .build(),
+        error = painterResource(Res.drawable.default_avatar),
+    )
+
     TopAppBar(
         modifier = modifier,
         title = {
@@ -46,15 +61,14 @@ fun SuperDiaryAppBar(
             containerColor = MaterialTheme.colorScheme.background,
         ),
         actions = {
-            AsyncImage(
+            Icon(
                 modifier = Modifier
+                    .size(48.dp)
                     .padding(end = 4.dp)
                     .clip(CircleShape),
-                model = userInfo?.avatarUrl,
+                painter = painter,
                 contentDescription = null,
-                onError = {
-                    println(it)
-                },
+                tint = MaterialTheme.colorScheme.inverseSurface,
             )
         },
         navigationIcon = {
