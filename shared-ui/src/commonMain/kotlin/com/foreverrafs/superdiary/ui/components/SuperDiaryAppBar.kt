@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -10,15 +11,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
+import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.SubcomposeAsyncImageContent
 import coil3.request.ImageRequest
 import com.foreverrafs.auth.model.UserInfo
 import org.jetbrains.compose.resources.painterResource
@@ -35,7 +41,8 @@ fun SuperDiaryAppBar(
     onProfileClick: () -> Unit = {},
     userInfo: UserInfo? = null,
 ) {
-    val model = ImageRequest.Builder(LocalPlatformContext.current)
+    val model = ImageRequest
+        .Builder(LocalPlatformContext.current)
         .data(userInfo?.avatarUrl)
         .build()
 
@@ -45,10 +52,9 @@ fun SuperDiaryAppBar(
             Text(
                 text = stringResource(Res.string.app_name),
                 textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .semantics {
-                        heading()
-                    },
+                modifier = Modifier.semantics {
+                    heading()
+                },
                 style = MaterialTheme.typography.displayLarge,
                 fontWeight = FontWeight.Bold,
             )
@@ -57,7 +63,7 @@ fun SuperDiaryAppBar(
             containerColor = MaterialTheme.colorScheme.background,
         ),
         actions = {
-            AsyncImage(
+            SubcomposeAsyncImage(
                 modifier = Modifier
                     .size(48.dp)
                     .padding(end = 4.dp)
@@ -67,7 +73,25 @@ fun SuperDiaryAppBar(
                     },
                 model = model,
                 contentDescription = null,
-                placeholder = painterResource(Res.drawable.default_avatar),
+                content = {
+                    val state by painter.state.collectAsState()
+                    when (state) {
+                        is AsyncImagePainter.State.Empty,
+                        is AsyncImagePainter.State.Error,
+                        is AsyncImagePainter.State.Loading,
+                        -> {
+                            Image(
+                                contentDescription = null,
+                                painter = painterResource(Res.drawable.default_avatar),
+                                colorFilter = ColorFilter.tint(
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                ),
+                            )
+                        }
+
+                        is AsyncImagePainter.State.Success -> SubcomposeAsyncImageContent()
+                    }
+                },
             )
         },
         navigationIcon = {
