@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    id("io.sentry.android.gradle") version "4.13.0"
+    id("io.sentry.android.gradle") version "4.14.0"
 }
 
 android {
