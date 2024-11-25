@@ -65,8 +65,8 @@ fun SuperDiaryAppBar(
         actions = {
             SubcomposeAsyncImage(
                 modifier = Modifier
-                    .size(48.dp)
                     .padding(end = 4.dp)
+                    .size(48.dp)
                     .clip(CircleShape)
                     .clickable {
                         onProfileClick()
