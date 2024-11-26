@@ -39,10 +39,6 @@ android {
 
     namespace = "com.foreverrafs.superdiary.app"
 
-    sourceSets["main"].res.srcDirs(
-        rootProject.projectDir.path + "shared-ui/src/commonMain/composeResources",
-    )
-
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("debug")

@@ -55,6 +55,7 @@ fun RegisterScreenContent(
     viewState: RegisterScreenState,
     onRegisterClick: (name: String, username: String, password: String) -> Unit,
     onRegisterSuccess: () -> Unit,
+    onLoginClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -197,7 +198,7 @@ fun RegisterScreenContent(
 
                 Spacer(modifier = Modifier.height(44.dp))
 
-                LoginText(onLoginClick = {})
+                LoginText(onLoginClick = onLoginClick)
             }
         }
     }

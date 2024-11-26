@@ -10,6 +10,10 @@
     <string name="confirm_save_diary_positive_button">Save</string>
     <string name="confirm_save_diary_negative_button">Don't save</string>
 
+    <string name="confirm_logout_dialog_title">Confirm logout</string>
+    <string name="confirm_logout_dialog_message">Are you sure you want to logout?</string>
+    <string name="confirm_logout_dialog_cancel_button">Cancel</string>
+    <string name="confirm_logout_dialog_confirm_button">Logout</string>
 
     <!--  Labels  -->
     <string name="label_diary_ai">Diary AI:</string>

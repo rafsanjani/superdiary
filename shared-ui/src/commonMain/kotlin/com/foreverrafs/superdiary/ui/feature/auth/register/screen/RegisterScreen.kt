@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
 import com.foreverrafs.superdiary.ui.feature.auth.register.RegisterScreenViewModel
 import com.foreverrafs.superdiary.ui.home.BottomNavigationScreen
 import kotlinx.serialization.Serializable
@@ -25,6 +26,13 @@ object RegisterScreen {
             onRegisterClick = screenModel::onRegisterClick,
             onRegisterSuccess = {
                 navController.navigate(BottomNavigationScreen)
+            },
+            onLoginClick = {
+                navController.navigate(LoginScreen) {
+                    popUpTo(LoginScreen) {
+                        inclusive = true
+                    }
+                }
             },
         )
     }

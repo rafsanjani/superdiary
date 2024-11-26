@@ -33,7 +33,6 @@ import coil3.disk.DiskCache
 import coil3.memory.MemoryCache
 import coil3.request.CachePolicy
 import coil3.request.crossfade
-import coil3.util.DebugLogger
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreen
@@ -128,7 +127,13 @@ private fun SuperDiaryNavHost(
     ) {
         animatedComposable<LoginScreen> {
             LoginScreen.Content(
-                navController = navController,
+                onLoginSuccess = {
+                    navController.navigate(BottomNavigationScreen) {
+                        popUpTo(BottomNavigationScreen) {
+                            inclusive = true
+                        }
+                    }
+                },
                 onRegisterClick = {
                     navController.navigate(RegisterScreen)
                 },
@@ -203,12 +208,13 @@ fun getAsyncImageLoader(context: PlatformContext) =
         .memoryCachePolicy(CachePolicy.ENABLED)
         .memoryCache {
             MemoryCache.Builder().maxSizePercent(context, 0.3).strongReferencesEnabled(true).build()
-        }.diskCachePolicy(CachePolicy.ENABLED)
+        }
+        .diskCachePolicy(CachePolicy.ENABLED)
         .networkCachePolicy(CachePolicy.ENABLED)
         .diskCache {
             newDiskCache()
-        }.crossfade(true)
-        .logger(DebugLogger())
+        }
+        .crossfade(true)
         .build()
 
 fun newDiskCache(): DiskCache =

@@ -83,12 +83,12 @@ fun LoginScreenContent(
                         viewState.error.message.orEmpty(),
                     )
                 }
+
+                enableLoginButton = true
             }
 
-            is LoginViewState.Idle -> {}
-            is LoginViewState.Processing -> {
-                enableLoginButton = false
-            }
+            is LoginViewState.Idle -> enableLoginButton = true
+            is LoginViewState.Processing -> enableLoginButton = false
 
             is LoginViewState.Success -> currentOnSignInSuccess()
         }

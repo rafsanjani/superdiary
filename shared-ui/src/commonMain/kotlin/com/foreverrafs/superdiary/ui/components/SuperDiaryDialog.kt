@@ -32,6 +32,10 @@ import superdiary.shared_ui.generated.resources.confirm_delete_diary_dialog_mess
 import superdiary.shared_ui.generated.resources.confirm_delete_diary_dialog_title
 import superdiary.shared_ui.generated.resources.confirm_delete_diary_negative_button
 import superdiary.shared_ui.generated.resources.confirm_delete_diary_positive_button
+import superdiary.shared_ui.generated.resources.confirm_logout_dialog_cancel_button
+import superdiary.shared_ui.generated.resources.confirm_logout_dialog_confirm_button
+import superdiary.shared_ui.generated.resources.confirm_logout_dialog_message
+import superdiary.shared_ui.generated.resources.confirm_logout_dialog_title
 import superdiary.shared_ui.generated.resources.confirm_save_diary_dialog_message
 import superdiary.shared_ui.generated.resources.confirm_save_diary_dialog_title
 import superdiary.shared_ui.generated.resources.confirm_save_diary_negative_button
@@ -83,12 +87,27 @@ fun ConfirmSaveDialog(
     onConfirm: () -> Unit,
 ) {
     BasicSuperDiaryDialog(
-        onDismiss = onDismiss,
-        onConfirm = onConfirm,
+        onNegativeButton = onDismiss,
+        onPositiveButton = onConfirm,
         title = stringResource(Res.string.confirm_save_diary_dialog_title),
         message = stringResource(Res.string.confirm_save_diary_dialog_message),
-        confirmButtonText = stringResource(Res.string.confirm_save_diary_positive_button),
-        dismissButtonText = stringResource(Res.string.confirm_save_diary_negative_button),
+        positiveButtonText = stringResource(Res.string.confirm_save_diary_positive_button),
+        negativeButtonText = stringResource(Res.string.confirm_save_diary_negative_button),
+    )
+}
+
+@Composable
+fun ConfirmLogoutDialog(
+    onLogout: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    BasicSuperDiaryDialog(
+        onNegativeButton = onLogout,
+        onPositiveButton = onDismiss,
+        title = stringResource(Res.string.confirm_logout_dialog_title),
+        message = stringResource(Res.string.confirm_logout_dialog_message),
+        negativeButtonText = stringResource(Res.string.confirm_logout_dialog_confirm_button),
+        positiveButtonText = stringResource(Res.string.confirm_logout_dialog_cancel_button),
     )
 }
 
@@ -96,17 +115,17 @@ fun ConfirmSaveDialog(
 private fun BasicSuperDiaryDialog(
     title: String,
     message: String,
-    dismissButtonText: String,
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
-    confirmButtonText: String,
+    negativeButtonText: String,
+    onNegativeButton: () -> Unit,
+    onPositiveButton: () -> Unit,
+    positiveButtonText: String,
     modifier: Modifier = Modifier,
     properties: DialogProperties = DialogProperties(),
 ) {
     AlertDialog(
         properties = properties,
         modifier = modifier,
-        onDismissRequest = onDismiss,
+        onDismissRequest = onNegativeButton,
         title = {
             Text(
                 text = title,
@@ -120,17 +139,17 @@ private fun BasicSuperDiaryDialog(
             )
         },
         confirmButton = {
-            TextButton(onClick = onConfirm) {
+            TextButton(onClick = onPositiveButton) {
                 Text(
-                    text = confirmButtonText,
+                    text = positiveButtonText,
                     style = MaterialTheme.typography.labelMedium,
                 )
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(onClick = onNegativeButton) {
                 Text(
-                    text = dismissButtonText,
+                    text = negativeButtonText,
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.error,
                 )

@@ -418,6 +418,7 @@ private fun RegisterPreview() {
             onRegisterClick = { name, email, password -> },
             viewState = RegisterScreenState.Idle,
             onRegisterSuccess = {},
+            onLoginClick = {},
         )
     }
 }
