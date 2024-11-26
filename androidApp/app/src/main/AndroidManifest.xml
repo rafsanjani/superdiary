@@ -36,15 +36,6 @@
             android:name="io.sentry.attach-view-hierarchy"
             android:value="true" />
 
-        <!-- enable the performance API by setting a sample-rate, adjust in production env -->
-        <meta-data
-            android:name="io.sentry.traces.sample-rate"
-            android:value="1.0" />
-        <!-- enable profiling when starting transactions, adjust in production env -->
-        <meta-data
-            android:name="io.sentry.traces.profiling.sample-rate"
-            android:value="1.0" />
-
         <!-- Set the environment    -->
         <meta-data
             android:name="io.sentry.environment"
