@@ -182,3 +182,9 @@ jobs:
 
       - name: Build Android App (Release)
         run: ./gradlew androidApp:app:assemble
+
+      - name: Upload APK artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+            path: build/outputs/apk/release/app-release.apk
