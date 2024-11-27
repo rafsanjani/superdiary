@@ -33,9 +33,9 @@ import coil3.disk.DiskCache
 import coil3.memory.MemoryCache
 import coil3.request.CachePolicy
 import coil3.request.crossfade
-import coil3.util.DebugLogger
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
+import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
@@ -98,7 +98,8 @@ fun App(modifier: Modifier = Modifier) {
                 return@SuperdiaryTheme
             }
 
-            is AppSessionState.Error -> SuperDiaryNavHost(
+            is AppSessionState.Error, AppSessionState.UnAuthenticated,
+            -> SuperDiaryNavHost(
                 modifier = modifier,
                 isSignedIn = false,
             )
@@ -126,6 +127,21 @@ private fun SuperDiaryNavHost(
     ) {
         animatedComposable<LoginScreen> {
             LoginScreen.Content(
+                onLoginSuccess = {
+                    navController.navigate(BottomNavigationScreen) {
+                        popUpTo(BottomNavigationScreen) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onRegisterClick = {
+                    navController.navigate(RegisterScreen)
+                },
+            )
+        }
+
+        animatedComposable<RegisterScreen> {
+            RegisterScreen.Content(
                 navController = navController,
             )
         }
@@ -192,15 +208,17 @@ fun getAsyncImageLoader(context: PlatformContext) =
         .memoryCachePolicy(CachePolicy.ENABLED)
         .memoryCache {
             MemoryCache.Builder().maxSizePercent(context, 0.3).strongReferencesEnabled(true).build()
-        }.diskCachePolicy(CachePolicy.ENABLED)
+        }
+        .diskCachePolicy(CachePolicy.ENABLED)
         .networkCachePolicy(CachePolicy.ENABLED)
         .diskCache {
             newDiskCache()
-        }.crossfade(true)
-        .logger(DebugLogger())
+        }
+        .crossfade(true)
         .build()
 
 fun newDiskCache(): DiskCache =
-    DiskCache.Builder().directory(FileSystem.SYSTEM_TEMPORARY_DIRECTORY / "image_cache")
+    DiskCache.Builder()
+        .directory(FileSystem.SYSTEM_TEMPORARY_DIRECTORY / "image_cache")
         .maxSizeBytes(1024L * 1024 * 1024) // 512MB
         .build()

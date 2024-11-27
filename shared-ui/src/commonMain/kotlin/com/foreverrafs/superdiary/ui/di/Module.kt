@@ -10,6 +10,7 @@ import com.foreverrafs.superdiary.data.di.platformModule
 import com.foreverrafs.superdiary.data.di.useCaseModule
 import com.foreverrafs.superdiary.ui.AppViewModel
 import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreenViewModel
+import com.foreverrafs.superdiary.ui.feature.auth.register.RegisterScreenViewModel
 import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
@@ -27,6 +28,7 @@ internal fun screenModules(): Module = module {
     factoryOf(::FavoriteViewModel)
     factoryOf(::DashboardViewModel)
     factoryOf(::DiaryChatViewModel)
+    factoryOf(::RegisterScreenViewModel)
     factoryOf(::DetailsViewModel)
     factoryOf(::LoginScreenViewModel)
     factoryOf(::AppViewModel)

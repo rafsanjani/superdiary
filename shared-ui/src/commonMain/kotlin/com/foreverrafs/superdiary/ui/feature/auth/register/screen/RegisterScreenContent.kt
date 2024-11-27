@@ -1,21 +1,19 @@
-package com.foreverrafs.superdiary.ui.feature.auth.login.screen
+package com.foreverrafs.superdiary.ui.feature.auth.register.screen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -44,53 +42,46 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.foreverrafs.auth.NoCredentialsException
-import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import superdiary.shared_ui.generated.resources.Res
-import superdiary.shared_ui.generated.resources.google_icon
-import superdiary.shared_ui.generated.resources.label_google_button
-import superdiary.shared_ui.generated.resources.label_login
-import superdiary.shared_ui.generated.resources.label_login_title
 import superdiary.shared_ui.generated.resources.label_password
 import superdiary.shared_ui.generated.resources.label_register
-import superdiary.shared_ui.generated.resources.label_register_message
-import superdiary.shared_ui.generated.resources.label_username
+import superdiary.shared_ui.generated.resources.label_register_title
 import superdiary.shared_ui.generated.resources.logo
 
 @Composable
-fun LoginScreenContent(
-    viewState: LoginViewState,
-    onSignInSuccess: () -> Unit,
-    onLoginClick: (username: String, password: String) -> Unit,
-    onLoginWithGoogle: () -> Unit,
-    onRegisterClick: () -> Unit,
+fun RegisterScreenContent(
+    viewState: RegisterScreenState,
+    onRegisterClick: (name: String, username: String, password: String) -> Unit,
+    onRegisterSuccess: () -> Unit,
+    onLoginClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val currentOnSignInSuccess by rememberUpdatedState(onSignInSuccess)
     val snackbarHostState = remember { SnackbarHostState() }
-    var enableLoginButton by remember {
+    val currentOnRegisterSuccess by rememberUpdatedState(onRegisterSuccess)
+
+    var enableRegisterButton by remember {
         mutableStateOf(true)
     }
 
     LaunchedEffect(viewState) {
         when (viewState) {
-            is LoginViewState.Error -> {
-                if (viewState.error is NoCredentialsException) {
-                    snackbarHostState.showSnackbar(
-                        viewState.error.message.orEmpty(),
-                    )
-                }
-
-                enableLoginButton = true
+            is RegisterScreenState.Idle -> {
+                enableRegisterButton = true
             }
 
-            is LoginViewState.Idle -> enableLoginButton = true
-            is LoginViewState.Processing -> enableLoginButton = false
+            is RegisterScreenState.Processing -> {
+                enableRegisterButton = false
+            }
 
-            is LoginViewState.Success -> currentOnSignInSuccess()
+            is RegisterScreenState.Success -> {
+                currentOnRegisterSuccess()
+            }
+
+            is RegisterScreenState.Error -> {
+                enableRegisterButton = true
+            }
         }
     }
 
@@ -99,19 +90,22 @@ fun LoginScreenContent(
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
         Surface(
-            modifier = Modifier.padding(padding),
+            modifier = Modifier.padding(padding).imePadding(),
             color = MaterialTheme.colorScheme.background,
         ) {
             Column(
                 modifier = Modifier
+                    .verticalScroll(rememberScrollState())
                     .fillMaxSize()
                     .padding(horizontal = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                var username by remember { mutableStateOf("") }
+                var name by remember { mutableStateOf("") }
+                var email by remember { mutableStateOf("") }
                 var password by remember { mutableStateOf("") }
+                var verifyPassword by remember { mutableStateOf("") }
 
-                Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Image(
                     modifier = Modifier.size(100.dp),
@@ -122,22 +116,38 @@ fun LoginScreenContent(
                 Spacer(modifier = Modifier.height(28.dp))
 
                 Text(
-                    text = stringResource(Res.string.label_login_title),
+                    text = stringResource(Res.string.label_register_title),
                     style = MaterialTheme.typography.titleLarge,
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
+                // Name
                 InputField(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .testTag("input_username"),
-                    label = stringResource(Res.string.label_username),
-                    value = username,
+                        .testTag("input_name"),
+                    label = "Full name",
+                    value = name,
                     onValueChange = {
-                        username = it
+                        name = it
                     },
-                    placeholder = "john.doe@gmail.com",
+                    placeholder = "John Doe",
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Email
+                InputField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("input_name"),
+                    label = "Email",
+                    value = email,
+                    onValueChange = {
+                        email = it
+                    },
+                    placeholder = "john@doe.com",
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -159,40 +169,43 @@ fun LoginScreenContent(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                LoginButton(
+                InputField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("input_password_reenter"),
+                    label = "Re-enter password",
+                    value = verifyPassword,
+                    onValueChange = {
+                        verifyPassword = it
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password,
+                    ),
+                    visualTransformation = PasswordVisualTransformation(),
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                RegisterButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("button_login"),
                     onClick = {
-                        onLoginClick(username, password)
+                        onRegisterClick(name, email, password)
                     },
-                    enabled = enableLoginButton,
+                    enabled = enableRegisterButton,
                 )
 
                 Spacer(modifier = Modifier.height(44.dp))
 
-                LoginDivider(modifier = Modifier.fillMaxWidth())
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                GoogleButton(
-                    onClick = onLoginWithGoogle,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                RegisterText(
-                    onRegisterClick = onRegisterClick,
-                )
+                LoginText(onLoginClick = onLoginClick)
             }
         }
     }
 }
 
 @Composable
-private fun LoginButton(
+private fun RegisterButton(
     onClick: () -> Unit,
     enabled: Boolean,
     modifier: Modifier = Modifier,
@@ -205,7 +218,7 @@ private fun LoginButton(
         enabled = enabled,
     ) {
         Text(
-            text = stringResource(Res.string.label_login),
+            text = stringResource(Res.string.label_register),
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.labelMedium,
         )
@@ -213,13 +226,13 @@ private fun LoginButton(
 }
 
 @Composable
-private fun RegisterText(
-    onRegisterClick: () -> Unit,
+private fun LoginText(
+    onLoginClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val registerText = buildAnnotatedString {
         withStyle(MaterialTheme.typography.bodyMedium.toSpanStyle()) {
-            append(stringResource(Res.string.label_register_message))
+            append("Already have an account? ")
         }
         withStyle(
             MaterialTheme.typography.bodyMedium.toSpanStyle()
@@ -230,13 +243,13 @@ private fun RegisterText(
         ) {
             withLink(
                 LinkAnnotation.Clickable(
-                    tag = "register",
+                    tag = "login",
                     linkInteractionListener = {
-                        onRegisterClick()
+                        onLoginClick()
                     },
                 ),
             ) {
-                append(stringResource(Res.string.label_register))
+                append("Login")
             }
         }
     }
@@ -245,68 +258,6 @@ private fun RegisterText(
         modifier = modifier,
         text = registerText,
     )
-}
-
-@Composable
-private fun GoogleButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    OutlinedButton(
-        modifier = modifier
-            .height(52.dp),
-        onClick = onClick,
-        shape = RoundedCornerShape(20.dp),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalArrangement = Arrangement.spacedBy(
-                30.dp,
-                Alignment.CenterHorizontally,
-            ),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Image(
-                painter = painterResource(Res.drawable.google_icon),
-                contentDescription = null,
-                modifier = Modifier.size(32.dp),
-            )
-            Text(
-                text = stringResource(Res.string.label_google_button),
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.labelMedium,
-            )
-        }
-    }
-}
-
-@Composable
-private fun LoginDivider(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        // Left Divider
-        HorizontalDivider(
-            modifier = Modifier
-                .weight(1f),
-        )
-
-        // Text
-        Text(
-            text = "OR",
-            style = MaterialTheme.typography.labelMedium,
-        )
-
-        // Right Divider
-        HorizontalDivider(
-            modifier = Modifier
-                .weight(1f),
-        )
-    }
 }
 
 @Composable
@@ -346,20 +297,6 @@ private fun InputField(
                 }
             },
             visualTransformation = visualTransformation,
-        )
-    }
-}
-
-@Composable
-@Preview
-private fun LoginPreview() {
-    SuperdiaryTheme {
-        LoginScreenContent(
-            onLoginWithGoogle = {},
-            onLoginClick = { _, _ -> },
-            onRegisterClick = {},
-            viewState = LoginViewState.Idle,
-            onSignInSuccess = {},
         )
     }
 }

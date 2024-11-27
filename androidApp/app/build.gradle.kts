@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    id("io.sentry.android.gradle") version "4.13.0"
+    id("io.sentry.android.gradle") version "4.14.0"
 }
 
 android {
@@ -26,6 +26,7 @@ android {
         }
 
         manifestPlaceholders["sentryBaseUrl"] = sentryBaseUrl
+        manifestPlaceholders["applicationName"] = "superdiary"
     }
 
     compileOptions {
@@ -39,10 +40,6 @@ android {
 
     namespace = "com.foreverrafs.superdiary.app"
 
-    sourceSets["main"].res.srcDirs(
-        rootProject.projectDir.path + "shared-ui/src/commonMain/composeResources",
-    )
-
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("debug")
@@ -50,10 +47,13 @@ android {
             proguardFile("proguard-rules.pro")
 
             manifestPlaceholders["sentryEnvironment"] = "production"
+            manifestPlaceholders["applicationName"] = "superdiary"
         }
 
         debug {
+            applicationIdSuffix = ".debug"
             manifestPlaceholders["sentryEnvironment"] = "debug"
+            manifestPlaceholders["applicationName"] = "superdiary debug"
         }
 
         create("benchmark") {
