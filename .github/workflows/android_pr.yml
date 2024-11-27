@@ -162,8 +162,11 @@ jobs:
     runs-on: macos-14
     needs: jvmTest
     env:
-      SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_DEBUG}}
+      SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
       SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
+      GOOGLE_SERVER_CLIENT_ID: ${{secrets.GOOGLE_SERVER_CLIENT_ID}}
+      MAPS_API_KEY_ANDROID: ${{secrets.MAPS_API_KEY_ANDROID}}
+      OPENAI_KEY: ${{secrets.OPENAI_KEY}}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -173,6 +176,13 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
+      - name: Setup secrets.properties
+        run: |
+              touch secrets.properties
+              echo "OPENAI_KEY=$OPENAI_KEY" >> secrets.properties
+              echo "GOOGLE_SERVER_CLIENT_ID=$GOOGLE_SERVER_CLIENT_ID" >> secrets.properties
+              echo "MAPS_API_KEY=$MAPS_API_KEY_ANDROID" >> secrets.properties
+              cat secrets.properties
 
       - name: Gradle Wrapper Validation
         uses: gradle/actions/wrapper-validation@v4
@@ -181,10 +191,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build Android App (Release)
-        run: ./gradlew androidApp:app:assemble
+        run: ./gradlew androidApp:app:assembleRelease
 
       - name: Upload APK artifact
         if: success()
         uses: actions/upload-artifact@v4
         with:
-            path: /androidApp/app/build/outputs/apk/release/app-release.apk
+            path: androidApp/app/build/outputs/apk/release/app-release.apk
