@@ -26,6 +26,7 @@ android {
         }
 
         manifestPlaceholders["sentryBaseUrl"] = sentryBaseUrl
+        manifestPlaceholders["applicationName"] = "superdiary"
     }
 
     compileOptions {
@@ -46,10 +47,13 @@ android {
             proguardFile("proguard-rules.pro")
 
             manifestPlaceholders["sentryEnvironment"] = "production"
+            manifestPlaceholders["applicationName"] = "superdiary"
         }
 
         debug {
+            applicationIdSuffix = ".debug"
             manifestPlaceholders["sentryEnvironment"] = "debug"
+            manifestPlaceholders["applicationName"] = "superdiary debug"
         }
 
         create("benchmark") {
