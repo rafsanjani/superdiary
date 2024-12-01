@@ -22,6 +22,8 @@ import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreenContent
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState
+import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenContent
+import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenState
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardScreenContent
@@ -404,6 +406,19 @@ private fun LoginPreview() {
             onRegisterClick = {},
             viewState = LoginViewState.Idle,
             onSignInSuccess = {},
+        )
+    }
+}
+
+@Composable
+@PreviewSuperDiary
+private fun RegisterPreview() {
+    SuperdiaryTheme {
+        RegisterScreenContent(
+            onRegisterClick = { name, email, password -> },
+            viewState = RegisterScreenState.Idle,
+            onRegisterSuccess = {},
+            onLoginClick = {},
         )
     }
 }

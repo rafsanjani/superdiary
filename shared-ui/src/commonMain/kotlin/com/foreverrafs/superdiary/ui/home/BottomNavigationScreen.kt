@@ -14,7 +14,9 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
@@ -25,8 +27,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.foreverrafs.superdiary.ui.AppSessionState
 import com.foreverrafs.superdiary.ui.AppViewModel
+import com.foreverrafs.superdiary.ui.components.ConfirmLogoutDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
+import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
 import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardTab
 import com.foreverrafs.superdiary.ui.feature.diarychat.screen.DiaryChatTab
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteTab
@@ -55,11 +59,33 @@ object BottomNavigationScreen {
         // This snackbar host state is used to show snackbars on the main screen
         val snackbarHostState = remember { SnackbarHostState() }
 
+        var showConfirmLogoutDialog by remember { mutableStateOf(false) }
+
+        if (showConfirmLogoutDialog) {
+            ConfirmLogoutDialog(
+                onDismiss = {
+                    showConfirmLogoutDialog = false
+                },
+                onLogout = {
+                    appViewModel.logOut()
+                    rootNavController.navigate(LoginScreen) {
+                        popUpTo(LoginScreen) {
+                            inclusive = true
+                        }
+                    }
+                    showConfirmLogoutDialog = false
+                },
+            )
+        }
+
         Scaffold(
             modifier = modifier,
             topBar = {
                 SuperDiaryAppBar(
                     userInfo = (viewState as? AppSessionState.Success)?.userInfo,
+                    onProfileClick = {
+                        showConfirmLogoutDialog = true
+                    },
                 )
             },
             bottomBar = {
@@ -67,6 +93,7 @@ object BottomNavigationScreen {
             },
             snackbarHost = { SnackbarHost(snackbarHostState) },
         ) { contentPadding ->
+
             Surface(
                 modifier = Modifier
                     .padding(contentPadding)

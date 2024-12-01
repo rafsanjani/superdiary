@@ -7,6 +7,7 @@ import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.Google
+import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.providers.builtin.IDToken
 import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.auth.user.UserSession
@@ -87,8 +88,45 @@ class DefaultSupabaseAuth(
         private val Tag = DefaultSupabaseAuth::class.simpleName.orEmpty()
     }
 
-    override suspend fun signIn(username: String, password: String): AuthApi.SignInStatus {
-        TODO("Not yet implemented")
+    override suspend fun signIn(email: String, password: String): AuthApi.SignInStatus = try {
+        client.auth.signInWith(Email) {
+            this.email = email
+            this.password = password
+        }
+
+        val session = client.auth.currentSessionOrNull()
+        if (session != null) {
+            AuthApi.SignInStatus.LoggedIn(session.toSession())
+        } else {
+            AuthApi.SignInStatus.Error(Exception("User was signed in but the returning session is null!"))
+        }
+    } catch (e: Exception) {
+        AuthApi.SignInStatus.Error(e)
+    }
+
+    override suspend fun register(
+        name: String,
+        email: String,
+        password: String,
+    ): AuthApi.SignInStatus = try {
+        client.auth.signUpWith(Email) {
+            this.email = email
+            this.password = password
+        }
+
+        val session = client.auth.currentSessionOrNull()
+
+        if (session != null) {
+            AuthApi.SignInStatus.LoggedIn(session.toSession())
+        } else {
+            AuthApi.SignInStatus.Error(Exception("User was registered but returned session is null!"))
+        }
+    } catch (e: Exception) {
+        AuthApi.SignInStatus.Error(e)
+    }
+
+    override suspend fun signOut() {
+        client.auth.signOut()
     }
 }
 
