@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.data.di
+package com.foreverrafs.superdiary.di
 
 import com.foreverrafs.superdiary.DarwinDatabaseDriver
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
