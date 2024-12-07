@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.usecase.GetFavoriteDiariesUseCase
-import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.usecase.GetFavoriteDiariesUseCase
+import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreenState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

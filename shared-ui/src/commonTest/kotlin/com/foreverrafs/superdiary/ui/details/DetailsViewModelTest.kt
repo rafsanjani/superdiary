@@ -6,10 +6,10 @@ import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.data.datasource.DataSource
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.usecase.DeleteDiaryUseCase
-import com.foreverrafs.superdiary.data.usecase.GetDiaryByIdUseCase
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.repository.DataSource
+import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
+import com.foreverrafs.superdiary.domain.usecase.GetDiaryByIdUseCase
 import com.foreverrafs.superdiary.ui.feature.details.DeleteDiaryState
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState

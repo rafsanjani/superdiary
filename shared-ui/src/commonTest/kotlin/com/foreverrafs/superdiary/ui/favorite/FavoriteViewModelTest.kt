@@ -6,10 +6,10 @@ import assertk.assertions.isEmpty
 import assertk.assertions.isInstanceOf
 import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.data.datasource.DataSource
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.usecase.GetFavoriteDiariesUseCase
-import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.repository.DataSource
+import com.foreverrafs.superdiary.domain.usecase.GetFavoriteDiariesUseCase
+import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.favorites.FavoriteViewModel
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreenState
 import dev.mokkery.answering.returns

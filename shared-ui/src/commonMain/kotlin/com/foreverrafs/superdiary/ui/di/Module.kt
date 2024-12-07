@@ -6,8 +6,8 @@ import com.foreverrafs.superdiary.core.location.di.locationModule
 import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.core.utils.di.utilsModule
-import com.foreverrafs.superdiary.data.di.platformModule
-import com.foreverrafs.superdiary.data.di.useCaseModule
+import com.foreverrafs.superdiary.di.platformModule
+import com.foreverrafs.superdiary.di.useCaseModule
 import com.foreverrafs.superdiary.ui.AppViewModel
 import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreenViewModel
 import com.foreverrafs.superdiary.ui.feature.auth.register.RegisterScreenViewModel

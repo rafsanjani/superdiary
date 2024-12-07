@@ -6,10 +6,10 @@ import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.data.usecase.GetChatMessagesUseCase
-import com.foreverrafs.superdiary.data.usecase.SaveChatMessageUseCase
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.domain.usecase.GetChatMessagesUseCase
+import com.foreverrafs.superdiary.domain.usecase.SaveChatMessageUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

@@ -2,12 +2,12 @@ package com.foreverrafs.superdiary.ui
 
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.superdiary.core.location.Location
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.model.Streak
-import com.foreverrafs.superdiary.data.utils.DiarySettings
-import com.foreverrafs.superdiary.data.utils.toDate
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardScreenContent
+import com.foreverrafs.superdiary.utils.DiarySettings
+import com.foreverrafs.superdiary.utils.toDate
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import kotlinx.datetime.Clock

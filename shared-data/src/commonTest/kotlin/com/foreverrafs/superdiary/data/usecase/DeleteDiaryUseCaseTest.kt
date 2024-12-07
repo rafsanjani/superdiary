@@ -6,10 +6,12 @@ import assertk.assertions.doesNotContain
 import assertk.assertions.isEqualTo
 import com.foreverrafs.superdiary.data.Database
 import com.foreverrafs.superdiary.data.TestAppDispatchers
-import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.data.datasource.TestDatabaseDriver
 import com.foreverrafs.superdiary.data.insertRandomDiaries
+import com.foreverrafs.superdiary.domain.repository.DataSource
+import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
+import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

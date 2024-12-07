@@ -1,6 +1,6 @@
 package com.foreverrafs.superdiary.ui.feature.diarylist
 
-import com.foreverrafs.superdiary.data.model.Diary
+import com.foreverrafs.superdiary.domain.model.Diary
 
 /**
  * Encapsulates all actions that can be performed on a list of diary items

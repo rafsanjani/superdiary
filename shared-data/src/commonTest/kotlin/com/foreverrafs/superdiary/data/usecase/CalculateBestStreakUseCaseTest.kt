@@ -3,7 +3,8 @@ package com.foreverrafs.superdiary.data.usecase
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.foreverrafs.superdiary.data.TestAppDispatchers
-import com.foreverrafs.superdiary.data.model.Diary
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.usecase.CalculateBestStreakUseCase
 import kotlin.random.Random
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest

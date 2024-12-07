@@ -4,7 +4,9 @@ import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import com.foreverrafs.superdiary.core.location.Location
-import com.foreverrafs.superdiary.data.model.Diary
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.validator.DiaryValidator
+import com.foreverrafs.superdiary.domain.validator.DiaryValidatorImpl
 import kotlin.test.Test
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimePeriod

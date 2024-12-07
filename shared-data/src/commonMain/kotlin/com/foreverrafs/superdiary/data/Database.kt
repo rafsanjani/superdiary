@@ -8,9 +8,9 @@ import app.cash.sqldelight.coroutines.mapToOneOrNull
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.model.WeeklySummary
 import com.foreverrafs.superdiary.database.SuperDiaryDatabase
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
