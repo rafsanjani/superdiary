@@ -1,8 +1,8 @@
 package com.foreverrafs.superdiary.data
 
-import com.foreverrafs.superdiary.data.datasource.DataSource
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.usecase.AddDiaryUseCase
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.repository.DataSource
+import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone

@@ -42,12 +42,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.model.Streak
-import com.foreverrafs.superdiary.data.utils.DiarySettings
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryItem
 import com.foreverrafs.superdiary.ui.format
+import com.foreverrafs.superdiary.utils.DiarySettings
 import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.label_add_entry

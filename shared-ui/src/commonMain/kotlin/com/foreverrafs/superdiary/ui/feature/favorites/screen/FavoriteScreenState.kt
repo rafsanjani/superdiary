@@ -1,6 +1,6 @@
 package com.foreverrafs.superdiary.ui.feature.favorites.screen
 
-import com.foreverrafs.superdiary.data.model.Diary
+import com.foreverrafs.superdiary.domain.model.Diary
 
 /**
  * We only have two states here because this operation happens on disk.

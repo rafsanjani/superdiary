@@ -4,6 +4,9 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
 import com.foreverrafs.superdiary.data.TestAppDispatchers
+import com.foreverrafs.superdiary.utils.DiaryPreference
+import com.foreverrafs.superdiary.utils.DiaryPreferenceImpl
+import com.foreverrafs.superdiary.utils.DiarySettings
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

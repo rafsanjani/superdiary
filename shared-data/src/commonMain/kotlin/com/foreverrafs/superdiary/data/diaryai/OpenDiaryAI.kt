@@ -6,7 +6,7 @@ import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.data.model.Diary
+import com.foreverrafs.superdiary.domain.model.Diary
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -68,7 +68,7 @@ class OpenDiaryAI(
         }
     }
 
-    override fun getWeeklySummary(diaries: List<Diary>): Flow<String> {
+    override fun generateSummary(diaries: List<Diary>): Flow<String> {
         val weeklyDiaryGeneratorPrompt = """
             You are Journal AI. I will give you a combined list of entries written over a period of
             one week and you write a brief, concise and informative summary for me. It should be at

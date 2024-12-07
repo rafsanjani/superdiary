@@ -5,18 +5,18 @@ import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.model.Streak
-import com.foreverrafs.superdiary.data.model.WeeklySummary
-import com.foreverrafs.superdiary.data.usecase.AddWeeklySummaryUseCase
-import com.foreverrafs.superdiary.data.usecase.CalculateBestStreakUseCase
-import com.foreverrafs.superdiary.data.usecase.CalculateStreakUseCase
-import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.data.usecase.GetWeeklySummaryUseCase
-import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
-import com.foreverrafs.superdiary.data.utils.DiaryPreference
-import com.foreverrafs.superdiary.data.utils.DiarySettings
-import com.foreverrafs.superdiary.data.utils.toDate
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.model.Streak
+import com.foreverrafs.superdiary.domain.model.WeeklySummary
+import com.foreverrafs.superdiary.domain.usecase.AddWeeklySummaryUseCase
+import com.foreverrafs.superdiary.domain.usecase.CalculateBestStreakUseCase
+import com.foreverrafs.superdiary.domain.usecase.CalculateStreakUseCase
+import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.domain.usecase.GetWeeklySummaryUseCase
+import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
+import com.foreverrafs.superdiary.utils.DiaryPreference
+import com.foreverrafs.superdiary.utils.DiarySettings
+import com.foreverrafs.superdiary.utils.toDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -155,7 +155,7 @@ class DashboardViewModel(
             }
         }
 
-        diaryAI.getWeeklySummary(diaries)
+        diaryAI.generateSummary(diaries)
             .catch { exception ->
                 logger.e(Tag, exception) {
                     "generateWeeklySummary: An error occurred generating weekly summary"

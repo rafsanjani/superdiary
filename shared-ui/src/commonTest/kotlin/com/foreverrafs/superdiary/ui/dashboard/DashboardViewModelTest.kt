@@ -8,19 +8,19 @@ import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.data.datasource.DataSource
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.model.WeeklySummary
-import com.foreverrafs.superdiary.data.usecase.AddWeeklySummaryUseCase
-import com.foreverrafs.superdiary.data.usecase.CalculateBestStreakUseCase
-import com.foreverrafs.superdiary.data.usecase.CalculateStreakUseCase
-import com.foreverrafs.superdiary.data.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.data.usecase.GetWeeklySummaryUseCase
-import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
-import com.foreverrafs.superdiary.data.utils.DiaryPreference
-import com.foreverrafs.superdiary.data.utils.DiarySettings
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.model.WeeklySummary
+import com.foreverrafs.superdiary.domain.repository.DataSource
+import com.foreverrafs.superdiary.domain.usecase.AddWeeklySummaryUseCase
+import com.foreverrafs.superdiary.domain.usecase.CalculateBestStreakUseCase
+import com.foreverrafs.superdiary.domain.usecase.CalculateStreakUseCase
+import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.domain.usecase.GetWeeklySummaryUseCase
+import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
+import com.foreverrafs.superdiary.utils.DiaryPreference
+import com.foreverrafs.superdiary.utils.DiarySettings
 import dev.mokkery.answering.returns
 import dev.mokkery.every
 import dev.mokkery.everySuspend
@@ -131,7 +131,7 @@ class DashboardViewModelTest {
                     ),
             ),
         )
-        every { diaryAI.getWeeklySummary(any()) }.returns(flowOf("New Diary Summary"))
+        every { diaryAI.generateSummary(any()) }.returns(flowOf("New Diary Summary"))
 
         val viewModel = createDashboardViewModel()
 
@@ -157,7 +157,7 @@ class DashboardViewModelTest {
                     .minus(value = 20, unit = DateTimeUnit.DAY, TimeZone.UTC),
             ),
         )
-        every { diaryAI.getWeeklySummary(any()) }.returns(flowOf("New Diary Summary"))
+        every { diaryAI.generateSummary(any()) }.returns(flowOf("New Diary Summary"))
 
         val viewModel = createDashboardViewModel()
 

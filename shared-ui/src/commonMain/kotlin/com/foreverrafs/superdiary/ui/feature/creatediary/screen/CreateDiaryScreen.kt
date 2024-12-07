@@ -12,9 +12,9 @@ import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.BindEffect
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.utils.DiarySettings
+import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
+import com.foreverrafs.superdiary.utils.DiarySettings
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
