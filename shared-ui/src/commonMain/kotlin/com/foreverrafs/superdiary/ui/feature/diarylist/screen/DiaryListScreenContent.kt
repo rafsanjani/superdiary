@@ -71,9 +71,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.utils.groupByDate
-import com.foreverrafs.superdiary.data.utils.toDate
+import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.ui.BackHandler
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
@@ -84,6 +82,8 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryHeader
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiarySearchBar
 import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiarySelectionModifierBar
 import com.foreverrafs.superdiary.ui.format
+import com.foreverrafs.superdiary.utils.groupByDate
+import com.foreverrafs.superdiary.utils.toDate
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock

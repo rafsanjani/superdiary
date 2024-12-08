@@ -2,8 +2,9 @@ package com.foreverrafs.superdiary.data.datasource
 
 import com.foreverrafs.superdiary.data.Database
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.model.WeeklySummary
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.model.WeeklySummary
+import com.foreverrafs.superdiary.domain.repository.DataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime

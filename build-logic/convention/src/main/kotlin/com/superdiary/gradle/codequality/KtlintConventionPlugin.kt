@@ -22,8 +22,6 @@ class KtlintConventionPlugin : Plugin<Project> {
                     filter {
                         exclude { it.file.path.contains("${layout.buildDirectory.get()}") }
                     }
-
-                    version.set("1.3.1")
                 }
 
                 dependencies {

@@ -14,10 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.Location
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.model.Streak
-import com.foreverrafs.superdiary.data.utils.DiarySettings
-import com.foreverrafs.superdiary.data.utils.toDate
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreenContent
@@ -38,6 +36,8 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
+import com.foreverrafs.superdiary.utils.DiarySettings
+import com.foreverrafs.superdiary.utils.toDate
 import dev.icerock.moko.permissions.PermissionState
 import java.time.LocalDate
 import kotlin.random.Random

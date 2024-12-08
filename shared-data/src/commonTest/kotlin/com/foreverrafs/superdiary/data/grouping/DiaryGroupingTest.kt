@@ -2,8 +2,8 @@ package com.foreverrafs.superdiary.data.grouping
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.utils.groupByDate
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.utils.groupByDate
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlinx.datetime.Clock
