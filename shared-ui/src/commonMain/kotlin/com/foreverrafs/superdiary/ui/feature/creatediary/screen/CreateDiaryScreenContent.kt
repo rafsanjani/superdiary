@@ -98,7 +98,7 @@ fun CreateDiaryScreenContent(
                         )
                     }
                 },
-                userInfo = userInfo,
+                avatarUrl = userInfo?.avatarUrl,
             )
         },
         modifier = modifier,

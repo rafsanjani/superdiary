@@ -53,7 +53,7 @@ class Database(databaseDriver: DatabaseDriver) {
                 entry = entry,
                 date = date,
                 isFavorite = favorite.asBoolean(),
-                location = location ?: Location.Empty,
+                location = location.toString(),
             )
         }
 
@@ -71,7 +71,7 @@ class Database(databaseDriver: DatabaseDriver) {
             entry = diary.entry,
             date = diary.date,
             favorite = diary.isFavorite.asLong(),
-            location = diary.location,
+            location = Location.fromString(diary.location),
         )
 
     fun deleteDiary(id: Long) = queries.delete(id)

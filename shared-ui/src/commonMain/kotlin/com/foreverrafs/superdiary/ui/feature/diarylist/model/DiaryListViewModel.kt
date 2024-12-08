@@ -50,13 +50,24 @@ class DiaryListViewModel(
                 return@flatMapLatest searchByEntry(entry = filters.entry)
             }
 
-            if (filters.date != null) return@flatMapLatest searchByDate(date = filters.date)
+            if (filters.date != null) {
+                return@flatMapLatest searchByDate(date = filters.date)
+            }
 
             // No filter applied, return all the diaries
             getAllDiariesUseCase()
         }
-        .map {
-            DiaryListViewState.Content(diaries = it, filtered = true) as DiaryListViewState
+        .map { result ->
+            @Suppress("UNCHECKED_CAST")
+            when (result) {
+                is Result.Failure -> DiaryListViewState.Error(result.error)
+                is Result.Success<*> -> DiaryListViewState.Content(
+                    result.data as List<Diary>,
+                    true,
+                )
+
+                else -> DiaryListViewState.Error(Exception("Unknown result"))
+            }
         }
         .catch {
             emit(DiaryListViewState.Error(it))

@@ -173,6 +173,7 @@ private fun SuperDiaryNavHost(
                 DetailScreen.Content(
                     diaryId = diaryId,
                     navController = navController,
+                    avatarUrl = userInfo?.avatarUrl.orEmpty(),
                 )
             }
         }

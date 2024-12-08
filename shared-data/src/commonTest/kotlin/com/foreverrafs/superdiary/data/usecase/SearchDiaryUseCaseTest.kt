@@ -132,9 +132,9 @@ class SearchDiaryUseCaseTest {
         insertEntries()
 
         val relaxedAddDiaryUseCase = AddDiaryUseCase(
-            dataSource = dataSource,
             dispatchers = TestAppDispatchers,
             validator = {},
+            dataSource = dataSource,
         )
         val date = LocalDate.parse("2023-03-03")
 
