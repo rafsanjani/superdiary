@@ -4,7 +4,7 @@ import app.cash.sqldelight.ColumnAdapter
 import app.cash.sqldelight.EnumColumnAdapter
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import app.cash.sqldelight.coroutines.mapToOneNotNull
+import app.cash.sqldelight.coroutines.mapToOneOrNull
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
@@ -89,8 +89,8 @@ class Database(databaseDriver: DatabaseDriver) {
         }
     }
 
-    fun findById(id: Long): Flow<DiaryDto> =
-        queries.findById(id, diaryMapper).asFlow().mapToOneNotNull(Dispatchers.Main)
+    fun findById(id: Long): Flow<DiaryDto?> =
+        queries.findById(id, diaryMapper).asFlow().mapToOneOrNull(Dispatchers.Main)
 
     fun getAllDiaries(): Flow<List<DiaryDto>> = queries.selectAll(
         mapper = diaryMapper,

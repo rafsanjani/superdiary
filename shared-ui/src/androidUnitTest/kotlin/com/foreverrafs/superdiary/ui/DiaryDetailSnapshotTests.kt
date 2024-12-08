@@ -48,6 +48,7 @@ class DiaryDetailSnapshotTests(
                             isFavorite = false,
                         ),
                     ),
+                    avatarUrl = "avatar-url",
                 )
             }
         }

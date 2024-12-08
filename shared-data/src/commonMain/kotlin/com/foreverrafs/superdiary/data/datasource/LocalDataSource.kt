@@ -42,7 +42,7 @@ class LocalDataSource(private val database: Database) : DataSource {
             diaryDtoList.map { it.toDiary() }
         }
 
-    override fun find(id: Long): Flow<Diary> = database.findById(id).map { it.toDiary() }
+    override fun find(id: Long): Flow<Diary?> = database.findById(id).map { it?.toDiary() }
 
     /**
      * The dates are currently stored on the database as very high precision

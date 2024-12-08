@@ -102,7 +102,7 @@ class DashboardViewModelTest {
         val viewModel = createDashboardViewModel()
 
         viewModel.state.test {
-            skipItems(3)
+            skipItems(2)
             val state = awaitItem()
             cancelAndIgnoreRemainingEvents()
 
@@ -123,12 +123,11 @@ class DashboardViewModelTest {
         every { dataSource.getWeeklySummary() }.returns(
             WeeklySummary(
                 summary = "Old diary summary",
-                date = Clock.System.now()
-                    .minus(
-                        value = 5,
-                        unit = DateTimeUnit.DAY,
-                        timeZone = TimeZone.UTC,
-                    ),
+                date = Clock.System.now().minus(
+                    value = 5,
+                    unit = DateTimeUnit.DAY,
+                    timeZone = TimeZone.UTC,
+                ),
             ),
         )
         every { diaryAI.generateSummary(any()) }.returns(flowOf("New Diary Summary"))
@@ -137,7 +136,7 @@ class DashboardViewModelTest {
 
         viewModel.state.test {
             // Skip the loading state
-            skipItems(3)
+            skipItems(2)
             val state = awaitItem() as? DashboardViewModel.DashboardScreenState.Content
 
             cancelAndIgnoreRemainingEvents()
@@ -153,8 +152,7 @@ class DashboardViewModelTest {
         every { dataSource.getWeeklySummary() }.returns(
             WeeklySummary(
                 summary = "Old diary summary",
-                date = Clock.System.now()
-                    .minus(value = 20, unit = DateTimeUnit.DAY, TimeZone.UTC),
+                date = Clock.System.now().minus(value = 20, unit = DateTimeUnit.DAY, TimeZone.UTC),
             ),
         )
         every { diaryAI.generateSummary(any()) }.returns(flowOf("New Diary Summary"))
@@ -163,7 +161,7 @@ class DashboardViewModelTest {
 
         viewModel.state.test {
             // Skip the loading state
-            skipItems(3)
+            skipItems(2)
             val state = awaitItem() as? DashboardViewModel.DashboardScreenState.Content
 
             cancelAndIgnoreRemainingEvents()
@@ -196,11 +194,11 @@ class DashboardViewModelTest {
 
     @Test
     fun `Should transition to content state on dashboard after loading`() = runTest {
+        every { dataSource.fetchAll() }.returns(flowOf(emptyList()))
         val viewModel = createDashboardViewModel()
 
         viewModel.state.test {
             skipItems(1)
-
             assertThat(awaitItem()).isInstanceOf(DashboardViewModel.DashboardScreenState.Content::class)
         }
     }

@@ -5,6 +5,7 @@ import assertk.assertThat
 import assertk.assertions.doesNotContain
 import assertk.assertions.isEqualTo
 import com.foreverrafs.superdiary.data.Database
+import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.data.datasource.TestDatabaseDriver
@@ -46,14 +47,14 @@ class DeleteDiaryUseCaseTest {
     fun `Delete diary and confirm deletion`() = runTest {
         insertRandomDiaries(dataSource)
         getAllDiariesUseCase().test {
-            var diaries = awaitItem()
+            var diaries = (awaitItem() as Result.Success).data
             val firstDiary = diaries.first()
 
             // delete the first entry
             deleteDiaryUseCase(listOf(firstDiary))
 
             // get latest diaries again
-            diaries = awaitItem()
+            diaries = (awaitItem() as Result.Success).data
 
             cancelAndConsumeRemainingEvents()
 
@@ -68,13 +69,13 @@ class DeleteDiaryUseCaseTest {
 
         getAllDiariesUseCase().test {
             // Given initial diary items
-            val originalList = awaitItem()
+            val originalList = (awaitItem() as Result.Success).data
 
             // Delete the first two entries
             deleteMultipleDiariesUseCase(originalList.take(2))
 
             // fetch the remaining diaries
-            val currentList = awaitItem()
+            val currentList = (awaitItem() as Result.Success).data
 
             cancelAndIgnoreRemainingEvents()
             assertThat(currentList.size).isEqualTo(originalList.size - 2)
