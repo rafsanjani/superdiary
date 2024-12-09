@@ -8,6 +8,7 @@ import app.cash.sqldelight.coroutines.mapToOneOrNull
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
+import com.foreverrafs.superdiary.data.model.DiaryDto
 import com.foreverrafs.superdiary.database.SuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
@@ -23,25 +24,9 @@ private val dateAdapter = object : ColumnAdapter<Instant, Long> {
 }
 
 private val locationAdapter = object : ColumnAdapter<Location, String> {
-    override fun decode(databaseValue: String): Location {
-        val (latitude, longitude) = databaseValue.split(",")
+    override fun decode(databaseValue: String): Location = Location.fromString(databaseValue)
 
-        return if (latitude.isNotEmpty() && longitude.isNotEmpty()) {
-            Location(
-                latitude = latitude.toDouble(),
-                longitude = longitude.toDouble(),
-            )
-        } else {
-            Location.Empty
-        }
-    }
-
-    override fun encode(value: Location): String =
-        if (!value.isEmpty()) {
-            "${value.latitude},${value.longitude}"
-        } else {
-            "0.0,0.0"
-        }
+    override fun encode(value: Location): String = value.toString()
 }
 
 @Suppress("TooManyFunctions")
@@ -63,12 +48,12 @@ class Database(databaseDriver: DatabaseDriver) {
 
     private val diaryMapper =
         { id: Long, entry: String, date: Instant, favorite: Long, location: Location? ->
-            Diary(
+            DiaryDto(
                 id = id,
                 entry = entry,
                 date = date,
                 isFavorite = favorite.asBoolean(),
-                location = location ?: Location.Empty,
+                location = location.toString(),
             )
         }
 
@@ -80,13 +65,13 @@ class Database(databaseDriver: DatabaseDriver) {
         SuperDiaryDatabase.Schema.create(driver)
     }
 
-    fun addDiary(diary: Diary) =
+    fun addDiary(diary: DiaryDto) =
         queries.insert(
             id = diary.id,
             entry = diary.entry,
             date = diary.date,
             favorite = diary.isFavorite.asLong(),
-            location = diary.location,
+            location = Location.fromString(diary.location),
         )
 
     fun deleteDiary(id: Long) = queries.delete(id)
@@ -104,21 +89,21 @@ class Database(databaseDriver: DatabaseDriver) {
         }
     }
 
-    fun findById(id: Long): Flow<Diary?> =
+    fun findById(id: Long): Flow<DiaryDto?> =
         queries.findById(id, diaryMapper).asFlow().mapToOneOrNull(Dispatchers.Main)
 
-    fun getAllDiaries(): Flow<List<Diary>> = queries.selectAll(
+    fun getAllDiaries(): Flow<List<DiaryDto>> = queries.selectAll(
         mapper = diaryMapper,
     )
         .asFlow()
         .mapToList(Dispatchers.Main)
 
-    fun findDiaryByEntry(query: String): Flow<List<Diary>> =
+    fun findDiaryByEntry(query: String): Flow<List<DiaryDto>> =
         queries.findByEntry(name = query, mapper = diaryMapper)
             .asFlow()
             .mapToList(Dispatchers.Main)
 
-    fun findByDateRange(from: Instant, to: Instant): Flow<List<Diary>> =
+    fun findByDateRange(from: Instant, to: Instant): Flow<List<DiaryDto>> =
         queries.findByDateRange(
             from,
             to,
@@ -138,7 +123,7 @@ class Database(databaseDriver: DatabaseDriver) {
         return queries.getAffectedRows().executeAsOne().toInt()
     }
 
-    fun getFavoriteDiaries(): Flow<List<Diary>> =
+    fun getFavoriteDiaries(): Flow<List<DiaryDto>> =
         queries.getFavoriteDiaries(diaryMapper)
             .asFlow()
             .mapToList(Dispatchers.Main)
@@ -147,7 +132,7 @@ class Database(databaseDriver: DatabaseDriver) {
 
     private fun Boolean.asLong(): Long = if (this) 1 else 0
     private fun Long.asBoolean(): Boolean = this != 0L
-    fun getLatestEntries(count: Int): Flow<List<Diary>> =
+    fun getLatestEntries(count: Int): Flow<List<DiaryDto>> =
         queries.getLatestEntries(count.toLong(), diaryMapper)
             .asFlow()
             .mapToList(Dispatchers.Main)

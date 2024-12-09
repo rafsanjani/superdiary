@@ -52,6 +52,7 @@ import superdiary.shared_ui.generated.resources.label_diary_deleted
 fun DetailScreenContent(
     onDeleteDiary: (diary: Diary) -> Unit,
     onNavigateBack: () -> Unit,
+    avatarUrl: String,
     viewState: DetailsViewState.DiarySelected,
     modifier: Modifier = Modifier,
 ) {
@@ -83,6 +84,7 @@ fun DetailScreenContent(
                         )
                     }
                 },
+                avatarUrl = avatarUrl,
             )
         },
         snackbarHost = {

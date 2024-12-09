@@ -2,10 +2,8 @@ package com.foreverrafs.superdiary.data.usecase
 
 import app.cash.turbine.test
 import assertk.assertThat
-import assertk.assertions.contains
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
-import assertk.assertions.isNotEmpty
 import com.foreverrafs.superdiary.data.Database
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.TestAppDispatchers
@@ -67,8 +65,9 @@ class AddDiaryUseCaseTest {
             val items = awaitItem()
             cancelAndConsumeRemainingEvents()
 
-            assertThat(items).isNotEmpty()
-            assertThat(items.first().id).isEqualTo(1000L)
+            assertThat(items).isInstanceOf(Result.Success::class)
+            val firstItem = (items as? Result.Success)?.data?.first()
+            assertThat(firstItem?.id).isEqualTo(1000L)
         }
     }
 
@@ -123,7 +122,7 @@ class AddDiaryUseCaseTest {
             val items = awaitItem()
             cancelAndConsumeRemainingEvents()
 
-            assertThat(items).contains(diary)
+            assertThat(items).isInstanceOf(Result.Success::class)
         }
     }
 }

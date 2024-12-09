@@ -391,6 +391,7 @@ private fun DetailPreview() {
                         location = Location.Empty,
                     ),
                 ),
+                avatarUrl = "avatar-url",
             )
         }
     }

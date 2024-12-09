@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.ui.feature.diarychat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
+import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
@@ -47,15 +48,30 @@ class DiaryChatViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DiaryChatViewState())
 
-    private val diariesFlow: Flow<List<Diary>> = getAllDiariesUseCase()
+    private val diariesFlow: Flow<Result<List<Diary>>> = getAllDiariesUseCase()
     private val chatMessagesFlow: Flow<List<DiaryChatMessage>> = getChatMessagesUseCase()
 
     private fun loadDiaries() = viewModelScope.launch {
         _viewState.updateLoadingDiaries(true)
-        diariesFlow.collect { diaries ->
-            _viewState.update { it.copy(diaries = diaries, isLoadingDiaries = false) }
-            logger.i(TAG) { "Loaded all diaries for chat screen: Size = ${diaries.size}" }
-            updateChatMessageList(diaries)
+        diariesFlow.collect { result ->
+            when (result) {
+                is Result.Success -> {
+                    _viewState.update {
+                        it.copy(
+                            diaries = result.data,
+                            isLoadingDiaries = false,
+                        )
+                    }
+                    logger.i(TAG) { "Loaded all result for chat screen: Size = ${result.data.size}" }
+                    updateChatMessageList(result.data)
+                }
+
+                is Result.Failure -> {
+                    logger.e(TAG) {
+                        "Error loading diaries"
+                    }
+                }
+            }
         }
     }
 

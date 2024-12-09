@@ -28,8 +28,10 @@ class UpdateDiaryUseCaseTest {
     private val database = Database(TestDatabaseDriver())
     private val dataSource: DataSource = LocalDataSource(database)
 
-    private val updateDiaryUseCase = UpdateDiaryUseCase(dataSource = dataSource, dispatchers = TestAppDispatchers)
-    private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource = dataSource, dispatchers = TestAppDispatchers)
+    private val updateDiaryUseCase =
+        UpdateDiaryUseCase(dataSource = dataSource, dispatchers = TestAppDispatchers)
+    private val getAllDiariesUseCase =
+        GetAllDiariesUseCase(dataSource = dataSource, dispatchers = TestAppDispatchers)
 
     @BeforeTest
     fun setup() {
@@ -47,7 +49,7 @@ class UpdateDiaryUseCaseTest {
         insertRandomDiaries(dataSource)
 
         getAllDiariesUseCase().test {
-            val originalList = awaitItem()
+            val originalList = (awaitItem() as Result.Success).data
 
             var firstEntry = originalList.first()
 
@@ -61,7 +63,7 @@ class UpdateDiaryUseCaseTest {
             )
 
             // fetch the remaining diaries
-            val currentList = awaitItem()
+            val currentList = (awaitItem() as Result.Success).data
 
             firstEntry = currentList.first()
 

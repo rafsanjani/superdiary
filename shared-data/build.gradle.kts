@@ -42,7 +42,6 @@ kotlin {
                 implementation(libs.kotlin.datetime)
                 implementation(libs.touchlab.stately)
                 implementation(libs.koin.core)
-                implementation(libs.kotlin.inject.runtime)
                 implementation(libs.square.sqldelight.coroutinesExt)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.openAiKotlin)
@@ -50,6 +49,9 @@ kotlin {
                 implementation(libs.androidx.datastore.preferences)
                 implementation(libs.androidx.datastore.okio)
                 implementation(libs.ktor.client.cio)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.supabase.posgrest)
+                implementation(libs.supabase.realtime)
 
                 // Project dependencies
                 implementation(projects.core.utils)

@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.foreverrafs.superdiary.data.Database
+import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.data.datasource.TestDatabaseDriver
@@ -43,7 +44,7 @@ class GetAllDiariesUseCaseTest {
         insertRandomDiaries(dataSource, 30)
 
         getAllDiariesUseCase().test {
-            val diaries = awaitItem()
+            val diaries = (awaitItem() as Result.Success).data
 
             // We inserted 30 items at the beginning
             assertThat(diaries.size).isEqualTo(30)

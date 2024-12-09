@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.hasSize
 import com.foreverrafs.superdiary.data.Database
+import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.data.datasource.TestDatabaseDriver
@@ -45,7 +46,7 @@ class FavoriteDiariesUseCaseTest {
     fun `Update favorite flag of diaries updates them on db`() = runTest {
         insertRandomDiaries(dataSource)
         getAllDiariesUseCase().test {
-            val diaries = awaitItem()
+            val diaries = (awaitItem() as Result.Success).data
 
             val favoriteDiaries = diaries
                 .take(4)

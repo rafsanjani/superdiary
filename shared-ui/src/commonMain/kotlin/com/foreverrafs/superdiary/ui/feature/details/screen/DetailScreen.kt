@@ -17,6 +17,7 @@ data class DetailScreen(val diaryId: String) {
         @Composable
         fun Content(
             diaryId: String,
+            avatarUrl: String,
             navController: NavController,
             modifier: Modifier = Modifier,
         ) {
@@ -38,6 +39,7 @@ data class DetailScreen(val diaryId: String) {
                             viewModel.deleteDiary(it)
                         },
                         viewState = state,
+                        avatarUrl = avatarUrl,
                     )
                 }
 
