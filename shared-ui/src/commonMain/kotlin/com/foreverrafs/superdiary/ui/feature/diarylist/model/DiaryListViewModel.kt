@@ -58,15 +58,12 @@ class DiaryListViewModel(
             getAllDiariesUseCase()
         }
         .map { result ->
-            @Suppress("UNCHECKED_CAST")
             when (result) {
                 is Result.Failure -> DiaryListViewState.Error(result.error)
-                is Result.Success<*> -> DiaryListViewState.Content(
-                    result.data as List<Diary>,
+                is Result.Success -> DiaryListViewState.Content(
+                    result.data,
                     true,
                 )
-
-                else -> DiaryListViewState.Error(Exception("Unknown result"))
             }
         }
         .catch {
@@ -84,21 +81,24 @@ class DiaryListViewModel(
         }
     }
 
-    private fun searchByEntry(entry: String): Flow<List<Diary>> =
+    private fun searchByEntry(entry: String): Flow<Result<List<Diary>>> =
         searchDiaryByEntryUseCase.invoke(entry)
+            .map { Result.Success(it) }
 
-    private fun searchByDate(date: LocalDate): Flow<List<Diary>> =
+    private fun searchByDate(date: LocalDate): Flow<Result<List<Diary>>> =
         searchDiaryByDateUseCase.invoke(date.toInstant())
+            .map {
+                Result.Success(it)
+            }
 
-    private fun searchByDateAndEntry(date: LocalDate, entry: String): Flow<List<Diary>> =
+    private fun searchByDateAndEntry(date: LocalDate, entry: String): Flow<Result<List<Diary>>> =
         searchDiaryByDateUseCase(date = date.toInstant())
             .map { list ->
-                list.filter {
-                    it.entry.contains(
-                        entry,
-                        false,
-                    )
-                }
+                Result.Success(
+                    list.filter {
+                        it.entry.contains(entry)
+                    },
+                )
             }
 
     suspend fun deleteDiaries(diaries: List<Diary>): Boolean =
