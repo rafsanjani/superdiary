@@ -11,7 +11,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreen
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
@@ -24,7 +23,7 @@ import org.koin.compose.koinInject
 object DiaryListScreen {
     @Composable
     fun Content(
-        userInfo: UserInfo?,
+        avatarUrl: String?,
         navController: NavController,
         modifier: Modifier = Modifier,
     ) {
@@ -64,6 +63,7 @@ object DiaryListScreen {
             showSearchBar = true,
             diaryFilters = diaryFilters,
             diaryListActions = diaryListActions,
+            avatarUrl = avatarUrl,
         )
     }
 }

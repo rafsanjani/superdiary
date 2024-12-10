@@ -96,6 +96,7 @@ private fun LoadingDiariesPreview() {
                 showSearchBar = false,
                 diaryFilters = DiaryFilters(),
                 diaryListActions = diaryListActions,
+                avatarUrl = "",
             )
         }
     }
@@ -113,6 +114,7 @@ private fun ErrorLoadingDiariesPreview() {
                 showSearchBar = false,
                 diaryFilters = DiaryFilters(),
                 diaryListActions = diaryListActions,
+                avatarUrl = "",
             )
         }
     }
@@ -147,6 +149,7 @@ private fun EmptyDiaryListPreview() {
                 showSearchBar = false,
                 diaryFilters = DiaryFilters(),
                 diaryListActions = diaryListActions,
+                avatarUrl = "",
             )
         }
     }
@@ -173,6 +176,7 @@ private fun DiaryListPreview() {
                 showSearchBar = true,
                 diaryFilters = DiaryFilters(),
                 diaryListActions = diaryListActions,
+                avatarUrl = "",
             )
         }
     }
@@ -248,6 +252,7 @@ private fun FilteredEmptyPreview() {
                     showSearchBar = true,
                     diaryFilters = DiaryFilters(),
                     diaryListActions = diaryListActions,
+                    avatarUrl = "",
                 )
             }
         }
