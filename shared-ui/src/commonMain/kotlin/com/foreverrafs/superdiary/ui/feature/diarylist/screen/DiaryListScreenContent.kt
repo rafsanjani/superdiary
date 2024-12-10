@@ -113,6 +113,7 @@ fun DiaryListScreenContent(
     diaryFilters: DiaryFilters,
     showSearchBar: Boolean,
     diaryListActions: DiaryListActions,
+    avatarUrl: String?,
     modifier: Modifier = Modifier,
     clock: Clock = Clock.System,
 ) {
@@ -170,6 +171,7 @@ fun DiaryListScreenContent(
                         )
                     }
                 },
+                avatarUrl = avatarUrl,
             )
         },
         floatingActionButton = {
@@ -539,6 +541,7 @@ private fun EmptyDiaryList(
     }
 }
 
+/** This is reused in DashboardScreenContent */
 @Composable
 fun DiaryItem(
     diary: Diary,
@@ -554,7 +557,7 @@ fun DiaryItem(
 
     val transition = updateTransition(selected, label = "selected")
     val padding by transition.animateDp(label = "padding") { _ ->
-        if (inSelectionMode) 4.dp else 0.dp
+        if (inSelectionMode) 8.dp else 0.dp
     }
 
     val roundedCornerShape by transition.animateDp(label = "corner") { _ ->
@@ -622,7 +625,7 @@ fun DiaryItem(
                     letterSpacing = (-0.3).sp,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Justify,
+                    textAlign = TextAlign.Start,
                     text = rememberRichTextState().apply { setHtml(diary.entry) }.annotatedString,
                 )
             }

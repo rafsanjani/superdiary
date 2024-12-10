@@ -71,6 +71,7 @@ class DiaryListSnapshotTests(
                     showSearchBar = true,
                     diaryFilters = DiaryFilters(),
                     diaryListActions = diaryListActions,
+                    avatarUrl = "",
                 )
             }
         }
@@ -101,6 +102,7 @@ class DiaryListSnapshotTests(
                     showSearchBar = true,
                     diaryFilters = DiaryFilters(),
                     diaryListActions = diaryListActions,
+                    avatarUrl = "",
                 )
             }
         }
@@ -118,6 +120,7 @@ class DiaryListSnapshotTests(
                     showSearchBar = true,
                     diaryFilters = DiaryFilters(),
                     diaryListActions = diaryListActions,
+                    avatarUrl = "",
                 )
             }
         }
@@ -135,6 +138,7 @@ class DiaryListSnapshotTests(
                     showSearchBar = true,
                     diaryFilters = DiaryFilters(),
                     diaryListActions = diaryListActions,
+                    avatarUrl = "",
                 )
             }
         }
@@ -152,6 +156,7 @@ class DiaryListSnapshotTests(
                     showSearchBar = true,
                     diaryFilters = DiaryFilters(),
                     diaryListActions = diaryListActions,
+                    avatarUrl = "",
                 )
             }
         }
