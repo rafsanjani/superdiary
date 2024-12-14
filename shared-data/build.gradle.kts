@@ -3,19 +3,11 @@
 plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.sqldelight)
     alias(libs.plugins.testLogger)
     alias(libs.plugins.kotlin.serialization)
     id("kotlin-parcelize")
     kotlin("multiplatform")
     alias(libs.plugins.mokkery)
-}
-
-sqldelight {
-    databases.register("SuperDiaryDatabase") {
-        packageName.set("com.foreverrafs.superdiary.database")
-        deriveSchemaFromMigrations.set(true)
-    }
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -59,6 +51,7 @@ kotlin {
                 implementation(projects.core.secrets)
                 implementation(projects.core.logging)
                 implementation(projects.core.location)
+                implementation(projects.core.database)
             }
         }
 
@@ -70,7 +63,7 @@ kotlin {
             }
         }
 
-        val androidUnitTest by getting {
+        androidUnitTest {
             dependencies {
                 implementation(libs.square.sqldelight.driver.sqlite)
             }
@@ -83,6 +76,7 @@ kotlin {
                 implementation(libs.koin.test)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.turbine)
+                implementation(projects.core.databaseTest)
                 implementation(libs.assertk.common)
             }
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")

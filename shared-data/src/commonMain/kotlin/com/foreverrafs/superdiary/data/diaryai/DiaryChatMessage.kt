@@ -1,6 +1,8 @@
 package com.foreverrafs.superdiary.data.diaryai
 
 import com.benasher44.uuid.uuid4
+import com.foreverrafs.superdiary.database.model.DiaryChatMessageDb
+import com.foreverrafs.superdiary.database.model.DiaryChatRoleDb
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 
@@ -34,3 +36,12 @@ data class DiaryChatMessage(
         )
     }
 }
+
+fun DiaryChatMessage.toDatabase() = DiaryChatMessageDb(
+    id = id,
+    role = role.toDatabase(),
+    timestamp = timestamp,
+    content = content,
+)
+
+fun DiaryChatRole.toDatabase() = DiaryChatRoleDb.valueOf(name)
