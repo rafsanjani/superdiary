@@ -14,6 +14,7 @@ sqldelight {
         packageName.set("com.foreverrafs.superdiary.database")
         deriveSchemaFromMigrations.set(true)
     }
+    linkSqlite.set(true)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)

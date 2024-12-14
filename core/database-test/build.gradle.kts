@@ -1,26 +1,16 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
-    alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.sqldelight)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.parcelize)
-}
-
-sqldelight {
-    databases.register("SuperDiaryDatabase") {
-        packageName.set("com.foreverrafs.superdiary.database")
-        deriveSchemaFromMigrations.set(true)
-    }
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     androidTarget()
 
-    iosX64()
     jvm()
     iosArm64()
     iosSimulatorArm64()
