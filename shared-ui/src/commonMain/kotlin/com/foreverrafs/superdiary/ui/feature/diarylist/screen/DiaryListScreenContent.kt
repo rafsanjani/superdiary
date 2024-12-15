@@ -557,11 +557,11 @@ fun DiaryItem(
 
     val transition = updateTransition(selected, label = "selected")
     val padding by transition.animateDp(label = "padding") { _ ->
-        if (inSelectionMode) 8.dp else 0.dp
+        if (inSelectionMode) 4.dp else 0.dp
     }
 
     val roundedCornerShape by transition.animateDp(label = "corner") { _ ->
-        if (selected) 16.dp else 0.dp
+        if (selected) 8.dp else 0.dp
     }
 
     val favoriteAction = SwipeAction(
@@ -572,10 +572,11 @@ fun DiaryItem(
     )
 
     SwipeableActionBox(
-        modifier = modifier
+        modifier = Modifier
             .height(110.dp)
             .padding(padding)
             .clip(RoundedCornerShape(roundedCornerShape))
+            .then(modifier)
             .fillMaxWidth(),
         action = favoriteAction,
         state = swipeableState,
@@ -583,8 +584,8 @@ fun DiaryItem(
         Card(
             shape = RoundedCornerShape(
                 topStart = 0.dp,
-                bottomStart = 12.dp,
-                topEnd = 12.dp,
+                bottomStart = 8.dp,
+                topEnd = 8.dp,
                 bottomEnd = 0.dp,
             ),
             colors = CardDefaults.cardColors(
@@ -609,11 +610,15 @@ fun DiaryItem(
                         )
                 }.fillMaxSize(),
             ) {
-                DateCard(diary.date.toDate())
+                DateCard(
+                    modifier = Modifier.weight(2.3f),
+                    date = diary.date.toDate(),
+                )
 
                 // Diary Entry
                 Text(
                     modifier = Modifier
+                        .weight(8f)
                         .clearAndSetSemantics { }
                         .padding(
                             start = 8.dp,
@@ -626,6 +631,7 @@ fun DiaryItem(
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Start,
+                    maxLines = 1,
                     text = rememberRichTextState().apply { setHtml(diary.entry) }.annotatedString,
                 )
             }
@@ -654,9 +660,12 @@ fun DiaryItem(
 }
 
 @Composable
-private fun DateCard(date: LocalDate) {
+private fun DateCard(
+    date: LocalDate,
+    modifier: Modifier = Modifier,
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxHeight()
             .background(
                 color = MaterialTheme.colorScheme.secondaryContainer,
@@ -667,15 +676,14 @@ private fun DateCard(date: LocalDate) {
                     bottomStart = 12.dp,
                     bottomEnd = 0.dp,
                 ),
-            )
-            .padding(horizontal = 25.dp),
+            ),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             modifier = Modifier.semantics {
                 contentDescription = "Entry for ${date.format("EEE dd MMMM yyyy")}"
             },
-            text = annotatedString(date),
+            text = buildDateAnnotatedString(date),
             textAlign = TextAlign.Center,
             lineHeight = 20.sp,
             style = MaterialTheme.typography.labelMedium,
@@ -684,7 +692,7 @@ private fun DateCard(date: LocalDate) {
 }
 
 @Composable
-private fun annotatedString(date: LocalDate): AnnotatedString =
+private fun buildDateAnnotatedString(date: LocalDate): AnnotatedString =
     buildAnnotatedString {
         append(
             date.format("E").uppercase(),
