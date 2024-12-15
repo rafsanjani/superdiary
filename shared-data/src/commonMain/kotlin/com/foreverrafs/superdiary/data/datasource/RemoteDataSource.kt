@@ -4,9 +4,9 @@ import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.data.model.DiaryDto
 import com.foreverrafs.superdiary.data.model.toDiary
-import com.foreverrafs.superdiary.data.model.toDto
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
+import com.foreverrafs.superdiary.domain.model.toDto
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.annotations.SupabaseExperimental

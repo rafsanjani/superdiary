@@ -21,14 +21,6 @@ data class DiaryDto(
     val location: String,
 )
 
-fun Diary.toDto(): DiaryDto = DiaryDto(
-    entry = entry,
-    id = id,
-    date = date,
-    isFavorite = isFavorite,
-    location = location.toString(),
-)
-
 fun DiaryDto.toDiary(): Diary = Diary(
     entry = entry,
     id = id,

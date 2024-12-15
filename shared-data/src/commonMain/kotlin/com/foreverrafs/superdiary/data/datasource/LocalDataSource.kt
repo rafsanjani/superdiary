@@ -1,12 +1,15 @@
 package com.foreverrafs.superdiary.data.datasource
 
-import com.foreverrafs.superdiary.data.Database
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
-import com.foreverrafs.superdiary.data.model.DiaryDto
-import com.foreverrafs.superdiary.data.model.toDiary
-import com.foreverrafs.superdiary.data.model.toDto
+import com.foreverrafs.superdiary.data.diaryai.toDatabase
+import com.foreverrafs.superdiary.data.mapper.toDiary
+import com.foreverrafs.superdiary.data.mapper.toDiaryChatMessage
+import com.foreverrafs.superdiary.data.mapper.toWeeklySummary
+import com.foreverrafs.superdiary.database.Database
+import com.foreverrafs.superdiary.database.model.DiaryDb
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
+import com.foreverrafs.superdiary.domain.model.toDatabase
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -21,7 +24,7 @@ import kotlinx.datetime.toLocalDateTime
 @Suppress("TooManyFunctions")
 class LocalDataSource(private val database: Database) : DataSource {
     override suspend fun add(diary: Diary): Long {
-        database.addDiary(diary.toDto())
+        database.addDiary(diary.toDatabase())
         return 1
     }
 
@@ -38,8 +41,8 @@ class LocalDataSource(private val database: Database) : DataSource {
         database.findDiaryByEntry(entry).mapToDiary()
 
     override fun find(from: Instant, to: Instant): Flow<List<Diary>> =
-        database.findByDateRange(from, to).map { diaryDtoList ->
-            diaryDtoList.map { it.toDiary() }
+        database.findByDateRange(from, to).map { diaryDbList ->
+            diaryDbList.map { it.toDiary() }
         }
 
     override fun find(id: Long): Flow<Diary?> = database.findById(id).map { it?.toDiary() }
@@ -74,7 +77,7 @@ class LocalDataSource(private val database: Database) : DataSource {
         return database.findByDateRange(startOfDay, endOfDay).mapToDiary()
     }
 
-    override suspend fun update(diary: Diary): Int = database.update(diary)
+    override suspend fun update(diary: Diary): Int = database.update(diary.toDatabase())
 
     override suspend fun deleteAll() = database.clearDiaries()
 
@@ -84,21 +87,23 @@ class LocalDataSource(private val database: Database) : DataSource {
     override suspend fun countEntries(): Long = database.countEntries()
 
     override suspend fun insertWeeklySummary(summary: WeeklySummary) =
-        database.insertWeeklySummary(summary = summary)
+        database.insertWeeklySummary(summary = summary.toDatabase())
 
-    override fun getWeeklySummary(): WeeklySummary? = database.getWeeklySummary()
+    override fun getWeeklySummary(): WeeklySummary? = database.getWeeklySummary()?.toWeeklySummary()
 
     override suspend fun saveChatMessage(message: DiaryChatMessage) {
-        database.saveChatMessage(message)
+        database.saveChatMessage(message.toDatabase())
     }
 
     override suspend fun clearChatMessages() {
         database.clearChatMessages()
     }
 
-    override fun getChatMessages(): Flow<List<DiaryChatMessage>> = database.getChatMessages()
+    override fun getChatMessages(): Flow<List<DiaryChatMessage>> = database.getChatMessages().map {
+        it.map { it.toDiaryChatMessage() }
+    }
 
-    private fun Flow<List<DiaryDto>>?.mapToDiary() =
+    private fun Flow<List<DiaryDb>>?.mapToDiary() =
         this?.map { diaryDtoList -> diaryDtoList.map { it.toDiary() } }
             ?: emptyFlow()
 }

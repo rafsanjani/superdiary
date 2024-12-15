@@ -7,11 +7,11 @@ import com.aallam.openai.client.OpenAI
 import com.foreverrafs.superdiary.core.SuperDiarySecret
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.data.Database
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.data.datasource.RemoteDataSource
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.diaryai.OpenDiaryAI
+import com.foreverrafs.superdiary.database.di.databaseModule
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.AddWeeklySummaryUseCase
@@ -43,6 +43,8 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 fun useCaseModule() = module {
+    includes(databaseModule())
+
     singleOf(::RemoteDataSource) { bind<DataSource>() }
 
     // The local datasource will get injected by default
@@ -99,8 +101,6 @@ fun useCaseModule() = module {
     }
     factoryOf(::SaveChatMessageUseCase)
     factoryOf(::GetChatMessagesUseCase)
-
-    singleOf(::Database)
 }
 
 expect fun platformModule(
