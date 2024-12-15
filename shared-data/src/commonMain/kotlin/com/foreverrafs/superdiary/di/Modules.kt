@@ -7,10 +7,11 @@ import com.aallam.openai.client.OpenAI
 import com.foreverrafs.superdiary.core.SuperDiarySecret
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.data.Database
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
+import com.foreverrafs.superdiary.data.datasource.RemoteDataSource
 import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.data.diaryai.OpenDiaryAI
+import com.foreverrafs.superdiary.database.di.databaseModule
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.AddWeeklySummaryUseCase
@@ -42,7 +43,13 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 fun useCaseModule() = module {
+    includes(databaseModule())
+
+    singleOf(::RemoteDataSource) { bind<DataSource>() }
+
+    // The local datasource will get injected by default
     singleOf(::LocalDataSource) { bind<DataSource>() }
+
     factory<Clock> { Clock.System }
 
     single<OpenAI> {
@@ -58,8 +65,22 @@ fun useCaseModule() = module {
     }
     factoryOf(::DiaryValidatorImpl) { bind<DiaryValidator>() }
     factoryOf(::OpenDiaryAI) { bind<DiaryAI>() }
-    factoryOf(::AddDiaryUseCase)
-    factoryOf(::GetAllDiariesUseCase)
+
+    factory {
+        AddDiaryUseCase(
+            dataSource = get<RemoteDataSource>(),
+            dispatchers = get(),
+            validator = get(),
+        )
+    }
+
+    factory {
+        GetAllDiariesUseCase(
+            dataSource = get<RemoteDataSource>(),
+            dispatchers = get(),
+        )
+    }
+
     factoryOf(::GetFavoriteDiariesUseCase)
     factoryOf(::SearchDiaryBetweenDatesUseCase)
     factoryOf(::SearchDiaryByEntryUseCase)
@@ -72,11 +93,14 @@ fun useCaseModule() = module {
     factoryOf(::AddWeeklySummaryUseCase)
     factoryOf(::GetWeeklySummaryUseCase)
     factoryOf(::CalculateBestStreakUseCase)
-    factoryOf(::GetDiaryByIdUseCase)
+    factory {
+        GetDiaryByIdUseCase(
+            dispatchers = get(),
+            dataSource = get<RemoteDataSource>(),
+        )
+    }
     factoryOf(::SaveChatMessageUseCase)
     factoryOf(::GetChatMessagesUseCase)
-
-    singleOf(::Database)
 }
 
 expect fun platformModule(

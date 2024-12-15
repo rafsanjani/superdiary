@@ -1,11 +1,19 @@
 package com.foreverrafs.superdiary.data.datasource
 
-import com.foreverrafs.superdiary.data.Database
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
+import com.foreverrafs.superdiary.data.diaryai.toDatabase
+import com.foreverrafs.superdiary.data.mapper.toDiary
+import com.foreverrafs.superdiary.data.mapper.toDiaryChatMessage
+import com.foreverrafs.superdiary.data.mapper.toWeeklySummary
+import com.foreverrafs.superdiary.database.Database
+import com.foreverrafs.superdiary.database.model.DiaryDb
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
+import com.foreverrafs.superdiary.domain.model.toDatabase
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -16,7 +24,7 @@ import kotlinx.datetime.toLocalDateTime
 @Suppress("TooManyFunctions")
 class LocalDataSource(private val database: Database) : DataSource {
     override suspend fun add(diary: Diary): Long {
-        database.addDiary(diary)
+        database.addDiary(diary.toDatabase())
         return 1
     }
 
@@ -25,16 +33,19 @@ class LocalDataSource(private val database: Database) : DataSource {
     override suspend fun delete(diaries: List<Diary>): Int =
         database.deleteDiaries(diaries.mapNotNull { it.id })
 
-    override fun fetchAll(): Flow<List<Diary>> = database.getAllDiaries()
+    override fun fetchAll(): Flow<List<Diary>> = database.getAllDiaries().mapToDiary()
 
-    override fun fetchFavorites(): Flow<List<Diary>> = database.getFavoriteDiaries()
+    override fun fetchFavorites(): Flow<List<Diary>> = database.getFavoriteDiaries().mapToDiary()
 
-    override fun find(entry: String): Flow<List<Diary>> = database.findDiaryByEntry(entry)
+    override fun find(entry: String): Flow<List<Diary>> =
+        database.findDiaryByEntry(entry).mapToDiary()
 
     override fun find(from: Instant, to: Instant): Flow<List<Diary>> =
-        database.findByDateRange(from, to)
+        database.findByDateRange(from, to).map { diaryDbList ->
+            diaryDbList.map { it.toDiary() }
+        }
 
-    override fun find(id: Long): Flow<Diary?> = database.findById(id)
+    override fun find(id: Long): Flow<Diary?> = database.findById(id).map { it?.toDiary() }
 
     /**
      * The dates are currently stored on the database as very high precision
@@ -63,29 +74,36 @@ class LocalDataSource(private val database: Database) : DataSource {
             59,
         ).toInstant(timeZone)
 
-        return database.findByDateRange(startOfDay, endOfDay)
+        return database.findByDateRange(startOfDay, endOfDay).mapToDiary()
     }
 
-    override suspend fun update(diary: Diary): Int = database.update(diary)
+    override suspend fun update(diary: Diary): Int = database.update(diary.toDatabase())
 
     override suspend fun deleteAll() = database.clearDiaries()
 
-    override fun getLatestEntries(count: Int): Flow<List<Diary>> = database.getLatestEntries(count)
+    override fun getLatestEntries(count: Int): Flow<List<Diary>> =
+        database.getLatestEntries(count).mapToDiary()
 
     override suspend fun countEntries(): Long = database.countEntries()
 
     override suspend fun insertWeeklySummary(summary: WeeklySummary) =
-        database.insertWeeklySummary(summary = summary)
+        database.insertWeeklySummary(summary = summary.toDatabase())
 
-    override fun getWeeklySummary(): WeeklySummary? = database.getWeeklySummary()
+    override fun getWeeklySummary(): WeeklySummary? = database.getWeeklySummary()?.toWeeklySummary()
 
     override suspend fun saveChatMessage(message: DiaryChatMessage) {
-        database.saveChatMessage(message)
+        database.saveChatMessage(message.toDatabase())
     }
 
     override suspend fun clearChatMessages() {
         database.clearChatMessages()
     }
 
-    override fun getChatMessages(): Flow<List<DiaryChatMessage>> = database.getChatMessages()
+    override fun getChatMessages(): Flow<List<DiaryChatMessage>> = database.getChatMessages().map {
+        it.map { it.toDiaryChatMessage() }
+    }
+
+    private fun Flow<List<DiaryDb>>?.mapToDiary() =
+        this?.map { diaryDtoList -> diaryDtoList.map { it.toDiary() } }
+            ?: emptyFlow()
 }

@@ -76,9 +76,9 @@ class CreateDiaryViewModelTest {
 
         createDiaryViewModel = CreateDiaryViewModel(
             addDiaryUseCase = AddDiaryUseCase(
-                dataSource = dataSource,
                 dispatchers = TestAppDispatchers,
                 validator = {},
+                dataSource = dataSource,
             ),
             diaryAI = diaryAI,
             logger = AggregateLogger(loggers = emptyList()),

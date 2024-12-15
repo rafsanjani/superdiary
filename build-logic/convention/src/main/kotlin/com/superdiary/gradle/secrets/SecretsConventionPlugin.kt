@@ -42,6 +42,18 @@ class SecretsConventionPlugin : Plugin<Project> {
                         ""
                     }
 
+                val supabaseUrl: String =
+                    props["SUPABASE_URL"]?.toString() ?: run {
+                        logger.error("SUPABASE_URL not provided!")
+                        ""
+                    }
+
+                val supabaseKey: String =
+                    props["SUPABASE_KEY"]?.toString() ?: run {
+                        logger.error("SUPABASE_KEY not provided!")
+                        ""
+                    }
+
                 defaultConfigs {
                     buildConfigField(
                         type = STRING,
@@ -53,6 +65,16 @@ class SecretsConventionPlugin : Plugin<Project> {
                         type = STRING,
                         name = "GOOGLE_SERVER_CLIENT_ID",
                         value = googleServerClientId,
+                    )
+                    buildConfigField(
+                        type = STRING,
+                        name = "SUPABASE_KEY",
+                        value = supabaseKey,
+                    )
+                    buildConfigField(
+                        type = STRING,
+                        name = "SUPABASE_URL",
+                        value = supabaseUrl,
                     )
                 }
             }

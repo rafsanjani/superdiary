@@ -3,7 +3,6 @@
 plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.sqldelight)
     alias(libs.plugins.testLogger)
     alias(libs.plugins.kotlin.serialization)
     id("kotlin-parcelize")
@@ -11,21 +10,19 @@ plugins {
     alias(libs.plugins.mokkery)
 }
 
-sqldelight {
-    databases.register("SuperDiaryDatabase") {
-        packageName.set("com.foreverrafs.superdiary.database")
-        deriveSchemaFromMigrations.set(true)
-    }
-}
-
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     androidTarget()
 
-    iosX64()
     jvm()
-    iosArm64()
-    iosSimulatorArm64()
+    listOf(
+        iosArm64(),
+        iosSimulatorArm64(),
+    ).forEach {
+        it.binaries.forEach { binary ->
+            binary.linkerOpts += "-lsqlite3"
+        }
+    }
 
     compilerOptions {
         freeCompilerArgs.addAll(
@@ -42,7 +39,6 @@ kotlin {
                 implementation(libs.kotlin.datetime)
                 implementation(libs.touchlab.stately)
                 implementation(libs.koin.core)
-                implementation(libs.kotlin.inject.runtime)
                 implementation(libs.square.sqldelight.coroutinesExt)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.openAiKotlin)
@@ -50,6 +46,9 @@ kotlin {
                 implementation(libs.androidx.datastore.preferences)
                 implementation(libs.androidx.datastore.okio)
                 implementation(libs.ktor.client.cio)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.supabase.posgrest)
+                implementation(libs.supabase.realtime)
 
                 // Project dependencies
                 implementation(projects.core.utils)
@@ -57,6 +56,7 @@ kotlin {
                 implementation(projects.core.secrets)
                 implementation(projects.core.logging)
                 implementation(projects.core.location)
+                implementation(projects.core.database)
             }
         }
 
@@ -68,7 +68,7 @@ kotlin {
             }
         }
 
-        val androidUnitTest by getting {
+        androidUnitTest {
             dependencies {
                 implementation(libs.square.sqldelight.driver.sqlite)
             }
@@ -81,6 +81,7 @@ kotlin {
                 implementation(libs.koin.test)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.turbine)
+                implementation(projects.core.databaseTest)
                 implementation(libs.assertk.common)
             }
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")

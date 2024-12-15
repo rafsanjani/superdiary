@@ -26,7 +26,6 @@ import coil3.compose.LocalPlatformContext
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import coil3.request.ImageRequest
-import com.foreverrafs.auth.model.UserInfo
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
@@ -39,11 +38,11 @@ fun SuperDiaryAppBar(
     modifier: Modifier = Modifier,
     navigationIcon: @Composable (() -> Unit)? = null,
     onProfileClick: () -> Unit = {},
-    userInfo: UserInfo? = null,
+    avatarUrl: String? = null,
 ) {
     val model = ImageRequest
         .Builder(LocalPlatformContext.current)
-        .data(userInfo?.avatarUrl)
+        .data(avatarUrl)
         .build()
 
     TopAppBar(
@@ -66,7 +65,7 @@ fun SuperDiaryAppBar(
             SubcomposeAsyncImage(
                 modifier = Modifier
                     .padding(end = 4.dp)
-                    .size(48.dp)
+                    .size(36.dp)
                     .clip(CircleShape)
                     .clickable {
                         onProfileClick()

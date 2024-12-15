@@ -20,6 +20,8 @@ class AddDiaryUseCase(
             Result.Success(data = listOf(diary))
         } catch (ex: IllegalArgumentException) {
             Result.Failure(ex)
+        } catch (ex: Exception) {
+            Result.Failure(ex)
         }
     }
 }

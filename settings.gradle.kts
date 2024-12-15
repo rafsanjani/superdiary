@@ -35,7 +35,7 @@ dependencyResolutionManagement {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 plugins {
-    id("org.jetbrains.kotlinx.kover.aggregation") version "0.8.3"
+    id("org.jetbrains.kotlinx.kover.aggregation") version "0.9.0"
 }
 
 kover {
@@ -111,4 +111,6 @@ include(":core:location")
 include(":core:logging")
 include(":core:utils")
 include(":core:secrets")
+include(":core:database")
+include(":core:database-test")
 include(":desktopApp")

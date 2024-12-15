@@ -162,7 +162,7 @@ private fun SuperDiaryNavHost(
         animatedComposable<DiaryListScreen> {
             DiaryListScreen.Content(
                 navController = navController,
-                userInfo = userInfo,
+                avatarUrl = userInfo?.avatarUrl,
             )
         }
 
@@ -173,6 +173,7 @@ private fun SuperDiaryNavHost(
                 DetailScreen.Content(
                     diaryId = diaryId,
                     navController = navController,
+                    avatarUrl = userInfo?.avatarUrl.orEmpty(),
                 )
             }
         }

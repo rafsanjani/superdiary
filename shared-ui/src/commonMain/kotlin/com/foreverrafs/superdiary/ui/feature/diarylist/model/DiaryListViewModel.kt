@@ -50,13 +50,21 @@ class DiaryListViewModel(
                 return@flatMapLatest searchByEntry(entry = filters.entry)
             }
 
-            if (filters.date != null) return@flatMapLatest searchByDate(date = filters.date)
+            if (filters.date != null) {
+                return@flatMapLatest searchByDate(date = filters.date)
+            }
 
             // No filter applied, return all the diaries
             getAllDiariesUseCase()
         }
-        .map {
-            DiaryListViewState.Content(diaries = it, filtered = true) as DiaryListViewState
+        .map { result ->
+            when (result) {
+                is Result.Failure -> DiaryListViewState.Error(result.error)
+                is Result.Success -> DiaryListViewState.Content(
+                    result.data,
+                    true,
+                )
+            }
         }
         .catch {
             emit(DiaryListViewState.Error(it))
@@ -73,21 +81,24 @@ class DiaryListViewModel(
         }
     }
 
-    private fun searchByEntry(entry: String): Flow<List<Diary>> =
+    private fun searchByEntry(entry: String): Flow<Result<List<Diary>>> =
         searchDiaryByEntryUseCase.invoke(entry)
+            .map { Result.Success(it) }
 
-    private fun searchByDate(date: LocalDate): Flow<List<Diary>> =
+    private fun searchByDate(date: LocalDate): Flow<Result<List<Diary>>> =
         searchDiaryByDateUseCase.invoke(date.toInstant())
+            .map {
+                Result.Success(it)
+            }
 
-    private fun searchByDateAndEntry(date: LocalDate, entry: String): Flow<List<Diary>> =
+    private fun searchByDateAndEntry(date: LocalDate, entry: String): Flow<Result<List<Diary>>> =
         searchDiaryByDateUseCase(date = date.toInstant())
             .map { list ->
-                list.filter {
-                    it.entry.contains(
-                        entry,
-                        false,
-                    )
-                }
+                Result.Success(
+                    list.filter {
+                        it.entry.contains(entry)
+                    },
+                )
             }
 
     suspend fun deleteDiaries(diaries: List<Diary>): Boolean =

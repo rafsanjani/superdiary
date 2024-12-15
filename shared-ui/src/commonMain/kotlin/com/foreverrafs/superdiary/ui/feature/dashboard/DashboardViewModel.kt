@@ -44,6 +44,7 @@ class DashboardViewModel(
 ) : ViewModel() {
     sealed interface DashboardScreenState {
         data object Loading : DashboardScreenState
+        data class Error(val message: String) : DashboardScreenState
         data class Content(
             val latestEntries: List<Diary>,
             val totalEntries: Long,
@@ -57,12 +58,7 @@ class DashboardViewModel(
 
     private val mutableState = MutableStateFlow<DashboardScreenState>(DashboardScreenState.Loading)
 
-    private val diaries: Flow<List<Diary>> = getAllDiariesUseCase()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = emptyList(),
-        )
+    private val getAllDiariesResult: Flow<Result<List<Diary>>> = getAllDiariesUseCase()
 
     val state: StateFlow<DashboardScreenState> = mutableState
         .onStart { loadDashboardContent() }
@@ -77,38 +73,50 @@ class DashboardViewModel(
             "Loading dashboard content"
         }
 
-        diaries.collect { diaries ->
-            logger.i(Tag) {
-                "Dashboard content refreshed!"
-            }
-            mutableState.update {
-                DashboardScreenState.Content(
-                    latestEntries = diaries.sortedByDescending { it.date }.take(4),
-                    totalEntries = diaries.size.toLong(),
-                    weeklySummary = if (diaries.isEmpty()) {
-                        """
-                            In this panel, your weekly diary entries will be summarized.
-                            Add your first entry to see how it works
-                        """.trimIndent()
-                    } else {
-                        DEFAULT_SUMMARY_TEXT
-                    },
-                    currentStreak = Streak(
-                        0,
-                        clock.now().toDate(),
-                        clock.now().toDate(),
-                    ),
-                    bestStreak = Streak(
-                        0,
-                        clock.now().toDate(),
-                        clock.now().toDate(),
-                    ),
-                )
-            }
+        getAllDiariesResult.collect { result ->
+            when (result) {
+                is Result.Failure -> mutableState.update {
+                    DashboardScreenState.Error(
+                        message = result.error.message.orEmpty(),
+                    )
+                }
 
-            if (diaries.isNotEmpty()) {
-                generateWeeklySummary(diaries)
-                calculateStreak(diaries)
+                is Result.Success -> {
+                    val diaries = result.data
+
+                    logger.i(Tag) {
+                        "Dashboard content refreshed!"
+                    }
+
+                    mutableState.update {
+                        DashboardScreenState.Content(
+                            latestEntries = diaries.sortedByDescending { it.date }.take(4),
+                            totalEntries = diaries.size.toLong(),
+                            weeklySummary = if (diaries.isEmpty()) {
+                                """
+
+                                """.trimIndent()
+                            } else {
+                                DEFAULT_SUMMARY_TEXT
+                            },
+                            currentStreak = Streak(
+                                0,
+                                clock.now().toDate(),
+                                clock.now().toDate(),
+                            ),
+                            bestStreak = Streak(
+                                0,
+                                clock.now().toDate(),
+                                clock.now().toDate(),
+                            ),
+                        )
+                    }
+
+                    if (diaries.isNotEmpty()) {
+                        generateWeeklySummary(diaries)
+                        calculateStreak(diaries)
+                    }
+                }
             }
         }
     }

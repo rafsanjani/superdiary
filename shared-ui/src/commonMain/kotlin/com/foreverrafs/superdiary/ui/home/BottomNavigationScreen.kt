@@ -82,7 +82,7 @@ object BottomNavigationScreen {
             modifier = modifier,
             topBar = {
                 SuperDiaryAppBar(
-                    userInfo = (viewState as? AppSessionState.Success)?.userInfo,
+                    avatarUrl = (viewState as? AppSessionState.Success)?.userInfo?.avatarUrl,
                     onProfileClick = {
                         showConfirmLogoutDialog = true
                     },
