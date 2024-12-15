@@ -91,7 +91,7 @@ jobs:
       SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
       SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
     runs-on: macos-latest
-    needs: danger
+    needs: snapshot
     steps:
       - uses: actions/checkout@v4
         with:
@@ -114,7 +114,7 @@ jobs:
       SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
       SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
     runs-on: ubuntu-latest
-    needs: danger
+    needs: snapshot
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
@@ -160,7 +160,7 @@ jobs:
   androidRelease:
     name: Build android app (release)
     runs-on: macos-14
-    needs: jvmTest
+    needs: snapshot
     env:
       SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
       SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
