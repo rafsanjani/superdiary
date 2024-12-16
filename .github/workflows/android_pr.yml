@@ -187,6 +187,8 @@ jobs:
               echo "OPENAI_KEY=$OPENAI_KEY" >> secrets.properties
               echo "GOOGLE_SERVER_CLIENT_ID=$GOOGLE_SERVER_CLIENT_ID" >> secrets.properties
               echo "MAPS_API_KEY=$MAPS_API_KEY_ANDROID" >> secrets.properties
+              echo "SUPABASE_KEY=$SUPABASE_KEY" >> secrets.properties
+              echo "SUPABASE_URL=$SUPABASE_URL" >> secrets.properties
               cat secrets.properties
 
       - name: Decode keystore file from secrets
