@@ -47,8 +47,7 @@ android {
         release {
             configureReleaseSigning()
             signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = false
-            isDebuggable = true
+            isMinifyEnabled = true
             proguardFile("proguard-rules.pro")
 
             manifestPlaceholders["sentryEnvironment"] = "production"
