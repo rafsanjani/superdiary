@@ -7,7 +7,7 @@ captures
 .externalNativeBuild
 .cxx
 /.kotlin
-
+keystore
 local.properties
 xcuserdata
 desktopApp/diary.db
