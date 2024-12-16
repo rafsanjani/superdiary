@@ -170,6 +170,8 @@ jobs:
       STORE_PASSWORD: ${{secrets.SIGNING_KEYSTORE_PASSWORD}}
       KEY_ALIAS: ${{secrets.SIGNING_KEY_ALIAS}}
       KEY_PASSWORD: ${{secrets.SIGNING_KEY_PASSWORD}}
+      SUPABASE_URL: ${{secrets.SUPABASE_URL}}
+      SUPABASE_KEY: ${{secrets.SUPABASE_KEY}}
     steps:
       - uses: actions/checkout@v4
         with:
