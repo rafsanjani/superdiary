@@ -43,6 +43,7 @@ class DefaultSupabaseAuth(
         }
         getSessionStatus()
     } catch (e: RestException) {
+        logger.e(tag = Tag, throwable = e)
         if (e is BadRequestRestException) {
             // Rewrite exception into a domain type
             AuthApi.SignInStatus.Error(TokenExpiredException(message = e.message))
