@@ -8,7 +8,7 @@ import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.database.Database
-import com.foreverrafs.superdiary.database.TestDatabaseDriver
+import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
@@ -25,7 +25,7 @@ import kotlinx.coroutines.test.setMain
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UpdateDiaryUseCaseTest {
-    private val database = Database(TestDatabaseDriver())
+    private val database = Database(testSuperDiaryDatabase)
     private val dataSource: DataSource = LocalDataSource(database)
 
     private val updateDiaryUseCase =
@@ -36,7 +36,6 @@ class UpdateDiaryUseCaseTest {
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
-        database.createDatabase()
     }
 
     @AfterTest

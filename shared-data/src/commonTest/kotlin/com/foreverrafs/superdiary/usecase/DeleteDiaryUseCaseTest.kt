@@ -8,7 +8,7 @@ import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.database.Database
-import com.foreverrafs.superdiary.database.TestDatabaseDriver
+import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
@@ -25,7 +25,7 @@ import kotlinx.coroutines.test.setMain
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DeleteDiaryUseCaseTest {
-    private val database = Database(TestDatabaseDriver())
+    private val database = Database(testSuperDiaryDatabase)
     private val dataSource: DataSource = LocalDataSource(database)
 
     private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers)
@@ -35,7 +35,6 @@ class DeleteDiaryUseCaseTest {
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
-        database.createDatabase()
     }
 
     @AfterTest

@@ -5,7 +5,7 @@ import assertk.assertions.isEqualTo
 import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.database.Database
-import com.foreverrafs.superdiary.database.TestDatabaseDriver
+import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.CountDiariesUseCase
 import com.foreverrafs.superdiary.insertRandomDiaries
@@ -20,14 +20,13 @@ import kotlinx.coroutines.test.setMain
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CountDiariesUseCaseTest {
-    private val database = Database(TestDatabaseDriver())
+    private val database = Database(testSuperDiaryDatabase)
     private val dataSource: DataSource = LocalDataSource(database)
     private val countDiariesUseCase = CountDiariesUseCase(dataSource = dataSource, dispatchers = TestAppDispatchers)
 
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(TestAppDispatchers.main)
-        database.createDatabase()
     }
 
     @AfterTest
