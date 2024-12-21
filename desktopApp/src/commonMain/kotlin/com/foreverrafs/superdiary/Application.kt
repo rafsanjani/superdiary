@@ -7,35 +7,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.singleWindowApplication
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.data.Database
 import com.foreverrafs.superdiary.ui.App
 import com.foreverrafs.superdiary.ui.di.compositeModule
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 
 fun main() = singleWindowApplication(
     state = WindowState(size = DpSize(400.dp, 800.dp)),
 ) {
-    onCreate()
-    App()
-}
-
-private fun onCreate() {
     initializeKoin()
-    initDatabase()
+    App()
 }
 
 private fun initializeKoin() {
     startKoin {
-        modules(compositeModule(JvmAnalytics(), AggregateLogger(emptyList())))
-    }
-}
-
-private fun initDatabase() = object : KoinComponent {
-    private val database: Database by inject()
-
-    init {
-        database.createDatabase()
+        modules(
+            compositeModule(
+                JvmAnalytics(),
+                AggregateLogger(emptyList()),
+            ),
+        )
     }
 }

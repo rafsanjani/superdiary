@@ -1,5 +1,7 @@
 package com.foreverrafs.superdiary.database.model
 
+import app.cash.sqldelight.ColumnAdapter
+
 data class LocationDb(
     val latitude: Double,
     val longitude: Double,
@@ -23,4 +25,10 @@ data class LocationDb(
     }
 
     override fun toString(): String = "$latitude,$longitude"
+}
+
+val locationAdapter = object : ColumnAdapter<LocationDb, String> {
+    override fun decode(databaseValue: String): LocationDb = LocationDb.fromString(databaseValue)
+
+    override fun encode(value: LocationDb): String = value.toString()
 }

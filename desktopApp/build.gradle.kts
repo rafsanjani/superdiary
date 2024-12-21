@@ -17,6 +17,7 @@ kotlin {
                 implementation(libs.koin.jvm)
                 implementation(projects.core.analytics)
                 implementation(projects.core.logging)
+                implementation(projects.core.database)
                 implementation(projects.sharedUi)
                 implementation(projects.sharedData)
             }

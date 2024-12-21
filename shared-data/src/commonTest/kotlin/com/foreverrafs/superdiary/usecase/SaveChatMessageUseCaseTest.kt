@@ -7,7 +7,7 @@ import assertk.assertions.isEmpty
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.database.Database
-import com.foreverrafs.superdiary.database.TestDatabaseDriver
+import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.GetChatMessagesUseCase
 import com.foreverrafs.superdiary.domain.usecase.SaveChatMessageUseCase
@@ -23,7 +23,7 @@ import kotlinx.coroutines.test.setMain
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SaveChatMessageUseCaseTest {
-    private val database = Database(TestDatabaseDriver())
+    private val database = Database(testSuperDiaryDatabase)
     private val dataSource: DataSource = LocalDataSource(database)
 
     private val saveChatMessageUseCase =
@@ -38,7 +38,6 @@ class SaveChatMessageUseCaseTest {
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
-        database.createDatabase()
     }
 
     @AfterTest

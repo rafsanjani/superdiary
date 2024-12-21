@@ -7,7 +7,7 @@ import assertk.assertions.isNotEmpty
 import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.database.Database
-import com.foreverrafs.superdiary.database.TestDatabaseDriver
+import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
@@ -28,7 +28,7 @@ import kotlinx.datetime.plus
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class GetLatestEntriesUseCaseTest {
-    private val database = Database(TestDatabaseDriver())
+    private val database = Database(testSuperDiaryDatabase)
     private val dataSource: DataSource = LocalDataSource(database)
 
     private val addDiaryUseCase = AddDiaryUseCase(dataSource, TestAppDispatchers) {
@@ -39,7 +39,7 @@ class GetLatestEntriesUseCaseTest {
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
-        database.createDatabase()
+
         database.clearDiaries()
     }
 

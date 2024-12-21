@@ -5,7 +5,7 @@ import assertk.assertions.isNotNull
 import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.database.Database
-import com.foreverrafs.superdiary.database.TestDatabaseDriver
+import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.AddWeeklySummaryUseCase
@@ -23,7 +23,7 @@ import kotlinx.datetime.Clock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AddWeeklySummaryUseCaseTest {
-    private val database = Database(TestDatabaseDriver())
+    private val database = Database(testSuperDiaryDatabase)
     private val dataSource: DataSource = LocalDataSource(database)
     private val addWeeklySummaryUseCase = AddWeeklySummaryUseCase(dataSource, TestAppDispatchers)
     private val getWeeklySummaryUseCase = GetWeeklySummaryUseCase(dataSource, TestAppDispatchers)
@@ -31,7 +31,6 @@ class AddWeeklySummaryUseCaseTest {
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
-        database.createDatabase()
     }
 
     @AfterTest

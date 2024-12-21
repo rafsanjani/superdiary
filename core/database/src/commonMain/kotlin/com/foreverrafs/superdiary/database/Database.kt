@@ -1,7 +1,6 @@
 package com.foreverrafs.superdiary.database
 
 import app.cash.sqldelight.ColumnAdapter
-import app.cash.sqldelight.EnumColumnAdapter
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOneOrNull
@@ -10,42 +9,24 @@ import com.foreverrafs.superdiary.database.model.DiaryChatRoleDb
 import com.foreverrafs.superdiary.database.model.DiaryDb
 import com.foreverrafs.superdiary.database.model.LocationDb
 import com.foreverrafs.superdiary.database.model.WeeklySummaryDb
-import db.Chat
-import db.Diary
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 
-private val dateAdapter = object : ColumnAdapter<Instant, Long> {
+// Converts a date to a long value and vice versa
+val dateAdapter = object : ColumnAdapter<Instant, Long> {
     override fun decode(databaseValue: Long): Instant =
         Instant.Companion.fromEpochMilliseconds(databaseValue)
 
     override fun encode(value: Instant): Long = value.toEpochMilliseconds()
 }
 
-private val locationAdapter = object : ColumnAdapter<LocationDb, String> {
-    override fun decode(databaseValue: String): LocationDb = LocationDb.fromString(databaseValue)
-
-    override fun encode(value: LocationDb): String = value.toString()
-}
-
 @Suppress("TooManyFunctions")
-class Database(databaseDriver: DatabaseDriver) {
-    private val driver = databaseDriver.createDriver()
-    private val superDiaryDatabase =
-        SuperDiaryDatabase(
-            driver = driver,
-            diaryAdapter = Diary.Adapter(
-                dateAdapter = dateAdapter,
-                locationAdapter = locationAdapter,
-            ),
-            chatAdapter = Chat.Adapter(
-                dateAdapter = dateAdapter,
-                roleAdapter = EnumColumnAdapter<DiaryChatRoleDb>(),
-            ),
-        )
-    private val queries = superDiaryDatabase.databaseQueries
+class Database(
+    database: SuperDiaryDatabase,
+) {
+    private val queries = database.databaseQueries
 
     private val diaryMapper =
         { id: Long, entry: String, date: Instant, favorite: Long, location: LocationDb? ->
@@ -57,14 +38,6 @@ class Database(databaseDriver: DatabaseDriver) {
                 location = location.toString(),
             )
         }
-
-    /**
-     * This is only used on JVM and in tests. Schema is created automatically
-     * on Android and iOS
-     */
-    fun createDatabase() {
-        SuperDiaryDatabase.Schema.create(driver)
-    }
 
     fun addDiary(diary: DiaryDb) =
         queries.insert(
