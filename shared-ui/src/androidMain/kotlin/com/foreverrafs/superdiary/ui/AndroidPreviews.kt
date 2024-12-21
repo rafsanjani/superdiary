@@ -203,6 +203,7 @@ private fun CreateDiaryPreview() {
                 ),
                 showSaveDialog = false,
                 onShowSaveDialogChange = {},
+                onNavigateBack = {},
             )
         }
     }
@@ -229,6 +230,7 @@ private fun CreateDiaryPreviewNonEditable() {
                 ),
                 showSaveDialog = false,
                 onShowSaveDialogChange = {},
+                onNavigateBack = {},
             )
         }
     }

@@ -112,6 +112,7 @@ object CreateDiaryScreen {
             onShowSaveDialogChange = {
                 showSaveDialog = it
             },
+            onNavigateBack = navController::popBackStack,
         )
     }
 }

@@ -37,6 +37,7 @@ class CreateDiarySnapshotTests(
                     userInfo = null,
                     showSaveDialog = false,
                     onShowSaveDialogChange = {},
+                    onNavigateBack = {},
                 )
             }
         }
@@ -62,6 +63,7 @@ class CreateDiarySnapshotTests(
                     userInfo = null,
                     showSaveDialog = false,
                     onShowSaveDialogChange = {},
+                    onNavigateBack = {},
                 )
             }
         }
@@ -96,6 +98,7 @@ class CreateDiarySnapshotTests(
                     userInfo = null,
                     showSaveDialog = false,
                     onShowSaveDialogChange = {},
+                    onNavigateBack = {},
                 )
             }
         }
@@ -130,6 +133,7 @@ class CreateDiarySnapshotTests(
                     userInfo = null,
                     showSaveDialog = false,
                     onShowSaveDialogChange = {},
+                    onNavigateBack = {},
                 )
             }
         }
@@ -151,6 +155,7 @@ class CreateDiarySnapshotTests(
                     userInfo = null,
                     showSaveDialog = false,
                     onShowSaveDialogChange = {},
+                    onNavigateBack = {},
                 )
             }
         }
@@ -172,6 +177,7 @@ class CreateDiarySnapshotTests(
                     userInfo = null,
                     showSaveDialog = true,
                     onShowSaveDialogChange = {},
+                    onNavigateBack = {},
                 )
             }
         }
