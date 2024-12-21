@@ -26,3 +26,4 @@ interface AuthApi {
 }
 
 class NoCredentialsException(message: String) : Exception(message)
+class UserAlreadyRegisteredException(message: String) : Exception(message)

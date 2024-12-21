@@ -85,10 +85,6 @@ class DefaultSupabaseAuth(
         }
     }
 
-    companion object {
-        private val Tag = DefaultSupabaseAuth::class.simpleName.orEmpty()
-    }
-
     override suspend fun signIn(email: String, password: String): AuthApi.SignInStatus = try {
         client.auth.signInWith(Email) {
             this.email = email
@@ -122,12 +118,23 @@ class DefaultSupabaseAuth(
         } else {
             AuthApi.SignInStatus.Error(Exception("User was registered but returned session is null!"))
         }
-    } catch (e: Exception) {
-        AuthApi.SignInStatus.Error(e)
+    } catch (exception: RestException) {
+        val error = if (exception.message?.contains(USER_REGISTERED_ERROR, true) == true) {
+            UserAlreadyRegisteredException(exception.message.orEmpty())
+        } else {
+            exception
+        }
+
+        AuthApi.SignInStatus.Error(error)
     }
 
     override suspend fun signOut() {
         client.auth.signOut()
+    }
+
+    companion object {
+        private const val USER_REGISTERED_ERROR = "User already registered"
+        private val Tag = DefaultSupabaseAuth::class.simpleName.orEmpty()
     }
 }
 

@@ -81,6 +81,9 @@ fun RegisterScreenContent(
 
             is RegisterScreenState.Error -> {
                 enableRegisterButton = true
+                snackbarHostState.showSnackbar(
+                    message = viewState.error.message ?: "An error occurred",
+                )
             }
         }
     }
@@ -297,6 +300,7 @@ private fun InputField(
                 }
             },
             visualTransformation = visualTransformation,
+            maxLines = 1,
         )
     }
 }
