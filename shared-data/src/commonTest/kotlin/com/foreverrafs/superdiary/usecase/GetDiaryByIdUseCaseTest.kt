@@ -8,7 +8,7 @@ import assertk.assertions.isNull
 import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.database.Database
-import com.foreverrafs.superdiary.database.TestDatabaseDriver
+import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
@@ -25,7 +25,7 @@ import kotlinx.coroutines.test.setMain
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class GetDiaryByIdUseCaseTest {
-    private val database = Database(TestDatabaseDriver())
+    private val database = Database(testSuperDiaryDatabase)
     private val dataSource: DataSource = LocalDataSource(database = database)
     private val addDiaryUseCase = AddDiaryUseCase(dataSource, TestAppDispatchers) {
         // no-op validator
@@ -35,7 +35,6 @@ class GetDiaryByIdUseCaseTest {
 
     @BeforeTest
     fun setup() {
-        database.createDatabase()
         database.clearDiaries()
         Dispatchers.setMain(StandardTestDispatcher())
     }

@@ -10,7 +10,7 @@ import assertk.assertions.messageContains
 import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.database.Database
-import com.foreverrafs.superdiary.database.TestDatabaseDriver
+import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
@@ -33,7 +33,7 @@ import kotlinx.datetime.LocalDate
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchDiaryUseCaseTest {
 
-    private val database = Database(TestDatabaseDriver())
+    private val database = Database(testSuperDiaryDatabase)
     private val dataSource: DataSource = LocalDataSource(database)
 
     private val searchDiaryBetweenDatesUseCase = SearchDiaryBetweenDatesUseCase(
@@ -52,7 +52,7 @@ class SearchDiaryUseCaseTest {
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
-        database.createDatabase()
+
         database.clearDiaries()
     }
 

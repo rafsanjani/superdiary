@@ -23,6 +23,7 @@ buildscript {
     }
 }
 
+// TODO: Move this into a plugin
 tasks.register("printLineCoverage") {
     group = "verification"
     doLast {

@@ -7,9 +7,9 @@ import co.touchlab.sqliter.DatabaseConfiguration
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-actual class TestDatabaseDriver : DatabaseDriver {
+internal actual class TestDatabaseDriverFactory : DatabaseDriverFactory {
     @OptIn(ExperimentalUuidApi::class)
-    override fun createDriver(): SqlDriver {
+    override fun createSqlDriver(): SqlDriver {
         val schema = SuperDiaryDatabase.Schema
         return NativeSqliteDriver(
             DatabaseConfiguration(

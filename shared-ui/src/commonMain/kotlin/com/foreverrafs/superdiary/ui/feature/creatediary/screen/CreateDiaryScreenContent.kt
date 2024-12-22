@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
+import com.foreverrafs.superdiary.ui.BackHandler
 import com.foreverrafs.superdiary.ui.components.ConfirmSaveDialog
 import com.foreverrafs.superdiary.ui.components.LocationRationaleDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
@@ -78,16 +79,29 @@ fun CreateDiaryScreenContent(
     userInfo: UserInfo?,
     onRequestLocationPermission: () -> Unit,
     onDontAskAgain: () -> Unit,
+    onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     richTextState: RichTextState = rememberRichTextState(),
 ) {
+    BackHandler {
+        if (richTextState.toText().isEmpty()) {
+            onNavigateBack()
+        } else {
+            onShowSaveDialogChange(true)
+        }
+    }
+
     Scaffold(
         topBar = {
             SuperDiaryAppBar(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            onShowSaveDialogChange(true)
+                            if (richTextState.toText().isEmpty()) {
+                                onNavigateBack()
+                            } else {
+                                onShowSaveDialogChange(true)
+                            }
                         },
                     ) {
                         Icon(
@@ -119,6 +133,7 @@ fun CreateDiaryScreenContent(
                 ConfirmSaveDialog(
                     onDismiss = {
                         onShowSaveDialogChange(false)
+                        onNavigateBack()
                     },
                     onConfirm = {
                         onSaveDiary(richTextState.toHtml())

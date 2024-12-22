@@ -40,9 +40,13 @@ android {
 
     namespace = "com.foreverrafs.superdiary.app"
 
+    // This will be populated in CI by configureReleaseSigning()
+    signingConfigs.create("release")
+
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("debug")
+            configureReleaseSigning()
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             proguardFile("proguard-rules.pro")
 
@@ -65,6 +69,27 @@ android {
             isMinifyEnabled = false
             isDebuggable = true
         }
+    }
+}
+
+fun configureReleaseSigning() {
+    val storeFile = findProperty("STORE_FILE")?.toString()
+    val keyAlias = findProperty("KEY_ALIAS")?.toString()
+    val storePassword = findProperty("STORE_PASSWORD")?.toString()
+    val keyPassword = findProperty("KEY_PASSWORD")?.toString()
+
+    if (storeFile != null && keyAlias != null && storePassword != null && keyPassword != null) {
+        android.signingConfigs.getByName("release") {
+            this.storeFile = File("${rootProject.projectDir.path}//$storeFile")
+            this.storePassword = storePassword
+            this.keyAlias = keyAlias
+            this.keyPassword = keyPassword
+        }
+        logger.info("Signing parameters injected")
+    } else {
+        logger.warn(
+            "WARN:Signing parameters not found. You can't build release variants."
+        )
     }
 }
 

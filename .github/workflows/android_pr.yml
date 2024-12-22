@@ -91,7 +91,7 @@ jobs:
       SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
       SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
     runs-on: macos-latest
-    needs: danger
+    needs: snapshot
     steps:
       - uses: actions/checkout@v4
         with:
@@ -114,7 +114,7 @@ jobs:
       SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
       SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
     runs-on: ubuntu-latest
-    needs: danger
+    needs: snapshot
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
@@ -156,33 +156,51 @@ jobs:
           minColorRange: 0
           maxColorRange: 100
 
-
   androidRelease:
     name: Build android app (release)
     runs-on: macos-14
-    needs: jvmTest
+    needs: snapshot
     env:
       SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
       SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
       GOOGLE_SERVER_CLIENT_ID: ${{secrets.GOOGLE_SERVER_CLIENT_ID}}
       MAPS_API_KEY_ANDROID: ${{secrets.MAPS_API_KEY_ANDROID}}
       OPENAI_KEY: ${{secrets.OPENAI_KEY}}
+      STORE_FILE_BASE64: ${{secrets.SIGNING_KEY_BASE64}}
+      STORE_PASSWORD: ${{secrets.SIGNING_KEYSTORE_PASSWORD}}
+      KEY_ALIAS: ${{secrets.SIGNING_KEY_ALIAS}}
+      KEY_PASSWORD: ${{secrets.SIGNING_KEY_PASSWORD}}
+      SUPABASE_URL: ${{secrets.SUPABASE_URL}}
+      SUPABASE_KEY: ${{secrets.SUPABASE_KEY}}
     steps:
       - uses: actions/checkout@v4
         with:
           lfs: true
-
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
+
       - name: Setup secrets.properties
         run: |
               touch secrets.properties
               echo "OPENAI_KEY=$OPENAI_KEY" >> secrets.properties
               echo "GOOGLE_SERVER_CLIENT_ID=$GOOGLE_SERVER_CLIENT_ID" >> secrets.properties
               echo "MAPS_API_KEY=$MAPS_API_KEY_ANDROID" >> secrets.properties
+              echo "SUPABASE_KEY=$SUPABASE_KEY" >> secrets.properties
+              echo "SUPABASE_URL=$SUPABASE_URL" >> secrets.properties
               cat secrets.properties
+
+      - name: Decode keystore file from secrets
+        run: echo "$STORE_FILE_BASE64" | base64 --decode > keystore
+
+      - name: Inject Signing params into gradle.properties
+        run: |
+          echo STORE_FILE=keystore >> gradle.properties
+          echo STORE_PASSWORD="$STORE_PASSWORD" >> gradle.properties
+          echo KEY_PASSWORD="$KEY_PASSWORD" >> gradle.properties
+          echo KEY_ALIAS="$KEY_ALIAS" >> gradle.properties
+          cat gradle.properties
 
       - name: Gradle Wrapper Validation
         uses: gradle/actions/wrapper-validation@v4
