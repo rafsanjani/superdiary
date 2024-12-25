@@ -5,6 +5,7 @@ import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.SessionInfo
+import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.ui.awaitUntil
 import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreenViewModel
@@ -77,7 +78,12 @@ class LoginScreenViewModelTest {
                 expiresAt = Clock.System.now(),
                 accessToken = "",
                 refreshToken = "",
-                userInfo = null,
+                userInfo = UserInfo(
+                    id = "",
+                    avatarUrl = "",
+                    name = "",
+                    email = "",
+                ),
             ),
         )
 

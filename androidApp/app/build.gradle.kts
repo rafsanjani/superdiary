@@ -3,6 +3,7 @@
 plugins {
     kotlin("android")
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
@@ -88,7 +89,7 @@ fun configureReleaseSigning() {
         logger.info("Signing parameters injected")
     } else {
         logger.warn(
-            "WARN:Signing parameters not found. You can't build release variants."
+            "WARN:Signing parameters not found. You can't build release variants.",
         )
     }
 }
@@ -137,6 +138,7 @@ dependencies {
     implementation(projects.core.utils)
     testImplementation(libs.koin.android)
     testImplementation(libs.koin.test)
+    implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.kotlinx.coroutines.test)
     kotlin("android")
 }

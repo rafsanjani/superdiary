@@ -23,6 +23,10 @@ class FakeAuthApi(
         ),
     )
 
+    override suspend fun handleRegistrationConfirmationDeeplink(fragment: String): AuthApi.SignInStatus {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper?): AuthApi.SignInStatus =
         signInResult
 
@@ -39,7 +43,7 @@ class FakeAuthApi(
         name: String,
         email: String,
         password: String,
-    ): AuthApi.SignInStatus {
+    ): AuthApi.RegistrationStatus {
         TODO("Not yet implemented")
     }
 

@@ -50,12 +50,6 @@ kotlin {
             }
         }
 
-        androidUnitTest {
-            dependencies {
-                implementation(libs.square.sqldelight.driver.sqlite)
-            }
-        }
-
         commonTest {
             dependencies {
                 implementation(kotlin("test"))

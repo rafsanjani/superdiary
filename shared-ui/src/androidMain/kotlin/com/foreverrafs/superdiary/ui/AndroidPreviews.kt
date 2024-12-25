@@ -18,10 +18,11 @@ import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
-import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreenContent
+import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenContent
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenState
+import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegistrationConfirmationScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardScreenContent
@@ -67,6 +68,18 @@ internal fun TestAppContainer(content: @Composable () -> Unit) {
                     .padding(it),
             ) {
                 content()
+            }
+        }
+    }
+}
+
+@Composable
+@PreviewSuperDiary
+private fun RegistrationConfirmationPreview() {
+    SuperdiaryTheme {
+        SuperdiaryTheme {
+            Surface(color = MaterialTheme.colorScheme.background) {
+                RegistrationConfirmationScreen()
             }
         }
     }
@@ -408,7 +421,7 @@ private fun DetailPreview() {
 @PreviewSuperDiary
 private fun LoginPreview() {
     SuperdiaryTheme {
-        LoginScreenContent(
+        LoginScreen(
             onLoginWithGoogle = {},
             onLoginClick = { _, _ -> },
             onRegisterClick = {},

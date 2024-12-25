@@ -15,14 +15,16 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardTab
-import com.foreverrafs.superdiary.ui.feature.diarychat.screen.DiaryChatTab
-import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteTab
+import com.foreverrafs.superdiary.ui.navigation.AppRoute
 import com.foreverrafs.superdiary.ui.navigation.SuperDiaryTab
 
 @Composable
 fun SuperDiaryBottomBar(navController: NavController) {
-    val items = listOf(DashboardTab, FavoriteTab, DiaryChatTab)
+    val items = listOf(
+        AppRoute.BottomNavigationRoute.DashboardTab,
+        AppRoute.BottomNavigationRoute.FavoriteTab,
+        AppRoute.BottomNavigationRoute.DiaryChatTab,
+    )
 
     val currentBackStackEntry = navController.currentBackStackEntryAsState().value
 

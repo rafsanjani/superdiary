@@ -16,7 +16,10 @@ internal fun supabaseModule() = module {
             supabaseUrl = SuperDiarySecret.supabaseUrl,
             supabaseKey = SuperDiarySecret.supabaseKey,
         ) {
-            install(Auth)
+            install(Auth) {
+                host = "login-verify"
+                scheme = "superdiary"
+            }
             install(Realtime)
             install(Postgrest) {
                 serializer = KotlinXSerializer(
