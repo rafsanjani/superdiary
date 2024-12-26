@@ -37,13 +37,13 @@ class RegisterScreenViewModel(
                     password = password,
                 )
             ) {
-                is AuthApi.SignInStatus.Error -> _viewState.update {
+                is AuthApi.RegistrationStatus.Error -> _viewState.update {
                     RegisterScreenState.Error(
                         error = result.exception,
                     )
                 }
 
-                is AuthApi.SignInStatus.LoggedIn -> _viewState.update {
+                is AuthApi.RegistrationStatus.Success -> _viewState.update {
                     RegisterScreenState.Success
                 }
             }

@@ -28,6 +28,7 @@ dependencyResolutionManagement {
         create("libs") {
             from("io.github.rafsanjani:versions:2024.12.25")
             version("openaiKotlin", "4.0.0-SNAPSHOT")
+            version("kotlinSerialization", "1.8.0-RC")
         }
     }
 }

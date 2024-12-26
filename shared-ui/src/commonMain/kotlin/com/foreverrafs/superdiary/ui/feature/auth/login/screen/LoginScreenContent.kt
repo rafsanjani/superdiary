@@ -45,6 +45,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.foreverrafs.auth.NoCredentialsException
+import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -61,9 +62,9 @@ import superdiary.shared_ui.generated.resources.label_username
 import superdiary.shared_ui.generated.resources.logo
 
 @Composable
-fun LoginScreenContent(
+fun LoginScreen(
     viewState: LoginViewState,
-    onSignInSuccess: () -> Unit,
+    onSignInSuccess: (UserInfo) -> Unit,
     onLoginClick: (username: String, password: String) -> Unit,
     onLoginWithGoogle: () -> Unit,
     onRegisterClick: () -> Unit,
@@ -90,7 +91,7 @@ fun LoginScreenContent(
             is LoginViewState.Idle -> enableLoginButton = true
             is LoginViewState.Processing -> enableLoginButton = false
 
-            is LoginViewState.Success -> currentOnSignInSuccess()
+            is LoginViewState.Success -> currentOnSignInSuccess(viewState.userInfo)
         }
     }
 
@@ -354,7 +355,7 @@ private fun InputField(
 @Preview
 private fun LoginPreview() {
     SuperdiaryTheme {
-        LoginScreenContent(
+        LoginScreen(
             onLoginWithGoogle = {},
             onLoginClick = { _, _ -> },
             onRegisterClick = {},

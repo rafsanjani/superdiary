@@ -34,8 +34,10 @@ class LoginScreenViewModel(
                     )
                 }
 
-                is AuthApi.SignInStatus.LoggedIn -> _viewState.update {
-                    LoginViewState.Success
+                is AuthApi.SignInStatus.LoggedIn -> _viewState.update { currentState ->
+                    result.sessionInfo.userInfo?.let {
+                        LoginViewState.Success(it)
+                    } ?: currentState
                 }
             }
         }
@@ -53,8 +55,10 @@ class LoginScreenViewModel(
                     )
                 }
 
-                is AuthApi.SignInStatus.LoggedIn -> _viewState.update {
-                    LoginViewState.Success
+                is AuthApi.SignInStatus.LoggedIn -> _viewState.update { currentState ->
+                    result.sessionInfo.userInfo?.let {
+                        LoginViewState.Success(it)
+                    } ?: currentState
                 }
             }
         }

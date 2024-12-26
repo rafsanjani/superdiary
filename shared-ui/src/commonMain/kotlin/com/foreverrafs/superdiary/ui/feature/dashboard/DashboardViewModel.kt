@@ -31,7 +31,7 @@ import kotlinx.datetime.Clock
 
 @Suppress("LongParameterList")
 class DashboardViewModel(
-    private val getAllDiariesUseCase: GetAllDiariesUseCase,
+    getAllDiariesUseCase: GetAllDiariesUseCase,
     private val calculateStreakUseCase: CalculateStreakUseCase,
     private val calculateBestStreakUseCase: CalculateBestStreakUseCase,
     private val addWeeklySummaryUseCase: AddWeeklySummaryUseCase,

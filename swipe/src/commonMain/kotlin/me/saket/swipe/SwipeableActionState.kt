@@ -7,12 +7,15 @@ import androidx.compose.foundation.gestures.DraggableState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.FloatState
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import kotlin.math.absoluteValue
 
 @Composable
-fun rememberSwipeableActionsState(iconWidthPx: Int): SwipeableActionState = remember { SwipeableActionState(iconWidthPx) }
+fun rememberSwipeableActionsState(iconWidthPx: Int): SwipeableActionState =
+    remember { SwipeableActionState(iconWidthPx) }
 
 /** The state of a [SwipeableActionBox]. */
 @Stable
@@ -36,7 +39,11 @@ class SwipeableActionState internal constructor(private val iconWidthPx: Int) {
     suspend fun finalizeDrag() {
         if (_offset.value == 0f) return
 
-        val targetValue = if (_offset.value.absoluteValue >= iconWidthPx / 2) iconWidthPx.toFloat() * -1 else 0f
+        val targetValue = if (_offset.value.absoluteValue >= iconWidthPx / 2) {
+            iconWidthPx.toFloat() * -1
+        } else {
+            0f
+        }
 
         dragBy(targetValue = targetValue)
     }

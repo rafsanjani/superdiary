@@ -18,136 +18,127 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.foreverrafs.superdiary.ui.AppSessionState
-import com.foreverrafs.superdiary.ui.AppViewModel
+import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.ui.components.ConfirmLogoutDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
-import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
 import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardTab
 import com.foreverrafs.superdiary.ui.feature.diarychat.screen.DiaryChatTab
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteTab
-import kotlinx.serialization.Serializable
-import org.koin.compose.koinInject
+import com.foreverrafs.superdiary.ui.navigation.AppRoute
 
 /**
  * Provides a navigation entry point for all the screens that rely on
  * bottom tab for navigation
  */
 
-@Serializable
-object BottomNavigationScreen {
+@Composable
+fun BottomNavigationScreen(
+    rootNavController: NavHostController,
+    userInfo: UserInfo?,
+    onLogout: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    // This nav controller is used to navigate between the tabs
+    val tabNavController = rememberNavController()
 
-    @Composable
-    fun Content(
-        rootNavController: NavHostController,
-        modifier: Modifier = Modifier,
-    ) {
-        // This nav controller is used to navigate between the tabs
-        val tabNavController = rememberNavController()
-        val appViewModel: AppViewModel = koinInject()
+    // This snackbar host state is used to show snackbars on the main screen
+    val snackbarHostState = remember { SnackbarHostState() }
 
-        val viewState by appViewModel.viewState.collectAsStateWithLifecycle()
+    var showConfirmLogoutDialog by remember { mutableStateOf(false) }
 
-        // This snackbar host state is used to show snackbars on the main screen
-        val snackbarHostState = remember { SnackbarHostState() }
-
-        var showConfirmLogoutDialog by remember { mutableStateOf(false) }
-
-        if (showConfirmLogoutDialog) {
-            ConfirmLogoutDialog(
-                onDismiss = {
-                    showConfirmLogoutDialog = false
-                },
-                onLogout = {
-                    appViewModel.logOut()
-                    rootNavController.navigate(LoginScreen) {
-                        popUpTo(LoginScreen) {
-                            inclusive = true
-                        }
-                    }
-                    showConfirmLogoutDialog = false
-                },
-            )
-        }
-
-        Scaffold(
-            modifier = modifier,
-            topBar = {
-                SuperDiaryAppBar(
-                    avatarUrl = (viewState as? AppSessionState.Success)?.userInfo?.avatarUrl,
-                    onProfileClick = {
-                        showConfirmLogoutDialog = true
-                    },
-                )
+    if (showConfirmLogoutDialog) {
+        ConfirmLogoutDialog(
+            onDismiss = {
+                showConfirmLogoutDialog = false
             },
-            bottomBar = {
-                SuperDiaryBottomBar(tabNavController)
-            },
-            snackbarHost = { SnackbarHost(snackbarHostState) },
-        ) { contentPadding ->
-
-            Surface(
-                modifier = Modifier
-                    .padding(contentPadding)
-                    .consumeWindowInsets(contentPadding),
-                color = MaterialTheme.colorScheme.background,
-                content = {
-                    NavHost(
-                        navController = tabNavController,
-                        startDestination = DashboardTab,
-                    ) {
-                        animatedComposable<DashboardTab> {
-                            DashboardTab.Content(
-                                navController = rootNavController,
-                                snackbarHostState = snackbarHostState,
-                            )
-                        }
-
-                        animatedComposable<FavoriteTab> {
-                            FavoriteTab.Content(
-                                snackbarHostState = snackbarHostState,
-                                navController = rootNavController,
-                            )
-                        }
-
-                        animatedComposable<DiaryChatTab> {
-                            DiaryChatTab.Content()
-                        }
+            onLogout = {
+                onLogout()
+                rootNavController.navigate(AppRoute.LoginScreen) {
+                    popUpTo(AppRoute.LoginScreen) {
+                        inclusive = true
                     }
-                },
-            )
-        }
+                }
+                showConfirmLogoutDialog = false
+            },
+        )
     }
 
-    private inline fun <reified T : Any> NavGraphBuilder.animatedComposable(
-        noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
-    ) = composable<T>(
-        content = content,
-        enterTransition = { enterTransition() },
-        exitTransition = { exitTransition() },
-        popEnterTransition = { enterTransition() },
-        popExitTransition = { exitTransition() },
-    )
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            SuperDiaryAppBar(
+                avatarUrl = userInfo?.avatarUrl,
+                onProfileClick = {
+                    showConfirmLogoutDialog = true
+                },
+            )
+        },
+        bottomBar = {
+            SuperDiaryBottomBar(tabNavController)
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+    ) { contentPadding ->
 
-    private fun enterTransition() = fadeIn(
-        animationSpec = tween(
-            300,
-            easing = LinearEasing,
-        ),
-    )
+        Surface(
+            modifier = Modifier
+                .padding(contentPadding)
+                .consumeWindowInsets(contentPadding),
+            color = MaterialTheme.colorScheme.background,
+            content = {
+                NavHost(
+                    navController = tabNavController,
+                    startDestination = BottomNavigationRoute.DashboardTab,
+                ) {
+                    animatedComposable<BottomNavigationRoute.DashboardTab> {
+                        DashboardTab(
+                            navController = rootNavController,
+                            snackbarHostState = snackbarHostState,
+                        )
+                    }
 
-    private fun exitTransition() = fadeOut(
-        animationSpec = tween(
-            300,
-            easing = LinearEasing,
-        ),
-    )
+                    animatedComposable<BottomNavigationRoute.FavoriteTab> {
+                        FavoriteTab(
+                            snackbarHostState = snackbarHostState,
+                            navController = rootNavController,
+                        )
+                    }
+
+                    animatedComposable<BottomNavigationRoute.DiaryChatTab> {
+                        DiaryChatTab()
+                    }
+                }
+            },
+        )
+    }
 }
+
+private inline fun <reified T : Any> NavGraphBuilder.animatedComposable(
+    noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
+) = composable<T>(
+    content = content,
+    enterTransition = { enterTransition() },
+    exitTransition = { exitTransition() },
+    popEnterTransition = { enterTransition() },
+    popExitTransition = { exitTransition() },
+)
+
+private fun enterTransition() = fadeIn(
+    animationSpec = tween(
+        durationMillis = 300,
+        easing = LinearEasing,
+    ),
+)
+
+private fun exitTransition() = fadeOut(
+    animationSpec = tween(
+        durationMillis = 300,
+        easing = LinearEasing,
+    ),
+)

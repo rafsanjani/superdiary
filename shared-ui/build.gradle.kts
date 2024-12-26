@@ -68,7 +68,7 @@ kotlin {
                 implementation(libs.coil3.network.ktor)
                 implementation(libs.coil3.multiplatform)
                 implementation(libs.ktor.client.core)
-
+                implementation("io.insert-koin:koin-compose-viewmodel:4.0.1")
                 api(projects.core.auth)
                 api(projects.core.analytics)
                 api(projects.core.location)
