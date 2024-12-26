@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.ui.auth.login
 
+import androidx.core.uri.Uri
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
@@ -23,7 +24,7 @@ class FakeAuthApi(
         ),
     )
 
-    override suspend fun handleAuthDeeplink(fragment: String): AuthApi.SignInStatus {
+    override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SignInStatus {
         TODO("Not yet implemented")
     }
 
