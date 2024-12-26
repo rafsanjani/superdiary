@@ -59,11 +59,25 @@ class AppViewModel(
         )
 
     /**
-     * When there is a token available, we show a loading screen and
-     * automatically sign in
+     * Attempt to restore a valid session from a deeplink when available When
+     * the deeplink is invalid a special error is emitted and is used to render
+     * the ui accordingly
      */
     private fun restoreSession() = viewModelScope.launch(appCoroutineDispatchers.main) {
         if (pendingDeeplink != null) {
+            if (pendingDeeplink.type == DeeplinkContainer.LinkType.Invalid) {
+                logger.d(TAG) {
+                    "Invalid deeplink found. Emitting error state $pendingDeeplink"
+                }
+                _viewState.update {
+                    AppSessionState.Error(
+                        isFromDeeplink = true,
+                        exception = Exception(pendingDeeplink.payload.toString()),
+                    )
+                }
+                return@launch
+            }
+
             logger.d(TAG) {
                 "App deeplink found. attempting to process it"
             }
