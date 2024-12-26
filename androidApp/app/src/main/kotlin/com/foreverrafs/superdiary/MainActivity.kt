@@ -10,7 +10,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.ui.App
-import com.foreverrafs.superdiary.ui.feature.auth.register.Deeplink
 import com.foreverrafs.superdiary.ui.feature.auth.register.DeeplinkContainer
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
@@ -46,15 +45,11 @@ class MainActivity : ComponentActivity() {
         val scheme = data.scheme ?: return
         val host = data.host ?: return
         if (scheme != supabase.auth.config.scheme || host != supabase.auth.config.host) return
-        val dataFragment = intent.data?.fragment
         logger.d("MainActivity") {
             "Found an app related deeplink. Attempting to resolve it's payload"
         }
-        deeplinkContainer.add(
-            Deeplink(
-                type = DeeplinkContainer.LinkType.EmailConfirmation,
-                payload = dataFragment.orEmpty(),
-            ),
+        deeplinkContainer.push(
+            data,
         )
     }
 }

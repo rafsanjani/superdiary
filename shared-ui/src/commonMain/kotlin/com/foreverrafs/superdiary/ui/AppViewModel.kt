@@ -7,6 +7,7 @@ import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.core.utils.AppCoroutineDispatchers
+import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.ui.feature.auth.register.DeeplinkContainer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,8 +20,16 @@ import kotlinx.coroutines.launch
 
 sealed interface AppSessionState {
     data object Processing : AppSessionState
-    data class Success(val userInfo: UserInfo?) : AppSessionState
-    data class Error(val exception: Exception) : AppSessionState
+    data class Authenticated(
+        val userInfo: UserInfo?,
+        val linkType: DeeplinkContainer.LinkType? = null,
+    ) : AppSessionState
+
+    data class Error(
+        val exception: Throwable,
+        val isFromDeeplink: Boolean = false,
+    ) : AppSessionState
+
     data object UnAuthenticated : AppSessionState
 }
 
@@ -28,12 +37,13 @@ class AppViewModel(
     private val appCoroutineDispatchers: AppCoroutineDispatchers,
     private val logger: AggregateLogger,
     private val authApi: AuthApi,
-    private val deeplinkContainer: DeeplinkContainer,
+    deeplinkContainer: DeeplinkContainer,
 ) : ViewModel() {
 
     private val _viewState: MutableStateFlow<AppSessionState> =
         MutableStateFlow(AppSessionState.Processing)
 
+    private val pendingDeeplink = deeplinkContainer.pop()
     val viewState: StateFlow<AppSessionState> = _viewState.onStart {
         restoreSession()
     }
@@ -53,37 +63,57 @@ class AppViewModel(
      * automatically sign in
      */
     private fun restoreSession() = viewModelScope.launch(appCoroutineDispatchers.main) {
-        val session = processRegistrationDeeplink()
-
-        if (session != null) {
+        if (pendingDeeplink != null) {
             logger.d(TAG) {
-                "Emitting success state from registration confirmation token"
+                "App deeplink found. attempting to process it"
             }
-            _viewState.update {
-                AppSessionState.Success(session.userInfo)
+            when (val getSessionResult = processPendingDeeplink()) {
+                is Result.Success -> {
+                    "Emitting success state from authentication token"
+                    _viewState.update {
+                        AppSessionState.Authenticated(
+                            userInfo = getSessionResult.data.userInfo,
+                            linkType = pendingDeeplink.type,
+                        )
+                    }
+                    return@launch
+                }
+
+                is Result.Failure -> {
+                    _viewState.update {
+                        AppSessionState.Error(
+                            isFromDeeplink = true,
+                            exception = getSessionResult.error,
+                        )
+                    }
+                }
             }
             return@launch
         }
+
         logger.d(TAG) {
             "Unable to restore from registration confirmation token. Attempting to restore from regular session"
         }
 
-        val authStatus = authApi.restoreSession()
+        val sessionRestoreStatus = authApi.restoreSession()
 
         _viewState.update {
-            when (authStatus) {
+            when (sessionRestoreStatus) {
                 is AuthApi.SignInStatus.Error -> {
                     logger.w(
                         tag = TAG,
-                        throwable = authStatus.exception,
+                        throwable = sessionRestoreStatus.exception,
                     ) { "Unable to restore previous session" }
-                    AppSessionState.Error(authStatus.exception)
+                    AppSessionState.Error(
+                        exception = sessionRestoreStatus.exception,
+                        isFromDeeplink = false,
+                    )
                 }
 
                 is AuthApi.SignInStatus.LoggedIn -> {
-                    logger.d(TAG) { "Session restored. Token expires on ${authStatus.sessionInfo.expiresAt}" }
-                    logger.d(TAG) { "Session user ${authStatus.sessionInfo.userInfo}" }
-                    AppSessionState.Success(authStatus.sessionInfo.userInfo)
+                    logger.d(TAG) { "Session restored. Token expires on ${sessionRestoreStatus.sessionInfo.expiresAt}" }
+                    logger.d(TAG) { "Session user ${sessionRestoreStatus.sessionInfo.userInfo}" }
+                    AppSessionState.Authenticated(sessionRestoreStatus.sessionInfo.userInfo)
                 }
             }
         }
@@ -94,35 +124,31 @@ class AppViewModel(
         _viewState.update { AppSessionState.UnAuthenticated }
     }
 
-    private suspend fun processRegistrationDeeplink(): SessionInfo? {
-        val deeplink = deeplinkContainer.getAndRemove(
-            type = DeeplinkContainer.LinkType.EmailConfirmation,
-        )
-        if (deeplink == null || deeplink.payload.isEmpty()) {
-            logger.d(TAG) { "No registration deeplink found" }
-            return null
+    /**
+     * An auth payload can originate from any of the following sources;
+     * 1. confirmation email sent after a registration process in the app
+     * 2. An invitation email sent after a user is invited
+     * 3. A password reset email after a user tries to reset their password
+     */
+    private suspend fun processPendingDeeplink(): Result<SessionInfo> = when (
+        val result =
+            authApi.handleAuthDeeplink(pendingDeeplink?.payload)
+    ) {
+        is AuthApi.SignInStatus.LoggedIn -> {
+            logger.d(TAG) {
+                "Auth deeplink successfully processed. A session for the user should have been started by now"
+            }
+            Result.Success(result.sessionInfo)
         }
 
-        return when (
-            val result =
-                authApi.handleRegistrationConfirmationDeeplink(deeplink.payload)
-        ) {
-            is AuthApi.SignInStatus.LoggedIn -> {
-                logger.d(TAG) {
-                    "New account successfully confirmed. A session for the user should have been started by now"
-                }
-                result.sessionInfo
+        is AuthApi.SignInStatus.Error -> {
+            logger.e(
+                tag = TAG,
+                throwable = result.exception,
+            ) {
+                "Error confirming new user registration"
             }
-
-            is AuthApi.SignInStatus.Error -> {
-                logger.e(
-                    tag = TAG,
-                    throwable = result.exception,
-                ) {
-                    "Error confirming new user registration"
-                }
-                null
-            }
+            Result.Failure(Exception("Error authenticating user with link payload"))
         }
     }
 

@@ -18,7 +18,7 @@ import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
-import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
+import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreenContent
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenContent
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenState
@@ -421,12 +421,13 @@ private fun DetailPreview() {
 @PreviewSuperDiary
 private fun LoginPreview() {
     SuperdiaryTheme {
-        LoginScreen(
+        LoginScreenContent(
             onLoginWithGoogle = {},
             onLoginClick = { _, _ -> },
             onRegisterClick = {},
             viewState = LoginViewState.Idle,
             onSignInSuccess = {},
+            isFromDeeplink = false,
         )
     }
 }

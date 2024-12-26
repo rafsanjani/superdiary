@@ -62,9 +62,10 @@ import superdiary.shared_ui.generated.resources.label_username
 import superdiary.shared_ui.generated.resources.logo
 
 @Composable
-fun LoginScreen(
+fun LoginScreenContent(
     viewState: LoginViewState,
     onSignInSuccess: (UserInfo) -> Unit,
+    isFromDeeplink: Boolean,
     onLoginClick: (username: String, password: String) -> Unit,
     onLoginWithGoogle: () -> Unit,
     onRegisterClick: () -> Unit,
@@ -92,6 +93,12 @@ fun LoginScreen(
             is LoginViewState.Processing -> enableLoginButton = false
 
             is LoginViewState.Success -> currentOnSignInSuccess(viewState.userInfo)
+        }
+    }
+
+    LaunchedEffect(isFromDeeplink) {
+        if (isFromDeeplink) {
+            snackbarHostState.showSnackbar("The link is invalid or has expired!")
         }
     }
 
@@ -355,12 +362,13 @@ private fun InputField(
 @Preview
 private fun LoginPreview() {
     SuperdiaryTheme {
-        LoginScreen(
+        LoginScreenContent(
             onLoginWithGoogle = {},
             onLoginClick = { _, _ -> },
             onRegisterClick = {},
             viewState = LoginViewState.Idle,
             onSignInSuccess = {},
+            isFromDeeplink = false,
         )
     }
 }

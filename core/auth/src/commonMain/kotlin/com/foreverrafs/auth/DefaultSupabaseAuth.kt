@@ -1,5 +1,6 @@
 package com.foreverrafs.auth
 
+import androidx.core.uri.Uri
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
@@ -131,13 +132,13 @@ class DefaultSupabaseAuth(
     }
 
     @OptIn(SupabaseInternal::class)
-    override suspend fun handleRegistrationConfirmationDeeplink(url: String): AuthApi.SignInStatus =
+    override suspend fun handleAuthDeeplink(url: Uri?): AuthApi.SignInStatus =
         suspendCoroutine { continuation ->
             logger.d(Tag) {
-                "Confirming registration with token $url"
+                "Confirming authentication with token $url"
             }
 
-            if (url.contains("error")) {
+            if (url.toString().contains("error")) {
                 continuation.resume(
                     AuthApi.SignInStatus.Error(Exception("Invalid confirmation link")),
                 )
@@ -146,7 +147,7 @@ class DefaultSupabaseAuth(
 
             try {
                 client.auth.parseFragmentAndImportSession(
-                    fragment = url,
+                    fragment = url?.getFragment().orEmpty(),
                     onSessionSuccess = {
                         continuation.resume(
                             AuthApi.SignInStatus.LoggedIn(it.toSession()),
@@ -154,7 +155,9 @@ class DefaultSupabaseAuth(
                     },
                 )
             } catch (e: Exception) {
-                AuthApi.SignInStatus.Error(e)
+                continuation.resume(
+                    AuthApi.SignInStatus.Error(e),
+                )
             }
         }
 

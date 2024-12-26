@@ -22,7 +22,7 @@ fun RegisterScreenContent(
         onRegisterClick = screenModel::onRegisterClick,
         onRegisterSuccess = {
             navController.navigate(AppRoute.RegistrationConfirmationScreen) {
-                popUpTo(navController.graph.startDestinationId) {
+                popUpTo(AppRoute.RegistrationConfirmationScreen) {
                     inclusive = true
                 }
             }
