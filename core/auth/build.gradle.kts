@@ -38,7 +38,7 @@ kotlin {
 
                 implementation(dependencies.platform(libs.supabase.bom))
                 implementation(libs.supabase.posgrest)
-                implementation("org.jetbrains.androidx.core:core-uri:1.0.0-alpha01")
+                implementation(libs.androidx.core.uri)
                 api(libs.supabase.auth)
                 implementation(libs.supabase.realtime)
                 implementation(libs.supabase.compose.auth)
