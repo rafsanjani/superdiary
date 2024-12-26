@@ -1,5 +1,6 @@
 package com.foreverrafs.auth
 
+import androidx.core.uri.Uri
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 
@@ -19,7 +20,7 @@ interface AuthApi {
 
     suspend fun signOut()
 
-    suspend fun handleRegistrationConfirmationDeeplink(fragment: String): SignInStatus
+    suspend fun handleAuthDeeplink(deeplinkUri: Uri?): SignInStatus
 
     sealed interface SignInStatus {
         data class LoggedIn(val sessionInfo: SessionInfo) : SignInStatus

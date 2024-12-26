@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +43,7 @@ import coil3.request.CachePolicy
 import coil3.request.crossfade
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
+import com.foreverrafs.superdiary.ui.feature.auth.register.DeeplinkContainer
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenContent
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegistrationConfirmationScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
@@ -85,13 +87,9 @@ private fun SuperDiaryNavHost(
     onLogout: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val isSignedIn by remember(viewState) {
-        mutableStateOf(viewState is AppSessionState.Success)
-    }
-
     // This userInfo is used when a session is automatically restored after app is launched.
     val userInfo by remember(viewState) {
-        mutableStateOf((viewState as? AppSessionState.Success)?.userInfo)
+        mutableStateOf((viewState as? AppSessionState.Authenticated)?.userInfo)
     }
 
     val navController = rememberNavController()
@@ -102,16 +100,43 @@ private fun SuperDiaryNavHost(
         return
     }
 
+    val startDestination = remember(viewState) {
+        when (viewState) {
+            is AppSessionState.Authenticated -> {
+                when (viewState.linkType) {
+                    DeeplinkContainer.LinkType.EmailConfirmation,
+                    DeeplinkContainer.LinkType.MagicLink,
+                    -> AppRoute.BottomNavigationScreen(
+                        viewState.userInfo,
+                    )
+
+                    DeeplinkContainer.LinkType.PasswordRecovery -> AppRoute.ChangePasswordScreen
+                    DeeplinkContainer.LinkType.Invalid -> AppRoute.LoginScreen(isFromDeeplink = true)
+                    // Session was restored from disk and didn't originate from an email link
+                    null -> AppRoute.BottomNavigationScreen(viewState.userInfo)
+                }
+            }
+
+            is AppSessionState.Error -> {
+                AppRoute.LoginScreen(
+                    isFromDeeplink = viewState.isFromDeeplink,
+                )
+            }
+
+            is AppSessionState.Processing,
+            is AppSessionState.UnAuthenticated,
+            -> AppRoute.LoginScreen(isFromDeeplink = false)
+        }
+    }
+
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = if (isSignedIn) {
-            AppRoute.BottomNavigationScreen(userInfo)
-        } else {
-            AppRoute.LoginScreen
-        },
+        startDestination = startDestination,
     ) {
         animatedComposable<AppRoute.LoginScreen> {
+            val route = it.toRoute<AppRoute.LoginScreen>()
+
             LoginScreen(
                 onLoginSuccess = {
                     navController.navigate(
@@ -127,6 +152,7 @@ private fun SuperDiaryNavHost(
                 onRegisterClick = {
                     navController.navigate(AppRoute.RegisterScreen)
                 },
+                isFromDeeplink = route.isFromDeeplink,
             )
         }
 
@@ -164,6 +190,17 @@ private fun SuperDiaryNavHost(
                 navController = navController,
                 avatarUrl = userInfo?.avatarUrl,
             )
+        }
+
+        animatedComposable<AppRoute.ChangePasswordScreen> {
+            Surface(modifier = Modifier.fillMaxSize()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text("Change password screen")
+                }
+            }
         }
 
         animatedComposable<AppRoute.DetailScreen> { backstackEntry ->

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 sealed interface AppRoute {
     @Serializable
-    data object LoginScreen : AppRoute
+    data class LoginScreen(val isFromDeeplink: Boolean = false) : AppRoute
 
     @Serializable
     data object RegisterScreen : AppRoute
@@ -26,4 +26,7 @@ sealed interface AppRoute {
 
     @Serializable
     data object DiaryListScreen : AppRoute
+
+    @Serializable
+    data object ChangePasswordScreen : AppRoute
 }

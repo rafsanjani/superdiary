@@ -23,7 +23,7 @@ class FakeAuthApi(
         ),
     )
 
-    override suspend fun handleRegistrationConfirmationDeeplink(fragment: String): AuthApi.SignInStatus {
+    override suspend fun handleAuthDeeplink(fragment: String): AuthApi.SignInStatus {
         TODO("Not yet implemented")
     }
 

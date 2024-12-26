@@ -14,6 +14,7 @@ import org.koin.compose.koinInject
 fun LoginScreen(
     onRegisterClick: () -> Unit,
     onLoginSuccess: (UserInfo) -> Unit,
+    isFromDeeplink: Boolean,
 ) {
     val screenModel: LoginScreenViewModel = koinInject()
     val signInStatus by screenModel.viewState.collectAsStateWithLifecycle(
@@ -22,7 +23,7 @@ fun LoginScreen(
     val activityWrapper = localActivityWrapper()
     val scope = rememberCoroutineScope()
 
-    LoginScreen(
+    LoginScreenContent(
         viewState = signInStatus,
         onLoginClick = screenModel::onLoginClick,
         onLoginWithGoogle = {
@@ -32,5 +33,6 @@ fun LoginScreen(
         },
         onRegisterClick = onRegisterClick,
         onSignInSuccess = onLoginSuccess,
+        isFromDeeplink = isFromDeeplink,
     )
 }

@@ -60,8 +60,8 @@ fun BottomNavigationScreen(
             },
             onLogout = {
                 onLogout()
-                rootNavController.navigate(AppRoute.LoginScreen) {
-                    popUpTo(AppRoute.LoginScreen) {
+                rootNavController.navigate(AppRoute.LoginScreen()) {
+                    popUpTo(AppRoute.LoginScreen()) {
                         inclusive = true
                     }
                 }
