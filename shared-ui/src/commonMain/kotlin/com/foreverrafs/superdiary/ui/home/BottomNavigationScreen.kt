@@ -94,23 +94,23 @@ fun BottomNavigationScreen(
             content = {
                 NavHost(
                     navController = tabNavController,
-                    startDestination = AppRoute.BottomNavigationRoute.DashboardTab,
+                    startDestination = BottomNavigationRoute.DashboardTab,
                 ) {
-                    animatedComposable<AppRoute.BottomNavigationRoute.DashboardTab> {
+                    animatedComposable<BottomNavigationRoute.DashboardTab> {
                         DashboardTab(
                             navController = rootNavController,
                             snackbarHostState = snackbarHostState,
                         )
                     }
 
-                    animatedComposable<AppRoute.BottomNavigationRoute.FavoriteTab> {
+                    animatedComposable<BottomNavigationRoute.FavoriteTab> {
                         FavoriteTab(
                             snackbarHostState = snackbarHostState,
                             navController = rootNavController,
                         )
                     }
 
-                    animatedComposable<AppRoute.BottomNavigationRoute.DiaryChatTab> {
+                    animatedComposable<BottomNavigationRoute.DiaryChatTab> {
                         DiaryChatTab()
                     }
                 }

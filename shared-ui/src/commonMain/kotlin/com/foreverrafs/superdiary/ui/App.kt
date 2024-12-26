@@ -119,7 +119,7 @@ private fun SuperDiaryNavHost(
                             userInfo = it,
                         ),
                     ) {
-                        popUpTo<AppRoute.BottomNavigationScreen> {
+                        popUpTo(navController.graph.startDestinationId) {
                             inclusive = true
                         }
                     }
