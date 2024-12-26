@@ -137,7 +137,7 @@ dependencies {
     implementation(libs.koin.android)
     implementation(projects.core.utils)
     implementation(libs.androidx.core)
-    implementation("org.jetbrains.androidx.core:core-uri:1.0.0-alpha01")
+    implementation(libs.androidx.core.uri)
     testImplementation(libs.koin.android)
     testImplementation(libs.koin.test)
     implementation(libs.kotlinx.serialization.json)
