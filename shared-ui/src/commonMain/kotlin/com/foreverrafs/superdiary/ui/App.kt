@@ -106,6 +106,7 @@ private fun SuperDiaryNavHost(
                 when (viewState.linkType) {
                     DeeplinkContainer.LinkType.EmailConfirmation,
                     DeeplinkContainer.LinkType.MagicLink,
+                    DeeplinkContainer.LinkType.Registration,
                     -> AppRoute.BottomNavigationScreen(
                         viewState.userInfo,
                     )

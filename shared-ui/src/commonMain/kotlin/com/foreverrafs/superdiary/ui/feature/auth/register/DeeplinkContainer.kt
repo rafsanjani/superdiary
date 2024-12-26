@@ -15,6 +15,9 @@ class DeeplinkContainer {
 
         // Magic links for one-time login
         MagicLink("magiclink"),
+
+        // Registration
+        Registration("signup"),
     }
 
     private var pendingLink: Deeplink? = null
