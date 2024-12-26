@@ -13,7 +13,6 @@ import com.foreverrafs.superdiary.ui.App
 import com.foreverrafs.superdiary.ui.feature.auth.register.DeeplinkContainer
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
-import io.github.jan.supabase.auth.handleDeeplinks
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
@@ -42,7 +41,6 @@ class MainActivity : ComponentActivity() {
      * actual processing of the deeplink will happen in the common module
      */
     private fun processAuthDeeplink() {
-        supabase.handleDeeplinks(intent)
         val data = intent.data ?: return
         val scheme = data.scheme ?: return
         val host = data.host ?: return
