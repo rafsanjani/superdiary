@@ -95,17 +95,13 @@ class AppViewModel(
     }
 
     private suspend fun processRegistrationDeeplink(): SessionInfo? {
-        val deeplink = deeplinkContainer.get(
+        val deeplink = deeplinkContainer.getAndRemove(
             type = DeeplinkContainer.LinkType.EmailConfirmation,
         )
         if (deeplink == null || deeplink.payload.isEmpty()) {
             logger.d(TAG) { "No registration deeplink found" }
             return null
         }
-
-        deeplinkContainer.remove(
-            type = DeeplinkContainer.LinkType.EmailConfirmation,
-        )
 
         return when (
             val result =

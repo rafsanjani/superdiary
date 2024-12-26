@@ -13,16 +13,16 @@ class DeeplinkContainer {
 
     fun add(deepLink: Deeplink) {
         require(deepLink.type !in deepLinks) {
-            "Deeplink of type ${deepLink.type} already exists."
+            "Deeplink of type ${deepLink.type} already exists in the container."
         }
         deepLinks[deepLink.type] = deepLink
     }
 
-    fun get(type: LinkType): Deeplink? = deepLinks[type]
-    fun remove(type: LinkType) = deepLinks.remove(type)
-    fun clear() = deepLinks.clear()
-    fun isEmpty() = deepLinks.isEmpty()
-    fun isNotEmpty() = deepLinks.isNotEmpty()
+    fun getAndRemove(type: LinkType): Deeplink? {
+        val value = deepLinks[type]
+        deepLinks.remove(type)
+        return value
+    }
 }
 
 data class Deeplink(
