@@ -24,9 +24,10 @@ class FakeAuthApi(
         ),
     )
 
-    override suspend fun sendPasswordResetEmail(email: String): Result<Unit> {
-        TODO("Not yet implemented")
-    }
+    var sendPasswordResetEmailResult: Result<Unit> = Result.success(Unit)
+
+    override suspend fun sendPasswordResetEmail(email: String): Result<Unit> = sendPasswordResetEmailResult
+
     override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SignInStatus {
         TODO("Not yet implemented")
     }

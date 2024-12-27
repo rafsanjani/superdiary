@@ -30,13 +30,24 @@ class PasswordResetViewModel(
                 isLoading = true,
             )
         }
+
         authApi.sendPasswordResetEmail(_viewState.value.email)
-        _viewState.update {
-            it.copy(
-                isLoading = false,
-                isEmailSent = true,
-            )
-        }
+            .onSuccess {
+                _viewState.update {
+                    it.copy(
+                        isLoading = false,
+                        isEmailSent = true,
+                    )
+                }
+            }
+            .onFailure {
+                _viewState.update {
+                    it.copy(
+                        isLoading = false,
+                        isEmailSent = false,
+                    )
+                }
+            }
     }
 
     fun onEmailChange(email: String) {
@@ -49,6 +60,12 @@ class PasswordResetViewModel(
                 inputErrorMessage = if (!isEmailValid) "Please enter a valid email" else null,
             )
         }
+    }
+
+    fun consumeTransientState() = _viewState.update {
+        it.copy(
+            isEmailSent = null,
+        )
     }
 
     private fun isEmailValid(email: String): Boolean {
