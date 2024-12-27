@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.home
+package com.foreverrafs.superdiary.ui.navigation
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.core.LinearEasing
@@ -31,7 +31,6 @@ import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
 import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardTab
 import com.foreverrafs.superdiary.ui.feature.diarychat.screen.DiaryChatTab
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteTab
-import com.foreverrafs.superdiary.ui.navigation.AppRoute
 
 /**
  * Provides a navigation entry point for all the screens that rely on

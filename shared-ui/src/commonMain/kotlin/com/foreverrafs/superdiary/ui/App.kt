@@ -50,8 +50,8 @@ import com.foreverrafs.superdiary.ui.feature.auth.reset.SendPasswordResetEmailSc
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
-import com.foreverrafs.superdiary.ui.home.BottomNavigationScreen
 import com.foreverrafs.superdiary.ui.navigation.AppRoute
+import com.foreverrafs.superdiary.ui.navigation.BottomNavigationScreen
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf

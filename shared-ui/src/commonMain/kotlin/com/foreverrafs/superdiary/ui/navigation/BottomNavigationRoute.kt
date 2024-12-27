@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.home
+package com.foreverrafs.superdiary.ui.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
@@ -10,8 +10,6 @@ import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import com.foreverrafs.superdiary.ui.navigation.SuperDiaryTab
-import com.foreverrafs.superdiary.ui.navigation.TabOptions
 import kotlinx.serialization.Serializable
 
 @Serializable
