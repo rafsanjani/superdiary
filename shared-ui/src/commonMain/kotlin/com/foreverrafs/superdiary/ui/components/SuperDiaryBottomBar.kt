@@ -15,7 +15,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.foreverrafs.superdiary.ui.home.BottomNavigationRoute
+import com.foreverrafs.superdiary.ui.navigation.BottomNavigationRoute
 import com.foreverrafs.superdiary.ui.navigation.SuperDiaryTab
 
 @Composable
