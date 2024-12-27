@@ -22,6 +22,8 @@ interface AuthApi {
 
     suspend fun handleAuthDeeplink(deeplinkUri: Uri?): SignInStatus
 
+    suspend fun sendPasswordResetEmail(email: String): Result<Unit>
+
     sealed interface SignInStatus {
         data class LoggedIn(val sessionInfo: SessionInfo) : SignInStatus
         data class Error(val exception: Exception) : SignInStatus

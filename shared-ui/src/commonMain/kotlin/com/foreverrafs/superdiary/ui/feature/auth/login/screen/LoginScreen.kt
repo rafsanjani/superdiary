@@ -13,6 +13,7 @@ import org.koin.compose.koinInject
 @Composable
 fun LoginScreen(
     onRegisterClick: () -> Unit,
+    onResetPasswordClick: () -> Unit,
     onLoginSuccess: (UserInfo) -> Unit,
     isFromDeeplink: Boolean,
 ) {
@@ -34,5 +35,6 @@ fun LoginScreen(
         onRegisterClick = onRegisterClick,
         onSignInSuccess = onLoginSuccess,
         isFromDeeplink = isFromDeeplink,
+        onResetPasswordClick = onResetPasswordClick,
     )
 }

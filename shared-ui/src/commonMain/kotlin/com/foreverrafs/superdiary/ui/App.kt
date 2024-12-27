@@ -46,6 +46,7 @@ import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
 import com.foreverrafs.superdiary.ui.feature.auth.register.DeeplinkContainer
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenContent
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegistrationConfirmationScreen
+import com.foreverrafs.superdiary.ui.feature.auth.reset.SendPasswordResetEmailScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
@@ -154,7 +155,14 @@ private fun SuperDiaryNavHost(
                     navController.navigate(AppRoute.RegisterScreen)
                 },
                 isFromDeeplink = route.isFromDeeplink,
+                onResetPasswordClick = {
+                    navController.navigate(AppRoute.SendPasswordResetEmailScreen)
+                },
             )
+        }
+
+        animatedComposable<AppRoute.SendPasswordResetEmailScreen> {
+            SendPasswordResetEmailScreen()
         }
 
         animatedComposable<AppRoute.RegisterScreen> {

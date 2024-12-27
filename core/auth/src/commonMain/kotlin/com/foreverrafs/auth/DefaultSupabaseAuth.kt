@@ -161,6 +161,24 @@ class DefaultSupabaseAuth(
             }
         }
 
+    override suspend fun sendPasswordResetEmail(email: String): Result<Unit> = try {
+        logger.d(Tag) {
+            "Sending password reset email to $email"
+        }
+        client.auth.resetPasswordForEmail(
+            email,
+        )
+        logger.d(Tag) {
+            "Password reset email sent to $email"
+        }
+        Result.success(Unit)
+    } catch (e: Exception) {
+        logger.e(Tag) {
+            "Failed to send password reset email to $email"
+        }
+        Result.failure(e)
+    }
+
     companion object {
         private const val USER_REGISTERED_ERROR = "User already registered"
         private val Tag = DefaultSupabaseAuth::class.simpleName.orEmpty()
