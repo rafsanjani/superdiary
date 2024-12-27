@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>GIDClientID</key>
-	<string>$(GIDClientID)</string>
-	<key>GIDServerClientID</key>
-	<string>$(GIDServerClientID)</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -32,9 +28,23 @@
 				<string>com.googleusercontent.apps.867773535981-kj64hpiar58dj7cgrn96m3mv5v3rjc09</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLName</key>
+			<string>com.foreverrafs.superdiary</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>superdiary</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>GIDClientID</key>
+	<string>$(GIDClientID)</string>
+	<key>GIDServerClientID</key>
+	<string>$(GIDServerClientID)</string>
 	<key>GOOGLE_MAPS_SDK_KEY</key>
 	<string>${GOOGLE_MAPS_SDK_KEY}</string>
 	<key>LSRequiresIPhoneOS</key>
