@@ -1,6 +1,7 @@
 package com.foreverrafs.superdiary.ui.feature.auth.login.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -21,7 +21,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,21 +30,20 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.foreverrafs.auth.NoCredentialsException
 import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.superdiary.ui.components.SuperDiaryButton
+import com.foreverrafs.superdiary.ui.components.SuperDiaryInputField
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -69,6 +67,7 @@ fun LoginScreenContent(
     onLoginClick: (username: String, password: String) -> Unit,
     onLoginWithGoogle: () -> Unit,
     onRegisterClick: () -> Unit,
+    onResetPasswordClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val currentOnSignInSuccess by rememberUpdatedState(onSignInSuccess)
@@ -136,7 +135,7 @@ fun LoginScreenContent(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                InputField(
+                SuperDiaryInputField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("input_username"),
@@ -150,7 +149,7 @@ fun LoginScreenContent(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                InputField(
+                SuperDiaryInputField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("input_password"),
@@ -165,9 +164,16 @@ fun LoginScreenContent(
                     visualTransformation = PasswordVisualTransformation(),
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-                LoginButton(
+                ResetPasswordText(
+                    modifier = Modifier.align(Alignment.End),
+                    onResetPasswordClick = onResetPasswordClick,
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                SuperDiaryButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("button_login"),
@@ -175,6 +181,7 @@ fun LoginScreenContent(
                         onLoginClick(username, password)
                     },
                     enabled = enableLoginButton,
+                    text = stringResource(Res.string.label_login),
                 )
 
                 Spacer(modifier = Modifier.height(44.dp))
@@ -196,27 +203,6 @@ fun LoginScreenContent(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun LoginButton(
-    onClick: () -> Unit,
-    enabled: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    Button(
-        modifier = modifier
-            .height(52.dp),
-        onClick = onClick,
-        shape = MaterialTheme.shapes.medium,
-        enabled = enabled,
-    ) {
-        Text(
-            text = stringResource(Res.string.label_login),
-            fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.labelMedium,
-        )
     }
 }
 
@@ -252,6 +238,20 @@ private fun RegisterText(
     Text(
         modifier = modifier,
         text = registerText,
+    )
+}
+
+@Composable
+private fun ResetPasswordText(
+    onResetPasswordClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        style = MaterialTheme.typography.bodyMedium,
+        textDecoration = TextDecoration.Underline,
+        fontWeight = FontWeight.Bold,
+        modifier = modifier.clickable { onResetPasswordClick() },
+        text = "Forgot password",
     )
 }
 
@@ -318,47 +318,6 @@ private fun LoginDivider(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun InputField(
-    label: String,
-    value: String,
-    onValueChange: (value: String) -> Unit,
-    modifier: Modifier = Modifier,
-    placeholder: String? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = label,
-            textAlign = TextAlign.Start,
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        TextField(
-            modifier = Modifier
-                .fillMaxWidth(),
-            value = value,
-            onValueChange = onValueChange,
-            keyboardOptions = keyboardOptions,
-            placeholder = {
-                if (placeholder != null) {
-                    Text(
-                        text = placeholder,
-                        modifier = Modifier.alpha(0.3f),
-                    )
-                }
-            },
-            visualTransformation = visualTransformation,
-        )
-    }
-}
-
-@Composable
 @Preview
 private fun LoginPreview() {
     SuperdiaryTheme {
@@ -369,6 +328,7 @@ private fun LoginPreview() {
             viewState = LoginViewState.Idle,
             onSignInSuccess = {},
             isFromDeeplink = false,
+            onResetPasswordClick = {},
         )
     }
 }

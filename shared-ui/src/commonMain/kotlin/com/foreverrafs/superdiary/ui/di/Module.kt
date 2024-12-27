@@ -12,6 +12,7 @@ import com.foreverrafs.superdiary.ui.AppViewModel
 import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreenViewModel
 import com.foreverrafs.superdiary.ui.feature.auth.register.DeeplinkContainer
 import com.foreverrafs.superdiary.ui.feature.auth.register.RegisterScreenViewModel
+import com.foreverrafs.superdiary.ui.feature.auth.reset.PasswordResetViewModel
 import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
@@ -35,6 +36,7 @@ internal fun screenModules(): Module = module {
     factoryOf(::DetailsViewModel)
     factoryOf(::LoginScreenViewModel)
     viewModelOf(::AppViewModel)
+    viewModelOf(::PasswordResetViewModel)
     singleOf(::DeeplinkContainer)
 }
 

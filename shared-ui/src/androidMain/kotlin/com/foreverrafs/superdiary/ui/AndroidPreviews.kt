@@ -428,6 +428,7 @@ private fun LoginPreview() {
             viewState = LoginViewState.Idle,
             onSignInSuccess = {},
             isFromDeeplink = false,
+            onResetPasswordClick = {},
         )
     }
 }

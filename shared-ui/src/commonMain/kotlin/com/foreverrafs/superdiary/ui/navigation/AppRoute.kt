@@ -29,4 +29,7 @@ sealed interface AppRoute {
 
     @Serializable
     data object ChangePasswordScreen : AppRoute
+
+    @Serializable
+    data object SendPasswordResetEmailScreen : AppRoute
 }

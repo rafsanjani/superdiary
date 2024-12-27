@@ -33,6 +33,7 @@ class RegisterScreenSnapshotTest(
                     onLoginWithGoogle = {},
                     onRegisterClick = {},
                     isFromDeeplink = false,
+                    onResetPasswordClick = {},
                 )
             }
         }
@@ -49,6 +50,7 @@ class RegisterScreenSnapshotTest(
                     onLoginWithGoogle = {},
                     onRegisterClick = {},
                     isFromDeeplink = false,
+                    onResetPasswordClick = {},
                 )
             }
         }
