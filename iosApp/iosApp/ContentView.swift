@@ -1,8 +1,6 @@
 import SwiftUI
 import GoogleSignIn
 import shared
-import GoogleSignInSwift
-
 
 struct ComposeView: UIViewControllerRepresentable {
     
