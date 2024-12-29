@@ -19,6 +19,7 @@ import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListViewModel
 import com.foreverrafs.superdiary.ui.feature.favorites.FavoriteViewModel
+import com.foreverrafs.superdiary.ui.feature.profile.ProfileScreenViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
@@ -38,6 +39,8 @@ internal fun screenModules(): Module = module {
     viewModelOf(::AppViewModel)
     viewModelOf(::PasswordResetViewModel)
     singleOf(::DeeplinkContainer)
+
+    viewModelOf(::ProfileScreenViewModel)
 }
 
 expect fun permissionModule(): Module

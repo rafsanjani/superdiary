@@ -131,6 +131,9 @@ class DefaultSupabaseAuth(
         client.auth.signOut()
     }
 
+    override suspend fun currentUserOrNull(): UserInfo? =
+        client.auth.currentUserOrNull()?.toUserInfo()
+
     @OptIn(SupabaseInternal::class)
     override suspend fun handleAuthDeeplink(url: Uri?): AuthApi.SignInStatus =
         suspendCoroutine { continuation ->
@@ -194,8 +197,8 @@ internal fun SessionInfoDto.toSession() = SessionInfo(
 
 internal fun UserInfoDto.toUserInfo(): UserInfo = UserInfo(
     id = id,
-    name = userMetadata?.get("name").toString(),
-    email = userMetadata?.get("email").toString(),
+    name = userMetadata?.get("name").toString().trim('\"'),
+    email = userMetadata?.get("email").toString().trim('\"'),
     // Strip leading and ending quotes from avatar url
     avatarUrl = userMetadata?.get("avatar_url").toString().replace("^\"|\"$".toRegex(), ""),
 )

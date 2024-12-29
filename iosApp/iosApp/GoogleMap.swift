@@ -34,6 +34,6 @@ struct GoogleMap : UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: GMSMapView, context: Context) {
-        
+        // required but no-op
     }
 }
