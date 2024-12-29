@@ -19,6 +19,8 @@ import io.github.jan.supabase.exceptions.RestException
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.delay
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
 
 typealias UserInfoDto = io.github.jan.supabase.auth.user.UserInfo
 typealias SessionInfoDto = UserSession
@@ -114,6 +116,9 @@ class DefaultSupabaseAuth(
         client.auth.signUpWith(Email) {
             this.email = email
             this.password = password
+            data = buildJsonObject {
+                put("full_name", JsonPrimitive(name))
+            }
         }
 
         AuthApi.RegistrationStatus.Success
@@ -197,8 +202,8 @@ internal fun SessionInfoDto.toSession() = SessionInfo(
 
 internal fun UserInfoDto.toUserInfo(): UserInfo = UserInfo(
     id = id,
-    name = userMetadata?.get("name").toString().trim('\"'),
-    email = userMetadata?.get("email").toString().trim('\"'),
+    name = userMetadata?.get("full_name").toString(),
+    email = userMetadata?.get("email").toString(),
     // Strip leading and ending quotes from avatar url
     avatarUrl = userMetadata?.get("avatar_url").toString().replace("^\"|\"$".toRegex(), ""),
 )
