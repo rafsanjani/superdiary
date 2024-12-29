@@ -44,6 +44,10 @@ class FakeAuthApi(
         TODO("Not yet implemented")
     }
 
+    override suspend fun currentUserOrNull(): UserInfo? {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun register(
         name: String,
         email: String,
