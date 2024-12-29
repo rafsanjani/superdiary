@@ -2,6 +2,7 @@ package com.foreverrafs.auth
 
 import androidx.core.uri.Uri
 import com.foreverrafs.auth.model.SessionInfo
+import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 
 class TokenExpiredException(message: String?) : Exception(message)
@@ -23,6 +24,8 @@ interface AuthApi {
     suspend fun handleAuthDeeplink(deeplinkUri: Uri?): SignInStatus
 
     suspend fun sendPasswordResetEmail(email: String): Result<Unit>
+
+    suspend fun currentUserOrNull(): UserInfo?
 
     sealed interface SignInStatus {
         data class LoggedIn(val sessionInfo: SessionInfo) : SignInStatus

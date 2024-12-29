@@ -69,7 +69,7 @@ fun SuperdiaryTheme(
         ),
         bodySmall = TextStyle(
             fontFamily = montserratAlternativesFontFamily(),
-            fontSize = 16.sp,
+            fontSize = 12.sp,
         ),
         titleMedium = TextStyle(
             fontFamily = montserratAlternativesFontFamily(),

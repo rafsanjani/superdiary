@@ -50,6 +50,7 @@ import com.foreverrafs.superdiary.ui.feature.auth.reset.SendPasswordResetEmailSc
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
+import com.foreverrafs.superdiary.ui.feature.profile.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.navigation.AppRoute
 import com.foreverrafs.superdiary.ui.navigation.BottomNavigationScreen
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
@@ -182,7 +183,9 @@ private fun SuperDiaryNavHost(
 
             BottomNavigationScreen(
                 rootNavController = navController,
-                onLogout = onLogout,
+                onProfileClick = {
+                    navController.navigate(AppRoute.ProfileScreen)
+                },
                 userInfo = route.userInfo,
             )
         }
@@ -220,6 +223,10 @@ private fun SuperDiaryNavHost(
                 navController = navController,
                 avatarUrl = userInfo?.avatarUrl.orEmpty(),
             )
+        }
+
+        animatedComposable<AppRoute.ProfileScreen> {
+            ProfileScreen()
         }
     }
 }

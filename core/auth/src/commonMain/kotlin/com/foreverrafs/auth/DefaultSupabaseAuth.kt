@@ -136,6 +136,9 @@ class DefaultSupabaseAuth(
         client.auth.signOut()
     }
 
+    override suspend fun currentUserOrNull(): UserInfo? =
+        client.auth.currentUserOrNull()?.toUserInfo()
+
     @OptIn(SupabaseInternal::class)
     override suspend fun handleAuthDeeplink(url: Uri?): AuthApi.SignInStatus =
         suspendCoroutine { continuation ->

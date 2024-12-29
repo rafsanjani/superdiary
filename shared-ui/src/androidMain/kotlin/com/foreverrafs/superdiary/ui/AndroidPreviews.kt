@@ -36,6 +36,8 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryDatePicke
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
+import com.foreverrafs.superdiary.ui.feature.profile.ProfileScreenViewData
+import com.foreverrafs.superdiary.ui.feature.profile.screen.ProfileScreenContent
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import com.foreverrafs.superdiary.utils.DiarySettings
 import com.foreverrafs.superdiary.utils.toDate
@@ -71,6 +73,17 @@ internal fun TestAppContainer(content: @Composable () -> Unit) {
             }
         }
     }
+}
+
+@PreviewSuperDiary
+@Composable
+private fun ProfileScreenPreview() {
+    ProfileScreenContent(
+        viewState = ProfileScreenViewData(
+            name = "Rafsanjani Aziz",
+            email = "foreverrafs@gmail.com",
+        ),
+    )
 }
 
 @Composable

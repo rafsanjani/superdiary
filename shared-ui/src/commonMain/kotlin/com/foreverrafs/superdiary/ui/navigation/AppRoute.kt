@@ -32,4 +32,7 @@ sealed interface AppRoute {
 
     @Serializable
     data object SendPasswordResetEmailScreen : AppRoute
+
+    @Serializable
+    data object ProfileScreen : AppRoute
 }
