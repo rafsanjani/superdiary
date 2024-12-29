@@ -26,7 +26,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2024.12.26")
+            from("io.github.rafsanjani:versions:2024.12.29")
             version("openaiKotlin", "4.0.0-SNAPSHOT")
             version("kotlinSerialization", "1.8.0-RC")
         }
