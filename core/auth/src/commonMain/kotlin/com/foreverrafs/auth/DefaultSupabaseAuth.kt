@@ -1,11 +1,14 @@
 package com.foreverrafs.auth
 
+import androidx.core.uri.Uri
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.annotations.SupabaseInternal
 import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.parseFragmentAndImportSession
 import io.github.jan.supabase.auth.providers.Google
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.providers.builtin.IDToken
@@ -13,6 +16,8 @@ import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.auth.user.UserSession
 import io.github.jan.supabase.exceptions.BadRequestRestException
 import io.github.jan.supabase.exceptions.RestException
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.delay
 
 typealias UserInfoDto = io.github.jan.supabase.auth.user.UserInfo
@@ -85,10 +90,6 @@ class DefaultSupabaseAuth(
         }
     }
 
-    companion object {
-        private val Tag = DefaultSupabaseAuth::class.simpleName.orEmpty()
-    }
-
     override suspend fun signIn(email: String, password: String): AuthApi.SignInStatus = try {
         client.auth.signInWith(Email) {
             this.email = email
@@ -109,25 +110,78 @@ class DefaultSupabaseAuth(
         name: String,
         email: String,
         password: String,
-    ): AuthApi.SignInStatus = try {
+    ): AuthApi.RegistrationStatus = try {
         client.auth.signUpWith(Email) {
             this.email = email
             this.password = password
         }
 
-        val session = client.auth.currentSessionOrNull()
-
-        if (session != null) {
-            AuthApi.SignInStatus.LoggedIn(session.toSession())
+        AuthApi.RegistrationStatus.Success
+    } catch (exception: RestException) {
+        val error = if (exception.message?.contains(USER_REGISTERED_ERROR, true) == true) {
+            UserAlreadyRegisteredException(exception.message.orEmpty())
         } else {
-            AuthApi.SignInStatus.Error(Exception("User was registered but returned session is null!"))
+            exception
         }
-    } catch (e: Exception) {
-        AuthApi.SignInStatus.Error(e)
+
+        AuthApi.RegistrationStatus.Error(error)
     }
 
     override suspend fun signOut() {
         client.auth.signOut()
+    }
+
+    @OptIn(SupabaseInternal::class)
+    override suspend fun handleAuthDeeplink(url: Uri?): AuthApi.SignInStatus =
+        suspendCoroutine { continuation ->
+            logger.d(Tag) {
+                "Confirming authentication with token $url"
+            }
+
+            if (url.toString().contains("error")) {
+                continuation.resume(
+                    AuthApi.SignInStatus.Error(Exception("Invalid confirmation link")),
+                )
+                return@suspendCoroutine
+            }
+
+            try {
+                client.auth.parseFragmentAndImportSession(
+                    fragment = url?.getFragment().orEmpty(),
+                    onSessionSuccess = {
+                        continuation.resume(
+                            AuthApi.SignInStatus.LoggedIn(it.toSession()),
+                        )
+                    },
+                )
+            } catch (e: Exception) {
+                continuation.resume(
+                    AuthApi.SignInStatus.Error(e),
+                )
+            }
+        }
+
+    override suspend fun sendPasswordResetEmail(email: String): Result<Unit> = try {
+        logger.d(Tag) {
+            "Sending password reset email to $email"
+        }
+        client.auth.resetPasswordForEmail(
+            email,
+        )
+        logger.d(Tag) {
+            "Password reset email sent to $email"
+        }
+        Result.success(Unit)
+    } catch (e: Exception) {
+        logger.e(Tag) {
+            "Failed to send password reset email to $email"
+        }
+        Result.failure(e)
+    }
+
+    companion object {
+        private const val USER_REGISTERED_ERROR = "User already registered"
+        private val Tag = DefaultSupabaseAuth::class.simpleName.orEmpty()
     }
 }
 

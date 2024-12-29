@@ -11,7 +11,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(TestParameterInjector::class)
-class RegisterScreenSnapshotTest(
+class LoginScreenSnapshotTest(
     @TestParameter val snapshotDevice: SnapshotDevice,
 ) {
 
@@ -32,6 +32,8 @@ class RegisterScreenSnapshotTest(
                     onLoginClick = { _, _ -> },
                     onLoginWithGoogle = {},
                     onRegisterClick = {},
+                    isFromDeeplink = false,
+                    onResetPasswordClick = {},
                 )
             }
         }
@@ -47,6 +49,8 @@ class RegisterScreenSnapshotTest(
                     onLoginClick = { _, _ -> },
                     onLoginWithGoogle = {},
                     onRegisterClick = {},
+                    isFromDeeplink = false,
+                    onResetPasswordClick = {},
                 )
             }
         }

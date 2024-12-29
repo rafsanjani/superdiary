@@ -22,6 +22,7 @@ import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreenConten
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenContent
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenState
+import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegistrationConfirmationScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardScreenContent
@@ -67,6 +68,18 @@ internal fun TestAppContainer(content: @Composable () -> Unit) {
                     .padding(it),
             ) {
                 content()
+            }
+        }
+    }
+}
+
+@Composable
+@PreviewSuperDiary
+private fun RegistrationConfirmationPreview() {
+    SuperdiaryTheme {
+        SuperdiaryTheme {
+            Surface(color = MaterialTheme.colorScheme.background) {
+                RegistrationConfirmationScreen()
             }
         }
     }
@@ -414,6 +427,8 @@ private fun LoginPreview() {
             onRegisterClick = {},
             viewState = LoginViewState.Idle,
             onSignInSuccess = {},
+            isFromDeeplink = false,
+            onResetPasswordClick = {},
         )
     }
 }

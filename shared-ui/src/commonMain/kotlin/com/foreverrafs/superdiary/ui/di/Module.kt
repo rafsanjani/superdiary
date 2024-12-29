@@ -10,7 +10,9 @@ import com.foreverrafs.superdiary.di.platformModule
 import com.foreverrafs.superdiary.di.useCaseModule
 import com.foreverrafs.superdiary.ui.AppViewModel
 import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreenViewModel
+import com.foreverrafs.superdiary.ui.feature.auth.register.DeeplinkContainer
 import com.foreverrafs.superdiary.ui.feature.auth.register.RegisterScreenViewModel
+import com.foreverrafs.superdiary.ui.feature.auth.reset.PasswordResetViewModel
 import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
@@ -19,6 +21,8 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListViewModel
 import com.foreverrafs.superdiary.ui.feature.favorites.FavoriteViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 internal fun screenModules(): Module = module {
@@ -31,7 +35,9 @@ internal fun screenModules(): Module = module {
     factoryOf(::RegisterScreenViewModel)
     factoryOf(::DetailsViewModel)
     factoryOf(::LoginScreenViewModel)
-    factoryOf(::AppViewModel)
+    viewModelOf(::AppViewModel)
+    viewModelOf(::PasswordResetViewModel)
+    singleOf(::DeeplinkContainer)
 }
 
 expect fun permissionModule(): Module

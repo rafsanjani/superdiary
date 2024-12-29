@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.ui.auth.login
 
+import androidx.core.uri.Uri
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
@@ -23,6 +24,14 @@ class FakeAuthApi(
         ),
     )
 
+    var sendPasswordResetEmailResult: Result<Unit> = Result.success(Unit)
+
+    override suspend fun sendPasswordResetEmail(email: String): Result<Unit> = sendPasswordResetEmailResult
+
+    override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SignInStatus {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper?): AuthApi.SignInStatus =
         signInResult
 
@@ -39,7 +48,7 @@ class FakeAuthApi(
         name: String,
         email: String,
         password: String,
-    ): AuthApi.SignInStatus {
+    ): AuthApi.RegistrationStatus {
         TODO("Not yet implemented")
     }
 

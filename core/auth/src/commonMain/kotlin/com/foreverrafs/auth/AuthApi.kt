@@ -1,5 +1,6 @@
 package com.foreverrafs.auth
 
+import androidx.core.uri.Uri
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 
@@ -15,14 +16,25 @@ interface AuthApi {
         name: String,
         email: String,
         password: String,
-    ): SignInStatus
+    ): RegistrationStatus
 
     suspend fun signOut()
+
+    suspend fun handleAuthDeeplink(deeplinkUri: Uri?): SignInStatus
+
+    suspend fun sendPasswordResetEmail(email: String): Result<Unit>
 
     sealed interface SignInStatus {
         data class LoggedIn(val sessionInfo: SessionInfo) : SignInStatus
         data class Error(val exception: Exception) : SignInStatus
     }
+
+    sealed interface RegistrationStatus {
+        // After registration, the user has to verify their email so there is no session info
+        data object Success : RegistrationStatus
+        data class Error(val exception: Exception) : RegistrationStatus
+    }
 }
 
 class NoCredentialsException(message: String) : Exception(message)
+class UserAlreadyRegisteredException(message: String) : Exception(message)
