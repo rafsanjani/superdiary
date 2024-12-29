@@ -2,7 +2,7 @@
 
 <div align="left">
     <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/android_pr.yml/badge.svg"  alt="Link to CI build status"/>
-    <img src = "https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rafsanjani/129c8d4608ea11b81849152dba085532/raw/dc150ab741a946e2f136d506d1935ab5a4f0fc96/superdiary-badge.json" alt="link to coverage status"/>
+    <img src = "https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rafsanjani/129c8d4608ea11b81849152dba085532/raw/011cf808dc000ebd058b419c0be1389f12d3d3fc/superdiary-badge.json" alt="link to coverage status"/>
 </div>
 A simple diary app, mostly focused on quality architectural patterns and improved testing strategies (unit, snapshot and instrumentation).
 
