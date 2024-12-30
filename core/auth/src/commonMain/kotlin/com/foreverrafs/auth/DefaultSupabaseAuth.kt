@@ -200,10 +200,10 @@ internal fun SessionInfoDto.toSession() = SessionInfo(
     userInfo = user?.toUserInfo(),
 )
 
+// Strip leading and ending quotes from all the properties
 internal fun UserInfoDto.toUserInfo(): UserInfo = UserInfo(
     id = id,
-    name = userMetadata?.get("full_name").toString(),
-    email = userMetadata?.get("email").toString(),
-    // Strip leading and ending quotes from avatar url
-    avatarUrl = userMetadata?.get("avatar_url").toString().replace("^\"|\"$".toRegex(), ""),
+    name = userMetadata?.get("full_name").toString().trim('\"'),
+    email = userMetadata?.get("email").toString().trim('\"'),
+    avatarUrl = userMetadata?.get("avatar_url").toString().trim('\"'),
 )

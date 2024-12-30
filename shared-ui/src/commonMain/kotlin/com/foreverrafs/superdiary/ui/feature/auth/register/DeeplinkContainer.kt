@@ -22,6 +22,8 @@ class DeeplinkContainer {
 
     private var pendingLink: Deeplink? = null
 
+    fun peek(): Deeplink? = pendingLink
+
     fun push(deepLink: Uri) {
         require(pendingLink == null) {
             "There is an unprocessed deeplink in the system. Unable to add more"

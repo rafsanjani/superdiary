@@ -26,10 +26,10 @@ fun LoginScreen(
 
     LoginScreenContent(
         viewState = signInStatus,
-        onLoginClick = screenModel::onLoginClick,
+        onLoginClick = screenModel::onLoginWithEmail,
         onLoginWithGoogle = {
             scope.launch {
-                activityWrapper?.let(screenModel::signInWithGoogle)
+                activityWrapper?.let(screenModel::onLoginWithGoogle)
             }
         },
         onRegisterClick = onRegisterClick,
