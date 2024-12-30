@@ -2,7 +2,9 @@ package com.foreverrafs.superdiary.ui.diarylist
 
 import app.cash.turbine.test
 import assertk.assertThat
+import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
+import assertk.assertions.isTrue
 import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
@@ -178,9 +180,22 @@ class DiaryListViewModelTest {
             dataSource.update(diary = any())
         }.returns(1)
 
-        diaryListViewModel.toggleFavorite(diary = Diary("hello-boss"))
+        val result = diaryListViewModel.toggleFavorite(diary = Diary("hello-boss"))
 
         verifySuspend { dataSource.update(any()) }
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `Toggle favorite fails when datasource fails`() = runTest {
+        everySuspend {
+            dataSource.update(diary = any())
+        }.returns(0)
+
+        val result = diaryListViewModel.toggleFavorite(diary = Diary("hello-boss"))
+
+        verifySuspend { dataSource.update(any()) }
+        assertThat(result).isFalse()
     }
 
     @Test

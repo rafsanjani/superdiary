@@ -21,7 +21,7 @@ class LoginScreenViewModel(
     val viewState = _viewState
         .asStateFlow()
 
-    fun signInWithGoogle(activityWrapper: ActivityWrapper?) =
+    fun onLoginWithGoogle(activityWrapper: ActivityWrapper?) =
         viewModelScope.launch(coroutineDispatchers.main) {
             _viewState.update {
                 LoginViewState.Processing
@@ -42,7 +42,7 @@ class LoginScreenViewModel(
             }
         }
 
-    fun onLoginClick(username: String, password: String) =
+    fun onLoginWithEmail(username: String, password: String) =
         viewModelScope.launch(coroutineDispatchers.main) {
             _viewState.update {
                 LoginViewState.Processing

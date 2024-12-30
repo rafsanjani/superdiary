@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class ProfileScreenViewData(
@@ -34,11 +35,13 @@ class ProfileScreenViewModel(
     private fun loadProfileData() = viewModelScope.launch {
         val profile = authApi.currentUserOrNull()
 
-        _viewState.value = _viewState.value.copy(
-            name = profile?.name.orEmpty(),
-            email = profile?.email.orEmpty(),
-            avatarUrl = profile?.avatarUrl.orEmpty(),
-        )
+        _viewState.update {
+            it.copy(
+                name = profile?.name.orEmpty(),
+                email = profile?.email.orEmpty(),
+                avatarUrl = profile?.avatarUrl.orEmpty(),
+            )
+        }
     }
 
     fun onSignOut() = viewModelScope.launch {

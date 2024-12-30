@@ -25,8 +25,10 @@ class FakeAuthApi(
     )
 
     var sendPasswordResetEmailResult: Result<Unit> = Result.success(Unit)
+    var registerWithEmailResult: AuthApi.RegistrationStatus = AuthApi.RegistrationStatus.Success
 
-    override suspend fun sendPasswordResetEmail(email: String): Result<Unit> = sendPasswordResetEmailResult
+    override suspend fun sendPasswordResetEmail(email: String): Result<Unit> =
+        sendPasswordResetEmailResult
 
     override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SignInStatus {
         TODO("Not yet implemented")
@@ -40,21 +42,17 @@ class FakeAuthApi(
 
     override suspend fun restoreSession(): AuthApi.SignInStatus = signInResult
 
-    override suspend fun signIn(email: String, password: String): AuthApi.SignInStatus {
-        TODO("Not yet implemented")
-    }
+    override suspend fun signIn(email: String, password: String): AuthApi.SignInStatus =
+        signInResult
 
-    override suspend fun currentUserOrNull(): UserInfo? {
-        TODO("Not yet implemented")
-    }
+    override suspend fun currentUserOrNull(): UserInfo? =
+        (signInResult as? AuthApi.SignInStatus.LoggedIn)?.sessionInfo?.userInfo
 
     override suspend fun register(
         name: String,
         email: String,
         password: String,
-    ): AuthApi.RegistrationStatus {
-        TODO("Not yet implemented")
-    }
+    ): AuthApi.RegistrationStatus = registerWithEmailResult
 
     override suspend fun signOut() {
         TODO("Not yet implemented")
