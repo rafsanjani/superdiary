@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.ui.feature.profile.screen
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,58 +17,115 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.Dialpad
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import com.foreverrafs.superdiary.ui.components.ConfirmLogoutDialog
 import com.foreverrafs.superdiary.ui.components.SuperdiaryImage
 import com.foreverrafs.superdiary.ui.feature.profile.ProfileScreenViewData
 import com.foreverrafs.superdiary.ui.feature.profile.ProfileScreenViewModel
+import com.foreverrafs.superdiary.ui.navigation.AppRoute
 import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(navController: NavController) {
     val viewModel: ProfileScreenViewModel = koinViewModel()
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+    var isLogoutDialogVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(viewState) {
+        if (viewState.isLogoutSuccess == true) {
+            navController.navigate(AppRoute.LoginScreen()) {
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
+            }
+        }
+    }
+
     ProfileScreenContent(
-        viewState,
+        viewState = viewState,
+        onLogout = {
+            viewModel.onLogout()
+        },
+        onLogoutDialogVisibilityChange = {
+            isLogoutDialogVisible = it
+        },
+        isLogoutDialogVisible = isLogoutDialogVisible,
+        onConsumeErrorMessage = viewModel::resetErrorMessage,
     )
 }
 
 @Composable
 fun ProfileScreenContent(
     viewState: ProfileScreenViewData,
+    onConsumeErrorMessage: () -> Unit,
+    onLogout: () -> Unit,
+    onLogoutDialogVisibilityChange: (Boolean) -> Unit,
+    isLogoutDialogVisible: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val snackBarkHostState = remember { SnackbarHostState() }
+    val currentOnConsumeErrorMessage by rememberUpdatedState(onConsumeErrorMessage)
+    LaunchedEffect(viewState.errorMessage) {
+        if (viewState.errorMessage != null) {
+            snackBarkHostState.showSnackbar(viewState.errorMessage)
+            currentOnConsumeErrorMessage()
+        }
+    }
+
     SuperdiaryTheme {
         Scaffold(
             modifier = modifier,
             contentColor = MaterialTheme.colorScheme.background,
+            snackbarHost = {
+                SnackbarHost(snackBarkHostState)
+            },
         ) {
             Surface(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it),
             ) {
+                if (isLogoutDialogVisible) {
+                    ConfirmLogoutDialog(
+                        onLogout = {
+                            onLogout()
+                            onLogoutDialogVisibilityChange(false)
+                        },
+                        onDismiss = {
+                            onLogoutDialogVisibilityChange(false)
+                        },
+                    )
+                }
+
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -102,48 +160,23 @@ fun ProfileScreenContent(
 
                     Spacer(modifier = Modifier.height(48.dp))
 
-                    Text(
-                        text = "Preferences",
-                        modifier = Modifier.align(Alignment.Start),
-                        style = MaterialTheme.typography.labelSmall,
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .border(
-                                width = 1.dp,
-                                color = DividerDefaults.color,
-                                shape = RoundedCornerShape(16.dp),
-                            ),
+                    ProfileSection(
+                        label = "Dashboard Cards",
                     ) {
-                        ProfileItem(
-                            label = "Dark Mode",
+                        CheckboxProfileItem(
+                            label = "Weekly summary",
+                            checked = true,
+                            onCheckChange = {},
                         )
 
-                        HorizontalDivider(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp),
+                        CheckboxProfileItem(
+                            label = "On this day",
+                            checked = true,
+                            onCheckChange = {},
                         )
 
-                        ProfileItem(
-                            label = "Pin Code",
-                            leadingIcon = rememberVectorPainter(Icons.Default.Dialpad),
-                        )
-
-                        HorizontalDivider(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp),
-                        )
-
-                        SwitchProfileItem(
-                            label = "Push Notifications",
-                            leadingIcon = rememberVectorPainter(
-                                Icons.Default.Notifications,
-                            ),
+                        CheckboxProfileItem(
+                            label = "Latest entries",
                             checked = true,
                             onCheckChange = {},
                         )
@@ -152,13 +185,36 @@ fun ProfileScreenContent(
                             modifier = Modifier
                                 .padding(horizontal = 16.dp),
                         )
+                    }
 
-                        ProfileItem(
-                            label = "Logout",
-                            labelColor = MaterialTheme.colorScheme.error,
-                            leadingIcon = rememberVectorPainter(Icons.AutoMirrored.Filled.Logout),
-                            leadingIconTint = MaterialTheme.colorScheme.error,
-                        )
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    TextButton(
+                        onClick = {
+                            onLogoutDialogVisibilityChange(true)
+                        },
+                        modifier = Modifier
+                            .align(alignment = Alignment.CenterHorizontally),
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                        ) {
+                            Icon(
+                                painter = rememberVectorPainter(Icons.AutoMirrored.Filled.Logout),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.error,
+                            )
+
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                text = "Sign out",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.error,
+                            )
+                        }
                     }
                 }
             }
@@ -167,41 +223,37 @@ fun ProfileScreenContent(
 }
 
 @Composable
-private fun ProfileItem(
+private fun ProfileSection(
     label: String,
-    labelColor: Color = MaterialTheme.colorScheme.onBackground,
-    leadingIcon: Painter? = null,
-    leadingIconTint: Color = LocalContentColor.current,
+    content: @Composable ColumnScope.() -> Unit,
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
+    Column(
+        modifier = Modifier.fillMaxWidth(),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            leadingIcon?.let {
-                Icon(
-                    painter = it,
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                    tint = leadingIconTint,
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-            }
-            Text(
-                modifier = Modifier.padding(vertical = 8.dp),
-                text = label,
-                style = MaterialTheme.typography.bodySmall,
-                color = labelColor,
-            )
-        }
+        Text(
+            text = label,
+            modifier = Modifier.align(Alignment.Start).padding(start = 4.dp),
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.SemiBold,
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .border(
+                    width = 1.dp,
+                    color = DividerDefaults.color,
+                    shape = RoundedCornerShape(16.dp),
+                ),
+            content = content,
+        )
     }
 }
 
 @Composable
-private fun SwitchProfileItem(
+private fun CheckboxProfileItem(
     label: String,
     checked: Boolean,
     onCheckChange: (Boolean) -> Unit,
@@ -210,7 +262,7 @@ private fun SwitchProfileItem(
 ) {
     Row(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -230,7 +282,7 @@ private fun SwitchProfileItem(
             )
         }
 
-        Switch(
+        Checkbox(
             checked = checked,
             onCheckedChange = onCheckChange,
         )

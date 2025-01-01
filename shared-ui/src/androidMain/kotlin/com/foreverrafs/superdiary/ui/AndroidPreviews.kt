@@ -83,6 +83,25 @@ private fun ProfileScreenPreview() {
             name = "Rafsanjani Aziz",
             email = "foreverrafs@gmail.com",
         ),
+        onLogout = {},
+        isLogoutDialogVisible = false,
+        onLogoutDialogVisibilityChange = {},
+        onConsumeErrorMessage = {},
+    )
+}
+
+@PreviewSuperDiary
+@Composable
+private fun ProfileScreenPreviewLogoutDialog() {
+    ProfileScreenContent(
+        viewState = ProfileScreenViewData(
+            name = "Rafsanjani Aziz",
+            email = "foreverrafs@gmail.com",
+        ),
+        onLogout = {},
+        isLogoutDialogVisible = true,
+        onLogoutDialogVisibilityChange = {},
+        onConsumeErrorMessage = {},
     )
 }
 

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.foreverrafs.superdiary.ui.BackHandler
 import com.foreverrafs.superdiary.ui.feature.auth.register.RegisterScreenViewModel
 import com.foreverrafs.superdiary.ui.navigation.AppRoute
 import org.koin.compose.viewmodel.koinViewModel
@@ -16,6 +17,10 @@ fun RegisterScreenContent(
     val signInStatus by screenModel.viewState.collectAsStateWithLifecycle(
         initialValue = RegisterScreenState.Idle,
     )
+
+    BackHandler {
+        // Prevent user from navigating back from this screen
+    }
 
     RegisterScreenContent(
         viewState = signInStatus,
