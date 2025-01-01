@@ -19,7 +19,7 @@ interface AuthApi {
         password: String,
     ): RegistrationStatus
 
-    suspend fun signOut()
+    suspend fun signOut(): Result<Unit>
 
     suspend fun handleAuthDeeplink(deeplinkUri: Uri?): SignInStatus
 

@@ -78,7 +78,6 @@ fun App(modifier: Modifier = Modifier) {
         SuperDiaryNavHost(
             viewState = appViewState,
             modifier = modifier,
-            onLogout = appViewModel::logOut,
         )
     }
 }
@@ -86,7 +85,6 @@ fun App(modifier: Modifier = Modifier) {
 @Composable
 private fun SuperDiaryNavHost(
     viewState: AppSessionState,
-    onLogout: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // This userInfo is used when a session is automatically restored after app is launched.
@@ -226,7 +224,9 @@ private fun SuperDiaryNavHost(
         }
 
         animatedComposable<AppRoute.ProfileScreen> {
-            ProfileScreen()
+            ProfileScreen(
+                navController = navController,
+            )
         }
     }
 }

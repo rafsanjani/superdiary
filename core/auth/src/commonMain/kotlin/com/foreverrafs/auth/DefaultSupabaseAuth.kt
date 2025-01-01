@@ -132,21 +132,25 @@ class DefaultSupabaseAuth(
         AuthApi.RegistrationStatus.Error(error)
     }
 
-    override suspend fun signOut() {
+    override suspend fun signOut(): Result<Unit> = try {
         client.auth.signOut()
+        Result.success(Unit)
+    } catch (e: Exception) {
+        logger.e(Tag, e)
+        Result.failure(e)
     }
 
     override suspend fun currentUserOrNull(): UserInfo? =
         client.auth.currentUserOrNull()?.toUserInfo()
 
     @OptIn(SupabaseInternal::class)
-    override suspend fun handleAuthDeeplink(url: Uri?): AuthApi.SignInStatus =
+    override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SignInStatus =
         suspendCoroutine { continuation ->
             logger.d(Tag) {
-                "Confirming authentication with token $url"
+                "Confirming authentication with token $deeplinkUri"
             }
 
-            if (url.toString().contains("error")) {
+            if (deeplinkUri.toString().contains("error")) {
                 continuation.resume(
                     AuthApi.SignInStatus.Error(Exception("Invalid confirmation link")),
                 )
@@ -155,7 +159,7 @@ class DefaultSupabaseAuth(
 
             try {
                 client.auth.parseFragmentAndImportSession(
-                    fragment = url?.getFragment().orEmpty(),
+                    fragment = deeplinkUri?.getFragment().orEmpty(),
                     onSessionSuccess = {
                         continuation.resume(
                             AuthApi.SignInStatus.LoggedIn(it.toSession()),

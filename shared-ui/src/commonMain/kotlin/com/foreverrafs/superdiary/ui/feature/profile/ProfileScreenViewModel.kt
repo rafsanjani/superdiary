@@ -15,6 +15,8 @@ data class ProfileScreenViewData(
     val name: String = "",
     val email: String = "",
     val avatarUrl: String = "",
+    val errorMessage: String? = null,
+    val isLogoutSuccess: Boolean? = null,
 )
 
 class ProfileScreenViewModel(
@@ -44,7 +46,26 @@ class ProfileScreenViewModel(
         }
     }
 
-    fun onSignOut() = viewModelScope.launch {
-        authApi.signOut()
+    fun onLogout() = viewModelScope.launch {
+        val result = authApi.signOut()
+
+        _viewState.update {
+            if (result.isSuccess) {
+                it.copy(isLogoutSuccess = true)
+            } else {
+                it.copy(
+                    errorMessage = "Error signing out",
+                )
+            }
+        }
+    }
+
+    fun resetErrors() {
+        _viewState.update {
+            it.copy(
+                errorMessage = null,
+                isLogoutSuccess = null,
+            )
+        }
     }
 }
