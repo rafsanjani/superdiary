@@ -7,7 +7,7 @@ import kotlinx.coroutines.IO
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
-fun utilsModule(): Module = module {
+val utilsModule: Module = module {
     factory<AppCoroutineDispatchers> {
         object : AppCoroutineDispatchers {
             override val io: CoroutineDispatcher

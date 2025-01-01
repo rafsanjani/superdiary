@@ -1,10 +1,13 @@
-package com.foreverrafs.superdiary.data.diaryai
+package com.foreverrafs.superdiary.ai
 
 import com.aallam.openai.api.chat.ChatCompletionRequest
 import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
+import com.foreverrafs.superdiary.ai.api.DiaryAI
+import com.foreverrafs.superdiary.ai.domain.model.DiaryChatMessage
+import com.foreverrafs.superdiary.ai.domain.model.toNetworkChatMessage
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +17,7 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 
 /** A diary AI implementation using Open AI */
-class OpenDiaryAI(
+class DiaryAiImpl(
     private val openAI: OpenAI,
     private val logger: AggregateLogger,
 ) : DiaryAI {
@@ -111,7 +114,7 @@ class OpenDiaryAI(
     ): String {
         val request = ChatCompletionRequest(
             model = ModelId(GPT_MODEL),
-            messages = messages.map { it.toOpenAIChatMessage() },
+            messages = messages.map { it.toNetworkChatMessage() },
         )
 
         return openAI.chatCompletion(request).choices.first().message.content.orEmpty()

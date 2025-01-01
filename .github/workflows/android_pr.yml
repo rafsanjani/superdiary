@@ -131,7 +131,6 @@ jobs:
         run: echo "COVERAGE=$(${{github.workspace}}/gradlew -q printLineCoverage)" >> $GITHUB_ENV
 
       - name: Add coverage Report to PR
-        if: github.ref == 'refs/heads/development'
         id: jacoco
         uses: madrapps/jacoco-report@v1.7.1
         with:
