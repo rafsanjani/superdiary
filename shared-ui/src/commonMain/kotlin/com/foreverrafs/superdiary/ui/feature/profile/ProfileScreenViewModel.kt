@@ -60,7 +60,7 @@ class ProfileScreenViewModel(
         }
     }
 
-    fun resetErrorMessage() {
+    fun resetErrors() {
         _viewState.update {
             it.copy(
                 errorMessage = null,

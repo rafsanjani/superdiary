@@ -3,7 +3,8 @@ package com.foreverrafs.superdiary.ui.profile
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isNotEmpty
-import com.foreverrafs.auth.AuthApi
+import assertk.assertions.isNotNull
+import assertk.assertions.isNull
 import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.ui.auth.login.FakeAuthApi
 import com.foreverrafs.superdiary.ui.feature.profile.ProfileScreenViewModel
@@ -17,7 +18,7 @@ import kotlinx.coroutines.test.setMain
 class ProfileScreenViewModelTest {
     private lateinit var profileScreenViewModel: ProfileScreenViewModel
 
-    private val authApi: AuthApi = FakeAuthApi()
+    private val authApi = FakeAuthApi()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @BeforeTest
@@ -37,6 +38,24 @@ class ProfileScreenViewModelTest {
             assertThat(state.name).isNotEmpty()
             assertThat(state.email).isNotEmpty()
             assertThat(state.avatarUrl).isNotEmpty()
+        }
+    }
+
+    @Test
+    fun `Should reset all error messages`() = runTest {
+        authApi.signOutResult = Result.failure(Exception("Error signing out"))
+        profileScreenViewModel.viewState.test {
+            skipItems(2)
+            profileScreenViewModel.onLogout()
+
+            val state = awaitItem()
+
+            // error messages should all be set by now
+            assertThat(state.errorMessage).isNotNull()
+
+            profileScreenViewModel.resetErrors()
+            val currentState = awaitItem()
+            assertThat(currentState.errorMessage).isNull()
         }
     }
 }

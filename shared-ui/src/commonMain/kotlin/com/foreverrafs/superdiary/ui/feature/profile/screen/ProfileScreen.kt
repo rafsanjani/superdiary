@@ -79,7 +79,7 @@ fun ProfileScreen(navController: NavController) {
             isLogoutDialogVisible = it
         },
         isLogoutDialogVisible = isLogoutDialogVisible,
-        onConsumeErrorMessage = viewModel::resetErrorMessage,
+        onConsumeErrorMessage = viewModel::resetErrors,
     )
 }
 

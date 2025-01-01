@@ -26,6 +26,7 @@ class FakeAuthApi(
 
     var sendPasswordResetEmailResult: Result<Unit> = Result.success(Unit)
     var registerWithEmailResult: AuthApi.RegistrationStatus = AuthApi.RegistrationStatus.Success
+    var signOutResult = Result.success(Unit)
 
     override suspend fun sendPasswordResetEmail(email: String): Result<Unit> =
         sendPasswordResetEmailResult
@@ -54,7 +55,5 @@ class FakeAuthApi(
         password: String,
     ): AuthApi.RegistrationStatus = registerWithEmailResult
 
-    override suspend fun signOut() {
-        TODO("Not yet implemented")
-    }
+    override suspend fun signOut() = signOutResult
 }
