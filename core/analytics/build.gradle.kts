@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.library)
     kotlin("multiplatform")
     id("kotlin-parcelize")
-    alias(libs.plugins.testLogger)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
