@@ -4,7 +4,6 @@ import androidx.core.uri.Uri
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
-import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 import kotlinx.datetime.Clock
 
 class FakeAuthApi(
@@ -35,7 +34,7 @@ class FakeAuthApi(
         TODO("Not yet implemented")
     }
 
-    override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper?): AuthApi.SignInStatus =
+    override suspend fun signInWithGoogle(): AuthApi.SignInStatus =
         signInResult
 
     override suspend fun signInWithGoogle(googleIdToken: String): AuthApi.SignInStatus =

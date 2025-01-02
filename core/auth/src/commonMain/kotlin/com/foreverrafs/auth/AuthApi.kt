@@ -3,12 +3,11 @@ package com.foreverrafs.auth
 import androidx.core.uri.Uri
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
-import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 
 class TokenExpiredException(message: String?) : Exception(message)
 
 interface AuthApi {
-    suspend fun signInWithGoogle(activityWrapper: ActivityWrapper?): SignInStatus
+    suspend fun signInWithGoogle(): SignInStatus
     suspend fun signInWithGoogle(googleIdToken: String): SignInStatus
 
     suspend fun restoreSession(): SignInStatus

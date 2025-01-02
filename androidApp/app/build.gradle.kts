@@ -131,7 +131,12 @@ dependencies {
     implementation(projects.sharedUi)
     implementation(projects.core.analytics)
     implementation(libs.koin.android)
-    implementation(libs.supabase.auth)
+    implementation(projects.commonUtils)
+    implementation(libs.androidx.core)
     implementation(libs.androidx.core.uri)
+    implementation(libs.koin.android)
+    implementation(libs.koin.core)
+    implementation(libs.kotlinx.serialization.json)
+    testImplementation(libs.kotlinx.coroutines.test)
     kotlin("android")
 }

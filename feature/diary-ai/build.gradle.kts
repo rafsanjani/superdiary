@@ -31,7 +31,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.openAiKotlin)
                 implementation(libs.kotlin.datetime)
-                implementation(projects.core.utils)
+                implementation(projects.commonUtils)
                 implementation(projects.sharedData)
                 implementation(projects.core.database)
                 implementation(projects.core.secrets)

@@ -2,11 +2,11 @@ package com.foreverrafs.superdiary.ui.di
 
 import com.foreverrafs.auth.di.authModule
 import com.foreverrafs.superdiary.ai.di.diaryAiModule
+import com.foreverrafs.superdiary.common.utils.di.utilsModule
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.location.di.locationModule
 import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.core.utils.di.utilsModule
 import com.foreverrafs.superdiary.di.platformModule
 import com.foreverrafs.superdiary.di.useCaseModule
 import com.foreverrafs.superdiary.profile.di.profileModule

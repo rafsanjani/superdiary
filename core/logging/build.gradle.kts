@@ -2,9 +2,8 @@
 
 plugins {
     alias(libs.plugins.android.library)
-    kotlin("multiplatform")
+    alias(libs.plugins.kotlin.multiplatform)
     id("kotlin-parcelize")
-    alias(libs.plugins.testLogger)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -27,7 +26,6 @@ kotlin {
                 implementation(libs.kotlin.datetime)
                 implementation(libs.touchlab.stately)
                 implementation(libs.koin.core)
-                implementation(libs.kotlin.inject.runtime)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.touchlab.kermit)
             }

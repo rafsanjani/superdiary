@@ -47,11 +47,10 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.materialIconsExtended)
                 implementation(projects.sharedData)
-                implementation(projects.core.utils)
+                implementation(projects.commonUtils)
                 implementation(libs.kotlin.datetime)
                 implementation(libs.koin.core)
                 implementation(libs.touchlab.kermit)
-                implementation(libs.kotlin.inject.runtime)
                 implementation(libs.koin.compose)
                 implementation(projects.swipe)
                 implementation(libs.uuid)
@@ -91,6 +90,7 @@ kotlin {
                     compose.uiTest,
                 )
                 implementation(libs.turbine)
+                implementation(projects.commonTest)
             }
 
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")

@@ -4,7 +4,6 @@ import androidx.core.uri.Uri
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.annotations.SupabaseInternal
 import io.github.jan.supabase.auth.auth
@@ -36,7 +35,7 @@ class DefaultSupabaseAuth(
     private val client: SupabaseClient,
     private val logger: AggregateLogger,
 ) : AuthApi {
-    override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper?): AuthApi.SignInStatus =
+    override suspend fun signInWithGoogle(): AuthApi.SignInStatus =
         try {
             client.auth.signInWith(provider = Google)
             getSessionStatus()

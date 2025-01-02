@@ -6,7 +6,7 @@ import assertk.assertions.isInstanceOf
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
-import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.ui.awaitUntil
 import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreenViewModel
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState
@@ -43,7 +43,7 @@ class LoginScreenViewModelTest {
     @Test
     fun `Should emit LoginViewState Processing when signInWithGoogle flow begins`() = runTest {
         loginViewModel.viewState.test {
-            loginViewModel.onLoginWithGoogle(null)
+            loginViewModel.onLoginWithGoogle()
             val state = awaitUntil { it is LoginViewState.Processing }
             cancelAndIgnoreRemainingEvents()
             assertThat(state).isInstanceOf<LoginViewState.Processing>()
@@ -74,7 +74,7 @@ class LoginScreenViewModelTest {
         authApi.signInResult = AuthApi.SignInStatus.Error(Exception("Error logging in"))
 
         loginViewModel.viewState.test {
-            loginViewModel.onLoginWithGoogle(null)
+            loginViewModel.onLoginWithGoogle()
             val state = awaitUntil { it is LoginViewState.Error }
             expectNoEvents()
             assertThat(state).isInstanceOf<LoginViewState.Error>()
@@ -110,7 +110,7 @@ class LoginScreenViewModelTest {
         )
 
         loginViewModel.viewState.test {
-            loginViewModel.onLoginWithGoogle(null)
+            loginViewModel.onLoginWithGoogle()
             val state = awaitUntil { it is LoginViewState.Success }
             expectNoEvents()
             assertThat(state).isInstanceOf<LoginViewState.Success>()

@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.testLogger)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -44,7 +43,7 @@ kotlin {
                 implementation(libs.supabase.compose.auth)
                 implementation(libs.ktor.client.cio)
                 implementation(libs.ktor.client.json)
-                implementation(projects.core.utils)
+                implementation(projects.commonUtils)
                 implementation(projects.core.secrets)
             }
         }

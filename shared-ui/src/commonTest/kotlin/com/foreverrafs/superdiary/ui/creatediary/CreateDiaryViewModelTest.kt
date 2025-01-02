@@ -5,8 +5,8 @@ import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
-import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.ai.api.DiaryAI
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.core.location.LocationManager
 import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager

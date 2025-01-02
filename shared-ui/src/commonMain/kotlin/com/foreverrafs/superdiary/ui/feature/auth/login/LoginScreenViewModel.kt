@@ -3,8 +3,7 @@ package com.foreverrafs.superdiary.ui.feature.auth.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
-import com.foreverrafs.superdiary.core.utils.ActivityWrapper
-import com.foreverrafs.superdiary.core.utils.AppCoroutineDispatchers
+import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,13 +20,13 @@ class LoginScreenViewModel(
     val viewState = _viewState
         .asStateFlow()
 
-    fun onLoginWithGoogle(activityWrapper: ActivityWrapper?) =
+    fun onLoginWithGoogle() =
         viewModelScope.launch(coroutineDispatchers.main) {
             _viewState.update {
                 LoginViewState.Processing
             }
 
-            when (val result = authApi.signInWithGoogle(activityWrapper)) {
+            when (val result = authApi.signInWithGoogle()) {
                 is AuthApi.SignInStatus.Error -> _viewState.update {
                     LoginViewState.Error(
                         error = result.exception,

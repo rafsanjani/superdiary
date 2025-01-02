@@ -3,8 +3,8 @@ package com.foreverrafs.superdiary.ui.auth.register
 import app.cash.turbine.test
 import assertk.assertThat
 import com.foreverrafs.auth.AuthApi
-import com.foreverrafs.superdiary.TestAppDispatchers
-import com.foreverrafs.superdiary.core.utils.AppCoroutineDispatchers
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
+import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.ui.auth.login.FakeAuthApi
 import com.foreverrafs.superdiary.ui.feature.auth.register.RegisterScreenViewModel
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenState
