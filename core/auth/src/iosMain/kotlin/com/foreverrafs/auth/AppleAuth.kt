@@ -1,7 +1,6 @@
 package com.foreverrafs.auth
 
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 import io.github.jan.supabase.SupabaseClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,7 +12,7 @@ class AppleAuth(private val supabaseClient: SupabaseClient, private val logger: 
     KoinComponent {
     private val googleTokenProvider: GoogleTokenProvider by inject()
 
-    override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper?): AuthApi.SignInStatus =
+    override suspend fun signInWithGoogle(): AuthApi.SignInStatus =
         try {
             logger.d(Tag) {
                 "Retrieving Google token from Apple"

@@ -2,12 +2,9 @@ package com.foreverrafs.superdiary.ui.feature.auth.login.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.foreverrafs.auth.model.UserInfo
-import com.foreverrafs.superdiary.core.utils.localActivityWrapper
 import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreenViewModel
-import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @Composable
@@ -21,17 +18,11 @@ fun LoginScreen(
     val signInStatus by screenModel.viewState.collectAsStateWithLifecycle(
         initialValue = LoginViewState.Idle,
     )
-    val activityWrapper = localActivityWrapper()
-    val scope = rememberCoroutineScope()
 
     LoginScreenContent(
         viewState = signInStatus,
         onLoginClick = screenModel::onLoginWithEmail,
-        onLoginWithGoogle = {
-            scope.launch {
-                activityWrapper?.let(screenModel::onLoginWithGoogle)
-            }
-        },
+        onLoginWithGoogle = screenModel::onLoginWithGoogle,
         onRegisterClick = onRegisterClick,
         onSignInSuccess = onLoginSuccess,
         isFromDeeplink = isFromDeeplink,

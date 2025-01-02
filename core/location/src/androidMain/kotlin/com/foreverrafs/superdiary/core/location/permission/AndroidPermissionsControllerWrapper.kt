@@ -1,7 +1,7 @@
 package com.foreverrafs.superdiary.core.location.permission
 
 import android.content.Context
-import com.foreverrafs.superdiary.core.utils.ActivityWrapper
+import androidx.activity.ComponentActivity
 import dev.icerock.moko.permissions.PermissionsController
 import dev.icerock.moko.permissions.PermissionsControllerImpl
 
@@ -19,8 +19,8 @@ class AndroidPermissionsControllerWrapper(context: Context) :
     override suspend fun getPermissionState(permission: Permission): PermissionState =
         permissionsController.getPermissionState(permission)
 
-    override fun bind(activityWrapper: ActivityWrapper) {
-        permissionsController.bind(activityWrapper)
+    override fun bind(activity: ComponentActivity) {
+        permissionsController.bind(activity)
     }
 
     override fun openAppSettings() = permissionsController.openAppSettings()
