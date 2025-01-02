@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
-import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
+import com.foreverrafs.superdiary.design.style.SuperdiaryTheme
 
 @Composable
 fun SuperdiaryPreviewTheme(

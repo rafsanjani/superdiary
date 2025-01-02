@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.components
+package com.foreverrafs.superdiary.design.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

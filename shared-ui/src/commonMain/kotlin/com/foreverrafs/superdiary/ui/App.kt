@@ -42,6 +42,7 @@ import coil3.memory.MemoryCache
 import coil3.request.CachePolicy
 import coil3.request.crossfade
 import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.superdiary.design.style.SuperdiaryTheme
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
 import com.foreverrafs.superdiary.ui.feature.auth.register.DeeplinkContainer
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenContent
@@ -53,7 +54,6 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
 import com.foreverrafs.superdiary.ui.feature.profile.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.navigation.AppRoute
 import com.foreverrafs.superdiary.ui.navigation.BottomNavigationScreen
-import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 import kotlinx.serialization.json.Json

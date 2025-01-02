@@ -14,10 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.Location
+import com.foreverrafs.superdiary.design.components.ConfirmDeleteDialog
+import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
+import com.foreverrafs.superdiary.design.style.SuperdiaryTheme
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
-import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
-import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreenContent
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenContent
@@ -38,7 +39,6 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenCon
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import com.foreverrafs.superdiary.ui.feature.profile.ProfileScreenViewData
 import com.foreverrafs.superdiary.ui.feature.profile.screen.ProfileScreenContent
-import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import com.foreverrafs.superdiary.utils.DiarySettings
 import com.foreverrafs.superdiary.utils.toDate
 import dev.icerock.moko.permissions.PermissionState

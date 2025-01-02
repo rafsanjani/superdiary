@@ -42,9 +42,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.foreverrafs.auth.NoCredentialsException
 import com.foreverrafs.auth.model.UserInfo
-import com.foreverrafs.superdiary.ui.components.SuperDiaryButton
-import com.foreverrafs.superdiary.ui.components.SuperDiaryInputField
-import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
+import com.foreverrafs.superdiary.design.components.SuperDiaryButton
+import com.foreverrafs.superdiary.design.components.SuperDiaryInputField
+import com.foreverrafs.superdiary.design.style.SuperdiaryTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview

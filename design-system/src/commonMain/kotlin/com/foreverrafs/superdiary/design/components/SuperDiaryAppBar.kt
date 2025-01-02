@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.components
+package com.foreverrafs.superdiary.design.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
@@ -18,8 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
-import superdiary.shared_ui.generated.resources.Res
-import superdiary.shared_ui.generated.resources.app_name
+import superdiary.design_system.generated.resources.Res
+import superdiary.design_system.generated.resources.app_name
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

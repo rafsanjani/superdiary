@@ -102,6 +102,7 @@ kover {
 
 rootProject.name = "superdiary"
 include(":androidApp:app")
+include(":design-system")
 include(":androidApp:benchmark")
 include(":shared-data")
 include(":swipe")

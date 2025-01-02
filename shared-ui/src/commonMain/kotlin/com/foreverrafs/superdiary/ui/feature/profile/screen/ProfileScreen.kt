@@ -46,12 +46,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.foreverrafs.superdiary.ui.components.ConfirmLogoutDialog
-import com.foreverrafs.superdiary.ui.components.SuperdiaryImage
+import com.foreverrafs.superdiary.design.components.ConfirmLogoutDialog
+import com.foreverrafs.superdiary.design.components.SuperdiaryImage
+import com.foreverrafs.superdiary.design.style.SuperdiaryTheme
 import com.foreverrafs.superdiary.ui.feature.profile.ProfileScreenViewData
 import com.foreverrafs.superdiary.ui.feature.profile.ProfileScreenViewModel
 import com.foreverrafs.superdiary.ui.navigation.AppRoute
-import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

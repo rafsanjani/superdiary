@@ -73,6 +73,7 @@ kotlin {
                 api(projects.core.analytics)
                 api(projects.core.location)
                 api(projects.core.logging)
+                api(projects.designSystem)
                 implementation(projects.feature.diaryAi)
             }
         }

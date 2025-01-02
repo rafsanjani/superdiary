@@ -1,9 +1,8 @@
-package com.foreverrafs.superdiary.ui.components
+package com.foreverrafs.superdiary.design.components
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.foreverrafs.superdiary.core.location.Location
 import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -16,10 +15,11 @@ import com.google.maps.android.compose.rememberMarkerState
 
 @Composable
 actual fun MapComponent(
-    location: Location,
+    latitude: Double,
+    longitude: Double,
     modifier: Modifier,
 ) {
-    val coordinates = LatLng(location.latitude, location.longitude)
+    val coordinates = LatLng(latitude, longitude)
     val markerState = rememberMarkerState(position = coordinates)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(coordinates, 11f)
