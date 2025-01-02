@@ -1,6 +1,7 @@
 package com.foreverrafs.superdiary.ui.di
 
 import com.foreverrafs.auth.di.authModule
+import com.foreverrafs.superdiary.ai.di.diaryAiModule
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.location.di.locationModule
 import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
@@ -26,7 +27,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
-internal fun screenModules(): Module = module {
+internal val screensModule: Module = module {
     factoryOf(::LocationPermissionManager)
     factoryOf(::DiaryListViewModel)
     factoryOf(::CreateDiaryViewModel)
@@ -50,11 +51,12 @@ fun compositeModule(
     analytics: AnalyticsTracker,
     logger: AggregateLogger,
 ): List<Module> = listOf(
-    utilsModule(),
+    utilsModule,
     locationModule(),
-    useCaseModule(),
+    useCaseModule,
     permissionModule(),
-    screenModules(),
+    screensModule,
     platformModule(analyticsTracker = analytics, aggregateLogger = logger),
     authModule(),
+    diaryAiModule,
 )

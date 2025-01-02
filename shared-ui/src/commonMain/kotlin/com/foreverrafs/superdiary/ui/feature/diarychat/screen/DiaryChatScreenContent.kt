@@ -57,8 +57,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.benasher44.uuid.uuid4
-import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
-import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
+import com.foreverrafs.superdiary.ai.domain.model.DiaryChatMessage
+import com.foreverrafs.superdiary.ai.domain.model.DiaryChatRole
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock

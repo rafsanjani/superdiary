@@ -1,16 +1,17 @@
-package com.foreverrafs.superdiary.usecase
+package com.foreverrafs.superdiary.ai.usecase
 
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isEmpty
-import com.foreverrafs.superdiary.data.datasource.LocalDataSource
-import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
+import com.foreverrafs.superdiary.ai.data.DiaryAiRepositoryImpl
+import com.foreverrafs.superdiary.ai.domain.model.DiaryChatMessage
+import com.foreverrafs.superdiary.ai.domain.repository.DiaryAiRepository
+import com.foreverrafs.superdiary.ai.domain.usecase.GetChatMessagesUseCase
+import com.foreverrafs.superdiary.ai.domain.usecase.SaveChatMessageUseCase
 import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
-import com.foreverrafs.superdiary.domain.repository.DataSource
-import com.foreverrafs.superdiary.domain.usecase.GetChatMessagesUseCase
-import com.foreverrafs.superdiary.domain.usecase.SaveChatMessageUseCase
+import dev.mokkery.mock
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -24,15 +25,18 @@ import kotlinx.coroutines.test.setMain
 @OptIn(ExperimentalCoroutinesApi::class)
 class SaveChatMessageUseCaseTest {
     private val database = Database(testSuperDiaryDatabase)
-    private val dataSource: DataSource = LocalDataSource(database)
+    private val repository: DiaryAiRepository = DiaryAiRepositoryImpl(
+        database = database,
+        diaryAI = mock(),
+    )
 
     private val saveChatMessageUseCase =
         SaveChatMessageUseCase(
-            dataSource = dataSource,
+            repository = repository,
         )
 
     private val getChatMessagesUseCase = GetChatMessagesUseCase(
-        dataSource = dataSource,
+        repository = repository,
     )
 
     @BeforeTest

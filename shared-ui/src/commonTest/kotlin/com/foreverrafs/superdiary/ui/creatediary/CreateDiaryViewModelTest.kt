@@ -6,12 +6,12 @@ import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.core.location.LocationManager
 import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
