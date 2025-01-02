@@ -1,11 +1,11 @@
-package com.foreverrafs.superdiary.ui.components
+package com.foreverrafs.superdiary.design.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.foreverrafs.superdiary.core.location.Location
 
 @Composable
 expect fun MapComponent(
-    location: Location,
+    latitude: Double,
+    longitude: Double,
     modifier: Modifier = Modifier,
 )

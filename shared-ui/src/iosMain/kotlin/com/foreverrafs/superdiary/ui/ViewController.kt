@@ -4,11 +4,11 @@ package com.foreverrafs.superdiary.ui
 
 import androidx.compose.ui.uikit.OnFocusBehavior
 import androidx.compose.ui.window.ComposeUIViewController
-import com.foreverrafs.superdiary.core.location.Location
+import com.foreverrafs.superdiary.design.SwiftUIViewControllers
 import platform.UIKit.UIViewController
 
 class ViewController(
-    googleMap: (location: Location) -> UIViewController,
+    googleMap: (latitude: Double, longitude: Double) -> UIViewController,
 ) {
     init {
         SwiftUIViewControllers.GoogleMap = googleMap
@@ -20,9 +20,4 @@ class ViewController(
         },
         content = { App() },
     )
-}
-
-object SwiftUIViewControllers {
-    @Suppress("ktlint:standard:property-naming")
-    lateinit var GoogleMap: (Location) -> UIViewController
 }

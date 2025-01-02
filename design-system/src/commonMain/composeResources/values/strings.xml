@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">Super Diary</string>
+    <string name="confirm_delete_diary_dialog_title">Confirm Deletion</string>
+    <string name="confirm_delete_diary_dialog_message">Are you sure you want to delete?</string>
+    <string name="confirm_delete_diary_positive_button">Confirm</string>
+    <string name="confirm_delete_diary_negative_button">Cancel</string>
+
+    <string name="confirm_save_diary_dialog_title">Confirm Save</string>
+    <string name="confirm_save_diary_dialog_message">Do you want to save the entry?</string>
+    <string name="confirm_save_diary_positive_button">Save</string>
+    <string name="confirm_save_diary_negative_button">Don't save</string>
+
+    <string name="confirm_logout_dialog_title">Confirm logout</string>
+    <string name="confirm_logout_dialog_message">Are you sure you want to logout?</string>
+    <string name="confirm_logout_dialog_cancel_button">Cancel</string>
+    <string name="confirm_logout_dialog_confirm_button">Logout</string>
+
+    <!--  Labels  -->
+    <string name="label_diary_ai">Diary AI:</string>
+    <string name="label_add_entry">Add entry</string>
+    <string name="label_entries">Entries</string>
+    <string name="label_glance_header_streak">Streak 🔥</string>
+    <string name="label_glance_header_best_streak">Best Streak</string>
+    <string name="label_glance_header_weekly_summary">Weekly Summary</string>
+    <string name="label_glance_header_latest_entries">Latest Entries</string>
+    <string name="label_weekly_summary_error">Error generating weekly summary</string>
+    <string name="label_button_retry">Retry</string>
+    <string name="label_button_show_all">Show All</string>
+    <string name="label_diary_deleted">Diary Deleted!</string>
+    <string name="label_username">Username</string>
+    <string name="label_password">Password</string>
+    <string name="label_login">Login</string>
+    <string name="label_login_title">Welcome back!</string>
+    <string name="label_register_title">Create an account</string>
+    <string name="label_register_message">Don't have an account yet? </string>
+    <string name="label_register">Register</string>
+    <string name="label_reset_password_button">Reset password</string>
+    <string name="label_reset_password_header">Reset your password</string>
+    <string name="label_google_button">Continue with Google</string>
+    <string name="label_open_email">Open email</string>
+
+    <string name="reset_password_success_message">A password reset email will be sent to $1 if it exists in our records.</string>
+
+    <!--  Accessibility Content Descriptions  -->
+    <string name="content_description_navigate_back">Navigate back</string>
+    <string name="content_description_save_entry">Save entry</string>
+    <string name="content_description_delete_entry">Delete entry</string>
+    <string name="content_description_button_send">Send</string>
+    <string name="content_description_button_login">Login Button</string>
+
+    <!--  Formatted Strings  -->
+    <string name="formatted_streak_days">%1$s days</string>
+
+</resources>

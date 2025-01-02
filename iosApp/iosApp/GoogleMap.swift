@@ -4,13 +4,15 @@ import SwiftUI
 import shared
 
 struct GoogleMap : UIViewRepresentable {
-    let location: Location
+    let latitude: Double
+    let longitude: Double
+    
     func makeUIView(context: Context) -> GMSMapView {
         let options = GMSMapViewOptions()
         
         options.camera = GMSCameraPosition.camera(
-            withLatitude: location.latitude,
-            longitude: location.longitude,
+            withLatitude: latitude,
+            longitude: longitude,
             zoom: 11.0
         )
         
@@ -23,8 +25,8 @@ struct GoogleMap : UIViewRepresentable {
         
         let marker = GMSMarker()
         marker.position = CLLocationCoordinate2D(
-            latitude: location.latitude,
-            longitude: location.longitude
+            latitude: latitude,
+            longitude: longitude
         )
         
         marker.map = mapView

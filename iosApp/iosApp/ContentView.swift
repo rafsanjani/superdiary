@@ -6,10 +6,10 @@ struct ComposeView: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> some UIViewController {
         
-        let viewController = ViewController { location in
+        let viewController = ViewController { latitude, longitude in
             
             UIHostingController(
-                rootView: GoogleMap(location: location)
+                rootView: GoogleMap(latitude: latitude.doubleValue, longitude: longitude.doubleValue)
             )
         }
         

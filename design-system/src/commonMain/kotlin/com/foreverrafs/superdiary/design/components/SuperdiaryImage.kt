@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.components
+package com.foreverrafs.superdiary.design.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.material3.MaterialTheme
@@ -13,8 +13,8 @@ import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import coil3.request.ImageRequest
 import org.jetbrains.compose.resources.painterResource
-import superdiary.shared_ui.generated.resources.Res
-import superdiary.shared_ui.generated.resources.default_avatar
+import superdiary.design_system.generated.resources.Res
+import superdiary.design_system.generated.resources.default_avatar
 
 @Composable
 fun SuperdiaryImage(

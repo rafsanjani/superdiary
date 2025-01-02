@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.components
+package com.foreverrafs.superdiary.design.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,21 +25,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import com.foreverrafs.superdiary.core.location.permission.PermissionState
 import org.jetbrains.compose.resources.stringResource
-import superdiary.shared_ui.generated.resources.Res
-import superdiary.shared_ui.generated.resources.confirm_delete_diary_dialog_message
-import superdiary.shared_ui.generated.resources.confirm_delete_diary_dialog_title
-import superdiary.shared_ui.generated.resources.confirm_delete_diary_negative_button
-import superdiary.shared_ui.generated.resources.confirm_delete_diary_positive_button
-import superdiary.shared_ui.generated.resources.confirm_logout_dialog_cancel_button
-import superdiary.shared_ui.generated.resources.confirm_logout_dialog_confirm_button
-import superdiary.shared_ui.generated.resources.confirm_logout_dialog_message
-import superdiary.shared_ui.generated.resources.confirm_logout_dialog_title
-import superdiary.shared_ui.generated.resources.confirm_save_diary_dialog_message
-import superdiary.shared_ui.generated.resources.confirm_save_diary_dialog_title
-import superdiary.shared_ui.generated.resources.confirm_save_diary_negative_button
-import superdiary.shared_ui.generated.resources.confirm_save_diary_positive_button
+import superdiary.design_system.generated.resources.Res
+import superdiary.design_system.generated.resources.confirm_delete_diary_dialog_message
+import superdiary.design_system.generated.resources.confirm_delete_diary_dialog_title
+import superdiary.design_system.generated.resources.confirm_delete_diary_negative_button
+import superdiary.design_system.generated.resources.confirm_delete_diary_positive_button
+import superdiary.design_system.generated.resources.confirm_logout_dialog_cancel_button
+import superdiary.design_system.generated.resources.confirm_logout_dialog_confirm_button
+import superdiary.design_system.generated.resources.confirm_logout_dialog_message
+import superdiary.design_system.generated.resources.confirm_logout_dialog_title
+import superdiary.design_system.generated.resources.confirm_save_diary_dialog_message
+import superdiary.design_system.generated.resources.confirm_save_diary_dialog_title
+import superdiary.design_system.generated.resources.confirm_save_diary_negative_button
+import superdiary.design_system.generated.resources.confirm_save_diary_positive_button
 
 @Composable
 fun ConfirmDeleteDialog(
@@ -161,14 +160,11 @@ private fun BasicSuperDiaryDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationRationaleDialog(
-    permissionState: PermissionState,
+    isPermissionDeniedAlways: Boolean,
     onRequestLocationPermission: () -> Unit,
     onDontAskAgain: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val isPermissionDeniedAlways =
-        permissionState == PermissionState.DeniedAlways || permissionState == PermissionState.NotGranted
-
     BasicAlertDialog(
         properties = DialogProperties(
             dismissOnBackPress = false,

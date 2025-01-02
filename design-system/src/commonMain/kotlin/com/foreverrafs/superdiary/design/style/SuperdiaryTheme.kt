@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.style
+package com.foreverrafs.superdiary.design.style
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,11 +16,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.Font
-import superdiary.shared_ui.generated.resources.Res
-import superdiary.shared_ui.generated.resources.montserrat_alternatives_bold
-import superdiary.shared_ui.generated.resources.montserrat_alternatives_regular
-import superdiary.shared_ui.generated.resources.montserrat_alternatives_semibold
-import superdiary.shared_ui.generated.resources.righteous_regular
+import superdiary.design_system.generated.resources.Res
+import superdiary.design_system.generated.resources.montserrat_alternatives_bold
+import superdiary.design_system.generated.resources.montserrat_alternatives_regular
+import superdiary.design_system.generated.resources.montserrat_alternatives_semibold
+import superdiary.design_system.generated.resources.righteous_regular
 
 @Composable
 fun SuperdiaryTheme(
