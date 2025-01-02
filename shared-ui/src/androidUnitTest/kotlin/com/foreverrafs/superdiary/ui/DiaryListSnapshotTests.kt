@@ -10,6 +10,8 @@ import androidx.compose.ui.unit.dp
 import app.cash.paparazzi.Paparazzi
 import com.android.ide.common.rendering.api.SessionParams
 import com.foreverrafs.superdiary.core.location.Location
+import com.foreverrafs.superdiary.design.SnapshotDevice
+import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
@@ -65,7 +67,7 @@ class DiaryListSnapshotTests(
     @Test
     fun `Loading diary list`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
+            SuperDiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
                 DiaryListScreenContent(
                     state = DiaryListViewState.Loading,
                     showSearchBar = true,
@@ -80,7 +82,7 @@ class DiaryListSnapshotTests(
     @Test
     fun `Unfiltered non-empty diary list`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme(modifier = Modifier.height(1500.dp)) {
+            SuperDiaryPreviewTheme(modifier = Modifier.height(1500.dp)) {
                 DiaryListScreenContent(
                     state = DiaryListViewState.Content(
                         (0..13).map {
@@ -111,7 +113,7 @@ class DiaryListSnapshotTests(
     @Test
     fun `Unfiltered empty diary list`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
+            SuperDiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
                 DiaryListScreenContent(
                     state = DiaryListViewState.Content(
                         listOf(),
@@ -129,7 +131,7 @@ class DiaryListSnapshotTests(
     @Test
     fun `Filtered empty diary list`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
+            SuperDiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
                 DiaryListScreenContent(
                     state = DiaryListViewState.Content(
                         listOf(),
@@ -147,7 +149,7 @@ class DiaryListSnapshotTests(
     @Test
     fun `Error loading diary list`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
+            SuperDiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
                 DiaryListScreenContent(
 
                     state = DiaryListViewState.Error(

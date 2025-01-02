@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import com.foreverrafs.superdiary.data.getDatastorePath
+import com.foreverrafs.superdiary.data.DataStorePathResolver
 import kotlin.concurrent.Volatile
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.internal.SynchronizedObject
 import kotlinx.coroutines.internal.synchronized
-import okio.Path.Companion.toPath
 
 interface DiaryPreference {
     val settings: Flow<DiarySettings>
@@ -23,9 +22,10 @@ interface DiaryPreference {
 }
 
 class DiaryPreferenceImpl private constructor(
-    filename: String,
+    private val filename: String,
+    private val dataStorePathResolver: DataStorePathResolver,
     private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.createWithPath {
-        getDatastorePath(filename = filename).toPath()
+        dataStorePathResolver.resolve(filename)
     },
 ) : DiaryPreference {
 
@@ -38,11 +38,11 @@ class DiaryPreferenceImpl private constructor(
 
     override val settings: Flow<DiarySettings> = dataStore.data.map {
         DiarySettings(
-            isFirstLaunch = it[isFirstLaunchKey] ?: true,
-            showWeeklySummary = it[showWeeklySummaryKey] ?: true,
-            showAtAGlance = it[showAtAGlanceKey] ?: true,
-            showLatestEntries = it[showLatestEntriesKey] ?: true,
-            showLocationPermissionDialog = it[showLocationPermissionDialogKey] ?: true,
+            isFirstLaunch = it[isFirstLaunchKey] != false,
+            showWeeklySummary = it[showWeeklySummaryKey] != false,
+            showAtAGlance = it[showAtAGlanceKey] != false,
+            showLatestEntries = it[showLatestEntriesKey] != false,
+            showLocationPermissionDialog = it[showLocationPermissionDialogKey] != false,
         )
     }
 
@@ -50,11 +50,11 @@ class DiaryPreferenceImpl private constructor(
         val prefs = dataStore.data.first()
 
         return DiarySettings(
-            isFirstLaunch = prefs[isFirstLaunchKey] ?: true,
-            showWeeklySummary = prefs[showWeeklySummaryKey] ?: true,
-            showAtAGlance = prefs[showAtAGlanceKey] ?: true,
-            showLatestEntries = prefs[showLatestEntriesKey] ?: true,
-            showLocationPermissionDialog = prefs[showLocationPermissionDialogKey] ?: true,
+            isFirstLaunch = prefs[isFirstLaunchKey] != false,
+            showWeeklySummary = prefs[showWeeklySummaryKey] != false,
+            showAtAGlance = prefs[showAtAGlanceKey] != false,
+            showLatestEntries = prefs[showLatestEntriesKey] != false,
+            showLocationPermissionDialog = prefs[showLocationPermissionDialogKey] != false,
         )
     }
 
@@ -82,8 +82,12 @@ class DiaryPreferenceImpl private constructor(
 
         fun getInstance(
             filename: String = "datastore.preferences_pb",
+            dataStorePathResolver: DataStorePathResolver,
         ) = synchronized(lock) {
-            instance ?: DiaryPreferenceImpl(filename).also { instance = it }
+            instance ?: DiaryPreferenceImpl(
+                filename = filename,
+                dataStorePathResolver = dataStorePathResolver,
+            ).also { instance = it }
         }
     }
 }

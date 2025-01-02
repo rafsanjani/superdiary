@@ -2,6 +2,8 @@ package com.foreverrafs.superdiary.ui
 
 import app.cash.paparazzi.Paparazzi
 import com.android.ide.common.rendering.api.SessionParams
+import com.foreverrafs.superdiary.design.SnapshotDevice
+import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreenContent
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState
 import com.google.testing.junit.testparameterinjector.TestParameter
@@ -25,7 +27,7 @@ class LoginScreenSnapshotTest(
     @Test
     fun `Login Screen - Idle`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 LoginScreenContent(
                     viewState = LoginViewState.Idle,
                     onSignInSuccess = {},
@@ -42,7 +44,7 @@ class LoginScreenSnapshotTest(
     @Test
     fun `Login Screen - Processing`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 LoginScreenContent(
                     viewState = LoginViewState.Processing,
                     onSignInSuccess = {},

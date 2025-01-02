@@ -23,7 +23,7 @@ import superdiary.design_system.generated.resources.montserrat_alternatives_semi
 import superdiary.design_system.generated.resources.righteous_regular
 
 @Composable
-fun SuperdiaryTheme(
+fun SuperDiaryTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {

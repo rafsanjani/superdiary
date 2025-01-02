@@ -1,34 +1,47 @@
-package com.foreverrafs.superdiary.ui.profile
+package com.foreverrafs.superdiary.profile
 
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
-import com.foreverrafs.superdiary.TestAppDispatchers
-import com.foreverrafs.superdiary.ui.auth.login.FakeAuthApi
-import com.foreverrafs.superdiary.ui.feature.profile.ProfileScreenViewModel
+import com.foreverrafs.auth.AuthApi
+import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewModel
+import dev.mokkery.answering.returns
+import dev.mokkery.everySuspend
+import dev.mokkery.mock
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 
 class ProfileScreenViewModelTest {
     private lateinit var profileScreenViewModel: ProfileScreenViewModel
 
-    private val authApi = FakeAuthApi()
+    // TODO: Replace this mock with a fake
+    private val authApi = mock<AuthApi>()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @BeforeTest
     fun setup() {
-        Dispatchers.setMain(TestAppDispatchers.main)
+        Dispatchers.setMain(StandardTestDispatcher())
         profileScreenViewModel = ProfileScreenViewModel(authApi)
     }
 
     @Test
     fun `Should load user data when profile screen loads`() = runTest {
+        everySuspend { authApi.currentUserOrNull() }.returns(
+            UserInfo(
+                id = "id",
+                avatarUrl = "avatarUrl",
+                name = "Rafsanjani Aziz",
+                email = "coded_raf@yahoo.com",
+            ),
+        )
         profileScreenViewModel.viewState.test {
             // skip the initial state
             skipItems(1)
@@ -43,9 +56,11 @@ class ProfileScreenViewModelTest {
 
     @Test
     fun `Should reset all error messages`() = runTest {
-        authApi.signOutResult = Result.failure(Exception("Error signing out"))
+        everySuspend { authApi.signOut() }.returns(Result.failure(Exception("Error signing out")))
+        everySuspend { authApi.currentUserOrNull() }.returns(null)
+
         profileScreenViewModel.viewState.test {
-            skipItems(2)
+            skipItems(1)
             profileScreenViewModel.onLogout()
 
             val state = awaitItem()

@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.paparazzi)
 }
 
 kotlin {
@@ -50,7 +51,6 @@ kotlin {
 
         androidUnitTest {
             dependencies {
-                implementation(libs.cashapp.paparazzi)
                 implementation(libs.koin.android)
                 implementation(libs.koin.test)
                 implementation(libs.kotlinx.coroutines.test)
@@ -72,6 +72,7 @@ kotlin {
             dependencies {
                 implementation(libs.compose.ui.tooling)
                 implementation(libs.moko.permissions)
+                implementation(libs.cashapp.paparazzi)
                 implementation(libs.moko.permissions.compose)
                 implementation(libs.kotlinx.coroutines.android)
                 implementation(libs.google.maps.compose)

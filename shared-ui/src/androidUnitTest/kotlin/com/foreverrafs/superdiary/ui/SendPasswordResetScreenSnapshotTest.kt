@@ -2,6 +2,8 @@ package com.foreverrafs.superdiary.ui
 
 import app.cash.paparazzi.Paparazzi
 import com.android.ide.common.rendering.api.SessionParams
+import com.foreverrafs.superdiary.design.SnapshotDevice
+import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.ui.feature.auth.reset.PasswordResetViewState
 import com.foreverrafs.superdiary.ui.feature.auth.reset.SendPasswordResetEmailScreenContent
 import com.google.testing.junit.testparameterinjector.TestParameter
@@ -25,7 +27,7 @@ class SendPasswordResetScreenSnapshotTest(
     @Test
     fun `Password Reset Screen - Initial State`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 SendPasswordResetEmailScreenContent(
                     viewState = PasswordResetViewState(),
                     onEmailChange = {},
@@ -39,7 +41,7 @@ class SendPasswordResetScreenSnapshotTest(
     @Test
     fun `Password Reset Screen - Loading State`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 SendPasswordResetEmailScreenContent(
                     viewState = PasswordResetViewState(
                         isLoading = true,
@@ -55,7 +57,7 @@ class SendPasswordResetScreenSnapshotTest(
     @Test
     fun `Password Reset Screen - Invalid Email State`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 SendPasswordResetEmailScreenContent(
                     viewState = PasswordResetViewState(
                         isLoading = false,
@@ -72,7 +74,7 @@ class SendPasswordResetScreenSnapshotTest(
     @Test
     fun `Password Reset Screen - Email Sent State`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 SendPasswordResetEmailScreenContent(
                     viewState = PasswordResetViewState(
                         isEmailSent = true,
@@ -90,7 +92,7 @@ class SendPasswordResetScreenSnapshotTest(
     @Test
     fun `Password Reset Screen - Input Valid State`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 SendPasswordResetEmailScreenContent(
                     viewState = PasswordResetViewState(
                         email = "john@doe.com",
@@ -107,7 +109,7 @@ class SendPasswordResetScreenSnapshotTest(
     @Test
     fun `Password Reset Screen - Input Invalid State`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 SendPasswordResetEmailScreenContent(
                     viewState = PasswordResetViewState(
                         email = "john@",

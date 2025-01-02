@@ -114,6 +114,7 @@ sentry {
     uploadNativeSymbols.set(true)
 }
 
+// This is only used for loading google maps api keys at the moment.
 secrets {
     propertiesFileName = "secrets.properties"
     defaultPropertiesFileName = "local.defaults.properties"
@@ -124,41 +125,13 @@ secrets {
 }
 
 dependencies {
-    implementation(libs.richTextEditor)
-    implementation(libs.moko.permissions)
     implementation(libs.androidx.activity.compose)
-    implementation(libs.kotlin.datetime)
     implementation(libs.google.material)
     implementation(compose.runtime)
     implementation(projects.sharedUi)
-    implementation(projects.core.logging)
-    implementation(projects.sharedData)
     implementation(projects.core.analytics)
     implementation(libs.koin.android)
-    implementation(projects.core.utils)
-    implementation(libs.androidx.core)
+    implementation(libs.supabase.auth)
     implementation(libs.androidx.core.uri)
-    testImplementation(libs.koin.android)
-    testImplementation(libs.koin.test)
-    implementation(libs.kotlinx.serialization.json)
-    testImplementation(libs.kotlinx.coroutines.test)
     kotlin("android")
-}
-
-dependencies {
-    implementation(libs.richTextEditor)
-    implementation(libs.moko.permissions)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.kotlin.datetime)
-    implementation(libs.google.material)
-    implementation(compose.runtime)
-    implementation(projects.sharedUi)
-    implementation(projects.core.logging)
-    implementation(projects.sharedData)
-    implementation(projects.core.analytics)
-    implementation(libs.koin.android)
-    implementation(projects.core.utils)
-    testImplementation(libs.koin.android)
-    testImplementation(libs.koin.test)
-    testImplementation(libs.kotlinx.coroutines.test)
 }

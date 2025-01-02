@@ -18,12 +18,13 @@ import io.github.jan.supabase.exceptions.BadRequestRestException
 import io.github.jan.supabase.exceptions.RestException
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 
-typealias UserInfoDto = io.github.jan.supabase.auth.user.UserInfo
-typealias SessionInfoDto = UserSession
+internal typealias UserInfoDto = io.github.jan.supabase.auth.user.UserInfo
+internal typealias SessionInfoDto = UserSession
 
 /**
  * Provides default implementation for all the functions in [AuthApi]
@@ -123,7 +124,9 @@ class DefaultSupabaseAuth(
 
         AuthApi.RegistrationStatus.Success
     } catch (exception: RestException) {
-        val error = if (exception.message?.contains(USER_REGISTERED_ERROR, true) == true) {
+        val error = if (
+            exception.message?.contains(USER_REGISTERED_ERROR, true) == true
+        ) {
             UserAlreadyRegisteredException(exception.message.orEmpty())
         } else {
             exception
@@ -136,6 +139,7 @@ class DefaultSupabaseAuth(
         client.auth.signOut()
         Result.success(Unit)
     } catch (e: Exception) {
+        if (e is CancellationException) throw e
         logger.e(Tag, e)
         Result.failure(e)
     }
@@ -167,6 +171,7 @@ class DefaultSupabaseAuth(
                     },
                 )
             } catch (e: Exception) {
+                if (e is CancellationException) throw e
                 continuation.resume(
                     AuthApi.SignInStatus.Error(e),
                 )
@@ -185,6 +190,7 @@ class DefaultSupabaseAuth(
         }
         Result.success(Unit)
     } catch (e: Exception) {
+        if (e is CancellationException) throw e
         logger.e(Tag) {
             "Failed to send password reset email to $email"
         }
