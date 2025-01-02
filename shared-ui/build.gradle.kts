@@ -74,6 +74,7 @@ kotlin {
                 api(projects.core.logging)
                 api(projects.designSystem)
                 implementation(projects.feature.diaryAi)
+                implementation(projects.feature.diaryAi)
             }
         }
 
@@ -89,6 +90,7 @@ kotlin {
                     compose.uiTest,
                 )
                 implementation(libs.turbine)
+                implementation(projects.commonTest)
             }
 
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")

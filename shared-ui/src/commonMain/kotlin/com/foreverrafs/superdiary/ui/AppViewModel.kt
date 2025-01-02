@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.core.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.ui.feature.auth.register.DeeplinkContainer
 import kotlinx.coroutines.flow.MutableStateFlow

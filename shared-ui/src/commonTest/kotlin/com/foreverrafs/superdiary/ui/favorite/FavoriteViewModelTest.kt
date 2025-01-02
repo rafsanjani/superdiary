@@ -4,7 +4,7 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEmpty
 import assertk.assertions.isInstanceOf
-import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource

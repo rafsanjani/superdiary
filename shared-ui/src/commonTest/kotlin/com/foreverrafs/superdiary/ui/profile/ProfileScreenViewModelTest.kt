@@ -5,7 +5,7 @@ import assertk.assertThat
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
-import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.ui.auth.login.FakeAuthApi
 import com.foreverrafs.superdiary.ui.feature.profile.ProfileScreenViewModel
 import kotlin.test.BeforeTest

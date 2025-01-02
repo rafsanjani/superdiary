@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary
 
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase

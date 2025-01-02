@@ -3,6 +3,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.paparazzi)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -22,14 +23,20 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.koin.core)
+                implementation(projects.commonUtils)
             }
+        }
+
+        androidMain.dependencies {
+            implementation(libs.cashapp.paparazzi)
         }
     }
 }
 
 android {
-    namespace = "com.foreverrafs.common.utils"
+    namespace = "com.foreverrafs.common.test"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
