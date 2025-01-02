@@ -74,7 +74,7 @@ kotlin {
                 api(projects.core.logging)
                 api(projects.designSystem)
                 implementation(projects.feature.diaryAi)
-                implementation(projects.feature.diaryAi)
+                implementation(projects.feature.diaryProfile)
             }
         }
 
@@ -103,6 +103,7 @@ kotlin {
                 implementation(libs.koin.test)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.mockk)
+                implementation(projects.commonTest)
                 implementation(libs.google.testparameterinjector)
             }
         }

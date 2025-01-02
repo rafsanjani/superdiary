@@ -71,6 +71,8 @@ kover {
         "*BackPressHandler*",
         "*SnapshotTheme*",
         "*BottomNavigationScreen*",
+        "*BottomNavigationRoute*",
+        "*Dto*",
         "*DiaryListActions*",
         "*DiaryFilters*",
         "*DiarySortCriteria*",
@@ -82,6 +84,9 @@ kover {
         "*DiaryHeader*",
         "*DiarySearchBar*",
         "*DiarySelectionModifierBar*",
+        "*AndroidDataStorePathResolver",
+        "*.*NavType",
+        "*.RemoteDataSource*",
         "db.*",
         "*di.*",
         "*screen.*",
@@ -118,3 +123,4 @@ include(":core:database")
 include(":core:database-test")
 include(":desktopApp")
 include(":feature:diary-ai")
+include(":feature:diary-profile")

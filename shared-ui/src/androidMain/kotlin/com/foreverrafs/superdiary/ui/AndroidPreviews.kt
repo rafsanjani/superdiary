@@ -1,7 +1,3 @@
-@file:Suppress("TooManyFunctions")
-
-package com.foreverrafs.superdiary.ui
-
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,9 +12,11 @@ import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.design.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
-import com.foreverrafs.superdiary.design.style.SuperdiaryTheme
+import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
+import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewData
+import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreenContent
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreenContent
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenContent
@@ -37,8 +35,6 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.components.DiaryDatePicke
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryList
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
-import com.foreverrafs.superdiary.ui.feature.profile.ProfileScreenViewData
-import com.foreverrafs.superdiary.ui.feature.profile.screen.ProfileScreenContent
 import com.foreverrafs.superdiary.utils.DiarySettings
 import com.foreverrafs.superdiary.utils.toDate
 import dev.icerock.moko.permissions.PermissionState
@@ -56,9 +52,13 @@ private val diaryListActions = DiaryListActions(
 )
 
 @Composable
-internal fun TestAppContainer(content: @Composable () -> Unit) {
-    SuperdiaryTheme {
+fun TestAppContainer(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    SuperDiaryTheme {
         Scaffold(
+            modifier = modifier,
             topBar = {
                 SuperDiaryAppBar()
             },
@@ -108,8 +108,8 @@ private fun ProfileScreenPreviewLogoutDialog() {
 @Composable
 @PreviewSuperDiary
 private fun RegistrationConfirmationPreview() {
-    SuperdiaryTheme {
-        SuperdiaryTheme {
+    SuperDiaryTheme {
+        SuperDiaryTheme {
             Surface(color = MaterialTheme.colorScheme.background) {
                 RegistrationConfirmationScreen()
             }
@@ -132,7 +132,7 @@ private fun DiaryChatPreview() {
 @PreviewSuperDiary
 @Composable
 private fun LoadingDiariesPreview() {
-    SuperdiaryTheme {
+    SuperDiaryTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
@@ -150,7 +150,7 @@ private fun LoadingDiariesPreview() {
 @PreviewSuperDiary
 @Composable
 private fun ErrorLoadingDiariesPreview() {
-    SuperdiaryTheme {
+    SuperDiaryTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
@@ -185,7 +185,7 @@ private fun EmptySearchDiaryListPreview() {
 @PreviewSuperDiary
 @Composable
 private fun EmptyDiaryListPreview() {
-    SuperdiaryTheme {
+    SuperDiaryTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
@@ -203,7 +203,7 @@ private fun EmptyDiaryListPreview() {
 @PreviewSuperDiary
 @Composable
 private fun DiaryListPreview() {
-    SuperdiaryTheme {
+    SuperDiaryTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             DiaryListScreenContent(
                 state = DiaryListViewState.Content(
@@ -230,7 +230,7 @@ private fun DiaryListPreview() {
 @PreviewSuperDiary
 @Composable
 private fun CreateDiaryPreview() {
-    SuperdiaryTheme {
+    SuperDiaryTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             CreateDiaryScreenContent(
                 onGenerateAI = { _, _ -> },
@@ -257,7 +257,7 @@ private fun CreateDiaryPreview() {
 @PreviewSuperDiary
 @Composable
 private fun CreateDiaryPreviewNonEditable() {
-    SuperdiaryTheme {
+    SuperDiaryTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             CreateDiaryScreenContent(
                 onGenerateAI = { _, _ -> },
@@ -284,7 +284,7 @@ private fun CreateDiaryPreviewNonEditable() {
 @PreviewSuperDiary
 @Composable
 private fun FilteredEmptyPreview() {
-    SuperdiaryTheme {
+    SuperDiaryTheme {
         Surface(
             color = MaterialTheme.colorScheme.background,
         ) {
@@ -395,7 +395,7 @@ private fun DashboardPreview() {
 @Composable
 @PreviewSuperDiary
 private fun DetailPreview() {
-    SuperdiaryTheme {
+    SuperDiaryTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             DetailScreenContent(
                 onDeleteDiary = {},
@@ -452,7 +452,7 @@ private fun DetailPreview() {
 @Composable
 @PreviewSuperDiary
 private fun LoginPreview() {
-    SuperdiaryTheme {
+    SuperDiaryTheme {
         LoginScreenContent(
             onLoginWithGoogle = {},
             onLoginClick = { _, _ -> },
@@ -468,7 +468,7 @@ private fun LoginPreview() {
 @Composable
 @PreviewSuperDiary
 private fun RegisterPreview() {
-    SuperdiaryTheme {
+    SuperDiaryTheme {
         RegisterScreenContent(
             onRegisterClick = { name, email, password -> },
             viewState = RegisterScreenState.Idle,

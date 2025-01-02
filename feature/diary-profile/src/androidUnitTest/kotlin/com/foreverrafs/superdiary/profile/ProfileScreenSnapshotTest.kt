@@ -1,9 +1,11 @@
-package com.foreverrafs.superdiary.ui
+package com.foreverrafs.superdiary.profile
 
 import app.cash.paparazzi.Paparazzi
 import com.android.ide.common.rendering.api.SessionParams
-import com.foreverrafs.superdiary.ui.feature.profile.ProfileScreenViewData
-import com.foreverrafs.superdiary.ui.feature.profile.screen.ProfileScreenContent
+import com.foreverrafs.common.paparazzi.SnapshotDevice
+import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
+import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewData
+import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreenContent
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import org.junit.Rule
@@ -25,7 +27,7 @@ class ProfileScreenSnapshotTest(
     @Test
     fun `Profile Screen - Idle`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 ProfileScreenContent(
                     viewState = ProfileScreenViewData(
                         name = "Rafsanjani Aziz",
@@ -44,7 +46,7 @@ class ProfileScreenSnapshotTest(
     @Test
     fun `Profile Screen - Logout dialog visible`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 ProfileScreenContent(
                     viewState = ProfileScreenViewData(
                         name = "Rafsanjani Aziz",
@@ -63,7 +65,7 @@ class ProfileScreenSnapshotTest(
     @Test
     fun `Profile Screen - error message visible`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 ProfileScreenContent(
                     viewState = ProfileScreenViewData(
                         name = "Rafsanjani Aziz",

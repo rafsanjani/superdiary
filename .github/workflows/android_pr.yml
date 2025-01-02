@@ -131,16 +131,17 @@ jobs:
         run: echo "COVERAGE=$(${{github.workspace}}/gradlew -q printLineCoverage)" >> $GITHUB_ENV
 
       - name: Add coverage Report to PR
-        id: jacoco
-        uses: madrapps/jacoco-report@v1.7.1
+        id: kover
+        uses: mi-kas/kover-report@v1
         with:
-          paths: |
+          path: |
             ${{ github.workspace }}/build/reports/kover/report.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           update-comment: true
           title: Code Coverage
           min-coverage-overall: 85
           min-coverage-changed-files: 85
+          coverage-counter-type: LINE
 
       - name: Update dynamic badge gist
         if: github.ref == 'refs/heads/development'

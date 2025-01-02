@@ -1,6 +1,8 @@
 package com.foreverrafs.superdiary.ui
 
 import app.cash.paparazzi.Paparazzi
+import com.foreverrafs.common.paparazzi.SnapshotDevice
+import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
@@ -24,7 +26,7 @@ class CreateDiarySnapshotTests(
     @Test
     fun `Create Diary Screen - empty`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = false,
                     onGenerateAI = { _: String, _: Int -> },
@@ -46,7 +48,7 @@ class CreateDiarySnapshotTests(
     @Test
     fun `Create Diary Screen - very few words`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = false,
                     onGenerateAI = { _: String, _: Int -> },
@@ -72,7 +74,7 @@ class CreateDiarySnapshotTests(
     @Test
     fun `Create Diary Screen - with content`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = false,
                     onGenerateAI = { _: String, _: Int -> },
@@ -107,7 +109,7 @@ class CreateDiarySnapshotTests(
     @Test
     fun `Create Diary Screen - with content - generating from AI`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = true,
                     onGenerateAI = { _: String, _: Int -> },
@@ -142,7 +144,7 @@ class CreateDiarySnapshotTests(
     @Test
     fun `Create Diary Screen - Location Permission Dialog`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = false,
                     onGenerateAI = { _: String, _: Int -> },
@@ -164,7 +166,7 @@ class CreateDiarySnapshotTests(
     @Test
     fun `Create Diary Screen - Confirm Save Dialog`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 CreateDiaryScreenContent(
                     isGeneratingFromAi = false,
                     onGenerateAI = { _: String, _: Int -> },

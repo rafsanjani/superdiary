@@ -43,7 +43,9 @@ val useCaseModule = module {
     factory<Clock> { Clock.System }
 
     factory<DiaryPreference> {
-        DiaryPreferenceImpl.getInstance()
+        DiaryPreferenceImpl.getInstance(
+            dataStorePathResolver = get(),
+        )
     }
     factoryOf(::DiaryValidatorImpl) { bind<DiaryValidator>() }
 

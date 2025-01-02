@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.profile.screen
+package com.foreverrafs.superdiary.profile.presentation.screen
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -45,28 +45,25 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.foreverrafs.superdiary.design.components.ConfirmLogoutDialog
 import com.foreverrafs.superdiary.design.components.SuperdiaryImage
-import com.foreverrafs.superdiary.design.style.SuperdiaryTheme
-import com.foreverrafs.superdiary.ui.feature.profile.ProfileScreenViewData
-import com.foreverrafs.superdiary.ui.feature.profile.ProfileScreenViewModel
-import com.foreverrafs.superdiary.ui.navigation.AppRoute
+import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
+import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewData
+import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(
+    onLogoutComplete: () -> Unit,
+) {
     val viewModel: ProfileScreenViewModel = koinViewModel()
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     var isLogoutDialogVisible by remember { mutableStateOf(false) }
+    val currentOnLogoutComplete by rememberUpdatedState(onLogoutComplete)
 
     LaunchedEffect(viewState) {
         if (viewState.isLogoutSuccess == true) {
-            navController.navigate(AppRoute.LoginScreen()) {
-                popUpTo(navController.graph.startDestinationId) {
-                    inclusive = true
-                }
-            }
+            currentOnLogoutComplete()
         }
     }
 
@@ -101,7 +98,7 @@ fun ProfileScreenContent(
         }
     }
 
-    SuperdiaryTheme {
+    SuperDiaryTheme {
         Scaffold(
             modifier = modifier,
             contentColor = MaterialTheme.colorScheme.background,

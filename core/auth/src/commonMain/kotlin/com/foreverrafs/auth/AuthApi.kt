@@ -38,5 +38,6 @@ interface AuthApi {
     }
 }
 
+// When the user hasn't enrolled any of the requested credentials onto their device yet
 class NoCredentialsException(message: String) : Exception(message)
 class UserAlreadyRegisteredException(message: String) : Exception(message)

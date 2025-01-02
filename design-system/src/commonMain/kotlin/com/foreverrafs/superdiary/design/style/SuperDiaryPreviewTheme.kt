@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui
+package com.foreverrafs.superdiary.design.style
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,15 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
-import com.foreverrafs.superdiary.design.style.SuperdiaryTheme
 
 @Composable
-fun SuperdiaryPreviewTheme(
+fun SuperDiaryPreviewTheme(
     modifier: Modifier = Modifier,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    SuperdiaryTheme(darkTheme = darkTheme) {
+    SuperDiaryTheme(darkTheme = darkTheme) {
         Scaffold(
             modifier = modifier,
         ) {

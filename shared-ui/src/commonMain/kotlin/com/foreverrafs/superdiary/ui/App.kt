@@ -42,7 +42,8 @@ import coil3.memory.MemoryCache
 import coil3.request.CachePolicy
 import coil3.request.crossfade
 import com.foreverrafs.auth.model.UserInfo
-import com.foreverrafs.superdiary.design.style.SuperdiaryTheme
+import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
+import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
 import com.foreverrafs.superdiary.ui.feature.auth.register.DeeplinkContainer
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenContent
@@ -51,7 +52,6 @@ import com.foreverrafs.superdiary.ui.feature.auth.reset.SendPasswordResetEmailSc
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
-import com.foreverrafs.superdiary.ui.feature.profile.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.navigation.AppRoute
 import com.foreverrafs.superdiary.ui.navigation.BottomNavigationScreen
 import kotlin.reflect.KType
@@ -73,7 +73,7 @@ fun App(modifier: Modifier = Modifier) {
     val appViewModel: AppViewModel = koinViewModel()
     val appViewState by appViewModel.viewState.collectAsStateWithLifecycle()
 
-    SuperdiaryTheme {
+    SuperDiaryTheme {
         setSingletonImageLoaderFactory(::getAsyncImageLoader)
         SuperDiaryNavHost(
             viewState = appViewState,
@@ -225,7 +225,13 @@ private fun SuperDiaryNavHost(
 
         animatedComposable<AppRoute.ProfileScreen> {
             ProfileScreen(
-                navController = navController,
+                onLogoutComplete = {
+                    navController.navigate(AppRoute.LoginScreen()) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                },
             )
         }
     }
@@ -233,7 +239,7 @@ private fun SuperDiaryNavHost(
 
 @Composable
 private fun LoadingScreen() {
-    SuperdiaryTheme {
+    SuperDiaryTheme {
         Surface {
             Box(
                 modifier = Modifier
