@@ -20,7 +20,7 @@ import okio.Path.Companion.toPath
 class DiaryPreferenceTest {
 
     private val dataStorePathResolver: DataStorePathResolver = object : DataStorePathResolver {
-        override fun resolve(filename: String): Path = "some/path".toPath()
+        override fun resolve(filename: String): Path = "superdiary/$filename.preferences_pb".toPath()
     }
     private val diaryPreference: DiaryPreference =
         DiaryPreferenceImpl.getInstance(
