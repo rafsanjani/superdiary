@@ -102,7 +102,7 @@ class DiaryAiImpl(
         var response = ""
 
         return openAI.chatCompletions(request).mapNotNull {
-            it.choices.first().delta?.content?.let {
+            it.choices.firstOrNull()?.delta?.content?.let {
                 response += it
             }
             response
@@ -117,7 +117,12 @@ class DiaryAiImpl(
             messages = messages.map { it.toNetworkChatMessage() },
         )
 
-        return openAI.chatCompletion(request).choices.first().message.content.orEmpty()
+        return openAI.chatCompletion(request)
+            .choices
+            .firstOrNull()
+            ?.message
+            ?.content
+            .orEmpty()
     }
 
     companion object {
