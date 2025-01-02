@@ -43,7 +43,7 @@ class LoginScreenViewModelTest {
     @Test
     fun `Should emit LoginViewState Processing when signInWithGoogle flow begins`() = runTest {
         loginViewModel.viewState.test {
-            loginViewModel.onLoginWithGoogle(null)
+            loginViewModel.onLoginWithGoogle()
             val state = awaitUntil { it is LoginViewState.Processing }
             cancelAndIgnoreRemainingEvents()
             assertThat(state).isInstanceOf<LoginViewState.Processing>()
@@ -74,7 +74,7 @@ class LoginScreenViewModelTest {
         authApi.signInResult = AuthApi.SignInStatus.Error(Exception("Error logging in"))
 
         loginViewModel.viewState.test {
-            loginViewModel.onLoginWithGoogle(null)
+            loginViewModel.onLoginWithGoogle()
             val state = awaitUntil { it is LoginViewState.Error }
             expectNoEvents()
             assertThat(state).isInstanceOf<LoginViewState.Error>()
@@ -110,7 +110,7 @@ class LoginScreenViewModelTest {
         )
 
         loginViewModel.viewState.test {
-            loginViewModel.onLoginWithGoogle(null)
+            loginViewModel.onLoginWithGoogle()
             val state = awaitUntil { it is LoginViewState.Success }
             expectNoEvents()
             assertThat(state).isInstanceOf<LoginViewState.Success>()

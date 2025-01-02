@@ -1,7 +1,5 @@
 package com.foreverrafs.superdiary.core.location.permission
 
-import com.foreverrafs.superdiary.core.utils.ActivityWrapper
-
 /**
  * Permission Controller Wrapper. This makes it possible to build and use
  * the app on JVM because moko-permissions doesn't provide a JVM target
@@ -14,12 +12,4 @@ interface PermissionsControllerWrapper {
     suspend fun isPermissionGranted(permission: Permission): Boolean
     suspend fun getPermissionState(permission: Permission): PermissionState
     fun openAppSettings()
-}
-
-/**
- * Only used on Android. Allows the permission controller to bind to the
- * instance of the underlying activity housing the screen
- */
-fun interface Bindable {
-    fun bind(activityWrapper: ActivityWrapper)
 }

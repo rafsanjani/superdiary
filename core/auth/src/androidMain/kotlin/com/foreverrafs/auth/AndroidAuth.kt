@@ -1,5 +1,6 @@
 package com.foreverrafs.auth
 
+import android.app.Activity
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -8,7 +9,6 @@ import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.NoCredentialException
 import com.foreverrafs.superdiary.core.SuperDiarySecret
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
@@ -17,13 +17,21 @@ import io.github.jan.supabase.SupabaseClient
 class AndroidAuth(
     private val supabaseClient: SupabaseClient,
     private val logger: AggregateLogger,
+    private val contextProvider: AndroidContextProvider,
 ) : AuthApi by DefaultSupabaseAuth(supabaseClient, logger) {
 
     /** Use the credentials manager to sign in with Google on Android */
-    override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper?): AuthApi.SignInStatus {
+    override suspend fun signInWithGoogle(): AuthApi.SignInStatus {
         logger.d(TAG) { "Starting Google sign-in process with CredentialManager" }
+        // This must be an activity context
+        val hostActivityContext = contextProvider.getContext()
+
+        require(hostActivityContext is Activity) {
+            "The host context must be an Activity!"
+        }
+
         val credentialManager = CredentialManager.create(
-            activityWrapper ?: throw IllegalArgumentException("activityWrapper is null!"),
+            context = hostActivityContext,
         )
 
         val request: GetCredentialRequest = GetCredentialRequest
@@ -41,7 +49,7 @@ class AndroidAuth(
             logger.d(TAG) { "Requesting credentials from CredentialManager" }
             val result = credentialManager.getCredential(
                 request = request,
-                context = activityWrapper,
+                context = hostActivityContext,
             )
 
             getGoogleIdToken(result)
