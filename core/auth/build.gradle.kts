@@ -44,7 +44,7 @@ kotlin {
                 implementation(libs.supabase.compose.auth)
                 implementation(libs.ktor.client.cio)
                 implementation(libs.ktor.client.json)
-                implementation(projects.core.utils)
+                implementation(projects.commonUtils)
                 implementation(projects.core.secrets)
             }
         }

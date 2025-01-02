@@ -27,7 +27,6 @@ kotlin {
                 implementation(libs.kotlin.datetime)
                 implementation(libs.touchlab.stately)
                 implementation(libs.koin.core)
-                implementation(libs.kotlin.inject.runtime)
                 implementation(libs.kotlinx.coroutines.test)
             }
         }
