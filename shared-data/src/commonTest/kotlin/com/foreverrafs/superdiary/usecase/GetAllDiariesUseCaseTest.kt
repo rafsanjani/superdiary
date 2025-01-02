@@ -3,7 +3,7 @@ package com.foreverrafs.superdiary.usecase
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.database.Database
@@ -25,7 +25,8 @@ import kotlinx.coroutines.test.setMain
 class GetAllDiariesUseCaseTest {
     private val database = Database(testSuperDiaryDatabase)
     private val dataSource: DataSource = LocalDataSource(database = database)
-    private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource = dataSource, dispatchers = TestAppDispatchers)
+    private val getAllDiariesUseCase =
+        GetAllDiariesUseCase(dataSource = dataSource, dispatchers = TestAppDispatchers)
 
     @BeforeTest
     fun setup() {

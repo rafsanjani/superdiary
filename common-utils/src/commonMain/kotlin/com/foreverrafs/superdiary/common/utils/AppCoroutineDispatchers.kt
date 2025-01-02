@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.core.utils
+package com.foreverrafs.superdiary.common.utils
 
 import kotlinx.coroutines.CoroutineDispatcher
 

@@ -6,8 +6,8 @@ import assertk.assertions.contains
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
-import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.ai.api.DiaryAI
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary

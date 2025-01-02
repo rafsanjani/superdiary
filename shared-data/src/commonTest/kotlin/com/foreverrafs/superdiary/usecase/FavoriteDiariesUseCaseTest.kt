@@ -3,7 +3,7 @@ package com.foreverrafs.superdiary.usecase
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.hasSize
-import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.database.Database

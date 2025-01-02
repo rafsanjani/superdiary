@@ -1,6 +1,6 @@
 package com.foreverrafs.superdiary.domain.usecase
 
-import com.foreverrafs.superdiary.core.utils.AppCoroutineDispatchers
+import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.utils.toDate

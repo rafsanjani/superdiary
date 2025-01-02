@@ -3,7 +3,7 @@ package com.foreverrafs.superdiary.ui.feature.auth.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
-import com.foreverrafs.superdiary.core.utils.AppCoroutineDispatchers
+import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

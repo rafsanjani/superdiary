@@ -1,6 +1,6 @@
-package com.foreverrafs.superdiary
+package com.foreverrafs.superdiary.common.coroutines
 
-import com.foreverrafs.superdiary.core.utils.AppCoroutineDispatchers
+import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.test.StandardTestDispatcher
 

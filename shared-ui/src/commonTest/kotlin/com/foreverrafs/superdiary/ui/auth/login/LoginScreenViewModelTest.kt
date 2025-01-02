@@ -6,7 +6,7 @@ import assertk.assertions.isInstanceOf
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
-import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.ui.awaitUntil
 import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreenViewModel
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState

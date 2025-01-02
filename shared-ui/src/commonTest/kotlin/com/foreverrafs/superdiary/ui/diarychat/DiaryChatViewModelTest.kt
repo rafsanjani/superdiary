@@ -4,12 +4,12 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
-import com.foreverrafs.superdiary.TestAppDispatchers
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatRole
 import com.foreverrafs.superdiary.ai.domain.repository.DiaryAiRepository
 import com.foreverrafs.superdiary.ai.domain.usecase.GetChatMessagesUseCase
 import com.foreverrafs.superdiary.ai.domain.usecase.SaveChatMessageUseCase
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource

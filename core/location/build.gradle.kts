@@ -3,12 +3,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.serialization)
-
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     kotlin("multiplatform")
     id("kotlin-parcelize")
-    alias(libs.plugins.testLogger)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -33,8 +31,7 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(projects.core.logging)
-                implementation(projects.core.utils)
-                implementation(libs.kotlin.inject.runtime)
+                implementation(projects.commonUtils)
                 implementation(compose.foundation)
                 implementation(libs.kotlinx.coroutines.test)
             }
