@@ -68,7 +68,6 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(libs.compose.ui.tooling)
-                implementation(libs.cashapp.paparazzi)
                 implementation(libs.kotlinx.coroutines.android)
                 implementation(libs.google.maps.compose)
             }

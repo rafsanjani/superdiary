@@ -103,6 +103,7 @@ kotlin {
                 implementation(libs.koin.test)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.mockk)
+                implementation(projects.commonTest)
                 implementation(libs.google.testparameterinjector)
             }
         }

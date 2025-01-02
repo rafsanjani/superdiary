@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import app.cash.paparazzi.Paparazzi
-import com.foreverrafs.superdiary.design.SnapshotDevice
+import com.foreverrafs.common.paparazzi.SnapshotDevice
 import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.google.testing.junit.testparameterinjector.TestParameter

@@ -9,8 +9,8 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import app.cash.paparazzi.Paparazzi
 import com.android.ide.common.rendering.api.SessionParams
+import com.foreverrafs.common.paparazzi.SnapshotDevice
 import com.foreverrafs.superdiary.core.location.Location
-import com.foreverrafs.superdiary.design.SnapshotDevice
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters

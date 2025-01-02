@@ -2,7 +2,7 @@ package com.foreverrafs.superdiary.ui
 
 import app.cash.paparazzi.Paparazzi
 import com.android.ide.common.rendering.api.SessionParams
-import com.foreverrafs.superdiary.design.SnapshotDevice
+import com.foreverrafs.common.paparazzi.SnapshotDevice
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreenContent
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState

@@ -2,7 +2,7 @@ package com.foreverrafs.superdiary.profile
 
 import app.cash.paparazzi.Paparazzi
 import com.android.ide.common.rendering.api.SessionParams
-import com.foreverrafs.superdiary.design.SnapshotDevice
+import com.foreverrafs.common.paparazzi.SnapshotDevice
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewData
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreenContent

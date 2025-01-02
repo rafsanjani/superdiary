@@ -5,9 +5,12 @@ import assertk.assertThat
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
-import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
-import com.foreverrafs.superdiary.ui.auth.login.FakeAuthApi
-import com.foreverrafs.superdiary.ui.feature.profile.ProfileScreenViewModel
+import com.foreverrafs.auth.AuthApi
+import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewModel
+import dev.mokkery.answering.returns
+import dev.mokkery.everySuspend
+import dev.mokkery.mock
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers

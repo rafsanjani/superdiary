@@ -22,6 +22,7 @@ kotlin {
     sourceSets {
         androidUnitTest.dependencies {
             implementation(libs.google.testparameterinjector)
+            implementation(projects.commonTest)
         }
 
         commonMain.dependencies {
@@ -37,7 +38,7 @@ kotlin {
             implementation(libs.kotlin.datetime)
             implementation(libs.jetbrains.navigation.compose)
             implementation(projects.core.auth)
-            implementation(projects.core.utils)
+            implementation(projects.commonUtils)
             implementation(projects.sharedData)
             implementation(projects.designSystem)
         }

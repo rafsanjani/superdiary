@@ -4,8 +4,6 @@ plugins {
     kotlin("android")
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.compose.multiplatform)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("io.sentry.android.gradle") version "4.14.1"
 }
@@ -127,12 +125,11 @@ secrets {
 dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.google.material)
-    implementation(compose.runtime)
     implementation(projects.sharedUi)
     implementation(projects.core.analytics)
     implementation(libs.koin.android)
-    implementation(projects.commonUtils)
     implementation(libs.androidx.core)
+    implementation(libs.supabase.compose.auth)
     implementation(libs.androidx.core.uri)
     implementation(libs.koin.android)
     implementation(libs.koin.core)
