@@ -17,7 +17,7 @@ import superdiary.design_system.generated.resources.Res
 import superdiary.design_system.generated.resources.default_avatar
 
 @Composable
-fun SuperdiaryImage(
+fun SuperDiaryImage(
     url: String?,
     modifier: Modifier = Modifier,
 ) {

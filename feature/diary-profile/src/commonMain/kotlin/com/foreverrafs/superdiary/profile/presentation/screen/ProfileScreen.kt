@@ -46,10 +46,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.foreverrafs.superdiary.design.components.ConfirmLogoutDialog
-import com.foreverrafs.superdiary.design.components.SuperdiaryImage
+import com.foreverrafs.superdiary.design.components.SuperDiaryImage
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewData
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewModel
+import com.foreverrafs.superdiary.utils.DiarySettings
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -60,6 +61,7 @@ fun ProfileScreen(
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     var isLogoutDialogVisible by remember { mutableStateOf(false) }
     val currentOnLogoutComplete by rememberUpdatedState(onLogoutComplete)
+    val settings by viewModel.settings.collectAsStateWithLifecycle()
 
     LaunchedEffect(viewState) {
         if (viewState.isLogoutSuccess == true) {
@@ -69,6 +71,7 @@ fun ProfileScreen(
 
     ProfileScreenContent(
         viewState = viewState,
+        onConsumeErrorMessage = viewModel::resetErrors,
         onLogout = {
             viewModel.onLogout()
         },
@@ -76,7 +79,8 @@ fun ProfileScreen(
             isLogoutDialogVisible = it
         },
         isLogoutDialogVisible = isLogoutDialogVisible,
-        onConsumeErrorMessage = viewModel::resetErrors,
+        settings = settings,
+        onUpdateSettings = viewModel::onSettingsUpdated,
     )
 }
 
@@ -86,11 +90,14 @@ fun ProfileScreenContent(
     onConsumeErrorMessage: () -> Unit,
     onLogout: () -> Unit,
     onLogoutDialogVisibilityChange: (Boolean) -> Unit,
+    onUpdateSettings: (DiarySettings) -> Unit,
     isLogoutDialogVisible: Boolean,
+    settings: DiarySettings,
     modifier: Modifier = Modifier,
 ) {
     val snackBarkHostState = remember { SnackbarHostState() }
     val currentOnConsumeErrorMessage by rememberUpdatedState(onConsumeErrorMessage)
+
     LaunchedEffect(viewState.errorMessage) {
         if (viewState.errorMessage != null) {
             snackBarkHostState.showSnackbar(viewState.errorMessage)
@@ -131,7 +138,7 @@ fun ProfileScreenContent(
                 ) {
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    SuperdiaryImage(
+                    SuperDiaryImage(
                         modifier = Modifier
                             .size(72.dp)
                             .clip(CircleShape),
@@ -162,8 +169,14 @@ fun ProfileScreenContent(
                     ) {
                         CheckboxProfileItem(
                             label = "Weekly summary",
-                            checked = true,
-                            onCheckChange = {},
+                            checked = settings.showWeeklySummary,
+                            onCheckChange = {
+                                onUpdateSettings(
+                                    settings.copy(
+                                        showWeeklySummary = it,
+                                    ),
+                                )
+                            },
                         )
 
                         CheckboxProfileItem(
@@ -174,8 +187,14 @@ fun ProfileScreenContent(
 
                         CheckboxProfileItem(
                             label = "Latest entries",
-                            checked = true,
-                            onCheckChange = {},
+                            checked = settings.showLatestEntries,
+                            onCheckChange = {
+                                onUpdateSettings(
+                                    settings.copy(
+                                        showLatestEntries = it,
+                                    ),
+                                )
+                            },
                         )
 
                         HorizontalDivider(

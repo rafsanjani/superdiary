@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.DataStorePathResolver
 import kotlin.concurrent.Volatile
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -27,6 +28,7 @@ class DiaryPreferenceImpl private constructor(
     private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.createWithPath {
         dataStorePathResolver.resolve(filename)
     },
+    private val logger: AggregateLogger,
 ) : DiaryPreference {
 
     private val isFirstLaunchKey = booleanPreferencesKey("isFirstLaunch")
@@ -66,6 +68,9 @@ class DiaryPreferenceImpl private constructor(
             it[showLatestEntriesKey] = settings.showLatestEntries
             it[showLocationPermissionDialogKey] = settings.showLocationPermissionDialog
         }
+        logger.d(Tag) {
+            "Settings saved: $settings"
+        }
     }
 
     override suspend fun clear() {
@@ -83,12 +88,16 @@ class DiaryPreferenceImpl private constructor(
         fun getInstance(
             filename: String = "datastore.preferences_pb",
             dataStorePathResolver: DataStorePathResolver,
+            logger: AggregateLogger,
         ) = synchronized(lock) {
             instance ?: DiaryPreferenceImpl(
                 filename = filename,
                 dataStorePathResolver = dataStorePathResolver,
+                logger = logger,
             ).also { instance = it }
         }
+
+        private val Tag = DiaryPreference::class.simpleName.orEmpty()
     }
 }
 

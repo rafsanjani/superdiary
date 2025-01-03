@@ -3,6 +3,8 @@ package com.foreverrafs.superdiary.profile.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
+import com.foreverrafs.superdiary.utils.DiaryPreference
+import com.foreverrafs.superdiary.utils.DiarySettings
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,9 +23,16 @@ data class ProfileScreenViewData(
 
 class ProfileScreenViewModel(
     private val authApi: AuthApi,
+    private val preference: DiaryPreference,
 ) : ViewModel() {
     private val _viewState: MutableStateFlow<ProfileScreenViewData> = MutableStateFlow(
         ProfileScreenViewData(),
+    )
+
+    val settings = preference.settings.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = DiarySettings.Empty,
     )
 
     val viewState = _viewState.asStateFlow()
@@ -58,6 +67,10 @@ class ProfileScreenViewModel(
                 )
             }
         }
+    }
+
+    fun onSettingsUpdated(settings: DiarySettings) = viewModelScope.launch {
+        preference.save(settings)
     }
 
     fun resetErrors() {

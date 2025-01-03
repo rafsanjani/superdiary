@@ -46,7 +46,7 @@ fun SuperDiaryAppBar(
             containerColor = MaterialTheme.colorScheme.background,
         ),
         actions = {
-            SuperdiaryImage(
+            SuperDiaryImage(
                 modifier = Modifier
                     .padding(end = 4.dp)
                     .size(36.dp)

@@ -166,7 +166,21 @@ private fun SuperDiaryNavHost(
 
         animatedComposable<AppRoute.RegisterScreen> {
             RegisterScreenContent(
-                navController = navController,
+                onLoginClick = {
+                    navController.navigate(AppRoute.LoginScreen) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onRegisterSuccess = {
+                    navController.navigate(AppRoute.RegistrationConfirmationScreen) {
+                        popUpTo(AppRoute.RegistrationConfirmationScreen) {
+                            inclusive = true
+                        }
+                    }
+                },
+
             )
         }
 
