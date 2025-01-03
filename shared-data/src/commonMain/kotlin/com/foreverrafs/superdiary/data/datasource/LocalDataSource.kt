@@ -25,8 +25,6 @@ class LocalDataSource(private val database: Database) : DataSource {
         return 1
     }
 
-    override suspend fun delete(diary: Diary): Int = delete(listOf(diary))
-
     override suspend fun delete(diaries: List<Diary>): Int =
         database.deleteDiaries(diaries.mapNotNull { it.id })
 

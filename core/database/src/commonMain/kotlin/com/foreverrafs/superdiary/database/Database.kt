@@ -48,7 +48,7 @@ class Database(
             location = LocationDb.fromString(diary.location),
         )
 
-    fun deleteDiary(id: Long) = queries.delete(id)
+    private fun deleteDiary(id: Long) = queries.delete(id)
 
     suspend fun deleteDiaries(ids: List<Long>): Int = suspendCoroutine { continuation ->
         queries.transaction {

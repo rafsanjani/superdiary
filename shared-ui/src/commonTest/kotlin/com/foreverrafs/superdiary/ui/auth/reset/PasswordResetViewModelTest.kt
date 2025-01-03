@@ -114,4 +114,28 @@ class PasswordResetViewModelTest {
             expectNoEvents()
         }
     }
+
+    @Test
+    fun `should show an error message when user inputs an invalid email`() = runTest {
+        viewModel.onEmailChange("invalid_email")
+        viewModel.viewState.test {
+            val state = expectMostRecentItem()
+            assertThat(state.isEmailValid).isFalse()
+            assertThat(state.inputErrorMessage).isNotNull()
+        }
+    }
+
+    @Test
+    fun `should reset transient states when state is consumed`() = runTest {
+        viewModel.onEmailChange("foreverrafs@gmail.com")
+        // this will flip state.isEmailSent and other transient states to true
+        viewModel.onResetPassword()
+        // this will flip state.isEmailSent and other transient back to undefined
+        viewModel.consumeTransientState()
+
+        viewModel.viewState.test {
+            val state = awaitItem()
+            assertThat(state.isEmailSent).isNull()
+        }
+    }
 }

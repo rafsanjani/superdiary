@@ -19,6 +19,7 @@ import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListViewModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListViewState
 import com.foreverrafs.superdiary.utils.toDate
 import dev.mokkery.answering.returns
+import dev.mokkery.answering.throws
 import dev.mokkery.every
 import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
@@ -86,7 +87,7 @@ class DiaryListViewModelTest {
     }
 
     @Test
-    fun `Verify diary list screen starts from loading state`() = runTest {
+    fun `Diary list - Verify screen starts from loading state`() = runTest {
         every { dataSource.fetchAll() }.returns(flowOf(listOf(diary)))
 
         diaryListViewModel.state.test {
@@ -98,7 +99,24 @@ class DiaryListViewModelTest {
     }
 
     @Test
-    fun `Verify diary list gets loaded successfully`() = runTest {
+    fun `Diary list - Error state is emitted when datasource fails`() = runTest {
+        every { dataSource.fetchAll() }.returns(
+            flow {
+                throw IllegalArgumentException("Exception thrown in datasource")
+            },
+        )
+
+        diaryListViewModel.state.test {
+            skipItems(1)
+            delay(100)
+
+            val state = awaitItem()
+            assertThat(state).isInstanceOf<DiaryListViewState.Error>()
+        }
+    }
+
+    @Test
+    fun `Diary list - Verify list gets loaded successfully`() = runTest {
         every { dataSource.fetchAll() }.returns(flowOf(listOf(diary)))
 
         diaryListViewModel.state.test {
@@ -111,7 +129,7 @@ class DiaryListViewModelTest {
     }
 
     @Test
-    fun `Verify filter by date  emits success state`() = runTest {
+    fun `Filters - Verify filter by date emits success state`() = runTest {
         diaryListViewModel.state.test {
             diaryListViewModel.applyFilter(
                 DiaryFilters(
@@ -127,7 +145,7 @@ class DiaryListViewModelTest {
     }
 
     @Test
-    fun `Apply filter with entry emits success state`() = runTest {
+    fun `Filters - Apply filter with entry emits success state`() = runTest {
         everySuspend { dataSource.find("entry") }.returns(
             flowOf(
                 listOf(Diary("hello world")),
@@ -147,7 +165,7 @@ class DiaryListViewModelTest {
     }
 
     @Test
-    fun `Apply filter with entry and date returns Content state`() = runTest {
+    fun `Filters - Apply filter with entry and date returns Content state`() = runTest {
         diaryListViewModel.state.test {
             diaryListViewModel.applyFilter(
                 DiaryFilters(
@@ -164,7 +182,7 @@ class DiaryListViewModelTest {
     }
 
     @Test
-    fun `Deleting a diary calls dataSource delete with correct parameters`() = runTest {
+    fun `Delete entry - Operation invokes datasource delete with correct params`() = runTest {
         everySuspend {
             dataSource.delete(diaries = any())
         }.returns(1)
@@ -175,7 +193,19 @@ class DiaryListViewModelTest {
     }
 
     @Test
-    fun `Toggle favorite updates diaries in datasource`() = runTest {
+    fun `Delete entry - Operation should fail when datasource fails`() = runTest {
+        everySuspend {
+            dataSource.delete(diaries = any())
+        }.throws(Exception("error deleting diary entry"))
+
+        val result = diaryListViewModel.deleteDiaries(diaries = listOf())
+
+        verifySuspend { dataSource.delete(diaries = any()) }
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `Favorite - Toggling favorite updates datasource`() = runTest {
         everySuspend {
             dataSource.update(diary = any())
         }.returns(1)
@@ -187,31 +217,14 @@ class DiaryListViewModelTest {
     }
 
     @Test
-    fun `Toggle favorite fails when datasource fails`() = runTest {
+    fun `Favorite - Toggling favorite fails when datasource fails`() = runTest {
         everySuspend {
             dataSource.update(diary = any())
-        }.returns(0)
+        }.throws(Exception("Error toggling favorite diary"))
 
         val result = diaryListViewModel.toggleFavorite(diary = Diary("hello-boss"))
 
         verifySuspend { dataSource.update(any()) }
         assertThat(result).isFalse()
-    }
-
-    @Test
-    fun `Verify error screen is shown when an error occurs`() = runTest {
-        every { dataSource.fetchAll() }.returns(
-            flow {
-                throw IllegalArgumentException("Exception thrown in datasource")
-            },
-        )
-
-        diaryListViewModel.state.test {
-            skipItems(1)
-            delay(100)
-
-            val state = awaitItem()
-            assertThat(state).isInstanceOf<DiaryListViewState.Error>()
-        }
     }
 }

@@ -41,18 +41,6 @@ class RemoteDataSource(
         }
     }
 
-    override suspend fun delete(diary: Diary): Int {
-        val dto = diary.toDto()
-        supabase.from(TABLE_NAME)
-            .delete {
-                filter {
-                    eq("id", dto.id.toString())
-                }
-            }
-
-        return 1
-    }
-
     override suspend fun delete(diaries: List<Diary>): Int {
         supabase.from(TABLE_NAME)
             .delete {

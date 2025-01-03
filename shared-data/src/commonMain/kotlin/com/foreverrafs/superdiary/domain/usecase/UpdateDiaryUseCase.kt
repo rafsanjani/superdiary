@@ -5,7 +5,6 @@ import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import kotlinx.coroutines.withContext
-import okio.IOException
 
 class UpdateDiaryUseCase(
     private val dataSource: DataSource,
@@ -14,7 +13,7 @@ class UpdateDiaryUseCase(
     suspend operator fun invoke(diary: Diary): Result<Boolean> = withContext(dispatchers.io) {
         try {
             Result.Success(dataSource.update(diary) != 0)
-        } catch (exception: IOException) {
+        } catch (exception: Exception) {
             Result.Failure(exception)
         }
     }

@@ -20,12 +20,6 @@ interface DataSource {
     suspend fun add(diary: Diary): Long
 
     /**
-     * Deletes the specified diary item from the datasource returning the
-     * number of diary items that have been succesfully deleted or 0 otherwise
-     */
-    suspend fun delete(diary: Diary): Int
-
-    /**
      * Updates an existing item with the same id with the properties of the new
      * item
      */
