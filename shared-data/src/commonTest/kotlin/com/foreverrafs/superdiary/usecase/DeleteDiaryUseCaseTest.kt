@@ -29,7 +29,6 @@ class DeleteDiaryUseCaseTest {
     private val dataSource: DataSource = LocalDataSource(database)
 
     private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers)
-    private val deleteMultipleDiariesUseCase = DeleteDiaryUseCase(dataSource, TestAppDispatchers)
     private val deleteDiaryUseCase = DeleteDiaryUseCase(dataSource, TestAppDispatchers)
 
     @BeforeTest
@@ -71,7 +70,7 @@ class DeleteDiaryUseCaseTest {
             val originalList = (awaitItem() as Result.Success).data
 
             // Delete the first two entries
-            deleteMultipleDiariesUseCase(originalList.take(2))
+            deleteDiaryUseCase(originalList.take(2))
 
             // fetch the remaining diaries
             val currentList = (awaitItem() as Result.Success).data
