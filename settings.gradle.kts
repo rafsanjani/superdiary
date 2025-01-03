@@ -102,6 +102,15 @@ kover {
 
         excludedClasses.addAll(classes)
         excludesAnnotatedBy.add("androidx.compose.runtime.Composable")
+
+        verify {
+            rule {
+                name = "Minimum Coverage Rule"
+                bound {
+                    minValue = 95
+                }
+            }
+        }
     }
 }
 
