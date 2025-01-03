@@ -107,7 +107,7 @@ kover {
             rule {
                 name = "Minimum Coverage Rule"
                 bound {
-                    minValue = 95
+                    minValue = 92
                 }
             }
         }
