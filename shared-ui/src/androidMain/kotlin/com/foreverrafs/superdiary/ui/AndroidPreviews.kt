@@ -83,10 +83,12 @@ private fun ProfileScreenPreview() {
             name = "Rafsanjani Aziz",
             email = "foreverrafs@gmail.com",
         ),
-        onLogout = {},
-        isLogoutDialogVisible = false,
-        onLogoutDialogVisibilityChange = {},
         onConsumeErrorMessage = {},
+        onLogout = {},
+        settings = DiarySettings.Empty,
+        onUpdateSettings = {},
+        onLogoutDialogVisibilityChange = {},
+        isLogoutDialogVisible = false,
     )
 }
 
@@ -98,10 +100,12 @@ private fun ProfileScreenPreviewLogoutDialog() {
             name = "Rafsanjani Aziz",
             email = "foreverrafs@gmail.com",
         ),
-        onLogout = {},
-        isLogoutDialogVisible = true,
-        onLogoutDialogVisibilityChange = {},
         onConsumeErrorMessage = {},
+        onLogout = {},
+        onLogoutDialogVisibilityChange = {},
+        isLogoutDialogVisible = true,
+        settings = DiarySettings.Empty,
+        onUpdateSettings = {},
     )
 }
 

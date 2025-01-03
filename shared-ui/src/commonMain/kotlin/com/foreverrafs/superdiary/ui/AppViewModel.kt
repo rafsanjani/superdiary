@@ -59,9 +59,9 @@ class AppViewModel(
         )
 
     /**
-     * Attempt to restore a valid session from a deeplink when available When
+     * Attempt to restore a valid session from a deeplink when available. When
      * the deeplink is invalid a special error is emitted and is used to render
-     * the ui accordingly
+     * the UI accordingly
      */
     private fun restoreSession() = viewModelScope.launch(appCoroutineDispatchers.main) {
         if (pendingDeeplink != null) {
@@ -131,11 +131,6 @@ class AppViewModel(
                 }
             }
         }
-    }
-
-    fun logOut() = viewModelScope.launch {
-        authApi.signOut()
-        _viewState.update { AppSessionState.UnAuthenticated }
     }
 
     /**

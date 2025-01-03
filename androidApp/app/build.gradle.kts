@@ -3,6 +3,7 @@
 plugins {
     kotlin("android")
     alias(libs.plugins.android.application)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("io.sentry.android.gradle") version "4.14.1"
@@ -34,6 +35,7 @@ android {
     }
 
     buildFeatures {
+        compose = true
         buildConfig = true
     }
 
@@ -97,7 +99,7 @@ sentry {
 
     if (sentryToken.isEmpty()) {
         logger.warn(
-            "Sentry token hasn't been set. Please add SENTRY_AUTH_TOKEN to your environment variables",
+            "WARN:Sentry token hasn't been set. Please add SENTRY_AUTH_TOKEN to your environment variables",
         )
     }
 
