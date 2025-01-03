@@ -4,6 +4,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.DataStorePathResolver
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -27,6 +28,7 @@ class DiaryPreferenceTest {
         DiaryPreferenceImpl.getInstance(
             filename = "superdiary.preferences_pb",
             dataStorePathResolver = dataStorePathResolver,
+            logger = AggregateLogger(emptyList()),
         )
 
     @BeforeTest
@@ -76,9 +78,11 @@ class DiaryPreferenceTest {
     fun `Should return the same instance of diary preference`() = runTest {
         val first = DiaryPreferenceImpl.getInstance(
             dataStorePathResolver = dataStorePathResolver,
+            logger = AggregateLogger(emptyList()),
         )
         val second = DiaryPreferenceImpl.getInstance(
             dataStorePathResolver = dataStorePathResolver,
+            logger = AggregateLogger(emptyList()),
         )
 
         assertThat(first).isEqualTo(second)

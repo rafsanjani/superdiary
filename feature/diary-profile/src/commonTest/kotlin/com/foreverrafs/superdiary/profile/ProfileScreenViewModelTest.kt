@@ -8,28 +8,41 @@ import assertk.assertions.isNull
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewModel
+import com.foreverrafs.superdiary.utils.DiaryPreference
+import com.foreverrafs.superdiary.utils.DiarySettings
 import dev.mokkery.answering.returns
+import dev.mokkery.every
 import dev.mokkery.everySuspend
+import dev.mokkery.matcher.any
 import dev.mokkery.mock
+import dev.mokkery.verifySuspend
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.yield
 
 class ProfileScreenViewModelTest {
     private lateinit var profileScreenViewModel: ProfileScreenViewModel
 
     // TODO: Replace this mock with a fake
-    private val authApi = mock<AuthApi>()
+    private val authApi: AuthApi = mock()
+    private val preference: DiaryPreference = mock()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
-        profileScreenViewModel = ProfileScreenViewModel(authApi)
+
+        every { preference.settings } returns flowOf(DiarySettings.Empty)
+        profileScreenViewModel = ProfileScreenViewModel(
+            authApi = authApi,
+            preference = preference,
+        )
     }
 
     @Test
@@ -72,5 +85,22 @@ class ProfileScreenViewModelTest {
             val currentState = awaitItem()
             assertThat(currentState.errorMessage).isNull()
         }
+    }
+
+    @Test
+    fun `Should update settings with new values when settings is changed`() = runTest {
+        everySuspend { authApi.currentUserOrNull() } returns null
+        everySuspend { preference.save(any()) } returns Unit
+
+        val settings = profileScreenViewModel.settings.value
+        val updatedSettings = settings.copy(isFirstLaunch = true)
+
+        profileScreenViewModel.onSettingsUpdated(
+            updatedSettings,
+        )
+
+        yield()
+
+        verifySuspend { preference.save(updatedSettings) }
     }
 }
