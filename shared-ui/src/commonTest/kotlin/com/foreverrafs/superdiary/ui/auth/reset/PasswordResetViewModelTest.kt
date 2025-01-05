@@ -8,8 +8,8 @@ import assertk.assertions.isFalse
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
-import com.foreverrafs.superdiary.TestAppDispatchers
-import com.foreverrafs.superdiary.core.utils.AppCoroutineDispatchers
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
+import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.ui.auth.login.FakeAuthApi
 import com.foreverrafs.superdiary.ui.feature.auth.reset.PasswordResetViewModel
 import kotlin.test.BeforeTest
@@ -112,6 +112,30 @@ class PasswordResetViewModelTest {
             assertThat(finalState.isEmailSent).isEqualTo(false)
 
             expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `should show an error message when user inputs an invalid email`() = runTest {
+        viewModel.onEmailChange("invalid_email")
+        viewModel.viewState.test {
+            val state = expectMostRecentItem()
+            assertThat(state.isEmailValid).isFalse()
+            assertThat(state.inputErrorMessage).isNotNull()
+        }
+    }
+
+    @Test
+    fun `should reset transient states when state is consumed`() = runTest {
+        viewModel.onEmailChange("foreverrafs@gmail.com")
+        // this will flip state.isEmailSent and other transient states to true
+        viewModel.onResetPassword()
+        // this will flip state.isEmailSent and other transient back to undefined
+        viewModel.consumeTransientState()
+
+        viewModel.viewState.test {
+            val state = awaitItem()
+            assertThat(state.isEmailSent).isNull()
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.foreverrafs.superdiary.data.datasource
 
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.data.model.DiaryDto
 import com.foreverrafs.superdiary.data.model.toDiary
 import com.foreverrafs.superdiary.domain.model.Diary
@@ -10,6 +9,7 @@ import com.foreverrafs.superdiary.domain.model.toDto
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.annotations.SupabaseExperimental
+import io.github.jan.supabase.exceptions.RestException
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.realtime.selectAsFlow
 import kotlinx.coroutines.flow.Flow
@@ -29,21 +29,27 @@ class RemoteDataSource(
     override suspend fun add(diary: Diary): Long {
         val dto = diary.toDto()
 
-        supabase.from(TABLE_NAME)
-            .insert(dto)
-
-        logger.d(TAG) {
-            "Remote Diary saved"
+        return try {
+            supabase.from(TABLE_NAME)
+                .insert(dto)
+            1
+        } catch (e: RestException) {
+            logger.e(tag = TAG, throwable = e) {
+                "Remote Diary saved"
+            }
+            0
         }
-        return 1
-    }
-
-    override suspend fun delete(diary: Diary): Int {
-        TODO("Not yet implemented")
     }
 
     override suspend fun delete(diaries: List<Diary>): Int {
-        TODO("Not yet implemented")
+        supabase.from(TABLE_NAME)
+            .delete {
+                filter {
+                    "id" in (diaries.map { it.id.toString() })
+                }
+            }
+
+        return 1
     }
 
     override suspend fun update(diary: Diary): Int {
@@ -106,15 +112,7 @@ class RemoteDataSource(
         TODO("Not yet implemented")
     }
 
-    override suspend fun saveChatMessage(message: DiaryChatMessage) {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun clearChatMessages() {
-        TODO("Not yet implemented")
-    }
-
-    override fun getChatMessages(): Flow<List<DiaryChatMessage>> {
         TODO("Not yet implemented")
     }
 

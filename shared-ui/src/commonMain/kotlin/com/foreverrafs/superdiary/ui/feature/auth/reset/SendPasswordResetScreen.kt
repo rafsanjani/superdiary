@@ -32,8 +32,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.foreverrafs.superdiary.ui.components.SuperDiaryButton
-import com.foreverrafs.superdiary.ui.components.SuperDiaryInputField
+import com.foreverrafs.superdiary.design.components.SuperDiaryButton
+import com.foreverrafs.superdiary.design.components.SuperDiaryInputField
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel

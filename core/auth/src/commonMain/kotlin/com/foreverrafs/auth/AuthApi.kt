@@ -2,12 +2,12 @@ package com.foreverrafs.auth
 
 import androidx.core.uri.Uri
 import com.foreverrafs.auth.model.SessionInfo
-import com.foreverrafs.superdiary.core.utils.ActivityWrapper
+import com.foreverrafs.auth.model.UserInfo
 
 class TokenExpiredException(message: String?) : Exception(message)
 
 interface AuthApi {
-    suspend fun signInWithGoogle(activityWrapper: ActivityWrapper?): SignInStatus
+    suspend fun signInWithGoogle(): SignInStatus
     suspend fun signInWithGoogle(googleIdToken: String): SignInStatus
 
     suspend fun restoreSession(): SignInStatus
@@ -18,11 +18,13 @@ interface AuthApi {
         password: String,
     ): RegistrationStatus
 
-    suspend fun signOut()
+    suspend fun signOut(): Result<Unit>
 
     suspend fun handleAuthDeeplink(deeplinkUri: Uri?): SignInStatus
 
     suspend fun sendPasswordResetEmail(email: String): Result<Unit>
+
+    suspend fun currentUserOrNull(): UserInfo?
 
     sealed interface SignInStatus {
         data class LoggedIn(val sessionInfo: SessionInfo) : SignInStatus
@@ -36,5 +38,6 @@ interface AuthApi {
     }
 }
 
+// When the user hasn't enrolled any of the requested credentials onto their device yet
 class NoCredentialsException(message: String) : Exception(message)
 class UserAlreadyRegisteredException(message: String) : Exception(message)

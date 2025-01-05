@@ -42,6 +42,8 @@ import coil3.memory.MemoryCache
 import coil3.request.CachePolicy
 import coil3.request.crossfade
 import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
+import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
 import com.foreverrafs.superdiary.ui.feature.auth.register.DeeplinkContainer
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenContent
@@ -52,7 +54,6 @@ import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreenContent
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
 import com.foreverrafs.superdiary.ui.navigation.AppRoute
 import com.foreverrafs.superdiary.ui.navigation.BottomNavigationScreen
-import com.foreverrafs.superdiary.ui.style.SuperdiaryTheme
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 import kotlinx.serialization.json.Json
@@ -72,12 +73,11 @@ fun App(modifier: Modifier = Modifier) {
     val appViewModel: AppViewModel = koinViewModel()
     val appViewState by appViewModel.viewState.collectAsStateWithLifecycle()
 
-    SuperdiaryTheme {
+    SuperDiaryTheme {
         setSingletonImageLoaderFactory(::getAsyncImageLoader)
         SuperDiaryNavHost(
             viewState = appViewState,
             modifier = modifier,
-            onLogout = appViewModel::logOut,
         )
     }
 }
@@ -85,7 +85,6 @@ fun App(modifier: Modifier = Modifier) {
 @Composable
 private fun SuperDiaryNavHost(
     viewState: AppSessionState,
-    onLogout: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // This userInfo is used when a session is automatically restored after app is launched.
@@ -167,7 +166,21 @@ private fun SuperDiaryNavHost(
 
         animatedComposable<AppRoute.RegisterScreen> {
             RegisterScreenContent(
-                navController = navController,
+                onLoginClick = {
+                    navController.navigate(AppRoute.LoginScreen) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onRegisterSuccess = {
+                    navController.navigate(AppRoute.RegistrationConfirmationScreen) {
+                        popUpTo(AppRoute.RegistrationConfirmationScreen) {
+                            inclusive = true
+                        }
+                    }
+                },
+
             )
         }
 
@@ -182,7 +195,9 @@ private fun SuperDiaryNavHost(
 
             BottomNavigationScreen(
                 rootNavController = navController,
-                onLogout = onLogout,
+                onProfileClick = {
+                    navController.navigate(AppRoute.ProfileScreen)
+                },
                 userInfo = route.userInfo,
             )
         }
@@ -221,12 +236,24 @@ private fun SuperDiaryNavHost(
                 avatarUrl = userInfo?.avatarUrl.orEmpty(),
             )
         }
+
+        animatedComposable<AppRoute.ProfileScreen> {
+            ProfileScreen(
+                onLogoutComplete = {
+                    navController.navigate(AppRoute.LoginScreen()) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                },
+            )
+        }
     }
 }
 
 @Composable
 private fun LoadingScreen() {
-    SuperdiaryTheme {
+    SuperDiaryTheme {
         Surface {
             Box(
                 modifier = Modifier

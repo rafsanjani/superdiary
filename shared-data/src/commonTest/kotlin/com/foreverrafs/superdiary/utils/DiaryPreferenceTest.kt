@@ -3,7 +3,9 @@ package com.foreverrafs.superdiary.utils
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
-import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
+import com.foreverrafs.superdiary.core.logging.AggregateLogger
+import com.foreverrafs.superdiary.data.DataStorePathResolver
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -12,13 +14,21 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import okio.Path
+import okio.Path.Companion.toPath
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiaryPreferenceTest {
 
+    private val dataStorePathResolver: DataStorePathResolver = object : DataStorePathResolver {
+        // The path used here is compatible with all platforms
+        override fun resolve(filename: String): Path = "/tmp/Test/TempPath/$filename".toPath()
+    }
     private val diaryPreference: DiaryPreference =
         DiaryPreferenceImpl.getInstance(
             filename = "superdiary.preferences_pb",
+            dataStorePathResolver = dataStorePathResolver,
+            logger = AggregateLogger(emptyList()),
         )
 
     @BeforeTest
@@ -66,8 +76,14 @@ class DiaryPreferenceTest {
 
     @Test
     fun `Should return the same instance of diary preference`() = runTest {
-        val first = DiaryPreferenceImpl.getInstance()
-        val second = DiaryPreferenceImpl.getInstance()
+        val first = DiaryPreferenceImpl.getInstance(
+            dataStorePathResolver = dataStorePathResolver,
+            logger = AggregateLogger(emptyList()),
+        )
+        val second = DiaryPreferenceImpl.getInstance(
+            dataStorePathResolver = dataStorePathResolver,
+            logger = AggregateLogger(emptyList()),
+        )
 
         assertThat(first).isEqualTo(second)
     }

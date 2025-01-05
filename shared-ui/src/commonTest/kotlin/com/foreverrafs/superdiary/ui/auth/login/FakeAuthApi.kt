@@ -4,7 +4,6 @@ import androidx.core.uri.Uri
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
-import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 import kotlinx.datetime.Clock
 
 class FakeAuthApi(
@@ -25,14 +24,17 @@ class FakeAuthApi(
     )
 
     var sendPasswordResetEmailResult: Result<Unit> = Result.success(Unit)
+    var registerWithEmailResult: AuthApi.RegistrationStatus = AuthApi.RegistrationStatus.Success
+    var signOutResult = Result.success(Unit)
 
-    override suspend fun sendPasswordResetEmail(email: String): Result<Unit> = sendPasswordResetEmailResult
+    override suspend fun sendPasswordResetEmail(email: String): Result<Unit> =
+        sendPasswordResetEmailResult
 
     override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SignInStatus {
         TODO("Not yet implemented")
     }
 
-    override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper?): AuthApi.SignInStatus =
+    override suspend fun signInWithGoogle(): AuthApi.SignInStatus =
         signInResult
 
     override suspend fun signInWithGoogle(googleIdToken: String): AuthApi.SignInStatus =
@@ -40,19 +42,17 @@ class FakeAuthApi(
 
     override suspend fun restoreSession(): AuthApi.SignInStatus = signInResult
 
-    override suspend fun signIn(email: String, password: String): AuthApi.SignInStatus {
-        TODO("Not yet implemented")
-    }
+    override suspend fun signIn(email: String, password: String): AuthApi.SignInStatus =
+        signInResult
+
+    override suspend fun currentUserOrNull(): UserInfo? =
+        (signInResult as? AuthApi.SignInStatus.LoggedIn)?.sessionInfo?.userInfo
 
     override suspend fun register(
         name: String,
         email: String,
         password: String,
-    ): AuthApi.RegistrationStatus {
-        TODO("Not yet implemented")
-    }
+    ): AuthApi.RegistrationStatus = registerWithEmailResult
 
-    override suspend fun signOut() {
-        TODO("Not yet implemented")
-    }
+    override suspend fun signOut() = signOutResult
 }

@@ -32,10 +32,10 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.foreverrafs.superdiary.design.components.ConfirmDeleteDialog
+import com.foreverrafs.superdiary.design.components.MapComponent
+import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.domain.model.Diary
-import com.foreverrafs.superdiary.ui.components.ConfirmDeleteDialog
-import com.foreverrafs.superdiary.ui.components.MapComponent
-import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
 import com.foreverrafs.superdiary.ui.format
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
@@ -105,7 +105,8 @@ fun DetailScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(150.dp),
-                    location = diary.location,
+                    latitude = diary.location.latitude,
+                    longitude = diary.location.longitude,
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))

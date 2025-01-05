@@ -47,11 +47,10 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.materialIconsExtended)
                 implementation(projects.sharedData)
-                implementation(projects.core.utils)
+                implementation(projects.commonUtils)
                 implementation(libs.kotlin.datetime)
                 implementation(libs.koin.core)
                 implementation(libs.touchlab.kermit)
-                implementation(libs.kotlin.inject.runtime)
                 implementation(libs.koin.compose)
                 implementation(projects.swipe)
                 implementation(libs.uuid)
@@ -73,6 +72,9 @@ kotlin {
                 api(projects.core.analytics)
                 api(projects.core.location)
                 api(projects.core.logging)
+                api(projects.designSystem)
+                implementation(projects.feature.diaryAi)
+                implementation(projects.feature.diaryProfile)
             }
         }
 
@@ -88,6 +90,7 @@ kotlin {
                     compose.uiTest,
                 )
                 implementation(libs.turbine)
+                implementation(projects.commonTest)
             }
 
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
@@ -100,6 +103,7 @@ kotlin {
                 implementation(libs.koin.test)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.mockk)
+                implementation(projects.commonTest)
                 implementation(libs.google.testparameterinjector)
             }
         }

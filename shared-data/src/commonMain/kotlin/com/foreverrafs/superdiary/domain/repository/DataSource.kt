@@ -1,6 +1,5 @@
 package com.foreverrafs.superdiary.domain.repository
 
-import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import kotlinx.coroutines.flow.Flow
@@ -19,12 +18,6 @@ interface DataSource {
      * @return 1 if the operation succeeded and 0 otherwise.
      */
     suspend fun add(diary: Diary): Long
-
-    /**
-     * Deletes the specified diary item from the datasource returning the
-     * number of diary items that have been succesfully deleted or 0 otherwise
-     */
-    suspend fun delete(diary: Diary): Int
 
     /**
      * Updates an existing item with the same id with the properties of the new
@@ -83,11 +76,6 @@ interface DataSource {
     /** Fetch all weekly summary entries */
     fun getWeeklySummary(): WeeklySummary?
 
-    /** Save chat entry into the database */
-    suspend fun saveChatMessage(message: DiaryChatMessage)
-
     /** Clear all chat messages from the system */
     suspend fun clearChatMessages()
-
-    fun getChatMessages(): Flow<List<DiaryChatMessage>>
 }

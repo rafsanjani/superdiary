@@ -3,9 +3,8 @@
 plugins {
     kotlin("android")
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("io.sentry.android.gradle") version "4.14.1"
 }
@@ -36,6 +35,7 @@ android {
     }
 
     buildFeatures {
+        compose = true
         buildConfig = true
     }
 
@@ -99,7 +99,7 @@ sentry {
 
     if (sentryToken.isEmpty()) {
         logger.warn(
-            "Sentry token hasn't been set. Please add SENTRY_AUTH_TOKEN to your environment variables",
+            "WARN:Sentry token hasn't been set. Please add SENTRY_AUTH_TOKEN to your environment variables",
         )
     }
 
@@ -114,6 +114,7 @@ sentry {
     uploadNativeSymbols.set(true)
 }
 
+// This is only used for loading google maps api keys at the moment.
 secrets {
     propertiesFileName = "secrets.properties"
     defaultPropertiesFileName = "local.defaults.properties"
@@ -124,41 +125,17 @@ secrets {
 }
 
 dependencies {
-    implementation(libs.richTextEditor)
-    implementation(libs.moko.permissions)
     implementation(libs.androidx.activity.compose)
-    implementation(libs.kotlin.datetime)
     implementation(libs.google.material)
-    implementation(compose.runtime)
     implementation(projects.sharedUi)
-    implementation(projects.core.logging)
-    implementation(projects.sharedData)
     implementation(projects.core.analytics)
     implementation(libs.koin.android)
-    implementation(projects.core.utils)
     implementation(libs.androidx.core)
+    implementation(libs.supabase.compose.auth)
     implementation(libs.androidx.core.uri)
-    testImplementation(libs.koin.android)
-    testImplementation(libs.koin.test)
+    implementation(libs.koin.android)
+    implementation(libs.koin.core)
     implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.kotlinx.coroutines.test)
     kotlin("android")
-}
-
-dependencies {
-    implementation(libs.richTextEditor)
-    implementation(libs.moko.permissions)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.kotlin.datetime)
-    implementation(libs.google.material)
-    implementation(compose.runtime)
-    implementation(projects.sharedUi)
-    implementation(projects.core.logging)
-    implementation(projects.sharedData)
-    implementation(projects.core.analytics)
-    implementation(libs.koin.android)
-    implementation(projects.core.utils)
-    testImplementation(libs.koin.android)
-    testImplementation(libs.koin.test)
-    testImplementation(libs.kotlinx.coroutines.test)
 }

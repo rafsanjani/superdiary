@@ -2,7 +2,7 @@ package com.foreverrafs.superdiary.usecase
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.usecase.CalculateStreakUseCase
 import kotlin.random.Random

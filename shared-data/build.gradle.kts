@@ -51,7 +51,7 @@ kotlin {
                 implementation(libs.supabase.realtime)
 
                 // Project dependencies
-                implementation(projects.core.utils)
+                implementation(projects.commonUtils)
                 implementation(projects.core.analytics)
                 implementation(projects.core.secrets)
                 implementation(projects.core.logging)
@@ -82,6 +82,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.turbine)
                 implementation(projects.core.databaseTest)
+                implementation(projects.commonTest)
                 implementation(libs.assertk.common)
             }
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")

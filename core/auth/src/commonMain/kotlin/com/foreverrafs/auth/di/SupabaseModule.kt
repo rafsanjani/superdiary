@@ -10,7 +10,7 @@ import io.github.jan.supabase.serializer.KotlinXSerializer
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
-internal fun supabaseModule() = module {
+private fun supabaseModule() = module {
     single<SupabaseClient> {
         createSupabaseClient(
             supabaseUrl = SuperDiarySecret.supabaseUrl,

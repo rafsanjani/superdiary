@@ -26,7 +26,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2024.12.29")
+            from("io.github.rafsanjani:versions:2025.01.03")
             version("openaiKotlin", "4.0.0-SNAPSHOT")
             version("kotlinSerialization", "1.8.0-RC")
         }
@@ -71,6 +71,8 @@ kover {
         "*BackPressHandler*",
         "*SnapshotTheme*",
         "*BottomNavigationScreen*",
+        "*BottomNavigationRoute*",
+        "*Dto*",
         "*DiaryListActions*",
         "*DiaryFilters*",
         "*DiarySortCriteria*",
@@ -82,6 +84,9 @@ kover {
         "*DiaryHeader*",
         "*DiarySearchBar*",
         "*DiarySelectionModifierBar*",
+        "*AndroidDataStorePathResolver",
+        "*.*NavType",
+        "*.RemoteDataSource*",
         "db.*",
         "*di.*",
         "*screen.*",
@@ -97,11 +102,21 @@ kover {
 
         excludedClasses.addAll(classes)
         excludesAnnotatedBy.add("androidx.compose.runtime.Composable")
+
+        verify {
+            rule {
+                name = "Minimum Coverage Rule"
+                bound {
+                    minValue = 92
+                }
+            }
+        }
     }
 }
 
 rootProject.name = "superdiary"
 include(":androidApp:app")
+include(":design-system")
 include(":androidApp:benchmark")
 include(":shared-data")
 include(":swipe")
@@ -110,8 +125,11 @@ include(":core:auth")
 include(":core:analytics")
 include(":core:location")
 include(":core:logging")
-include(":core:utils")
+include(":common-utils")
+include(":common-test")
 include(":core:secrets")
 include(":core:database")
 include(":core:database-test")
 include(":desktopApp")
+include(":feature:diary-ai")
+include(":feature:diary-profile")

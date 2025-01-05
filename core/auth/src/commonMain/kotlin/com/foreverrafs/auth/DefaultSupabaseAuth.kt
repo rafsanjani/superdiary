@@ -4,7 +4,6 @@ import androidx.core.uri.Uri
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.core.utils.ActivityWrapper
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.annotations.SupabaseInternal
 import io.github.jan.supabase.auth.auth
@@ -18,10 +17,13 @@ import io.github.jan.supabase.exceptions.BadRequestRestException
 import io.github.jan.supabase.exceptions.RestException
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
 
-typealias UserInfoDto = io.github.jan.supabase.auth.user.UserInfo
-typealias SessionInfoDto = UserSession
+internal typealias UserInfoDto = io.github.jan.supabase.auth.user.UserInfo
+internal typealias SessionInfoDto = UserSession
 
 /**
  * Provides default implementation for all the functions in [AuthApi]
@@ -33,7 +35,7 @@ class DefaultSupabaseAuth(
     private val client: SupabaseClient,
     private val logger: AggregateLogger,
 ) : AuthApi {
-    override suspend fun signInWithGoogle(activityWrapper: ActivityWrapper?): AuthApi.SignInStatus =
+    override suspend fun signInWithGoogle(): AuthApi.SignInStatus =
         try {
             client.auth.signInWith(provider = Google)
             getSessionStatus()
@@ -114,11 +116,16 @@ class DefaultSupabaseAuth(
         client.auth.signUpWith(Email) {
             this.email = email
             this.password = password
+            data = buildJsonObject {
+                put("full_name", JsonPrimitive(name))
+            }
         }
 
         AuthApi.RegistrationStatus.Success
     } catch (exception: RestException) {
-        val error = if (exception.message?.contains(USER_REGISTERED_ERROR, true) == true) {
+        val error = if (
+            exception.message?.contains(USER_REGISTERED_ERROR, true) == true
+        ) {
             UserAlreadyRegisteredException(exception.message.orEmpty())
         } else {
             exception
@@ -127,18 +134,26 @@ class DefaultSupabaseAuth(
         AuthApi.RegistrationStatus.Error(error)
     }
 
-    override suspend fun signOut() {
+    override suspend fun signOut(): Result<Unit> = try {
         client.auth.signOut()
+        Result.success(Unit)
+    } catch (e: Exception) {
+        if (e is CancellationException) throw e
+        logger.e(Tag, e)
+        Result.failure(e)
     }
 
+    override suspend fun currentUserOrNull(): UserInfo? =
+        client.auth.currentUserOrNull()?.toUserInfo()
+
     @OptIn(SupabaseInternal::class)
-    override suspend fun handleAuthDeeplink(url: Uri?): AuthApi.SignInStatus =
+    override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SignInStatus =
         suspendCoroutine { continuation ->
             logger.d(Tag) {
-                "Confirming authentication with token $url"
+                "Confirming authentication with token $deeplinkUri"
             }
 
-            if (url.toString().contains("error")) {
+            if (deeplinkUri.toString().contains("error")) {
                 continuation.resume(
                     AuthApi.SignInStatus.Error(Exception("Invalid confirmation link")),
                 )
@@ -147,7 +162,7 @@ class DefaultSupabaseAuth(
 
             try {
                 client.auth.parseFragmentAndImportSession(
-                    fragment = url?.getFragment().orEmpty(),
+                    fragment = deeplinkUri?.getFragment().orEmpty(),
                     onSessionSuccess = {
                         continuation.resume(
                             AuthApi.SignInStatus.LoggedIn(it.toSession()),
@@ -155,6 +170,7 @@ class DefaultSupabaseAuth(
                     },
                 )
             } catch (e: Exception) {
+                if (e is CancellationException) throw e
                 continuation.resume(
                     AuthApi.SignInStatus.Error(e),
                 )
@@ -173,6 +189,7 @@ class DefaultSupabaseAuth(
         }
         Result.success(Unit)
     } catch (e: Exception) {
+        if (e is CancellationException) throw e
         logger.e(Tag) {
             "Failed to send password reset email to $email"
         }
@@ -192,10 +209,10 @@ internal fun SessionInfoDto.toSession() = SessionInfo(
     userInfo = user?.toUserInfo(),
 )
 
+// Strip leading and ending quotes from all the properties
 internal fun UserInfoDto.toUserInfo(): UserInfo = UserInfo(
     id = id,
-    name = userMetadata?.get("name").toString(),
-    email = userMetadata?.get("email").toString(),
-    // Strip leading and ending quotes from avatar url
-    avatarUrl = userMetadata?.get("avatar_url").toString().replace("^\"|\"$".toRegex(), ""),
+    name = userMetadata?.get("full_name").toString().trim('\"'),
+    email = userMetadata?.get("email").toString().trim('\"'),
+    avatarUrl = userMetadata?.get("avatar_url").toString().trim('\"'),
 )

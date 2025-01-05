@@ -1,9 +1,6 @@
 package com.foreverrafs.superdiary.data.datasource
 
-import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
-import com.foreverrafs.superdiary.data.diaryai.toDatabase
 import com.foreverrafs.superdiary.data.mapper.toDiary
-import com.foreverrafs.superdiary.data.mapper.toDiaryChatMessage
 import com.foreverrafs.superdiary.data.mapper.toWeeklySummary
 import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.database.model.DiaryDb
@@ -27,8 +24,6 @@ class LocalDataSource(private val database: Database) : DataSource {
         database.addDiary(diary.toDatabase())
         return 1
     }
-
-    override suspend fun delete(diary: Diary): Int = delete(listOf(diary))
 
     override suspend fun delete(diaries: List<Diary>): Int =
         database.deleteDiaries(diaries.mapNotNull { it.id })
@@ -90,17 +85,8 @@ class LocalDataSource(private val database: Database) : DataSource {
         database.insertWeeklySummary(summary = summary.toDatabase())
 
     override fun getWeeklySummary(): WeeklySummary? = database.getWeeklySummary()?.toWeeklySummary()
-
-    override suspend fun saveChatMessage(message: DiaryChatMessage) {
-        database.saveChatMessage(message.toDatabase())
-    }
-
     override suspend fun clearChatMessages() {
         database.clearChatMessages()
-    }
-
-    override fun getChatMessages(): Flow<List<DiaryChatMessage>> = database.getChatMessages().map {
-        it.map { it.toDiaryChatMessage() }
     }
 
     private fun Flow<List<DiaryDb>>?.mapToDiary() =

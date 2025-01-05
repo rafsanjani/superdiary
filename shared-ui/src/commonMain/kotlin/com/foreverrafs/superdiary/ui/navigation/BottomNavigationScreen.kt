@@ -13,10 +13,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
@@ -25,8 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.foreverrafs.auth.model.UserInfo
-import com.foreverrafs.superdiary.ui.components.ConfirmLogoutDialog
-import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
+import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
 import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardTab
 import com.foreverrafs.superdiary.ui.feature.diarychat.screen.DiaryChatTab
@@ -41,7 +37,7 @@ import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteTab
 fun BottomNavigationScreen(
     rootNavController: NavHostController,
     userInfo: UserInfo?,
-    onLogout: () -> Unit,
+    onProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // This nav controller is used to navigate between the tabs
@@ -50,33 +46,12 @@ fun BottomNavigationScreen(
     // This snackbar host state is used to show snackbars on the main screen
     val snackbarHostState = remember { SnackbarHostState() }
 
-    var showConfirmLogoutDialog by remember { mutableStateOf(false) }
-
-    if (showConfirmLogoutDialog) {
-        ConfirmLogoutDialog(
-            onDismiss = {
-                showConfirmLogoutDialog = false
-            },
-            onLogout = {
-                onLogout()
-                rootNavController.navigate(AppRoute.LoginScreen()) {
-                    popUpTo(AppRoute.LoginScreen()) {
-                        inclusive = true
-                    }
-                }
-                showConfirmLogoutDialog = false
-            },
-        )
-    }
-
     Scaffold(
         modifier = modifier,
         topBar = {
             SuperDiaryAppBar(
                 avatarUrl = userInfo?.avatarUrl,
-                onProfileClick = {
-                    showConfirmLogoutDialog = true
-                },
+                onProfileClick = onProfileClick,
             )
         },
         bottomBar = {

@@ -4,11 +4,12 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
-import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.ai.api.DiaryAI
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.data.diaryai.DiaryAI
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import com.foreverrafs.superdiary.domain.repository.DataSource
@@ -22,6 +23,7 @@ import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.utils.DiaryPreference
 import com.foreverrafs.superdiary.utils.DiarySettings
 import dev.mokkery.answering.returns
+import dev.mokkery.answering.throws
 import dev.mokkery.every
 import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
@@ -193,6 +195,20 @@ class DashboardViewModelTest {
     }
 
     @Test
+    fun `Should fail to toggle favorite when datasource throws an error`() = runTest {
+        val diary = Diary("Hello World")
+        every { dataSource.fetchAll() }.returns(flowOf(listOf(diary)))
+        everySuspend { dataSource.update(any()) }.throws(Exception("error toggling favorite"))
+
+        val viewModel = createDashboardViewModel()
+
+        val result = viewModel.toggleFavorite(diary)
+
+        verifySuspend { dataSource.update(any()) }
+        assertThat(result).isFalse()
+    }
+
+    @Test
     fun `Should transition to content state on dashboard after loading`() = runTest {
         every { dataSource.fetchAll() }.returns(flowOf(emptyList()))
         val viewModel = createDashboardViewModel()
@@ -200,6 +216,17 @@ class DashboardViewModelTest {
         viewModel.state.test {
             skipItems(1)
             assertThat(awaitItem()).isInstanceOf(DashboardViewModel.DashboardScreenState.Content::class)
+        }
+    }
+
+    @Test
+    fun `Should show error screen when loading diaries throw an error`() = runTest {
+        every { dataSource.fetchAll() }.throws(Exception("Error fetching diaries"))
+        val viewModel = createDashboardViewModel()
+
+        viewModel.state.test {
+            skipItems(1)
+            assertThat(awaitItem()).isInstanceOf(DashboardViewModel.DashboardScreenState.Error::class)
         }
     }
 }

@@ -4,7 +4,7 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
-import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
@@ -59,7 +59,6 @@ class DetailsViewModelTest {
     fun `Successfully deleting a diary should emit deleted state`() = runTest {
         val diary = Diary("Hello world")
 
-        everySuspend { dataSource.delete(diary) }.returns(1)
         everySuspend { dataSource.delete(listOf(diary)) }.returns(1)
 
         detailsViewModel.deleteDiaryState.test {
@@ -78,7 +77,6 @@ class DetailsViewModelTest {
     fun `Failing to delete should emit failure deleting state`() = runTest {
         val diary = Diary("Hello world")
 
-        everySuspend { dataSource.delete(diary) }.returns(0)
         everySuspend { dataSource.delete(listOf(diary)) }.returns(0)
 
         detailsViewModel.deleteDiaryState.test {

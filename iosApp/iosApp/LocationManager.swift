@@ -13,22 +13,16 @@ import shared
 class AppleLocationManager : NSObject, CLLocationManagerDelegate{
     let locationManager = CLLocationManager()
     
-    
     func startUpdatingLocation(){
-        print("Rafsanjani: Starting location updates")
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
         
-       
-        
         locationManager.startUpdatingLocation()
-
     }
 
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("Locations updated")
         locations.forEach { location in
             print("Rafsanjani \(location.coordinate.latitude), \(location.coordinate.longitude)")
         }
@@ -38,5 +32,4 @@ class AppleLocationManager : NSObject, CLLocationManagerDelegate{
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Rafsanjani \(error)")
     }
-    
 }

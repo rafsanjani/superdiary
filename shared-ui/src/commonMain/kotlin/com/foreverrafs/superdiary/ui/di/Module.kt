@@ -1,13 +1,16 @@
 package com.foreverrafs.superdiary.ui.di
 
 import com.foreverrafs.auth.di.authModule
+import com.foreverrafs.superdiary.ai.di.diaryAiModule
+import com.foreverrafs.superdiary.common.utils.di.utilsModule
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.location.di.locationModule
 import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.core.utils.di.utilsModule
 import com.foreverrafs.superdiary.di.platformModule
 import com.foreverrafs.superdiary.di.useCaseModule
+import com.foreverrafs.superdiary.profile.di.profileModule
+import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewModel
 import com.foreverrafs.superdiary.ui.AppViewModel
 import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreenViewModel
 import com.foreverrafs.superdiary.ui.feature.auth.register.DeeplinkContainer
@@ -25,7 +28,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
-internal fun screenModules(): Module = module {
+internal val screensModule: Module = module {
     factoryOf(::LocationPermissionManager)
     factoryOf(::DiaryListViewModel)
     factoryOf(::CreateDiaryViewModel)
@@ -38,6 +41,8 @@ internal fun screenModules(): Module = module {
     viewModelOf(::AppViewModel)
     viewModelOf(::PasswordResetViewModel)
     singleOf(::DeeplinkContainer)
+
+    viewModelOf(::ProfileScreenViewModel)
 }
 
 expect fun permissionModule(): Module
@@ -47,11 +52,13 @@ fun compositeModule(
     analytics: AnalyticsTracker,
     logger: AggregateLogger,
 ): List<Module> = listOf(
-    utilsModule(),
+    utilsModule,
     locationModule(),
-    useCaseModule(),
+    useCaseModule,
     permissionModule(),
-    screenModules(),
+    screensModule,
     platformModule(analyticsTracker = analytics, aggregateLogger = logger),
     authModule(),
+    diaryAiModule,
+    profileModule,
 )

@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.core.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.ui.feature.auth.register.DeeplinkContainer
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -59,9 +59,9 @@ class AppViewModel(
         )
 
     /**
-     * Attempt to restore a valid session from a deeplink when available When
+     * Attempt to restore a valid session from a deeplink when available. When
      * the deeplink is invalid a special error is emitted and is used to render
-     * the ui accordingly
+     * the UI accordingly
      */
     private fun restoreSession() = viewModelScope.launch(appCoroutineDispatchers.main) {
         if (pendingDeeplink != null) {
@@ -131,11 +131,6 @@ class AppViewModel(
                 }
             }
         }
-    }
-
-    fun logOut() = viewModelScope.launch {
-        authApi.signOut()
-        _viewState.update { AppSessionState.UnAuthenticated }
     }
 
     /**

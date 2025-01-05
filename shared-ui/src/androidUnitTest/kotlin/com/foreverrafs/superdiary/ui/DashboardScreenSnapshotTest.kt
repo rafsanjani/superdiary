@@ -1,7 +1,9 @@
 package com.foreverrafs.superdiary.ui
 
 import app.cash.paparazzi.Paparazzi
+import com.foreverrafs.common.paparazzi.SnapshotDevice
 import com.foreverrafs.superdiary.core.location.Location
+import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
@@ -34,7 +36,7 @@ class DashboardScreenSnapshotTest(
     @Test
     fun `Dashboard Screen - Latest Entries`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 DashboardScreenContent(
                     state = DashboardViewModel.DashboardScreenState.Content(
                         (0..3).map {
@@ -73,7 +75,7 @@ class DashboardScreenSnapshotTest(
     @Test
     fun `Dashboard Screen - Hide weekly summary`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 DashboardScreenContent(
                     state = DashboardViewModel.DashboardScreenState.Content(
                         (0..3).map {
@@ -114,7 +116,7 @@ class DashboardScreenSnapshotTest(
     @Test
     fun `Dashboard Screen - Hide latest entries`() {
         paparazzi.snapshot {
-            SuperdiaryPreviewTheme {
+            SuperDiaryPreviewTheme {
                 DashboardScreenContent(
                     state = DashboardViewModel.DashboardScreenState.Content(
                         (0..3).map {
