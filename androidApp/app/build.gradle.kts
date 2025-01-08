@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("io.sentry.android.gradle") version "4.14.1"
+    id("com.google.firebase.appdistribution") version "5.0.0"
 }
 
 android {
@@ -53,6 +54,13 @@ android {
 
             manifestPlaceholders["sentryEnvironment"] = "production"
             manifestPlaceholders["applicationName"] = "superdiary"
+
+            val applicationId = System.getenv("FIREBASE_DISTRIBUTION_APP_ID")
+            firebaseAppDistribution {
+                appId = applicationId
+                artifactType = "APK"
+                serviceCredentialsFile = "firebase_credentials.json"
+            }
         }
 
         debug {
