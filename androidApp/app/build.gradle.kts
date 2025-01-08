@@ -59,6 +59,7 @@ android {
             firebaseAppDistribution {
                 appId = applicationId
                 artifactType = "APK"
+                groups = "default"
                 serviceCredentialsFile = "firebase_credentials.json"
             }
         }
