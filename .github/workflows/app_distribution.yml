@@ -1,14 +1,14 @@
 name: Publish weekly to app distribution
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * 0'
+    workflow_dispatch:
+    schedule:
+        -   cron: '0 0 * * 0'
 
 jobs:
     androidRelease:
         name: Publish to Firebase App Distribution
-        runs-on: ubuntu-latest
+        runs-on: macos-14
         env:
             SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
             SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
@@ -21,7 +21,8 @@ jobs:
             KEY_PASSWORD: ${{secrets.SIGNING_KEY_PASSWORD}}
             SUPABASE_URL: ${{secrets.SUPABASE_URL}}
             SUPABASE_KEY: ${{secrets.SUPABASE_KEY}}
-            FIREBASE_DISTRIBUTION_APP_ID : ${{secrets.FIREBASE_DISTRIBUTION_APP_ID}}
+            FIREBASE_DISTRIBUTION_APP_ID: ${{secrets.FIREBASE_DISTRIBUTION_APP_ID}}
+            FIREBASE_DISTRIBUTION_SERVICE_ACCOUNT: ${{secrets.FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT}}
         steps:
             -   uses: actions/checkout@v4
                 with:
@@ -50,6 +51,12 @@ jobs:
                     echo KEY_PASSWORD="$KEY_PASSWORD" >> gradle.properties
                     echo KEY_ALIAS="$KEY_ALIAS" >> gradle.properties
 
+            -   name: Generate firebase_credentials.json
+                run: |
+                    touch firebase_credentials.json
+                    echo $FIREBASE_DISTRIBUTION_SERVICE_ACCOUNT >> firebase_credentials.json
+                    ls -a
+
             -   name: Validate gradle wrapper
                 uses: gradle/actions/wrapper-validation@v4
 
@@ -60,8 +67,4 @@ jobs:
                 run: ./gradlew androidApp:app:assembleRelease
 
             -   name: Upload to firebase
-                uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
-                with:
-                    file: androidApp/app/build/outputs/apk/release/app-release.apk
-                    appId: $FIREBASE_DISTRIBUTION_APP_ID
-                    serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+                run: ./gradlew androidApp:app:appDistributionUploadRelease
