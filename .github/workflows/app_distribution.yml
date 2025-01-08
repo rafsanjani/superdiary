@@ -7,8 +7,8 @@ on:
 
 jobs:
     androidRelease:
-        name: Build android app (release)
-        runs-on: macos-14
+        name: Publish to Firebase App Distribution
+        runs-on: ubuntu-latest
         env:
             SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
             SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
@@ -22,7 +22,6 @@ jobs:
             SUPABASE_URL: ${{secrets.SUPABASE_URL}}
             SUPABASE_KEY: ${{secrets.SUPABASE_KEY}}
             FIREBASE_DISTRIBUTION_APP_ID : ${{secrets.FIREBASE_DISTRIBUTION_APP_ID}}
-            FIREBASE_SERVICE_CREDENTIALS: ${{secrets.FIREBASE_SERVICE_CREDENTIALS}}
         steps:
             -   uses: actions/checkout@v4
                 with:
@@ -40,7 +39,6 @@ jobs:
                     echo "MAPS_API_KEY=$MAPS_API_KEY_ANDROID" >> secrets.properties
                     echo "SUPABASE_KEY=$SUPABASE_KEY" >> secrets.properties
                     echo "SUPABASE_URL=$SUPABASE_URL" >> secrets.properties
-                    cat secrets.properties
 
             -   name: Decode keystore file from secrets
                 run: echo "$STORE_FILE_BASE64" | base64 --decode > keystore
@@ -51,7 +49,6 @@ jobs:
                     echo STORE_PASSWORD="$STORE_PASSWORD" >> gradle.properties
                     echo KEY_PASSWORD="$KEY_PASSWORD" >> gradle.properties
                     echo KEY_ALIAS="$KEY_ALIAS" >> gradle.properties
-                    cat gradle.properties
 
             -   name: Validate gradle wrapper
                 uses: gradle/actions/wrapper-validation@v4
@@ -67,4 +64,4 @@ jobs:
                 with:
                     file: androidApp/app/build/outputs/apk/release/app-release.apk
                     appId: $FIREBASE_DISTRIBUTION_APP_ID
-                    serviceCredentialsFileContent: $FIREBASE_SERVICE_CREDENTIALS
+                    serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
