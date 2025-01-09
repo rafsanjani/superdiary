@@ -41,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -488,13 +489,27 @@ private fun WeeklySummaryCard(
                 )
             }
 
+            val textScrollState = rememberScrollState()
+            val textStyle = MaterialTheme.typography.bodySmall
+
+            val textLayoutResult = rememberTextMeasurer().measure(
+                text = summary.orEmpty(),
+                style = textStyle,
+            )
+
             Text(
                 modifier = Modifier
+                    .verticalScroll(textScrollState)
+                    .fadingEdges(
+                        scrollState = textScrollState,
+                        edgeHeight = textLayoutResult.getLineBottom(0) - textLayoutResult.getLineTop(
+                            0,
+                        ),
+                    )
                     .padding(horizontal = 4.dp)
-                    .padding(bottom = 4.dp)
-                    .verticalScroll(rememberScrollState()),
+                    .padding(bottom = 4.dp),
                 text = summary ?: stringResource(Res.string.label_weekly_summary_error),
-                style = MaterialTheme.typography.bodySmall,
+                style = textStyle,
                 textAlign = TextAlign.Justify,
                 lineHeight = 28.sp,
             )
