@@ -127,6 +127,9 @@ fun ProfileScreenContent(
                         onDismiss = {
                             onLogoutDialogVisibilityChange(false)
                         },
+                        onDismissRequest = {
+                            onLogoutDialogVisibilityChange(false)
+                        },
                     )
                 }
 
