@@ -84,7 +84,7 @@ jobs:
             SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
             SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
         runs-on: macos-latest
-        needs: snapshot
+        needs: danger
         steps:
             -   uses: actions/checkout@v4
                 with:
@@ -103,6 +103,7 @@ jobs:
 
     jvmTest:
         name: Run JVM unit tests and generate coverage badge
+        needs: danger
         env:
             SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
             SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
@@ -168,7 +169,7 @@ jobs:
     androidRelease:
         name: Build android app (release)
         runs-on: macos-14
-        needs: snapshot
+        needs: jvmTest
         env:
             SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
             SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
