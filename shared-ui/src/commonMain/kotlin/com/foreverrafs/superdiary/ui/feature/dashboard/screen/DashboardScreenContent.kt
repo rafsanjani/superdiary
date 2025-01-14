@@ -158,7 +158,7 @@ private fun dashboardItems(
         )
     }
 
-    if (settings.showWeeklySummary) {
+    if (settings.showWeeklySummary && state.totalEntries != 0L) {
         add(
             DashboardSection(
                 content = { onDismiss ->
