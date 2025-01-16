@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("io.sentry.android.gradle") version "4.14.1"
-    id("com.google.firebase.appdistribution") version "5.0.0"
+    id("com.google.firebase.appdistribution") version "5.1.0"
 }
 
 android {
