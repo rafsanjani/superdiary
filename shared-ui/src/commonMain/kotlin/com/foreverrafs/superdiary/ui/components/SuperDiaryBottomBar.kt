@@ -1,20 +1,20 @@
 package com.foreverrafs.superdiary.ui.components
 
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.foreverrafs.superdiary.ui.navigation.BottomNavigationRoute
 import com.foreverrafs.superdiary.ui.navigation.SuperDiaryTab
 
@@ -26,14 +26,18 @@ fun SuperDiaryBottomBar(navController: NavController) {
         BottomNavigationRoute.DiaryChatTab,
     )
 
-    val currentBackStackEntry = navController.currentBackStackEntryAsState().value
-
     NavigationBar {
-        items.forEach { tab ->
+        var selectedItemIndex by remember { mutableIntStateOf(0) }
+
+        items.forEachIndexed { index, tab ->
+            val selected = selectedItemIndex == index
+
             BottomNavigationItem(
                 tab = tab,
-                selected = currentBackStackEntry?.destination?.route == tab::class.qualifiedName,
+                selected = selected,
             ) {
+                selectedItemIndex = index
+
                 navController.navigate(tab) {
                     popUpTo(navController.graph.startDestinationId) {
                         saveState = true
@@ -62,7 +66,6 @@ private fun RowScope.BottomNavigationItem(
                     tab.selectedIcon
                 } else {
                     tab.options.icon
-                        ?: rememberVectorPainter(Icons.Default.Home)
                 },
                 contentDescription = tab.options.title,
             )

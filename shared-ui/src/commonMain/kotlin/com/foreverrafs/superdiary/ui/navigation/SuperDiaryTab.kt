@@ -15,5 +15,5 @@ interface SuperDiaryTab {
 data class TabOptions(
     val index: UShort,
     val title: String,
-    val icon: Painter? = null,
+    val icon: Painter,
 )
