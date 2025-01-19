@@ -31,6 +31,7 @@ kotlin {
         it.binaries.framework {
             baseName = "shared"
             linkerOpts += "-lsqlite3"
+            linkerOpts += "-ld_classic"
 
             export(projects.core.analytics)
             export(projects.core.logging)
