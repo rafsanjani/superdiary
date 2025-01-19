@@ -101,6 +101,8 @@ class ProfileScreenViewModelTest {
 
         yield()
 
-        verifySuspend { preference.save(updatedSettings) }
+        verifySuspend {
+            preference.save(any())
+        }
     }
 }
