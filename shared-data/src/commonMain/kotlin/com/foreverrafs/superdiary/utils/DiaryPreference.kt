@@ -17,7 +17,7 @@ import kotlinx.coroutines.internal.synchronized
 
 interface DiaryPreference {
     val settings: Flow<DiarySettings>
-    suspend fun save(settings: DiarySettings)
+    suspend fun save(block: (DiarySettings) -> DiarySettings)
     suspend fun getSnapshot(): DiarySettings
     suspend fun clear()
 }
@@ -60,7 +60,10 @@ class DiaryPreferenceImpl private constructor(
         )
     }
 
-    override suspend fun save(settings: DiarySettings) {
+    override suspend fun save(block: (DiarySettings) -> DiarySettings) {
+        val currentSettings = getSnapshot()
+        val settings = block(currentSettings)
+
         dataStore.edit {
             it[isFirstLaunchKey] = settings.isFirstLaunch
             it[showWeeklySummaryKey] = settings.showWeeklySummary

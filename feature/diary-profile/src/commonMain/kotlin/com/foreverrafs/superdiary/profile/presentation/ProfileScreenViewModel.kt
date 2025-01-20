@@ -70,7 +70,9 @@ class ProfileScreenViewModel(
     }
 
     fun onSettingsUpdated(settings: DiarySettings) = viewModelScope.launch {
-        preference.save(settings)
+        preference.save {
+            settings
+        }
     }
 
     fun resetErrors() {

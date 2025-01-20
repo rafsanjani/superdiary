@@ -40,7 +40,7 @@ fun DashboardTab(
                 }
             },
             settings = it,
-            onChangeSettings = screenModel::updateSettings,
+            onChangeSettings = screenModel::onUpdateSettings,
             onDiaryClick = { diary ->
                 diary.id?.let {
                     navController.navigate(

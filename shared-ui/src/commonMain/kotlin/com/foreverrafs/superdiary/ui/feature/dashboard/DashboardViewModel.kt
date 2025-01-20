@@ -243,11 +243,11 @@ class DashboardViewModel(
         }
     }
 
-    fun updateSettings(settings: DiarySettings) = viewModelScope.launch {
+    fun onUpdateSettings(settings: DiarySettings) = viewModelScope.launch {
         logger.i(Tag) {
             "updateSettings: Updating settings with values $settings"
         }
-        preference.save(settings)
+        preference.save { settings }
     }
 
     companion object {

@@ -177,7 +177,7 @@ class DashboardViewModelTest {
     fun `Should save settings when dashboard ordering is changed`() = runTest {
         val viewModel = createDashboardViewModel()
 
-        viewModel.updateSettings(DiarySettings.Empty)
+        viewModel.onUpdateSettings(DiarySettings.Empty)
         delay(100)
         verifySuspend { diaryPreference.save(any()) }
     }
