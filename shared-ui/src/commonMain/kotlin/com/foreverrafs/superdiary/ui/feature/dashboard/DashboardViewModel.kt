@@ -48,12 +48,12 @@ class DashboardViewModel(
         data object Loading : DashboardScreenState
         data class Error(val message: String) : DashboardScreenState
         data class Content(
-            val latestEntries: List<Diary>,
-            val totalEntries: Long,
-            val weeklySummary: String?,
-            val currentStreak: Streak,
-            val bestStreak: Streak,
-            val isBiometricAuthEnabled: Boolean? = null,
+            val latestEntries: List<Diary> = emptyList<Diary>(),
+            val totalEntries: Long = 0L,
+            val weeklySummary: String? = null,
+            val currentStreak: Streak? = null,
+            val bestStreak: Streak? = null,
+            val showBiometricAuthDialog: Boolean? = null,
             val isBiometricAuthError: Boolean? = null,
         ) : DashboardScreenState
     }
@@ -65,7 +65,9 @@ class DashboardViewModel(
     private val getAllDiariesResult: Flow<Result<List<Diary>>> = getAllDiariesUseCase()
 
     val state: StateFlow<DashboardScreenState> = mutableState
-        .onStart { loadDashboardContent() }
+        .onStart {
+            loadDashboardContent()
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
@@ -113,6 +115,8 @@ class DashboardViewModel(
                                 clock.now().toDate(),
                                 clock.now().toDate(),
                             ),
+                            showBiometricAuthDialog = preference.getSnapshot().showBiometricAuthDialog &&
+                                biometricAuth.canAuthenticate(),
                         )
                     }
 
@@ -125,6 +129,10 @@ class DashboardViewModel(
         }
     }
 
+    /**
+     * Only use this function if you are sure the current state of the screen
+     * is [DashboardScreenState.Content]
+     */
     private fun updateContentState(func: (current: DashboardScreenState.Content) -> DashboardScreenState.Content) {
         mutableState.update { state ->
             val currentState = state as? DashboardScreenState.Content
@@ -260,7 +268,7 @@ class DashboardViewModel(
             updateContentState {
                 it.copy(
                     isBiometricAuthError = true,
-                    isBiometricAuthEnabled = false,
+                    showBiometricAuthDialog = false,
                 )
             }
 
@@ -277,7 +285,6 @@ class DashboardViewModel(
                 }
                 updateContentState {
                     it.copy(
-                        isBiometricAuthEnabled = false,
                         isBiometricAuthError = true,
                     )
                 }
@@ -285,15 +292,17 @@ class DashboardViewModel(
 
             is BiometricAuth.AuthResult.Failed -> updateContentState {
                 it.copy(
-                    isBiometricAuthEnabled = false,
                     isBiometricAuthError = true,
                 )
             }
 
-            is BiometricAuth.AuthResult.Success -> updateContentState {
-                it.copy(
-                    isBiometricAuthEnabled = true,
-                )
+            is BiometricAuth.AuthResult.Success -> {
+                preference.save {
+                    it.copy(
+                        isBiometricAuthEnabled = true,
+                        showBiometricAuthDialog = false,
+                    )
+                }
             }
         }
     }
@@ -303,6 +312,13 @@ class DashboardViewModel(
             "updateSettings: Updating settings with values $settings"
         }
         preference.save { settings }
+
+        // Update the content to reflect the current state
+        updateContentState {
+            it.copy(
+                showBiometricAuthDialog = settings.showBiometricAuthDialog,
+            )
+        }
     }
 
     companion object {

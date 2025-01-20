@@ -9,6 +9,7 @@ import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.ui.feature.auth.register.DeeplinkContainer
+import com.foreverrafs.superdiary.utils.DiaryPreference
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +23,10 @@ sealed interface AppSessionState {
     data object Processing : AppSessionState
     data class Authenticated(
         val userInfo: UserInfo?,
+        // linkType will be null if the session was just getting restored from disk
         val linkType: DeeplinkContainer.LinkType? = null,
+        // Present the user with a biometric auth dialog if they have opted to log in with biometrics
+        val isBiometricAuthEnabled: Boolean? = null,
     ) : AppSessionState
 
     data class Error(
@@ -36,6 +40,7 @@ sealed interface AppSessionState {
 class AppViewModel(
     private val appCoroutineDispatchers: AppCoroutineDispatchers,
     private val logger: AggregateLogger,
+    private val preference: DiaryPreference,
     private val authApi: AuthApi,
     deeplinkContainer: DeeplinkContainer,
 ) : ViewModel() {
@@ -83,7 +88,6 @@ class AppViewModel(
             }
             when (val getSessionResult = processPendingDeeplink()) {
                 is Result.Success -> {
-                    "Emitting success state from authentication token"
                     _viewState.update {
                         AppSessionState.Authenticated(
                             userInfo = getSessionResult.data.userInfo,
@@ -106,7 +110,7 @@ class AppViewModel(
         }
 
         logger.d(TAG) {
-            "Unable to restore from registration confirmation token. Attempting to restore from regular session"
+            "Unable to restore from registration confirmation token. Attempting to restore session from disk"
         }
 
         val sessionRestoreStatus = authApi.restoreSession()
@@ -127,14 +131,20 @@ class AppViewModel(
                 is AuthApi.SignInStatus.LoggedIn -> {
                     logger.d(TAG) { "Session restored. Token expires on ${sessionRestoreStatus.sessionInfo.expiresAt}" }
                     logger.d(TAG) { "Session user ${sessionRestoreStatus.sessionInfo.userInfo}" }
-                    AppSessionState.Authenticated(sessionRestoreStatus.sessionInfo.userInfo)
+
+                    val userSettings = preference.getSnapshot()
+
+                    AppSessionState.Authenticated(
+                        userInfo = sessionRestoreStatus.sessionInfo.userInfo,
+                        isBiometricAuthEnabled = userSettings.isBiometricAuthEnabled,
+                    )
                 }
             }
         }
     }
 
     /**
-     * An auth payload can originate from any of the following sources;
+     * An auth payload can originate from any of the following sources
      * 1. confirmation email sent after a registration process in the app
      * 2. An invitation email sent after a user is invited
      * 3. A password reset email after a user tries to reset their password

@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.utils
 
+import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
@@ -49,6 +50,8 @@ class DiaryPreferenceTest {
             showAtAGlance = true,
             showLatestEntries = true,
             showLocationPermissionDialog = false,
+            showBiometricAuthDialog = false,
+            isBiometricAuthEnabled = false,
         )
 
         diaryPreference.save {
@@ -58,6 +61,8 @@ class DiaryPreferenceTest {
                 showAtAGlance = initialSettings.showAtAGlance,
                 showLatestEntries = initialSettings.showLatestEntries,
                 showLocationPermissionDialog = initialSettings.showLocationPermissionDialog,
+                showBiometricAuthDialog = initialSettings.showBiometricAuthDialog,
+                isBiometricAuthEnabled = initialSettings.isBiometricAuthEnabled,
             )
         }
 
@@ -73,6 +78,8 @@ class DiaryPreferenceTest {
             showAtAGlance = false,
             showLatestEntries = true,
             showLocationPermissionDialog = false,
+            isBiometricAuthEnabled = false,
+            showBiometricAuthDialog = false,
         )
 
         diaryPreference.save {
@@ -107,7 +114,12 @@ class DiaryPreferenceTest {
         diaryPreference.save {
             it.copy(isFirstLaunch = false)
         }
+
+        // Should reset isFirstLaunch back to true
         diaryPreference.clear()
-        assertThat(diaryPreference.getSnapshot().isFirstLaunch).isTrue()
+
+        diaryPreference.settings.test {
+            assertThat(awaitItem().isFirstLaunch).isTrue()
+        }
     }
 }

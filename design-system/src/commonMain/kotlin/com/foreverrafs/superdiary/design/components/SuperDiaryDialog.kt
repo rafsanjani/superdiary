@@ -98,6 +98,27 @@ fun ConfirmSaveDialog(
 }
 
 @Composable
+fun BiometricAuthErrorDialog(
+    onExitApp: () -> Unit,
+    onTryAgain: () -> Unit,
+    onDismissRequest: () -> Unit,
+) {
+    BasicSuperDiaryDialog(
+        onNegativeButton = onExitApp,
+        onPositiveButton = onTryAgain,
+        title = "Authentication failed",
+        message = "Would you like to try biometric authentication again?",
+        positiveButtonText = "Try again",
+        negativeButtonText = "Exit",
+        onDismissRequest = onDismissRequest,
+        properties = DialogProperties(
+            dismissOnBackPress = false,
+            dismissOnClickOutside = false,
+        ),
+    )
+}
+
+@Composable
 fun ConfirmLogoutDialog(
     onLogout: () -> Unit,
     onDismiss: () -> Unit,

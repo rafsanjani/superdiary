@@ -37,7 +37,8 @@ class DiaryPreferenceImpl private constructor(
     private val showLatestEntriesKey = booleanPreferencesKey("showLatestEntries")
     private val showLocationPermissionDialogKey =
         booleanPreferencesKey("showLocationPermissionDialog")
-    private val isBiometricsAuthEnabledKey = booleanPreferencesKey("isBiometricsAuthEnabled")
+    private val showBiometricAuthDialogKey = booleanPreferencesKey("showBiometricAuthDialog")
+    private val isBiometricAuthEnabledKey = booleanPreferencesKey("isBiometricsAuthEnabled")
 
     override val settings: Flow<DiarySettings> = dataStore.data.map {
         DiarySettings(
@@ -46,7 +47,8 @@ class DiaryPreferenceImpl private constructor(
             showAtAGlance = it[showAtAGlanceKey] ?: true,
             showLatestEntries = it[showLatestEntriesKey] ?: true,
             showLocationPermissionDialog = it[showLocationPermissionDialogKey] ?: true,
-            showBiometricAuthDialog = it[isBiometricsAuthEnabledKey] ?: true,
+            showBiometricAuthDialog = it[showBiometricAuthDialogKey] ?: true,
+            isBiometricAuthEnabled = it[isBiometricAuthEnabledKey] ?: false,
         )
     }
 
@@ -59,7 +61,8 @@ class DiaryPreferenceImpl private constructor(
             showAtAGlance = prefs[showAtAGlanceKey] ?: false,
             showLatestEntries = prefs[showLatestEntriesKey] ?: false,
             showLocationPermissionDialog = prefs[showLocationPermissionDialogKey] ?: false,
-            showBiometricAuthDialog = prefs[isBiometricsAuthEnabledKey] ?: true,
+            showBiometricAuthDialog = prefs[showBiometricAuthDialogKey] ?: true,
+            isBiometricAuthEnabled = prefs[isBiometricAuthEnabledKey] ?: false,
         )
     }
 
@@ -73,7 +76,8 @@ class DiaryPreferenceImpl private constructor(
             it[showAtAGlanceKey] = settings.showAtAGlance
             it[showLatestEntriesKey] = settings.showLatestEntries
             it[showLocationPermissionDialogKey] = settings.showLocationPermissionDialog
-            it[isBiometricsAuthEnabledKey] = settings.showBiometricAuthDialog
+            it[showBiometricAuthDialogKey] = settings.showBiometricAuthDialog
+            it[isBiometricAuthEnabledKey] = settings.isBiometricAuthEnabled
         }
         logger.d(Tag) {
             "Settings saved: $settings"
@@ -113,6 +117,7 @@ data class DiarySettings(
     val showWeeklySummary: Boolean,
     val showAtAGlance: Boolean,
     val showLatestEntries: Boolean,
+    val isBiometricAuthEnabled: Boolean,
     val showLocationPermissionDialog: Boolean,
     val showBiometricAuthDialog: Boolean,
 ) {
@@ -124,6 +129,7 @@ data class DiarySettings(
             showLatestEntries = true,
             showLocationPermissionDialog = true,
             showBiometricAuthDialog = true,
+            isBiometricAuthEnabled = false,
         )
     }
 }

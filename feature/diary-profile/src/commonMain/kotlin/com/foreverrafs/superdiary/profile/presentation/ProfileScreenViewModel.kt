@@ -60,6 +60,7 @@ class ProfileScreenViewModel(
 
         _viewState.update {
             if (result.isSuccess) {
+                preference.clear()
                 it.copy(isLogoutSuccess = true)
             } else {
                 it.copy(
