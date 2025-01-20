@@ -7,6 +7,8 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
+import assertk.assertions.isTrue
+import com.foreverrafs.auth.BiometricAuth
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
@@ -20,7 +22,6 @@ import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
-import com.foreverrafs.superdiary.utils.DiaryPreference
 import com.foreverrafs.superdiary.utils.DiarySettings
 import dev.mokkery.answering.returns
 import dev.mokkery.answering.throws
@@ -34,11 +35,11 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.yield
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
@@ -48,11 +49,14 @@ import kotlinx.datetime.minus
 class DashboardViewModelTest {
     private lateinit var dataSource: DataSource
 
-    private val diaryAI: DiaryAI = mock<DiaryAI>()
+    private val diaryAI: DiaryAI = mock()
 
-    private val diaryPreference: DiaryPreference = mock<DiaryPreference> {
-        everySuspend { save(any()) }.returns(Unit)
+    private val biometricAuth: BiometricAuth = mock {
+        everySuspend { canAuthenticate() } returns true
+        everySuspend { startBiometricAuth() } returns BiometricAuth.AuthResult.Success
     }
+
+    private val diaryPreference = FakeDiaryPreference()
 
     @BeforeTest
     fun setup() {
@@ -60,7 +64,6 @@ class DashboardViewModelTest {
         dataSource = mock()
 
         every { dataSource.fetchAll() }.returns(flowOf())
-        everySuspend { diaryPreference.save(any()) }.returns(Unit)
     }
 
     @AfterTest
@@ -79,6 +82,7 @@ class DashboardViewModelTest {
         logger = AggregateLogger(emptyList()),
         preference = diaryPreference,
         clock = Clock.System,
+        biometricAuth = biometricAuth,
     )
 
     @Test
@@ -178,8 +182,9 @@ class DashboardViewModelTest {
         val viewModel = createDashboardViewModel()
 
         viewModel.onUpdateSettings(DiarySettings.Empty)
-        delay(100)
-        verifySuspend { diaryPreference.save(any()) }
+        yield()
+
+        assertThat(diaryPreference.isSaveCalled).isTrue()
     }
 
     @Test
