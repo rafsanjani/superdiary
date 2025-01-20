@@ -115,6 +115,23 @@ fun ConfirmLogoutDialog(
 }
 
 @Composable
+fun ConfirmBiometricAuthDialog(
+    onDismiss: () -> Unit,
+    onEnableBiometric: () -> Unit,
+    onDismissRequest: () -> Unit,
+) {
+    BasicSuperDiaryDialog(
+        onNegativeButton = onDismiss,
+        onPositiveButton = onEnableBiometric,
+        title = "Biometric Authentication",
+        message = "Do you want to enable biometric authentication?",
+        negativeButtonText = "No",
+        positiveButtonText = "Yes",
+        onDismissRequest = onDismissRequest,
+    )
+}
+
+@Composable
 private fun BasicSuperDiaryDialog(
     title: String,
     message: String,

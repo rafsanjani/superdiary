@@ -48,6 +48,14 @@ fun DashboardTab(
                     )
                 }
             },
+            onDisableBiometricAuth = {
+                screenModel.onUpdateSettings(
+                    it.copy(
+                        showBiometricAuthDialog = false,
+                    ),
+                )
+            },
+            onEnableBiometric = screenModel::onEnableBiometricAuth,
         )
     }
 }

@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.ui.feature.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.foreverrafs.auth.BiometricAuth
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
@@ -39,6 +40,7 @@ class DashboardViewModel(
     private val updateDiaryUseCase: UpdateDiaryUseCase,
     private val preference: DiaryPreference,
     private val diaryAI: DiaryAI,
+    private val biometricAuth: BiometricAuth,
     private val logger: AggregateLogger,
     private val clock: Clock,
 ) : ViewModel() {
@@ -51,6 +53,8 @@ class DashboardViewModel(
             val weeklySummary: String?,
             val currentStreak: Streak,
             val bestStreak: Streak,
+            val isBiometricAuthEnabled: Boolean? = null,
+            val isBiometricAuthError: Boolean? = null,
         ) : DashboardScreenState
     }
 
@@ -239,6 +243,57 @@ class DashboardViewModel(
                     message
                 }
                 result.data
+            }
+        }
+    }
+
+    fun onEnableBiometricAuth() = viewModelScope.launch {
+        enableBiometricAuth()
+    }
+
+    private suspend fun enableBiometricAuth() {
+        if (!biometricAuth.canAuthenticate()) {
+            logger.i(Tag) {
+                "Biometric authentication is not available"
+            }
+
+            updateContentState {
+                it.copy(
+                    isBiometricAuthError = true,
+                    isBiometricAuthEnabled = false,
+                )
+            }
+
+            return
+        }
+
+        when (val biometricAuthResult = biometricAuth.startBiometricAuth()) {
+            is BiometricAuth.AuthResult.Error -> {
+                logger.e(
+                    tag = Tag,
+                    throwable = biometricAuthResult.error,
+                ) {
+                    "Error performing biometric authentication"
+                }
+                updateContentState {
+                    it.copy(
+                        isBiometricAuthEnabled = false,
+                        isBiometricAuthError = true,
+                    )
+                }
+            }
+
+            is BiometricAuth.AuthResult.Failed -> updateContentState {
+                it.copy(
+                    isBiometricAuthEnabled = false,
+                    isBiometricAuthError = true,
+                )
+            }
+
+            is BiometricAuth.AuthResult.Success -> updateContentState {
+                it.copy(
+                    isBiometricAuthEnabled = true,
+                )
             }
         }
     }

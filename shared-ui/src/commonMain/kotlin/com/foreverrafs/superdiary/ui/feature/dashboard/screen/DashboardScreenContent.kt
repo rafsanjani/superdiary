@@ -45,6 +45,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.foreverrafs.superdiary.design.components.ConfirmBiometricAuthDialog
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
@@ -78,7 +79,9 @@ fun DashboardScreenContent(
     settings: DiarySettings,
     onChangeSettings: (DiarySettings) -> Unit,
     onAddEntry: () -> Unit,
+    onDisableBiometricAuth: () -> Unit,
     onSeeAll: () -> Unit,
+    onEnableBiometric: () -> Unit,
     onDiaryClick: (diary: Diary) -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
     modifier: Modifier = Modifier,
@@ -104,6 +107,22 @@ fun DashboardScreenContent(
                 settings = settings,
             )
         }
+    }
+
+    var showBiometricAuthDialog by remember(settings.showBiometricAuthDialog) {
+        mutableStateOf(settings.showBiometricAuthDialog)
+    }
+
+    if (showBiometricAuthDialog) {
+        ConfirmBiometricAuthDialog(
+            onEnableBiometric = onEnableBiometric,
+            onDismiss = {
+                onDisableBiometricAuth()
+            },
+            onDismissRequest = {
+                showBiometricAuthDialog = false
+            },
+        )
     }
 
     LazyColumn(

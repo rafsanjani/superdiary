@@ -67,6 +67,7 @@ class DashboardScreenSnapshotTest(
                     settings = DiarySettings.Empty,
                     onChangeSettings = {},
                     onDiaryClick = {},
+                    onDisableBiometricAuth = {},
                 )
             }
         }
@@ -108,6 +109,7 @@ class DashboardScreenSnapshotTest(
                     ),
                     onChangeSettings = {},
                     onDiaryClick = {},
+                    onDisableBiometricAuth = {},
                 )
             }
         }
@@ -150,6 +152,7 @@ class DashboardScreenSnapshotTest(
                     ),
                     onChangeSettings = {},
                     onDiaryClick = {},
+                    onDisableBiometricAuth = {},
                 )
             }
         }

@@ -3,7 +3,6 @@ package com.foreverrafs.superdiary.ui.feature.auth.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
-import com.foreverrafs.auth.BiometricAuth
 import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +12,6 @@ import kotlinx.coroutines.launch
 
 class LoginScreenViewModel(
     private val authApi: AuthApi,
-    private val biometricAuth: BiometricAuth,
     private val coroutineDispatchers: AppCoroutineDispatchers,
 ) : ViewModel() {
     private val _viewState: MutableStateFlow<LoginViewState> =
@@ -42,15 +40,6 @@ class LoginScreenViewModel(
                 }
             }
         }
-
-    fun onAuthenticateWithBiometrics() = viewModelScope.launch {
-        if (biometricAuth.canAuthenticate()) {
-            val result = biometricAuth.startBiometricAuth()
-            println(result)
-        } else {
-            println()
-        }
-    }
 
     fun onLoginWithEmail(username: String, password: String) =
         viewModelScope.launch(coroutineDispatchers.main) {

@@ -394,6 +394,8 @@ private fun DashboardPreview() {
             settings = DiarySettings.Empty,
             onChangeSettings = {},
             onDiaryClick = {},
+            onDisableBiometricAuth = {},
+            onEnableBiometric = {},
         )
     }
 }
@@ -476,7 +478,7 @@ private fun LoginPreview() {
 private fun RegisterPreview() {
     SuperDiaryTheme {
         RegisterScreenContent(
-            onRegisterClick = { name, email, password -> },
+            onRegisterClick = { _, _, _ -> },
             viewState = RegisterScreenState.Idle,
             onRegisterSuccess = {},
             onLoginClick = {},
