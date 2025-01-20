@@ -53,6 +53,7 @@ kotlin {
                 implementation(libs.google.playservices.location)
                 implementation(libs.moko.permissions.compose)
                 implementation(libs.ktor.client.json)
+                implementation("androidx.biometric:biometric:1.4.0-alpha02")
 
                 // this isn't a bom
                 implementation(libs.androidx.credentials.bom)

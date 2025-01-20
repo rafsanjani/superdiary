@@ -15,7 +15,7 @@
         android:label="${applicationName}"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Material3.DayNight"
+        android:theme="@style/Theme.Material3.DayNight.NoActionBar"
         android:usesCleartextTraffic="false"
         tools:targetApi="s">
         <!-- Required: set your sentry.io project identifier (DSN) -->

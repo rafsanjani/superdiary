@@ -1,6 +1,7 @@
 package com.foreverrafs.superdiary.ui.feature.auth.login.screen
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.foreverrafs.auth.model.UserInfo
@@ -18,6 +19,10 @@ fun LoginScreen(
     val signInStatus by screenModel.viewState.collectAsStateWithLifecycle(
         initialValue = LoginViewState.Idle,
     )
+
+    LaunchedEffect(Unit) {
+        screenModel.onAuthenticateWithBiometrics()
+    }
 
     LoginScreenContent(
         viewState = signInStatus,
