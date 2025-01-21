@@ -9,7 +9,7 @@ internal class FakeDiaryPreference : DiaryPreference {
     var isSaveCalled = false
     var isClearCalled = false
 
-    private var snapshotSettings = DiarySettings(
+    var settingsResult = DiarySettings(
         isFirstLaunch = true,
         showWeeklySummary = false,
         showAtAGlance = false,
@@ -18,15 +18,16 @@ internal class FakeDiaryPreference : DiaryPreference {
         showLocationPermissionDialog = false,
         showBiometricAuthDialog = false,
     )
+
     override val settings: Flow<DiarySettings>
-        get() = flowOf(snapshotSettings)
+        get() = flowOf(settingsResult)
 
     override suspend fun save(block: (DiarySettings) -> DiarySettings) {
         isSaveCalled = true
-        snapshotSettings = block(snapshotSettings)
+        settingsResult = block(settingsResult)
     }
 
-    override suspend fun getSnapshot(): DiarySettings = snapshotSettings
+    override suspend fun getSnapshot(): DiarySettings = settingsResult
 
     override suspend fun clear() {
         isClearCalled = true

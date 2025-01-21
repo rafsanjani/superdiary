@@ -95,6 +95,10 @@ class DashboardViewModel(
                     }
 
                     mutableState.update {
+                        val shouldShowBiometricDialog =
+                            preference.getSnapshot().showBiometricAuthDialog &&
+                                biometricAuth.canAuthenticate()
+
                         DashboardScreenState.Content(
                             latestEntries = diaries.sortedByDescending { it.date }.take(4),
                             totalEntries = diaries.size.toLong(),
@@ -115,8 +119,7 @@ class DashboardViewModel(
                                 clock.now().toDate(),
                                 clock.now().toDate(),
                             ),
-                            showBiometricAuthDialog = preference.getSnapshot().showBiometricAuthDialog &&
-                                biometricAuth.canAuthenticate(),
+                            showBiometricAuthDialog = shouldShowBiometricDialog,
                         )
                     }
 
