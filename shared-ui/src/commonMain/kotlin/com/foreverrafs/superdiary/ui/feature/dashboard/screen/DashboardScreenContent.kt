@@ -45,6 +45,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.foreverrafs.superdiary.design.components.ConfirmBiometricAuthDialog
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
@@ -78,14 +79,22 @@ fun DashboardScreenContent(
     settings: DiarySettings,
     onChangeSettings: (DiarySettings) -> Unit,
     onAddEntry: () -> Unit,
+    onDisableBiometricAuth: () -> Unit,
     onSeeAll: () -> Unit,
+    onEnableBiometric: () -> Unit,
     onDiaryClick: (diary: Diary) -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showShimmer by remember { mutableStateOf(false) }
+    var showBiometricAuthDialog by remember {
+        mutableStateOf(false)
+    }
+
     val dashboardItems = when (state) {
         is DashboardViewModel.DashboardScreenState.Content -> {
+            showBiometricAuthDialog = state.showBiometricAuthDialog == true
+
             showShimmer = false
             dashboardItems(
                 state = state,
@@ -104,6 +113,19 @@ fun DashboardScreenContent(
                 settings = settings,
             )
         }
+    }
+
+    if (showBiometricAuthDialog) {
+        ConfirmBiometricAuthDialog(
+            onEnableBiometric = onEnableBiometric,
+            onDismiss = {
+                showBiometricAuthDialog = false
+                onDisableBiometricAuth()
+            },
+            onDismissRequest = {
+                showBiometricAuthDialog = false
+            },
+        )
     }
 
     LazyColumn(
@@ -290,12 +312,12 @@ private fun AtAGlance(
     val animationState = remember { MutableTransitionState(false) }
 
     val currentStreakCount by animateIntAsState(
-        targetValue = if (animationState.targetState) state.currentStreak.count else 0,
+        targetValue = if (animationState.targetState) state.currentStreak?.count ?: 0 else 0,
         animationSpec = tween(durationMillis = 1000),
     )
 
     val bestStreakCount by animateIntAsState(
-        targetValue = if (animationState.targetState) state.bestStreak.count else 0,
+        targetValue = if (animationState.targetState) state.bestStreak?.count ?: 0 else 0,
         animationSpec = tween(durationMillis = 1000),
     )
 
@@ -323,11 +345,11 @@ private fun AtAGlance(
         ) {
             val dashboardCardModifier = Modifier.weight(1f).aspectRatio(1f)
 
-            fun streakCaption(streak: Streak): String {
+            fun streakCaption(streak: Streak?): String {
                 val dateFormatPattern = "MMM dd"
-                return if (streak.count != 0) {
-                    "${streak.startDate.format(dateFormatPattern)} - ${
-                        streak.endDate.format(
+                return if (streak?.count != 0) {
+                    "${streak?.startDate?.format(dateFormatPattern)} - ${
+                        streak?.endDate?.format(
                             dateFormatPattern,
                         )
                     }"

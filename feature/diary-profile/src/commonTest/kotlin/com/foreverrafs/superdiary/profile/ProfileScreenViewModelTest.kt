@@ -22,9 +22,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.coroutines.yield
 
 class ProfileScreenViewModelTest {
     private lateinit var profileScreenViewModel: ProfileScreenViewModel
@@ -87,6 +87,7 @@ class ProfileScreenViewModelTest {
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `Should update settings with new values when settings is changed`() = runTest {
         everySuspend { authApi.currentUserOrNull() } returns null
@@ -99,7 +100,7 @@ class ProfileScreenViewModelTest {
             updatedSettings,
         )
 
-        yield()
+        advanceUntilIdle()
 
         verifySuspend {
             preference.save(any())

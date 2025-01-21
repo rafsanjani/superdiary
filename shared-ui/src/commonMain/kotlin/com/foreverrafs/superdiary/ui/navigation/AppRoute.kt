@@ -5,6 +5,9 @@ import kotlinx.serialization.Serializable
 
 sealed interface AppRoute {
     @Serializable
+    data object BiometricAuthScreen : AppRoute
+
+    @Serializable
     data class LoginScreen(val isFromDeeplink: Boolean = false) : AppRoute
 
     @Serializable

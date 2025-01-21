@@ -34,6 +34,7 @@ fun SuperDiaryTheme(
             secondaryContainer = Color(0x611E1E1E),
             tertiaryContainer = Color.DarkGray,
             primaryContainer = Color(0xFF303943),
+            surfaceContainerHigh = Color(0xff0c1215),
         )
     } else {
         lightColorScheme(

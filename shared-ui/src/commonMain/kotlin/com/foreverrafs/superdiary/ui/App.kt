@@ -44,6 +44,7 @@ import coil3.request.crossfade
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
+import com.foreverrafs.superdiary.ui.feature.auth.login.screen.BiometricLoginScreen
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreen
 import com.foreverrafs.superdiary.ui.feature.auth.register.DeeplinkContainer
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenContent
@@ -114,7 +115,14 @@ private fun SuperDiaryNavHost(
                     DeeplinkContainer.LinkType.PasswordRecovery -> AppRoute.ChangePasswordScreen
                     DeeplinkContainer.LinkType.Invalid -> AppRoute.LoginScreen(isFromDeeplink = true)
                     // Session was restored from disk and didn't originate from an email link
-                    null -> AppRoute.BottomNavigationScreen(viewState.userInfo)
+                    null -> {
+                        // If user has biometrics enabled, show a screen asking them for that, else go straight to bottom navigation screen
+                        if (viewState.isBiometricAuthEnabled == true) {
+                            AppRoute.BiometricAuthScreen
+                        } else {
+                            AppRoute.BottomNavigationScreen(viewState.userInfo)
+                        }
+                    }
                 }
             }
 
@@ -135,6 +143,21 @@ private fun SuperDiaryNavHost(
         navController = navController,
         startDestination = startDestination,
     ) {
+        animatedComposable<AppRoute.BiometricAuthScreen> {
+            BiometricLoginScreen(
+                onBiometricAuthSuccess = {
+                    navController.navigate(
+                        AppRoute.BottomNavigationScreen(
+                            userInfo = null,
+                        ),
+                    ) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                },
+            )
+        }
         animatedComposable<AppRoute.LoginScreen> {
             val route = it.toRoute<AppRoute.LoginScreen>()
 

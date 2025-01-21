@@ -17,6 +17,8 @@ import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewData
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreenContent
+import com.foreverrafs.superdiary.ui.feature.auth.login.BiometricLoginScreenState
+import com.foreverrafs.superdiary.ui.feature.auth.login.screen.BiometricLoginScreenContent
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreenContent
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState
 import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenContent
@@ -72,6 +74,18 @@ fun TestAppContainer(
                 content()
             }
         }
+    }
+}
+
+@Composable
+@PreviewSuperDiary
+private fun BiometricLoginScreen() {
+    SuperDiaryTheme {
+        BiometricLoginScreenContent(
+            viewState = BiometricLoginScreenState.Idle,
+            onBiometricAuthSuccess = {},
+            showBiometricAuthErrorDialog = false,
+        )
     }
 }
 
@@ -387,6 +401,8 @@ private fun DashboardPreview() {
                     Clock.System.now().toDate(),
                     Clock.System.now().toDate(),
                 ),
+                isBiometricAuthError = null,
+                showBiometricAuthDialog = false,
             ),
             onAddEntry = {},
             onSeeAll = {},
@@ -394,6 +410,8 @@ private fun DashboardPreview() {
             settings = DiarySettings.Empty,
             onChangeSettings = {},
             onDiaryClick = {},
+            onDisableBiometricAuth = {},
+            onEnableBiometric = {},
         )
     }
 }
@@ -476,7 +494,7 @@ private fun LoginPreview() {
 private fun RegisterPreview() {
     SuperDiaryTheme {
         RegisterScreenContent(
-            onRegisterClick = { name, email, password -> },
+            onRegisterClick = { _, _, _ -> },
             viewState = RegisterScreenState.Idle,
             onRegisterSuccess = {},
             onLoginClick = {},

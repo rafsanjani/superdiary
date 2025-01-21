@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreenViewModel
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LoginScreen(
@@ -14,7 +14,7 @@ fun LoginScreen(
     onLoginSuccess: (UserInfo) -> Unit,
     isFromDeeplink: Boolean,
 ) {
-    val screenModel: LoginScreenViewModel = koinInject()
+    val screenModel: LoginScreenViewModel = koinViewModel()
     val signInStatus by screenModel.viewState.collectAsStateWithLifecycle(
         initialValue = LoginViewState.Idle,
     )
