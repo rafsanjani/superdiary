@@ -128,7 +128,7 @@ jobs:
                     min-coverage-overall: 92
                     min-coverage-changed-files: 85
 
-            -   name: Store coverage info
+            -   name: Print code coverage info
                 run: |
                     echo "Total coverage ${{ steps.jacoco.outputs.coverage-overall }}"
                     echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
@@ -150,6 +150,13 @@ jobs:
                     message: ❌ **Dude, your code coverage is ${{ steps.jacoco.outputs.coverage-overall }} which is lower than the minimum coverage of 92%. Please go back and do the needful :wink**
                     github-token: ${{secrets.GITHUB_TOKEN}}
                     comment-tag: coverage
+
+            -   name: Post overall coverage violation
+                if: ${{ steps.jacoco.outputs.coverage-overall  < 92.0 }}
+                uses: actions/github-script@v7
+                with:
+                    script: |
+                        core.setFailed('Coverage for total project: ${{steps.jacoco.outputs.coverage-changed-files}} is less than 92%!')
 
             -   name: Update dynamic badge gist
                 if: github.ref == 'refs/heads/development'
