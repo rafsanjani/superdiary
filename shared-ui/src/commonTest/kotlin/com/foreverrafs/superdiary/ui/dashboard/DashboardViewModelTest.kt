@@ -36,10 +36,10 @@ import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.coroutines.yield
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
@@ -182,7 +182,7 @@ class DashboardViewModelTest {
         val viewModel = createDashboardViewModel()
 
         viewModel.onUpdateSettings(DiarySettings.Empty)
-        yield()
+        advanceUntilIdle()
 
         assertThat(diaryPreference.isSaveCalled).isTrue()
     }

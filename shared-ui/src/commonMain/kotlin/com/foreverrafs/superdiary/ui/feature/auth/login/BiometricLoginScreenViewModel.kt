@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.ui.feature.auth.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.BiometricAuth
+import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -12,18 +13,22 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-sealed interface BiometricLoginViewState {
-    data object Success : BiometricLoginViewState
-    data class Error(val exception: Exception) : BiometricLoginViewState
-    data object Idle : BiometricLoginViewState
+sealed interface BiometricLoginScreenState {
+    data object Success : BiometricLoginScreenState
+    data class Error(val exception: Exception) : BiometricLoginScreenState
+    data object Idle : BiometricLoginScreenState
 }
+
+class BiometricAuthUnavailableException : Exception()
+class BiometricAuthenticationException : Exception()
 
 class BiometricLoginScreenViewModel(
     private val biometricAuth: BiometricAuth,
     private val logger: AggregateLogger,
+    private val coroutineDispatchers: AppCoroutineDispatchers,
 ) : ViewModel() {
-    private val _viewState: MutableStateFlow<BiometricLoginViewState> =
-        MutableStateFlow(BiometricLoginViewState.Idle)
+    private val _viewState: MutableStateFlow<BiometricLoginScreenState> =
+        MutableStateFlow(BiometricLoginScreenState.Idle)
 
     val viewState = _viewState
         .asStateFlow()
@@ -33,10 +38,10 @@ class BiometricLoginScreenViewModel(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = BiometricLoginViewState.Idle,
+            initialValue = BiometricLoginScreenState.Idle,
         )
 
-    private fun onAuthenticateWithBiometrics() = viewModelScope.launch {
+    private fun onAuthenticateWithBiometrics() = viewModelScope.launch(coroutineDispatchers.main) {
         authenticateWithBiometrics()
     }
 
@@ -46,8 +51,8 @@ class BiometricLoginScreenViewModel(
                 "Biometric authentication is not available"
             }
             _viewState.update {
-                BiometricLoginViewState.Error(
-                    Exception("Biometric authentication is not available"),
+                BiometricLoginScreenState.Error(
+                    BiometricAuthUnavailableException(),
                 )
             }
             return
@@ -61,19 +66,28 @@ class BiometricLoginScreenViewModel(
                 ) {
                     "Error performing biometric authentication"
                 }
+
+                _viewState.update {
+                    BiometricLoginScreenState.Error(
+                        BiometricAuthenticationException(),
+                    )
+                }
             }
 
             is BiometricAuth.AuthResult.Failed -> {
+                logger.e(tag = Tag) {
+                    "Error performing biometric authentication"
+                }
                 _viewState.update {
-                    BiometricLoginViewState.Error(
-                        Exception("error logging with biometrics"),
+                    BiometricLoginScreenState.Error(
+                        BiometricAuthenticationException(),
                     )
                 }
             }
 
             is BiometricAuth.AuthResult.Success -> {
                 _viewState.update {
-                    BiometricLoginViewState.Success
+                    BiometricLoginScreenState.Success
                 }
             }
         }

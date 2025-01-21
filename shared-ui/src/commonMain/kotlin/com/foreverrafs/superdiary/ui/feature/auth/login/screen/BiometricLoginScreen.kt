@@ -23,8 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.foreverrafs.superdiary.design.components.BiometricAuthErrorDialog
+import com.foreverrafs.superdiary.ui.feature.auth.login.BiometricLoginScreenState
 import com.foreverrafs.superdiary.ui.feature.auth.login.BiometricLoginScreenViewModel
-import com.foreverrafs.superdiary.ui.feature.auth.login.BiometricLoginViewState
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -34,7 +34,7 @@ fun BiometricLoginScreen(
     val viewModel: BiometricLoginScreenViewModel = koinViewModel()
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     val showBiometricAuthErrorDialog by remember(viewState) {
-        mutableStateOf(viewState is BiometricLoginViewState.Error)
+        mutableStateOf(viewState is BiometricLoginScreenState.Error)
     }
 
     BiometricLoginScreenContent(
@@ -46,7 +46,7 @@ fun BiometricLoginScreen(
 
 @Composable
 fun BiometricLoginScreenContent(
-    viewState: BiometricLoginViewState,
+    viewState: BiometricLoginScreenState,
     showBiometricAuthErrorDialog: Boolean,
     onBiometricAuthSuccess: () -> Unit,
     modifier: Modifier = Modifier,
@@ -55,9 +55,9 @@ fun BiometricLoginScreenContent(
 
     LaunchedEffect(viewState) {
         when (viewState) {
-            is BiometricLoginViewState.Error -> {}
-            is BiometricLoginViewState.Idle -> {}
-            is BiometricLoginViewState.Success -> currentOnAuthSuccess()
+            is BiometricLoginScreenState.Error -> {}
+            is BiometricLoginScreenState.Idle -> {}
+            is BiometricLoginScreenState.Success -> currentOnAuthSuccess()
         }
     }
 

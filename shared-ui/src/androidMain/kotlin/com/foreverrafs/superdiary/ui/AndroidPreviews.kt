@@ -17,7 +17,7 @@ import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewData
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreenContent
-import com.foreverrafs.superdiary.ui.feature.auth.login.BiometricLoginViewState
+import com.foreverrafs.superdiary.ui.feature.auth.login.BiometricLoginScreenState
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.BiometricLoginScreenContent
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreenContent
 import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState
@@ -82,7 +82,7 @@ fun TestAppContainer(
 private fun BiometricLoginScreen() {
     SuperDiaryTheme {
         BiometricLoginScreenContent(
-            viewState = BiometricLoginViewState.Idle,
+            viewState = BiometricLoginScreenState.Idle,
             onBiometricAuthSuccess = {},
             showBiometricAuthErrorDialog = false,
         )
