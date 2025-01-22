@@ -140,16 +140,8 @@ jobs:
                     script: |
                         core.setFailed('Coverage for changed files ${{steps.jacoco.outputs.coverage-changed-files}} is less than 80%!')
 
-            #            -   name: Verify minimum code coverage (90%)
-            #                run: ./gradlew testDebugUnitTest -Pkover koverVerify
-
-            -   name: Post overall project coverage violation
-                if: failure() && ${{steps.jacoco.outputs.coverage-overall < 92.0 }}
-                uses: thollander/actions-comment-pull-request@v3
-                with:
-                    message: ❌ **Dude, your code coverage is ${{ steps.jacoco.outputs.coverage-overall }} which is lower than the minimum coverage of 92%. Please go back and do the needful :wink**
-                    github-token: ${{secrets.GITHUB_TOKEN}}
-                    comment-tag: coverage
+            #  -   name: Verify minimum code coverage (90%)
+            #      run: ./gradlew testDebugUnitTest -Pkover koverVerify
 
             -   name: Post overall coverage violation
                 if: ${{ steps.jacoco.outputs.coverage-overall  < 92.0 }}
