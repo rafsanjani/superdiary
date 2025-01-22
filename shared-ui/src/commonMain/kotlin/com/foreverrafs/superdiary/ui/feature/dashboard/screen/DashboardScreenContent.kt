@@ -117,7 +117,10 @@ fun DashboardScreenContent(
 
     if (showBiometricAuthDialog) {
         ConfirmBiometricAuthDialog(
-            onEnableBiometric = onEnableBiometric,
+            onEnableBiometric = {
+                showBiometricAuthDialog = false
+                onEnableBiometric()
+            },
             onDismiss = {
                 showBiometricAuthDialog = false
                 onDisableBiometricAuth()
@@ -185,7 +188,8 @@ private fun dashboardItems(
             DashboardSection(
                 content = { onDismiss ->
                     WeeklySummaryCard(
-                        modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null)
+                        modifier = Modifier
+                            .animateItem(fadeInSpec = null, fadeOutSpec = null)
                             .fillMaxWidth()
                             .heightIn(max = 200.dp, min = 150.dp),
                         summary = state.weeklySummary,
@@ -214,8 +218,7 @@ private fun dashboardItems(
                     } else {
                         Button(
                             onClick = onAddEntry,
-                            modifier = Modifier
-                                .testTag("button_add_entry"),
+                            modifier = Modifier.testTag("button_add_entry"),
                         ) {
                             Text(
                                 text = stringResource(Res.string.label_add_entry),
@@ -267,8 +270,7 @@ private fun dashboardPlaceholderItems(
             DashboardSection(
                 content = { onDismiss ->
                     WeeklySummaryCard(
-                        modifier = Modifier
-                            .shimmer()
+                        modifier = Modifier.shimmer()
                             .animateItem(fadeInSpec = null, fadeOutSpec = null)
                             .fillMaxWidth()
                             .heightIn(max = 200.dp, min = 150.dp),
@@ -287,9 +289,11 @@ private fun dashboardPlaceholderItems(
             DashboardSection(
                 content = {
                     LatestEntries(
-                        modifier = Modifier
-                            .shimmer()
-                            .animateItem(fadeInSpec = null, fadeOutSpec = null),
+                        modifier = Modifier.shimmer()
+                            .animateItem(
+                                fadeInSpec = null,
+                                fadeOutSpec = null,
+                            ),
                         diaries = (0..2).map {
                             Diary(id = Random.nextLong(), entry = "")
                         },
@@ -434,14 +438,11 @@ private fun LatestEntries(
 ) {
     Column(modifier) {
         Row(
-            modifier = Modifier
-                .clickable(
-                    indication = null,
-                    interactionSource = MutableInteractionSource(),
-                    onClick = onSeeAll,
-                )
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
+            modifier = Modifier.clickable(
+                indication = null,
+                interactionSource = MutableInteractionSource(),
+                onClick = onSeeAll,
+            ).fillMaxWidth().padding(bottom = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
@@ -465,8 +466,7 @@ private fun LatestEntries(
                     diary = diary,
                     selected = false,
                     inSelectionMode = false,
-                    modifier = Modifier
-                        .clickable(onClick = { onDiaryClick(diary) })
+                    modifier = Modifier.clickable(onClick = { onDiaryClick(diary) })
                         .testTag("diary_list_item_$index"),
                     onToggleFavorite = { onToggleFavorite(diary) },
                 )
