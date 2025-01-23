@@ -57,9 +57,9 @@ class DiaryPreferenceImpl private constructor(
 
         return DiarySettings(
             isFirstLaunch = prefs[isFirstLaunchKey] ?: false,
-            showWeeklySummary = prefs[showWeeklySummaryKey] ?: false,
-            showAtAGlance = prefs[showAtAGlanceKey] ?: false,
-            showLatestEntries = prefs[showLatestEntriesKey] ?: false,
+            showWeeklySummary = prefs[showWeeklySummaryKey] ?: true,
+            showAtAGlance = prefs[showAtAGlanceKey] ?: true,
+            showLatestEntries = prefs[showLatestEntriesKey] ?: true,
             showLocationPermissionDialog = prefs[showLocationPermissionDialogKey] ?: false,
             showBiometricAuthDialog = prefs[showBiometricAuthDialogKey] ?: true,
             isBiometricAuthEnabled = prefs[isBiometricAuthEnabledKey] ?: false,

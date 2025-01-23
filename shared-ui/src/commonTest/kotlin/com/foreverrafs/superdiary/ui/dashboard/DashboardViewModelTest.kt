@@ -187,7 +187,8 @@ class DashboardViewModelTest {
     fun `Should save settings when dashboard ordering is changed`() = runTest {
         val viewModel = createDashboardViewModel()
 
-        viewModel.onUpdateSettings(DiarySettings.Empty)
+        viewModel.onUpdateSettings { DiarySettings.Empty }
+
         advanceUntilIdle()
 
         assertThat(diaryPreference.isSaveCalled).isTrue()
