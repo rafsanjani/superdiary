@@ -10,6 +10,7 @@
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
+		58033CFC2D437DB700A97874 /* BiometricAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58033CFB2D437DB700A97874 /* BiometricAuth.swift */; };
 		58072E372CDD90C000B59193 /* GoogleTokenProviderImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58072E362CDD90C000B59193 /* GoogleTokenProviderImpl.swift */; };
 		587B21362CDC0B6B0081E14F /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 587B21352CDC0B6B0081E14F /* GoogleSignIn */; };
 		587B21382CDC0B6B0081E14F /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 587B21372CDC0B6B0081E14F /* GoogleSignInSwift */; };
@@ -43,6 +44,7 @@
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
+		58033CFB2D437DB700A97874 /* BiometricAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricAuth.swift; sourceTree = "<group>"; };
 		58072E362CDD90C000B59193 /* GoogleTokenProviderImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleTokenProviderImpl.swift; sourceTree = "<group>"; };
 		58A8DBF12CA21EC60084B125 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		58DACF1E2C9E2ECE00664937 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 				58E13CED2CDAEC04007F1210 /* GoogleMap.swift */,
 				58E13CEF2CDB7DD1007F1210 /* LocationManager.swift */,
 				587B21332CDC0B160081E14F /* auth */,
+				58033CFB2D437DB700A97874 /* BiometricAuth.swift */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -303,6 +306,7 @@
 				58072E372CDD90C000B59193 /* GoogleTokenProviderImpl.swift in Sources */,
 				58E13CF02CDB7DD1007F1210 /* LocationManager.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
+				58033CFC2D437DB700A97874 /* BiometricAuth.swift in Sources */,
 				C98CCF64845DD8BB67A3E6A3 /* AppleAnalytics.swift in Sources */,
 				C98CCA9FD0F556E704236CA0 /* SentryLogger.swift in Sources */,
 			);
