@@ -51,7 +51,6 @@ import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryItem
 import com.foreverrafs.superdiary.ui.format
-import com.foreverrafs.superdiary.utils.DiarySettings
 import com.valentinilk.shimmer.shimmer
 import kotlin.random.Random
 import kotlinx.datetime.Clock
@@ -76,10 +75,11 @@ private const val WEEKLY_SUMMARY_ID = "weeklysummary"
 @Composable
 fun DashboardScreenContent(
     state: DashboardViewModel.DashboardScreenState,
-    settings: DiarySettings,
-    onChangeSettings: (DiarySettings) -> Unit,
     onAddEntry: () -> Unit,
     onDisableBiometricAuth: () -> Unit,
+    onToggleLatestEntries: () -> Unit,
+    onToggleWeeklySummaryCard: () -> Unit,
+    onToggleGlanceCard: () -> Unit,
     onSeeAll: () -> Unit,
     onEnableBiometric: () -> Unit,
     onDiaryClick: (diary: Diary) -> Unit,
@@ -102,16 +102,13 @@ fun DashboardScreenContent(
                 onSeeAll = onSeeAll,
                 onDiaryClicked = onDiaryClick,
                 onToggleFavorite = onToggleFavorite,
-                settings = settings,
             )
         }
 
         is DashboardViewModel.DashboardScreenState.Error -> TODO()
         is DashboardViewModel.DashboardScreenState.Loading -> {
             showShimmer = true
-            dashboardPlaceholderItems(
-                settings = settings,
-            )
+            dashboardPlaceholderItems()
         }
     }
 
@@ -143,15 +140,15 @@ fun DashboardScreenContent(
             content.content(this) {
                 when (content.id) {
                     AT_A_GLANCE_ID -> {
-                        onChangeSettings(settings.copy(showAtAGlance = false))
+                        onToggleGlanceCard()
                     }
 
                     WEEKLY_SUMMARY_ID -> {
-                        onChangeSettings(settings.copy(showWeeklySummary = false))
+                        onToggleWeeklySummaryCard()
                     }
 
                     LATEST_ENTRIES_ID -> {
-                        onChangeSettings(settings.copy(showLatestEntries = false))
+                        onToggleLatestEntries()
                     }
                 }
             }
@@ -162,13 +159,12 @@ fun DashboardScreenContent(
 @Suppress("LongMethod")
 private fun dashboardItems(
     state: DashboardViewModel.DashboardScreenState.Content,
-    settings: DiarySettings,
     onAddEntry: () -> Unit,
     onSeeAll: () -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
     onDiaryClicked: (diary: Diary) -> Unit,
 ): SnapshotStateList<DashboardSection> = mutableStateListOf<DashboardSection>().apply {
-    if (settings.showAtAGlance) {
+    if (state.showAtaGlance) {
         add(
             DashboardSection(
                 content = {
@@ -183,7 +179,7 @@ private fun dashboardItems(
         )
     }
 
-    if (settings.showWeeklySummary && state.totalEntries != 0L) {
+    if (state.showWeeklySummary && state.totalEntries != 0L) {
         add(
             DashboardSection(
                 content = { onDismiss ->
@@ -201,11 +197,11 @@ private fun dashboardItems(
         )
     }
 
-    if (settings.showLatestEntries) {
+    if (state.showLatestEntries) {
         add(
             DashboardSection(
                 content = {
-                    val itemCount = if (settings.showWeeklySummary) 2 else 4
+                    val itemCount = if (state.showWeeklySummary) 2 else 4
 
                     if (state.latestEntries.isNotEmpty()) {
                         LatestEntries(
@@ -234,10 +230,8 @@ private fun dashboardItems(
 }
 
 @Suppress("LongMethod")
-private fun dashboardPlaceholderItems(
-    settings: DiarySettings,
-): SnapshotStateList<DashboardSection> = mutableStateListOf<DashboardSection>().apply {
-    if (settings.showAtAGlance) {
+private fun dashboardPlaceholderItems(): SnapshotStateList<DashboardSection> =
+    mutableStateListOf<DashboardSection>().apply {
         add(
             DashboardSection(
                 content = {
@@ -263,9 +257,7 @@ private fun dashboardPlaceholderItems(
                 id = AT_A_GLANCE_ID,
             ),
         )
-    }
 
-    if (settings.showWeeklySummary) {
         add(
             DashboardSection(
                 content = { onDismiss ->
@@ -282,9 +274,7 @@ private fun dashboardPlaceholderItems(
                 id = WEEKLY_SUMMARY_ID,
             ),
         )
-    }
 
-    if (settings.showLatestEntries) {
         add(
             DashboardSection(
                 content = {
@@ -306,7 +296,6 @@ private fun dashboardPlaceholderItems(
             ),
         )
     }
-}
 
 @Composable
 private fun AtAGlance(

@@ -54,11 +54,12 @@ class DashboardViewModel(
             val currentStreak: Streak? = null,
             val bestStreak: Streak? = null,
             val showBiometricAuthDialog: Boolean? = null,
+            val showWeeklySummary: Boolean = true,
+            val showLatestEntries: Boolean = true,
+            val showAtaGlance: Boolean = true,
             val isBiometricAuthError: Boolean? = null,
         ) : DashboardScreenState
     }
-
-    val settings: Flow<DiarySettings> get() = preference.settings
 
     private val mutableState = MutableStateFlow<DashboardScreenState>(DashboardScreenState.Loading)
 
@@ -66,13 +67,29 @@ class DashboardViewModel(
 
     val state: StateFlow<DashboardScreenState> = mutableState
         .onStart {
-            loadDashboardContent()
+            viewModelScope.launch {
+                loadDashboardContent()
+                observeSettingsChanges()
+            }
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
             initialValue = DashboardScreenState.Loading,
         )
+
+    private fun observeSettingsChanges() = viewModelScope.launch {
+        preference.settings.collect { settings ->
+            updateContentState {
+                it.copy(
+                    showBiometricAuthDialog = settings.showBiometricAuthDialog && !settings.isBiometricAuthEnabled,
+                    showWeeklySummary = settings.showWeeklySummary,
+                    showLatestEntries = settings.showLatestEntries,
+                    showAtaGlance = settings.showAtAGlance,
+                )
+            }
+        }
+    }
 
     private fun loadDashboardContent() = viewModelScope.launch {
         logger.i(Tag) {
@@ -95,9 +112,12 @@ class DashboardViewModel(
                     }
 
                     mutableState.update {
+                        val settings = preference.getSnapshot()
+
                         val shouldShowBiometricDialog =
-                            preference.getSnapshot().showBiometricAuthDialog &&
-                                biometricAuth.canAuthenticate()
+                            settings.showBiometricAuthDialog &&
+                                biometricAuth.canAuthenticate() &&
+                                !settings.isBiometricAuthEnabled
 
                         DashboardScreenState.Content(
                             latestEntries = diaries.sortedByDescending { it.date }.take(4),
@@ -289,6 +309,7 @@ class DashboardViewModel(
                 updateContentState {
                     it.copy(
                         isBiometricAuthError = true,
+                        showBiometricAuthDialog = false,
                     )
                 }
             }
@@ -296,6 +317,7 @@ class DashboardViewModel(
             is BiometricAuth.AuthResult.Failed -> updateContentState {
                 it.copy(
                     isBiometricAuthError = true,
+                    showBiometricAuthDialog = false,
                 )
             }
 
@@ -310,17 +332,12 @@ class DashboardViewModel(
         }
     }
 
-    fun onUpdateSettings(settings: DiarySettings) = viewModelScope.launch {
-        logger.i(Tag) {
-            "updateSettings: Updating settings with values $settings"
-        }
-        preference.save { settings }
+    fun onUpdateSettings(block: (DiarySettings) -> DiarySettings) = viewModelScope.launch {
+        val settings = preference.getSnapshot()
+        val updatedSettings = block(settings)
 
-        // Update the content to reflect the current state
-        updateContentState {
-            it.copy(
-                showBiometricAuthDialog = settings.showBiometricAuthDialog,
-            )
+        preference.save {
+            updatedSettings
         }
     }
 

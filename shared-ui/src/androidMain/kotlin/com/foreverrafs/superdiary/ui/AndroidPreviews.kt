@@ -407,11 +407,12 @@ private fun DashboardPreview() {
             onAddEntry = {},
             onSeeAll = {},
             onToggleFavorite = {},
-            settings = DiarySettings.Empty,
-            onChangeSettings = {},
             onDiaryClick = {},
             onDisableBiometricAuth = {},
             onEnableBiometric = {},
+            onToggleLatestEntries = {},
+            onToggleWeeklySummaryCard = { },
+            onToggleGlanceCard = { },
         )
     }
 }
