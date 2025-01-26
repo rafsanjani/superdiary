@@ -34,10 +34,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.coroutines.yield
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CreateDiaryViewModelTest {
@@ -139,7 +139,7 @@ class CreateDiaryViewModelTest {
 
         createDiaryViewModel.onRequestLocationPermission()
 
-        yield()
+        advanceUntilIdle()
 
         assertThat(
             permissionsController.actionPerformed,
@@ -156,7 +156,7 @@ class CreateDiaryViewModelTest {
 
         createDiaryViewModel.onPermanentlyDismissLocationPermissionDialog()
 
-        yield()
+        advanceUntilIdle()
         verifySuspend { preference.save(any()) }
     }
 

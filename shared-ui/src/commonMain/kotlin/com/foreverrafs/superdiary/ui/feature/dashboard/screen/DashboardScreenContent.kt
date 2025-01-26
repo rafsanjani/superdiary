@@ -45,12 +45,12 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.foreverrafs.superdiary.design.components.ConfirmBiometricAuthDialog
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryItem
 import com.foreverrafs.superdiary.ui.format
-import com.foreverrafs.superdiary.utils.DiarySettings
 import com.valentinilk.shimmer.shimmer
 import kotlin.random.Random
 import kotlinx.datetime.Clock
@@ -75,17 +75,26 @@ private const val WEEKLY_SUMMARY_ID = "weeklysummary"
 @Composable
 fun DashboardScreenContent(
     state: DashboardViewModel.DashboardScreenState,
-    settings: DiarySettings,
-    onChangeSettings: (DiarySettings) -> Unit,
     onAddEntry: () -> Unit,
+    onDisableBiometricAuth: () -> Unit,
+    onToggleLatestEntries: () -> Unit,
+    onToggleWeeklySummaryCard: () -> Unit,
+    onToggleGlanceCard: () -> Unit,
     onSeeAll: () -> Unit,
+    onEnableBiometric: () -> Unit,
     onDiaryClick: (diary: Diary) -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showShimmer by remember { mutableStateOf(false) }
+    var showBiometricAuthDialog by remember {
+        mutableStateOf(false)
+    }
+
     val dashboardItems = when (state) {
         is DashboardViewModel.DashboardScreenState.Content -> {
+            showBiometricAuthDialog = state.showBiometricAuthDialog == true
+
             showShimmer = false
             dashboardItems(
                 state = state,
@@ -93,17 +102,30 @@ fun DashboardScreenContent(
                 onSeeAll = onSeeAll,
                 onDiaryClicked = onDiaryClick,
                 onToggleFavorite = onToggleFavorite,
-                settings = settings,
             )
         }
 
         is DashboardViewModel.DashboardScreenState.Error -> TODO()
         is DashboardViewModel.DashboardScreenState.Loading -> {
             showShimmer = true
-            dashboardPlaceholderItems(
-                settings = settings,
-            )
+            dashboardPlaceholderItems()
         }
+    }
+
+    if (showBiometricAuthDialog) {
+        ConfirmBiometricAuthDialog(
+            onEnableBiometric = {
+                showBiometricAuthDialog = false
+                onEnableBiometric()
+            },
+            onDismiss = {
+                showBiometricAuthDialog = false
+                onDisableBiometricAuth()
+            },
+            onDismissRequest = {
+                showBiometricAuthDialog = false
+            },
+        )
     }
 
     LazyColumn(
@@ -118,15 +140,15 @@ fun DashboardScreenContent(
             content.content(this) {
                 when (content.id) {
                     AT_A_GLANCE_ID -> {
-                        onChangeSettings(settings.copy(showAtAGlance = false))
+                        onToggleGlanceCard()
                     }
 
                     WEEKLY_SUMMARY_ID -> {
-                        onChangeSettings(settings.copy(showWeeklySummary = false))
+                        onToggleWeeklySummaryCard()
                     }
 
                     LATEST_ENTRIES_ID -> {
-                        onChangeSettings(settings.copy(showLatestEntries = false))
+                        onToggleLatestEntries()
                     }
                 }
             }
@@ -137,13 +159,12 @@ fun DashboardScreenContent(
 @Suppress("LongMethod")
 private fun dashboardItems(
     state: DashboardViewModel.DashboardScreenState.Content,
-    settings: DiarySettings,
     onAddEntry: () -> Unit,
     onSeeAll: () -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
     onDiaryClicked: (diary: Diary) -> Unit,
 ): SnapshotStateList<DashboardSection> = mutableStateListOf<DashboardSection>().apply {
-    if (settings.showAtAGlance) {
+    if (state.showAtaGlance) {
         add(
             DashboardSection(
                 content = {
@@ -158,12 +179,13 @@ private fun dashboardItems(
         )
     }
 
-    if (settings.showWeeklySummary && state.totalEntries != 0L) {
+    if (state.showWeeklySummary && state.totalEntries != 0L) {
         add(
             DashboardSection(
                 content = { onDismiss ->
                     WeeklySummaryCard(
-                        modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null)
+                        modifier = Modifier
+                            .animateItem(fadeInSpec = null, fadeOutSpec = null)
                             .fillMaxWidth()
                             .heightIn(max = 200.dp, min = 150.dp),
                         summary = state.weeklySummary,
@@ -175,11 +197,11 @@ private fun dashboardItems(
         )
     }
 
-    if (settings.showLatestEntries) {
+    if (state.showLatestEntries) {
         add(
             DashboardSection(
                 content = {
-                    val itemCount = if (settings.showWeeklySummary) 2 else 4
+                    val itemCount = if (state.showWeeklySummary) 2 else 4
 
                     if (state.latestEntries.isNotEmpty()) {
                         LatestEntries(
@@ -192,8 +214,7 @@ private fun dashboardItems(
                     } else {
                         Button(
                             onClick = onAddEntry,
-                            modifier = Modifier
-                                .testTag("button_add_entry"),
+                            modifier = Modifier.testTag("button_add_entry"),
                         ) {
                             Text(
                                 text = stringResource(Res.string.label_add_entry),
@@ -209,10 +230,8 @@ private fun dashboardItems(
 }
 
 @Suppress("LongMethod")
-private fun dashboardPlaceholderItems(
-    settings: DiarySettings,
-): SnapshotStateList<DashboardSection> = mutableStateListOf<DashboardSection>().apply {
-    if (settings.showAtAGlance) {
+private fun dashboardPlaceholderItems(): SnapshotStateList<DashboardSection> =
+    mutableStateListOf<DashboardSection>().apply {
         add(
             DashboardSection(
                 content = {
@@ -238,15 +257,12 @@ private fun dashboardPlaceholderItems(
                 id = AT_A_GLANCE_ID,
             ),
         )
-    }
 
-    if (settings.showWeeklySummary) {
         add(
             DashboardSection(
                 content = { onDismiss ->
                     WeeklySummaryCard(
-                        modifier = Modifier
-                            .shimmer()
+                        modifier = Modifier.shimmer()
                             .animateItem(fadeInSpec = null, fadeOutSpec = null)
                             .fillMaxWidth()
                             .heightIn(max = 200.dp, min = 150.dp),
@@ -258,16 +274,16 @@ private fun dashboardPlaceholderItems(
                 id = WEEKLY_SUMMARY_ID,
             ),
         )
-    }
 
-    if (settings.showLatestEntries) {
         add(
             DashboardSection(
                 content = {
                     LatestEntries(
-                        modifier = Modifier
-                            .shimmer()
-                            .animateItem(fadeInSpec = null, fadeOutSpec = null),
+                        modifier = Modifier.shimmer()
+                            .animateItem(
+                                fadeInSpec = null,
+                                fadeOutSpec = null,
+                            ),
                         diaries = (0..2).map {
                             Diary(id = Random.nextLong(), entry = "")
                         },
@@ -280,7 +296,6 @@ private fun dashboardPlaceholderItems(
             ),
         )
     }
-}
 
 @Composable
 private fun AtAGlance(
@@ -290,12 +305,12 @@ private fun AtAGlance(
     val animationState = remember { MutableTransitionState(false) }
 
     val currentStreakCount by animateIntAsState(
-        targetValue = if (animationState.targetState) state.currentStreak.count else 0,
+        targetValue = if (animationState.targetState) state.currentStreak?.count ?: 0 else 0,
         animationSpec = tween(durationMillis = 1000),
     )
 
     val bestStreakCount by animateIntAsState(
-        targetValue = if (animationState.targetState) state.bestStreak.count else 0,
+        targetValue = if (animationState.targetState) state.bestStreak?.count ?: 0 else 0,
         animationSpec = tween(durationMillis = 1000),
     )
 
@@ -323,11 +338,11 @@ private fun AtAGlance(
         ) {
             val dashboardCardModifier = Modifier.weight(1f).aspectRatio(1f)
 
-            fun streakCaption(streak: Streak): String {
+            fun streakCaption(streak: Streak?): String {
                 val dateFormatPattern = "MMM dd"
-                return if (streak.count != 0) {
-                    "${streak.startDate.format(dateFormatPattern)} - ${
-                        streak.endDate.format(
+                return if (streak?.count != 0) {
+                    "${streak?.startDate?.format(dateFormatPattern)} - ${
+                        streak?.endDate?.format(
                             dateFormatPattern,
                         )
                     }"
@@ -412,14 +427,11 @@ private fun LatestEntries(
 ) {
     Column(modifier) {
         Row(
-            modifier = Modifier
-                .clickable(
-                    indication = null,
-                    interactionSource = MutableInteractionSource(),
-                    onClick = onSeeAll,
-                )
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
+            modifier = Modifier.clickable(
+                indication = null,
+                interactionSource = MutableInteractionSource(),
+                onClick = onSeeAll,
+            ).fillMaxWidth().padding(bottom = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
@@ -443,8 +455,7 @@ private fun LatestEntries(
                     diary = diary,
                     selected = false,
                     inSelectionMode = false,
-                    modifier = Modifier
-                        .clickable(onClick = { onDiaryClick(diary) })
+                    modifier = Modifier.clickable(onClick = { onDiaryClick(diary) })
                         .testTag("diary_list_item_$index"),
                     onToggleFavorite = { onToggleFavorite(diary) },
                 )

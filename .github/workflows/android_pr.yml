@@ -53,30 +53,27 @@ jobs:
                 uses: gradle/actions/setup-gradle@v4
 
             -   name: Snapshot test (shared-ui)
-                run: ./gradlew verifyPaparazziDebug
+                run: ./gradlew verifyPaparazziDebug --continue
 
             -   name: Commit and Push Images to GitHub Pages
                 if: failure()
-                run: |
-                    git config --global user.name "GitHub Actions"
-                    git config --global user.email "actions@github.com"
-                    git checkout --orphan paparazzi-snapshots-$BUILD_NUMBER
-                    git reset
-                    cp -R shared-ui/build/paparazzi/failures/delta-* .
-                    git add delta-*
-                    git commit -m "Upload paparazzi failures"
-                    git push --force origin paparazzi-snapshots-$BUILD_NUMBER
+                run: ./commit-images.sh
 
             -   name: Generate snapshot difference markdown
                 if: failure()
                 run: ./gradlew createPaparazziReportComment
+
+            -   name: Print out contents of snapshots.md
+                if: failure()
+                run: cat snapshots.md
 
             -   name: Comment snapshot difference markdown file on PR
                 uses: thollander/actions-comment-pull-request@v3
                 if: failure()
                 with:
                     file-path: snapshots.md
-                    comment-tag: execution
+                    github-token: ${{secrets.GITHUB_TOKEN}}
+                    comment-tag: snapshots
 
     iosTest:
         name: Run iOS unit tests
@@ -131,7 +128,7 @@ jobs:
                     min-coverage-overall: 92
                     min-coverage-changed-files: 85
 
-            -   name: Store coverage info
+            -   name: Print code coverage info
                 run: |
                     echo "Total coverage ${{ steps.jacoco.outputs.coverage-overall }}"
                     echo "Changed Files coverage ${{ steps.jacoco.outputs.coverage-changed-files }}"
@@ -143,15 +140,15 @@ jobs:
                     script: |
                         core.setFailed('Coverage for changed files ${{steps.jacoco.outputs.coverage-changed-files}} is less than 80%!')
 
-            #            -   name: Verify minimum code coverage (90%)
-            #                run: ./gradlew testDebugUnitTest -Pkover koverVerify
+            #  -   name: Verify minimum code coverage (90%)
+            #      run: ./gradlew testDebugUnitTest -Pkover koverVerify
 
-            -   name: Post overall project coverage violation
-                if: ${{ steps.jacoco.outputs.coverage-overall < 92.0 }}
+            -   name: Post overall coverage violation
+                if: ${{ steps.jacoco.outputs.coverage-overall  < 92.0 }}
                 uses: actions/github-script@v7
                 with:
                     script: |
-                        core.setFailed('❌ **Dude, your code coverage is ${{ steps.jacoco.outputs.coverage-overall }} which is lower than the minimum coverage of 92%. Please go back and do the needful :wink**')
+                        core.setFailed('Coverage for total project: ${{steps.jacoco.outputs.coverage-overall}} is less than 92%!')
 
             -   name: Update dynamic badge gist
                 if: github.ref == 'refs/heads/development'

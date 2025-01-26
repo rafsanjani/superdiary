@@ -17,7 +17,7 @@ import kotlinx.coroutines.internal.synchronized
 
 interface DiaryPreference {
     val settings: Flow<DiarySettings>
-    suspend fun save(settings: DiarySettings)
+    suspend fun save(block: (DiarySettings) -> DiarySettings)
     suspend fun getSnapshot(): DiarySettings
     suspend fun clear()
 }
@@ -37,14 +37,18 @@ class DiaryPreferenceImpl private constructor(
     private val showLatestEntriesKey = booleanPreferencesKey("showLatestEntries")
     private val showLocationPermissionDialogKey =
         booleanPreferencesKey("showLocationPermissionDialog")
+    private val showBiometricAuthDialogKey = booleanPreferencesKey("showBiometricAuthDialog")
+    private val isBiometricAuthEnabledKey = booleanPreferencesKey("isBiometricsAuthEnabled")
 
     override val settings: Flow<DiarySettings> = dataStore.data.map {
         DiarySettings(
-            isFirstLaunch = it[isFirstLaunchKey] != false,
-            showWeeklySummary = it[showWeeklySummaryKey] != false,
-            showAtAGlance = it[showAtAGlanceKey] != false,
-            showLatestEntries = it[showLatestEntriesKey] != false,
-            showLocationPermissionDialog = it[showLocationPermissionDialogKey] != false,
+            isFirstLaunch = it[isFirstLaunchKey] ?: true,
+            showWeeklySummary = it[showWeeklySummaryKey] ?: true,
+            showAtAGlance = it[showAtAGlanceKey] ?: true,
+            showLatestEntries = it[showLatestEntriesKey] ?: true,
+            showLocationPermissionDialog = it[showLocationPermissionDialogKey] ?: true,
+            showBiometricAuthDialog = it[showBiometricAuthDialogKey] ?: true,
+            isBiometricAuthEnabled = it[isBiometricAuthEnabledKey] ?: false,
         )
     }
 
@@ -52,21 +56,28 @@ class DiaryPreferenceImpl private constructor(
         val prefs = dataStore.data.first()
 
         return DiarySettings(
-            isFirstLaunch = prefs[isFirstLaunchKey] != false,
-            showWeeklySummary = prefs[showWeeklySummaryKey] != false,
-            showAtAGlance = prefs[showAtAGlanceKey] != false,
-            showLatestEntries = prefs[showLatestEntriesKey] != false,
-            showLocationPermissionDialog = prefs[showLocationPermissionDialogKey] != false,
+            isFirstLaunch = prefs[isFirstLaunchKey] ?: false,
+            showWeeklySummary = prefs[showWeeklySummaryKey] ?: true,
+            showAtAGlance = prefs[showAtAGlanceKey] ?: true,
+            showLatestEntries = prefs[showLatestEntriesKey] ?: true,
+            showLocationPermissionDialog = prefs[showLocationPermissionDialogKey] ?: false,
+            showBiometricAuthDialog = prefs[showBiometricAuthDialogKey] ?: true,
+            isBiometricAuthEnabled = prefs[isBiometricAuthEnabledKey] ?: false,
         )
     }
 
-    override suspend fun save(settings: DiarySettings) {
+    override suspend fun save(block: (DiarySettings) -> DiarySettings) {
+        val currentSettings = getSnapshot()
+        val settings = block(currentSettings)
+
         dataStore.edit {
             it[isFirstLaunchKey] = settings.isFirstLaunch
             it[showWeeklySummaryKey] = settings.showWeeklySummary
             it[showAtAGlanceKey] = settings.showAtAGlance
             it[showLatestEntriesKey] = settings.showLatestEntries
             it[showLocationPermissionDialogKey] = settings.showLocationPermissionDialog
+            it[showBiometricAuthDialogKey] = settings.showBiometricAuthDialog
+            it[isBiometricAuthEnabledKey] = settings.isBiometricAuthEnabled
         }
         logger.d(Tag) {
             "Settings saved: $settings"
@@ -106,15 +117,19 @@ data class DiarySettings(
     val showWeeklySummary: Boolean,
     val showAtAGlance: Boolean,
     val showLatestEntries: Boolean,
+    val isBiometricAuthEnabled: Boolean,
     val showLocationPermissionDialog: Boolean,
+    val showBiometricAuthDialog: Boolean,
 ) {
     companion object {
         val Empty: DiarySettings = DiarySettings(
-            isFirstLaunch = false,
+            isFirstLaunch = true,
             showWeeklySummary = true,
             showAtAGlance = true,
             showLatestEntries = true,
             showLocationPermissionDialog = true,
+            showBiometricAuthDialog = true,
+            isBiometricAuthEnabled = false,
         )
     }
 }

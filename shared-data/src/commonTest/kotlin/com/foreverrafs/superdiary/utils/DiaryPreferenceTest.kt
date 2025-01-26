@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.utils
 
+import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
@@ -14,16 +15,16 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import okio.Path
 import okio.Path.Companion.toPath
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiaryPreferenceTest {
 
-    private val dataStorePathResolver: DataStorePathResolver = object : DataStorePathResolver {
-        // The path used here is compatible with all platforms
-        override fun resolve(filename: String): Path = "/tmp/Test/TempPath/$filename".toPath()
-    }
+    private val dataStorePathResolver: DataStorePathResolver =
+        DataStorePathResolver { filename ->
+            // The path used here is compatible with all platforms
+            "/tmp/Test/TempPath/$filename".toPath()
+        }
     private val diaryPreference: DiaryPreference =
         DiaryPreferenceImpl.getInstance(
             filename = "superdiary.preferences_pb",
@@ -49,11 +50,21 @@ class DiaryPreferenceTest {
             showAtAGlance = true,
             showLatestEntries = true,
             showLocationPermissionDialog = false,
+            showBiometricAuthDialog = false,
+            isBiometricAuthEnabled = false,
         )
 
-        diaryPreference.save(
-            settings = initialSettings,
-        )
+        diaryPreference.save {
+            it.copy(
+                isFirstLaunch = initialSettings.isFirstLaunch,
+                showWeeklySummary = initialSettings.showWeeklySummary,
+                showAtAGlance = initialSettings.showAtAGlance,
+                showLatestEntries = initialSettings.showLatestEntries,
+                showLocationPermissionDialog = initialSettings.showLocationPermissionDialog,
+                showBiometricAuthDialog = initialSettings.showBiometricAuthDialog,
+                isBiometricAuthEnabled = initialSettings.isBiometricAuthEnabled,
+            )
+        }
 
         // The settings flow is not emitting immediately after a call to save
         // in testing. Use the snapshot to get the latest value from it and test that
@@ -67,9 +78,19 @@ class DiaryPreferenceTest {
             showAtAGlance = false,
             showLatestEntries = true,
             showLocationPermissionDialog = false,
+            isBiometricAuthEnabled = false,
+            showBiometricAuthDialog = false,
         )
 
-        diaryPreference.save(updatedSettings)
+        diaryPreference.save {
+            it.copy(
+                isFirstLaunch = updatedSettings.isFirstLaunch,
+                showWeeklySummary = updatedSettings.showWeeklySummary,
+                showAtAGlance = updatedSettings.showAtAGlance,
+                showLatestEntries = updatedSettings.showLatestEntries,
+                showLocationPermissionDialog = updatedSettings.showLocationPermissionDialog,
+            )
+        }
         val finalState = diaryPreference.getSnapshot()
         assertThat(finalState).isEqualTo(updatedSettings)
     }
@@ -90,10 +111,15 @@ class DiaryPreferenceTest {
 
     @Test
     fun `Should reset data when preference is cleared`() = runTest {
-        val initial = diaryPreference.getSnapshot()
+        diaryPreference.save {
+            it.copy(isFirstLaunch = false)
+        }
 
-        diaryPreference.save(initial.copy(isFirstLaunch = false))
+        // Should reset isFirstLaunch back to true
         diaryPreference.clear()
-        assertThat(diaryPreference.getSnapshot().isFirstLaunch).isTrue()
+
+        diaryPreference.settings.test {
+            assertThat(awaitItem().isFirstLaunch).isTrue()
+        }
     }
 }

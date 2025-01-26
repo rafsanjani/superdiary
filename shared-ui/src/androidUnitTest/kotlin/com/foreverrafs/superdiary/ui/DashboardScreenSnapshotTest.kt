@@ -8,7 +8,6 @@ import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardScreenContent
-import com.foreverrafs.superdiary.utils.DiarySettings
 import com.foreverrafs.superdiary.utils.toDate
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
@@ -64,9 +63,55 @@ class DashboardScreenSnapshotTest(
                     onAddEntry = {},
                     onSeeAll = {},
                     onToggleFavorite = {},
-                    settings = DiarySettings.Empty,
-                    onChangeSettings = {},
                     onDiaryClick = {},
+                    onDisableBiometricAuth = {},
+                    onEnableBiometric = {},
+                    onToggleLatestEntries = {},
+                    onToggleWeeklySummaryCard = {},
+                    onToggleGlanceCard = {},
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `Dashboard Screen - Show biometric dialog when showBiometricAuthDialog is set to true`() {
+        paparazzi.snapshot {
+            SuperDiaryPreviewTheme {
+                DashboardScreenContent(
+                    state = DashboardViewModel.DashboardScreenState.Content(
+                        latestEntries = (0..3).map {
+                            Diary(
+                                id = it.toLong(),
+                                entry = "<strong>Awesome</strong> Diary",
+                                date = testClock.now(),
+                                isFavorite = false,
+                                location = Location.Empty,
+                            )
+                        },
+                        totalEntries = 3,
+                        weeklySummary = "This is the weekly summary of all the entries",
+                        currentStreak = Streak(
+                            0,
+                            testClock.now().toDate(),
+                            testClock.now().toDate(),
+                        ),
+                        bestStreak = Streak(
+                            0,
+                            testClock.now().toDate(),
+                            testClock.now().toDate(),
+                        ),
+                        showBiometricAuthDialog = true,
+                    ),
+                    onAddEntry = {},
+                    onSeeAll = {},
+                    onToggleFavorite = {},
+                    onDiaryClick = {},
+                    onDisableBiometricAuth = {},
+                    onEnableBiometric = {},
+                    onToggleLatestEntries = {},
+                    onToggleWeeklySummaryCard = {},
+                    onToggleGlanceCard = {},
                 )
             }
         }
@@ -99,15 +144,17 @@ class DashboardScreenSnapshotTest(
                             testClock.now().toDate(),
                             testClock.now().toDate(),
                         ),
+                        showWeeklySummary = false,
                     ),
                     onAddEntry = {},
                     onSeeAll = {},
                     onToggleFavorite = {},
-                    settings = DiarySettings.Empty.copy(
-                        showWeeklySummary = false,
-                    ),
-                    onChangeSettings = {},
                     onDiaryClick = {},
+                    onDisableBiometricAuth = {},
+                    onEnableBiometric = {},
+                    onToggleLatestEntries = {},
+                    onToggleWeeklySummaryCard = {},
+                    onToggleGlanceCard = {},
                 )
             }
         }
@@ -140,16 +187,19 @@ class DashboardScreenSnapshotTest(
                             testClock.now().toDate(),
                             testClock.now().toDate(),
                         ),
+                        showLatestEntries = false,
+                        showWeeklySummary = true,
                     ),
                     onAddEntry = {},
                     onSeeAll = {},
                     onToggleFavorite = {},
-                    settings = DiarySettings.Empty.copy(
-                        showWeeklySummary = true,
-                        showLatestEntries = false,
-                    ),
-                    onChangeSettings = {},
+
                     onDiaryClick = {},
+                    onDisableBiometricAuth = {},
+                    onEnableBiometric = {},
+                    onToggleLatestEntries = {},
+                    onToggleWeeklySummaryCard = {},
+                    onToggleGlanceCard = {},
                 )
             }
         }
