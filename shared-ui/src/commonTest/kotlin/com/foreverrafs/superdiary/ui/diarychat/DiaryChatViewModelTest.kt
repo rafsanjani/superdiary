@@ -10,11 +10,11 @@ import com.foreverrafs.superdiary.ai.domain.repository.DiaryAiRepository
 import com.foreverrafs.superdiary.ai.domain.usecase.GetChatMessagesUseCase
 import com.foreverrafs.superdiary.ai.domain.usecase.SaveChatMessageUseCase
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
+import com.foreverrafs.superdiary.common.coroutines.awaitUntil
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.ui.awaitUntil
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
 import dev.mokkery.answering.returns
 import dev.mokkery.every

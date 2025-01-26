@@ -17,13 +17,6 @@ import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewData
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreenContent
-import com.foreverrafs.superdiary.ui.feature.auth.login.BiometricLoginScreenState
-import com.foreverrafs.superdiary.ui.feature.auth.login.screen.BiometricLoginScreenContent
-import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginScreenContent
-import com.foreverrafs.superdiary.ui.feature.auth.login.screen.LoginViewState
-import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenContent
-import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegisterScreenState
-import com.foreverrafs.superdiary.ui.feature.auth.register.screen.RegistrationConfirmationScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardScreenContent
@@ -77,17 +70,17 @@ fun TestAppContainer(
     }
 }
 
-@Composable
-@PreviewSuperDiary
-private fun BiometricLoginScreen() {
-    SuperDiaryTheme {
-        BiometricLoginScreenContent(
-            viewState = BiometricLoginScreenState.Idle,
-            onBiometricAuthSuccess = {},
-            showBiometricAuthErrorDialog = false,
-        )
-    }
-}
+// @Composable
+// @PreviewSuperDiary
+// private fun BiometricLoginScreen() {
+//    SuperDiaryTheme {
+//        BiometricLoginScreenContent(
+//            viewState = BiometricLoginScreenState.Idle,
+//            onBiometricAuthSuccess = {},
+//            showBiometricAuthErrorDialog = false,
+//        )
+//    }
+// }
 
 @PreviewSuperDiary
 @Composable
@@ -125,17 +118,17 @@ private fun ProfileScreenPreviewLogoutDialog() {
     )
 }
 
-@Composable
-@PreviewSuperDiary
-private fun RegistrationConfirmationPreview() {
-    SuperDiaryTheme {
-        SuperDiaryTheme {
-            Surface(color = MaterialTheme.colorScheme.background) {
-                RegistrationConfirmationScreen()
-            }
-        }
-    }
-}
+// @Composable
+// @PreviewSuperDiary
+// private fun RegistrationConfirmationPreview() {
+//    SuperDiaryTheme {
+//        SuperDiaryTheme {
+//            Surface(color = MaterialTheme.colorScheme.background) {
+//                RegistrationConfirmationScreen()
+//            }
+//        }
+//    }
+// }
 
 @PreviewSuperDiary
 @Composable
@@ -474,34 +467,34 @@ private fun DetailPreview() {
     }
 }
 
-@Composable
-@PreviewSuperDiary
-private fun LoginPreview() {
-    SuperDiaryTheme {
-        LoginScreenContent(
-            onLoginWithGoogle = {},
-            onLoginClick = { _, _ -> },
-            onRegisterClick = {},
-            viewState = LoginViewState.Idle,
-            onSignInSuccess = {},
-            isFromDeeplink = false,
-            onResetPasswordClick = {},
-        )
-    }
-}
-
-@Composable
-@PreviewSuperDiary
-private fun RegisterPreview() {
-    SuperDiaryTheme {
-        RegisterScreenContent(
-            onRegisterClick = { _, _, _ -> },
-            viewState = RegisterScreenState.Idle,
-            onRegisterSuccess = {},
-            onLoginClick = {},
-        )
-    }
-}
+// @Composable
+// @PreviewSuperDiary
+// private fun LoginPreview() {
+//    SuperDiaryTheme {
+//        LoginScreenContent(
+//            onLoginWithGoogle = {},
+//            onLoginClick = { _, _ -> },
+//            onRegisterClick = {},
+//            viewState = LoginViewState.Idle,
+//            onSignInSuccess = {},
+//            isFromDeeplink = false,
+//            onResetPasswordClick = {},
+//        )
+//    }
+// }
+//
+// @Composable
+// @PreviewSuperDiary
+// private fun RegisterPreview() {
+//    SuperDiaryTheme {
+//        RegisterScreenContent(
+//            onRegisterClick = { _, _, _ -> },
+//            viewState = RegisterScreenState.Idle,
+//            onRegisterSuccess = {},
+//            onLoginClick = {},
+//        )
+//    }
+// }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")
