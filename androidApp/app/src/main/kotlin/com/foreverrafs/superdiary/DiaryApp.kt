@@ -10,11 +10,10 @@ import com.foreverrafs.superdiary.core.logging.SentryLogger
 import com.foreverrafs.superdiary.ui.di.compositeModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 
 class DiaryApp : Application(), KoinComponent {
-    private val androidContextProvider: AndroidContextProvider by inject()
+    private val androidContextProvider = AndroidContextProvider.getInstance()
     override fun onCreate() {
         super.onCreate()
         initializeKoin()
@@ -22,36 +21,30 @@ class DiaryApp : Application(), KoinComponent {
     }
 
     private fun registerAndroidContextProviderCallbacks() {
-        registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
-            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                androidContextProvider.setContext(activity)
-            }
+        registerActivityLifecycleCallbacks(
+            object : ActivityLifecycleCallbacks {
+                override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) =
+                    Unit
 
-            override fun onActivityStarted(activity: Activity) {
-                androidContextProvider.setContext(activity)
-            }
+                override fun onActivityStarted(activity: Activity) = Unit
 
-            // Sometimes activities will cycle between paused and resumed states
-            override fun onActivityResumed(activity: Activity) {
-                androidContextProvider.setContext(activity)
-            }
+                // Sometimes activities will cycle between paused and resumed states
+                override fun onActivityResumed(activity: Activity) {
+                    androidContextProvider.setContext(activity)
+                }
 
-            override fun onActivityPaused(activity: Activity) {
-                androidContextProvider.clearContext()
-            }
+                override fun onActivityPaused(activity: Activity) {
+                    androidContextProvider.clearContext()
+                }
 
-            // Cleared in onPaused but being extra cautious
-            override fun onActivityStopped(activity: Activity) {
-                androidContextProvider.clearContext()
-            }
+                override fun onActivityStopped(activity: Activity) = Unit
 
-            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
+                override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) =
+                    Unit
 
-            // Cleared in onPaused but being extra cautious
-            override fun onActivityDestroyed(activity: Activity) {
-                androidContextProvider.clearContext()
-            }
-        })
+                override fun onActivityDestroyed(activity: Activity) = Unit
+            },
+        )
     }
 
     private fun initializeKoin() {
