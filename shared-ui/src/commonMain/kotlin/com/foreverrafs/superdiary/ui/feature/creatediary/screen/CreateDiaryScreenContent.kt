@@ -38,10 +38,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
+import com.foreverrafs.superdiary.design.components.BackHandler
 import com.foreverrafs.superdiary.design.components.ConfirmSaveDialog
 import com.foreverrafs.superdiary.design.components.LocationRationaleDialog
 import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
-import com.foreverrafs.superdiary.ui.BackHandler
 import com.foreverrafs.superdiary.ui.feature.creatediary.components.RichTextStyleRow
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState

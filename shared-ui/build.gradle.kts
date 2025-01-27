@@ -79,6 +79,7 @@ kotlin {
                 api(projects.designSystem)
                 implementation(projects.feature.diaryAi)
                 implementation(projects.feature.diaryProfile)
+                implementation(projects.feature.diaryAuth)
             }
         }
 

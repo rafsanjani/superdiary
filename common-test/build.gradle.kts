@@ -26,6 +26,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.koin.core)
                 implementation(projects.commonUtils)
+                implementation(libs.turbine)
             }
         }
 

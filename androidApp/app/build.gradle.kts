@@ -137,6 +137,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.google.material)
     implementation(projects.sharedUi)
+    implementation(projects.feature.diaryAuth)
     implementation(projects.core.analytics)
     implementation(libs.koin.android)
     implementation(libs.androidx.core)

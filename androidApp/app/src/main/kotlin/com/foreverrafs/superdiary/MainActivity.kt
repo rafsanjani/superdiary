@@ -8,9 +8,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.ui.App
-import com.foreverrafs.superdiary.ui.feature.auth.register.DeeplinkContainer
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import org.koin.android.ext.android.inject
