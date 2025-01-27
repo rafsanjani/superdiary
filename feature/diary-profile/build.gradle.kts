@@ -36,7 +36,7 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.kotlin.datetime)
-            implementation(projects.core.auth)
+            implementation(projects.core.authentication)
             implementation(projects.commonUtils)
             implementation(projects.sharedData)
             implementation("org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.8.4")

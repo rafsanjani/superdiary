@@ -36,7 +36,7 @@ kotlin {
             export(projects.core.analytics)
             export(projects.core.logging)
             export(projects.core.location)
-            export(projects.core.auth)
+            export(projects.core.authentication)
         }
     }
 
@@ -72,7 +72,7 @@ kotlin {
                     implementation("com.valentinilk.shimmer:compose-shimmer:1.3.1")
                 }
                 implementation(libs.koin.compose.viewmodel)
-                api(projects.core.auth)
+                api(projects.core.authentication)
                 api(projects.core.analytics)
                 api(projects.core.location)
                 api(projects.core.logging)
