@@ -34,7 +34,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(compose.materialIconsExtended)
             implementation(projects.core.logging)
-            implementation("org.jetbrains.androidx.core:core-uri:1.1.0-alpha02")
+            implementation("org.jetbrains.androidx.core:core-uri:1.1.0-SNAPSHOT+pull-1739")
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
