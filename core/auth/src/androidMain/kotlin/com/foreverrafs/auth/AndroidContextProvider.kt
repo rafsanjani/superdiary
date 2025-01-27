@@ -1,5 +1,6 @@
 package com.foreverrafs.auth
 
+import android.annotation.SuppressLint
 import android.content.Context
 
 /**
@@ -11,9 +12,15 @@ import android.content.Context
  * This should only be used from the Application class where it can be
  * cleared in a structured manner
  */
-class AndroidContextProvider {
+class AndroidContextProvider private constructor() {
     private var context: Context? = null
     fun getContext(): Context? = context
+
+    companion object {
+        @SuppressLint("StaticFieldLeak")
+        private val instance = AndroidContextProvider()
+        fun getInstance(): AndroidContextProvider = instance
+    }
 
     fun setContext(context: Context) {
         this.context = context
