@@ -5,6 +5,7 @@ import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
+import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.location.Location
@@ -17,7 +18,6 @@ import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.ui.creatediary.FakePermissionsControllerWrapper.ActionPerformed.ProvidePermission
 import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
-import com.foreverrafs.superdiary.utils.DiaryPreference
 import com.foreverrafs.superdiary.utils.DiarySettings
 import dev.mokkery.answering.returns
 import dev.mokkery.every

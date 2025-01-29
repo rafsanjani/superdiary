@@ -1,7 +1,11 @@
 package com.foreverrafs.superdiary.di
 
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import com.foreverrafs.preferences.DiaryPreference
+import com.foreverrafs.preferences.DiaryPreferenceImpl
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
+import com.foreverrafs.superdiary.data.DataStorePathResolver
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.data.datasource.RemoteDataSource
 import com.foreverrafs.superdiary.database.di.databaseModule
@@ -23,8 +27,7 @@ import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.domain.validator.DiaryValidator
 import com.foreverrafs.superdiary.domain.validator.DiaryValidatorImpl
-import com.foreverrafs.superdiary.utils.DiaryPreference
-import com.foreverrafs.superdiary.utils.DiaryPreferenceImpl
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.datetime.Clock
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.bind
@@ -32,6 +35,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
+@OptIn(InternalCoroutinesApi::class)
 val useCaseModule = module {
     includes(databaseModule())
 
@@ -44,8 +48,11 @@ val useCaseModule = module {
 
     factory<DiaryPreference> {
         DiaryPreferenceImpl.getInstance(
-            dataStorePathResolver = get(),
-            logger = get(),
+            dataStore = PreferenceDataStoreFactory.createWithPath {
+                get<DataStorePathResolver>().resolve(
+                    "diary_preferences.preferences_pb",
+                )
+            },
         )
     }
     factoryOf(::DiaryValidatorImpl) { bind<DiaryValidator>() }

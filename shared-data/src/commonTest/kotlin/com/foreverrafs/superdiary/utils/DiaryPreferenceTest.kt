@@ -1,17 +1,20 @@
 package com.foreverrafs.superdiary.utils
 
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
+import com.foreverrafs.preferences.DiaryPreference
+import com.foreverrafs.preferences.DiaryPreferenceImpl
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
-import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.DataStorePathResolver
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -25,11 +28,13 @@ class DiaryPreferenceTest {
             // The path used here is compatible with all platforms
             "/tmp/Test/TempPath/$filename".toPath()
         }
+
+    @OptIn(InternalCoroutinesApi::class)
     private val diaryPreference: DiaryPreference =
         DiaryPreferenceImpl.getInstance(
-            filename = "superdiary.preferences_pb",
-            dataStorePathResolver = dataStorePathResolver,
-            logger = AggregateLogger(emptyList()),
+            PreferenceDataStoreFactory.createWithPath {
+                dataStorePathResolver.resolve("test.preferences_pb")
+            },
         )
 
     @BeforeTest
@@ -95,15 +100,18 @@ class DiaryPreferenceTest {
         assertThat(finalState).isEqualTo(updatedSettings)
     }
 
+    @OptIn(InternalCoroutinesApi::class)
     @Test
     fun `Should return the same instance of diary preference`() = runTest {
         val first = DiaryPreferenceImpl.getInstance(
-            dataStorePathResolver = dataStorePathResolver,
-            logger = AggregateLogger(emptyList()),
+            PreferenceDataStoreFactory.createWithPath {
+                dataStorePathResolver.resolve("test.preferences_pb")
+            },
         )
         val second = DiaryPreferenceImpl.getInstance(
-            dataStorePathResolver = dataStorePathResolver,
-            logger = AggregateLogger(emptyList()),
+            PreferenceDataStoreFactory.createWithPath {
+                dataStorePathResolver.resolve("test.preferences_pb")
+            },
         )
 
         assertThat(first).isEqualTo(second)

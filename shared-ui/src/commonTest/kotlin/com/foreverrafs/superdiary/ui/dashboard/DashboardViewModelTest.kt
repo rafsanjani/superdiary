@@ -10,6 +10,7 @@ import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
 import com.foreverrafs.auth.BiometricAuth
+import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
@@ -23,7 +24,6 @@ import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
-import com.foreverrafs.superdiary.utils.DiaryPreference
 import com.foreverrafs.superdiary.utils.DiarySettings
 import dev.mokkery.answering.returns
 import dev.mokkery.answering.throws

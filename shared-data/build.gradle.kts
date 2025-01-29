@@ -43,6 +43,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.openAiKotlin)
                 implementation(libs.uuid)
+                implementation(projects.preferences.annotation)
                 implementation(libs.androidx.datastore.preferences)
                 implementation(libs.androidx.datastore.okio)
                 implementation(libs.ktor.client.cio)
@@ -58,6 +59,8 @@ kotlin {
                 implementation(projects.core.location)
                 implementation(projects.core.database)
             }
+
+            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
         }
 
         androidMain {
@@ -116,5 +119,19 @@ android {
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_17
         sourceCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    add("kspCommonMainMetadata", projects.preferences.processor)
+}
+
+afterEvaluate {
+    tasks {
+        withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>> {
+            if (name != "kspCommonMainKotlinMetadata") {
+                dependsOn("kspCommonMainKotlinMetadata")
+            }
+        }
     }
 }

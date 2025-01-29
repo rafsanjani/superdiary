@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.ui.feature.creatediary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.core.location.LocationManager
 import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
@@ -11,7 +12,6 @@ import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenState
-import com.foreverrafs.superdiary.utils.DiaryPreference
 import com.foreverrafs.superdiary.utils.DiarySettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
