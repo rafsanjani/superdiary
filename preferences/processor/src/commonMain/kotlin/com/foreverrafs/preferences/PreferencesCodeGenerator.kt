@@ -22,7 +22,7 @@ class PreferencesCodeGenerator {
      * Generates the Preferences class by delegating activities to individual
      * private functions.
      *
-     * @param preferenceClass This is the main class that will be created. The
+     * @param concreteClass This is the main class that will be created. The
      *    name of this class is obtained as a parameter passed to the
      *    annotation
      * @param settingsClass This is the name of the data class which has been
@@ -30,22 +30,70 @@ class PreferencesCodeGenerator {
      * @param properties These are the individual members of the data class
      */
     fun generatePreferenceClass(
-        preferenceClass: ClassName,
+        concreteClass: ClassName,
         settingsClass: ClassName,
         properties: List<KSPropertyDeclaration>,
+        interfaceClass: ClassName,
     ): FileSpec {
         val preferenceKeyProperties = createPreferenceKeyProperties(properties)
 
         val preferenceClassBuilder = createPreferenceClassBuilder(
-            preferenceClass = preferenceClass,
+            preferenceClass = concreteClass,
+            interfaceClass = interfaceClass,
             settingsClass = settingsClass,
             preferenceKeyProperties = preferenceKeyProperties,
             properties = properties,
         )
 
-        return FileSpec.builder(preferenceClass.packageName, preferenceClass.simpleName)
-            .addType(preferenceClassBuilder)
+        return FileSpec.builder(
+            packageName = concreteClass.packageName,
+            fileName = concreteClass.simpleName,
+        ).addType(preferenceClassBuilder).build()
+    }
+
+    fun generatePreferenceInterface(
+        preferenceClass: ClassName,
+        settingsClass: ClassName,
+    ): FileSpec {
+        val settingsSpec = PropertySpec.builder(
+            name = "settings",
+            type = ClassName("kotlinx.coroutines.flow", "Flow").parameterizedBy(
+                settingsClass,
+            ),
+        ).build()
+
+        val saveFunSpec =
+            FunSpec.builder("save").addModifiers(KModifier.SUSPEND, KModifier.ABSTRACT)
+                .addParameter(
+                    "block",
+                    LambdaTypeName.get(
+                        returnType = settingsClass,
+                        parameters = listOf(
+                            ParameterSpec.builder("", settingsClass).build(),
+                        ),
+                    ),
+                ).build()
+
+        val snapshotFunSpec = FunSpec.builder("getSnapshot")
+            .addModifiers(KModifier.SUSPEND, KModifier.ABSTRACT)
+            .returns(settingsClass)
             .build()
+
+        val clearFunSpec = FunSpec.builder("clear")
+            .addModifiers(KModifier.ABSTRACT, KModifier.SUSPEND)
+            .build()
+
+        val preferenceInterfaceSpec = TypeSpec.interfaceBuilder(
+            preferenceClass,
+        ).addProperty(settingsSpec)
+            .addFunction(clearFunSpec)
+            .addFunction(snapshotFunSpec)
+            .addFunction(saveFunSpec).build()
+
+        return FileSpec.builder(
+            packageName = preferenceClass.packageName,
+            fileName = preferenceClass.simpleName,
+        ).addType(preferenceInterfaceSpec).build()
     }
 
     private fun createPreferenceClassBuilder(
@@ -53,69 +101,65 @@ class PreferencesCodeGenerator {
         settingsClass: ClassName,
         preferenceKeyProperties: List<PropertySpec>,
         properties: List<KSPropertyDeclaration>,
+        interfaceClass: ClassName,
     ): TypeSpec {
         val dataStore = ClassName("androidx.datastore.core", "DataStore")
         val preferences = ClassName("androidx.datastore.preferences.core", "Preferences")
 
-        val constructor =
-            createConstructor()
+        val constructor = createConstructor()
 
-        val settingsProperty = createSettingsProperty(settingsClass, properties)
-        val getSnapshotFun = createGetSnapshotFunction(settingsClass, properties)
-        val saveFun = createSaveFunction(settingsClass, properties)
-        val clearFun = createClearFunction()
-        val companionObject = createCompanionObject(preferenceClass)
+        val settingsProperty = createSettingsPropertySpec(settingsClass, properties)
+        val getSnapshotFun = createGetSnapshotFunctionSpec(settingsClass, properties)
+        val saveFun = createSaveFunctionSpec(settingsClass, properties)
+        val clearFun = createClearFunctionSpec()
+        val companionObject = createCompanionObjectSpec(preferenceClass)
 
         return TypeSpec.classBuilder(preferenceClass)
-            .primaryConstructor(constructor)
-            .addProperty(
+            .addSuperinterfaces(
+                listOf(interfaceClass),
+            )
+            .primaryConstructor(constructor).addProperty(
                 PropertySpec.builder("dataStore", dataStore.parameterizedBy(preferences))
-                    .initializer("dataStore")
-                    .addModifiers(KModifier.PRIVATE)
-                    .build(),
+                    .initializer("dataStore").addModifiers(KModifier.PRIVATE).build(),
             )
             .addProperties(preferenceKeyProperties)
             .addProperty(settingsProperty)
             .addFunction(getSnapshotFun)
             .addFunction(saveFun)
             .addFunction(clearFun)
-            .addType(companionObject)
-            .build()
+            .addType(companionObject).build()
     }
 
-    private fun createConstructor(): FunSpec = FunSpec.constructorBuilder()
-        .addParameter(
-            ParameterSpec.builder(
-                "dataStore",
-                ClassName("androidx.datastore.core", "DataStore").parameterizedBy(
-                    ClassName("androidx.datastore.preferences.core", "Preferences"),
-                ),
-            )
-                .build(),
-        )
-        .build()
+    private fun createConstructor(): FunSpec = FunSpec.constructorBuilder().addParameter(
+        ParameterSpec.builder(
+            "dataStore",
+            ClassName("androidx.datastore.core", "DataStore").parameterizedBy(
+                ClassName("androidx.datastore.preferences.core", "Preferences"),
+            ),
+        ).build(),
+    ).build()
 
     /**
      * Creates a settings property which emits changes to the preferences. The
      * generated property is a pure Kotlin data class and can be observed as is
      */
-    private fun createSettingsProperty(
+    private fun createSettingsPropertySpec(
         settingsClass: ClassName,
         properties: List<KSPropertyDeclaration>,
     ): PropertySpec {
         val flow = ClassName("kotlinx.coroutines.flow", "Flow")
         val map = MemberName("kotlinx.coroutines.flow", "map")
 
-        return PropertySpec.builder("settings", flow.parameterizedBy(settingsClass))
-            .initializer(
-                "dataStore.data.%M { prefs -> %T(%L) }",
-                map,
-                settingsClass,
-                properties.joinToString(",\n") { property ->
-                    val key = property.simpleName.asString()
-                    "$key = prefs[${key}Key] ?: ${getDefaultValue(property)}"
-                },
-            )
+        return PropertySpec.builder("settings", flow.parameterizedBy(settingsClass)).initializer(
+            "dataStore.data.%M { prefs -> %T(%L) }",
+            map,
+            settingsClass,
+            properties.joinToString(",\n") { property ->
+                val key = property.simpleName.asString()
+                "$key = prefs[${key}Key] ?: ${getDefaultValue(property)}"
+            },
+        )
+            .addModifiers(KModifier.OVERRIDE)
             .build()
     }
 
@@ -124,14 +168,14 @@ class PreferencesCodeGenerator {
      * changes. This grabs the latest value at a specific point in time and may
      * not always reflect the most up to date value
      */
-    private fun createGetSnapshotFunction(
+    private fun createGetSnapshotFunctionSpec(
         settingsClass: ClassName,
         properties: List<KSPropertyDeclaration>,
     ): FunSpec {
         val first = MemberName("kotlinx.coroutines.flow", "first")
 
         return FunSpec.builder("getSnapshot")
-            .addModifiers(KModifier.SUSPEND)
+            .addModifiers(KModifier.SUSPEND, KModifier.OVERRIDE)
             .returns(settingsClass)
             .addCode(
                 "val prefs = dataStore.data.%M()\nreturn %T(%L)",
@@ -141,18 +185,17 @@ class PreferencesCodeGenerator {
                     val key = property.simpleName.asString()
                     "$key = prefs[${key}Key] ?: ${getDefaultValue(property)}"
                 },
-            )
-            .build()
+            ).build()
     }
 
-    private fun createSaveFunction(
+    private fun createSaveFunctionSpec(
         settingsClass: ClassName,
         properties: List<KSPropertyDeclaration>,
     ): FunSpec {
         val edit = MemberName("androidx.datastore.preferences.core", "edit")
 
         return FunSpec.builder("save")
-            .addModifiers(KModifier.SUSPEND)
+            .addModifiers(KModifier.SUSPEND, KModifier.OVERRIDE)
             .addParameter(
                 "block",
                 LambdaTypeName.get(
@@ -161,8 +204,7 @@ class PreferencesCodeGenerator {
                         ParameterSpec.builder("", settingsClass).build(),
                     ),
                 ),
-            )
-            .addCode(
+            ).addCode(
                 """
                     val currentSettings = getSnapshot()
                     val settings = block(currentSettings)
@@ -176,53 +218,47 @@ class PreferencesCodeGenerator {
                     val key = property.simpleName.asString()
                     "it[${key}Key] = settings.$key"
                 },
-            )
-            .build()
+            ).build()
     }
 
-    private fun createClearFunction(): FunSpec {
+    private fun createClearFunctionSpec(): FunSpec {
         val edit = MemberName("androidx.datastore.preferences.core", "edit")
 
         return FunSpec.builder("clear")
-            .addModifiers(KModifier.SUSPEND)
+            .addModifiers(KModifier.SUSPEND, KModifier.OVERRIDE)
             .addCode("dataStore.%M { it.clear() }", edit)
             .build()
     }
 
-    private fun createCompanionObject(preferenceClass: ClassName): TypeSpec =
-        TypeSpec.companionObjectBuilder()
-            .addAnnotation(
-                AnnotationSpec.builder(ClassName("kotlinx.coroutines", "InternalCoroutinesApi"))
-                    .build(),
-            )
-            .addProperty(
-                PropertySpec.builder("instance", preferenceClass.copy(nullable = true))
-                    .mutable()
-                    .addModifiers(KModifier.PRIVATE)
-                    .initializer("null")
-                    .build(),
-            )
-            .addFunction(
-                FunSpec.builder("getInstance")
-                    .returns(preferenceClass)
-                    .addParameter(
-                        ParameterSpec.builder(
-                            name = "dataStore",
-                            // DataStore<Preferences>
-                            type = ClassName(
-                                "androidx.datastore.core",
-                                "DataStore",
-                            ).parameterizedBy(
-                                ClassName("androidx.datastore.preferences.core", "Preferences"),
-                            ),
-                        ).build(),
+    private fun createCompanionObjectSpec(preferenceClass: ClassName): TypeSpec =
+        TypeSpec.companionObjectBuilder().addAnnotation(
+            AnnotationSpec.builder(ClassName("kotlinx.coroutines", "InternalCoroutinesApi"))
+                .build(),
+        ).addProperty(
+            PropertySpec.builder("instance", preferenceClass.copy(nullable = true)).mutable()
+                .addModifiers(KModifier.PRIVATE).initializer("null").build(),
+        ).addFunction(
+            FunSpec.builder("getInstance")
+                .returns(preferenceClass)
+                .addParameter(
+                    ParameterSpec.builder(
+                        name = "dataStore",
+                        // DataStore<Preferences>
+                        type = ClassName(
+                            "androidx.datastore.core",
+                            "DataStore",
+                        ).parameterizedBy(
+                            ClassName("androidx.datastore.preferences.core", "Preferences"),
+                        ),
                     )
-                    .addCode(
-                        "return instance ?: %T(dataStore).also { instance = it }",
-                        preferenceClass,
-                    )
-                    .build(),
-            )
+                        .build(),
+                )
+                .addCode(
+                    "return instance ?: %T(dataStore).also { instance = it }",
+                    preferenceClass,
+                )
+                .build(),
+        )
             .build()
 
     private fun createPreferenceKeyProperties(properties: List<KSPropertyDeclaration>): List<PropertySpec> =
@@ -234,7 +270,9 @@ class PreferencesCodeGenerator {
                 ),
             )
                 .addModifiers(KModifier.PRIVATE)
-                .initializer(getPreferenceInitializer(property))
+                .initializer(
+                    getPreferenceInitializer(property = property),
+                )
                 .build()
         }
 
@@ -246,11 +284,7 @@ class PreferencesCodeGenerator {
             property.annotations.toList()
                 .isNotEmpty()
         ) {
-            return property.annotations
-                .firstOrNull()
-                ?.arguments
-                ?.firstOrNull()
-                ?.value as String
+            return property.annotations.firstOrNull()?.arguments?.firstOrNull()?.value as String
         }
 
         // The property doesn't have the PreferenceKey annotation, use reasonable defaults
@@ -263,10 +297,9 @@ class PreferencesCodeGenerator {
             String::class.asClassName() to "\"\"",
         )
 
-        return defaultValues[propertyType]
-            ?: throw IllegalArgumentException(
-                "Unsupported type: $propertyType",
-            )
+        return defaultValues[propertyType] ?: throw IllegalArgumentException(
+            "Unsupported type: $propertyType",
+        )
     }
 
     private fun getPreferenceInitializer(property: KSPropertyDeclaration): CodeBlock {
@@ -282,8 +315,6 @@ class PreferencesCodeGenerator {
             else -> throw IllegalArgumentException("Unsupported type: $propertyType")
         }
 
-        return CodeBlock.builder()
-            .add("%M(%S)", expression, property)
-            .build()
+        return CodeBlock.builder().add("%M(%S)", expression, property).build()
     }
 }
