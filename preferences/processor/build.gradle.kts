@@ -20,4 +20,9 @@ kotlin {
 android {
     namespace = "com.foreverrafs.preferences.processor"
     compileSdk = libs.versions.compileSdk.get().toInt()
+
+    compileOptions {
+        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+    }
 }

@@ -7,8 +7,8 @@ import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewModel
-import com.foreverrafs.superdiary.utils.DiaryPreference
 import com.foreverrafs.superdiary.utils.DiarySettings
 import dev.mokkery.answering.returns
 import dev.mokkery.every
@@ -29,7 +29,6 @@ import kotlinx.coroutines.test.setMain
 class ProfileScreenViewModelTest {
     private lateinit var profileScreenViewModel: ProfileScreenViewModel
 
-    // TODO: Replace this mock with a fake
     private val authApi: AuthApi = mock()
     private val preference: DiaryPreference = mock()
 
