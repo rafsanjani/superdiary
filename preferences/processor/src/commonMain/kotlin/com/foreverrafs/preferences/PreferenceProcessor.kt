@@ -72,16 +72,32 @@ class PreferenceProcessor(
             val nameArgument = annotation.arguments
                 .first { arg -> arg.name?.asString() == "name" }
 
-            val preferenceCode = preferencesCodeGenerator.generatePreferenceClass(
+            preferencesCodeGenerator.generatePreferenceInterface(
                 preferenceClass = ClassName(
                     packageName = ROOT_PACKAGE,
                     nameArgument.value as String,
                 ),
                 settingsClass = classDeclaration.toClassName(),
-                properties = properties.toList(),
+            ).writeTo(
+                codeGenerator = codeGenerator,
+                dependencies = Dependencies(
+                    aggregating = false,
+                    sources = resolver.getAllFiles().toList().toTypedArray(),
+                ),
             )
 
-            preferenceCode.writeTo(
+            preferencesCodeGenerator.generatePreferenceClass(
+                concreteClass = ClassName(
+                    packageName = ROOT_PACKAGE,
+                    "${nameArgument.value as String}Impl",
+                ),
+                interfaceClass = ClassName(
+                    packageName = ROOT_PACKAGE,
+                    nameArgument.value as String,
+                ),
+                settingsClass = classDeclaration.toClassName(),
+                properties = properties.toList(),
+            ).writeTo(
                 codeGenerator = codeGenerator,
                 dependencies = Dependencies(
                     aggregating = false,
