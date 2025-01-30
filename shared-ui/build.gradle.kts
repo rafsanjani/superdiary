@@ -69,7 +69,7 @@ kotlin {
                 implementation(libs.coil3.multiplatform)
                 implementation(libs.ktor.client.core)
                 dependencies {
-                    implementation("com.valentinilk.shimmer:compose-shimmer:1.3.1")
+                    implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
                 }
                 implementation(libs.koin.compose.viewmodel)
                 api(projects.core.authentication)
