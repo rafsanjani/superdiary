@@ -1,9 +1,7 @@
 package com.foreverrafs.preferences
 
+@Suppress("unused")
 @Target(AnnotationTarget.CLASS)
 annotation class Preference(
-    val name: String,
+    val generatedClassName: String,
 )
-
-@Target(AnnotationTarget.PROPERTY)
-annotation class PreferenceKey(val defaultValue: String)

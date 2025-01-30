@@ -1,4 +1,4 @@
-package com.foreverrafs.preferences
+package com.foreverrafs.preferences.codegen
 
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.squareup.kotlinpoet.AnnotationSpec
@@ -156,7 +156,7 @@ class PreferencesCodeGenerator {
             settingsClass,
             properties.joinToString(",\n") { property ->
                 val key = property.simpleName.asString()
-                "$key = prefs[${key}Key] ?: ${getDefaultValue(property)}"
+                "$key = prefs[${key}Key] ?: ${property.getValueAsString()}"
             },
         )
             .addModifiers(KModifier.OVERRIDE)
@@ -183,7 +183,7 @@ class PreferencesCodeGenerator {
                 settingsClass,
                 properties.joinToString(",\n") { property ->
                     val key = property.simpleName.asString()
-                    "$key = prefs[${key}Key] ?: ${getDefaultValue(property)}"
+                    "$key = prefs[${key}Key] ?: ${property.getValueAsString()}"
                 },
             ).build()
     }
@@ -235,8 +235,13 @@ class PreferencesCodeGenerator {
             AnnotationSpec.builder(ClassName("kotlinx.coroutines", "InternalCoroutinesApi"))
                 .build(),
         ).addProperty(
-            PropertySpec.builder("instance", preferenceClass.copy(nullable = true)).mutable()
-                .addModifiers(KModifier.PRIVATE).initializer("null").build(),
+            PropertySpec.builder(
+                "instance",
+                preferenceClass.copy(nullable = true),
+            )
+                .mutable()
+                .addModifiers(KModifier.PRIVATE).initializer("null")
+                .build(),
         ).addFunction(
             FunSpec.builder("getInstance")
                 .returns(preferenceClass)
@@ -276,45 +281,25 @@ class PreferencesCodeGenerator {
                 .build()
         }
 
-    // TODO: Support default values for all data types
-    private fun getDefaultValue(property: KSPropertyDeclaration): String {
-        val propertyType = property.type.resolve().toClassName()
-
-        if (propertyType == Boolean::class.asClassName() &&
-            property.annotations.toList()
-                .isNotEmpty()
-        ) {
-            return property.annotations.firstOrNull()?.arguments?.firstOrNull()?.value as String
-        }
-
-        // The property doesn't have the PreferenceKey annotation, use reasonable defaults
-        val defaultValues = mapOf(
-            Boolean::class.asClassName() to "false",
-            Int::class.asClassName() to "0",
-            Float::class.asClassName() to "0F",
-            Long::class.asClassName() to "0L",
-            Double::class.asClassName() to "0.0",
-            String::class.asClassName() to "\"\"",
-        )
-
-        return defaultValues[propertyType] ?: throw IllegalArgumentException(
-            "Unsupported type: $propertyType",
-        )
-    }
-
+    // Example generated line: val isFirstLaunchKey = booleanPreferencesKey("isFirstLaunch")
     private fun getPreferenceInitializer(property: KSPropertyDeclaration): CodeBlock {
-        val commonImport = "androidx.datastore.preferences.core"
-
-        val expression = when (val propertyType = property.type.resolve().toClassName()) {
-            Boolean::class.asClassName() -> MemberName(commonImport, "booleanPreferencesKey")
-            Int::class.asClassName() -> MemberName(commonImport, "intPreferencesKey")
-            Float::class.asClassName() -> MemberName(commonImport, "floatPreferencesKey")
-            Long::class.asClassName() -> MemberName(commonImport, "longPreferencesKey")
-            Double::class.asClassName() -> MemberName(commonImport, "doublePreferencesKey")
-            String::class.asClassName() -> MemberName(commonImport, "stringPreferencesKey")
-            else -> throw IllegalArgumentException("Unsupported type: $propertyType")
+        val keyFunction = when (property.type.resolve().toClassName()) {
+            Boolean::class.asClassName() -> "booleanPreferencesKey"
+            Int::class.asClassName() -> "intPreferencesKey"
+            Float::class.asClassName() -> "floatPreferencesKey"
+            Long::class.asClassName() -> "longPreferencesKey"
+            Double::class.asClassName() -> "doublePreferencesKey"
+            String::class.asClassName() -> "stringPreferencesKey"
+            else -> throw IllegalArgumentException("Unsupported type: ${property.type}")
         }
 
-        return CodeBlock.builder().add("%M(%S)", expression, property).build()
+        return CodeBlock.of(
+            "%M(%S)",
+            MemberName(
+                "androidx.datastore.preferences.core",
+                keyFunction,
+            ),
+            property,
+        )
     }
 }
