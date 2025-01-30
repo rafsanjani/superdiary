@@ -5,25 +5,25 @@ import com.foreverrafs.preferences.PreferenceKey
 
 @Preference("DiaryPreference")
 data class DiarySettings(
-    @PreferenceKey(defaultValue = "true")
+    @PreferenceKey.Boolean(default = true)
     val isFirstLaunch: Boolean,
 
-    @PreferenceKey(defaultValue = "true")
+    @PreferenceKey.Boolean(default = true)
     val showWeeklySummary: Boolean,
 
-    @PreferenceKey(defaultValue = "true")
+    @PreferenceKey.Boolean(default = true)
     val showAtAGlance: Boolean,
 
-    @PreferenceKey(defaultValue = "true")
+    @PreferenceKey.Boolean(default = true)
     val showLatestEntries: Boolean,
 
-    @PreferenceKey(defaultValue = "false")
+    @PreferenceKey.Boolean(default = false)
     val isBiometricAuthEnabled: Boolean,
 
-    @PreferenceKey(defaultValue = "true")
+    @PreferenceKey.Boolean(default = true)
     val showLocationPermissionDialog: Boolean,
 
-    @PreferenceKey(defaultValue = "true")
+    @PreferenceKey.Boolean(default = true)
     val showBiometricAuthDialog: Boolean,
 ) {
     companion object {

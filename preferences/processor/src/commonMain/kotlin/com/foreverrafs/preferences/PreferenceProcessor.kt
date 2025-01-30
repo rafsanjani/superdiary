@@ -2,6 +2,8 @@
 
 package com.foreverrafs.preferences
 
+import com.foreverrafs.preferences.codegen.PreferencesCodeGenerator
+import com.foreverrafs.preferences.codegen.filterDataClassesWithAnnotation
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.KSPLogger
@@ -13,7 +15,6 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSVisitorVoid
-import com.google.devtools.ksp.symbol.Modifier
 import com.google.devtools.ksp.validate
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ksp.toClassName
@@ -26,19 +27,14 @@ class PreferenceProcessor(
 ) : SymbolProcessor {
     private val preferencesCodeGenerator = PreferencesCodeGenerator()
 
-    private fun isDataClass(classDeclaration: KSClassDeclaration): Boolean =
-        Modifier.DATA in classDeclaration.modifiers
-
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val symbols = resolver
-            .getSymbolsWithAnnotation("com.foreverrafs.preferences.Preference")
-            .filterIsInstance<KSClassDeclaration>()
-            .filter(::isDataClass)
+            .filterDataClassesWithAnnotation(PREFERENCE_ANNOTATION_FQN)
 
         if (!symbols.iterator().hasNext()) return emptyList()
 
-        symbols.forEach {
-            it.accept(
+        symbols.forEach { symbol ->
+            symbol.accept(
                 visitor = Visitor(
                     codeGenerator = codeGenerator,
                     resolver = resolver,
@@ -66,11 +62,11 @@ class PreferenceProcessor(
                 .filter { it.validate() }
 
             val annotation: KSAnnotation = classDeclaration.annotations.first {
-                it.shortName.asString() == "Preference"
+                it.shortName.asString() == PREFERENCE_ANNOTATION_SIMPLE_NAME
             }
 
             val nameArgument = annotation.arguments
-                .first { arg -> arg.name?.asString() == "name" }
+                .first { arg -> arg.name?.asString() == "generatedClassName" }
 
             preferencesCodeGenerator.generatePreferenceInterface(
                 preferenceClass = ClassName(
@@ -108,7 +104,9 @@ class PreferenceProcessor(
     }
 
     companion object {
+        private const val PREFERENCE_ANNOTATION_SIMPLE_NAME = "Preference"
         private const val ROOT_PACKAGE = "com.foreverrafs.preferences"
+        private const val PREFERENCE_ANNOTATION_FQN = "$ROOT_PACKAGE.Preference"
     }
 }
 
