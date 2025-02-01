@@ -33,7 +33,21 @@ jobs:
                 with:
                     distribution: 'zulu'
                     java-version: '17'
-                    
+
+            -   name: Setup secrets.properties and Configurations/Release.xcconfig
+                run: ./environments.sh
+
+            -   name: Decode keystore file from secrets
+                run: echo "$STORE_FILE_BASE64" | base64 --decode > keystore
+
+            -   name: Inject Signing params into gradle.properties
+                run: |
+                    echo STORE_FILE=keystore >> gradle.properties
+                    echo STORE_PASSWORD="$STORE_PASSWORD" >> gradle.properties
+                    echo KEY_PASSWORD="$KEY_PASSWORD" >> gradle.properties
+                    echo KEY_ALIAS="$KEY_ALIAS" >> gradle.properties
+                    cat gradle.properties
+
             -   name: Build Android App (Release)
                 run: ./gradlew androidApp:app:assembleRelease
 
