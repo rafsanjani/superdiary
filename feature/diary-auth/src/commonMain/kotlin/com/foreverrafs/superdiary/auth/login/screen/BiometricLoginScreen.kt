@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.foreverrafs.superdiary.auth.login.BiometricLoginScreenState
 import com.foreverrafs.superdiary.auth.login.BiometricLoginScreenViewModel
-import com.foreverrafs.superdiary.design.components.BiometricAuthErrorDialog
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

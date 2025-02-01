@@ -16,7 +16,10 @@ fun Resolver.filterDataClassesWithAnnotation(annotation: String): Sequence<KSCla
 
 fun KSPropertyDeclaration.getValueAsString(): String {
     fun illegalStateException(): Unit =
-        throw IllegalStateException("Property and annotation type mismatch for ${this.simpleName.asString()}. Please Ensure that the property type is the same as the @PreferenceKey type used")
+        throw IllegalStateException(
+            "Property and annotation type mismatch for ${this.simpleName.asString()}." +
+                "Please Ensure that the property type is the same as the @PreferenceKey type used",
+        )
 
     val resolvedProperty = type.resolve().toClassName()
 
@@ -25,13 +28,13 @@ fun KSPropertyDeclaration.getValueAsString(): String {
         ?.arguments
         ?.firstOrNull()
         ?.value
-        ?: throw IllegalStateException("The property ${simpleName.asString()} hasn't been annotated with @PreferenceKey. Please ensure all properties have been annotated")
+        ?: throw IllegalStateException(
+            "The property ${simpleName.asString()} hasn't been annotated with @PreferenceKey." +
+                "Please ensure all properties have been annotated",
+        )
 
     val value = when (resolvedProperty) {
-        Boolean::class.asClassName() ->
-            firstAnnotatedValue as? Boolean
-                ?: illegalStateException()
-
+        Boolean::class.asClassName() -> firstAnnotatedValue as? Boolean ?: illegalStateException()
         Int::class.asClassName() -> firstAnnotatedValue as? Int ?: illegalStateException()
         Float::class.asClassName() -> firstAnnotatedValue as? Float ?: illegalStateException()
         Long::class.asClassName() -> firstAnnotatedValue as? Long ?: illegalStateException()

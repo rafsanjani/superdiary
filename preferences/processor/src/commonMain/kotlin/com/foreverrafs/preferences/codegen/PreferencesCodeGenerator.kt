@@ -19,7 +19,7 @@ import com.squareup.kotlinpoet.ksp.toClassName
 class PreferencesCodeGenerator {
 
     /**
-     * Generates the Preferences class by delegating activities to individual
+     * Generates the Preferences class by delegating operations to individual
      * private functions.
      *
      * @param concreteClass This is the main class that will be created. The
@@ -127,17 +127,19 @@ class PreferencesCodeGenerator {
             .addFunction(getSnapshotFun)
             .addFunction(saveFun)
             .addFunction(clearFun)
-            .addType(companionObject).build()
+            .addType(companionObject)
+            .build()
     }
 
-    private fun createConstructor(): FunSpec = FunSpec.constructorBuilder().addParameter(
-        ParameterSpec.builder(
-            "dataStore",
-            ClassName("androidx.datastore.core", "DataStore").parameterizedBy(
-                ClassName("androidx.datastore.preferences.core", "Preferences"),
-            ),
-        ).build(),
-    ).build()
+    private fun createConstructor(): FunSpec = FunSpec.constructorBuilder()
+        .addParameter(
+            ParameterSpec.builder(
+                "dataStore",
+                ClassName("androidx.datastore.core", "DataStore").parameterizedBy(
+                    ClassName("androidx.datastore.preferences.core", "Preferences"),
+                ),
+            ).build(),
+        ).build()
 
     /**
      * Creates a settings property which emits changes to the preferences. The
