@@ -1,6 +1,7 @@
 name: Save Release APK
 
 on:
+    workflow_dispatch:
     push:
         branches: [ development ]
 concurrency:
@@ -47,6 +48,9 @@ jobs:
                     echo KEY_PASSWORD="$KEY_PASSWORD" >> gradle.properties
                     echo KEY_ALIAS="$KEY_ALIAS" >> gradle.properties
                     cat gradle.properties
+
+            -   name: Setup Gradle
+                uses: gradle/actions/setup-gradle@v4
 
             -   name: Build Android App (Release)
                 run: ./gradlew androidApp:app:assembleRelease
