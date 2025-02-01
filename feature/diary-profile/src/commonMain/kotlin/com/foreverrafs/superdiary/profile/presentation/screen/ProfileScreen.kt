@@ -47,7 +47,6 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.foreverrafs.superdiary.design.components.ConfirmLogoutDialog
 import com.foreverrafs.superdiary.design.components.SuperDiaryImage
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewData

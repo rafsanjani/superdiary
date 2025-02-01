@@ -29,6 +29,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
             implementation(compose.foundation)
+            implementation(compose.components.resources)
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(projects.core.logging)
