@@ -166,7 +166,7 @@ jobs:
     androidRelease:
         name: Build android app (release)
         runs-on: macos-14
-        #        needs: jvmTest
+        needs: jvmTest
         env:
             SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
             SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
@@ -179,7 +179,6 @@ jobs:
             KEY_PASSWORD: ${{secrets.SIGNING_KEY_PASSWORD}}
             SUPABASE_URL: ${{secrets.SUPABASE_URL}}
             SUPABASE_KEY: ${{secrets.SUPABASE_KEY}}
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         steps:
             -   uses: actions/checkout@v4
                 with:
@@ -212,27 +211,11 @@ jobs:
             -   name: Build Android App (Release)
                 run: ./gradlew androidApp:app:assembleRelease
 
-            -   name: Download previous release artifact
-                id: download-artifact
-                uses: dawidd6/action-download-artifact@v8
+            -   name: Upload APK artifact
+                if: success()
+                uses: actions/upload-artifact@v4
                 with:
-                    name: artifact
-                    if_no_artifact_found: fail
-
-            -   name: Run Apk Diff
-                run: |
-                    gh release download -p '*.zip' -R jakewharton/diffuse 0.3.0
-                    unzip diffuse-0.3.0.zip
-                    ./diffuse-0.3.0/bin/diffuse diff app-release.apk androidApp/app/build/outputs/apk/release/app-release.apk > apk_differences.txt
-                    { echo "\`\`\`"; head -n 17 apk_differences.txt; echo "\`\`\`"; echo; } >> apk_differences_summary.txt
-
-            -   name: Post APK diff to Pull Request
-                uses: thollander/actions-comment-pull-request@v3
-                with:
-                    file-path: apk_differences_summary.txt
-                    github-token: ${{secrets.GITHUB_TOKEN}}
-                    comment-tag: apk_difference
-
+                    path: androidApp/app/build/outputs/apk/release/app-release.apk
 #
 #    iOSReleaseBuild:
 #        name: Build iOS app (Release)
@@ -267,3 +250,8 @@ jobs:
 #                        -destination 'generic/platform=iOS' \
 #                        build
 #
+#            -   name: Upload APK artifact
+#                if: success()
+#                uses: actions/upload-artifact@v4
+#                with:
+#                    path: androidApp/app/build/outputs/apk/release/app-release.apk

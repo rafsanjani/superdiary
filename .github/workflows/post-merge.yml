@@ -1,4 +1,4 @@
-name: Multiplatform Build
+name: Save Release APK
 
 on:
     push:
@@ -8,7 +8,7 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    housekeeping:
+    persistReleaseApk:
         env:
             SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
             SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
@@ -22,8 +22,7 @@ jobs:
             SUPABASE_URL: ${{secrets.SUPABASE_URL}}
             SUPABASE_KEY: ${{secrets.SUPABASE_KEY}}
 
-        if: github.event_name != 'pull_request'
-        name: Housekeeping
+        name: Save Release APK artifact
         runs-on: macos-14
         steps:
             -   uses: actions/checkout@v4
@@ -34,7 +33,6 @@ jobs:
                 run: ./gradlew androidApp:app:assembleRelease
 
             -   name: Upload APK artifact
-                if: success()
                 uses: actions/upload-artifact@v4
                 with:
                     name: apk-release
