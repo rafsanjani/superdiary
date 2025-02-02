@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    id("io.sentry.android.gradle") version "4.14.1"
+    id("io.sentry.android.gradle") version "5.1.0"
     id("com.google.firebase.appdistribution") version "5.1.0"
 }
 
@@ -16,7 +16,7 @@ android {
         applicationId = "com.foreverrafs.superdiary"
         minSdk = 28
         targetSdk = 35
-        versionCode = 19
+        versionCode = 26
         versionName = "0.0.1"
 
         val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_ANDROID") ?: ""
@@ -137,6 +137,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.google.material)
     implementation(projects.sharedUi)
+    implementation(projects.feature.diaryAuth)
     implementation(projects.core.analytics)
     implementation(libs.koin.android)
     implementation(libs.androidx.core)

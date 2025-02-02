@@ -1,6 +1,6 @@
 package com.foreverrafs.superdiary.ui.dashboard
 
-import com.foreverrafs.superdiary.utils.DiaryPreference
+import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.utils.DiarySettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf

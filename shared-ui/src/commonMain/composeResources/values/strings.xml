@@ -27,19 +27,6 @@
     <string name="label_button_retry">Retry</string>
     <string name="label_button_show_all">Show All</string>
     <string name="label_diary_deleted">Diary Deleted!</string>
-    <string name="label_username">Username</string>
-    <string name="label_password">Password</string>
-    <string name="label_login">Login</string>
-    <string name="label_login_title">Welcome back!</string>
-    <string name="label_register_title">Create an account</string>
-    <string name="label_register_message">Don't have an account yet? </string>
-    <string name="label_register">Register</string>
-    <string name="label_reset_password_button">Reset password</string>
-    <string name="label_reset_password_header">Reset your password</string>
-    <string name="label_google_button">Continue with Google</string>
-    <string name="label_open_email">Open email</string>
-
-    <string name="reset_password_success_message">A password reset email will be sent to $1 if it exists in our records.</string>
 
     <!--  Accessibility Content Descriptions  -->
     <string name="content_description_navigate_back">Navigate back</string>

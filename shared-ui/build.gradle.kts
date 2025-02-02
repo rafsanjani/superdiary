@@ -36,7 +36,7 @@ kotlin {
             export(projects.core.analytics)
             export(projects.core.logging)
             export(projects.core.location)
-            export(projects.core.auth)
+            export(projects.core.authentication)
         }
     }
 
@@ -69,16 +69,17 @@ kotlin {
                 implementation(libs.coil3.multiplatform)
                 implementation(libs.ktor.client.core)
                 dependencies {
-                    implementation("com.valentinilk.shimmer:compose-shimmer:1.3.1")
+                    implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
                 }
                 implementation(libs.koin.compose.viewmodel)
-                api(projects.core.auth)
+                api(projects.core.authentication)
                 api(projects.core.analytics)
                 api(projects.core.location)
                 api(projects.core.logging)
                 api(projects.designSystem)
                 implementation(projects.feature.diaryAi)
                 implementation(projects.feature.diaryProfile)
+                implementation(projects.feature.diaryAuth)
             }
         }
 

@@ -25,135 +25,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import org.jetbrains.compose.resources.stringResource
-import superdiary.design_system.generated.resources.Res
-import superdiary.design_system.generated.resources.confirm_delete_diary_dialog_message
-import superdiary.design_system.generated.resources.confirm_delete_diary_dialog_title
-import superdiary.design_system.generated.resources.confirm_delete_diary_negative_button
-import superdiary.design_system.generated.resources.confirm_delete_diary_positive_button
-import superdiary.design_system.generated.resources.confirm_logout_dialog_cancel_button
-import superdiary.design_system.generated.resources.confirm_logout_dialog_confirm_button
-import superdiary.design_system.generated.resources.confirm_logout_dialog_message
-import superdiary.design_system.generated.resources.confirm_logout_dialog_title
-import superdiary.design_system.generated.resources.confirm_save_diary_dialog_message
-import superdiary.design_system.generated.resources.confirm_save_diary_dialog_title
-import superdiary.design_system.generated.resources.confirm_save_diary_negative_button
-import superdiary.design_system.generated.resources.confirm_save_diary_positive_button
 
 @Composable
-fun ConfirmDeleteDialog(
+expect fun ConfirmDeleteDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(
-                text = stringResource(Res.string.confirm_delete_diary_dialog_title),
-                style = MaterialTheme.typography.titleMedium,
-            )
-        },
-        text = {
-            Text(
-                text = stringResource(Res.string.confirm_delete_diary_dialog_message),
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text(
-                    text = stringResource(Res.string.confirm_delete_diary_positive_button),
-                    style = MaterialTheme.typography.labelMedium,
-                )
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(
-                    text = stringResource(Res.string.confirm_delete_diary_negative_button),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.error,
-                )
-            }
-        },
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-    )
-}
+)
 
 @Composable
-fun ConfirmSaveDialog(
+expect fun ConfirmSaveDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     onDismissRequest: () -> Unit,
-) {
-    BasicSuperDiaryDialog(
-        onNegativeButton = onDismiss,
-        onPositiveButton = onConfirm,
-        title = stringResource(Res.string.confirm_save_diary_dialog_title),
-        message = stringResource(Res.string.confirm_save_diary_dialog_message),
-        positiveButtonText = stringResource(Res.string.confirm_save_diary_positive_button),
-        negativeButtonText = stringResource(Res.string.confirm_save_diary_negative_button),
-        onDismissRequest = onDismissRequest,
-    )
-}
+)
 
 @Composable
-fun BiometricAuthErrorDialog(
-    onExitApp: () -> Unit,
-    onTryAgain: () -> Unit,
-    onDismissRequest: () -> Unit,
-) {
-    BasicSuperDiaryDialog(
-        onNegativeButton = onExitApp,
-        onPositiveButton = onTryAgain,
-        title = "Authentication failed",
-        message = "Would you like to try biometric authentication again?",
-        positiveButtonText = "Try again",
-        negativeButtonText = "Exit",
-        onDismissRequest = onDismissRequest,
-        properties = DialogProperties(
-            dismissOnBackPress = false,
-            dismissOnClickOutside = false,
-        ),
-    )
-}
-
-@Composable
-fun ConfirmLogoutDialog(
-    onLogout: () -> Unit,
-    onDismiss: () -> Unit,
-    onDismissRequest: () -> Unit,
-) {
-    BasicSuperDiaryDialog(
-        onNegativeButton = onLogout,
-        onPositiveButton = onDismiss,
-        title = stringResource(Res.string.confirm_logout_dialog_title),
-        message = stringResource(Res.string.confirm_logout_dialog_message),
-        negativeButtonText = stringResource(Res.string.confirm_logout_dialog_confirm_button),
-        positiveButtonText = stringResource(Res.string.confirm_logout_dialog_cancel_button),
-        onDismissRequest = onDismissRequest,
-    )
-}
-
-@Composable
-fun ConfirmBiometricAuthDialog(
+expect fun ConfirmBiometricAuthDialog(
     onDismiss: () -> Unit,
     onEnableBiometric: () -> Unit,
     onDismissRequest: () -> Unit,
-) {
-    BasicSuperDiaryDialog(
-        onNegativeButton = onDismiss,
-        onPositiveButton = onEnableBiometric,
-        title = "Biometric Authentication",
-        message = "Do you want to enable biometric authentication?",
-        negativeButtonText = "No",
-        positiveButtonText = "Yes",
-        onDismissRequest = onDismissRequest,
-    )
-}
+)
 
 @Composable
-private fun BasicSuperDiaryDialog(
+fun BasicMaterialDialog(
     title: String,
     message: String,
     negativeButtonText: String,
@@ -228,7 +122,6 @@ fun LocationRationaleDialog(
                             .padding(top = 35.dp)
                             .height(70.dp)
                             .fillMaxWidth(),
-
                     )
 
                     Column(

@@ -1,0 +1,19 @@
+<resources>
+    <string name="label_open_email">Open email</string>
+    <string name="label_reset_password_button">Reset password</string>
+    <string name="label_reset_password_header">Reset your password</string>
+    <string name="label_google_button">Continue with Google</string>
+    <string name="label_username">Username</string>
+    <string name="label_password">Password</string>
+    <string name="label_login">Login</string>
+    <string name="label_login_input_username">Email</string>
+    <string name="label_login_title">Welcome back!</string>
+    <string name="label_register_title">Create an account</string>
+    <string name="label_register_message">Don't have an account yet? </string>
+    <string name="label_register">Register</string>
+
+    <string name="dialog_biometric_auth_error_title">Authentication failed</string>
+    <string name="dialog_biometric_auth_error_message">Would you like to try biometric authentication again?</string>
+    <string name="dialog_biometric_auth_error_positive_btn_text">Try again</string>
+    <string name="dialog_biometric_auth_error_negative_btn_text">Exit</string>
+</resources>

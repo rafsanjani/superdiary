@@ -3,7 +3,7 @@ package com.foreverrafs.superdiary.profile.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
-import com.foreverrafs.superdiary.utils.DiaryPreference
+import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.utils.DiarySettings
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

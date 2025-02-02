@@ -23,10 +23,18 @@ class GoogleTokenProviderImpl : GoogleTokenProvider{
         guard let rootViewController = await keyWindow?.rootViewController else { throw GoogleTokenProviderException(message: "Could not find root view controller") }
         
         
+        return try await signInWithGoogle(rootViewController: rootViewController)
+    }
+    
+    @MainActor
+    func signInWithGoogle(rootViewController: UIViewController) async throws -> String {
         let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
         
-        guard let token = result.user.idToken?.tokenString else { throw GoogleTokenProviderException(message: "Error getting token from Google Sign in result") }
-        
+
+        guard let token = result.user.idToken?.tokenString else {
+            throw GoogleTokenProviderException(message: "Error getting token from Google Sign in result")
+        }
+
         return token
     }
     
