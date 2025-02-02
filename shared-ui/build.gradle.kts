@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.google.ksp)
     alias(libs.plugins.testLogger)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.paparazzi)
