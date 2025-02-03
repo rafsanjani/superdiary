@@ -1,8 +1,6 @@
 name: Multiplatform Build
 
 on:
-    push:
-        branches: [ main, development ]
     pull_request:
 concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}
