@@ -1,7 +1,6 @@
 name: Save Release APK
 
 on:
-    workflow_dispatch:
     push:
         branches: [ development ]
 concurrency:
