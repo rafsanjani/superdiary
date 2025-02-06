@@ -59,10 +59,11 @@ class DefaultSupabaseAuth(
         }
     }
 
-    private fun getSessionStatus(): AuthApi.SignInStatus {
+    private suspend fun getSessionStatus(): AuthApi.SignInStatus {
         val currentSession = client.auth.currentSessionOrNull()
 
         return if (currentSession != null) {
+            associateUniqueEmailToUser()
             AuthApi.SignInStatus.LoggedIn(currentSession.toSession())
         } else {
             AuthApi.SignInStatus.Error(Exception("User was authenticated, but the session was null."))
@@ -97,13 +98,7 @@ class DefaultSupabaseAuth(
             this.email = email
             this.password = password
         }
-
-        val session = client.auth.currentSessionOrNull()
-        if (session != null) {
-            AuthApi.SignInStatus.LoggedIn(session.toSession())
-        } else {
-            AuthApi.SignInStatus.Error(Exception("User was signed in but the returning session is null!"))
-        }
+        getSessionStatus()
     } catch (e: Exception) {
         AuthApi.SignInStatus.Error(e)
     }
@@ -132,6 +127,27 @@ class DefaultSupabaseAuth(
         }
 
         AuthApi.RegistrationStatus.Error(error)
+    }
+
+    private suspend fun associateUniqueEmailToUser() {
+        if (!currentUserOrNull()?.uniqueEmail.isNullOrEmpty()) {
+            logger.d(Tag) {
+                "User already has a unique email. Skipping update."
+            }
+            return
+        }
+
+        val charset = ('A'..'Z') + ('a'..'z') + ('0'..'9')
+        val randomPart = (1..16)
+            .map { charset.random() }
+            .joinToString("")
+        val uniqueEmail = "$randomPart@emailparse.nebulainnova.co.uk"
+
+        client.auth.updateUser {
+            data = buildJsonObject {
+                put("unique_email", JsonPrimitive(uniqueEmail))
+            }
+        }
     }
 
     override suspend fun signOut(): Result<Unit> = try {

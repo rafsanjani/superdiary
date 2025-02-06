@@ -101,13 +101,15 @@ fun DetailScreenContent(
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                MapComponent(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(150.dp),
-                    latitude = diary.location.latitude,
-                    longitude = diary.location.longitude,
-                )
+                if (!diary.location.isEmpty()) {
+                    MapComponent(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(150.dp),
+                        latitude = diary.location.latitude,
+                        longitude = diary.location.longitude,
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(12.dp))
 
