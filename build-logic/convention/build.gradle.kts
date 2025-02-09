@@ -33,7 +33,6 @@ gradlePlugin {
     val rootPackageName = "com.superdiary.gradle"
 
     plugins {
-
         register("GitHooksConventionPlugin") {
             id = "com.superdiary.githooks"
             implementationClass = "$rootPackageName.codequality.GitHooksConventionPlugin"
@@ -52,6 +51,11 @@ gradlePlugin {
         register("SecretsConventionPlugin") {
             id = "com.superdiary.secrets"
             implementationClass = "$rootPackageName.secrets.SecretsConventionPlugin"
+        }
+
+        register("SnapshotsDiffPlugin") {
+            id = "com.superdiary.snapshotdiff"
+            implementationClass = "$rootPackageName.snapshots.SnapshotsDiffPlugin"
         }
     }
 }

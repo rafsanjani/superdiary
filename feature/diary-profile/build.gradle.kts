@@ -30,6 +30,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(compose.foundation)
             implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(projects.core.logging)

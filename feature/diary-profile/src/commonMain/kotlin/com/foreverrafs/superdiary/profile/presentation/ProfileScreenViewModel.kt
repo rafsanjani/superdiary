@@ -17,6 +17,7 @@ data class ProfileScreenViewData(
     val name: String = "",
     val email: String = "",
     val avatarUrl: String = "",
+    val uniqueEmailAddress: String = "",
     val errorMessage: String? = null,
     val isLogoutSuccess: Boolean? = null,
 )
@@ -50,6 +51,7 @@ class ProfileScreenViewModel(
             it.copy(
                 name = profile?.name.orEmpty(),
                 email = profile?.email.orEmpty(),
+                uniqueEmailAddress = profile?.uniqueEmail.orEmpty(),
                 avatarUrl = profile?.avatarUrl.orEmpty(),
             )
         }

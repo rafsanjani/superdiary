@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.ktlint).apply(false)
     id("com.superdiary.ktlint")
     id("com.superdiary.githooks")
+    id("com.superdiary.snapshotdiff")
 }
 
 buildscript {
