@@ -195,32 +195,3 @@ tasks.named("iosArm64ResolveResourcesFromDependencies") {
 dependencies {
     testImplementation(project(":shared-data"))
 }
-
-tasks.register("createPaparazziReportComment") {
-    doLast {
-        val reportDirectory = layout.buildDirectory.dir("paparazzi/failures").get().toString()
-        val deltaFiles = File(reportDirectory)
-            .listFiles()
-            ?.filter { it.name.startsWith("delta") }
-
-        val pullRequestNumber = System.getenv("BUILD_NUMBER")
-
-        val outputFilePath = "snapshots.md"
-        val outputFile = FileOutputStream(outputFilePath)
-        deltaFiles?.forEach { image ->
-            val filePath = image
-                .name
-                .toString()
-                .replace("[", "%5B")
-                .replace("]", "%5D")
-
-            val header = "#### ${image.name}\n"
-            val data =
-                "<img alt=\"paparazzi failure\" src=\"https://github.com/rafsanjani/superdiary/raw/paparazzi-snapshots-$pullRequestNumber/$filePath\"/>\n\n"
-
-            outputFile.write(header.toByteArray())
-            outputFile.write(data.toByteArray())
-        }
-        outputFile.close()
-    }
-}
