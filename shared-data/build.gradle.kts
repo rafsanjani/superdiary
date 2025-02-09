@@ -1,12 +1,15 @@
 @file:Suppress("UnusedPrivateProperty")
 
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+
+
 plugins {
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.android.library)
     alias(libs.plugins.testLogger)
     alias(libs.plugins.kotlin.serialization)
-    id("kotlin-parcelize")
-    kotlin("multiplatform")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.mokkery)
 }
 
@@ -127,11 +130,9 @@ dependencies {
 }
 
 afterEvaluate {
-    tasks {
-        withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>> {
-            if (name != "kspCommonMainKotlinMetadata") {
-                dependsOn("kspCommonMainKotlinMetadata")
-            }
+    tasks.withType<KotlinCompilationTask<*>> {
+        if (name != "kspCommonMainKotlinMetadata") {
+            dependsOn("kspCommonMainKotlinMetadata")
         }
     }
 }
