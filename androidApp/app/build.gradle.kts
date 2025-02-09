@@ -8,6 +8,7 @@ plugins {
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("io.sentry.android.gradle") version "5.1.0"
     id("com.google.firebase.appdistribution") version "5.1.1"
+    id("com.dropbox.dependency-guard") version "0.5.0"
 }
 
 android {
@@ -147,5 +148,8 @@ dependencies {
     implementation(libs.koin.core)
     implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.kotlinx.coroutines.test)
-    kotlin("android")
+}
+
+dependencyGuard {
+    configuration("releaseRuntimeClasspath")
 }
