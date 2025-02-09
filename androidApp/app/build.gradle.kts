@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("io.sentry.android.gradle") version "5.1.0"
-    id("com.google.firebase.appdistribution") version "5.1.0"
+    id("com.google.firebase.appdistribution") version "5.1.1"
 }
 
 android {
@@ -16,7 +16,7 @@ android {
         applicationId = "com.foreverrafs.superdiary"
         minSdk = 28
         targetSdk = 35
-        versionCode = 26
+        versionCode = 33
         versionName = "0.0.1"
 
         val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_ANDROID") ?: ""

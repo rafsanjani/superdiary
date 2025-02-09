@@ -48,6 +48,9 @@ jobs:
                     echo KEY_ALIAS="$KEY_ALIAS" >> gradle.properties
                     cat gradle.properties
 
+            -   name: Setup Gradle
+                uses: gradle/actions/setup-gradle@v4
+
             -   name: Build Android App (Release)
                 run: ./gradlew androidApp:app:assembleRelease
 

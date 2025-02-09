@@ -11,7 +11,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.google.maps.android.compose.rememberMarkerState
+import com.google.maps.android.compose.rememberUpdatedMarkerState
 
 @Composable
 actual fun MapComponent(
@@ -20,7 +20,7 @@ actual fun MapComponent(
     modifier: Modifier,
 ) {
     val coordinates = LatLng(latitude, longitude)
-    val markerState = rememberMarkerState(position = coordinates)
+    val markerState = rememberUpdatedMarkerState(position = coordinates)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(coordinates, 11f)
     }

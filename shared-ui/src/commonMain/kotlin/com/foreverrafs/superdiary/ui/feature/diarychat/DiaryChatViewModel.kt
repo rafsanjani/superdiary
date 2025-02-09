@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -40,13 +39,13 @@ class DiaryChatViewModel(
     private val _viewState = MutableStateFlow(DiaryChatViewState())
     val viewState: StateFlow<DiaryChatViewState> = _viewState
         .onStart {
-            logger.d(TAG) { "New subscription to DiaryChatViewModel" }
             loadDiaries()
         }
-        .onCompletion {
-            logger.d(TAG) { "All subscriptions to DiaryChatViewModel removed" }
-        }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DiaryChatViewState())
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = DiaryChatViewState(),
+        )
 
     private val diariesFlow: Flow<Result<List<Diary>>> = getAllDiariesUseCase()
     private val chatMessagesFlow: Flow<List<DiaryChatMessage>> = getChatMessagesUseCase()
