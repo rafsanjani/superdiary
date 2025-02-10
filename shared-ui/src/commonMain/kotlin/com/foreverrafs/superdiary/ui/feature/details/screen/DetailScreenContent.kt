@@ -32,12 +32,12 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.foreverrafs.superdiary.common.utils.format
 import com.foreverrafs.superdiary.design.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.design.components.MapComponent
 import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
-import com.foreverrafs.superdiary.ui.format
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlinx.coroutines.launch
@@ -119,7 +119,8 @@ fun DetailScreenContent(
                         .format("EEE - MMMM dd, yyyy - hh:mm a")
                         .lowercase(),
                     style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.alpha(0.6f)
+                    modifier = Modifier
+                        .alpha(0.6f)
                         .padding(12.dp),
                 )
 

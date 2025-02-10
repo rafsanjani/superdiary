@@ -1,7 +1,5 @@
 @file:Suppress("UnusedPrivateProperty")
 
-import java.io.FileOutputStream
-
 
 plugins {
     alias(libs.plugins.android.library)
@@ -80,6 +78,7 @@ kotlin {
                 implementation(projects.feature.diaryAi)
                 implementation(projects.feature.diaryProfile)
                 implementation(projects.feature.diaryAuth)
+                implementation(projects.feature.diaryList)
             }
         }
 
