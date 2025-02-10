@@ -23,6 +23,14 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.koin.core)
+                implementation(libs.kotlin.datetime)
+                kotlin("test")
+            }
+        }
+
+        commonTest {
+            dependencies {
+                implementation(libs.assertk.common)
             }
         }
     }
@@ -39,5 +47,10 @@ android {
     compileOptions {
         targetCompatibility = JavaVersion.VERSION_17
         sourceCompatibility = JavaVersion.VERSION_17
+    }
+}
+kotlin {
+    sourceSets.commonTest.dependencies {
+        implementation(kotlin("test"))
     }
 }

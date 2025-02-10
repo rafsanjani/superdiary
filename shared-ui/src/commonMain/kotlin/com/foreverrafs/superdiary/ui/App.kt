@@ -49,10 +49,10 @@ import com.foreverrafs.superdiary.auth.register.screen.RegisterScreen
 import com.foreverrafs.superdiary.auth.register.screen.RegistrationConfirmationScreen
 import com.foreverrafs.superdiary.auth.reset.SendPasswordResetEmailScreen
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
+import com.foreverrafs.superdiary.list.presentation.DiaryListScreen
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreenContent
-import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryListScreen
 import com.foreverrafs.superdiary.ui.navigation.AppRoute
 import com.foreverrafs.superdiary.ui.navigation.BottomNavigationScreen
 import kotlin.reflect.KType
@@ -236,6 +236,14 @@ private fun SuperDiaryNavHost(
             DiaryListScreen(
                 navController = navController,
                 avatarUrl = userInfo?.avatarUrl,
+                onAddEntry = {
+                    navController.navigate(route = AppRoute.CreateDiaryScreen)
+                },
+                onDiaryClick = { diaryId ->
+                    navController.navigate(
+                        route = AppRoute.DetailScreen(diaryId = diaryId.toString()),
+                    )
+                },
             )
         }
 
