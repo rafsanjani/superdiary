@@ -226,7 +226,7 @@ fun DiaryListScreenContent(
  * Display a list of diaries from the database. We have different functions
  * for adding and removing instead of just using the toggle. There are
  * instances where we just want to add entries whether they exist or
- * not and other times where we want to remove entries at all costs.
+ * not and other times when we want to remove entries at all costs.
  *
  * @param diaries The list of diaries to display
  * @param inSelectionMode Whether we are actively selecting items or not
@@ -236,8 +236,8 @@ fun DiaryListScreenContent(
  *    performed on a list of diaries.
  * @param onDeleteDiaries Delete the selected diaries from the list diaries
  * @param clock This is used to control the time/date for diary groupings
- * @param showSearchBar Determines whether or not the search/selection
- *    modifier bar will be showed. This is hidden in favorite screen it
+ * @param showSearchBar Determines whether the search/selection
+ *    modifier bar will be shown. This is hidden in favorite screen it
  *    otherwise.
  */
 @OptIn(ExperimentalFoundationApi::class)
@@ -399,7 +399,7 @@ fun DiaryList(
  * @param diaries List of diaries to display in the list
  * @param isFiltered Determines whether the rendered list is a result of a
  *    filter operation
- * @param showSearchBar Determines whether the search bar should be showed.
+ * @param showSearchBar Determines whether the search bar should be shown.
  *    It is hidden
  */
 @Composable
