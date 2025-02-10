@@ -1,6 +1,6 @@
 @file:Suppress("TooManyFunctions")
 
-package com.foreverrafs.superdiary.list.screen
+package com.foreverrafs.superdiary.list.presentation
 
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
@@ -78,10 +78,10 @@ import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.list.DiaryFilters
 import com.foreverrafs.superdiary.list.DiaryListActions
-import com.foreverrafs.superdiary.list.components.DiaryFilterSheet
-import com.foreverrafs.superdiary.list.components.DiaryHeader
-import com.foreverrafs.superdiary.list.components.DiarySearchBar
-import com.foreverrafs.superdiary.list.components.DiarySelectionModifierBar
+import com.foreverrafs.superdiary.list.presentation.components.DiaryFilterSheet
+import com.foreverrafs.superdiary.list.presentation.components.DiaryHeader
+import com.foreverrafs.superdiary.list.presentation.components.DiarySearchBar
+import com.foreverrafs.superdiary.list.presentation.components.DiarySelectionModifierBar
 import com.foreverrafs.superdiary.utils.groupByDate
 import com.foreverrafs.superdiary.utils.toDate
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
@@ -236,9 +236,8 @@ fun DiaryListScreenContent(
  *    performed on a list of diaries.
  * @param onDeleteDiaries Delete the selected diaries from the list diaries
  * @param clock This is used to control the time/date for diary groupings
- * @param showSearchBar Determines whether the search/selection
- *    modifier bar will be shown. This is hidden in favorite screen it
- *    otherwise.
+ * @param showSearchBar Determines whether the search/selection modifier
+ *    bar will be shown. This is hidden in favorite screen it otherwise.
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

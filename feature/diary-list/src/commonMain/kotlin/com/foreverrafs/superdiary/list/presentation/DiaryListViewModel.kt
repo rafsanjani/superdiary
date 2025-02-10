@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.list.model
+package com.foreverrafs.superdiary.list.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,7 +11,6 @@ import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.list.DiaryFilters
-import com.foreverrafs.superdiary.list.screen.DiaryListViewState
 import com.foreverrafs.superdiary.utils.toInstant
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -71,7 +70,7 @@ internal class DiaryListViewModel(
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Companion.WhileSubscribed(5000),
             initialValue = DiaryListViewState.Loading,
         )
 

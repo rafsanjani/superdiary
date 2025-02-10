@@ -9,6 +9,5 @@ import kotlinx.datetime.toJavaLocalDateTime
 actual fun LocalDate.format(format: String): String =
     DateTimeFormatter.ofPattern(format).format(this.toJavaLocalDate())
 
-
 actual fun LocalDateTime.format(format: String): String =
     DateTimeFormatter.ofPattern(format).format(this.toJavaLocalDateTime())

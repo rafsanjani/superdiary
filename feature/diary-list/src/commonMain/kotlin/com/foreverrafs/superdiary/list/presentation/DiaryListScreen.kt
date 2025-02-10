@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.list.screen
+package com.foreverrafs.superdiary.list.presentation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.foreverrafs.superdiary.list.DiaryFilters
 import com.foreverrafs.superdiary.list.DiaryListActions
-import com.foreverrafs.superdiary.list.model.DiaryListViewModel
 import org.koin.compose.koinInject
 
 @Composable
@@ -21,7 +20,7 @@ fun DiaryListScreen(
     avatarUrl: String?,
     navController: NavController,
     onAddEntry: () -> Unit,
-    onDiaryClicked: (id: Long) -> Unit,
+    onDiaryClick: (id: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val screenModel: DiaryListViewModel = koinInject()
@@ -43,7 +42,7 @@ fun DiaryListScreen(
                 diaryFilters = it
             },
             onToggleFavorite = screenModel::toggleFavorite,
-            onDiaryClicked = onDiaryClicked,
+            onDiaryClicked = onDiaryClick,
             onBackPressed = {
                 navController.popBackStack()
             },

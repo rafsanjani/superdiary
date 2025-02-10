@@ -1,8 +1,7 @@
-package com.foreverrafs.superdiary
+package com.foreverrafs.superdiary.common.utils
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.foreverrafs.superdiary.ui.format
 import kotlin.test.Test
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -21,8 +20,8 @@ class DateFormatterTest {
     @Test
     fun `Verify datetime formatting works properly`() {
         val dateTime = LocalDate(2020, 10, 10)
-            .atStartOfDayIn(TimeZone.UTC)
-            .toLocalDateTime(TimeZone.UTC)
+            .atStartOfDayIn(TimeZone.Companion.UTC)
+            .toLocalDateTime(TimeZone.Companion.UTC)
 
         val formattedDate = dateTime.format("YYYY")
 

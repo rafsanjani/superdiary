@@ -49,7 +49,7 @@ import com.foreverrafs.superdiary.auth.register.screen.RegisterScreen
 import com.foreverrafs.superdiary.auth.register.screen.RegistrationConfirmationScreen
 import com.foreverrafs.superdiary.auth.reset.SendPasswordResetEmailScreen
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
-import com.foreverrafs.superdiary.list.screen.DiaryListScreen
+import com.foreverrafs.superdiary.list.presentation.DiaryListScreen
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreenContent
@@ -239,7 +239,7 @@ private fun SuperDiaryNavHost(
                 onAddEntry = {
                     navController.navigate(route = AppRoute.CreateDiaryScreen)
                 },
-                onDiaryClicked = { diaryId ->
+                onDiaryClick = { diaryId ->
                     navController.navigate(
                         route = AppRoute.DetailScreen(diaryId = diaryId.toString()),
                     )

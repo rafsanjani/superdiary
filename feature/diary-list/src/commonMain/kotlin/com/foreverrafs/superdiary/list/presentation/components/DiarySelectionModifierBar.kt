@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.list.components
+package com.foreverrafs.superdiary.list.presentation.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn

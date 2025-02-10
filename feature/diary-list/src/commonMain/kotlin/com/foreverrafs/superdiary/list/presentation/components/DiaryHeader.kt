@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.list.components
+package com.foreverrafs.superdiary.list.presentation.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -38,7 +38,7 @@ internal fun DiaryHeader(
     Card(
         modifier = modifier
             .semantics(mergeDescendants = true) {
-                contentDescription = "Group header"
+                contentDescription = text
             }
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(
