@@ -12,7 +12,6 @@ pluginManagement {
     }
     includeBuild("build-logic")
 }
-System.setProperty("sonar.gradle.skipCompile", "true")
 
 dependencyResolutionManagement {
     repositories {
