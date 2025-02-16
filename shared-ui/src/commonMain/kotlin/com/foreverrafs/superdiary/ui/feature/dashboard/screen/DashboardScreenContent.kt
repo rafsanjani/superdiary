@@ -45,12 +45,12 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.foreverrafs.superdiary.common.utils.format
 import com.foreverrafs.superdiary.design.components.ConfirmBiometricAuthDialog
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
+import com.foreverrafs.superdiary.list.presentation.DiaryItem
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
-import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryItem
-import com.foreverrafs.superdiary.ui.format
 import com.valentinilk.shimmer.shimmer
 import kotlin.random.Random
 import kotlinx.datetime.Clock

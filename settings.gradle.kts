@@ -12,7 +12,6 @@ pluginManagement {
     }
     includeBuild("build-logic")
 }
-System.setProperty("sonar.gradle.skipCompile", "true")
 
 dependencyResolutionManagement {
     repositories {
@@ -27,6 +26,7 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
             from("io.github.rafsanjani:versions:2025.02.02")
+            version("gradle", "8.8.0-alpha05")
         }
     }
 }
@@ -132,5 +132,6 @@ include(":desktopApp")
 include(":feature:diary-ai")
 include(":feature:diary-profile")
 include(":feature:diary-auth")
+include(":feature:diary-list")
 include(":preferences:annotation")
 include(":preferences:processor")

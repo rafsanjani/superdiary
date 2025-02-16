@@ -11,10 +11,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.domain.model.Diary
-import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
-import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
-import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryList
-import com.foreverrafs.superdiary.ui.feature.diarylist.screen.Empty
+import com.foreverrafs.superdiary.list.DiaryFilters
+import com.foreverrafs.superdiary.list.DiaryListActions
+import com.foreverrafs.superdiary.list.presentation.DiaryList
+import com.foreverrafs.superdiary.list.presentation.Empty
 
 @Composable
 fun FavoriteScreenContent(

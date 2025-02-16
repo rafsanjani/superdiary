@@ -25,15 +25,14 @@ dependencies {
     compileOnly(libs.conventionplugins.android)
     compileOnly(libs.conventionplugins.compose)
     compileOnly(libs.conventionplugins.compose.compiler)
-    compileOnly("com.codingfeline.buildkonfig:buildkonfig-gradle-plugin:0.15.2")
-    compileOnly("com.codingfeline.buildkonfig:buildkonfig-compiler:0.15.2")
+    compileOnly("com.codingfeline.buildkonfig:buildkonfig-gradle-plugin:0.16.0")
+    compileOnly("com.codingfeline.buildkonfig:buildkonfig-compiler:0.16.0")
 }
 
 gradlePlugin {
     val rootPackageName = "com.superdiary.gradle"
 
     plugins {
-
         register("GitHooksConventionPlugin") {
             id = "com.superdiary.githooks"
             implementationClass = "$rootPackageName.codequality.GitHooksConventionPlugin"
@@ -52,6 +51,11 @@ gradlePlugin {
         register("SecretsConventionPlugin") {
             id = "com.superdiary.secrets"
             implementationClass = "$rootPackageName.secrets.SecretsConventionPlugin"
+        }
+
+        register("SnapshotsDiffPlugin") {
+            id = "com.superdiary.snapshotdiff"
+            implementationClass = "$rootPackageName.snapshots.SnapshotsDiffPlugin"
         }
     }
 }

@@ -3,4 +3,6 @@
     <string name="confirm_logout_dialog_message">Are you sure you want to logout?</string>
     <string name="confirm_logout_dialog_cancel_button">Cancel</string>
     <string name="confirm_logout_dialog_confirm_button">Logout</string>
+    <string name="profile_screen_section_dashboard_cards">Dashboard Cards</string>
+    <string name="unique_email_address_label">Unique email address</string>
 </resources>

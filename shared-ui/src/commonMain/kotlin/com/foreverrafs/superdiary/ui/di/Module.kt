@@ -14,13 +14,13 @@ import com.foreverrafs.superdiary.core.location.permission.LocationPermissionMan
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.di.platformModule
 import com.foreverrafs.superdiary.di.useCaseModule
+import com.foreverrafs.superdiary.list.di.diaryListModule
 import com.foreverrafs.superdiary.profile.di.profileModule
 import com.foreverrafs.superdiary.ui.AppViewModel
 import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
-import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListViewModel
 import com.foreverrafs.superdiary.ui.feature.favorites.FavoriteViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
@@ -32,7 +32,6 @@ internal val screensModule: Module = module {
     factoryOf(::LocationPermissionManager)
     singleOf(::DeeplinkContainer)
 
-    viewModelOf(::DiaryListViewModel)
     viewModelOf(::CreateDiaryViewModel)
     viewModelOf(::FavoriteViewModel)
     viewModelOf(::DiaryChatViewModel)
@@ -61,4 +60,5 @@ fun compositeModule(
     authModule(),
     diaryAiModule,
     profileModule,
+    diaryListModule,
 )

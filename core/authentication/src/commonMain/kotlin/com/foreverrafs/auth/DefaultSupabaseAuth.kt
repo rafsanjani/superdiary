@@ -231,4 +231,5 @@ internal fun UserInfoDto.toUserInfo(): UserInfo = UserInfo(
     name = userMetadata?.get("full_name").toString().trim('\"'),
     email = userMetadata?.get("email").toString().trim('\"'),
     avatarUrl = userMetadata?.get("avatar_url").toString().trim('\"'),
+    uniqueEmail = userMetadata?.get("unique_email").toString().trim('\"'),
 )

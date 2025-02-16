@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -46,13 +47,19 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.foreverrafs.superdiary.design.components.SuperDiaryImage
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewData
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewModel
 import com.foreverrafs.superdiary.utils.DiarySettings
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import superdiary.feature.diary_profile.generated.resources.Res
+import superdiary.feature.diary_profile.generated.resources.profile_screen_section_dashboard_cards
+import superdiary.feature.diary_profile.generated.resources.unique_email_address_label
 
 @Composable
 fun ProfileScreen(
@@ -140,7 +147,7 @@ fun ProfileScreenContent(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp),
+                        .padding(horizontal = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     IconButton(
@@ -182,7 +189,7 @@ fun ProfileScreenContent(
                     Spacer(modifier = Modifier.height(48.dp))
 
                     ProfileSection(
-                        label = "Dashboard Cards",
+                        label = stringResource(Res.string.profile_screen_section_dashboard_cards),
                     ) {
                         CheckboxProfileItem(
                             label = "Weekly summary",
@@ -221,6 +228,20 @@ fun ProfileScreenContent(
                     }
 
                     Spacer(modifier = Modifier.weight(1f))
+
+                    Text(
+                        text = stringResource(Res.string.unique_email_address_label),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+
+                    SelectionContainer {
+                        Text(
+                            text = viewState.uniqueEmailAddress,
+                            style = MaterialTheme.typography.labelSmall,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
 
                     TextButton(
                         onClick = {
@@ -320,4 +341,23 @@ private fun CheckboxProfileItem(
             onCheckedChange = onCheckChange,
         )
     }
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    ProfileScreenContent(
+        viewState = ProfileScreenViewData(
+            name = "Rafsanjani Aziz",
+            email = "foreverrafs@gmail.com",
+            uniqueEmailAddress = "S2FZ8rv7U@emailparse.nebulainnova.co.uk",
+        ),
+        onConsumeErrorMessage = {},
+        onLogout = {},
+        settings = DiarySettings.Empty,
+        onUpdateSettings = {},
+        onLogoutDialogVisibilityChange = {},
+        isLogoutDialogVisible = false,
+        onNavigateBack = {},
+    )
 }
