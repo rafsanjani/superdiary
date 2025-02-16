@@ -19,7 +19,7 @@ data class DiaryDto(
     @SerialName("isFavorite")
     val isFavorite: Boolean = false,
     @SerialName("location")
-    val location: String,
+    val location: String? = Location.Empty.toString(),
 )
 
 fun DiaryDto.toDiary(): Diary = Diary(
@@ -27,7 +27,7 @@ fun DiaryDto.toDiary(): Diary = Diary(
     id = id,
     date = date,
     isFavorite = isFavorite,
-    location = Location.fromString(location),
+    location = Location.fromString(location ?: Location.Empty.toString()),
 )
 
 fun DiaryDto.toDatabase(): DiaryDb = DiaryDb(
@@ -37,4 +37,5 @@ fun DiaryDto.toDatabase(): DiaryDb = DiaryDb(
     isFavorite = isFavorite,
     location = Location.toString(),
     markedForDelete = false,
+    isSynced = true,
 )

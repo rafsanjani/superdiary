@@ -15,7 +15,9 @@ class DiaryListRepositoryImpl(
     override fun getDiaryById(id: Long): Diary? = database.findById(id)?.toDiary()
 
     override fun getAllDiaries(): Flow<List<Diary>> =
-        database.getAllDiaries().map { result -> result.map { it.toDiary() } }
+        database.getAllDiaries().map { result ->
+            result.map { it.toDiary() }
+        }
 
     override suspend fun deleteDiaries(diary: List<Diary>): Result<Int> {
         TODO("Not yet implemented")

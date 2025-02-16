@@ -57,13 +57,7 @@ val useCaseModule = module {
     }
     factoryOf(::DiaryValidatorImpl) { bind<DiaryValidator>() }
 
-    factory {
-        AddDiaryUseCase(
-            dataSource = get<RemoteDataSource>(),
-            dispatchers = get(),
-            validator = get(),
-        )
-    }
+    factoryOf(::AddDiaryUseCase)
 
     factoryOf(::GetFavoriteDiariesUseCase)
     factoryOf(::SearchDiaryBetweenDatesUseCase)

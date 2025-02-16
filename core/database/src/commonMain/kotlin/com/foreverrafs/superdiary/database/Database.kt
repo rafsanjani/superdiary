@@ -28,14 +28,15 @@ class Database(
     private val queries = database.databaseQueries
 
     private val diaryMapper =
-        { id: Long, entry: String, date: Instant, favorite: Long, location: LocationDb?, markForDelete: Long ->
+        { id: Long, entry: String, date: Instant, favorite: Long, location: LocationDb?, markForDelete: Boolean, isSynced: Boolean ->
             DiaryDb(
                 id = id,
                 entry = entry,
                 date = date,
                 isFavorite = favorite.asBoolean(),
                 location = location.toString(),
-                markedForDelete = markForDelete.asBoolean(),
+                markedForDelete = markForDelete,
+                isSynced = isSynced,
             )
         }
 
@@ -46,6 +47,7 @@ class Database(
             date = diary.date,
             favorite = diary.isFavorite.asLong(),
             location = LocationDb.fromString(diary.location),
+            is_synced = diary.isSynced,
         )
 
         return queries.lastInsertRowId().executeAsOne()
@@ -63,10 +65,13 @@ class Database(
         }
     }
 
-    fun insert(diaries: List<DiaryDb>) {
-        queries.transaction {
-            diaries.forEach(::insert)
+    fun insert(diaries: List<DiaryDb>): Long {
+        val result = queries.transactionWithResult {
+            diaries.forEach(::upsert)
+            diaries.size.toLong()
         }
+
+        return result
     }
 
     /**
@@ -125,7 +130,8 @@ class Database(
             entry = diary.entry,
             date = diary.date,
             favorite = diary.isFavorite.asLong(),
-            mark_for_deletion = diary.markedForDelete.asLong(),
+            mark_for_deletion = diary.markedForDelete,
+            is_synced = diary.isSynced,
         )
 
         return queries.getAffectedRows().executeAsOne()

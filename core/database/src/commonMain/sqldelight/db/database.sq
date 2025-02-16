@@ -2,7 +2,7 @@ selectAll:
 SELECT * FROM diary ORDER BY date DESC;
 
 insert:
-INSERT INTO diary(id, entry, date, favorite, location, mark_for_deletion) VALUES (?, ?, ?, ?, ?, 0);
+INSERT INTO diary(id, entry, date, favorite, location, mark_for_deletion, is_synced) VALUES (?, ?, ?, ?, ?, 0, ?);
 
 delete:
 DELETE FROM diary WHERE id=?;
@@ -23,7 +23,7 @@ deleteAll:
 DELETE FROM diary;
 
 update:
-REPLACE INTO diary (id, entry, date, favorite, mark_for_deletion) VALUES(?, ?,?, ?, ?);
+REPLACE INTO diary (id, entry, date, favorite, mark_for_deletion, is_synced) VALUES(?, ?,?, ?, ?, ?);
 
 getLatestEntries:
 SELECT * FROM diary ORDER BY date DESC LIMIT ?;

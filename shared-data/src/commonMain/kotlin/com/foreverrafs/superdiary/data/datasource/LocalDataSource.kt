@@ -20,10 +20,9 @@ import kotlinx.datetime.toLocalDateTime
 
 @Suppress("TooManyFunctions")
 class LocalDataSource(private val database: Database) : DataSource {
-    override suspend fun add(diary: Diary): Long {
-        database.insert(diary.toDatabase())
-        return 1
-    }
+    override suspend fun add(diary: Diary): Long = database.insert(diary.toDatabase())
+
+    override suspend fun addAll(diaries: List<Diary>): Long = database.insert(diaries.map { it.toDatabase() })
 
     override suspend fun delete(diaries: List<Diary>): Int =
         database.deleteDiaries(diaries.mapNotNull { it.id })

@@ -26,7 +26,6 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
             from("io.github.rafsanjani:versions:2025.02.02")
-            version("gradle", "8.8.0-alpha05")
         }
     }
 }
@@ -124,6 +123,7 @@ include(":core:analytics")
 include(":core:location")
 include(":core:logging")
 include(":common-utils")
+include(":core:sync")
 include(":common-test")
 include(":core:secrets")
 include(":core:database")

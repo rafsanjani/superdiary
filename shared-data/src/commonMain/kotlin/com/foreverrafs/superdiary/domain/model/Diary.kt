@@ -15,6 +15,7 @@ data class Diary(
     // An entry marked for deletion will not be rendered and will be removed
     // from remote db during next sync cycle
     val isMarkedForDelete: Boolean = false,
+    val isSynced: Boolean = false,
 )
 
 fun Diary.toDto(): DiaryDto = DiaryDto(
@@ -32,4 +33,5 @@ fun Diary.toDatabase(): DiaryDb = DiaryDb(
     isFavorite = isFavorite,
     location = location.toString(),
     markedForDelete = isMarkedForDelete,
+    isSynced = isSynced,
 )
