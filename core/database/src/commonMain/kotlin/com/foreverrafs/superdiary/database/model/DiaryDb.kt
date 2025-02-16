@@ -10,4 +10,5 @@ data class DiaryDb(
     val isFavorite: Boolean = false,
     val location: String,
     val markedForDelete: Boolean,
+    val isSynced: Boolean,
 )

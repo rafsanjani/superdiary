@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,6 +49,7 @@ import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
 import com.foreverrafs.superdiary.auth.register.screen.RegisterScreen
 import com.foreverrafs.superdiary.auth.register.screen.RegistrationConfirmationScreen
 import com.foreverrafs.superdiary.auth.reset.SendPasswordResetEmailScreen
+import com.foreverrafs.superdiary.core.sync.Synchronizer
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.list.presentation.DiaryListScreen
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
@@ -60,6 +62,7 @@ import kotlin.reflect.typeOf
 import kotlinx.serialization.json.Json
 import okio.FileSystem
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.logo
@@ -73,12 +76,14 @@ import superdiary.shared_ui.generated.resources.logo
 fun App(modifier: Modifier = Modifier) {
     val appViewModel: AppViewModel = koinViewModel()
     val appViewState by appViewModel.viewState.collectAsStateWithLifecycle()
+    val synchronizer: Synchronizer = koinInject()
 
     SuperDiaryTheme {
         setSingletonImageLoaderFactory(::getAsyncImageLoader)
         SuperDiaryNavHost(
             viewState = appViewState,
             modifier = modifier,
+            synchronizer = synchronizer,
         )
     }
 }
@@ -87,6 +92,7 @@ fun App(modifier: Modifier = Modifier) {
 private fun SuperDiaryNavHost(
     viewState: AppSessionState,
     modifier: Modifier = Modifier,
+    synchronizer: Synchronizer,
 ) {
     // This userInfo is used when a session is automatically restored after app is launched.
     val userInfo by remember(viewState) {
@@ -215,6 +221,11 @@ private fun SuperDiaryNavHost(
         ) {
             val route = it.toRoute<AppRoute.BottomNavigationScreen>()
 
+            // Sync can only happen after we are logged in
+            LaunchedEffect(Unit) {
+                synchronizer.sync()
+            }
+
             BottomNavigationScreen(
                 rootNavController = navController,
                 onProfileClick = {
@@ -287,8 +298,7 @@ private fun LoadingScreen() {
     SuperDiaryTheme {
         Surface {
             Box(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
                 val imageAnimation = rememberInfiniteTransition()
@@ -305,12 +315,10 @@ private fun LoadingScreen() {
                 )
 
                 Image(
-                    modifier = Modifier
-                        .size(96.dp)
-                        .graphicsLayer {
-                            scaleX = scale
-                            scaleY = scale
-                        },
+                    modifier = Modifier.size(96.dp).graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                    },
                     painter = painterResource(Res.drawable.logo),
                     contentDescription = null,
                 )
@@ -362,8 +370,7 @@ fun getAsyncImageLoader(context: PlatformContext) =
         .build()
 
 fun newDiskCache(): DiskCache =
-    DiskCache.Builder()
-        .directory(FileSystem.SYSTEM_TEMPORARY_DIRECTORY / "image_cache")
+    DiskCache.Builder().directory(FileSystem.SYSTEM_TEMPORARY_DIRECTORY / "image_cache")
         .maxSizeBytes(1024L * 1024 * 1024) // 512MB
         .build()
 

@@ -33,7 +33,7 @@ fun DetailScreen(
             DetailScreenContent(
                 modifier = modifier,
                 onNavigateBack = {
-                    navController.popBackStack()
+                    navController.navigateUp()
                 },
                 onDeleteDiary = {
                     viewModel.deleteDiary(it)

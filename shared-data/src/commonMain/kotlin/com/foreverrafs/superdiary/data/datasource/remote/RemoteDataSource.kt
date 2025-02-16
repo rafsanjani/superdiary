@@ -113,6 +113,9 @@ class RemoteDataSource(
         TODO("Not yet implemented")
     }
 
+    override suspend fun addAll(diaries: List<Diary>): Long {
+        TODO("Not yet implemented")
+    }
     companion object {
         private const val TABLE_NAME = "diary"
         private const val TAG = "RemoteDataSource"

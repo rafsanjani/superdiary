@@ -20,6 +20,14 @@ interface DataSource {
     suspend fun add(diary: Diary): Long
 
     /**
+     * Adds all diary items to the datasource. This operation is synchronous
+     * and will return after the operation has either succeeded or failed.
+     *
+     * @return The number of inserted entries
+     */
+    suspend fun addAll(diaries: List<Diary>): Long
+
+    /**
      * Updates an existing item with the same id with the properties of the new
      * item
      */
