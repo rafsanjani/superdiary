@@ -12,7 +12,7 @@ class AddDiaryUseCase(
     private val dispatchers: AppCoroutineDispatchers,
     private val validator: DiaryValidator,
 ) {
-    suspend operator fun invoke(diary: Diary): DiaryListResult = withContext(dispatchers.io) {
+    suspend operator fun invoke(diary: Diary) = withContext(dispatchers.io) {
         try {
             validator.validate(diary)
 

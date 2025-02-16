@@ -59,7 +59,7 @@ interface DataSource {
     fun find(from: Instant, to: Instant): Flow<List<Diary>>
 
     /** Search for a diary by its id */
-    fun find(id: Long): Flow<Diary?>
+    fun find(id: Long): Diary?
 
     /** Deletes all the diary entries from the data source. */
     suspend fun deleteAll()

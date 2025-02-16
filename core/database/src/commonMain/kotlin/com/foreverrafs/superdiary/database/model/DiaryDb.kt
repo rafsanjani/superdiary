@@ -9,4 +9,5 @@ data class DiaryDb(
     val date: Instant = Clock.System.now(),
     val isFavorite: Boolean = false,
     val location: String,
+    val markedForDelete: Boolean,
 )

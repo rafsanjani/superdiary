@@ -52,7 +52,7 @@ import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.list.presentation.DiaryListScreen
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
-import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreenContent
+import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreen
 import com.foreverrafs.superdiary.ui.navigation.AppRoute
 import com.foreverrafs.superdiary.ui.navigation.BottomNavigationScreen
 import kotlin.reflect.KType
@@ -190,7 +190,7 @@ private fun SuperDiaryNavHost(
         animatedComposable<AppRoute.RegisterScreen> {
             RegisterScreen(
                 onLoginClick = {
-                    navController.navigate(AppRoute.LoginScreen) {
+                    navController.navigate(AppRoute.LoginScreen()) {
                         popUpTo(navController.graph.startDestinationId) {
                             inclusive = true
                         }
@@ -203,7 +203,6 @@ private fun SuperDiaryNavHost(
                         }
                     }
                 },
-
             )
         }
 
@@ -261,7 +260,7 @@ private fun SuperDiaryNavHost(
         animatedComposable<AppRoute.DetailScreen> { backstackEntry ->
             val diaryId: String = backstackEntry.toRoute<AppRoute.DetailScreen>().diaryId
 
-            DetailScreenContent(
+            DetailScreen(
                 diaryId = diaryId,
                 navController = navController,
                 avatarUrl = userInfo?.avatarUrl.orEmpty(),

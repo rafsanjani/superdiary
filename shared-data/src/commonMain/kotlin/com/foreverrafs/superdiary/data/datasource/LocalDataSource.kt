@@ -21,7 +21,7 @@ import kotlinx.datetime.toLocalDateTime
 @Suppress("TooManyFunctions")
 class LocalDataSource(private val database: Database) : DataSource {
     override suspend fun add(diary: Diary): Long {
-        database.addDiary(diary.toDatabase())
+        database.insert(diary.toDatabase())
         return 1
     }
 
@@ -40,7 +40,7 @@ class LocalDataSource(private val database: Database) : DataSource {
             diaryDbList.map { it.toDiary() }
         }
 
-    override fun find(id: Long): Flow<Diary?> = database.findById(id).map { it?.toDiary() }
+    override fun find(id: Long): Diary? = database.findById(id)?.toDiary()
 
     /**
      * The dates are currently stored on the database as very high precision
@@ -61,18 +61,18 @@ class LocalDataSource(private val database: Database) : DataSource {
 
         // End of day
         val endOfDay = LocalDateTime(
-            currentDate.year,
-            currentDate.monthNumber,
-            currentDate.dayOfMonth,
-            23,
-            59,
-            59,
+            year = currentDate.year,
+            monthNumber = currentDate.monthNumber,
+            dayOfMonth = currentDate.dayOfMonth,
+            hour = 23,
+            minute = 59,
+            second = 59,
         ).toInstant(timeZone)
 
         return database.findByDateRange(startOfDay, endOfDay).mapToDiary()
     }
 
-    override suspend fun update(diary: Diary): Int = database.update(diary.toDatabase())
+    override suspend fun update(diary: Diary): Int = database.update(diary.toDatabase()).toInt()
 
     override suspend fun deleteAll() = database.clearDiaries()
 
