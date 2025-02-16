@@ -45,8 +45,11 @@ plugins {
             implementation(projects.core.location)
             implementation(projects.swipe)
             implementation(projects.sharedData)
+            implementation(projects.core.database)
+            implementation("org.mobilenativefoundation.store:store5:5.1.0-alpha05")
             implementation("org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
             implementation(projects.designSystem)
+
         }
 
         commonTest.dependencies {

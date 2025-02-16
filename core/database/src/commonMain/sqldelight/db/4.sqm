@@ -1,0 +1,3 @@
+
+ALTER TABLE diary ADD COLUMN `mark_for_deletion` INTEGER NOT NULL;
+

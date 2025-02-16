@@ -1,6 +1,7 @@
 package com.foreverrafs.superdiary.data.model
 
 import com.foreverrafs.superdiary.core.location.Location
+import com.foreverrafs.superdiary.database.model.DiaryDb
 import com.foreverrafs.superdiary.domain.model.Diary
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -27,4 +28,13 @@ fun DiaryDto.toDiary(): Diary = Diary(
     date = date,
     isFavorite = isFavorite,
     location = Location.fromString(location),
+)
+
+fun DiaryDto.toDatabase(): DiaryDb = DiaryDb(
+    entry = entry,
+    id = id,
+    date = date,
+    isFavorite = isFavorite,
+    location = Location.toString(),
+    markedForDelete = false,
 )
