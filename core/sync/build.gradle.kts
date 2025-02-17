@@ -28,7 +28,9 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(projects.core.logging)
                 implementation(projects.commonUtils)
+                implementation(libs.kotlinx.coroutines.core)
                 implementation(projects.sharedData)
+                implementation(projects.core.location)
                 implementation(libs.kotlinx.coroutines.test)
             }
         }

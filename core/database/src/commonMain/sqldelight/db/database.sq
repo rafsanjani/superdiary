@@ -52,6 +52,12 @@ SELECT last_insert_rowid();
 saveChat:
 INSERT INTO chat(id, date, content, role) VALUES (?, ?,?,?);
 
+getPendingDeletes:
+SELECT * FROM diary WHERE mark_for_deletion = 1;
+
+getPendingSyncs:
+SELECT * FROM diary WHERE is_synced = 0;
+
 clearChat:
 DELETE FROM chat;
 

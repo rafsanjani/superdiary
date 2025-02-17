@@ -59,11 +59,8 @@ class Database(
         update(diary)
     }
 
-    fun upsert(diaries: List<DiaryDb>) {
-        queries.transaction {
-            diaries.forEach(::upsert)
-        }
-    }
+    fun getPendingDeletes(): List<DiaryDb> = queries.getPendingDeletes(diaryMapper).executeAsList()
+    fun getPendingSyncs(): List<DiaryDb> = queries.getPendingSyncs(diaryMapper).executeAsList()
 
     fun insert(diaries: List<DiaryDb>): Long {
         val result = queries.transactionWithResult {

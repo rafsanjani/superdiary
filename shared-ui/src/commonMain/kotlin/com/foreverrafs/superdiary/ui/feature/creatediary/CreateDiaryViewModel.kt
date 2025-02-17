@@ -9,6 +9,8 @@ import com.foreverrafs.superdiary.core.location.permission.LocationPermissionMan
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
 import com.foreverrafs.superdiary.core.location.permission.PermissionsControllerWrapper
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
+import com.foreverrafs.superdiary.core.sync.Synchronizer
+import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenState
@@ -29,6 +31,7 @@ class CreateDiaryViewModel(
     private val logger: AggregateLogger,
     private val locationManager: LocationManager,
     private val locationPermissionManager: LocationPermissionManager,
+    private val synchronizer: Synchronizer,
     private val preference: DiaryPreference,
 ) : ViewModel() {
 
@@ -90,9 +93,24 @@ class CreateDiaryViewModel(
     }
 
     fun saveDiary(diary: Diary) = viewModelScope.launch {
-        addDiaryUseCase(diary)
-        logger.i(Tag) {
-            "Diary entry successfully saved: $diary"
+        when (val results = addDiaryUseCase(diary)) {
+            is Result.Failure -> {
+                logger.e(Tag, results.error)
+            }
+
+            is Result.Success -> {
+                results.data.lastOrNull()?.let { lastInsertedItem ->
+                    synchronizer.sync(
+                        operation = Synchronizer.SyncOperation.Save(
+                            lastInsertedItem,
+                        ),
+                    )
+
+                    logger.i(Tag) {
+                        "Diary entry successfully saved: $diary"
+                    }
+                }
+            }
         }
     }
 

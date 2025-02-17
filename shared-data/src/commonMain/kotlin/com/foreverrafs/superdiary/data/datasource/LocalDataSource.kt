@@ -22,7 +22,8 @@ import kotlinx.datetime.toLocalDateTime
 class LocalDataSource(private val database: Database) : DataSource {
     override suspend fun add(diary: Diary): Long = database.insert(diary.toDatabase())
 
-    override suspend fun addAll(diaries: List<Diary>): Long = database.insert(diaries.map { it.toDatabase() })
+    override suspend fun addAll(diaries: List<Diary>): Long =
+        database.insert(diaries.map { it.toDatabase() })
 
     override suspend fun delete(diaries: List<Diary>): Int =
         database.deleteDiaries(diaries.mapNotNull { it.id })
@@ -91,4 +92,10 @@ class LocalDataSource(private val database: Database) : DataSource {
     private fun Flow<List<DiaryDb>>?.mapToDiary() =
         this?.map { diaryDtoList -> diaryDtoList.map { it.toDiary() } }
             ?: emptyFlow()
+
+    override suspend fun getPendingDeletes(): List<Diary> =
+        database.getPendingDeletes().map { it.toDiary() }
+
+    override suspend fun getPendingSyncs(): List<Diary> =
+        database.getPendingSyncs().map { it.toDiary() }
 }

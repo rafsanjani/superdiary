@@ -16,10 +16,16 @@ class AddDiaryUseCase(
         try {
             validator.validate(diary)
 
-            dataSource.add(diary)
-            Result.Success(data = listOf(diary))
-        } catch (ex: IllegalArgumentException) {
-            Result.Failure(ex)
+            // new diary entries are created without ids and let to the database to auto generate them
+            // after adding an entry, the generated id is returned from the database
+            val diaryId = dataSource.add(diary)
+
+            // Update the diary with the newly generated id and return it
+            Result.Success(
+                data = listOf(
+                    diary.copy(id = diaryId),
+                ),
+            )
         } catch (ex: Exception) {
             Result.Failure(ex)
         }
