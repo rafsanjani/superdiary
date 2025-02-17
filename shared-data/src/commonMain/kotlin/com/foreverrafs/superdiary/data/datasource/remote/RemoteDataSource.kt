@@ -41,6 +41,13 @@ class RemoteDataSource(
         }
     }
 
+    override suspend fun getPendingDeletes(): List<Diary> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getPendingSyncs(): List<Diary> {
+        TODO("Not yet implemented")
+    }
     override suspend fun delete(diaries: List<Diary>): Int {
         supabase.from(TABLE_NAME)
             .delete {

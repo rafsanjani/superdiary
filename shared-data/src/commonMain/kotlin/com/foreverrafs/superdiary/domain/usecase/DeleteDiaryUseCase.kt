@@ -12,6 +12,11 @@ class DeleteDiaryUseCase(
 ) {
     suspend operator fun invoke(diaries: List<Diary>): Result<Int> = withContext(dispatchers.io) {
         try {
+            // mark all the diaries for deletion
+            diaries
+                .map { diary -> diary.copy(isMarkedForDelete = true) }
+                .forEach { dataSource.update(it) }
+
             Result.Success(dataSource.delete(diaries))
         } catch (exception: Exception) {
             Result.Failure(exception)

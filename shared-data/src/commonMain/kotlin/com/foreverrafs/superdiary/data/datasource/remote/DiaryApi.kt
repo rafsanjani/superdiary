@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.data.datasource.remote
 
+import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.model.DiaryDto
 import kotlinx.coroutines.flow.Flow
 
@@ -13,4 +14,9 @@ interface DiaryApi {
      * @return a list of diary items that were fetched
      */
     fun fetchAll(): Flow<List<DiaryDto>>
+
+    /** Save the diary entry into the remote database */
+    suspend fun save(diary: DiaryDto): Result<Boolean>
+
+    suspend fun delete(diary: DiaryDto): Result<Boolean>
 }

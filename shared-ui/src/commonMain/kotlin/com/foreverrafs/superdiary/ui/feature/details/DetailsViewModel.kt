@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.ui.feature.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
+import com.foreverrafs.superdiary.core.sync.Synchronizer
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
@@ -25,6 +26,7 @@ sealed interface DetailsViewState {
 class DetailsViewModel(
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
     private val getDiaryByIdUseCase: GetDiaryByIdUseCase,
+    private val synchronizer: Synchronizer,
     private val logger: AggregateLogger,
 ) : ViewModel() {
 

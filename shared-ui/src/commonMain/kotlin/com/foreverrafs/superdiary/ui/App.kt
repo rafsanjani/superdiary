@@ -16,16 +16,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.core.bundle.Bundle
 import androidx.core.uri.UriUtils
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDeepLink
@@ -59,6 +60,7 @@ import com.foreverrafs.superdiary.ui.navigation.AppRoute
 import com.foreverrafs.superdiary.ui.navigation.BottomNavigationScreen
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import okio.FileSystem
 import org.jetbrains.compose.resources.painterResource
@@ -91,8 +93,8 @@ fun App(modifier: Modifier = Modifier) {
 @Composable
 private fun SuperDiaryNavHost(
     viewState: AppSessionState,
-    modifier: Modifier = Modifier,
     synchronizer: Synchronizer,
+    modifier: Modifier = Modifier,
 ) {
     // This userInfo is used when a session is automatically restored after app is launched.
     val userInfo by remember(viewState) {
@@ -220,10 +222,16 @@ private fun SuperDiaryNavHost(
             typeMap = mapOf(typeOf<UserInfo?>() to UserInfoNavType),
         ) {
             val route = it.toRoute<AppRoute.BottomNavigationScreen>()
+            val scope = rememberCoroutineScope()
 
             // Sync can only happen after we are logged in
-            LaunchedEffect(Unit) {
-                synchronizer.sync()
+            LifecycleResumeEffect(Unit) {
+                scope.launch {
+                    synchronizer.startListening()
+                }
+                onPauseOrDispose {
+                    synchronizer.stopListening()
+                }
             }
 
             BottomNavigationScreen(
