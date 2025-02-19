@@ -3,10 +3,11 @@ package com.foreverrafs.superdiary.ui.feature.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
+import com.foreverrafs.superdiary.core.sync.Synchronizer
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
-import com.foreverrafs.superdiary.domain.usecase.GetDiaryByIdUseCase
+import com.foreverrafs.superdiary.list.domain.usecase.GetDiaryByIdUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,6 +26,7 @@ sealed interface DetailsViewState {
 class DetailsViewModel(
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
     private val getDiaryByIdUseCase: GetDiaryByIdUseCase,
+    private val synchronizer: Synchronizer,
     private val logger: AggregateLogger,
 ) : ViewModel() {
 
@@ -63,16 +65,15 @@ class DetailsViewModel(
             "Selecting diary with id $diaryId"
         }
 
-        getDiaryByIdUseCase(diaryId)
-            .collect { diary ->
-                _detailsViewState.update {
-                    if (diary != null) {
-                        DetailsViewState.DiarySelected(diary)
-                    } else {
-                        it
-                    }
-                }
+        val diary = getDiaryByIdUseCase(diaryId)
+
+        _detailsViewState.update {
+            if (diary != null) {
+                DetailsViewState.DiarySelected(diary)
+            } else {
+                it
             }
+        }
     }
 
     companion object {

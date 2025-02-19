@@ -6,11 +6,11 @@ import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
-import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.list.DiaryFilters
+import com.foreverrafs.superdiary.list.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.utils.toInstant
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
