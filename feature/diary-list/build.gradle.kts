@@ -16,8 +16,15 @@ kotlin {
     androidTarget()
 
     jvm()
-    iosArm64()
-    iosSimulatorArm64()
+
+    listOf(
+        iosArm64(),
+        iosSimulatorArm64(),
+    ).forEach {
+        it.binaries.forEach { binary ->
+            binary.linkerOpts += "-lsqlite3"
+        }
+    }
 
     sourceSets {
         androidUnitTest.dependencies {
