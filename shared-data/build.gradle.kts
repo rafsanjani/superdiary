@@ -42,7 +42,6 @@ kotlin {
                 implementation(libs.kotlin.datetime)
                 implementation(libs.touchlab.stately)
                 implementation(libs.koin.core)
-                implementation(libs.square.sqldelight.coroutinesExt)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.openAiKotlin)
                 implementation(libs.uuid)
@@ -68,15 +67,7 @@ kotlin {
 
         androidMain {
             dependencies {
-                implementation(libs.square.sqldelight.driver.android)
-                implementation(libs.square.sqldelight.coroutinesExt)
                 implementation(libs.koin.android)
-            }
-        }
-
-        androidUnitTest {
-            dependencies {
-                implementation(libs.square.sqldelight.driver.sqlite)
             }
         }
 
