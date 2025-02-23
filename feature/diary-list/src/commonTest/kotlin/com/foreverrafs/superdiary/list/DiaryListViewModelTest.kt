@@ -13,6 +13,7 @@ import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
+import com.foreverrafs.superdiary.list.domain.repository.DiaryListRepository
 import com.foreverrafs.superdiary.list.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.list.presentation.DiaryListViewModel
 import com.foreverrafs.superdiary.list.presentation.DiaryListViewState
@@ -47,6 +48,8 @@ class DiaryListViewModelTest {
 
     private lateinit var diaryListViewModel: DiaryListViewModel
 
+    private val repository: DiaryListRepository = mock()
+
     private val today = Clock.System.now()
 
     private val diary = Diary(
@@ -70,8 +73,10 @@ class DiaryListViewModelTest {
             flowOf(listOf(diary)),
         )
 
+        everySuspend { repository.getAllDiaries() } returns flowOf(listOf(diary))
+
         diaryListViewModel = DiaryListViewModel(
-            getAllDiariesUseCase = GetAllDiariesUseCase(dataSource),
+            getAllDiariesUseCase = GetAllDiariesUseCase(repository = repository),
             searchDiaryByEntryUseCase = SearchDiaryByEntryUseCase(dataSource, TestAppDispatchers),
             searchDiaryByDateUseCase = SearchDiaryByDateUseCase(dataSource, TestAppDispatchers),
             updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
@@ -102,6 +107,12 @@ class DiaryListViewModelTest {
         every { dataSource.fetchAll() }.returns(
             flow {
                 throw IllegalArgumentException("Exception thrown in datasource")
+            },
+        )
+
+        every { repository.getAllDiaries() }.returns(
+            flow {
+                throw IllegalArgumentException("Exception thrown in repository")
             },
         )
 

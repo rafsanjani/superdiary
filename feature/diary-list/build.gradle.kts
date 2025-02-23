@@ -11,7 +11,8 @@ plugins {
     alias(libs.plugins.paparazzi)
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class) kotlin {
+@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
+kotlin {
     androidTarget()
 
     jvm()
@@ -49,13 +50,13 @@ plugins {
             implementation("org.mobilenativefoundation.store:store5:5.1.0-alpha05")
             implementation("org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
             implementation(projects.designSystem)
-
         }
 
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.junit)
             implementation(libs.koin.test)
+            implementation(projects.core.databaseTest)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.turbine)
             implementation(projects.commonTest)

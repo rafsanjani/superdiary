@@ -14,7 +14,7 @@ import com.foreverrafs.superdiary.common.coroutines.awaitUntil
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
-import com.foreverrafs.superdiary.list.domain.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
 import dev.mokkery.answering.returns
 import dev.mokkery.every

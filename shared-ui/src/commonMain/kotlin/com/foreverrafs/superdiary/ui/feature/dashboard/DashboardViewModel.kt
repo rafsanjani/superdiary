@@ -13,9 +13,9 @@ import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import com.foreverrafs.superdiary.domain.usecase.AddWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.CalculateBestStreakUseCase
 import com.foreverrafs.superdiary.domain.usecase.CalculateStreakUseCase
+import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
-import com.foreverrafs.superdiary.list.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.utils.DiarySettings
 import com.foreverrafs.superdiary.utils.toDate
 import kotlinx.coroutines.flow.Flow

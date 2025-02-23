@@ -10,7 +10,6 @@ import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.repository.DataSource
-import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.insertRandomDiaries
 import kotlin.test.AfterTest
@@ -52,7 +51,7 @@ class UpdateDiaryUseCaseTest {
 
             var firstEntry = originalList.first()
 
-            // verify that it isn't favorited
+            // verify that it isn't favorite
             assertThat(firstEntry.isFavorite).isFalse()
 
             val updated = updateDiaryUseCase(
