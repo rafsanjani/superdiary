@@ -55,7 +55,10 @@ class GetDiaryByIdUseCaseTest {
     @Test
     fun `Should return null for invalid ID`() = runTest {
         addDiaryUseCase(
-            diary = Diary(id = 12L, entry = "Hello World!"),
+            diary = Diary(
+                id = 12L,
+                entry = "Hello World!",
+            ),
         )
 
         val diary = getDiaryByIdUseCase(id = 112L)
