@@ -9,6 +9,8 @@ import com.foreverrafs.superdiary.core.location.permission.LocationPermissionMan
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
 import com.foreverrafs.superdiary.core.location.permission.PermissionsControllerWrapper
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
+import com.foreverrafs.superdiary.core.sync.Synchronizer
+import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenState
@@ -29,6 +31,7 @@ class CreateDiaryViewModel(
     private val logger: AggregateLogger,
     private val locationManager: LocationManager,
     private val locationPermissionManager: LocationPermissionManager,
+    private val synchronizer: Synchronizer,
     private val preference: DiaryPreference,
 ) : ViewModel() {
 
@@ -65,7 +68,11 @@ class CreateDiaryViewModel(
                     "Location permission granted. Requesting location updates"
                 }
                 locationManager.requestLocation(
-                    onError = {},
+                    onError = {
+                        logger.e(Tag, it) {
+                            "Error requesting location updates. Entry will not be tagged!"
+                        }
+                    },
                     onLocation = { location ->
                         logger.i(Tag) {
                             "Updating state with location [${location.latitude}, ${location.longitude}]"
@@ -90,9 +97,22 @@ class CreateDiaryViewModel(
     }
 
     fun saveDiary(diary: Diary) = viewModelScope.launch {
-        addDiaryUseCase(diary)
-        logger.i(Tag) {
-            "Diary entry successfully saved: $diary"
+        when (val addDiaryResult = addDiaryUseCase(diary)) {
+            is Result.Failure -> {
+                logger.e(Tag, addDiaryResult.error)
+            }
+
+            is Result.Success -> {
+                synchronizer.sync(
+                    operation = Synchronizer.SyncOperation.Save(
+                        addDiaryResult.data,
+                    ),
+                )
+
+                logger.i(Tag) {
+                    "Diary entry successfully saved: $diary"
+                }
+            }
         }
     }
 

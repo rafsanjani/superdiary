@@ -26,7 +26,6 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
             from("io.github.rafsanjani:versions:2025.02.02")
-            version("gradle", "8.8.0-alpha05")
         }
     }
 }
@@ -97,6 +96,11 @@ kover {
     reports {
         includedProjects.add(":shared-data")
         includedProjects.add(":shared-ui")
+        includedProjects.add(":core:sync")
+        includedProjects.add(":feature:diary-profile")
+        includedProjects.add(":feature:diary-list")
+        includedProjects.add(":feature:diary-auth")
+        includedProjects.add(":feature:diary-ai")
 
         excludedClasses.addAll(classes)
         excludesAnnotatedBy.add("androidx.compose.runtime.Composable")
@@ -124,6 +128,7 @@ include(":core:analytics")
 include(":core:location")
 include(":core:logging")
 include(":common-utils")
+include(":core:sync")
 include(":common-test")
 include(":core:secrets")
 include(":core:database")

@@ -12,6 +12,10 @@ data class Diary(
     val date: Instant = Clock.System.now(),
     val isFavorite: Boolean = false,
     val location: Location = Location.Empty,
+    // An entry marked for deletion will not be rendered and will be removed
+    // from remote db during next sync cycle
+    val isMarkedForDelete: Boolean = false,
+    val isSynced: Boolean = false,
 )
 
 fun Diary.toDto(): DiaryDto = DiaryDto(
@@ -28,4 +32,6 @@ fun Diary.toDatabase(): DiaryDb = DiaryDb(
     date = date,
     isFavorite = isFavorite,
     location = location.toString(),
+    markedForDelete = isMarkedForDelete,
+    isSynced = isSynced,
 )

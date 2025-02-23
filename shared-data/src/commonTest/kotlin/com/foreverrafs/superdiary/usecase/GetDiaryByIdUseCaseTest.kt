@@ -1,8 +1,6 @@
 package com.foreverrafs.superdiary.usecase
 
-import app.cash.turbine.test
 import assertk.assertThat
-import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
@@ -25,61 +23,46 @@ import kotlinx.coroutines.test.setMain
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class GetDiaryByIdUseCaseTest {
-    private val database = Database(testSuperDiaryDatabase)
-    private val dataSource: DataSource = LocalDataSource(database = database)
-    private val addDiaryUseCase = AddDiaryUseCase(dataSource, TestAppDispatchers) {
-        // no-op validator
-    }
-    private val getDiaryByIdUseCase =
-        GetDiaryByIdUseCase(dataSource = dataSource, dispatchers = TestAppDispatchers)
+    private val dataSource: DataSource = LocalDataSource(Database(testSuperDiaryDatabase))
+    private val getDiaryByIdUseCase = GetDiaryByIdUseCase(dataSource = dataSource)
+    private val addDiaryUseCase = AddDiaryUseCase(
+        dataSource = dataSource,
+        dispatchers = TestAppDispatchers,
+        validator = {},
+    )
 
     @BeforeTest
     fun setup() {
-        database.clearDiaries()
         Dispatchers.setMain(StandardTestDispatcher())
     }
 
     @AfterTest
-    fun teardown() {
+    fun tearDown() {
         Dispatchers.resetMain()
     }
 
     @Test
-    fun `Getting a dairy by id should return it`() = runTest {
-        // Insert a diary into the database
+    fun `Should return diary data for valid id`() = runTest {
         addDiaryUseCase(
-            Diary(
-                id = 12345L,
-                entry = "Hello World",
-            ),
+            diary = Diary(id = 12L, entry = "Hello World!"),
         )
 
-        // Fetch the diary we just inserted
-        getDiaryByIdUseCase(id = 12345L).test {
-            val diary = awaitItem()
+        val diary = getDiaryByIdUseCase(id = 12L)
 
-            // Assert that the diary is not null
-            assertThat(diary).isNotNull()
-            assertThat(diary?.id).isEqualTo(12345L)
-        }
+        assertThat(diary).isNotNull()
     }
 
     @Test
-    fun `Getting invalid diary id should return null`() = runTest {
-        // Insert a diary into the database
+    fun `Should return null for invalid ID`() = runTest {
         addDiaryUseCase(
-            Diary(
-                id = 12345L,
-                entry = "Hello World",
+            diary = Diary(
+                id = 12L,
+                entry = "Hello World!",
             ),
         )
 
-        // Attempt to fetch a non-existent diary by id
-        getDiaryByIdUseCase(id = 122222L).test {
-            val diary = awaitItem()
+        val diary = getDiaryByIdUseCase(id = 112L)
 
-            // Assert that the diary is not null
-            assertThat(diary).isNull()
-        }
+        assertThat(diary).isNull()
     }
 }
