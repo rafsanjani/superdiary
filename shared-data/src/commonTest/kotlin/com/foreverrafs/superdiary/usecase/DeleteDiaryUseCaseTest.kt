@@ -11,6 +11,7 @@ import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
+import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.insertRandomDiaries
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
