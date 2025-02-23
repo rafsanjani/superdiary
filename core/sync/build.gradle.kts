@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.mokkery)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -42,6 +43,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.turbine)
                 implementation(libs.assertk.common)
+                implementation(projects.commonTest)
             }
         }
 
