@@ -12,7 +12,7 @@ class AddDiaryUseCase(
     private val dispatchers: AppCoroutineDispatchers,
     private val validator: DiaryValidator,
 ) {
-    suspend operator fun invoke(diary: Diary) = withContext(dispatchers.io) {
+    suspend operator fun invoke(diary: Diary): Result<Diary> = withContext(dispatchers.io) {
         try {
             validator.validate(diary)
 
@@ -22,9 +22,7 @@ class AddDiaryUseCase(
 
             // Update the diary with the newly generated id and return it
             Result.Success(
-                data = listOf(
-                    diary.copy(id = diaryId),
-                ),
+                diary.copy(id = diaryId),
             )
         } catch (ex: Exception) {
             Result.Failure(ex)
