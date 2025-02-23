@@ -3,11 +3,11 @@ package com.foreverrafs.superdiary.core.sync
 import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
-import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.data.datasource.remote.DiaryApi
 import com.foreverrafs.superdiary.data.model.toDiary
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.toDto
+import com.foreverrafs.superdiary.domain.repository.DataSource
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -27,7 +27,7 @@ interface Synchronizer {
 
 class DiarySynchronizer(
     private val diaryApi: DiaryApi,
-    private val database: LocalDataSource,
+    private val dataSource: DataSource,
     private val logger: AggregateLogger,
     private val appCoroutineDispatchers: AppCoroutineDispatchers,
 ) : Synchronizer {
@@ -41,12 +41,12 @@ class DiarySynchronizer(
 
         sync()
 
-        diaryApiListeningJob = coroutineScope.launch {
+        diaryApiListeningJob = coroutineScope.launch(appCoroutineDispatchers.main) {
             // fetch all entries from remote
             diaryApi.fetchAll().collect { diaryDtoList ->
                 // insert remote entries into database. This will set isSynced flag
                 // to true and trigger an update for observers
-                val savedEntries = database.addAll(diaryDtoList.map { it.toDiary() })
+                val savedEntries = dataSource.addAll(diaryDtoList.map { it.toDiary() })
 
                 logger.i(TAG) {
                     "Saved $savedEntries new items to local database"
@@ -60,7 +60,7 @@ class DiarySynchronizer(
             "Syncing all previously out of sync data to the network"
         }
 
-        val pendingSyncs = database.getPendingDeletes() + database.getPendingSyncs()
+        val pendingSyncs = dataSource.getPendingDeletes() + dataSource.getPendingSyncs()
 
         if (pendingSyncs.isEmpty()) {
             logger.i(TAG) {
@@ -93,7 +93,7 @@ class DiarySynchronizer(
                     "Successfully synced deleted diary with network"
                 }
                 // Remove sync flag from entry in local database
-                database.update(
+                dataSource.update(
                     diary.copy(isSynced = true),
                 )
 
@@ -119,7 +119,7 @@ class DiarySynchronizer(
                 }
 
                 // Delete entry from database
-                val count = database.delete(
+                val count = dataSource.delete(
                     listOf(diary),
                 )
 
