@@ -92,7 +92,7 @@ class DashboardViewModel(
     }
 
     private fun loadDashboardContent() = viewModelScope.launch {
-        logger.i(Tag) {
+        logger.i(TAG) {
             "Loading dashboard content"
         }
 
@@ -107,7 +107,7 @@ class DashboardViewModel(
                 is Result.Success -> {
                     val diaries = result.data
 
-                    logger.i(Tag) {
+                    logger.i(TAG) {
                         "Dashboard content refreshed!"
                     }
 
@@ -163,13 +163,13 @@ class DashboardViewModel(
             if (currentState != null) {
                 val newState = func(currentState)
 
-                logger.d(Tag) {
+                logger.d(TAG) {
                     "updateContentState: Updating content state from $currentState to $newState"
                 }
 
                 newState
             } else {
-                logger.i(Tag) {
+                logger.i(TAG) {
                     "Current state is null, cannot update"
                 }
                 state
@@ -178,7 +178,7 @@ class DashboardViewModel(
     }
 
     private fun generateWeeklySummary(diaries: List<Diary>) = viewModelScope.launch {
-        logger.i(Tag) {
+        logger.i(TAG) {
             "generateWeeklySummary: Fetching weekly summary for ${diaries.size} entries"
         }
         val latestWeeklySummary = getWeeklySummaryUseCase()
@@ -187,7 +187,7 @@ class DashboardViewModel(
             val difference = clock.now() - latestWeeklySummary.date
 
             if (difference.inWholeDays <= 7L) {
-                logger.i(Tag) {
+                logger.i(TAG) {
                     "generateWeeklySummary: Weekly summary was generated ${difference.inWholeDays} days ago." +
                         " Skip generation for now"
                 }
@@ -200,7 +200,7 @@ class DashboardViewModel(
 
         diaryAI.generateSummary(diaries)
             .catch { exception ->
-                logger.e(Tag, exception) {
+                logger.e(TAG, exception) {
                     "generateWeeklySummary: An error occurred generating weekly summary"
                 }
             }.onCompletion {
@@ -212,7 +212,7 @@ class DashboardViewModel(
                         return@onCompletion
                     }
 
-                    logger.d(Tag) {
+                    logger.d(TAG) {
                         "generateWeeklySummary: Weekly summary generated!"
                     }
                     appState.weeklySummary?.let { summary ->
@@ -232,13 +232,13 @@ class DashboardViewModel(
     }
 
     private fun calculateStreak(diaries: List<Diary>) = viewModelScope.launch {
-        logger.i(Tag) {
+        logger.i(TAG) {
             "calculateStreak: Calculating streak for ${diaries.size} entries"
         }
         val streak = calculateStreakUseCase(diaries)
         val bestStreak = calculateBestStreakUseCase(diaries)
 
-        logger.i(Tag) {
+        logger.i(TAG) {
             "calculateStreak: Streak: ${streak.count}\nBest Streak: ${bestStreak.count}"
         }
 
@@ -257,14 +257,14 @@ class DashboardViewModel(
 
         return when (result) {
             is Result.Failure -> {
-                logger.e(Tag, result.error) {
+                logger.e(TAG, result.error) {
                     "toggleFavorite: Error adding/removing favorite for diary ${diary.id}"
                 }
                 false
             }
 
             is Result.Success -> {
-                logger.d(Tag) {
+                logger.d(TAG) {
                     val message = if (diary.isFavorite) {
                         "toggleFavorite: Successfully added diary: ${diary.id} to favorites"
                     } else {
@@ -284,7 +284,7 @@ class DashboardViewModel(
 
     private suspend fun enableBiometricAuth() {
         if (!biometricAuth.canAuthenticate()) {
-            logger.i(Tag) {
+            logger.i(TAG) {
                 "Biometric authentication is not available"
             }
 
@@ -301,7 +301,7 @@ class DashboardViewModel(
         when (val biometricAuthResult = biometricAuth.startBiometricAuth()) {
             is BiometricAuth.AuthResult.Error -> {
                 logger.e(
-                    tag = Tag,
+                    tag = TAG,
                     throwable = biometricAuthResult.error,
                 ) {
                     "Error performing biometric authentication"
@@ -343,6 +343,6 @@ class DashboardViewModel(
 
     companion object {
         private const val DEFAULT_SUMMARY_TEXT = "Generating weekly Summary..."
-        private val Tag = DashboardViewModel::class.simpleName.orEmpty()
+        private const val TAG = "DashboardViewModel"
     }
 }

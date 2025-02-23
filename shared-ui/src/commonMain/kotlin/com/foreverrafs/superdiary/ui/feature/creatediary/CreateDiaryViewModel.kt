@@ -68,7 +68,11 @@ class CreateDiaryViewModel(
                     "Location permission granted. Requesting location updates"
                 }
                 locationManager.requestLocation(
-                    onError = {},
+                    onError = {
+                        logger.e(Tag, it) {
+                            "Error requesting location updates. Entry will not be tagged!"
+                        }
+                    },
                     onLocation = { location ->
                         logger.i(Tag) {
                             "Updating state with location [${location.latitude}, ${location.longitude}]"
@@ -93,22 +97,20 @@ class CreateDiaryViewModel(
     }
 
     fun saveDiary(diary: Diary) = viewModelScope.launch {
-        when (val results = addDiaryUseCase(diary)) {
+        when (val addDiaryResult = addDiaryUseCase(diary)) {
             is Result.Failure -> {
-                logger.e(Tag, results.error)
+                logger.e(Tag, addDiaryResult.error)
             }
 
             is Result.Success -> {
-                results.data.lastOrNull()?.let { lastInsertedItem ->
-                    synchronizer.sync(
-                        operation = Synchronizer.SyncOperation.Save(
-                            lastInsertedItem,
-                        ),
-                    )
+                synchronizer.sync(
+                    operation = Synchronizer.SyncOperation.Save(
+                        addDiaryResult.data,
+                    ),
+                )
 
-                    logger.i(Tag) {
-                        "Diary entry successfully saved: $diary"
-                    }
+                logger.i(Tag) {
+                    "Diary entry successfully saved: $diary"
                 }
             }
         }
