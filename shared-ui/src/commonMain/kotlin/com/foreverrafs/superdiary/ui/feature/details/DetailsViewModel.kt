@@ -3,11 +3,10 @@ package com.foreverrafs.superdiary.ui.feature.details
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.core.sync.Synchronizer
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
-import com.foreverrafs.superdiary.list.domain.usecase.GetDiaryByIdUseCase
+import com.foreverrafs.superdiary.domain.usecase.GetDiaryByIdUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,12 +25,11 @@ sealed interface DetailsViewState {
 class DetailsViewModel(
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
     private val getDiaryByIdUseCase: GetDiaryByIdUseCase,
-    private val synchronizer: Synchronizer,
     private val logger: AggregateLogger,
 ) : ViewModel() {
 
-    private val _deleteDiaryState = MutableStateFlow<DeleteDiaryState>(DeleteDiaryState.Failure)
-    val deleteDiaryState: StateFlow<DeleteDiaryState> = _deleteDiaryState.asStateFlow()
+    private val _deleteDiaryState = MutableStateFlow<DeleteDiaryState?>(null)
+    val deleteDiaryState: StateFlow<DeleteDiaryState?> = _deleteDiaryState.asStateFlow()
 
     private val _detailsViewState = MutableStateFlow<DetailsViewState?>(null)
     val detailsViewState: StateFlow<DetailsViewState?> = _detailsViewState.asStateFlow()

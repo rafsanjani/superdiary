@@ -16,6 +16,8 @@ data class Location(
         )
 
         fun fromString(rawString: String): Location {
+            if (rawString.isEmpty()) return Empty
+
             val (latitudeStr, longitudeStr) = rawString.split(",")
             if (latitudeStr.isEmpty() || longitudeStr.isEmpty()) {
                 throw IllegalArgumentException("Invalid location string")

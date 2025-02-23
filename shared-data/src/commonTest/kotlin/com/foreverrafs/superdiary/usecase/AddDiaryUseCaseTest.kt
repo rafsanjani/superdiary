@@ -12,7 +12,6 @@ import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
-import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.domain.validator.DiaryValidator
 import com.foreverrafs.superdiary.domain.validator.DiaryValidatorImpl
 import kotlin.test.AfterTest

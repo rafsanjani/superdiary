@@ -15,14 +15,13 @@ import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
 import dev.mokkery.answering.returns
 import dev.mokkery.everySuspend
+import dev.mokkery.matcher.any
 import dev.mokkery.mock
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -36,7 +35,7 @@ class DetailsViewModelTest {
 
     @BeforeTest
     fun setup() {
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(TestAppDispatchers.main)
         detailsViewModel = DetailsViewModel(
             DeleteDiaryUseCase(
                 dataSource = dataSource,
@@ -44,7 +43,6 @@ class DetailsViewModelTest {
             ),
             getDiaryByIdUseCase = GetDiaryByIdUseCase(
                 dataSource = dataSource,
-                dispatchers = TestAppDispatchers,
             ),
             logger = AggregateLogger(emptyList()),
         )
@@ -59,7 +57,9 @@ class DetailsViewModelTest {
     fun `Successfully deleting a diary should emit deleted state`() = runTest {
         val diary = Diary("Hello world")
 
-        everySuspend { dataSource.delete(listOf(diary)) }.returns(1)
+        everySuspend { dataSource.delete(listOf(diary)) } returns 1
+        // when we delete an item, we essentially mark it for deletion and don't delete it right away
+        everySuspend { dataSource.update(any()) } returns 1
 
         detailsViewModel.deleteDiaryState.test {
             detailsViewModel.deleteDiary(diary)
@@ -78,9 +78,13 @@ class DetailsViewModelTest {
         val diary = Diary("Hello world")
 
         everySuspend { dataSource.delete(listOf(diary)) }.returns(0)
+        // when we delete an item, we essentially mark it for deletion and don't delete it right away
+        everySuspend { dataSource.update(any()) } returns 0
 
         detailsViewModel.deleteDiaryState.test {
             detailsViewModel.deleteDiary(diary)
+
+            skipItems(1)
 
             val state = awaitItem()
             cancelAndIgnoreRemainingEvents()
@@ -94,8 +98,7 @@ class DetailsViewModelTest {
     fun `Should emit state when diary is supplied`() = runTest {
         val diaryId = 12345L
 
-        everySuspend { dataSource.find(diaryId) }
-            .returns(flowOf(Diary("Wonky diary")))
+        everySuspend { dataSource.find(diaryId) } returns Diary("Wonky diary")
 
         detailsViewModel.initForDiary(diaryId)
 

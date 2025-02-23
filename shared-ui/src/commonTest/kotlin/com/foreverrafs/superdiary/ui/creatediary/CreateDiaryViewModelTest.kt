@@ -90,6 +90,9 @@ class CreateDiaryViewModelTest {
                 ),
             ),
             preference = preference,
+            synchronizer = mock {
+                everySuspend { sync(any()) } returns true
+            },
         )
     }
 
