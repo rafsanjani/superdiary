@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.list
+package com.foreverrafs.superdiary.list.presentation
 
 import app.cash.turbine.test
 import assertk.assertThat
@@ -13,10 +13,9 @@ import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
+import com.foreverrafs.superdiary.list.DiaryFilters
 import com.foreverrafs.superdiary.list.domain.repository.DiaryListRepository
 import com.foreverrafs.superdiary.list.domain.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.list.presentation.DiaryListViewModel
-import com.foreverrafs.superdiary.list.presentation.DiaryListViewState
 import com.foreverrafs.superdiary.utils.toDate
 import dev.mokkery.answering.returns
 import dev.mokkery.answering.throws

@@ -1,17 +1,30 @@
 package com.foreverrafs.superdiary.ai
 
+import app.cash.turbine.test
+import assertk.assertThat
+import assertk.assertions.isEmpty
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.ai.data.DiaryAiRepositoryImpl
 import com.foreverrafs.superdiary.database.Database
+import com.foreverrafs.superdiary.database.model.DiaryChatMessageDb
+import com.foreverrafs.superdiary.database.model.DiaryChatRoleDb
 import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import dev.mokkery.answering.returns
 import dev.mokkery.every
 import dev.mokkery.matcher.any
 import dev.mokkery.mock
 import dev.mokkery.verifySuspend
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import kotlinx.datetime.Instant
 
 class DiaryAiRepositoryImplTest {
     private val diaryAI: DiaryAI = mock {
@@ -19,10 +32,24 @@ class DiaryAiRepositoryImplTest {
         every { generateDiary(any(), any()) } returns flowOf()
     }
 
+    private val database: Database = Database(testSuperDiaryDatabase)
+
     private val diaryAiRepository = DiaryAiRepositoryImpl(
-        database = Database(testSuperDiaryDatabase),
+        database = database,
         diaryAI = diaryAI,
     )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @BeforeTest
+    fun setup() {
+        Dispatchers.setMain(StandardTestDispatcher())
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @AfterTest
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
 
     @Test
     fun `Should generate diaries when requested`() = runTest {
@@ -36,5 +63,25 @@ class DiaryAiRepositoryImplTest {
         diaryAiRepository.generateSummary(diaries = emptyList())
 
         verifySuspend { diaryAI.generateSummary(diaries = emptyList()) }
+    }
+
+    @Test
+    fun `Clearing chat messages should actually clear it`() = runTest {
+        database.saveChatMessage(
+            DiaryChatMessageDb(
+                id = "123",
+                role = DiaryChatRoleDb.DiaryAI,
+                timestamp = Instant.DISTANT_PAST,
+                content = "hi",
+            ),
+        )
+
+        diaryAiRepository.clearChatMessages()
+
+        diaryAiRepository.getChatMessages().test {
+            val items = awaitItem()
+
+            assertThat(items).isEmpty()
+        }
     }
 }

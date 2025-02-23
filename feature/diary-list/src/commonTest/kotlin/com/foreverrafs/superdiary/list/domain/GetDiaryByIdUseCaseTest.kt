@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.list
+package com.foreverrafs.superdiary.list.domain
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
