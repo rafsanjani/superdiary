@@ -1,4 +1,0 @@
-import kotlin.Boolean;
-
-ALTER TABLE diary ADD COLUMN `mark_for_deletion` INTEGER AS Boolean NOT NULL DEFAULT 0;
-ALTER TABLE diary ADD COLUMN  `is_synced` INTEGER AS Boolean NOT NULL DEFAULT 1;
