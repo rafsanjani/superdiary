@@ -25,7 +25,8 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2025.02.02")
+            from("io.github.rafsanjani:versions:2025.02.24")
+            version("compose-multiplatform", "1.8.0-alpha03")
         }
     }
 }

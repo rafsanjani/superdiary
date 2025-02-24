@@ -81,7 +81,6 @@ kotlin {
                 implementation(projects.core.databaseTest)
                 implementation(projects.commonTest)
                 implementation(libs.assertk.common)
-                implementation(projects.core.databaseTest)
             }
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
         }

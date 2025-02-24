@@ -28,6 +28,9 @@ fun DiaryDto.toDiary(): Diary = Diary(
     date = date,
     isFavorite = isFavorite,
     location = Location.fromString(location ?: Location.Empty.toString()),
+    // a fresh entry from the network should be considered synced
+    isSynced = true,
+    isMarkedForDelete = false,
 )
 
 fun DiaryDto.toDatabase(): DiaryDb = DiaryDb(

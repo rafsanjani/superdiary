@@ -8,6 +8,6 @@ CREATE TABLE IF NOT EXISTS diary (
   date INTEGER AS Instant NOT NULL,
   favorite INTEGER NOT NULL,
   location TEXT AS LocationDb NOT NULL DEFAULT "0.0,0.0",
-  `mark_for_deletion` INTEGER AS Boolean NOT NULL,
-  `is_synced` INTEGER AS Boolean NOT NULL
+  markForDelete INTEGER AS Boolean NOT NULL,
+  isSynced INTEGER AS Boolean NOT NULL
 );

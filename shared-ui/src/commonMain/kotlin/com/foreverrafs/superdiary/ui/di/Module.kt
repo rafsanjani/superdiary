@@ -15,6 +15,7 @@ import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.core.sync.di.syncModule
 import com.foreverrafs.superdiary.di.platformModule
 import com.foreverrafs.superdiary.di.useCaseModule
+import com.foreverrafs.superdiary.domain.usecase.GetDiaryByIdUseCase
 import com.foreverrafs.superdiary.list.di.diaryListModule
 import com.foreverrafs.superdiary.profile.di.profileModule
 import com.foreverrafs.superdiary.ui.AppViewModel
@@ -33,6 +34,7 @@ internal val screensModule: Module = module {
     factoryOf(::LocationPermissionManager)
     singleOf(::DeeplinkContainer)
 
+    factoryOf(::GetDiaryByIdUseCase)
     viewModelOf(::CreateDiaryViewModel)
     viewModelOf(::FavoriteViewModel)
     viewModelOf(::DiaryChatViewModel)
