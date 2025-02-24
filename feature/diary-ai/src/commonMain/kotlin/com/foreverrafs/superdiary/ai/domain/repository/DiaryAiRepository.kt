@@ -9,4 +9,5 @@ interface DiaryAiRepository {
     fun generateSummary(diaries: List<Diary>): Flow<String>
     suspend fun saveChatMessage(message: DiaryChatMessage)
     fun getChatMessages(): Flow<List<DiaryChatMessage>>
+    suspend fun clearChatMessages()
 }

@@ -20,6 +20,14 @@ interface DataSource {
     suspend fun add(diary: Diary): Long
 
     /**
+     * Adds all diary items to the datasource. This operation is synchronous
+     * and will return after the operation has either succeeded or failed.
+     *
+     * @return The number of inserted entries
+     */
+    suspend fun addAll(diaries: List<Diary>): Long
+
+    /**
      * Updates an existing item with the same id with the properties of the new
      * item
      */
@@ -59,7 +67,7 @@ interface DataSource {
     fun find(from: Instant, to: Instant): Flow<List<Diary>>
 
     /** Search for a diary by its id */
-    fun find(id: Long): Flow<Diary?>
+    fun find(id: Long): Diary?
 
     /** Deletes all the diary entries from the data source. */
     suspend fun deleteAll()
@@ -78,4 +86,7 @@ interface DataSource {
 
     /** Clear all chat messages from the system */
     suspend fun clearChatMessages()
+
+    suspend fun getPendingDeletes(): List<Diary>
+    suspend fun getPendingSyncs(): List<Diary>
 }
