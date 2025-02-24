@@ -97,7 +97,7 @@ fun CreateDiaryScreenContent(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            if (richTextState.toText().isEmpty()) {
+                            if (richTextState.annotatedString.isEmpty()) {
                                 onNavigateBack()
                             } else {
                                 onShowSaveDialogChange(true)
@@ -180,14 +180,14 @@ fun CreateDiaryScreenContent(
 
                     // Only enable AI suggestions when there is at least 50 characters entered
                     val enableSuggestionChip =
-                        !isGeneratingFromAi && richTextState.annotatedString.text.length >= 50
+                        !isGeneratingFromAi && richTextState.toText().length >= 50
 
                     DiaryAISuggestionChip(
                         words = 50,
                         enabled = enableSuggestionChip,
                         onClick = {
                             onGenerateAI(
-                                richTextState.annotatedString.text,
+                                richTextState.toText(),
                                 50,
                             )
                         },
