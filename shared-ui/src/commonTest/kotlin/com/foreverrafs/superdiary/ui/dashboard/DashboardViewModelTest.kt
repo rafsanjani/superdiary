@@ -23,6 +23,7 @@ import com.foreverrafs.superdiary.domain.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
+import com.foreverrafs.superdiary.list.domain.repository.DiaryListRepository
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.utils.DiarySettings
 import dev.mokkery.answering.returns
@@ -61,6 +62,8 @@ class DashboardViewModelTest {
     }
 
     private val diaryPreference = FakeDiaryPreference()
+
+    private val diaryListRepository: DiaryListRepository = mock()
 
     @BeforeTest
     fun setup() {

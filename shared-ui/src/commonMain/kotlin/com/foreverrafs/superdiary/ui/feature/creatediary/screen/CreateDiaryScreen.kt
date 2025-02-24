@@ -89,6 +89,7 @@ fun CreateDiaryScreen(navController: NavHostController, userInfo: UserInfo?) {
                     date = Clock.System.now(),
                     isFavorite = false,
                     location = screenState.location ?: Location.Empty,
+                    isMarkedForDelete = false,
                 ),
             )
 

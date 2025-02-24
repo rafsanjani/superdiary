@@ -28,8 +28,8 @@ class DetailsViewModel(
     private val logger: AggregateLogger,
 ) : ViewModel() {
 
-    private val _deleteDiaryState = MutableStateFlow<DeleteDiaryState>(DeleteDiaryState.Failure)
-    val deleteDiaryState: StateFlow<DeleteDiaryState> = _deleteDiaryState.asStateFlow()
+    private val _deleteDiaryState = MutableStateFlow<DeleteDiaryState?>(null)
+    val deleteDiaryState: StateFlow<DeleteDiaryState?> = _deleteDiaryState.asStateFlow()
 
     private val _detailsViewState = MutableStateFlow<DetailsViewState?>(null)
     val detailsViewState: StateFlow<DetailsViewState?> = _detailsViewState.asStateFlow()
@@ -63,16 +63,15 @@ class DetailsViewModel(
             "Selecting diary with id $diaryId"
         }
 
-        getDiaryByIdUseCase(diaryId)
-            .collect { diary ->
-                _detailsViewState.update {
-                    if (diary != null) {
-                        DetailsViewState.DiarySelected(diary)
-                    } else {
-                        it
-                    }
-                }
+        val diary = getDiaryByIdUseCase(diaryId)
+
+        _detailsViewState.update {
+            if (diary != null) {
+                DetailsViewState.DiarySelected(diary)
+            } else {
+                it
             }
+        }
     }
 
     companion object {

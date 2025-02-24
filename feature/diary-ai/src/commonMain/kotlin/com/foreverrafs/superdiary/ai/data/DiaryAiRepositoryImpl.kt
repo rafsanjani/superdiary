@@ -26,4 +26,6 @@ internal class DiaryAiRepositoryImpl(
     override fun getChatMessages(): Flow<List<DiaryChatMessage>> =
         database.getChatMessages()
             .map { chatMessagesDb -> chatMessagesDb.map { it.toDiaryChatMessage() } }
+
+    override suspend fun clearChatMessages() = database.clearChatMessages()
 }

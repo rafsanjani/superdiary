@@ -11,6 +11,7 @@ import com.foreverrafs.superdiary.ai.domain.model.toNetworkChatMessage
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onCompletion
@@ -101,12 +102,19 @@ class DiaryAiImpl(
 
         var response = ""
 
-        return openAI.chatCompletions(request).mapNotNull {
-            it.choices.firstOrNull()?.delta?.content?.let {
-                response += it
+        return openAI.chatCompletions(request)
+            .catch {
+                println(it)
             }
-            response
-        }
+            .onEach {
+                println(it)
+            }
+            .mapNotNull {
+                it.choices.firstOrNull()?.delta?.content?.let {
+                    response += it
+                }
+                response
+            }
     }
 
     override suspend fun queryDiaries(
