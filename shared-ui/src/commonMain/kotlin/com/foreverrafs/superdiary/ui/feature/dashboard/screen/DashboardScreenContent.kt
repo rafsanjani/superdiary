@@ -164,7 +164,7 @@ private fun dashboardItems(
     onToggleFavorite: (diary: Diary) -> Unit,
     onDiaryClicked: (diary: Diary) -> Unit,
 ): SnapshotStateList<DashboardSection> = mutableStateListOf<DashboardSection>().apply {
-    if (state.showAtaGlance) {
+    if (state.showAtaGlance == true) {
         add(
             DashboardSection(
                 content = {
@@ -179,7 +179,7 @@ private fun dashboardItems(
         )
     }
 
-    if (state.showWeeklySummary && state.totalEntries != 0L) {
+    if (state.showWeeklySummary == true && state.totalEntries != 0L) {
         add(
             DashboardSection(
                 content = { onDismiss ->
@@ -197,11 +197,11 @@ private fun dashboardItems(
         )
     }
 
-    if (state.showLatestEntries) {
+    if (state.showLatestEntries == true) {
         add(
             DashboardSection(
                 content = {
-                    val itemCount = if (state.showWeeklySummary) 2 else 4
+                    val itemCount = if (state.showWeeklySummary == true) 2 else 4
 
                     if (state.latestEntries.isNotEmpty()) {
                         LatestEntries(
