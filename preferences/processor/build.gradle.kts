@@ -12,7 +12,7 @@ kotlin {
             implementation(projects.preferences.annotation)
             implementation(libs.square.kotlinPoet)
             implementation("com.squareup:kotlinpoet-ksp:2.0.0")
-            implementation("com.google.devtools.ksp:symbol-processing-api:2.1.10-1.0.30")
+            implementation("com.google.devtools.ksp:symbol-processing-api:2.1.10-1.0.31")
         }
     }
 }
