@@ -25,7 +25,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2025.02.24")
+            from("io.github.rafsanjani:versions:2025.03.02")
             version("compose-multiplatform", "1.8.0-alpha03")
             // Because the all versions newer than this do not play well with compose 1.8.0-alpha03
             version("richTextEditor", "1.0.0-rc09")
