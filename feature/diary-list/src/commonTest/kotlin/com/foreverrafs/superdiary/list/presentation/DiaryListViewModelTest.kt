@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.list
+package com.foreverrafs.superdiary.list.presentation
 
 import app.cash.turbine.test
 import assertk.assertThat
@@ -10,12 +10,12 @@ import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
-import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
-import com.foreverrafs.superdiary.list.presentation.DiaryListViewModel
-import com.foreverrafs.superdiary.list.presentation.DiaryListViewState
+import com.foreverrafs.superdiary.list.DiaryFilters
+import com.foreverrafs.superdiary.list.domain.repository.DiaryListRepository
+import com.foreverrafs.superdiary.list.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.utils.toDate
 import dev.mokkery.answering.returns
 import dev.mokkery.answering.throws
@@ -47,6 +47,8 @@ class DiaryListViewModelTest {
 
     private lateinit var diaryListViewModel: DiaryListViewModel
 
+    private val repository: DiaryListRepository = mock()
+
     private val today = Clock.System.now()
 
     private val diary = Diary(
@@ -70,8 +72,10 @@ class DiaryListViewModelTest {
             flowOf(listOf(diary)),
         )
 
+        everySuspend { repository.getAllDiaries() } returns flowOf(listOf(diary))
+
         diaryListViewModel = DiaryListViewModel(
-            getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers),
+            getAllDiariesUseCase = GetAllDiariesUseCase(repository = repository),
             searchDiaryByEntryUseCase = SearchDiaryByEntryUseCase(dataSource, TestAppDispatchers),
             searchDiaryByDateUseCase = SearchDiaryByDateUseCase(dataSource, TestAppDispatchers),
             updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
@@ -102,6 +106,12 @@ class DiaryListViewModelTest {
         every { dataSource.fetchAll() }.returns(
             flow {
                 throw IllegalArgumentException("Exception thrown in datasource")
+            },
+        )
+
+        every { repository.getAllDiaries() }.returns(
+            flow {
+                throw IllegalArgumentException("Exception thrown in repository")
             },
         )
 

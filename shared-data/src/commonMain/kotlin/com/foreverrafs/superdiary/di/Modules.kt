@@ -7,7 +7,9 @@ import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.DataStorePathResolver
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
-import com.foreverrafs.superdiary.data.datasource.RemoteDataSource
+import com.foreverrafs.superdiary.data.datasource.remote.DiaryApi
+import com.foreverrafs.superdiary.data.datasource.remote.RemoteDataSource
+import com.foreverrafs.superdiary.data.datasource.remote.SupabaseDiaryApi
 import com.foreverrafs.superdiary.database.di.databaseModule
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
@@ -17,7 +19,6 @@ import com.foreverrafs.superdiary.domain.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.domain.usecase.CountDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.domain.usecase.GetDiaryByIdUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetFavoriteDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetLatestEntriesUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetWeeklySummaryUseCase
@@ -57,20 +58,7 @@ val useCaseModule = module {
     }
     factoryOf(::DiaryValidatorImpl) { bind<DiaryValidator>() }
 
-    factory {
-        AddDiaryUseCase(
-            dataSource = get<RemoteDataSource>(),
-            dispatchers = get(),
-            validator = get(),
-        )
-    }
-
-    factory {
-        GetAllDiariesUseCase(
-            dataSource = get<RemoteDataSource>(),
-            dispatchers = get(),
-        )
-    }
+    factoryOf(::AddDiaryUseCase)
 
     factoryOf(::GetFavoriteDiariesUseCase)
     factoryOf(::SearchDiaryBetweenDatesUseCase)
@@ -83,13 +71,9 @@ val useCaseModule = module {
     factoryOf(::CalculateStreakUseCase)
     factoryOf(::AddWeeklySummaryUseCase)
     factoryOf(::GetWeeklySummaryUseCase)
+    factoryOf(::GetAllDiariesUseCase)
     factoryOf(::CalculateBestStreakUseCase)
-    factory {
-        GetDiaryByIdUseCase(
-            dispatchers = get(),
-            dataSource = get<RemoteDataSource>(),
-        )
-    }
+    factoryOf(::SupabaseDiaryApi) { bind<DiaryApi>() }
 }
 
 expect fun platformModule(

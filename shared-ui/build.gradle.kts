@@ -79,6 +79,7 @@ kotlin {
                 implementation(projects.feature.diaryProfile)
                 implementation(projects.feature.diaryAuth)
                 implementation(projects.feature.diaryList)
+                implementation(projects.core.sync)
             }
         }
 

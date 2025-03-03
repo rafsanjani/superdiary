@@ -3,7 +3,6 @@ package com.foreverrafs.superdiary.database
 import app.cash.sqldelight.ColumnAdapter
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import app.cash.sqldelight.coroutines.mapToOneOrNull
 import com.foreverrafs.superdiary.database.model.DiaryChatMessageDb
 import com.foreverrafs.superdiary.database.model.DiaryChatRoleDb
 import com.foreverrafs.superdiary.database.model.DiaryDb
@@ -29,24 +28,59 @@ class Database(
     private val queries = database.databaseQueries
 
     private val diaryMapper =
-        { id: Long, entry: String, date: Instant, favorite: Long, location: LocationDb? ->
+        { id: Long, entry: String, date: Instant, favorite: Long, location: LocationDb?, markForDelete: Boolean?, isSynced: Boolean ->
             DiaryDb(
                 id = id,
                 entry = entry,
                 date = date,
                 isFavorite = favorite.asBoolean(),
                 location = location.toString(),
+                markedForDelete = markForDelete ?: false,
+                isSynced = isSynced,
             )
         }
 
-    fun addDiary(diary: DiaryDb) =
+    fun insert(diary: DiaryDb): Long {
         queries.insert(
             id = diary.id,
             entry = diary.entry,
             date = diary.date,
             favorite = diary.isFavorite.asLong(),
             location = LocationDb.fromString(diary.location),
+            isSynced = diary.isSynced,
         )
+
+        return queries.lastInsertRowId().executeAsOne()
+    }
+
+    fun upsert(diary: DiaryDb): Long = if (diary.id == null) {
+        insert(diary)
+    } else {
+        update(diary)
+    }
+
+    fun getPendingDeletes(): List<DiaryDb> = queries.getPendingDeletes(diaryMapper).executeAsList()
+    fun getPendingSyncs(): List<DiaryDb> = queries.getPendingSyncs(diaryMapper).executeAsList()
+
+    fun insert(diaries: List<DiaryDb>): Long {
+        val result = queries.transactionWithResult {
+            diaries.forEach(::upsert)
+            diaries.size.toLong()
+        }
+
+        return result
+    }
+
+    /**
+     * Syncs up the remote and local data sources by removing all the entries
+     * that have been deleted from the remote server
+     */
+    fun syncDeletedEntries(ids: List<Long>) {
+        // fetch entries
+        queries.transaction {
+            ids.forEach(::deleteDiary)
+        }
+    }
 
     private fun deleteDiary(id: Long) = queries.delete(id)
 
@@ -64,8 +98,8 @@ class Database(
         }
     }
 
-    fun findById(id: Long): Flow<DiaryDb?> =
-        queries.findById(id, diaryMapper).asFlow().mapToOneOrNull(Dispatchers.Main)
+    fun findById(id: Long): DiaryDb? =
+        queries.findById(id, diaryMapper).executeAsOneOrNull()
 
     fun getAllDiaries(): Flow<List<DiaryDb>> = queries.selectAll(
         mapper = diaryMapper,
@@ -87,15 +121,17 @@ class Database(
             .asFlow()
             .mapToList(Dispatchers.Main)
 
-    fun update(diary: DiaryDb): Int {
+    fun update(diary: DiaryDb): Long {
         queries.update(
             id = diary.id,
             entry = diary.entry,
             date = diary.date,
             favorite = diary.isFavorite.asLong(),
+            markForDelete = diary.markedForDelete,
+            isSynced = diary.isSynced,
         )
 
-        return queries.getAffectedRows().executeAsOne().toInt()
+        return queries.getAffectedRows().executeAsOne()
     }
 
     fun getFavoriteDiaries(): Flow<List<DiaryDb>> =

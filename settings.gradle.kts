@@ -25,8 +25,10 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2025.02.02")
-            version("gradle", "8.8.0-alpha05")
+            from("io.github.rafsanjani:versions:2025.03.02")
+            version("compose-multiplatform", "1.8.0-alpha03")
+            // Because the all versions newer than this do not play well with compose 1.8.0-alpha03
+            version("richTextEditor", "1.0.0-rc09")
         }
     }
 }
@@ -97,6 +99,11 @@ kover {
     reports {
         includedProjects.add(":shared-data")
         includedProjects.add(":shared-ui")
+        includedProjects.add(":core:sync")
+        includedProjects.add(":feature:diary-profile")
+        includedProjects.add(":feature:diary-list")
+        includedProjects.add(":feature:diary-auth")
+        includedProjects.add(":feature:diary-ai")
 
         excludedClasses.addAll(classes)
         excludesAnnotatedBy.add("androidx.compose.runtime.Composable")
@@ -124,6 +131,7 @@ include(":core:analytics")
 include(":core:location")
 include(":core:logging")
 include(":common-utils")
+include(":core:sync")
 include(":common-test")
 include(":core:secrets")
 include(":core:database")

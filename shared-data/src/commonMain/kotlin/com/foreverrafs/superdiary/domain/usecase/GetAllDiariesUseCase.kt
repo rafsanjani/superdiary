@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
+@Deprecated("Please reconsider why you might want to use this instead of a feature specific usecase")
 class GetAllDiariesUseCase(
     private val dataSource: DataSource,
     private val dispatchers: AppCoroutineDispatchers,

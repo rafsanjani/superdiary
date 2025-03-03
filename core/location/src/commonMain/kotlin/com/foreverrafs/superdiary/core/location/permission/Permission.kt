@@ -1,5 +1,7 @@
 package com.foreverrafs.superdiary.core.location.permission
 
-expect enum class Permission {
-    LOCATION,
+expect interface Permission {
+    companion object
 }
+
+expect object LocationPermission : Permission

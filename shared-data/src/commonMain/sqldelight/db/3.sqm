@@ -1,9 +1,0 @@
-import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole;
-import kotlinx.datetime.Instant;
-
-CREATE TABLE IF NOT EXISTS chat(
- id TEXT PRIMARY KEY UNIQUE,
- date INTEGER AS Instant NOT NULL,
- content TEXT NOT NULL,
- role TEXT AS DiaryChatRole NOT NULL
-);

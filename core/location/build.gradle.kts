@@ -41,6 +41,7 @@ kotlin {
                 implementation(libs.koin.android)
                 implementation(libs.google.playservices.location)
                 implementation(libs.moko.permissions.compose)
+                implementation(libs.moko.permissions.location)
             }
         }
 
@@ -60,6 +61,7 @@ kotlin {
                 implementation(libs.square.sqldelight.driver.native)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.moko.permissions.compose)
+                implementation(libs.moko.permissions.location)
             }
         }
     }

@@ -11,12 +11,20 @@ plugins {
     alias(libs.plugins.paparazzi)
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class) kotlin {
+@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
+kotlin {
     androidTarget()
 
     jvm()
-    iosArm64()
-    iosSimulatorArm64()
+
+    listOf(
+        iosArm64(),
+        iosSimulatorArm64(),
+    ).forEach {
+        it.binaries.forEach { binary ->
+            binary.linkerOpts += "-lsqlite3"
+        }
+    }
 
     sourceSets {
         androidUnitTest.dependencies {
@@ -45,6 +53,8 @@ plugins {
             implementation(projects.core.location)
             implementation(projects.swipe)
             implementation(projects.sharedData)
+            implementation(projects.core.database)
+            implementation("org.mobilenativefoundation.store:store5:5.1.0-alpha06")
             implementation("org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
             implementation(projects.designSystem)
         }
@@ -53,6 +63,7 @@ plugins {
             implementation(kotlin("test"))
             implementation(libs.junit)
             implementation(libs.koin.test)
+            implementation(projects.core.databaseTest)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.turbine)
             implementation(projects.commonTest)

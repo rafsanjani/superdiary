@@ -1,5 +1,4 @@
 package com.foreverrafs.superdiary.core.location.permission
 
-actual enum class Permission {
-    LOCATION,
-}
+actual class Permission
+actual class LocationPermission

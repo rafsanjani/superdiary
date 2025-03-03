@@ -52,7 +52,7 @@ class UpdateDiaryUseCaseTest {
 
             var firstEntry = originalList.first()
 
-            // verify that it isn't favorited
+            // verify that it isn't favorite
             assertThat(firstEntry.isFavorite).isFalse()
 
             val updated = updateDiaryUseCase(
