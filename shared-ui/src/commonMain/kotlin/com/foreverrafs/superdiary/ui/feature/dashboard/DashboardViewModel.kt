@@ -18,11 +18,13 @@ import com.foreverrafs.superdiary.domain.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.utils.DiarySettings
 import com.foreverrafs.superdiary.utils.toDate
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -48,15 +50,15 @@ class DashboardViewModel(
         data object Loading : DashboardScreenState
         data class Error(val message: String) : DashboardScreenState
         data class Content(
-            val latestEntries: List<Diary> = emptyList<Diary>(),
+            val latestEntries: List<Diary> = emptyList(),
             val totalEntries: Long = 0L,
             val weeklySummary: String? = null,
             val currentStreak: Streak? = null,
             val bestStreak: Streak? = null,
             val showBiometricAuthDialog: Boolean? = null,
-            val showWeeklySummary: Boolean = true,
-            val showLatestEntries: Boolean = true,
-            val showAtaGlance: Boolean = true,
+            val showWeeklySummary: Boolean? = null,
+            val showLatestEntries: Boolean? = null,
+            val showAtaGlance: Boolean? = null,
             val isBiometricAuthError: Boolean? = null,
         ) : DashboardScreenState
     }
@@ -69,7 +71,6 @@ class DashboardViewModel(
         .onStart {
             viewModelScope.launch {
                 loadDashboardContent()
-                observeSettingsChanges()
             }
         }
         .stateIn(
@@ -80,6 +81,9 @@ class DashboardViewModel(
 
     private fun observeSettingsChanges() = viewModelScope.launch {
         preference.settings.collect { settings ->
+            logger.i(TAG) {
+                settings.toString()
+            }
             updateContentState {
                 it.copy(
                     showBiometricAuthDialog = settings.showBiometricAuthDialog && !settings.isBiometricAuthEnabled,
@@ -88,12 +92,70 @@ class DashboardViewModel(
                     showAtaGlance = settings.showAtAGlance,
                 )
             }
+
+            // Flip initial launch switch if it is still active
+            if (settings.isFirstLaunch) {
+                preference.save { it.copy(isFirstLaunch = false) }
+            }
         }
     }
 
     private fun loadDashboardContent() = viewModelScope.launch {
+        delay(2000)
         logger.i(TAG) {
             "Loading dashboard content"
+        }
+
+        getAllDiariesResult.combine(preference.settings) { result, settings ->
+            when (result) {
+                is Result.Failure ->
+                    DashboardScreenState.Error(
+                        message = result.error.message.orEmpty(),
+                    )
+
+                is Result.Success -> {
+                    val diaries = result.data
+
+                    logger.i(TAG) {
+                        "Dashboard content refreshed!"
+                    }
+
+                    val shouldShowBiometricDialog =
+                        settings.showBiometricAuthDialog &&
+                            biometricAuth.canAuthenticate() &&
+                            !settings.isBiometricAuthEnabled
+
+                    DashboardScreenState.Content(
+                        latestEntries = diaries.sortedByDescending { it.date }.take(4),
+                        totalEntries = diaries.size.toLong(),
+                        weeklySummary = if (diaries.isEmpty()) {
+                            """
+
+                            """.trimIndent()
+                        } else {
+                            DEFAULT_SUMMARY_TEXT
+                        },
+                        currentStreak = Streak(
+                            0,
+                            clock.now().toDate(),
+                            clock.now().toDate(),
+                        ),
+                        bestStreak = Streak(
+                            0,
+                            clock.now().toDate(),
+                            clock.now().toDate(),
+                        ),
+                        showBiometricAuthDialog = shouldShowBiometricDialog,
+                        showLatestEntries = settings.showLatestEntries,
+                        showAtaGlance = settings.showAtAGlance,
+                        showWeeklySummary = settings.showWeeklySummary,
+                    )
+                }
+            }
+        }.collect { updatedState ->
+            mutableState.update {
+                updatedState
+            }
         }
 
         getAllDiariesResult.collect { result ->

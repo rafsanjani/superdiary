@@ -38,7 +38,7 @@ class DashboardScreenSnapshotTest(
             SuperDiaryPreviewTheme {
                 DashboardScreenContent(
                     state = DashboardViewModel.DashboardScreenState.Content(
-                        (0..3).map {
+                        latestEntries = (0..3).map {
                             Diary(
                                 id = it.toLong(),
                                 entry = "<strong>Awesome</strong> Diary",
@@ -47,9 +47,12 @@ class DashboardScreenSnapshotTest(
                                 location = Location.Empty,
                             )
                         },
-                        3,
-                        "This is the weekly summary of all the entries",
-                        Streak(
+                        totalEntries = 3,
+                        weeklySummary = "This is the weekly summary of all the entries",
+                        showWeeklySummary = true,
+                        showAtaGlance = true,
+                        showLatestEntries = true,
+                        currentStreak = Streak(
                             0,
                             testClock.now().toDate(),
                             testClock.now().toDate(),
@@ -90,6 +93,9 @@ class DashboardScreenSnapshotTest(
                             )
                         },
                         totalEntries = 3,
+                        showWeeklySummary = true,
+                        showAtaGlance = true,
+                        showLatestEntries = true,
                         weeklySummary = "This is the weekly summary of all the entries",
                         currentStreak = Streak(
                             0,
@@ -123,7 +129,9 @@ class DashboardScreenSnapshotTest(
             SuperDiaryPreviewTheme {
                 DashboardScreenContent(
                     state = DashboardViewModel.DashboardScreenState.Content(
-                        (0..3).map {
+                        showAtaGlance = true,
+                        showLatestEntries = true,
+                        latestEntries = (0..3).map {
                             Diary(
                                 id = it.toLong(),
                                 entry = "<strong>Awesome</strong> Diary",
@@ -132,9 +140,9 @@ class DashboardScreenSnapshotTest(
                                 location = Location.Empty,
                             )
                         },
-                        3,
-                        "This is the weekly summary of all the entries",
-                        Streak(
+                        totalEntries = 3,
+                        weeklySummary = "This is the weekly summary of all the entries",
+                        currentStreak = Streak(
                             0,
                             testClock.now().toDate(),
                             testClock.now().toDate(),
@@ -189,6 +197,7 @@ class DashboardScreenSnapshotTest(
                         ),
                         showLatestEntries = false,
                         showWeeklySummary = true,
+                        showAtaGlance = true,
                     ),
                     onAddEntry = {},
                     onSeeAll = {},

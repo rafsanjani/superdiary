@@ -1,7 +1,7 @@
 package com.foreverrafs.superdiary.ui
 
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -9,6 +9,8 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -352,15 +354,21 @@ private inline fun <reified T : Any> NavGraphBuilder.animatedComposable(
 private fun enterTransition() = fadeIn(
     animationSpec = tween(
         durationMillis = 300,
-        easing = LinearEasing,
+        easing = FastOutSlowInEasing,
     ),
+) + scaleIn(
+    initialScale = 0.95f,
+    animationSpec = tween(300, easing = FastOutSlowInEasing),
 )
 
 private fun exitTransition() = fadeOut(
     animationSpec = tween(
         durationMillis = 300,
-        easing = LinearEasing,
+        easing = FastOutSlowInEasing,
     ),
+) + scaleOut(
+    targetScale = 1.05f,
+    animationSpec = tween(300, easing = FastOutSlowInEasing),
 )
 
 fun getAsyncImageLoader(context: PlatformContext) =

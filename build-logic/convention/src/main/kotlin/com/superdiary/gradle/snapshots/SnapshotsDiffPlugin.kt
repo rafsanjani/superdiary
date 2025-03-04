@@ -1,7 +1,7 @@
 package com.superdiary.gradle.snapshots
 
 import java.io.File
-import java.io.FileOutputStream
+import java.io.FileWriter
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -16,7 +16,8 @@ class SnapshotsDiffPlugin : Plugin<Project> {
             with(project) {
                 tasks.register("createPaparazziReportComment") {
                     doLast {
-                        val reportDirectory = layout.buildDirectory.dir("paparazzi/failures").get().toString()
+                        val reportDirectory =
+                            layout.buildDirectory.dir("paparazzi/failures").get().toString()
                         val deltaFiles = File(reportDirectory)
                             .listFiles()
                             ?.filter { file ->
@@ -26,63 +27,24 @@ class SnapshotsDiffPlugin : Plugin<Project> {
                         val pullRequestNumber = System.getenv("BUILD_NUMBER")
 
                         val outputFilePath = "snapshots.md"
-                        val outputFile = FileOutputStream(outputFilePath)
-                        deltaFiles?.forEach { image ->
-                            val filePath = image
-                                .name
-                                .toString()
-                                .replace("[", "%5B")
-                                .replace("]", "%5D")
+                        FileWriter(outputFilePath, true).use { outputFile ->
+                            deltaFiles?.forEach { image ->
+                                val filePath = image
+                                    .name
+                                    .toString()
+                                    .replace("[", "%5B")
+                                    .replace("]", "%5D")
 
-                            val header = "#### ${image.name}\n"
-                            val data =
-                                "<img alt=\"paparazzi failure\" src=\"https://github.com/rafsanjani/superdiary/raw/paparazzi-snapshots-$pullRequestNumber/$filePath\"/>\n\n"
-
-                            outputFile.write(header.toByteArray())
-                            outputFile.write(data.toByteArray())
+                                val header = "#### ${image.name}\n"
+                                val data =
+                                    "<img alt=\"paparazzi failure\" src=\"https://github.com/rafsanjani/superdiary/raw/paparazzi-snapshots-$pullRequestNumber/$filePath\"/>\n\n"
+                                outputFile.write(header)
+                                outputFile.write(data)
+                            }
                         }
-                        outputFile.close()
                     }
                 }
             }
         }
-//        project.afterEvaluate {
-//            if (!project.pluginManager.hasPlugin("app.cash.paparazzi")) {
-//                return@afterEvaluate
-//            }
-//
-//            with(project) {
-//                tasks.register("createPaparazziReportComment") {
-//                    doLast {
-//                        val reportDirectory = layout.buildDirectory.dir("paparazzi/failures").get().toString()
-//                        val deltaFiles = File(reportDirectory)
-//                            .listFiles()
-//                            ?.filter { file ->
-//                                file.name.startsWith("delta")
-//                            }
-//
-//                        val pullRequestNumber = System.getenv("BUILD_NUMBER")
-//
-//                        val outputFilePath = "snapshots.md"
-//                        val outputFile = FileOutputStream(outputFilePath)
-//                        deltaFiles?.forEach { image ->
-//                            val filePath = image
-//                                .name
-//                                .toString()
-//                                .replace("[", "%5B")
-//                                .replace("]", "%5D")
-//
-//                            val header = "#### ${image.name}\n"
-//                            val data =
-//                                "<img alt=\"paparazzi failure\" src=\"https://github.com/rafsanjani/superdiary/raw/paparazzi-snapshots-$pullRequestNumber/$filePath\"/>\n\n"
-//
-//                            outputFile.write(header.toByteArray())
-//                            outputFile.write(data.toByteArray())
-//                        }
-//                        outputFile.close()
-//                    }
-//                }
-//            }
-//        }
     }
 }
