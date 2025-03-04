@@ -231,7 +231,7 @@ jobs:
                 uses: thollander/actions-comment-pull-request@v3
                 with:
                     file-path: apk_differences_summary.txt
-                    github-token: ${{secrets.GITHUB_TOKEN}}
+                    github-token: $GITHUB_TOKEN
                     comment-tag: apk_difference
 
 #
