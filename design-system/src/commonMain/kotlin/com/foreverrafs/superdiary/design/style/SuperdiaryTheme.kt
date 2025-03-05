@@ -1,12 +1,11 @@
 package com.foreverrafs.superdiary.design.style
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -108,17 +107,13 @@ fun SuperDiaryTheme(
         colorScheme = colorScheme,
         typography = typography,
         shapes = shapes,
-        content = {
-            // This outer opaque box prevents the bright white flash on jvm and ios when performing fade transitions
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = MaterialTheme.colorScheme.background),
-            ) {
-                content()
-            }
-        },
-    )
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background,
+            content = content,
+        )
+    }
 }
 
 @Composable
