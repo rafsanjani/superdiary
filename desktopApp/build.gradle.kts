@@ -1,6 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -9,20 +7,7 @@ plugins {
 }
 
 kotlin {
-    jvm {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        binaries {
-            // Configures a JavaExec task named "runJvm" and a Gradle distribution for the "main" compilation in this target
-            executable {
-                mainClass.set("com.foreverrafs.superdiary.ApplicationKt")
-            }
-
-            // Configures a JavaExec task named "runJvmTest" and a Gradle distribution for the "test" compilation
-            executable(KotlinCompilation.TEST_COMPILATION_NAME) {
-                mainClass.set("com.foreverrafs.superdiary.ApplicationKt")
-            }
-        }
-    }
+    jvm()
     sourceSets {
         jvmMain {
             dependencies {
