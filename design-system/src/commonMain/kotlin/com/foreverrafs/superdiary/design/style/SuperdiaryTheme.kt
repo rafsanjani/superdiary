@@ -1,13 +1,16 @@
 package com.foreverrafs.superdiary.design.style
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -22,6 +25,7 @@ import superdiary.design_system.generated.resources.montserrat_alternatives_regu
 import superdiary.design_system.generated.resources.montserrat_alternatives_semibold
 import superdiary.design_system.generated.resources.righteous_regular
 
+@Suppress("ktlint:compose:modifier-missing-check")
 @Composable
 fun SuperDiaryTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -103,8 +107,13 @@ fun SuperDiaryTheme(
         colorScheme = colorScheme,
         typography = typography,
         shapes = shapes,
-        content = content,
-    )
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background,
+            content = content,
+        )
+    }
 }
 
 @Composable
