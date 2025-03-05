@@ -1,14 +1,28 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 
 plugins {
-    kotlin("multiplatform")
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
 }
 
 kotlin {
-    jvm()
+    jvm {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        binaries {
+            // Configures a JavaExec task named "runJvm" and a Gradle distribution for the "main" compilation in this target
+            executable {
+                mainClass.set("com.foreverrafs.superdiary.ApplicationKt")
+            }
+
+            // Configures a JavaExec task named "runJvmTest" and a Gradle distribution for the "test" compilation
+            executable(KotlinCompilation.TEST_COMPILATION_NAME) {
+                mainClass.set("com.foreverrafs.superdiary.ApplicationKt")
+            }
+        }
+    }
     sourceSets {
         jvmMain {
             dependencies {
@@ -24,7 +38,6 @@ kotlin {
         }
     }
 
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions {
         freeCompilerArgs.addAll(
             "-Xskip-prerelease-check",
