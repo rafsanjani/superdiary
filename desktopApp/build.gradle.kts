@@ -1,8 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
-    kotlin("multiplatform")
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.multiplatform)
 }
@@ -24,7 +23,6 @@ kotlin {
         }
     }
 
-    @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions {
         freeCompilerArgs.addAll(
             "-Xskip-prerelease-check",
