@@ -79,6 +79,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.turbine)
                 implementation(projects.core.databaseTest)
+                implementation("io.ktor:ktor-client-mock:${libs.versions.ktor.get()}")
                 implementation(projects.commonTest)
                 implementation(libs.assertk.common)
             }
