@@ -1,26 +1,24 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.compose.compiler)
+    id("org.jetbrains.compose.hot-reload")
     alias(libs.plugins.compose.multiplatform)
 }
 
 kotlin {
     jvm()
-    sourceSets {
-        jvmMain {
-            dependencies {
-                implementation(compose.desktop.currentOs)
-                implementation(compose.material3)
-                implementation(libs.koin.jvm)
-                implementation(projects.core.analytics)
-                implementation(projects.core.logging)
-                implementation(projects.core.database)
-                implementation(projects.sharedUi)
-                implementation(projects.sharedData)
-            }
-        }
+    sourceSets.commonMain.dependencies {
+        implementation(compose.desktop.currentOs)
+        implementation(compose.foundation)
+        implementation(compose.material3)
+        implementation(libs.koin.jvm)
+        implementation(projects.core.analytics)
+        implementation(projects.core.logging)
+        implementation(projects.core.database)
+        implementation(projects.sharedUi)
+        implementation(projects.sharedData)
     }
 
     compilerOptions {
@@ -30,18 +28,6 @@ kotlin {
     }
 }
 
-compose.desktop {
-    application {
-        mainClass = "com.foreverrafs.superdiary.ApplicationKt"
-
-        nativeDistributions {
-            targetFormats(
-                TargetFormat.Deb,
-                TargetFormat.Msi,
-                TargetFormat.Deb,
-            )
-            packageName = "Superdiary"
-            packageVersion = "1.0.0"
-        }
-    }
+composeCompiler {
+    featureFlags.add(ComposeFeatureFlag.OptimizeNonSkippingGroups)
 }

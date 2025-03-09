@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.android.test).apply(false)
     alias(libs.plugins.kotlin.parcelize).apply(false)
     alias(libs.plugins.ktlint).apply(false)
+    id("org.jetbrains.compose.hot-reload") version "1.0.0-alpha01" apply false
     id("com.superdiary.ktlint")
     id("com.superdiary.githooks")
     id("com.superdiary.snapshotdiff")

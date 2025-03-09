@@ -29,6 +29,9 @@ dependencyResolutionManagement {
             version("compose-multiplatform", "1.8.0-alpha03")
             // Because the all versions newer than this do not play well with compose 1.8.0-alpha03
             version("richTextEditor", "1.0.0-rc09")
+            version("compose-plugin", "2.1.20-RC")
+            version("kotlin", "2.1.20-RC")
+            version("ksp", "2.1.20-RC-1.0.31")
         }
     }
 }
@@ -37,6 +40,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 plugins {
     id("org.jetbrains.kotlinx.kover.aggregation") version "0.9.1"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
 }
 
 kover {
