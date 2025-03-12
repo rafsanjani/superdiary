@@ -24,6 +24,8 @@ interface AuthApi {
 
     suspend fun sendPasswordResetEmail(email: String): Result<Unit>
 
+    suspend fun updatePassword(password: String): Result<Unit>
+
     suspend fun currentUserOrNull(): UserInfo?
 
     sealed interface SignInStatus {

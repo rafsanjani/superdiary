@@ -5,10 +5,27 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.TextObfuscationMode
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SecureTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldLabelPosition
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -16,6 +33,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
+@Deprecated("Please use the variant which accepts a TextFieldState")
 @Composable
 fun SuperDiaryInputField(
     label: String,
@@ -68,4 +86,73 @@ fun SuperDiaryInputField(
             )
         }
     }
+}
+
+@Composable
+fun PasswordInputField(
+    label: String,
+    state: TextFieldState,
+    modifier: Modifier = Modifier,
+    onPasswordChange: (String) -> Unit = {},
+    enabled: Boolean = true,
+    errorLabel: String? = null,
+    placeholder: String? = null,
+    isError: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+) {
+    var isPasswordVisible by remember { mutableStateOf(false) }
+
+    val text by snapshotFlow { state.text }.collectAsState(initial = state.text)
+
+    val currentOnTextChanged by rememberUpdatedState(onPasswordChange)
+
+    LaunchedEffect(text) {
+        currentOnTextChanged(text.toString())
+    }
+
+    SecureTextField(
+        modifier = modifier
+            .fillMaxWidth(),
+        state = state,
+        placeholder = {
+            placeholder?.let {
+                Text(
+                    text = placeholder,
+                    modifier = Modifier.alpha(0.3f).fillMaxWidth(),
+                )
+            }
+        },
+        isError = isError,
+        keyboardOptions = keyboardOptions,
+        label = {
+            Text(
+                text = label,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        },
+        labelPosition = TextFieldLabelPosition.Above(alignment = Alignment.Start),
+        supportingText = {
+            errorLabel?.let {
+                Text(it)
+            }
+        },
+        trailingIcon = {
+            IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                val visibilityIcon =
+                    if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                val description = if (isPasswordVisible) "Show password" else "Hide password"
+
+                Icon(
+                    imageVector = visibilityIcon,
+                    contentDescription = description,
+                )
+            }
+        },
+        textObfuscationMode = if (isPasswordVisible) {
+            TextObfuscationMode.Visible
+        } else {
+            TextObfuscationMode.RevealLastTyped
+        },
+        enabled = enabled,
+    )
 }

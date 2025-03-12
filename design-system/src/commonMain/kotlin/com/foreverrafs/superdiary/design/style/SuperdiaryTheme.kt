@@ -96,17 +96,21 @@ fun SuperDiaryTheme(
             fontSize = 14.sp,
             fontWeight = FontWeight.Normal,
         ),
-    )
-    val shapes = Shapes(
-        small = RoundedCornerShape(4.dp),
-        medium = RoundedCornerShape(4.dp),
-        large = RoundedCornerShape(0.dp),
+        bodyLarge = TextStyle(
+            fontFamily = montserratAlternativesFontFamily(),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Normal,
+        ),
     )
 
     MaterialTheme(
         colorScheme = colorScheme,
         typography = typography,
-        shapes = shapes,
+        shapes = Shapes(
+            small = RoundedCornerShape(4.dp),
+            medium = RoundedCornerShape(4.dp),
+            large = RoundedCornerShape(0.dp),
+        ),
     ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
