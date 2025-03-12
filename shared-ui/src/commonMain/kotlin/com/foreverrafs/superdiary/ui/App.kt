@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,6 +55,7 @@ import com.foreverrafs.superdiary.core.sync.Synchronizer
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.list.presentation.DiaryListScreen
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
+import com.foreverrafs.superdiary.ui.feature.changepassword.ChangePasswordNavHost
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreen
 import com.foreverrafs.superdiary.ui.navigation.AppRoute
@@ -122,7 +122,7 @@ private fun SuperDiaryNavHost(
                         viewState.userInfo,
                     )
 
-                    DeeplinkContainer.LinkType.PasswordRecovery -> AppRoute.ChangePasswordScreen
+                    DeeplinkContainer.LinkType.PasswordRecovery -> AppRoute.ChangePasswordNavHost
                     DeeplinkContainer.LinkType.Invalid -> AppRoute.LoginScreen(isFromDeeplink = true)
                     // Session was restored from disk and didn't originate from an email link
                     null -> {
@@ -267,15 +267,8 @@ private fun SuperDiaryNavHost(
             )
         }
 
-        animatedComposable<AppRoute.ChangePasswordScreen> {
-            Surface(modifier = Modifier.fillMaxSize()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text("Change password screen")
-                }
-            }
+        animatedComposable<AppRoute.ChangePasswordNavHost> {
+            ChangePasswordNavHost(navController)
         }
 
         animatedComposable<AppRoute.DetailScreen> { backstackEntry ->
@@ -337,7 +330,7 @@ private fun LoadingScreen() {
     }
 }
 
-private inline fun <reified T : Any> NavGraphBuilder.animatedComposable(
+internal inline fun <reified T : Any> NavGraphBuilder.animatedComposable(
     typeMap: Map<KType, NavType<*>> = emptyMap(),
     deepLinks: List<NavDeepLink> = emptyList(),
     noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,

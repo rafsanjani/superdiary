@@ -19,6 +19,7 @@ import com.foreverrafs.superdiary.domain.usecase.GetDiaryByIdUseCase
 import com.foreverrafs.superdiary.list.di.diaryListModule
 import com.foreverrafs.superdiary.profile.di.profileModule
 import com.foreverrafs.superdiary.ui.AppViewModel
+import com.foreverrafs.superdiary.ui.feature.changepassword.ChangePasswordViewModel
 import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
@@ -45,6 +46,7 @@ internal val screensModule: Module = module {
     viewModelOf(::PasswordResetViewModel)
     viewModelOf(::DashboardViewModel)
     viewModelOf(::BiometricLoginScreenViewModel)
+    viewModelOf(::ChangePasswordViewModel)
 }
 
 expect fun permissionModule(): Module

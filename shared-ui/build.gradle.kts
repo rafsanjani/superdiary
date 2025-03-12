@@ -1,6 +1,5 @@
 @file:Suppress("UnusedPrivateProperty")
 
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
@@ -66,6 +65,8 @@ kotlin {
                 implementation(libs.coil3.network.ktor)
                 implementation(libs.coil3.multiplatform)
                 implementation(libs.ktor.client.core)
+                implementation(libs.jetbrains.lifecycle.viewmodel)
+                implementation(libs.jetbrains.lifecycle.runtime.compose)
                 dependencies {
                     implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
                 }

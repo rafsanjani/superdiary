@@ -42,7 +42,7 @@ fun SuperDiaryAppBar(
                 fontWeight = FontWeight.Bold,
             )
         },
-        colors = TopAppBarDefaults.mediumTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
         ),
         actions = {

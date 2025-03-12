@@ -150,6 +150,22 @@ class DefaultSupabaseAuth(
         }
     }
 
+    override suspend fun updatePassword(password: String): Result<Unit> = try {
+        logger.i(Tag) {
+            "Setting new password for user!"
+        }
+
+        client.auth.updateUser {
+            this.password = password
+        }
+        Result.success(Unit)
+    } catch (e: Exception) {
+        logger.e(Tag, e) {
+            "Error setting new password for user!"
+        }
+        Result.failure(e)
+    }
+
     override suspend fun signOut(): Result<Unit> = try {
         client.auth.signOut()
         Result.success(Unit)
