@@ -52,7 +52,7 @@ internal class ChangePasswordViewModel(
 
     private fun dismissErrorMessage() {
         _viewState.update {
-            it.copy(errorMessage = null)
+            it.copy(errorMessage = null, isSuccess = null)
         }
     }
 
@@ -148,6 +148,7 @@ internal class ChangePasswordViewModel(
                 _viewState.update {
                     it.copy(
                         errorMessage = "Error submitting password change request.",
+                        isSuccess = false,
                         arePasswordsMatching = null,
                         passwordStrength = null,
                         isProcessing = false,
