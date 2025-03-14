@@ -1,28 +1,15 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
+    id("com.superdiary.multiplatform.compose")
+    id("com.superdiary.multiplatform.kotlin")
+    id("com.superdiary.android.library")
     alias(libs.plugins.google.ksp)
-    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.parcelize)
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    androidTarget()
-
-    jvm()
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
-
-    compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-    }
-
     sourceSets {
         commonMain {
             dependencies {
@@ -85,23 +72,5 @@ kotlin {
 }
 
 android {
-    buildFeatures {
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
-
     namespace = "com.foreverrafs.core.authentication"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minimumSdk.get().toInt()
-    }
-
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_17
-        sourceCompatibility = JavaVersion.VERSION_17
-    }
 }

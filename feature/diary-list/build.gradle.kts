@@ -1,11 +1,10 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
-    alias(libs.plugins.android.library)
+    id("com.superdiary.multiplatform.compose")
+    id("com.superdiary.multiplatform.kotlin")
+    id("com.superdiary.android.library")
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.mokkery)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.paparazzi)
@@ -13,19 +12,6 @@ plugins {
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    androidTarget()
-
-    jvm()
-
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach {
-        it.binaries.forEach { binary ->
-            binary.linkerOpts += "-lsqlite3"
-        }
-    }
-
     sourceSets {
         androidUnitTest.dependencies {
             implementation(libs.google.testparameterinjector)
@@ -74,14 +60,4 @@ kotlin {
 
 android {
     namespace = "com.foreverrafs.superdiary.diarylist"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minimumSdk.get().toInt()
-    }
-
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_17
-        sourceCompatibility = JavaVersion.VERSION_17
-    }
 }

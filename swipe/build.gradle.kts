@@ -3,22 +3,14 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
-    kotlin("multiplatform")
-    alias(libs.plugins.sonar)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
+    id("com.superdiary.android.library")
+    id("com.superdiary.multiplatform.kotlin")
 }
 
 kotlin {
-    androidTarget()
-
-    jvm()
-    iosArm64()
-    iosSimulatorArm64()
-
-    applyDefaultHierarchyTemplate()
-
     sourceSets {
         commonMain {
             dependencies {
@@ -41,14 +33,4 @@ kotlin {
 
 android {
     namespace = "me.saket.swipe"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minimumSdk.get().toInt()
-    }
-
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_17
-        sourceCompatibility = JavaVersion.VERSION_17
-    }
 }

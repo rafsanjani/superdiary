@@ -1,4 +1,5 @@
 plugins {
+    id("com.superdiary.android.library")
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
 }
@@ -19,10 +20,4 @@ kotlin {
 
 android {
     namespace = "com.foreverrafs.preferences.processor"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_17
-        sourceCompatibility = JavaVersion.VERSION_17
-    }
 }

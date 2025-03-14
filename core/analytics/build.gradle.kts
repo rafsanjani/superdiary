@@ -1,16 +1,18 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
-    alias(libs.plugins.android.library)
-    kotlin("multiplatform")
-    id("kotlin-parcelize")
+    plugins {
+        id("com.superdiary.multiplatform.kotlin")
+        id("com.superdiary.android.library")
+        alias(libs.plugins.kotlin.serialization)
+        alias(libs.plugins.kotlin.parcelize)
+    }
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     androidTarget()
 
-    iosX64()
     jvm()
     iosArm64()
     iosSimulatorArm64()
