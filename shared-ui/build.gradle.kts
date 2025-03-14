@@ -1,26 +1,19 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.compose.compiler)
+    id("com.superdiary.multiplatform.compose")
+    id("com.superdiary.multiplatform.kotlin")
+    id("com.superdiary.android.library")
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.testLogger)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.paparazzi)
-    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.mokkery)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    applyDefaultHierarchyTemplate()
-    androidTarget()
-
-    jvm()
-    jvmToolchain(17)
-
     listOf(
         iosArm64(),
         iosSimulatorArm64(),
@@ -145,27 +138,6 @@ kotlin {
 
 android {
     namespace = "com.foreverrafs.superdiary.shared"
-
-    buildFeatures {
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
-
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minimumSdk.get().toInt()
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    sourceSets["main"].res.srcDirs("src/commonMain/resources")
 }
 
 afterEvaluate {
@@ -194,5 +166,5 @@ tasks.named("iosArm64ResolveResourcesFromDependencies") {
     }
 }
 dependencies {
-    testImplementation(project(":shared-data"))
+    testImplementation(projects.sharedData)
 }

@@ -4,37 +4,17 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 
 plugins {
+    id("com.superdiary.multiplatform.kotlin")
+    id("com.superdiary.android.library")
     alias(libs.plugins.google.ksp)
-    alias(libs.plugins.android.library)
     alias(libs.plugins.testLogger)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.mokkery)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    androidTarget()
-
-    jvm()
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach {
-        it.binaries.forEach { binary ->
-            binary.linkerOpts += "-lsqlite3"
-        }
-    }
-
-    compilerOptions {
-        freeCompilerArgs.addAll(
-            "-Xexpect-actual-classes",
-            "-opt-in=com.aallam.openai.api.BetaOpenAI",
-            "-Xskip-prerelease-check",
-        )
-    }
-
     sourceSets {
         commonMain {
             dependencies {
@@ -105,16 +85,6 @@ kotlin {
 
 android {
     namespace = "com.foreverrafs.data"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minimumSdk.get().toInt()
-    }
-
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_17
-        sourceCompatibility = JavaVersion.VERSION_17
-    }
 }
 
 dependencies {
