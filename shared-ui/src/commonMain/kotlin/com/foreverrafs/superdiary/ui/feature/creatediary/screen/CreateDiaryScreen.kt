@@ -109,6 +109,6 @@ fun CreateDiaryScreen(navController: NavHostController, userInfo: UserInfo?) {
         onShowSaveDialogChange = {
             showSaveDialog = it
         },
-        onNavigateBack = navController::popBackStack,
+        onNavigateBack = navController::navigateUp,
     )
 }
