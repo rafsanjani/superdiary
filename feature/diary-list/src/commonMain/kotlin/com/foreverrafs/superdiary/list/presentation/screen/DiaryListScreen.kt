@@ -44,9 +44,7 @@ fun DiaryListScreen(
             },
             onToggleFavorite = screenModel::toggleFavorite,
             onDiaryClicked = onDiaryClick,
-            onBackPressed = {
-                navController.popBackStack()
-            },
+            onBackPressed = navController::navigateUp,
         )
     }
 

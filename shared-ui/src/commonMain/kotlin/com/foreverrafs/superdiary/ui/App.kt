@@ -290,7 +290,7 @@ private fun SuperDiaryNavHost(
                         }
                     }
                 },
-                onNavigateBack = navController::popBackStack,
+                onNavigateBack = navController::navigateUp,
             )
         }
     }
