@@ -59,7 +59,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
@@ -82,7 +84,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.foreverrafs.superdiary.common.utils.format
-import com.foreverrafs.superdiary.design.components.BackHandler
 import com.foreverrafs.superdiary.design.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.domain.model.Diary
@@ -117,6 +118,7 @@ val DiaryListActions.Companion.Empty: DiaryListActions
             onDiaryClicked = {},
         )
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DiaryListScreenContent(
     state: DiaryListViewState,
@@ -593,6 +595,7 @@ fun DiaryItem(
                 state = state,
                 flingBehavior = AnchoredDraggableDefaults.flingBehavior(
                     state = state,
+                    positionalThreshold = { distance: Float -> distance * 0.25f },
                 ),
                 orientation = Orientation.Horizontal,
                 overscrollEffect = rememberOverscrollEffect(),

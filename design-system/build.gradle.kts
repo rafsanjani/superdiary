@@ -19,6 +19,7 @@ kotlin {
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
                 implementation(compose.components.uiToolingPreview)
+                api("org.jetbrains.compose.ui:ui-backhandler:1.8.0-alpha04")
                 implementation(libs.coil3.compose)
                 implementation(libs.coil3.compose.core)
                 implementation(libs.coil3.network.ktor)
