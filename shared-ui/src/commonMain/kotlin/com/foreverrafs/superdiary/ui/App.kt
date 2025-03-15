@@ -53,7 +53,7 @@ import com.foreverrafs.superdiary.auth.register.screen.RegistrationConfirmationS
 import com.foreverrafs.superdiary.auth.reset.SendPasswordResetEmailScreen
 import com.foreverrafs.superdiary.core.sync.Synchronizer
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
-import com.foreverrafs.superdiary.list.presentation.DiaryListScreen
+import com.foreverrafs.superdiary.list.presentation.screen.DiaryListScreen
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.feature.changepassword.ChangePasswordNavHost
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen

@@ -49,7 +49,7 @@ import com.foreverrafs.superdiary.common.utils.format
 import com.foreverrafs.superdiary.design.components.ConfirmBiometricAuthDialog
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
-import com.foreverrafs.superdiary.list.presentation.DiaryItem
+import com.foreverrafs.superdiary.list.presentation.screen.DiaryItem
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.valentinilk.shimmer.shimmer
 import kotlin.random.Random

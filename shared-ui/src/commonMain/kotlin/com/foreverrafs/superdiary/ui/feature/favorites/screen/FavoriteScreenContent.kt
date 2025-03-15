@@ -13,8 +13,8 @@ import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.list.DiaryFilters
 import com.foreverrafs.superdiary.list.DiaryListActions
-import com.foreverrafs.superdiary.list.presentation.DiaryList
-import com.foreverrafs.superdiary.list.presentation.Empty
+import com.foreverrafs.superdiary.list.presentation.screen.DiaryList
+import com.foreverrafs.superdiary.list.presentation.screen.Empty
 
 @Composable
 fun FavoriteScreenContent(

@@ -17,10 +17,10 @@ import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.list.DiaryFilters
 import com.foreverrafs.superdiary.list.DiaryListActions
-import com.foreverrafs.superdiary.list.presentation.DiaryList
-import com.foreverrafs.superdiary.list.presentation.DiaryListScreenContent
 import com.foreverrafs.superdiary.list.presentation.DiaryListViewState
 import com.foreverrafs.superdiary.list.presentation.components.DiaryDatePicker
+import com.foreverrafs.superdiary.list.presentation.screen.DiaryList
+import com.foreverrafs.superdiary.list.presentation.screen.DiaryListScreenContent
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewData
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreenContent
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent

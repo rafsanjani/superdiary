@@ -43,7 +43,6 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.touchlab.kermit)
                 implementation(libs.koin.compose)
-                implementation(projects.swipe)
                 implementation(libs.uuid)
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
