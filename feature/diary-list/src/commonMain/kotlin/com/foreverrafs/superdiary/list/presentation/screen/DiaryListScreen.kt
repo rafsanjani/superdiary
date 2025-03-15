@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.list.presentation
+package com.foreverrafs.superdiary.list.presentation.screen
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.foreverrafs.superdiary.list.DiaryFilters
 import com.foreverrafs.superdiary.list.DiaryListActions
+import com.foreverrafs.superdiary.list.presentation.DiaryListViewModel
 import org.koin.compose.koinInject
 
 @Composable

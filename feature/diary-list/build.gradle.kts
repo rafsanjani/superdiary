@@ -37,7 +37,6 @@ kotlin {
             implementation(projects.commonUtils)
             implementation(libs.richTextEditor)
             implementation(projects.core.location)
-            implementation(projects.swipe)
             implementation(projects.sharedData)
             implementation(projects.core.database)
             implementation("org.mobilenativefoundation.store:store5:5.1.0-alpha06")
