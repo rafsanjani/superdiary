@@ -12,6 +12,7 @@ import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -100,6 +102,7 @@ import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlin.math.roundToInt
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -699,6 +702,7 @@ fun DiaryItem(
             (draggableWidth * 0.25f).toDp()
         }
 
+        val coroutineScope = rememberCoroutineScope()
         Box(
             modifier = Modifier
                 .size(totalSize)
@@ -707,10 +711,21 @@ fun DiaryItem(
             contentAlignment = Alignment.Center,
         ) {
             IconButton(
-                onClick = onToggleFavorite,
+                onClick = {
+                    onToggleFavorite()
+                    coroutineScope.launch {
+                        // don't reverse the animation straight away
+                        delay(250)
+                        state.animateTo(Anchors.Start)
+                    }
+                },
             ) {
                 Icon(
-                    imageVector = Icons.Default.Favorite,
+                    imageVector = if (diary.isFavorite) {
+                        Icons.Default.Favorite
+                    } else {
+                        Icons.Default.FavoriteBorder
+                    },
                     contentDescription = null,
                 )
             }
@@ -728,8 +743,7 @@ private fun DateCard(
             .fillMaxHeight()
             .background(
                 color = MaterialTheme.colorScheme.secondaryContainer,
-                shape =
-                RoundedCornerShape(
+                shape = RoundedCornerShape(
                     topStart = 0.dp,
                     topEnd = 12.dp,
                     bottomStart = 12.dp,
