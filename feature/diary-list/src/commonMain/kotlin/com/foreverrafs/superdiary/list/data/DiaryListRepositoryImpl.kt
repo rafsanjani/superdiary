@@ -21,8 +21,8 @@ class DiaryListRepositoryImpl(
         }
 
     override suspend fun deleteDiaries(diary: List<Diary>): Result<Int> = try {
-        database.deleteDiaries(diary.mapNotNull { it.id })
-        Result.Success(diary.size)
+        val result = database.deleteDiaries(diary.mapNotNull { it.id })
+        Result.Success(result)
     } catch (e: Exception) {
         Result.Failure(e)
     }

@@ -2,11 +2,13 @@ package com.foreverrafs.superdiary.list.data
 
 import app.cash.turbine.test
 import assertk.assertThat
+import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
+import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.Result.Success
 import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
@@ -69,6 +71,26 @@ class DiaryListRepositoryImplTest {
             val items = awaitItem()
             assertThat(items).isNotEmpty()
         }
+    }
+
+    @Test
+    fun `delete diaries actually deletes it and returns non zero result `() = runTest {
+        val diary = Diary(id = 1L, entry = "Hello World")
+        database.insert(
+            diary.toDatabase(),
+        )
+
+        val result =
+            repository.deleteDiaries(listOf(diary)) as Success
+        assertThat(result.data).isEqualTo(1)
+    }
+
+    @Test
+    fun `delete diaries fails if no match is found`() = runTest {
+        val diary = Diary(id = 1L, entry = "Hello World")
+
+        val result = repository.deleteDiaries(listOf(diary)) as Result.Success
+        assertThat(result.data).isEqualTo(0)
     }
 
     @Test
