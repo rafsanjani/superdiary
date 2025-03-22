@@ -66,6 +66,9 @@ class DefaultSupabaseAuth(
             associateUniqueEmailToUser()
             AuthApi.SignInStatus.LoggedIn(currentSession.toSession())
         } else {
+            logger.e(Tag) {
+                "User was authenticated, but the session was null."
+            }
             AuthApi.SignInStatus.Error(Exception("User was authenticated, but the session was null."))
         }
     }
@@ -73,13 +76,13 @@ class DefaultSupabaseAuth(
     override suspend fun restoreSession(): AuthApi.SignInStatus {
         // Wait for session to be initialized
         while (client.auth.sessionStatus.value == SessionStatus.Initializing) {
-            logger.d(Tag) {
+            logger.i(Tag) {
                 "Waiting for session to be initialized"
             }
             delay(100)
         }
 
-        logger.d(Tag) {
+        logger.i(Tag) {
             "Session Initialized. Attempting to get current session"
         }
         val currentSession = client.auth.currentSessionOrNull()
@@ -130,9 +133,11 @@ class DefaultSupabaseAuth(
     }
 
     private suspend fun associateUniqueEmailToUser() {
-        if (!currentUserOrNull()?.uniqueEmail.isNullOrEmpty()) {
-            logger.d(Tag) {
-                "User already has a unique email. Skipping update."
+        val currentUniqueEmail = currentUserOrNull()?.uniqueEmail
+
+        if (currentUniqueEmail.isNullOrBlank()) {
+            logger.i(Tag) {
+                "User already has a unique email. Skipping update. Email is $currentUniqueEmail"
             }
             return
         }
@@ -147,6 +152,9 @@ class DefaultSupabaseAuth(
             data = buildJsonObject {
                 put("unique_email", JsonPrimitive(uniqueEmail))
             }
+        }
+        logger.i(Tag) {
+            "Associated unique email with user."
         }
     }
 
@@ -181,7 +189,7 @@ class DefaultSupabaseAuth(
     @OptIn(SupabaseInternal::class)
     override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SignInStatus =
         suspendCoroutine { continuation ->
-            logger.d(Tag) {
+            logger.i(Tag) {
                 "Confirming authentication with token $deeplinkUri"
             }
 
@@ -210,13 +218,13 @@ class DefaultSupabaseAuth(
         }
 
     override suspend fun sendPasswordResetEmail(email: String): Result<Unit> = try {
-        logger.d(Tag) {
+        logger.i(Tag) {
             "Sending password reset email to $email"
         }
         client.auth.resetPasswordForEmail(
             email,
         )
-        logger.d(Tag) {
+        logger.i(Tag) {
             "Password reset email sent to $email"
         }
         Result.success(Unit)
