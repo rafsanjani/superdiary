@@ -41,13 +41,13 @@ class LoginScreenViewModel(
             }
         }
 
-    fun onLoginWithEmail(username: String, password: String) =
+    fun onLoginWithEmail(username: CharSequence, password: CharSequence) =
         viewModelScope.launch(coroutineDispatchers.main) {
             _viewState.update {
                 LoginViewState.Processing
             }
 
-            when (val result = authApi.signIn(username, password)) {
+            when (val result = authApi.signIn(username.toString(), password.toString())) {
                 is AuthApi.SignInStatus.Error -> _viewState.update {
                     LoginViewState.Error(
                         error = result.exception,

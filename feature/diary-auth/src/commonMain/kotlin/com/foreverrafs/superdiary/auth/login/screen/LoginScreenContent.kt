@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -35,13 +36,13 @@ import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.foreverrafs.auth.NoCredentialsException
 import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.superdiary.design.components.PasswordInputField
 import com.foreverrafs.superdiary.design.components.SuperDiaryButton
 import com.foreverrafs.superdiary.design.components.SuperDiaryInputField
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
@@ -64,7 +65,7 @@ fun LoginScreenContent(
     viewState: LoginViewState,
     onSignInSuccess: (UserInfo) -> Unit,
     isFromDeeplink: Boolean,
-    onLoginClick: (username: String, password: String) -> Unit,
+    onLoginClick: (username: CharSequence, password: CharSequence) -> Unit,
     onLoginWithGoogle: () -> Unit,
     onRegisterClick: () -> Unit,
     onResetPasswordClick: () -> Unit,
@@ -115,8 +116,8 @@ fun LoginScreenContent(
                     .padding(horizontal = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                var username by remember { mutableStateOf("") }
-                var password by remember { mutableStateOf("") }
+                val username = rememberTextFieldState("")
+                val password = rememberTextFieldState("")
 
                 Spacer(modifier = Modifier.height(40.dp))
 
@@ -140,28 +141,21 @@ fun LoginScreenContent(
                         .fillMaxWidth()
                         .testTag("input_username"),
                     label = stringResource(Res.string.label_username),
-                    value = username,
-                    onValueChange = {
-                        username = it
-                    },
                     placeholder = "john.doe@gmail.com",
+                    state = username,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                SuperDiaryInputField(
+                PasswordInputField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("input_password"),
                     label = stringResource(Res.string.label_password),
-                    value = password,
-                    onValueChange = {
-                        password = it
-                    },
+                    state = password,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
                     ),
-                    visualTransformation = PasswordVisualTransformation(),
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -178,7 +172,7 @@ fun LoginScreenContent(
                         .fillMaxWidth()
                         .testTag("button_login"),
                     onClick = {
-                        onLoginClick(username, password)
+                        onLoginClick(username.text, password.text)
                     },
                     enabled = enableLoginButton,
                     text = stringResource(Res.string.label_login),

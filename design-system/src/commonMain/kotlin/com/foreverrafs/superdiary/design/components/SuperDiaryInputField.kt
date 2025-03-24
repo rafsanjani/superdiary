@@ -89,6 +89,56 @@ fun SuperDiaryInputField(
 }
 
 @Composable
+fun SuperDiaryInputField(
+    label: String,
+    state: TextFieldState,
+    modifier: Modifier = Modifier,
+    onValueChange: (value: String) -> Unit = {},
+    errorLabel: String? = null,
+    placeholder: String? = null,
+    readOnly: Boolean = false,
+    isError: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+) {
+    val text by snapshotFlow { state.text }.collectAsState(initial = state.text)
+    val currentOnTextChanged by rememberUpdatedState(onValueChange)
+
+    LaunchedEffect(text) {
+        currentOnTextChanged(text.toString())
+    }
+
+    TextField(
+        modifier = modifier
+            .fillMaxWidth(),
+        state = state,
+        isError = isError,
+        placeholder = {
+            if (placeholder != null) {
+                Text(
+                    text = placeholder,
+                    modifier = Modifier.alpha(0.3f).fillMaxWidth(),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
+        },
+        labelPosition = TextFieldLabelPosition.Above(alignment = Alignment.Start),
+        keyboardOptions = keyboardOptions,
+        readOnly = readOnly,
+        supportingText = {
+            errorLabel?.let {
+                Text(it)
+            }
+        },
+        label = {
+            Text(
+                text = label,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        },
+    )
+}
+
+@Composable
 fun PasswordInputField(
     label: String,
     state: TextFieldState,
