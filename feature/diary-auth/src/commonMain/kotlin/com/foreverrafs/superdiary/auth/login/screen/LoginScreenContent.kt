@@ -141,8 +141,8 @@ fun LoginScreenContent(
                         .fillMaxWidth()
                         .testTag("input_username"),
                     label = stringResource(Res.string.label_username),
-                    state = username,
                     placeholder = "john.doe@gmail.com",
+                    state = username,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

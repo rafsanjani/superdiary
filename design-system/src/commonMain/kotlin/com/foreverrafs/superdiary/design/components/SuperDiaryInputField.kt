@@ -119,6 +119,7 @@ fun SuperDiaryInputField(
                 )
             }
         },
+        labelPosition = TextFieldLabelPosition.Above(alignment = Alignment.Start),
         keyboardOptions = keyboardOptions,
         readOnly = readOnly,
         supportingText = {
