@@ -116,6 +116,8 @@ fun SuperDiaryInputField(
             if (placeholder != null) {
                 Text(
                     text = placeholder,
+                    modifier = Modifier.alpha(0.3f).fillMaxWidth(),
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
         },
