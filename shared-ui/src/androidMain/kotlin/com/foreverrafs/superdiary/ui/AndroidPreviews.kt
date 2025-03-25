@@ -382,17 +382,17 @@ private fun DashboardPreview() {
                         location = Location.Empty,
                     )
                 },
-                20,
-                "",
-                Streak(
+                totalEntries = 20,
+                weeklySummary = "",
+                currentStreak = Streak(
                     0,
                     Clock.System.now().toDate(),
                     Clock.System.now().toDate(),
                 ),
                 bestStreak = Streak(
-                    0,
-                    Clock.System.now().toDate(),
-                    Clock.System.now().toDate(),
+                    count = 0,
+                    startDate = Clock.System.now().toDate(),
+                    endDate = Clock.System.now().toDate(),
                 ),
                 isBiometricAuthError = null,
                 showBiometricAuthDialog = false,
@@ -418,6 +418,7 @@ private fun DetailPreview() {
             DetailScreenContent(
                 onDeleteDiary = {},
                 onNavigateBack = {},
+                onProfileClick = {},
                 viewState = DetailsViewState.DiarySelected(
                     Diary(
                         entry = """
@@ -461,40 +462,10 @@ private fun DetailPreview() {
                         location = Location.Empty,
                     ),
                 ),
-                avatarUrl = "avatar-url",
             )
         }
     }
 }
-
-// @Composable
-// @PreviewSuperDiary
-// private fun LoginPreview() {
-//    SuperDiaryTheme {
-//        LoginScreenContent(
-//            onLoginWithGoogle = {},
-//            onLoginClick = { _, _ -> },
-//            onRegisterClick = {},
-//            viewState = LoginViewState.Idle,
-//            onSignInSuccess = {},
-//            isFromDeeplink = false,
-//            onResetPasswordClick = {},
-//        )
-//    }
-// }
-//
-// @Composable
-// @PreviewSuperDiary
-// private fun RegisterPreview() {
-//    SuperDiaryTheme {
-//        RegisterScreenContent(
-//            onRegisterClick = { _, _, _ -> },
-//            viewState = RegisterScreenState.Idle,
-//            onRegisterSuccess = {},
-//            onLoginClick = {},
-//        )
-//    }
-// }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, name = "Night")
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, name = "Day")

@@ -136,14 +136,14 @@ class DashboardViewModel(
                             DEFAULT_SUMMARY_TEXT
                         },
                         currentStreak = Streak(
-                            0,
-                            clock.now().toDate(),
-                            clock.now().toDate(),
+                            count = 0,
+                            startDate = clock.now().toDate(),
+                            endDate = clock.now().toDate(),
                         ),
                         bestStreak = Streak(
-                            0,
-                            clock.now().toDate(),
-                            clock.now().toDate(),
+                            count = 0,
+                            startDate = clock.now().toDate(),
+                            endDate = clock.now().toDate(),
                         ),
                         showBiometricAuthDialog = shouldShowBiometricDialog,
                         showLatestEntries = settings.showLatestEntries,

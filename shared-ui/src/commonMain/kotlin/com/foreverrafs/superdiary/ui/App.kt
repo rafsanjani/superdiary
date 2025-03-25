@@ -277,7 +277,9 @@ private fun SuperDiaryNavHost(
             DetailScreen(
                 diaryId = diaryId,
                 navController = navController,
-                avatarUrl = userInfo?.avatarUrl.orEmpty(),
+                onProfileClick = {
+                    navController.navigate(AppRoute.ProfileScreen)
+                },
             )
         }
 
