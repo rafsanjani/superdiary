@@ -17,29 +17,25 @@ import org.koin.compose.koinInject
 @Composable
 fun DetailScreen(
     diaryId: String,
-    avatarUrl: String,
     navController: NavController,
+    onProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: DetailsViewModel = koinInject()
     val viewState by viewModel.detailsViewState.collectAsState()
 
     LaunchedEffect(diaryId) {
-        viewModel.initForDiary(diaryId.toLong())
+        viewModel.selectDiary(diaryId.toLong())
     }
 
     when (val state = viewState) {
         is DetailsViewState.DiarySelected -> {
             DetailScreenContent(
                 modifier = modifier,
-                onNavigateBack = {
-                    navController.navigateUp()
-                },
-                onDeleteDiary = {
-                    viewModel.deleteDiary(it)
-                },
+                onNavigateBack = navController::navigateUp,
+                onDeleteDiary = viewModel::deleteDiary,
                 viewState = state,
-                avatarUrl = avatarUrl,
+                onProfileClick = onProfileClick,
             )
         }
 
@@ -48,7 +44,9 @@ fun DetailScreen(
                 modifier = modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(text = "Selected account is null. This shouldn't ever happen.")
+                Text(
+                    text = "Selected account is null. This shouldn't ever happen.",
+                )
             }
         }
     }

@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
+import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
@@ -31,6 +32,10 @@ class DetailsViewModelTest {
 
     private val dataSource: DataSource = mock<DataSource>()
 
+    private val authApi: AuthApi = mock<AuthApi> {
+        everySuspend { currentUserOrNull() } returns null
+    }
+
     private lateinit var detailsViewModel: DetailsViewModel
 
     @BeforeTest
@@ -44,7 +49,8 @@ class DetailsViewModelTest {
             getDiaryByIdUseCase = GetDiaryByIdUseCase(
                 dataSource = dataSource,
             ),
-            logger = AggregateLogger(emptyList()),
+            logger = AggregateLogger(loggers = emptyList()),
+            authApi = authApi,
         )
     }
 
@@ -55,7 +61,7 @@ class DetailsViewModelTest {
 
     @Test
     fun `Successfully deleting a diary should emit deleted state`() = runTest {
-        val diary = Diary("Hello world")
+        val diary = Diary(entry = "Hello world")
 
         everySuspend { dataSource.delete(listOf(diary)) } returns 1
         // when we delete an item, we essentially mark it for deletion and don't delete it right away
@@ -75,7 +81,7 @@ class DetailsViewModelTest {
 
     @Test
     fun `Failing to delete should emit failure deleting state`() = runTest {
-        val diary = Diary("Hello world")
+        val diary = Diary(entry = "Hello world")
 
         everySuspend { dataSource.delete(listOf(diary)) }.returns(0)
         // when we delete an item, we essentially mark it for deletion and don't delete it right away
@@ -98,9 +104,9 @@ class DetailsViewModelTest {
     fun `Should emit state when diary is supplied`() = runTest {
         val diaryId = 12345L
 
-        everySuspend { dataSource.find(diaryId) } returns Diary("Wonky diary")
+        everySuspend { dataSource.find(diaryId) } returns Diary(entry = "Wonky diary")
 
-        detailsViewModel.initForDiary(diaryId)
+        detailsViewModel.selectDiary(diaryId)
 
         detailsViewModel.detailsViewState.test {
             // This state is initialized as null so skip the first emission

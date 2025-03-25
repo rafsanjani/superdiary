@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.ui.feature.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
@@ -19,13 +20,17 @@ sealed interface DeleteDiaryState {
 }
 
 sealed interface DetailsViewState {
-    data class DiarySelected(val diary: Diary) : DetailsViewState
+    data class DiarySelected(
+        val diary: Diary,
+        val avatarUrl: String? = null,
+    ) : DetailsViewState
 }
 
 class DetailsViewModel(
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
     private val getDiaryByIdUseCase: GetDiaryByIdUseCase,
     private val logger: AggregateLogger,
+    private val authApi: AuthApi,
 ) : ViewModel() {
 
     private val _deleteDiaryState = MutableStateFlow<DeleteDiaryState?>(null)
@@ -58,18 +63,22 @@ class DetailsViewModel(
         }
     }
 
-    fun initForDiary(diaryId: Long) = viewModelScope.launch {
+    fun selectDiary(diaryId: Long) = viewModelScope.launch {
         logger.d(TAG) {
             "Selecting diary with id $diaryId"
         }
 
-        val diary = getDiaryByIdUseCase(diaryId)
-
-        _detailsViewState.update {
-            if (diary != null) {
+        getDiaryByIdUseCase(diaryId)?.let { diary ->
+            _detailsViewState.update {
                 DetailsViewState.DiarySelected(diary)
-            } else {
-                it
+            }
+        }
+
+        authApi.currentUserOrNull()?.let { user ->
+            _detailsViewState.update {
+                (it as? DetailsViewState.DiarySelected)?.copy(
+                    avatarUrl = user.avatarUrl,
+                )
             }
         }
     }

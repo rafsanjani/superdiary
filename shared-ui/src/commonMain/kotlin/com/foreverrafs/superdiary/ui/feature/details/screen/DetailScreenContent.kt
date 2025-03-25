@@ -38,6 +38,7 @@ import com.foreverrafs.superdiary.design.components.MapComponent
 import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
+import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlinx.coroutines.launch
@@ -48,11 +49,12 @@ import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.label_diary_deleted
 
+@OptIn(ExperimentalRichTextApi::class)
 @Composable
 fun DetailScreenContent(
     onDeleteDiary: (diary: Diary) -> Unit,
     onNavigateBack: () -> Unit,
-    avatarUrl: String,
+    onProfileClick: () -> Unit,
     viewState: DetailsViewState.DiarySelected,
     modifier: Modifier = Modifier,
 ) {
@@ -84,7 +86,8 @@ fun DetailScreenContent(
                         )
                     }
                 },
-                avatarUrl = avatarUrl,
+                avatarUrl = viewState.avatarUrl,
+                onProfileClick = onProfileClick,
             )
         },
         snackbarHost = {
