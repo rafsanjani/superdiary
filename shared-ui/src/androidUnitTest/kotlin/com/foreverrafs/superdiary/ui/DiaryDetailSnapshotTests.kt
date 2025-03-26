@@ -1,5 +1,7 @@
 package com.foreverrafs.superdiary.ui
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.common.paparazzi.SnapshotDevice
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
@@ -14,6 +16,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @RunWith(TestParameterInjector::class)
 class DiaryDetailSnapshotTests(
     @TestParameter val snapshotDevice: SnapshotDevice,
@@ -33,25 +36,29 @@ class DiaryDetailSnapshotTests(
     @Test
     fun `Diary detail screen`() {
         paparazzi.snapshot {
-            SuperDiaryPreviewTheme {
-                DetailScreenContent(
-                    onDeleteDiary = {},
-                    onNavigateBack = {},
-                    viewState = DetailsViewState.DiarySelected(
-                        Diary(
-                            entry = """
+            SharedTransitionLayout {
+                SuperDiaryPreviewTheme {
+                    DetailScreenContent(
+                        onDeleteDiary = {},
+                        onNavigateBack = {},
+                        viewState = DetailsViewState.DiarySelected(
+                            Diary(
+                                entry = """
                         Hello Diary, I did something awful today too.
                         I kept eating a very large bowl of rice till I couldn't take
                         it any much longer. I think this will go down in history as
                         the greatest rice eating bout of all time.
-                            """.trimIndent(),
-                            id = 1000,
-                            date = testClock.now(),
-                            isFavorite = false,
+                                """.trimIndent(),
+                                id = 1000,
+                                date = testClock.now(),
+                                isFavorite = false,
+                            ),
                         ),
-                    ),
-                    onProfileClick = {},
-                )
+                        onProfileClick = {},
+                        animatedContentScope = this,
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                    )
+                }
             }
         }
     }

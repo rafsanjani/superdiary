@@ -1,6 +1,10 @@
 package com.foreverrafs.superdiary.design.components
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -21,44 +25,68 @@ import org.jetbrains.compose.resources.stringResource
 import superdiary.design_system.generated.resources.Res
 import superdiary.design_system.generated.resources.app_name
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun SuperDiaryAppBar(
     modifier: Modifier = Modifier,
     navigationIcon: @Composable (() -> Unit)? = null,
     onProfileClick: () -> Unit = {},
     avatarUrl: String? = null,
+    animatedContentScope: AnimatedContentScope,
+    sharedTransitionScope: SharedTransitionScope,
 ) {
     TopAppBar(
         modifier = modifier,
         title = {
-            Text(
-                text = stringResource(Res.string.app_name),
-                textAlign = TextAlign.Start,
-                modifier = Modifier.semantics {
-                    heading()
-                },
-                style = MaterialTheme.typography.displayLarge,
-                fontWeight = FontWeight.Bold,
-            )
+            with(sharedTransitionScope) {
+                Text(
+                    text = stringResource(Res.string.app_name),
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .semantics {
+                            heading()
+                        }
+                        .sharedElement(
+                            sharedContentState = sharedTransitionScope.rememberSharedContentState("app_name"),
+                            animatedVisibilityScope = animatedContentScope,
+                        ),
+                    style = MaterialTheme.typography.displayLarge,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
         ),
         actions = {
-            SuperDiaryImage(
-                modifier = Modifier
-                    .padding(end = 4.dp)
-                    .size(36.dp)
-                    .clip(CircleShape)
-                    .clickable {
-                        onProfileClick()
-                    },
-                url = avatarUrl,
-            )
+            with(sharedTransitionScope) {
+                SuperDiaryImage(
+                    modifier = Modifier
+                        .sharedElement(
+                            sharedContentState = sharedTransitionScope.rememberSharedContentState("profile_image"),
+                            animatedVisibilityScope = animatedContentScope,
+                        )
+                        .padding(end = 4.dp)
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .clickable {
+                            onProfileClick()
+                        },
+                    url = avatarUrl,
+                )
+            }
         },
         navigationIcon = {
-            navigationIcon?.invoke()
+            with(sharedTransitionScope) {
+                Box(
+                    modifier = Modifier.sharedElement(
+                        sharedContentState = sharedTransitionScope.rememberSharedContentState("navigation_icon"),
+                        animatedVisibilityScope = animatedContentScope,
+                    ),
+                ) {
+                    navigationIcon?.invoke()
+                }
+            }
         },
     )
 }

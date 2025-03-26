@@ -1,5 +1,8 @@
 package com.foreverrafs.superdiary.ui.feature.details.screen
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,13 +52,15 @@ import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.label_diary_deleted
 
-@OptIn(ExperimentalRichTextApi::class)
+@OptIn(ExperimentalRichTextApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun DetailScreenContent(
     onDeleteDiary: (diary: Diary) -> Unit,
     onNavigateBack: () -> Unit,
     onProfileClick: () -> Unit,
     viewState: DetailsViewState.DiarySelected,
+    animatedContentScope: AnimatedContentScope,
+    sharedTransitionScope: SharedTransitionScope,
     modifier: Modifier = Modifier,
 ) {
     val diary = viewState.diary
@@ -71,94 +76,98 @@ fun DetailScreenContent(
     val hostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            SuperDiaryAppBar(
-                navigationIcon = {
-                    IconButton(
-                        onClick = onNavigateBack,
-                    ) {
-                        Icon(
-                            modifier = Modifier.clip(CircleShape),
-                            imageVector = Icons.Default.ArrowBackIosNew,
-                            contentDescription = "",
+    with(sharedTransitionScope) {
+        Scaffold(
+            modifier = modifier,
+            topBar = {
+                SuperDiaryAppBar(
+                    navigationIcon = {
+                        IconButton(
+                            onClick = onNavigateBack,
+                        ) {
+                            Icon(
+                                modifier = Modifier.clip(CircleShape),
+                                imageVector = Icons.Default.ArrowBackIosNew,
+                                contentDescription = "",
+                            )
+                        }
+                    },
+                    avatarUrl = viewState.avatarUrl,
+                    onProfileClick = onProfileClick,
+                    animatedContentScope = animatedContentScope,
+                    sharedTransitionScope = this@with,
+                )
+            },
+            snackbarHost = {
+                SnackbarHost(hostState)
+            },
+        ) {
+            Surface(
+                modifier = Modifier.padding(it),
+                color = MaterialTheme.colorScheme.background,
+            ) {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    if (!diary.location.isEmpty()) {
+                        MapComponent(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(150.dp),
+                            latitude = diary.location.latitude,
+                            longitude = diary.location.longitude,
                         )
                     }
-                },
-                avatarUrl = viewState.avatarUrl,
-                onProfileClick = onProfileClick,
-            )
-        },
-        snackbarHost = {
-            SnackbarHost(hostState)
-        },
-    ) {
-        Surface(
-            modifier = Modifier.padding(it),
-            color = MaterialTheme.colorScheme.background,
-        ) {
-            Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                if (!diary.location.isEmpty()) {
-                    MapComponent(
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = diary.date
+                            .toLocalDateTime(TimeZone.currentSystemDefault())
+                            .format("EEE - MMMM dd, yyyy - hh:mm a")
+                            .lowercase(),
+                        style = MaterialTheme.typography.labelMedium,
+                        modifier = Modifier
+                            .alpha(0.6f)
+                            .padding(12.dp),
+                    )
+
+                    RichText(
+                        state = richTextState,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(150.dp),
-                        latitude = diary.location.latitude,
-                        longitude = diary.location.longitude,
+                            .padding(horizontal = 12.dp),
+                        style = MaterialTheme.typography.bodyMedium,
+                        lineHeight = 32.sp,
                     )
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                if (showDeleteDialog) {
+                    val deletedString = stringResource(Res.string.label_diary_deleted)
 
-                Text(
-                    text = diary.date
-                        .toLocalDateTime(TimeZone.currentSystemDefault())
-                        .format("EEE - MMMM dd, yyyy - hh:mm a")
-                        .lowercase(),
-                    style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier
-                        .alpha(0.6f)
-                        .padding(12.dp),
-                )
+                    ConfirmDeleteDialog(
+                        onDismiss = { showDeleteDialog = !showDeleteDialog },
+                        onConfirm = {
+                            showDeleteDialog = !showDeleteDialog
+                            onDeleteDiary(diary)
 
-                RichText(
-                    state = richTextState,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp),
-                    style = MaterialTheme.typography.bodyMedium,
-                    lineHeight = 32.sp,
-                )
-            }
+                            coroutineScope.launch {
+                                // Only show snackbar for 600 milliseconds
+                                withTimeoutOrNull(600) {
+                                    hostState.showSnackbar(
+                                        message = deletedString,
+                                        duration = SnackbarDuration.Indefinite,
+                                    )
+                                }
 
-            if (showDeleteDialog) {
-                val deletedString = stringResource(Res.string.label_diary_deleted)
-
-                ConfirmDeleteDialog(
-                    onDismiss = { showDeleteDialog = !showDeleteDialog },
-                    onConfirm = {
-                        showDeleteDialog = !showDeleteDialog
-                        onDeleteDiary(diary)
-
-                        coroutineScope.launch {
-                            // Only show snackbar for 600 milliseconds
-                            withTimeoutOrNull(600) {
-                                hostState.showSnackbar(
-                                    message = deletedString,
-                                    duration = SnackbarDuration.Indefinite,
-                                )
+                                onNavigateBack()
                             }
-
-                            onNavigateBack()
-                        }
-                    },
-                )
+                        },
+                    )
+                }
             }
         }
     }

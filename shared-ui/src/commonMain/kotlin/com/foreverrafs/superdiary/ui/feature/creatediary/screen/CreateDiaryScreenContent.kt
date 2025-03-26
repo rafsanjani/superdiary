@@ -1,6 +1,9 @@
 package com.foreverrafs.superdiary.ui.feature.creatediary.screen
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -67,7 +70,11 @@ import superdiary.shared_ui.generated.resources.label_diary_ai
  *    dialog, this callback is invoked, signalling that the user doesn't
  *    want to be disturbed again.
  */
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalComposeUiApi::class,
+    ExperimentalSharedTransitionApi::class,
+)
 @Composable
 fun CreateDiaryScreenContent(
     isGeneratingFromAi: Boolean,
@@ -81,6 +88,8 @@ fun CreateDiaryScreenContent(
     onRequestLocationPermission: () -> Unit,
     onDontAskAgain: () -> Unit,
     onNavigateBack: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     modifier: Modifier = Modifier,
     richTextState: RichTextState = rememberRichTextState(),
 ) {
@@ -114,6 +123,8 @@ fun CreateDiaryScreenContent(
                     }
                 },
                 avatarUrl = userInfo?.avatarUrl,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedContentScope = animatedContentScope,
             )
         },
         modifier = modifier,
