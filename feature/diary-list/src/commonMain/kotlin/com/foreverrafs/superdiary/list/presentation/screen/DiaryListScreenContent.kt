@@ -132,11 +132,11 @@ fun DiaryListScreenContent(
     showSearchBar: Boolean,
     diaryListActions: DiaryListActions,
     avatarUrl: String?,
-    modifier: Modifier = Modifier,
-    clock: Clock = Clock.System,
     onProfileClick: () -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
+    modifier: Modifier = Modifier,
+    clock: Clock = Clock.System,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     var selectedIds by rememberSaveable {

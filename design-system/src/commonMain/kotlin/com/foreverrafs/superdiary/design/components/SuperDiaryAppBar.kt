@@ -28,12 +28,12 @@ import superdiary.design_system.generated.resources.app_name
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun SuperDiaryAppBar(
+    animatedContentScope: AnimatedContentScope,
+    sharedTransitionScope: SharedTransitionScope,
     modifier: Modifier = Modifier,
     navigationIcon: @Composable (() -> Unit)? = null,
     onProfileClick: () -> Unit = {},
     avatarUrl: String? = null,
-    animatedContentScope: AnimatedContentScope,
-    sharedTransitionScope: SharedTransitionScope,
 ) {
     TopAppBar(
         modifier = modifier,
