@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.auth.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
+import com.foreverrafs.auth.AuthException
 import com.foreverrafs.superdiary.auth.login.screen.LoginViewState
 import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +30,7 @@ class LoginScreenViewModel(
             when (val result = authApi.signInWithGoogle()) {
                 is AuthApi.SignInStatus.Error -> _viewState.update {
                     LoginViewState.Error(
-                        error = result.exception,
+                        error = AuthException(cause = result.exception),
                     )
                 }
 
@@ -50,7 +51,7 @@ class LoginScreenViewModel(
             when (val result = authApi.signIn(username.toString(), password.toString())) {
                 is AuthApi.SignInStatus.Error -> _viewState.update {
                     LoginViewState.Error(
-                        error = result.exception,
+                        error = AuthException(cause = result.exception),
                     )
                 }
 

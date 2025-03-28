@@ -102,8 +102,8 @@ class DefaultSupabaseAuth(
             this.password = password
         }
         getSessionStatus()
-    } catch (e: Exception) {
-        AuthApi.SignInStatus.Error(e)
+    } catch (exception: Exception) {
+        AuthApi.SignInStatus.Error(exception.transform())
     }
 
     override suspend fun register(
@@ -121,15 +121,25 @@ class DefaultSupabaseAuth(
 
         AuthApi.RegistrationStatus.Success
     } catch (exception: RestException) {
-        val error = if (
-            exception.message?.contains(USER_REGISTERED_ERROR, true) == true
-        ) {
-            UserAlreadyRegisteredException(exception.message.orEmpty())
-        } else {
-            exception
-        }
+        AuthApi.RegistrationStatus.Error(
+            exception.transform(),
+        )
+    }
 
-        AuthApi.RegistrationStatus.Error(error)
+    private fun Exception.transform(): AuthException = when {
+        message?.contains(
+            USER_REGISTERED_ERROR,
+            true,
+        ) == true -> UserAlreadyRegisteredException(message.orEmpty())
+
+        message?.contains(
+            INVALID_LOGIN_CREDENTIALS,
+            true,
+        ) == true -> InvalidCredentialsException(message.orEmpty())
+
+        else -> {
+            GenericAuthException(this, this.message)
+        }
     }
 
     private suspend fun associateUniqueEmailToUser() {
@@ -238,6 +248,7 @@ class DefaultSupabaseAuth(
 
     companion object {
         private const val USER_REGISTERED_ERROR = "User already registered"
+        private const val INVALID_LOGIN_CREDENTIALS = "Invalid login credentials"
         private val Tag = DefaultSupabaseAuth::class.simpleName.orEmpty()
     }
 }
