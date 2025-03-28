@@ -2,6 +2,9 @@
 
 package com.foreverrafs.superdiary.list.presentation.screen
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -121,7 +124,7 @@ val DiaryListActions.Companion.Empty: DiaryListActions
             onDiaryClicked = {},
         )
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun DiaryListScreenContent(
     state: DiaryListViewState,
@@ -129,6 +132,9 @@ fun DiaryListScreenContent(
     showSearchBar: Boolean,
     diaryListActions: DiaryListActions,
     avatarUrl: String?,
+    onProfileClick: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     modifier: Modifier = Modifier,
     clock: Clock = Clock.System,
 ) {
@@ -187,6 +193,9 @@ fun DiaryListScreenContent(
                     }
                 },
                 avatarUrl = avatarUrl,
+                animatedContentScope = animatedContentScope,
+                sharedTransitionScope = sharedTransitionScope,
+                onProfileClick = onProfileClick,
             )
         },
         floatingActionButton = {
@@ -617,7 +626,7 @@ fun DiaryItem(
                 .zIndex(.9f)
                 .fillMaxWidth()
                 .offset {
-                    IntOffset(state.requireOffset().roundToInt(), 0)
+                    IntOffset(x = state.requireOffset().roundToInt(), 0)
                 },
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceVariant,

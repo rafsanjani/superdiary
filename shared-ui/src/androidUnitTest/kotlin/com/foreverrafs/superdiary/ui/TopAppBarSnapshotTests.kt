@@ -1,5 +1,7 @@
 package com.foreverrafs.superdiary.ui
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,23 +32,29 @@ class TopAppBarSnapshotTests(
         useDeviceResolution = true,
     )
 
+    @OptIn(ExperimentalSharedTransitionApi::class)
     @Test
     fun `Top App Bar`() {
         paparazzi.snapshot {
-            SuperDiaryPreviewTheme {
-                Scaffold(
-                    topBar = {
-                        SuperDiaryAppBar()
-                    },
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(color = Color.Cyan)
-                            .padding(it),
-                        contentAlignment = Alignment.Center,
+            SharedTransitionLayout {
+                SuperDiaryPreviewTheme {
+                    Scaffold(
+                        topBar = {
+                            SuperDiaryAppBar(
+                                sharedTransitionScope = this@SharedTransitionLayout,
+                                animatedContentScope = this,
+                            )
+                        },
                     ) {
-                        Text("hello World")
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = Color.Cyan)
+                                .padding(it),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text("hello World")
+                        }
                     }
                 }
             }

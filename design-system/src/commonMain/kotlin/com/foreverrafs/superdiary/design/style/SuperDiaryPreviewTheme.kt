@@ -1,5 +1,7 @@
 package com.foreverrafs.superdiary.design.style
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,7 +17,7 @@ import androidx.compose.ui.platform.LocalInspectionMode
 fun SuperDiaryPreviewTheme(
     modifier: Modifier = Modifier,
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit,
+    content: @Composable AnimatedContentScope.() -> Unit,
 ) {
     SuperDiaryTheme(darkTheme = darkTheme) {
         Scaffold(
@@ -28,7 +30,9 @@ fun SuperDiaryPreviewTheme(
                 color = MaterialTheme.colorScheme.background,
             ) {
                 CompositionLocalProvider(LocalInspectionMode provides true) {
-                    content()
+                    AnimatedContent(targetState = Unit) {
+                        content()
+                    }
                 }
             }
         }

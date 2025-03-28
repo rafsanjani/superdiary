@@ -1,5 +1,8 @@
 package com.foreverrafs.superdiary.ui.feature.details.screen
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,13 +52,15 @@ import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.label_diary_deleted
 
-@OptIn(ExperimentalRichTextApi::class)
+@OptIn(ExperimentalRichTextApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun DetailScreenContent(
     onDeleteDiary: (diary: Diary) -> Unit,
     onNavigateBack: () -> Unit,
     onProfileClick: () -> Unit,
     viewState: DetailsViewState.DiarySelected,
+    animatedContentScope: AnimatedContentScope,
+    sharedTransitionScope: SharedTransitionScope,
     modifier: Modifier = Modifier,
 ) {
     val diary = viewState.diary
@@ -88,6 +93,8 @@ fun DetailScreenContent(
                 },
                 avatarUrl = viewState.avatarUrl,
                 onProfileClick = onProfileClick,
+                animatedContentScope = animatedContentScope,
+                sharedTransitionScope = sharedTransitionScope,
             )
         },
         snackbarHost = {

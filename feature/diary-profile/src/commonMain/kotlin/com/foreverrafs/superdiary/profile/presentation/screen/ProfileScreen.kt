@@ -1,5 +1,8 @@
 package com.foreverrafs.superdiary.profile.presentation.screen
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -55,16 +58,18 @@ import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewData
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewModel
 import com.foreverrafs.superdiary.utils.DiarySettings
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import superdiary.feature.diary_profile.generated.resources.Res
 import superdiary.feature.diary_profile.generated.resources.profile_screen_section_dashboard_cards
 import superdiary.feature.diary_profile.generated.resources.unique_email_address_label
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ProfileScreen(
     onLogoutComplete: () -> Unit,
     onNavigateBack: () -> Unit,
+    animatedContentScope: AnimatedContentScope,
+    sharedTransitionScope: SharedTransitionScope,
 ) {
     val viewModel: ProfileScreenViewModel = koinViewModel()
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
@@ -91,9 +96,12 @@ fun ProfileScreen(
         settings = settings,
         onUpdateSettings = viewModel::onSettingsUpdated,
         onNavigateBack = onNavigateBack,
+        sharedTransitionScope = sharedTransitionScope,
+        animatedContentScope = animatedContentScope,
     )
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ProfileScreenContent(
     viewState: ProfileScreenViewData,
@@ -102,6 +110,8 @@ fun ProfileScreenContent(
     onLogoutDialogVisibilityChange: (Boolean) -> Unit,
     onUpdateSettings: (DiarySettings) -> Unit,
     onNavigateBack: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     isLogoutDialogVisible: Boolean,
     settings: DiarySettings,
     modifier: Modifier = Modifier,
@@ -116,158 +126,166 @@ fun ProfileScreenContent(
         }
     }
 
-    SuperDiaryTheme {
-        Scaffold(
-            modifier = modifier,
-            contentColor = MaterialTheme.colorScheme.background,
-            snackbarHost = {
-                SnackbarHost(snackBarkHostState)
-            },
-        ) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it),
+    with(sharedTransitionScope) {
+        SuperDiaryTheme {
+            Scaffold(
+                modifier = modifier,
+                contentColor = MaterialTheme.colorScheme.background,
+                snackbarHost = {
+                    SnackbarHost(snackBarkHostState)
+                },
             ) {
-                if (isLogoutDialogVisible) {
-                    ConfirmLogoutDialog(
-                        onLogout = {
-                            onLogout()
-                            onLogoutDialogVisibilityChange(false)
-                        },
-                        onDismiss = {
-                            onLogoutDialogVisibilityChange(false)
-                        },
-                        onDismissRequest = {
-                            onLogoutDialogVisibilityChange(false)
-                        },
-                    )
-                }
-
-                Column(
+                Surface(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                        .padding(it),
                 ) {
-                    IconButton(
-                        onClick = onNavigateBack,
-                        modifier = Modifier.align(Alignment.Start),
-                    ) {
-                        Icon(
-                            modifier = Modifier.clip(CircleShape),
-                            imageVector = Icons.Default.ArrowBackIosNew,
-                            contentDescription = "",
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    SuperDiaryImage(
-                        modifier = Modifier
-                            .size(72.dp)
-                            .clip(CircleShape),
-                        url = viewState.avatarUrl,
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Text(
-                        text = viewState.name,
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = viewState.email,
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Button(onClick = {}) {
-                        Text("Edit Profile")
-                    }
-
-                    Spacer(modifier = Modifier.height(48.dp))
-
-                    ProfileSection(
-                        label = stringResource(Res.string.profile_screen_section_dashboard_cards),
-                    ) {
-                        CheckboxProfileItem(
-                            label = "Weekly summary",
-                            checked = settings.showWeeklySummary,
-                            onCheckChange = {
-                                onUpdateSettings(
-                                    settings.copy(
-                                        showWeeklySummary = it,
-                                    ),
-                                )
+                    if (isLogoutDialogVisible) {
+                        ConfirmLogoutDialog(
+                            onLogout = {
+                                onLogout()
+                                onLogoutDialogVisibilityChange(false)
+                            },
+                            onDismiss = {
+                                onLogoutDialogVisibilityChange(false)
+                            },
+                            onDismissRequest = {
+                                onLogoutDialogVisibilityChange(false)
                             },
                         )
-
-                        CheckboxProfileItem(
-                            label = "On this day",
-                            checked = true,
-                            onCheckChange = {},
-                        )
-
-                        CheckboxProfileItem(
-                            label = "Latest entries",
-                            checked = settings.showLatestEntries,
-                            onCheckChange = {
-                                onUpdateSettings(
-                                    settings.copy(
-                                        showLatestEntries = it,
-                                    ),
-                                )
-                            },
-                        )
-
-                        HorizontalDivider(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp),
-                        )
                     }
 
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    Text(
-                        text = stringResource(Res.string.unique_email_address_label),
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-
-                    SelectionContainer {
-                        Text(
-                            text = viewState.uniqueEmailAddress,
-                            style = MaterialTheme.typography.labelSmall,
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
-
-                    TextButton(
-                        onClick = {
-                            onLogoutDialogVisibilityChange(true)
-                        },
+                    Column(
                         modifier = Modifier
-                            .align(alignment = Alignment.CenterHorizontally),
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(horizontal = 16.dp),
+                        IconButton(
+                            onClick = onNavigateBack,
+                            modifier = Modifier.align(Alignment.Start),
                         ) {
                             Icon(
-                                painter = rememberVectorPainter(Icons.AutoMirrored.Filled.Logout),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp),
-                                tint = MaterialTheme.colorScheme.error,
+                                modifier = Modifier.clip(CircleShape),
+                                imageVector = Icons.Default.ArrowBackIosNew,
+                                contentDescription = "",
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        SuperDiaryImage(
+                            modifier = Modifier
+                                .sharedElement(
+                                    sharedContentState = sharedTransitionScope.rememberSharedContentState(
+                                        key = "profile_image",
+                                    ),
+                                    animatedVisibilityScope = animatedContentScope,
+                                )
+                                .size(72.dp)
+                                .clip(CircleShape),
+                            url = viewState.avatarUrl,
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = viewState.name,
+                            style = MaterialTheme.typography.titleMedium,
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = viewState.email,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Button(onClick = {}) {
+                            Text("Edit Profile")
+                        }
+
+                        Spacer(modifier = Modifier.height(48.dp))
+
+                        ProfileSection(
+                            label = stringResource(Res.string.profile_screen_section_dashboard_cards),
+                        ) {
+                            CheckboxProfileItem(
+                                label = "Weekly summary",
+                                checked = settings.showWeeklySummary,
+                                onCheckChange = {
+                                    onUpdateSettings(
+                                        settings.copy(
+                                            showWeeklySummary = it,
+                                        ),
+                                    )
+                                },
                             )
 
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                modifier = Modifier.padding(vertical = 8.dp),
-                                text = "Sign out",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.error,
+                            CheckboxProfileItem(
+                                label = "On this day",
+                                checked = true,
+                                onCheckChange = {},
                             )
+
+                            CheckboxProfileItem(
+                                label = "Latest entries",
+                                checked = settings.showLatestEntries,
+                                onCheckChange = {
+                                    onUpdateSettings(
+                                        settings.copy(
+                                            showLatestEntries = it,
+                                        ),
+                                    )
+                                },
+                            )
+
+                            HorizontalDivider(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp),
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Text(
+                            text = stringResource(Res.string.unique_email_address_label),
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+
+                        SelectionContainer {
+                            Text(
+                                text = viewState.uniqueEmailAddress,
+                                style = MaterialTheme.typography.labelSmall,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
+
+                        TextButton(
+                            onClick = {
+                                onLogoutDialogVisibilityChange(true)
+                            },
+                            modifier = Modifier
+                                .align(alignment = Alignment.CenterHorizontally),
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                            ) {
+                                Icon(
+                                    painter = rememberVectorPainter(Icons.AutoMirrored.Filled.Logout),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MaterialTheme.colorScheme.error,
+                                )
+
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    modifier = Modifier.padding(vertical = 8.dp),
+                                    text = "Sign out",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.error,
+                                )
+                            }
                         }
                     }
                 }
@@ -343,21 +361,24 @@ private fun CheckboxProfileItem(
     }
 }
 
-@Preview
-@Composable
-private fun Preview() {
-    ProfileScreenContent(
-        viewState = ProfileScreenViewData(
-            name = "Rafsanjani Aziz",
-            email = "foreverrafs@gmail.com",
-            uniqueEmailAddress = "S2FZ8rv7U@emailparse.nebulainnova.co.uk",
-        ),
-        onConsumeErrorMessage = {},
-        onLogout = {},
-        settings = DiarySettings.Empty,
-        onUpdateSettings = {},
-        onLogoutDialogVisibilityChange = {},
-        isLogoutDialogVisible = false,
-        onNavigateBack = {},
-    )
-}
+// @OptIn(ExperimentalSharedTransitionApi::class)
+// @Preview
+// @Composable
+// private fun Preview() {
+//    ProfileScreenContent(
+//        viewState = ProfileScreenViewData(
+//            name = "Rafsanjani Aziz",
+//            email = "foreverrafs@gmail.com",
+//            uniqueEmailAddress = "S2FZ8rv7U@emailparse.nebulainnova.co.uk",
+//        ),
+//        onConsumeErrorMessage = {},
+//        onLogout = {},
+//        settings = DiarySettings.Empty,
+//        onUpdateSettings = {},
+//        onLogoutDialogVisibilityChange = {},
+//        isLogoutDialogVisible = false,
+//        onNavigateBack = {},
+//        sharedTransitionScope = LookaheadScope,
+//        animatedContentScope = this
+//    )
+// }

@@ -1,5 +1,8 @@
 package com.foreverrafs.superdiary.ui.feature.details.screen
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -14,11 +17,14 @@ import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
 import org.koin.compose.koinInject
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun DetailScreen(
     diaryId: String,
     navController: NavController,
     onProfileClick: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScpe: AnimatedContentScope,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: DetailsViewModel = koinInject()
@@ -36,6 +42,8 @@ fun DetailScreen(
                 onDeleteDiary = viewModel::deleteDiary,
                 viewState = state,
                 onProfileClick = onProfileClick,
+                animatedContentScope = animatedContentScpe,
+                sharedTransitionScope = sharedTransitionScope,
             )
         }
 
