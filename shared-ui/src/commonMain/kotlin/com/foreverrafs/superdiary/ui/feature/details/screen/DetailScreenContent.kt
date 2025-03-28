@@ -76,98 +76,96 @@ fun DetailScreenContent(
     val hostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    with(sharedTransitionScope) {
-        Scaffold(
-            modifier = modifier,
-            topBar = {
-                SuperDiaryAppBar(
-                    navigationIcon = {
-                        IconButton(
-                            onClick = onNavigateBack,
-                        ) {
-                            Icon(
-                                modifier = Modifier.clip(CircleShape),
-                                imageVector = Icons.Default.ArrowBackIosNew,
-                                contentDescription = "",
-                            )
-                        }
-                    },
-                    avatarUrl = viewState.avatarUrl,
-                    onProfileClick = onProfileClick,
-                    animatedContentScope = animatedContentScope,
-                    sharedTransitionScope = this@with,
-                )
-            },
-            snackbarHost = {
-                SnackbarHost(hostState)
-            },
-        ) {
-            Surface(
-                modifier = Modifier.padding(it),
-                color = MaterialTheme.colorScheme.background,
-            ) {
-                Column(
-                    modifier = Modifier
-                        .verticalScroll(rememberScrollState())
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    if (!diary.location.isEmpty()) {
-                        MapComponent(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(150.dp),
-                            latitude = diary.location.latitude,
-                            longitude = diary.location.longitude,
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            SuperDiaryAppBar(
+                navigationIcon = {
+                    IconButton(
+                        onClick = onNavigateBack,
+                    ) {
+                        Icon(
+                            modifier = Modifier.clip(CircleShape),
+                            imageVector = Icons.Default.ArrowBackIosNew,
+                            contentDescription = "",
                         )
                     }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Text(
-                        text = diary.date
-                            .toLocalDateTime(TimeZone.currentSystemDefault())
-                            .format("EEE - MMMM dd, yyyy - hh:mm a")
-                            .lowercase(),
-                        style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier
-                            .alpha(0.6f)
-                            .padding(12.dp),
-                    )
-
-                    RichText(
-                        state = richTextState,
+                },
+                avatarUrl = viewState.avatarUrl,
+                onProfileClick = onProfileClick,
+                animatedContentScope = animatedContentScope,
+                sharedTransitionScope = sharedTransitionScope,
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState)
+        },
+    ) {
+        Surface(
+            modifier = Modifier.padding(it),
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                if (!diary.location.isEmpty()) {
+                    MapComponent(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 12.dp),
-                        style = MaterialTheme.typography.bodyMedium,
-                        lineHeight = 32.sp,
+                            .height(150.dp),
+                        latitude = diary.location.latitude,
+                        longitude = diary.location.longitude,
                     )
                 }
 
-                if (showDeleteDialog) {
-                    val deletedString = stringResource(Res.string.label_diary_deleted)
+                Spacer(modifier = Modifier.height(12.dp))
 
-                    ConfirmDeleteDialog(
-                        onDismiss = { showDeleteDialog = !showDeleteDialog },
-                        onConfirm = {
-                            showDeleteDialog = !showDeleteDialog
-                            onDeleteDiary(diary)
+                Text(
+                    text = diary.date
+                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                        .format("EEE - MMMM dd, yyyy - hh:mm a")
+                        .lowercase(),
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier
+                        .alpha(0.6f)
+                        .padding(12.dp),
+                )
 
-                            coroutineScope.launch {
-                                // Only show snackbar for 600 milliseconds
-                                withTimeoutOrNull(600) {
-                                    hostState.showSnackbar(
-                                        message = deletedString,
-                                        duration = SnackbarDuration.Indefinite,
-                                    )
-                                }
+                RichText(
+                    state = richTextState,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    lineHeight = 32.sp,
+                )
+            }
 
-                                onNavigateBack()
+            if (showDeleteDialog) {
+                val deletedString = stringResource(Res.string.label_diary_deleted)
+
+                ConfirmDeleteDialog(
+                    onDismiss = { showDeleteDialog = !showDeleteDialog },
+                    onConfirm = {
+                        showDeleteDialog = !showDeleteDialog
+                        onDeleteDiary(diary)
+
+                        coroutineScope.launch {
+                            // Only show snackbar for 600 milliseconds
+                            withTimeoutOrNull(600) {
+                                hostState.showSnackbar(
+                                    message = deletedString,
+                                    duration = SnackbarDuration.Indefinite,
+                                )
                             }
-                        },
-                    )
-                }
+
+                            onNavigateBack()
+                        }
+                    },
+                )
             }
         }
     }
