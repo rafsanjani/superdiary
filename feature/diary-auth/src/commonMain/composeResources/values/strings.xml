@@ -16,4 +16,9 @@
     <string name="dialog_biometric_auth_error_message">Would you like to try biometric authentication again?</string>
     <string name="dialog_biometric_auth_error_positive_btn_text">Try again</string>
     <string name="dialog_biometric_auth_error_negative_btn_text">Exit</string>
+
+    <string name="error_invalid_credentials">Invalid credentials</string>"
+    <string name="error_no_credentials">No credentials</string>"
+    <string name="error_user_already_registered">User already registered</string>"
+    <String name="error_generic_error">Generic error</String>"
 </resources>

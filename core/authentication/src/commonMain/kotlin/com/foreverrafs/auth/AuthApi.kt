@@ -40,6 +40,17 @@ interface AuthApi {
     }
 }
 
+open class AuthException(message: String? = null, cause: Throwable? = null) : Exception(message, cause)
+
 // When the user hasn't enrolled any of the requested credentials onto their device yet
-class NoCredentialsException(message: String) : Exception(message)
-class UserAlreadyRegisteredException(message: String) : Exception(message)
+class NoCredentialsException(message: String) : AuthException(message)
+
+// Wrong username and password
+class InvalidCredentialsException(message: String) : AuthException(message)
+
+// User has already been registered::duplicate registration
+class UserAlreadyRegisteredException(message: String) : AuthException(message)
+
+// Everything else
+class GenericAuthException(cause: Throwable, message: String?) :
+    AuthException(cause = cause, message = message)
