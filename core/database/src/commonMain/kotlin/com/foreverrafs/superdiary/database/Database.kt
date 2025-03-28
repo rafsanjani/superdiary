@@ -88,7 +88,9 @@ class Database(
         queries.transaction {
             afterCommit {
                 continuation.resumeWith(
-                    Result.success(ids.size),
+                    Result.success(
+                        queries.getAffectedRows().executeAsOne().toInt(),
+                    ),
                 )
             }
 

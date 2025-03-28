@@ -1,5 +1,8 @@
 package com.foreverrafs.superdiary.ui.feature.details.screen
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -14,32 +17,33 @@ import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
 import org.koin.compose.koinInject
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun DetailScreen(
     diaryId: String,
-    avatarUrl: String,
     navController: NavController,
+    onProfileClick: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScpe: AnimatedContentScope,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: DetailsViewModel = koinInject()
     val viewState by viewModel.detailsViewState.collectAsState()
 
     LaunchedEffect(diaryId) {
-        viewModel.initForDiary(diaryId.toLong())
+        viewModel.selectDiary(diaryId.toLong())
     }
 
     when (val state = viewState) {
         is DetailsViewState.DiarySelected -> {
             DetailScreenContent(
                 modifier = modifier,
-                onNavigateBack = {
-                    navController.navigateUp()
-                },
-                onDeleteDiary = {
-                    viewModel.deleteDiary(it)
-                },
+                onNavigateBack = navController::navigateUp,
+                onDeleteDiary = viewModel::deleteDiary,
                 viewState = state,
-                avatarUrl = avatarUrl,
+                onProfileClick = onProfileClick,
+                animatedContentScope = animatedContentScpe,
+                sharedTransitionScope = sharedTransitionScope,
             )
         }
 
@@ -48,7 +52,9 @@ fun DetailScreen(
                 modifier = modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(text = "Selected account is null. This shouldn't ever happen.")
+                Text(
+                    text = "Selected account is null. This shouldn't ever happen.",
+                )
             }
         }
     }

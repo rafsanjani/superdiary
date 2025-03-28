@@ -1,5 +1,7 @@
 package com.foreverrafs.superdiary.list
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -13,8 +15,8 @@ import com.foreverrafs.common.paparazzi.SnapshotDevice
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
-import com.foreverrafs.superdiary.list.presentation.DiaryListScreenContent
 import com.foreverrafs.superdiary.list.presentation.DiaryListViewState
+import com.foreverrafs.superdiary.list.presentation.screen.DiaryListScreenContent
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import kotlinx.datetime.Clock
@@ -26,6 +28,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @RunWith(TestParameterInjector::class)
 class DiaryListSnapshotTests(
     @TestParameter val snapshotDevice: SnapshotDevice,
@@ -62,17 +65,23 @@ class DiaryListSnapshotTests(
             }
         }
 
+    @OptIn(ExperimentalSharedTransitionApi::class)
     @Test
     fun `Loading diary list`() {
         paparazzi.snapshot {
             SuperDiaryPreviewTheme(modifier = Modifier.Companion.size(deviceSize)) {
-                DiaryListScreenContent(
-                    state = DiaryListViewState.Loading,
-                    showSearchBar = true,
-                    diaryFilters = DiaryFilters(),
-                    diaryListActions = diaryListActions,
-                    avatarUrl = "",
-                )
+                SharedTransitionLayout {
+                    DiaryListScreenContent(
+                        animatedContentScope = this@SuperDiaryPreviewTheme,
+                        sharedTransitionScope = this,
+                        state = DiaryListViewState.Loading,
+                        showSearchBar = true,
+                        diaryFilters = DiaryFilters(),
+                        diaryListActions = diaryListActions,
+                        onProfileClick = {},
+                        avatarUrl = "",
+                    )
+                }
             }
         }
     }
@@ -81,29 +90,34 @@ class DiaryListSnapshotTests(
     fun `Unfiltered non-empty diary list`() {
         paparazzi.snapshot {
             SuperDiaryPreviewTheme(modifier = Modifier.Companion.height(1500.dp)) {
-                DiaryListScreenContent(
-                    state = DiaryListViewState.Content(
-                        (0..13).map {
-                            Diary(
-                                id = it.toLong(),
-                                entry = "Hello Diary $it",
-                                date = testClock.now().minus(
-                                    value = 1,
-                                    unit = DateTimeUnit.Companion.MONTH,
-                                    timeZone = TimeZone.Companion.UTC,
-                                ),
-                                isFavorite = false,
-                                location = Location.Companion.Empty,
-                            )
-                        },
-                        filtered = false,
-                    ),
-                    clock = testClock,
-                    showSearchBar = true,
-                    diaryFilters = DiaryFilters(),
-                    diaryListActions = diaryListActions,
-                    avatarUrl = "",
-                )
+                SharedTransitionLayout {
+                    DiaryListScreenContent(
+                        state = DiaryListViewState.Content(
+                            (0..13).map {
+                                Diary(
+                                    id = it.toLong(),
+                                    entry = "Hello Diary $it",
+                                    date = testClock.now().minus(
+                                        value = 1,
+                                        unit = DateTimeUnit.Companion.MONTH,
+                                        timeZone = TimeZone.Companion.UTC,
+                                    ),
+                                    isFavorite = false,
+                                    location = Location.Companion.Empty,
+                                )
+                            },
+                            filtered = false,
+                        ),
+                        clock = testClock,
+                        showSearchBar = true,
+                        diaryFilters = DiaryFilters(),
+                        diaryListActions = diaryListActions,
+                        avatarUrl = "",
+                        onProfileClick = {},
+                        sharedTransitionScope = this,
+                        animatedContentScope = this@SuperDiaryPreviewTheme,
+                    )
+                }
             }
         }
     }
@@ -112,16 +126,21 @@ class DiaryListSnapshotTests(
     fun `Unfiltered empty diary list`() {
         paparazzi.snapshot {
             SuperDiaryPreviewTheme(modifier = Modifier.Companion.size(deviceSize)) {
-                DiaryListScreenContent(
-                    state = DiaryListViewState.Content(
-                        listOf(),
-                        filtered = false,
-                    ),
-                    showSearchBar = true,
-                    diaryFilters = DiaryFilters(),
-                    diaryListActions = diaryListActions,
-                    avatarUrl = "",
-                )
+                SharedTransitionLayout {
+                    DiaryListScreenContent(
+                        state = DiaryListViewState.Content(
+                            listOf(),
+                            filtered = false,
+                        ),
+                        showSearchBar = true,
+                        diaryFilters = DiaryFilters(),
+                        diaryListActions = diaryListActions,
+                        avatarUrl = "",
+                        onProfileClick = {},
+                        sharedTransitionScope = this,
+                        animatedContentScope = this@SuperDiaryPreviewTheme,
+                    )
+                }
             }
         }
     }
@@ -129,17 +148,22 @@ class DiaryListSnapshotTests(
     @Test
     fun `Filtered empty diary list`() {
         paparazzi.snapshot {
-            SuperDiaryPreviewTheme(modifier = Modifier.Companion.size(deviceSize)) {
-                DiaryListScreenContent(
-                    state = DiaryListViewState.Content(
-                        listOf(),
-                        filtered = true,
-                    ),
-                    showSearchBar = true,
-                    diaryFilters = DiaryFilters(),
-                    diaryListActions = diaryListActions,
-                    avatarUrl = "",
-                )
+            SharedTransitionLayout {
+                SuperDiaryPreviewTheme(modifier = Modifier.Companion.size(deviceSize)) {
+                    DiaryListScreenContent(
+                        state = DiaryListViewState.Content(
+                            listOf(),
+                            filtered = true,
+                        ),
+                        showSearchBar = true,
+                        diaryFilters = DiaryFilters(),
+                        diaryListActions = diaryListActions,
+                        avatarUrl = "",
+                        onProfileClick = {},
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedContentScope = this@SuperDiaryPreviewTheme,
+                    )
+                }
             }
         }
     }
@@ -147,17 +171,21 @@ class DiaryListSnapshotTests(
     @Test
     fun `Error loading diary list`() {
         paparazzi.snapshot {
-            SuperDiaryPreviewTheme(modifier = Modifier.Companion.size(deviceSize)) {
-                DiaryListScreenContent(
-
-                    state = DiaryListViewState.Error(
-                        Error("Error loading diaries"),
-                    ),
-                    showSearchBar = true,
-                    diaryFilters = DiaryFilters(),
-                    diaryListActions = diaryListActions,
-                    avatarUrl = "",
-                )
+            SharedTransitionLayout {
+                SuperDiaryPreviewTheme(modifier = Modifier.Companion.size(deviceSize)) {
+                    DiaryListScreenContent(
+                        state = DiaryListViewState.Error(
+                            Error("Error loading diaries"),
+                        ),
+                        showSearchBar = true,
+                        diaryFilters = DiaryFilters(),
+                        diaryListActions = diaryListActions,
+                        avatarUrl = "",
+                        onProfileClick = {},
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedContentScope = this@SuperDiaryPreviewTheme,
+                    )
+                }
             }
         }
     }

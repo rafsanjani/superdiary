@@ -46,17 +46,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.common.utils.format
+import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.design.components.ConfirmBiometricAuthDialog
+import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
-import com.foreverrafs.superdiary.list.presentation.DiaryItem
+import com.foreverrafs.superdiary.list.presentation.screen.DiaryItem
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
+import com.foreverrafs.superdiary.utils.toDate
 import com.valentinilk.shimmer.shimmer
 import kotlin.random.Random
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.label_add_entry
 import superdiary.shared_ui.generated.resources.label_button_retry
@@ -86,7 +90,6 @@ fun DashboardScreenContent(
     onToggleFavorite: (diary: Diary) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var showShimmer by remember { mutableStateOf(false) }
     var showBiometricAuthDialog by remember {
         mutableStateOf(false)
     }
@@ -95,7 +98,6 @@ fun DashboardScreenContent(
         is DashboardViewModel.DashboardScreenState.Content -> {
             showBiometricAuthDialog = state.showBiometricAuthDialog == true
 
-            showShimmer = false
             dashboardItems(
                 state = state,
                 onAddEntry = onAddEntry,
@@ -107,7 +109,6 @@ fun DashboardScreenContent(
 
         is DashboardViewModel.DashboardScreenState.Error -> TODO()
         is DashboardViewModel.DashboardScreenState.Loading -> {
-            showShimmer = true
             dashboardPlaceholderItems()
         }
     }
@@ -543,3 +544,47 @@ data class DashboardSection(
     val content: @Composable LazyItemScope.(onDismiss: () -> Unit) -> Unit,
     val id: String,
 )
+
+@Composable
+@Preview
+private fun DashboardScreenPreview() {
+    SuperDiaryPreviewTheme {
+        DashboardScreenContent(
+            state = DashboardViewModel.DashboardScreenState.Content(
+                latestEntries = (0..3).map {
+                    Diary(
+                        id = it.toLong(),
+                        entry = "<strong>Awesome</strong> Diary",
+                        date = Clock.System.now(),
+                        isFavorite = false,
+                        location = Location.Empty,
+                    )
+                },
+                totalEntries = 3,
+                weeklySummary = "This is the weekly summary of all the entries",
+                showWeeklySummary = true,
+                showAtaGlance = true,
+                showLatestEntries = true,
+                currentStreak = Streak(
+                    count = 0,
+                    startDate = Clock.System.now().toDate(),
+                    endDate = Clock.System.now().toDate(),
+                ),
+                bestStreak = Streak(
+                    count = 0,
+                    startDate = Clock.System.now().toDate(),
+                    endDate = Clock.System.now().toDate(),
+                ),
+            ),
+            onAddEntry = {},
+            onSeeAll = {},
+            onToggleFavorite = {},
+            onDiaryClick = {},
+            onDisableBiometricAuth = {},
+            onEnableBiometric = {},
+            onToggleLatestEntries = {},
+            onToggleWeeklySummaryCard = {},
+            onToggleGlanceCard = {},
+        )
+    }
+}

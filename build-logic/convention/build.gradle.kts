@@ -40,7 +40,7 @@ gradlePlugin {
 
         register("KotlinAndroidConventionPlugin") {
             id = "com.superdiary.kotlin.android"
-            implementationClass = "$rootPackageName.kotlinjava.KotlinAndroidConventionPlugin"
+            implementationClass = "$rootPackageName.kotlin.KotlinAndroidConventionPlugin"
         }
 
         register("KtlintConventionPlugin") {
@@ -56,6 +56,26 @@ gradlePlugin {
         register("SnapshotsDiffPlugin") {
             id = "com.superdiary.snapshotdiff"
             implementationClass = "$rootPackageName.snapshots.SnapshotsDiffPlugin"
+        }
+
+        register("AndroidLibraryConventionPlugin") {
+            id = "com.superdiary.android.library"
+            implementationClass = "$rootPackageName.android.AndroidLibraryConventionPlugin"
+        }
+
+        register("AndroidComposeLibraryConventionPlugin") {
+            id = "com.superdiary.compose.library"
+            implementationClass = "$rootPackageName.android.AndroidComposeLibraryConventionPlugin"
+        }
+
+        register("KotlinMultiplatformConventionPlugin") {
+            id = "com.superdiary.multiplatform.kotlin"
+            implementationClass = "$rootPackageName.multiplatform.KotlinMultiplatformConventionPlugin"
+        }
+
+        register("ComposeMultiplatformConventionPlugin") {
+            id = "com.superdiary.multiplatform.compose"
+            implementationClass = "$rootPackageName.multiplatform.ComposeMultiplatformConventionPlugin"
         }
     }
 }

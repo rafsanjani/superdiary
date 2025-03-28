@@ -34,6 +34,10 @@ class FakeAuthApi(
         TODO("Not yet implemented")
     }
 
+    override suspend fun updatePassword(password: String): Result<Unit> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun signInWithGoogle(): AuthApi.SignInStatus =
         signInResult
 

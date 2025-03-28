@@ -1,12 +1,21 @@
 @file:Suppress("TooManyFunctions")
 
-package com.foreverrafs.superdiary.list.presentation
+package com.foreverrafs.superdiary.list.presentation.screen
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.AnchoredDraggableDefaults
+import androidx.compose.foundation.gestures.AnchoredDraggableState
+import androidx.compose.foundation.gestures.DraggableAnchors
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,12 +25,14 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberOverscrollEffect
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -44,17 +55,21 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -69,29 +84,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.foreverrafs.superdiary.common.utils.format
-import com.foreverrafs.superdiary.design.components.BackHandler
 import com.foreverrafs.superdiary.design.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.list.DiaryFilters
 import com.foreverrafs.superdiary.list.DiaryListActions
+import com.foreverrafs.superdiary.list.presentation.DiaryListViewState
 import com.foreverrafs.superdiary.list.presentation.components.DiaryFilterSheet
 import com.foreverrafs.superdiary.list.presentation.components.DiaryHeader
 import com.foreverrafs.superdiary.list.presentation.components.DiarySearchBar
 import com.foreverrafs.superdiary.list.presentation.components.DiarySelectionModifierBar
 import com.foreverrafs.superdiary.utils.groupByDate
 import com.foreverrafs.superdiary.utils.toDate
+import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
+import com.mohamedrejeb.richeditor.ui.material3.RichText
+import kotlin.math.roundToInt
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
-import me.saket.swipe.SwipeAction
-import me.saket.swipe.SwipeableActionBox
-import me.saket.swipe.defaultSwipeableActionIconSize
-import me.saket.swipe.rememberSwipeableActionsState
 
 val DiaryListActions.Companion.Empty: DiaryListActions
     get() =
@@ -107,6 +124,7 @@ val DiaryListActions.Companion.Empty: DiaryListActions
             onDiaryClicked = {},
         )
 
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun DiaryListScreenContent(
     state: DiaryListViewState,
@@ -114,6 +132,9 @@ fun DiaryListScreenContent(
     showSearchBar: Boolean,
     diaryListActions: DiaryListActions,
     avatarUrl: String?,
+    onProfileClick: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     modifier: Modifier = Modifier,
     clock: Clock = Clock.System,
 ) {
@@ -172,6 +193,9 @@ fun DiaryListScreenContent(
                     }
                 },
                 avatarUrl = avatarUrl,
+                animatedContentScope = animatedContentScope,
+                sharedTransitionScope = sharedTransitionScope,
+                onProfileClick = onProfileClick,
             )
         },
         floatingActionButton = {
@@ -337,8 +361,8 @@ fun DiaryList(
                     }
 
                     items(
-                        items = diaries.sortedByDescending { it.id },
-                        key = { item -> item.id.toString() },
+                        items = diaries,
+                        key = { item -> item.id!! },
                     ) { diary ->
 
                         DiaryItem(
@@ -492,8 +516,7 @@ private fun LoadingContent(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.padding(bottom = 64.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement =
-        Arrangement.spacedBy(
+        verticalArrangement = Arrangement.spacedBy(
             space = 8.dp,
             alignment = Alignment.CenterVertically,
         ),
@@ -540,7 +563,13 @@ private fun EmptyDiaryList(
     }
 }
 
+private enum class Anchors {
+    Start,
+    End,
+}
+
 /** This is reused in DashboardScreenContent */
+@OptIn(ExperimentalRichTextApi::class)
 @Composable
 fun DiaryItem(
     diary: Diary,
@@ -549,36 +578,42 @@ fun DiaryItem(
     onToggleFavorite: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val iconWidthPx = LocalDensity.current.run { defaultSwipeableActionIconSize.roundToPx() }
-    val swipeableState = rememberSwipeableActionsState(
-        iconWidthPx = iconWidthPx,
-    )
-
     val transition = updateTransition(selected, label = "selected")
     val padding by transition.animateDp(label = "padding") { _ ->
         if (inSelectionMode) 4.dp else 0.dp
     }
 
-    val roundedCornerShape by transition.animateDp(label = "corner") { _ ->
-        if (selected) 8.dp else 0.dp
+    var draggableWidth by remember { mutableFloatStateOf(0f) }
+
+    val state = rememberSaveable(saver = AnchoredDraggableState.Saver()) {
+        AnchoredDraggableState(
+            initialValue = Anchors.Start,
+        )
     }
 
-    val favoriteAction = SwipeAction(
-        icon = rememberVectorPainter(
-            if (diary.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-        ),
-        onActionClicked = onToggleFavorite,
-    )
-
-    SwipeableActionBox(
-        modifier = Modifier
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .onSizeChanged {
+                draggableWidth = it.width.toFloat()
+                state.updateAnchors(
+                    DraggableAnchors {
+                        Anchors.Start at 0f
+                        Anchors.End at -(draggableWidth * 0.25f)
+                    },
+                )
+            }
+            .anchoredDraggable(
+                state = state,
+                flingBehavior = AnchoredDraggableDefaults.flingBehavior(
+                    state = state,
+                    positionalThreshold = { distance: Float -> distance * 0.25f },
+                ),
+                orientation = Orientation.Horizontal,
+                overscrollEffect = rememberOverscrollEffect(),
+            )
             .height(110.dp)
-            .padding(padding)
-            .clip(RoundedCornerShape(roundedCornerShape))
-            .then(modifier)
-            .fillMaxWidth(),
-        action = favoriteAction,
-        state = swipeableState,
+            .padding(padding),
     ) {
         Card(
             shape = RoundedCornerShape(
@@ -587,26 +622,35 @@ fun DiaryItem(
                 topEnd = 8.dp,
                 bottomEnd = 0.dp,
             ),
+            modifier = Modifier
+                .zIndex(.9f)
+                .fillMaxWidth()
+                .offset {
+                    IntOffset(x = state.requireOffset().roundToInt(), 0)
+                },
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceVariant,
             ),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier =
-                Modifier.semantics {
-                    stateDescription = if (diary.isFavorite) "Favorite" else "Not favorite"
+                modifier = Modifier.semantics {
+                    stateDescription = if
+                        (diary.isFavorite) {
+                        "Favorite"
+                    } else {
+                        "Not favorite"
+                    }
 
-                    customActions =
-                        listOf(
-                            CustomAccessibilityAction(
-                                label = "Toggle Favorite",
-                                action = {
-                                    onToggleFavorite()
-                                    true
-                                },
-                            ),
-                        )
+                    customActions = listOf(
+                        CustomAccessibilityAction(
+                            label = "Toggle Favorite",
+                            action = {
+                                onToggleFavorite()
+                                true
+                            },
+                        ),
+                    )
                 }.fillMaxSize(),
             ) {
                 DateCard(
@@ -614,8 +658,13 @@ fun DiaryItem(
                     date = diary.date.toDate(),
                 )
 
+                val state = rememberRichTextState()
+                LaunchedEffect(Unit) {
+                    state.setHtml(diary.entry)
+                }
+
                 // Diary Entry
-                Text(
+                RichText(
                     modifier = Modifier
                         .weight(8f)
                         .clearAndSetSemantics { }
@@ -631,13 +680,15 @@ fun DiaryItem(
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Start,
                     maxLines = 1,
-                    text = rememberRichTextState().apply { setHtml(diary.entry) }.annotatedString,
+                    state = state,
                 )
             }
         }
         // Selection mode icon
         if (inSelectionMode) {
-            val iconModifier = Modifier.padding(top = 12.dp, start = 4.dp).size(20.dp)
+            val iconModifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(top = 12.dp, start = 4.dp).size(20.dp)
 
             if (selected) {
                 Icon(
@@ -655,6 +706,39 @@ fun DiaryItem(
                 )
             }
         }
+
+        val totalSize = with(LocalDensity.current) {
+            (draggableWidth * 0.25f).toDp()
+        }
+
+        val coroutineScope = rememberCoroutineScope()
+        Box(
+            modifier = Modifier
+                .size(totalSize)
+                .zIndex(.1f)
+                .align(Alignment.CenterEnd),
+            contentAlignment = Alignment.Center,
+        ) {
+            IconButton(
+                onClick = {
+                    onToggleFavorite()
+                    coroutineScope.launch {
+                        // don't reverse the animation straight away
+                        delay(250)
+                        state.animateTo(Anchors.Start)
+                    }
+                },
+            ) {
+                Icon(
+                    imageVector = if (diary.isFavorite) {
+                        Icons.Default.Favorite
+                    } else {
+                        Icons.Default.FavoriteBorder
+                    },
+                    contentDescription = null,
+                )
+            }
+        }
     }
 }
 
@@ -668,8 +752,7 @@ private fun DateCard(
             .fillMaxHeight()
             .background(
                 color = MaterialTheme.colorScheme.secondaryContainer,
-                shape =
-                RoundedCornerShape(
+                shape = RoundedCornerShape(
                     topStart = 0.dp,
                     topEnd = 12.dp,
                     bottomStart = 12.dp,

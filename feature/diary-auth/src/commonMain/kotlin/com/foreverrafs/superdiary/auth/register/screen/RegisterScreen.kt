@@ -2,11 +2,13 @@ package com.foreverrafs.superdiary.auth.register.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.foreverrafs.superdiary.auth.register.RegisterScreenViewModel
-import com.foreverrafs.superdiary.design.components.BackHandler
 import org.koin.compose.viewmodel.koinViewModel
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RegisterScreen(
     onLoginClick: () -> Unit,

@@ -1,5 +1,7 @@
 package com.foreverrafs.superdiary.profile
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import app.cash.paparazzi.Paparazzi
 import com.android.ide.common.rendering.api.SessionParams
 import com.foreverrafs.common.paparazzi.SnapshotDevice
@@ -13,6 +15,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @RunWith(TestParameterInjector::class)
 class ProfileScreenSnapshotTest(
     @TestParameter val snapshotDevice: SnapshotDevice,
@@ -28,21 +31,25 @@ class ProfileScreenSnapshotTest(
     @Test
     fun `Profile Screen - Idle`() {
         paparazzi.snapshot {
-            SuperDiaryPreviewTheme {
-                ProfileScreenContent(
-                    viewState = ProfileScreenViewData(
-                        name = "Rafsanjani Aziz",
-                        email = "foreverrafs@gmail.com",
-                        avatarUrl = "",
-                    ),
-                    onConsumeErrorMessage = {},
-                    isLogoutDialogVisible = false,
-                    onLogout = {},
-                    onLogoutDialogVisibilityChange = {},
-                    onUpdateSettings = {},
-                    settings = DiarySettings.Empty,
-                    onNavigateBack = {},
-                )
+            SharedTransitionLayout {
+                SuperDiaryPreviewTheme {
+                    ProfileScreenContent(
+                        viewState = ProfileScreenViewData(
+                            name = "Rafsanjani Aziz",
+                            email = "foreverrafs@gmail.com",
+                            avatarUrl = "",
+                        ),
+                        onConsumeErrorMessage = {},
+                        isLogoutDialogVisible = false,
+                        onLogout = {},
+                        onLogoutDialogVisibilityChange = {},
+                        onUpdateSettings = {},
+                        settings = DiarySettings.Empty,
+                        onNavigateBack = {},
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedContentScope = this@SuperDiaryPreviewTheme,
+                    )
+                }
             }
         }
     }
@@ -50,21 +57,25 @@ class ProfileScreenSnapshotTest(
     @Test
     fun `Profile Screen - Logout dialog visible`() {
         paparazzi.snapshot {
-            SuperDiaryPreviewTheme {
-                ProfileScreenContent(
-                    viewState = ProfileScreenViewData(
-                        name = "Rafsanjani Aziz",
-                        email = "foreverrafs@gmail.com",
-                        avatarUrl = "",
-                    ),
-                    onConsumeErrorMessage = {},
-                    isLogoutDialogVisible = true,
-                    onLogout = {},
-                    onLogoutDialogVisibilityChange = {},
-                    onUpdateSettings = {},
-                    settings = DiarySettings.Empty,
-                    onNavigateBack = {},
-                )
+            SharedTransitionLayout {
+                SuperDiaryPreviewTheme {
+                    ProfileScreenContent(
+                        viewState = ProfileScreenViewData(
+                            name = "Rafsanjani Aziz",
+                            email = "foreverrafs@gmail.com",
+                            avatarUrl = "",
+                        ),
+                        onConsumeErrorMessage = {},
+                        isLogoutDialogVisible = true,
+                        onLogout = {},
+                        onLogoutDialogVisibilityChange = {},
+                        onUpdateSettings = {},
+                        settings = DiarySettings.Empty,
+                        onNavigateBack = {},
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedContentScope = this@SuperDiaryPreviewTheme,
+                    )
+                }
             }
         }
     }
@@ -72,22 +83,26 @@ class ProfileScreenSnapshotTest(
     @Test
     fun `Profile Screen - error message visible`() {
         paparazzi.snapshot {
-            SuperDiaryPreviewTheme {
-                ProfileScreenContent(
-                    viewState = ProfileScreenViewData(
-                        name = "Rafsanjani Aziz",
-                        email = "foreverrafs@gmail.com",
-                        avatarUrl = "",
-                        errorMessage = "Something went wrong",
-                    ),
-                    onConsumeErrorMessage = {},
-                    isLogoutDialogVisible = false,
-                    onLogout = {},
-                    onLogoutDialogVisibilityChange = {},
-                    onUpdateSettings = {},
-                    settings = DiarySettings.Empty,
-                    onNavigateBack = {},
-                )
+            SharedTransitionLayout {
+                SuperDiaryPreviewTheme {
+                    ProfileScreenContent(
+                        viewState = ProfileScreenViewData(
+                            name = "Rafsanjani Aziz",
+                            email = "foreverrafs@gmail.com",
+                            avatarUrl = "",
+                            errorMessage = "Something went wrong",
+                        ),
+                        onConsumeErrorMessage = {},
+                        isLogoutDialogVisible = false,
+                        onLogout = {},
+                        onLogoutDialogVisibilityChange = {},
+                        onUpdateSettings = {},
+                        settings = DiarySettings.Empty,
+                        onNavigateBack = {},
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedContentScope = this@SuperDiaryPreviewTheme,
+                    )
+                }
             }
         }
     }

@@ -31,7 +31,7 @@ sealed interface AppRoute {
     data object DiaryListScreen : AppRoute
 
     @Serializable
-    data object ChangePasswordScreen : AppRoute
+    data object ChangePasswordNavHost : AppRoute
 
     @Serializable
     data object SendPasswordResetEmailScreen : AppRoute

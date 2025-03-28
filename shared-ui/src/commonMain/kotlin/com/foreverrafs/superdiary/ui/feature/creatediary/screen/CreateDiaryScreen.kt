@@ -1,5 +1,8 @@
 package com.foreverrafs.superdiary.ui.feature.creatediary.screen
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,8 +26,14 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import org.koin.compose.koinInject
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun CreateDiaryScreen(navController: NavHostController, userInfo: UserInfo?) {
+fun CreateDiaryScreen(
+    navController: NavHostController,
+    userInfo: UserInfo?,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
+) {
     val viewModel: CreateDiaryViewModel = koinInject()
 
     val richTextState = rememberRichTextState()
@@ -109,6 +118,8 @@ fun CreateDiaryScreen(navController: NavHostController, userInfo: UserInfo?) {
         onShowSaveDialogChange = {
             showSaveDialog = it
         },
-        onNavigateBack = navController::popBackStack,
+        onNavigateBack = navController::navigateUp,
+        animatedContentScope = animatedContentScope,
+        sharedTransitionScope = sharedTransitionScope,
     )
 }

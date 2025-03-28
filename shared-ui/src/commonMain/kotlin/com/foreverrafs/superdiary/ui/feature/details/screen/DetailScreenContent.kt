@@ -1,5 +1,8 @@
 package com.foreverrafs.superdiary.ui.feature.details.screen
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,6 +41,7 @@ import com.foreverrafs.superdiary.design.components.MapComponent
 import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
+import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlinx.coroutines.launch
@@ -48,12 +52,15 @@ import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.label_diary_deleted
 
+@OptIn(ExperimentalRichTextApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun DetailScreenContent(
     onDeleteDiary: (diary: Diary) -> Unit,
     onNavigateBack: () -> Unit,
-    avatarUrl: String,
+    onProfileClick: () -> Unit,
     viewState: DetailsViewState.DiarySelected,
+    animatedContentScope: AnimatedContentScope,
+    sharedTransitionScope: SharedTransitionScope,
     modifier: Modifier = Modifier,
 ) {
     val diary = viewState.diary
@@ -84,7 +91,10 @@ fun DetailScreenContent(
                         )
                     }
                 },
-                avatarUrl = avatarUrl,
+                avatarUrl = viewState.avatarUrl,
+                onProfileClick = onProfileClick,
+                animatedContentScope = animatedContentScope,
+                sharedTransitionScope = sharedTransitionScope,
             )
         },
         snackbarHost = {

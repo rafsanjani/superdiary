@@ -1,4 +1,5 @@
 plugins {
+    id("com.superdiary.android.library")
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
 }
@@ -12,17 +13,11 @@ kotlin {
             implementation(projects.preferences.annotation)
             implementation(libs.square.kotlinPoet)
             implementation("com.squareup:kotlinpoet-ksp:2.1.0")
-            implementation("com.google.devtools.ksp:symbol-processing-api:2.1.10-1.0.31")
+            implementation("com.google.devtools.ksp:symbol-processing-api:2.1.20-1.0.32")
         }
     }
 }
 
 android {
     namespace = "com.foreverrafs.preferences.processor"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_17
-        sourceCompatibility = JavaVersion.VERSION_17
-    }
 }

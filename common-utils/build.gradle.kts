@@ -1,23 +1,12 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.multiplatform)
+    id("com.superdiary.multiplatform.kotlin")
+    id("com.superdiary.android.library")
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    androidTarget()
-
-    iosX64()
-    jvm()
-    iosArm64()
-    iosSimulatorArm64()
-
-    compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-    }
-
     sourceSets {
         commonMain {
             dependencies {
@@ -31,6 +20,7 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(libs.assertk.common)
+                implementation(kotlin("test"))
             }
         }
     }
@@ -38,19 +28,4 @@ kotlin {
 
 android {
     namespace = "com.foreverrafs.common.utils"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minimumSdk.get().toInt()
-    }
-
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_17
-        sourceCompatibility = JavaVersion.VERSION_17
-    }
-}
-kotlin {
-    sourceSets.commonTest.dependencies {
-        implementation(kotlin("test"))
-    }
 }

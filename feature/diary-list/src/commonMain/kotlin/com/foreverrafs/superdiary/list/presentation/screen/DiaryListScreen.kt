@@ -1,5 +1,10 @@
-package com.foreverrafs.superdiary.list.presentation
+@file:OptIn(ExperimentalSharedTransitionApi::class)
 
+package com.foreverrafs.superdiary.list.presentation.screen
+
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.foreverrafs.superdiary.list.DiaryFilters
 import com.foreverrafs.superdiary.list.DiaryListActions
+import com.foreverrafs.superdiary.list.presentation.DiaryListViewModel
 import org.koin.compose.koinInject
 
 @Composable
@@ -21,6 +27,9 @@ fun DiaryListScreen(
     navController: NavController,
     onAddEntry: () -> Unit,
     onDiaryClick: (id: Long) -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
+    onProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val screenModel: DiaryListViewModel = koinInject()
@@ -43,9 +52,7 @@ fun DiaryListScreen(
             },
             onToggleFavorite = screenModel::toggleFavorite,
             onDiaryClicked = onDiaryClick,
-            onBackPressed = {
-                navController.popBackStack()
-            },
+            onBackPressed = navController::navigateUp,
         )
     }
 
@@ -56,5 +63,8 @@ fun DiaryListScreen(
         diaryFilters = diaryFilters,
         diaryListActions = diaryListActions,
         avatarUrl = avatarUrl,
+        sharedTransitionScope = sharedTransitionScope,
+        animatedContentScope = animatedContentScope,
+        onProfileClick = onProfileClick,
     )
 }

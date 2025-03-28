@@ -2,8 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>NSFaceIDUsageDescription</key>
-    <string>Your biometrics is required to authenticate</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Your biometrics is required to authenticate</string>
 	<key>CFBundleGetInfoString</key>
 	<string></string>
 	<key>LSApplicationCategoryType</key>
@@ -63,12 +63,6 @@
 	<string>Your location is required to tag your entries when they are made</string>
 	<key>SENTRY_BASE_URL</key>
 	<string>${SENTRY_BASE_URL}</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>font/mont_bold.ttf</string>
-		<string>font/mont_regular.ttf</string>
-		<string>font/right_regular.ttf</string>
-	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

@@ -1,6 +1,9 @@
 package com.foreverrafs.superdiary.ui.feature.creatediary.screen
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,7 +32,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -38,7 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
-import com.foreverrafs.superdiary.design.components.BackHandler
 import com.foreverrafs.superdiary.design.components.ConfirmSaveDialog
 import com.foreverrafs.superdiary.design.components.LocationRationaleDialog
 import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
@@ -66,7 +70,11 @@ import superdiary.shared_ui.generated.resources.label_diary_ai
  *    dialog, this callback is invoked, signalling that the user doesn't
  *    want to be disturbed again.
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalComposeUiApi::class,
+    ExperimentalSharedTransitionApi::class,
+)
 @Composable
 fun CreateDiaryScreenContent(
     isGeneratingFromAi: Boolean,
@@ -80,6 +88,8 @@ fun CreateDiaryScreenContent(
     onRequestLocationPermission: () -> Unit,
     onDontAskAgain: () -> Unit,
     onNavigateBack: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     modifier: Modifier = Modifier,
     richTextState: RichTextState = rememberRichTextState(),
 ) {
@@ -113,6 +123,8 @@ fun CreateDiaryScreenContent(
                     }
                 },
                 avatarUrl = userInfo?.avatarUrl,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedContentScope = animatedContentScope,
             )
         },
         modifier = modifier,

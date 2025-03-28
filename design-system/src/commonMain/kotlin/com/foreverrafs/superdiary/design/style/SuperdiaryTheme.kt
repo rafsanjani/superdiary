@@ -1,7 +1,6 @@
 package com.foreverrafs.superdiary.design.style
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
@@ -10,7 +9,6 @@ import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -96,20 +94,24 @@ fun SuperDiaryTheme(
             fontSize = 14.sp,
             fontWeight = FontWeight.Normal,
         ),
-    )
-    val shapes = Shapes(
-        small = RoundedCornerShape(4.dp),
-        medium = RoundedCornerShape(4.dp),
-        large = RoundedCornerShape(0.dp),
+        bodyLarge = TextStyle(
+            fontFamily = montserratAlternativesFontFamily(),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Normal,
+        ),
     )
 
     MaterialTheme(
         colorScheme = colorScheme,
         typography = typography,
-        shapes = shapes,
+        shapes = Shapes(
+            small = RoundedCornerShape(4.dp),
+            medium = RoundedCornerShape(4.dp),
+            large = RoundedCornerShape(0.dp),
+        ),
     ) {
         Surface(
-            modifier = Modifier.fillMaxSize(),
+//            modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
             content = content,
         )
