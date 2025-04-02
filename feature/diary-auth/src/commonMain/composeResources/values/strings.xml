@@ -20,5 +20,7 @@
     <string name="error_invalid_credentials">Invalid credentials</string>"
     <string name="error_no_credentials">No credentials</string>"
     <string name="error_user_already_registered">User already registered</string>"
-    <String name="error_generic_error">Generic error</String>"
+    <string name="error_generic_error">Generic error</string>"
+    <string name="registration_success_message">Thank you for registering!</string>"
+    <string name="registration_email_confirmation_prompt">Please confirm your email</string>"
 </resources>

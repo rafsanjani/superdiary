@@ -23,6 +23,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.foreverrafs.superdiary.auth.openDefaultEmailApp
+import org.jetbrains.compose.resources.stringResource
+import superdiary.feature.diary_auth.generated.resources.Res
+import superdiary.feature.diary_auth.generated.resources.label_open_email
+import superdiary.feature.diary_auth.generated.resources.registration_email_confirmation_prompt
+import superdiary.feature.diary_auth.generated.resources.registration_success_message
 
 @Composable
 fun RegistrationConfirmationScreen(
@@ -43,7 +48,7 @@ fun RegistrationConfirmationScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = "Thank you for registering!",
+                text = stringResource(Res.string.registration_success_message),
                 style = MaterialTheme.typography.displayMedium,
                 fontWeight = FontWeight.SemiBold,
             )
@@ -59,7 +64,7 @@ fun RegistrationConfirmationScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Please confirm your email address to continue",
+                text = stringResource(Res.string.registration_email_confirmation_prompt),
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
             )
@@ -73,7 +78,7 @@ fun RegistrationConfirmationScreen(
                     .padding(horizontal = 16.dp),
                 onClick = ::openDefaultEmailApp,
             ) {
-                Text("Open email app")
+                Text(text = stringResource(Res.string.label_open_email))
             }
         }
     }
