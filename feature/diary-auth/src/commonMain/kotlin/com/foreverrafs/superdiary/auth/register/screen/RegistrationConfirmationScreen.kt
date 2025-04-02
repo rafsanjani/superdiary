@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.foreverrafs.superdiary.auth.openDefaultEmailApp
 
 @Composable
 fun RegistrationConfirmationScreen(
@@ -70,7 +71,7 @@ fun RegistrationConfirmationScreen(
                     .height(52.dp)
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                onClick = { /*TODO*/ },
+                onClick = ::openDefaultEmailApp,
             ) {
                 Text("Open email app")
             }
