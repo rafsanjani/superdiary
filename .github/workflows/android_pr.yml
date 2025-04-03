@@ -12,8 +12,16 @@ jobs:
         runs-on: macos-14
         steps:
             -   uses: actions/checkout@v4
+            -   name: Create LFS file list
+                run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+
+            -   name: Restore LFS cache
+                uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
                 with:
-                    lfs: true
+                    path: .git/lfs
+                    key: ${{runner.os}}-lfs-${{hashFiles('.lfs-assets-id')}}
+            -   name: Git LFS Pull
+                run: GIT_TRACE=1 git lfs pull
 
             -   uses: actions/setup-java@v4
                 with:
@@ -39,8 +47,13 @@ jobs:
         needs: danger
         steps:
             -   uses: actions/checkout@v4
+            -   name: Restore LFS cache
+                uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
                 with:
-                    lfs: true
+                    path: .git/lfs
+                    key: ${{runner.os}}-lfs-${{hashFiles('.lfs-assets-id')}}
+            -   name: Git LFS Pull
+                run: GIT_TRACE=1 git lfs pull
 
             -   uses: actions/setup-java@v4
                 with:
@@ -83,8 +96,13 @@ jobs:
         needs: danger
         steps:
             -   uses: actions/checkout@v4
+            -   name: Restore LFS cache
+                uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
                 with:
-                    lfs: true
+                    path: .git/lfs
+                    key: ${{runner.os}}-lfs-${{hashFiles('.lfs-assets-id')}}
+            -   name: Git LFS Pull
+                run: GIT_TRACE=1 git lfs pull
 
             -   uses: actions/setup-java@v4
                 with:
@@ -183,8 +201,14 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         steps:
             -   uses: actions/checkout@v4
+            -   name: Restore LFS cache
+                uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
                 with:
-                    lfs: true
+                    path: .git/lfs
+                    key: ${{runner.os}}-lfs-${{hashFiles('.lfs-assets-id')}}
+            -   name: Git LFS Pull
+                run: GIT_TRACE=1 git lfs pull
+
             -   uses: actions/setup-java@v4
                 with:
                     distribution: 'zulu'
