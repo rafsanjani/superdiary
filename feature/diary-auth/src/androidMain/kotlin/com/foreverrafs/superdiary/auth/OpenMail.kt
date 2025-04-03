@@ -8,7 +8,7 @@ import org.koin.java.KoinJavaComponent.inject
 
 private val context: Context by inject(Context::class.java)
 
-actual fun openDefaultEmailApp() {
+actual fun openMail() {
     try {
         val intent = Intent(Intent.ACTION_MAIN).apply {
             addCategory(Intent.CATEGORY_APP_EMAIL)

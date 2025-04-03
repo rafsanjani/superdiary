@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.foreverrafs.superdiary.auth.openDefaultEmailApp
+import com.foreverrafs.superdiary.auth.openMail
 import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.diary_auth.generated.resources.Res
 import superdiary.feature.diary_auth.generated.resources.label_open_email
@@ -76,7 +76,7 @@ fun RegistrationConfirmationScreen(
                     .height(52.dp)
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                onClick = ::openDefaultEmailApp,
+                onClick = ::openMail,
             ) {
                 Text(text = stringResource(Res.string.label_open_email))
             }

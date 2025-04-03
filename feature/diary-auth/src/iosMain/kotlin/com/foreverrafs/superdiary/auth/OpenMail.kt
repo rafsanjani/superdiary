@@ -3,7 +3,7 @@ package com.foreverrafs.superdiary.auth
 import platform.Foundation.NSURL
 import platform.UIKit.UIApplication
 
-actual fun openDefaultEmailApp() {
+actual fun openMail() {
     NSURL.URLWithString("message://")?.let {
         if (UIApplication.sharedApplication.canOpenURL(url = it)) {
             UIApplication.sharedApplication.openURL(

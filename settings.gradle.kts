@@ -98,6 +98,7 @@ kover {
         "*utils.FileSystem_androidKt",
         "*generated.resources.*",
         "*components.*",
+        "*OpenMail.*",
     )
 
     reports {
