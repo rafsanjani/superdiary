@@ -53,9 +53,9 @@ class SecretsConventionPlugin : Plugin<Project> {
     }
 
     private fun Project.loadSecrets(): List<Secret> {
-        val properties = loadPropertiesOrNull() ?: return emptyList()
+        val properties = loadPropertiesOrNull()
 
-        fun getProperty(name: String): String = properties[name]?.toString() ?: run {
+        fun getProperty(name: String): String = properties?.get(name)?.toString() ?: run {
             logger.error("$name not provided!")
             ""
         }
