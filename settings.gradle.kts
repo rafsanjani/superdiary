@@ -105,6 +105,7 @@ kover {
         includedProjects.add(":shared-data")
         includedProjects.add(":shared-ui")
         includedProjects.add(":core:sync")
+        includedProjects.add(":common-utils")
         includedProjects.add(":feature:diary-profile")
         includedProjects.add(":feature:diary-list")
         includedProjects.add(":feature:diary-auth")
