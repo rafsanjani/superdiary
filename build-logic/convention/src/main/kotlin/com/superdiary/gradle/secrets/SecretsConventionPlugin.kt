@@ -1,11 +1,18 @@
 package com.superdiary.gradle.secrets
 
+import com.codingfeline.buildkonfig.compiler.FieldSpec
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import com.codingfeline.buildkonfig.gradle.BuildKonfigExtension
 import java.util.Properties
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
+
+data class Secret(
+    val name: String,
+    val value: String,
+    val type: FieldSpec.Type,
+)
 
 /**
  * These secrets are only consumed in ":core:utils" module which is in turn
@@ -19,66 +26,62 @@ class SecretsConventionPlugin : Plugin<Project> {
             buildKonfig {
                 packageName = "com.foreverrafs.superdiary.secrets"
 
-                val props = Properties()
-
-                try {
-                    props.load(
-                        rootProject.file("secrets.properties").inputStream(),
-                    )
-                } catch (_: Throwable) {
-                    logger.warn(
-                        "secrets.properties not found. All app features will not work as expected",
-                    )
-                }
-
-                val openAIUrl: String = props["OPENAI_KEY"]?.toString() ?: run {
-                    logger.error("OPENAI_KEY not provided!")
-                    ""
-                }
-
-                val googleServerClientId: String =
-                    props["GOOGLE_SERVER_CLIENT_ID"]?.toString() ?: run {
-                        logger.error("GOOGLE_SERVER_CLIENT_ID not provided!")
-                        ""
-                    }
-
-                val supabaseUrl: String =
-                    props["SUPABASE_URL"]?.toString() ?: run {
-                        logger.error("SUPABASE_URL not provided!")
-                        ""
-                    }
-
-                val supabaseKey: String =
-                    props["SUPABASE_KEY"]?.toString() ?: run {
-                        logger.error("SUPABASE_KEY not provided!")
-                        ""
-                    }
-
                 defaultConfigs {
-                    buildConfigField(
-                        type = STRING,
-                        name = "OPENAI_URL",
-                        value = openAIUrl,
-                    )
-
-                    buildConfigField(
-                        type = STRING,
-                        name = "GOOGLE_SERVER_CLIENT_ID",
-                        value = googleServerClientId,
-                    )
-                    buildConfigField(
-                        type = STRING,
-                        name = "SUPABASE_KEY",
-                        value = supabaseKey,
-                    )
-                    buildConfigField(
-                        type = STRING,
-                        name = "SUPABASE_URL",
-                        value = supabaseUrl,
-                    )
+                    loadSecrets().forEach { secret ->
+                        buildConfigField(
+                            type = secret.type,
+                            name = secret.name,
+                            value = secret.value,
+                        )
+                    }
                 }
             }
         }
+    }
+
+    private fun Project.loadPropertiesOrNull(): Properties? = try {
+        Properties().apply {
+            load(
+                rootProject.file("secrets.properties").inputStream(),
+            )
+        }
+    } catch (_: Throwable) {
+        logger.warn(
+            "secrets.properties not found. All app features will not work as expected",
+        )
+        null
+    }
+
+    private fun Project.loadSecrets(): List<Secret> {
+        val properties = loadPropertiesOrNull()
+
+        fun getProperty(name: String): String = properties?.get(name)?.toString() ?: run {
+            logger.error("$name not provided!")
+            ""
+        }
+
+        return listOf(
+            Secret(
+                name = "OPENAI_KEY",
+                value = getProperty("OPENAI_KEY"),
+                type = STRING,
+            ),
+            Secret(
+                name = "GOOGLE_SERVER_CLIENT_ID",
+                value = getProperty("GOOGLE_SERVER_CLIENT_ID"),
+                type = STRING,
+            ),
+            Secret(
+                name = "SUPABASE_URL",
+                value = getProperty("SUPABASE_URL"),
+                type = STRING,
+            ),
+            Secret(
+                name = "SUPABASE_KEY",
+                value = getProperty("SUPABASE_KEY"),
+                type = STRING,
+            ),
+        )
     }
 }
 
