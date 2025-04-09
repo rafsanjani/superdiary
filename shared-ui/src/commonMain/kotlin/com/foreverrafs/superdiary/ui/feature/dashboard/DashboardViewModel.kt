@@ -18,7 +18,6 @@ import com.foreverrafs.superdiary.domain.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.utils.DiarySettings
 import com.foreverrafs.superdiary.utils.toDate
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -79,138 +78,74 @@ class DashboardViewModel(
             initialValue = DashboardScreenState.Loading,
         )
 
-    private fun observeSettingsChanges() = viewModelScope.launch {
-        preference.settings.collect { settings ->
-            logger.i(TAG) {
-                settings.toString()
-            }
-            updateContentState {
-                it.copy(
-                    showBiometricAuthDialog = settings.showBiometricAuthDialog && !settings.isBiometricAuthEnabled,
-                    showWeeklySummary = settings.showWeeklySummary,
-                    showLatestEntries = settings.showLatestEntries,
-                    showAtaGlance = settings.showAtAGlance,
-                )
-            }
-
-            // Flip initial launch switch if it is still active
-            if (settings.isFirstLaunch) {
-                preference.save { it.copy(isFirstLaunch = false) }
-            }
-        }
-    }
-
     private fun loadDashboardContent() = viewModelScope.launch {
-        delay(2000)
         logger.i(TAG) {
             "Loading dashboard content"
         }
 
-        getAllDiariesResult.combine(preference.settings) { result, settings ->
-            when (result) {
-                is Result.Failure ->
-                    DashboardScreenState.Error(
-                        message = result.error.message.orEmpty(),
-                    )
+        launch {
+            getAllDiariesResult
+                .combine(preference.settings) { result, settings ->
+                    when (result) {
+                        is Result.Failure -> {
+                            logger.e(TAG, result.error) {
+                                "Error loading dashboard contents"
+                            }
 
-                is Result.Success -> {
-                    val diaries = result.data
+                            DashboardScreenState.Error(
+                                message = result.error.message.orEmpty(),
+                            )
+                        }
 
-                    logger.i(TAG) {
-                        "Dashboard content refreshed!"
+                        is Result.Success -> {
+                            val diaries = result.data
+
+                            logger.i(TAG) {
+                                "Dashboard content refreshed!"
+                            }
+
+                            val shouldShowBiometricDialog =
+                                settings.showBiometricAuthDialog &&
+                                    biometricAuth.canAuthenticate() &&
+                                    !settings.isBiometricAuthEnabled
+
+                            if (diaries.isNotEmpty()) {
+                                generateWeeklySummary(diaries)
+                                calculateStreak(diaries)
+                            }
+
+                            DashboardScreenState.Content(
+                                latestEntries = diaries.sortedByDescending { it.date }.take(4),
+                                totalEntries = diaries.size.toLong(),
+                                weeklySummary = if (diaries.isEmpty()) {
+                                    """
+
+                                    """.trimIndent()
+                                } else {
+                                    DEFAULT_SUMMARY_TEXT
+                                },
+                                currentStreak = Streak(
+                                    count = 0,
+                                    startDate = clock.now().toDate(),
+                                    endDate = clock.now().toDate(),
+                                ),
+                                bestStreak = Streak(
+                                    count = 0,
+                                    startDate = clock.now().toDate(),
+                                    endDate = clock.now().toDate(),
+                                ),
+                                showBiometricAuthDialog = shouldShowBiometricDialog,
+                                showLatestEntries = settings.showLatestEntries,
+                                showAtaGlance = settings.showAtAGlance,
+                                showWeeklySummary = settings.showWeeklySummary,
+                            )
+                        }
                     }
-
-                    val shouldShowBiometricDialog =
-                        settings.showBiometricAuthDialog &&
-                            biometricAuth.canAuthenticate() &&
-                            !settings.isBiometricAuthEnabled
-
-                    DashboardScreenState.Content(
-                        latestEntries = diaries.sortedByDescending { it.date }.take(4),
-                        totalEntries = diaries.size.toLong(),
-                        weeklySummary = if (diaries.isEmpty()) {
-                            """
-
-                            """.trimIndent()
-                        } else {
-                            DEFAULT_SUMMARY_TEXT
-                        },
-                        currentStreak = Streak(
-                            count = 0,
-                            startDate = clock.now().toDate(),
-                            endDate = clock.now().toDate(),
-                        ),
-                        bestStreak = Streak(
-                            count = 0,
-                            startDate = clock.now().toDate(),
-                            endDate = clock.now().toDate(),
-                        ),
-                        showBiometricAuthDialog = shouldShowBiometricDialog,
-                        showLatestEntries = settings.showLatestEntries,
-                        showAtaGlance = settings.showAtAGlance,
-                        showWeeklySummary = settings.showWeeklySummary,
-                    )
-                }
-            }
-        }.collect { updatedState ->
-            mutableState.update {
-                updatedState
-            }
-        }
-
-        getAllDiariesResult.collect { result ->
-            when (result) {
-                is Result.Failure -> mutableState.update {
-                    DashboardScreenState.Error(
-                        message = result.error.message.orEmpty(),
-                    )
-                }
-
-                is Result.Success -> {
-                    val diaries = result.data
-
-                    logger.i(TAG) {
-                        "Dashboard content refreshed!"
-                    }
-
+                }.collect { updatedState ->
                     mutableState.update {
-                        val settings = preference.getSnapshot()
-
-                        val shouldShowBiometricDialog =
-                            settings.showBiometricAuthDialog &&
-                                biometricAuth.canAuthenticate() &&
-                                !settings.isBiometricAuthEnabled
-
-                        DashboardScreenState.Content(
-                            latestEntries = diaries.sortedByDescending { it.date }.take(4),
-                            totalEntries = diaries.size.toLong(),
-                            weeklySummary = if (diaries.isEmpty()) {
-                                """
-
-                                """.trimIndent()
-                            } else {
-                                DEFAULT_SUMMARY_TEXT
-                            },
-                            currentStreak = Streak(
-                                0,
-                                clock.now().toDate(),
-                                clock.now().toDate(),
-                            ),
-                            bestStreak = Streak(
-                                0,
-                                clock.now().toDate(),
-                                clock.now().toDate(),
-                            ),
-                            showBiometricAuthDialog = shouldShowBiometricDialog,
-                        )
-                    }
-
-                    if (diaries.isNotEmpty()) {
-                        generateWeeklySummary(diaries)
-                        calculateStreak(diaries)
+                        updatedState
                     }
                 }
-            }
         }
     }
 
@@ -220,22 +155,16 @@ class DashboardViewModel(
      */
     private fun updateContentState(func: (current: DashboardScreenState.Content) -> DashboardScreenState.Content) {
         mutableState.update { state ->
-            val currentState = state as? DashboardScreenState.Content
+            val currentState =
+                state as? DashboardScreenState.Content ?: DashboardScreenState.Content()
 
-            if (currentState != null) {
-                val newState = func(currentState)
+            val newState = func(currentState)
 
-                logger.d(TAG) {
-                    "updateContentState: Updating content state from $currentState to $newState"
-                }
-
-                newState
-            } else {
-                logger.i(TAG) {
-                    "Current state is null, cannot update"
-                }
-                state
+            logger.d(TAG) {
+                "updateContentState: Updating content state from $currentState to $newState"
             }
+
+            newState
         }
     }
 
@@ -265,22 +194,27 @@ class DashboardViewModel(
                 logger.e(TAG, exception) {
                     "generateWeeklySummary: An error occurred generating weekly summary"
                 }
-            }.onCompletion {
+            }
+            .onCompletion {
                 (mutableState.value as? DashboardScreenState.Content)?.let { appState ->
-                    if (appState.weeklySummary == DEFAULT_SUMMARY_TEXT) {
+                    // Summary has been generated, save it to the database
+                    if (appState.weeklySummary != DEFAULT_SUMMARY_TEXT) {
+                        logger.d(TAG) {
+                            "generateWeeklySummary: Weekly summary generated!"
+                        }
+                        appState.weeklySummary?.let { summary ->
+                            addWeeklySummaryUseCase(
+                                weeklySummary = WeeklySummary(summary),
+                            )
+                        }
+                    } else {
+                        logger.e(TAG, it) {
+                            "There was an error generating weekly summary"
+                        }
+                        // No summary was generated, show an error message
                         updateContentState { currentState ->
                             currentState.copy(weeklySummary = "Error generating weekly summary")
                         }
-                        return@onCompletion
-                    }
-
-                    logger.d(TAG) {
-                        "generateWeeklySummary: Weekly summary generated!"
-                    }
-                    appState.weeklySummary?.let { summary ->
-                        addWeeklySummaryUseCase(
-                            weeklySummary = WeeklySummary(summary),
-                        )
                     }
                 }
             }
