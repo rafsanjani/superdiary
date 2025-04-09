@@ -1,7 +1,6 @@
 package com.superdiary.gradle.secrets
 
 import com.codingfeline.buildkonfig.compiler.FieldSpec
-import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import com.codingfeline.buildkonfig.gradle.BuildKonfigExtension
 import java.util.Properties
 import org.gradle.api.Plugin
@@ -64,22 +63,22 @@ class SecretsConventionPlugin : Plugin<Project> {
             Secret(
                 name = "OPENAI_KEY",
                 value = getProperty("OPENAI_KEY"),
-                type = STRING,
+                type = FieldSpec.Type.STRING,
             ),
             Secret(
                 name = "GOOGLE_SERVER_CLIENT_ID",
                 value = getProperty("GOOGLE_SERVER_CLIENT_ID"),
-                type = STRING,
+                type = FieldSpec.Type.STRING,
             ),
             Secret(
                 name = "SUPABASE_URL",
                 value = getProperty("SUPABASE_URL"),
-                type = STRING,
+                type = FieldSpec.Type.STRING,
             ),
             Secret(
                 name = "SUPABASE_KEY",
                 value = getProperty("SUPABASE_KEY"),
-                type = STRING,
+                type = FieldSpec.Type.STRING,
             ),
         )
     }
