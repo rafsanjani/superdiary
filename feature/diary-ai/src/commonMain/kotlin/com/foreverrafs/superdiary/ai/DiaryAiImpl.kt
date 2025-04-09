@@ -11,7 +11,6 @@ import com.foreverrafs.superdiary.ai.domain.model.toNetworkChatMessage
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onCompletion
@@ -73,7 +72,7 @@ class DiaryAiImpl(
     }
 
     override fun generateSummary(diaries: List<Diary>): Flow<String> {
-        val weeklyDiaryGeneratorPrompt = """
+        val weeklySummaryGeneratorPrompt = """
             You are Journal AI. I will give you a combined list of entries written over a period of
             one week and you write a brief, concise and informative summary for me. It should be at
             least 50 words and at most 100. The grammar should be spot on without any mistakes or errors.
@@ -84,7 +83,7 @@ class DiaryAiImpl(
         // Add the instruction
         generateDiaryMessages.add(
             ChatMessage.System(
-                content = weeklyDiaryGeneratorPrompt,
+                content = weeklySummaryGeneratorPrompt,
             ),
         )
 
@@ -103,12 +102,6 @@ class DiaryAiImpl(
         var response = ""
 
         return openAI.chatCompletions(request)
-            .catch {
-                println(it)
-            }
-            .onEach {
-                println(it)
-            }
             .mapNotNull {
                 it.choices.firstOrNull()?.delta?.content?.let {
                     response += it
@@ -134,7 +127,7 @@ class DiaryAiImpl(
     }
 
     companion object {
-        private const val GPT_MODEL = "chatgpt-4o-latest"
+        private const val GPT_MODEL = "deepseek-chat"
         private const val TAG = "OpenDiaryAI"
     }
 }

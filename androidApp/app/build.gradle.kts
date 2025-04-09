@@ -1,5 +1,8 @@
 @file:Suppress("UnusedPrivateProperty")
 
+import io.sentry.android.gradle.extensions.InstrumentationFeature
+
+
 plugins {
     kotlin("android")
     alias(libs.plugins.android.application)
@@ -122,6 +125,21 @@ sentry {
     includeSourceContext.set(true)
     autoUploadProguardMapping.set(true)
     uploadNativeSymbols.set(true)
+
+    tracingInstrumentation {
+        enabled = true
+        features = setOf(
+            InstrumentationFeature.DATABASE,
+            InstrumentationFeature.FILE_IO,
+            InstrumentationFeature.OKHTTP,
+            InstrumentationFeature.COMPOSE,
+        )
+    }
+
+    autoInstallation {
+        enabled = true
+        sentryVersion = libs.versions.sentry.get()
+    }
 }
 
 // This is only used for loading google maps api keys at the moment.
