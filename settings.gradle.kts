@@ -99,6 +99,7 @@ kover {
         "*generated.resources.*",
         "*components.*",
         "*MailManager",
+        "*.navigation.*",
     )
 
     reports {
