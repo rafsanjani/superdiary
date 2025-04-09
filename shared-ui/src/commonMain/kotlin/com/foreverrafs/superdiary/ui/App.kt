@@ -50,7 +50,6 @@ import com.foreverrafs.superdiary.list.navigation.diaryListNavigation
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.feature.changepassword.navigation.changePasswordNavigation
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
-import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreen
 import com.foreverrafs.superdiary.ui.navigation.AppRoute
 import com.foreverrafs.superdiary.ui.navigation.BottomNavigationScreen
 import kotlin.reflect.typeOf
@@ -258,31 +257,12 @@ private fun SuperDiaryNavHost(
                 onAddEntry = {
                     navController.navigate(route = AppRoute.CreateDiaryScreen)
                 },
-                onDiaryClick = { diaryId ->
-                    navController.navigate(
-                        route = AppRoute.DetailScreen(diaryId = diaryId.toString()),
-                    )
-                },
                 onProfileClick = { navController.navigate(AppRoute.ProfileScreen) },
             )
 
             changePasswordNavigation<AppRoute.ChangePasswordNavHost>(
                 navController = navController,
             )
-
-            animatedComposable<AppRoute.DetailScreen> { backstackEntry ->
-                val diaryId: String = backstackEntry.toRoute<AppRoute.DetailScreen>().diaryId
-
-                DetailScreen(
-                    diaryId = diaryId,
-                    navController = navController,
-                    onProfileClick = {
-                        navController.navigate(AppRoute.ProfileScreen)
-                    },
-                    sharedTransitionScope = this@SharedTransitionLayout,
-                    animatedContentScpe = this@animatedComposable,
-                )
-            }
 
             animatedComposable<AppRoute.ProfileScreen> {
                 ProfileScreen(

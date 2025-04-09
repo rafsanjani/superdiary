@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.details.screen
+package com.foreverrafs.superdiary.list.presentation.screen.detail.screen
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -40,7 +40,7 @@ import com.foreverrafs.superdiary.design.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.design.components.MapComponent
 import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.domain.model.Diary
-import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
+import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewState
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
@@ -49,8 +49,8 @@ import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
-import superdiary.shared_ui.generated.resources.Res
-import superdiary.shared_ui.generated.resources.label_diary_deleted
+import superdiary.feature.diary_list.generated.resources.Res
+import superdiary.feature.diary_list.generated.resources.label_diary_deleted
 
 @OptIn(ExperimentalRichTextApi::class, ExperimentalSharedTransitionApi::class)
 @Composable

@@ -15,8 +15,8 @@ import com.foreverrafs.common.paparazzi.SnapshotDevice
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
-import com.foreverrafs.superdiary.list.presentation.DiaryListViewState
-import com.foreverrafs.superdiary.list.presentation.screen.DiaryListScreenContent
+import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListScreenContent
+import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListViewState
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import kotlinx.datetime.Clock

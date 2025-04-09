@@ -51,7 +51,7 @@ import com.foreverrafs.superdiary.design.components.ConfirmBiometricAuthDialog
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
-import com.foreverrafs.superdiary.list.presentation.screen.DiaryItem
+import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryItem
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.utils.toDate
 import com.valentinilk.shimmer.shimmer

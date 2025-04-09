@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.details.screen
+package com.foreverrafs.superdiary.list.presentation.screen.detail.screen
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -13,8 +13,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
-import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
+import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewModel
+import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewState
 import org.koin.compose.koinInject
 
 @OptIn(ExperimentalSharedTransitionApi::class)

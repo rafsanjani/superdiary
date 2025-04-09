@@ -1,6 +1,6 @@
 @file:Suppress("TooManyFunctions")
 
-package com.foreverrafs.superdiary.list.presentation.screen
+package com.foreverrafs.superdiary.list.presentation.screen.list
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -94,11 +94,11 @@ import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.list.DiaryFilters
 import com.foreverrafs.superdiary.list.DiaryListActions
-import com.foreverrafs.superdiary.list.presentation.DiaryListViewState
 import com.foreverrafs.superdiary.list.presentation.components.DiaryFilterSheet
 import com.foreverrafs.superdiary.list.presentation.components.DiaryHeader
 import com.foreverrafs.superdiary.list.presentation.components.DiarySearchBar
 import com.foreverrafs.superdiary.list.presentation.components.DiarySelectionModifierBar
+import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListViewState
 import com.foreverrafs.superdiary.utils.groupByDate
 import com.foreverrafs.superdiary.utils.toDate
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi

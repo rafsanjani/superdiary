@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.list.presentation
+package com.foreverrafs.superdiary.list.presentation.screen.list
 
 import com.foreverrafs.superdiary.domain.model.Diary
 
