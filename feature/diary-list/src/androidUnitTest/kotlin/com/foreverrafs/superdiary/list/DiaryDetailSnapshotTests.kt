@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui
+package com.foreverrafs.superdiary.list
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
@@ -6,8 +6,8 @@ import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.common.paparazzi.SnapshotDevice
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
-import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
-import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreenContent
+import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewState
+import com.foreverrafs.superdiary.list.presentation.screen.detail.screen.DetailScreenContent
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import kotlinx.datetime.Clock
@@ -23,7 +23,7 @@ class DiaryDetailSnapshotTests(
 ) {
     private val testClock = object : Clock {
         // 2023-11-10
-        override fun now(): Instant = Instant.parse("2023-11-10T00:00:00.850951Z")
+        override fun now(): Instant = Instant.Companion.parse("2023-11-10T00:00:00.850951Z")
     }
 
     @get:Rule
