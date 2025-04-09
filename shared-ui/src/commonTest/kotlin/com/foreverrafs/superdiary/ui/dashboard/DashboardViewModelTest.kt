@@ -115,7 +115,7 @@ class DashboardViewModelTest {
         val viewModel = createDashboardViewModel()
 
         viewModel.state.test {
-            skipItems(3)
+            skipItems(2)
             val state = awaitItem()
             cancelAndIgnoreRemainingEvents()
 
@@ -149,7 +149,7 @@ class DashboardViewModelTest {
 
         viewModel.state.test {
             // Skip the loading state
-            skipItems(3)
+            skipItems(2)
             val state = awaitItem() as? DashboardViewModel.DashboardScreenState.Content
 
             cancelAndIgnoreRemainingEvents()
@@ -174,7 +174,7 @@ class DashboardViewModelTest {
 
         viewModel.state.test {
             // Skip the loading state
-            skipItems(3)
+            skipItems(2)
             val state = awaitItem() as? DashboardViewModel.DashboardScreenState.Content
 
             cancelAndIgnoreRemainingEvents()
@@ -271,7 +271,7 @@ class DashboardViewModelTest {
         val viewModel = createDashboardViewModel()
 
         viewModel.state.test {
-            skipItems(2)
+            skipItems(1)
 
             viewModel.onEnableBiometricAuth()
             val state = awaitItem()
@@ -327,7 +327,7 @@ class DashboardViewModelTest {
             val viewModel = createDashboardViewModel()
 
             viewModel.state.test {
-                skipItems(2)
+                skipItems(1)
 
                 viewModel.onEnableBiometricAuth()
                 val state = awaitItem()
