@@ -57,7 +57,7 @@ import com.foreverrafs.superdiary.core.sync.Synchronizer
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.list.presentation.screen.DiaryListScreen
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
-import com.foreverrafs.superdiary.ui.feature.changepassword.ChangePasswordNavHost
+import com.foreverrafs.superdiary.ui.feature.changepassword.navigation.changePasswordNavigation
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.ui.feature.details.screen.DetailScreen
 import com.foreverrafs.superdiary.ui.navigation.AppRoute
@@ -281,9 +281,9 @@ private fun SuperDiaryNavHost(
                 )
             }
 
-            animatedComposable<AppRoute.ChangePasswordNavHost> {
-                ChangePasswordNavHost(navController)
-            }
+            changePasswordNavigation<AppRoute.ChangePasswordNavHost>(
+                navController = navController,
+            )
 
             animatedComposable<AppRoute.DetailScreen> { backstackEntry ->
                 val diaryId: String = backstackEntry.toRoute<AppRoute.DetailScreen>().diaryId

@@ -1,27 +1,17 @@
-package com.foreverrafs.superdiary.ui.feature.changepassword
+package com.foreverrafs.superdiary.ui.feature.changepassword.navigation
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import com.foreverrafs.superdiary.ui.animatedComposable
 import com.foreverrafs.superdiary.ui.feature.changepassword.screen.ChangePasswordScreen
 import com.foreverrafs.superdiary.ui.feature.changepassword.screen.ChangePasswordSuccessScreen
 import com.foreverrafs.superdiary.ui.navigation.AppRoute
-import kotlinx.serialization.Serializable
 
-@Composable
-fun ChangePasswordNavHost(
-    rootNavController: NavHostController,
-    modifier: Modifier = Modifier,
+internal inline fun <reified T : Any> NavGraphBuilder.changePasswordNavigation(
+    navController: NavHostController,
 ) {
-    val navController = rememberNavController()
-    NavHost(
-        navController = navController,
-        startDestination = ChangePasswordRoute.ChangePasswordScreen,
-        modifier = modifier,
-    ) {
+    navigation<T>(startDestination = ChangePasswordRoute.ChangePasswordScreen) {
         animatedComposable<ChangePasswordRoute.ChangePasswordScreen> {
             ChangePasswordScreen(
                 onPasswordChangeSuccess = {
@@ -37,8 +27,8 @@ fun ChangePasswordNavHost(
         animatedComposable<ChangePasswordRoute.PasswordChangeSuccessScreen> {
             ChangePasswordSuccessScreen(
                 onPrimaryButtonClick = {
-                    rootNavController.navigate(AppRoute.BottomNavigationScreen(null)) {
-                        popUpTo(rootNavController.graph.startDestinationRoute.orEmpty()) {
+                    navController.navigate(AppRoute.BottomNavigationScreen(null)) {
+                        popUpTo(navController.graph.startDestinationRoute.orEmpty()) {
                             inclusive = true
                         }
                     }
@@ -46,12 +36,4 @@ fun ChangePasswordNavHost(
             )
         }
     }
-}
-
-sealed interface ChangePasswordRoute {
-    @Serializable
-    data object ChangePasswordScreen : ChangePasswordRoute
-
-    @Serializable
-    data object PasswordChangeSuccessScreen : ChangePasswordRoute
 }
