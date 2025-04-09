@@ -47,35 +47,37 @@ fun SuperDiaryAppBar(
     // workaround for https://issuetracker.google.com/issues/344343033
     var isPlaced by remember { mutableStateOf(false) }
 
+    val sharedElementModifier = with(sharedTransitionScope) {
+        if (isPlaced) {
+            Modifier.sharedElement(
+                sharedContentState = sharedTransitionScope.rememberSharedContentState(
+                    "app_name",
+                ),
+                animatedVisibilityScope = animatedContentScope,
+            )
+        } else {
+            Modifier
+        }
+    }
+
     TopAppBar(
         modifier = modifier.onGloballyPositioned {
             isPlaced = true
         },
         title = {
-            with(sharedTransitionScope) {
-                Text(
-                    text = stringResource(Res.string.app_name),
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .semantics {
-                            heading()
-                        }
-                        .then(
-                            if (isPlaced) {
-                                Modifier.sharedElement(
-                                    sharedContentState = sharedTransitionScope.rememberSharedContentState(
-                                        "app_name",
-                                    ),
-                                    animatedVisibilityScope = animatedContentScope,
-                                )
-                            } else {
-                                Modifier
-                            },
-                        ),
-                    style = MaterialTheme.typography.displayLarge,
-                    fontWeight = FontWeight.Bold,
-                )
-            }
+            Text(
+                text = stringResource(Res.string.app_name),
+                textAlign = TextAlign.Start,
+                modifier = Modifier
+                    .semantics {
+                        heading()
+                    }
+                    .then(
+                        sharedElementModifier,
+                    ),
+                style = MaterialTheme.typography.displayLarge,
+                fontWeight = FontWeight.Bold,
+            )
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
