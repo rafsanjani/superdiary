@@ -26,7 +26,6 @@
     <string name="label_weekly_summary_error">Error generating weekly summary</string>
     <string name="label_button_retry">Retry</string>
     <string name="label_button_show_all">Show All</string>
-    <string name="label_diary_deleted">Diary Deleted!</string>
 
     <!--  Accessibility Content Descriptions  -->
     <string name="content_description_navigate_back">Navigate back</string>

@@ -3,7 +3,7 @@ package com.foreverrafs.superdiary.ui.feature.changepassword.navigation
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
-import com.foreverrafs.superdiary.ui.animatedComposable
+import com.foreverrafs.superdiary.design.style.animatedComposable
 import com.foreverrafs.superdiary.ui.feature.changepassword.screen.ChangePasswordScreen
 import com.foreverrafs.superdiary.ui.feature.changepassword.screen.ChangePasswordSuccessScreen
 import com.foreverrafs.superdiary.ui.navigation.AppRoute

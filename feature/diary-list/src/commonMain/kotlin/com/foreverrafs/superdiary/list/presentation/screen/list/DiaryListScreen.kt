@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalSharedTransitionApi::class)
 
-package com.foreverrafs.superdiary.list.presentation.screen
+package com.foreverrafs.superdiary.list.presentation.screen.list
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.foreverrafs.superdiary.list.DiaryFilters
 import com.foreverrafs.superdiary.list.DiaryListActions
-import com.foreverrafs.superdiary.list.presentation.DiaryListViewModel
+import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListViewModel
 import org.koin.compose.koinInject
 
 @Composable

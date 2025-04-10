@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.details
+package com.foreverrafs.superdiary.list.presentation
 
 import app.cash.turbine.test
 import assertk.assertThat
@@ -11,9 +11,9 @@ import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetDiaryByIdUseCase
-import com.foreverrafs.superdiary.ui.feature.details.DeleteDiaryState
-import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
-import com.foreverrafs.superdiary.ui.feature.details.DetailsViewState
+import com.foreverrafs.superdiary.list.presentation.screen.detail.DeleteDiaryState
+import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewModel
+import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewState
 import dev.mokkery.answering.returns
 import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any

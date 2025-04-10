@@ -22,7 +22,6 @@ import com.foreverrafs.superdiary.ui.AppViewModel
 import com.foreverrafs.superdiary.ui.feature.changepassword.ChangePasswordViewModel
 import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
 import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
-import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
 import com.foreverrafs.superdiary.ui.feature.favorites.FavoriteViewModel
 import org.koin.core.module.Module
@@ -40,7 +39,6 @@ internal val screensModule: Module = module {
     viewModelOf(::FavoriteViewModel)
     viewModelOf(::DiaryChatViewModel)
     viewModelOf(::RegisterScreenViewModel)
-    viewModelOf(::DetailsViewModel)
     viewModelOf(::LoginScreenViewModel)
     viewModelOf(::AppViewModel)
     viewModelOf(::PasswordResetViewModel)

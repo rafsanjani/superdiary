@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.details
+package com.foreverrafs.superdiary.list.presentation.screen.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

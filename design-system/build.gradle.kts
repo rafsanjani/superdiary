@@ -22,6 +22,7 @@ kotlin {
                 api("org.jetbrains.compose.ui:ui-backhandler:1.8.0-alpha04")
                 implementation(libs.coil3.compose)
                 implementation(libs.coil3.compose.core)
+                implementation(libs.jetbrains.navigation.compose)
                 implementation(libs.coil3.network.ktor)
                 implementation(libs.coil3.multiplatform)
                 implementation(libs.ktor.client.core)
