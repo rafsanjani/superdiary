@@ -24,7 +24,6 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(projects.core.logging)
             implementation(libs.jetbrains.navigation.compose)
@@ -39,9 +38,9 @@ kotlin {
             implementation(projects.core.location)
             implementation(projects.sharedData)
             implementation(projects.core.database)
-            implementation("org.mobilenativefoundation.store:store5:5.1.0-alpha06")
-            implementation("org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
+            implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(projects.designSystem)
+            implementation(libs.kotlinx.serialization.json)
         }
 
         commonTest.dependencies {
