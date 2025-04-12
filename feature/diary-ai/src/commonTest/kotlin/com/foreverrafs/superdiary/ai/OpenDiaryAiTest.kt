@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.ai
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isNotEmpty
+import assertk.assertions.isNotNull
 import com.aallam.openai.api.chat.ChatChoice
 import com.aallam.openai.api.chat.ChatChunk
 import com.aallam.openai.api.chat.ChatCompletion
@@ -89,7 +90,7 @@ class OpenDiaryAiTest {
         everySuspend { openAI.chatCompletion(any(), any()) }.returns(chatCompletion)
 
         val response = openDiaryAI.queryDiaries(emptyList())
-        assertThat(response).isNotEmpty()
+        assertThat(response).isNotNull()
     }
 
     @Test

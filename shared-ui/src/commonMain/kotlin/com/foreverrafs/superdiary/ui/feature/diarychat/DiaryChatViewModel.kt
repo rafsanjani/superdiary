@@ -107,6 +107,15 @@ class DiaryChatViewModel(
         logger.d(TAG) { "queryDiaries: Querying all diaries for: $query" }
 
         val responseContent = diaryAI.queryDiaries(messages = updatedMessages)
+
+        // There was an error generating the response
+        if (responseContent == null) {
+            _viewState.updateRespondingState(
+                isResponding = false,
+            )
+            return@launch
+        }
+
         val diaryAIResponse = DiaryChatMessage.DiaryAI(responseContent)
 
         val finalMessages = updatedMessages + diaryAIResponse
@@ -152,7 +161,13 @@ class DiaryChatViewModel(
             isResponding: Boolean,
             messages: List<DiaryChatMessage>,
         ) {
-            update { it.copy(isResponding = isResponding, messages = messages) }
+            update { it.copy(isResponding = isResponding, messages = it.messages + messages) }
+        }
+
+        private fun MutableStateFlow<DiaryChatViewState>.updateRespondingState(
+            isResponding: Boolean,
+        ) {
+            update { it.copy(isResponding = isResponding) }
         }
     }
 }

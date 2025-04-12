@@ -5,9 +5,6 @@ pluginManagement {
         mavenCentral()
         google()
         gradlePluginPortal()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
-        maven("https://jitpack.io")
         mavenLocal()
     }
     includeBuild("build-logic")
@@ -17,7 +14,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven("https://jitpack.io")
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
         mavenLocal()
@@ -26,12 +22,8 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
             from("io.github.rafsanjani:versions:2025.04.06")
-            version("compose-multiplatform", "1.8.0-alpha03")
-            // Because the all versions newer than this do not play well with compose 1.8.0-alpha03
-            version("richTextEditor", "1.0.0-rc09")
-            version("compose-plugin", "2.1.20-RC")
-            version("kotlin", "2.1.20-RC")
-            version("ksp", "2.1.20-RC-1.0.31")
+            version("compose-multiplatform", "1.8.0-beta02")
+            version("richTextEditor", "1.0.0-rc12")
         }
     }
 }

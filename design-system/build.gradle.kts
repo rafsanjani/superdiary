@@ -13,13 +13,13 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(compose.components.resources)
-                implementation(compose.material3)
                 implementation(compose.foundation)
                 implementation(compose.materialIconsExtended)
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
                 implementation(compose.components.uiToolingPreview)
-                api("org.jetbrains.compose.ui:ui-backhandler:1.8.0-alpha04")
+                api("org.jetbrains.compose.ui:ui-backhandler:1.8.0-beta02")
+                api("org.jetbrains.compose.material3:material3:1.8.0-alpha03")
                 implementation(libs.coil3.compose)
                 implementation(libs.coil3.compose.core)
                 implementation(libs.jetbrains.navigation.compose)

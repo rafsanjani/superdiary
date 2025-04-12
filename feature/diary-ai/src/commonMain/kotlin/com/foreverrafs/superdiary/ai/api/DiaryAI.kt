@@ -12,5 +12,5 @@ interface DiaryAI {
     fun generateSummary(diaries: List<Diary>): Flow<String>
     suspend fun queryDiaries(
         messages: List<DiaryChatMessage>,
-    ): String
+    ): String?
 }

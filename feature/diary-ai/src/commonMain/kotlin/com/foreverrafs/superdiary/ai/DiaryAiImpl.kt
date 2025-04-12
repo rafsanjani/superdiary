@@ -112,18 +112,23 @@ class DiaryAiImpl(
 
     override suspend fun queryDiaries(
         messages: List<DiaryChatMessage>,
-    ): String {
+    ): String? {
         val request = ChatCompletionRequest(
             model = ModelId(GPT_MODEL),
             messages = messages.map { it.toNetworkChatMessage() },
         )
 
-        return openAI.chatCompletion(request)
-            .choices
-            .firstOrNull()
-            ?.message
-            ?.content
-            .orEmpty()
+        return try {
+            openAI.chatCompletion(request)
+                .choices
+                .firstOrNull()
+                ?.message
+                ?.content
+                .orEmpty()
+        } catch (e: Exception) {
+            logger.e(TAG, e)
+            null
+        }
     }
 
     companion object {

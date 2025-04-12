@@ -24,7 +24,6 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(projects.core.logging)
             implementation(libs.kotlinx.coroutines.test)
@@ -34,7 +33,7 @@ kotlin {
             implementation(projects.core.authentication)
             implementation(projects.commonUtils)
             implementation(projects.sharedData)
-            implementation("org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
+            implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(projects.designSystem)
         }
 
