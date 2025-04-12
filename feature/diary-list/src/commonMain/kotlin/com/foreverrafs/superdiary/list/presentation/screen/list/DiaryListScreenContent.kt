@@ -98,7 +98,6 @@ import com.foreverrafs.superdiary.list.presentation.components.DiaryFilterSheet
 import com.foreverrafs.superdiary.list.presentation.components.DiaryHeader
 import com.foreverrafs.superdiary.list.presentation.components.DiarySearchBar
 import com.foreverrafs.superdiary.list.presentation.components.DiarySelectionModifierBar
-import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListViewState
 import com.foreverrafs.superdiary.utils.groupByDate
 import com.foreverrafs.superdiary.utils.toDate
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
@@ -261,7 +260,7 @@ fun DiaryListScreenContent(
  * @param onDeleteDiaries Delete the selected diaries from the list diaries
  * @param clock This is used to control the time/date for diary groupings
  * @param showSearchBar Determines whether the search/selection modifier
- *    bar will be shown. This is hidden in favorite screen it otherwise.
+ *    bar will be shown. This is hidden in favorite screen.
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -626,7 +625,15 @@ fun DiaryItem(
                 .zIndex(.9f)
                 .fillMaxWidth()
                 .offset {
-                    IntOffset(x = state.requireOffset().roundToInt(), 0)
+                    IntOffset(
+                        // Workaround for offset getting read before being initialized bug in anchoreddraggable
+                        x = if (state.offset.isNaN()) {
+                            0
+                        } else {
+                            state.offset.roundToInt()
+                        },
+                        y = 0,
+                    )
                 },
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceVariant,
