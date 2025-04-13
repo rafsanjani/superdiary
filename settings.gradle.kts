@@ -21,7 +21,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2025.04.06")
+            from("io.github.rafsanjani:versions:2025.04.13")
             version("compose-multiplatform", "1.8.0-beta02")
             version("richTextEditor", "1.0.0-rc12")
         }
