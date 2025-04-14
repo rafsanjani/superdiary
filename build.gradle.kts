@@ -1,7 +1,7 @@
 import javax.xml.parsers.DocumentBuilderFactory
 
 plugins {
-    id("org.jetbrains.compose.hot-reload") version "1.0.0-alpha04" apply false
+    id("org.jetbrains.compose.hot-reload") version "1.0.0-alpha05" apply false
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.android) apply false
