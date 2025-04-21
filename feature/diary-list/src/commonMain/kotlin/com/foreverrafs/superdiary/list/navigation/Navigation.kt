@@ -4,6 +4,7 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.foreverrafs.superdiary.design.style.animatedComposable
@@ -17,6 +18,8 @@ inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
     noinline onAddEntry: () -> Unit,
     noinline onProfileClick: () -> Unit,
 ) {
+    val baseUrl = "https://api.nebulainnova.co.uk"
+
     navigation<T>(startDestination = DiaryListRoute.DiaryListScreen) {
         animatedComposable<DiaryListRoute.DiaryListScreen> {
             DiaryListScreen(
@@ -32,7 +35,13 @@ inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
             )
         }
 
-        animatedComposable<DiaryListRoute.DetailScreen> { backstackEntry ->
+        animatedComposable<DiaryListRoute.DetailScreen>(
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "$baseUrl/details/{diaryId}"
+                },
+            ),
+        ) { backstackEntry ->
             val diaryId: String = backstackEntry.toRoute<DiaryListRoute.DetailScreen>().diaryId
 
             DetailScreen(

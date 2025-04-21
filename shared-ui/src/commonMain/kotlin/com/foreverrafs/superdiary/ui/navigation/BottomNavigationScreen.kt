@@ -19,14 +19,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.superdiary.dashboard.screen.DashboardTab
 import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
-import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardTab
 import com.foreverrafs.superdiary.ui.feature.diarychat.screen.DiaryChatTab
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteTab
 
@@ -38,15 +37,17 @@ import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteTab
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun BottomNavigationScreen(
-    rootNavController: NavHostController,
     userInfo: UserInfo?,
     onProfileClick: () -> Unit,
+    onAddEntry: () -> Unit,
+    onSeeAll: () -> Unit,
+    onDiaryClick: (diaryId: Long) -> Unit,
     animatedContentScope: AnimatedContentScope,
     sharedTransitionScope: SharedTransitionScope,
     modifier: Modifier = Modifier,
 ) {
     // This nav controller is used to navigate between the tabs
-    val tabNavController = rememberNavController()
+    val navController = rememberNavController()
 
     // This snackbar host state is used to show snackbars on the main screen
     val snackbarHostState = remember { SnackbarHostState() }
@@ -62,7 +63,7 @@ fun BottomNavigationScreen(
             )
         },
         bottomBar = {
-            SuperDiaryBottomBar(tabNavController)
+            SuperDiaryBottomBar(navController)
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { contentPadding ->
@@ -74,20 +75,22 @@ fun BottomNavigationScreen(
             color = MaterialTheme.colorScheme.background,
             content = {
                 NavHost(
-                    navController = tabNavController,
+                    navController = navController,
                     startDestination = BottomNavigationRoute.DashboardTab,
                 ) {
                     animatedComposable<BottomNavigationRoute.DashboardTab> {
                         DashboardTab(
-                            navController = rootNavController,
                             snackbarHostState = snackbarHostState,
+                            onAddEntry = onAddEntry,
+                            onSeeAll = onSeeAll,
+                            onDiaryClick = onDiaryClick,
                         )
                     }
 
                     animatedComposable<BottomNavigationRoute.FavoriteTab> {
                         FavoriteTab(
                             snackbarHostState = snackbarHostState,
-                            navController = rootNavController,
+                            onFavoriteClick = onDiaryClick,
                         )
                     }
 

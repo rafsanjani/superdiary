@@ -124,20 +124,30 @@ include(":design-system")
 include(":androidApp:benchmark")
 include(":shared-data")
 include(":shared-ui")
+
+// core project modules
 include(":core:authentication")
 include(":core:analytics")
 include(":core:location")
+include(":core:ui-components")
 include(":core:logging")
-include(":common-utils")
-include(":core:sync")
-include(":common-test")
+include(":core:database-test")
 include(":core:secrets")
 include(":core:database")
-include(":core:database-test")
+include(":core:sync")
+
+// common components shared by other modules
+include(":common-utils")
+include(":common-test")
 include(":desktopApp")
+
+// feature modules, a feature is something a user can directly interact with
 include(":feature:diary-ai")
 include(":feature:diary-profile")
 include(":feature:diary-auth")
 include(":feature:diary-list")
+include(":feature:diary-dashboard")
+
+// annotation processor for datasore preferences
 include(":preferences:annotation")
 include(":preferences:processor")

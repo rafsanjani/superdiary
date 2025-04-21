@@ -27,7 +27,7 @@ internal inline fun <reified T : Any> NavGraphBuilder.changePasswordNavigation(
         animatedComposable<ChangePasswordRoute.PasswordChangeSuccessScreen> {
             ChangePasswordSuccessScreen(
                 onPrimaryButtonClick = {
-                    navController.navigate(AppRoute.BottomNavigationScreen(null)) {
+                    navController.navigate(AppRoute.BottomNavigationNavHost(null)) {
                         popUpTo(navController.graph.startDestinationRoute.orEmpty()) {
                             inclusive = true
                         }

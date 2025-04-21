@@ -20,18 +20,15 @@ sealed interface AppRoute {
     data object RegistrationConfirmationScreen : AppRoute
 
     @Serializable
-    data class BottomNavigationScreen(
+    data class BottomNavigationNavHost(
         val userInfo: UserInfo?,
     ) : AppRoute
-
-    @Serializable
-    data class DetailScreen(val diaryId: String) : AppRoute
 
     @Serializable
     data object CreateDiaryScreen : AppRoute
 
     @Serializable
-    data object DiaryListScreen : AppRoute
+    data object DiaryListNavHost : AppRoute
 
     @Serializable
     data object ChangePasswordNavHost : AppRoute

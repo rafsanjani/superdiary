@@ -1,20 +1,20 @@
-package com.foreverrafs.superdiary.ui.feature.dashboard.screen
+package com.foreverrafs.superdiary.dashboard.screen
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.navigation.NavHostController
-import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
-import com.foreverrafs.superdiary.ui.navigation.AppRoute
+import com.foreverrafs.superdiary.dashboard.DashboardViewModel
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DashboardTab(
-    navController: NavHostController,
     snackbarHostState: SnackbarHostState,
+    onAddEntry: () -> Unit,
+    onSeeAll: () -> Unit,
+    onDiaryClick: (diaryId: Long) -> Unit,
 ) {
     val screenModel: DashboardViewModel = koinViewModel()
     val screenState by screenModel.state.collectAsState()
@@ -22,12 +22,8 @@ fun DashboardTab(
 
     DashboardScreenContent(
         state = screenState,
-        onAddEntry = {
-            navController.navigate(AppRoute.CreateDiaryScreen)
-        },
-        onSeeAll = {
-            navController.navigate(AppRoute.DiaryListScreen)
-        },
+        onAddEntry = onAddEntry,
+        onSeeAll = onSeeAll,
         onToggleFavorite = {
             coroutineScope.launch {
                 if (screenModel.toggleFavorite(it)) {
@@ -35,13 +31,7 @@ fun DashboardTab(
                 }
             }
         },
-        onDiaryClick = { diary ->
-            diary.id?.let {
-                navController.navigate(
-                    AppRoute.DetailScreen(it.toString()),
-                )
-            }
-        },
+        onDiaryClick = onDiaryClick,
         onDisableBiometricAuth = {
             screenModel.onUpdateSettings {
                 it.copy(

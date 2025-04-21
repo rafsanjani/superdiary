@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.dashboard.screen
+package com.foreverrafs.superdiary.dashboard.screen
 
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateIntAsState
@@ -45,14 +45,14 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.components.diarylist.DiaryItem
 import com.foreverrafs.superdiary.common.utils.format
 import com.foreverrafs.superdiary.core.location.Location
+import com.foreverrafs.superdiary.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.design.components.ConfirmBiometricAuthDialog
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
-import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryItem
-import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.utils.toDate
 import com.valentinilk.shimmer.shimmer
 import kotlin.random.Random
@@ -61,16 +61,16 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import superdiary.shared_ui.generated.resources.Res
-import superdiary.shared_ui.generated.resources.label_add_entry
-import superdiary.shared_ui.generated.resources.label_button_retry
-import superdiary.shared_ui.generated.resources.label_button_show_all
-import superdiary.shared_ui.generated.resources.label_entries
-import superdiary.shared_ui.generated.resources.label_glance_header_best_streak
-import superdiary.shared_ui.generated.resources.label_glance_header_latest_entries
-import superdiary.shared_ui.generated.resources.label_glance_header_streak
-import superdiary.shared_ui.generated.resources.label_glance_header_weekly_summary
-import superdiary.shared_ui.generated.resources.label_weekly_summary_error
+import superdiary.feature.diary_dashboard.generated.resources.Res
+import superdiary.feature.diary_dashboard.generated.resources.label_add_entry
+import superdiary.feature.diary_dashboard.generated.resources.label_button_retry
+import superdiary.feature.diary_dashboard.generated.resources.label_button_show_all
+import superdiary.feature.diary_dashboard.generated.resources.label_entries
+import superdiary.feature.diary_dashboard.generated.resources.label_glance_header_best_streak
+import superdiary.feature.diary_dashboard.generated.resources.label_glance_header_latest_entries
+import superdiary.feature.diary_dashboard.generated.resources.label_glance_header_streak
+import superdiary.feature.diary_dashboard.generated.resources.label_glance_header_weekly_summary
+import superdiary.feature.diary_dashboard.generated.resources.label_weekly_summary_error
 
 private const val LATEST_ENTRIES_ID = "latestentries"
 private const val AT_A_GLANCE_ID = "ataglance"
@@ -86,7 +86,7 @@ fun DashboardScreenContent(
     onToggleGlanceCard: () -> Unit,
     onSeeAll: () -> Unit,
     onEnableBiometric: () -> Unit,
-    onDiaryClick: (diary: Diary) -> Unit,
+    onDiaryClick: (diaryId: Long) -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -163,7 +163,7 @@ private fun dashboardItems(
     onAddEntry: () -> Unit,
     onSeeAll: () -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
-    onDiaryClicked: (diary: Diary) -> Unit,
+    onDiaryClicked: (diaryId: Long) -> Unit,
 ): SnapshotStateList<DashboardSection> = mutableStateListOf<DashboardSection>().apply {
     if (state.showAtaGlance == true) {
         add(
@@ -237,7 +237,7 @@ private fun dashboardPlaceholderItems(): SnapshotStateList<DashboardSection> =
             DashboardSection(
                 content = {
                     AtAGlance(
-                        modifier = Modifier.shimmer(),
+                        modifier = Modifier.Companion.shimmer(),
                         state = DashboardViewModel.DashboardScreenState.Content(
                             latestEntries = emptyList(),
                             totalEntries = 0,
@@ -263,7 +263,7 @@ private fun dashboardPlaceholderItems(): SnapshotStateList<DashboardSection> =
             DashboardSection(
                 content = { onDismiss ->
                     WeeklySummaryCard(
-                        modifier = Modifier.shimmer()
+                        modifier = Modifier.Companion.shimmer()
                             .animateItem(fadeInSpec = null, fadeOutSpec = null)
                             .fillMaxWidth()
                             .heightIn(max = 200.dp, min = 150.dp),
@@ -280,7 +280,7 @@ private fun dashboardPlaceholderItems(): SnapshotStateList<DashboardSection> =
             DashboardSection(
                 content = {
                     LatestEntries(
-                        modifier = Modifier.shimmer()
+                        modifier = Modifier.Companion.shimmer()
                             .animateItem(
                                 fadeInSpec = null,
                                 fadeOutSpec = null,
@@ -423,7 +423,7 @@ private fun LatestEntries(
     diaries: List<Diary>,
     onSeeAll: () -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
-    onDiaryClick: (diary: Diary) -> Unit,
+    onDiaryClick: (diaryId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -456,7 +456,10 @@ private fun LatestEntries(
                     diary = diary,
                     selected = false,
                     inSelectionMode = false,
-                    modifier = Modifier.clickable(onClick = { onDiaryClick(diary) })
+                    modifier = Modifier
+                        .clickable(
+                            onClick = { diary.id?.let { onDiaryClick(it) } },
+                        )
                         .testTag("diary_list_item_$index"),
                     onToggleFavorite = { onToggleFavorite(diary) },
                 )
