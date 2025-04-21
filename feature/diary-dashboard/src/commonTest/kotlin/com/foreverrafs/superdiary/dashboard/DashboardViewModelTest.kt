@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.dashboard
+package com.foreverrafs.superdiary.dashboard
 
 import app.cash.turbine.test
 import assertk.assertThat
@@ -23,7 +23,6 @@ import com.foreverrafs.superdiary.domain.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
-import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.utils.DiarySettings
 import dev.mokkery.answering.returns
 import dev.mokkery.answering.throws

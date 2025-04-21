@@ -19,9 +19,9 @@ import com.foreverrafs.superdiary.list.presentation.screen.list.Empty
 @Composable
 fun FavoriteScreenContent(
     state: FavoriteScreenState,
-    onToggleFavorite: suspend (diary: Diary) -> Boolean,
+    onToggleFavorite: suspend (Diary) -> Boolean,
     snackbarHostState: SnackbarHostState,
-    onFavoriteClick: (diary: Long) -> Unit,
+    onFavoriteClick: (diaryId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (state is FavoriteScreenState.Content) {

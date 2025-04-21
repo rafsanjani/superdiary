@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.dashboard
+package com.foreverrafs.superdiary.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

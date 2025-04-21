@@ -1,0 +1,13 @@
+<resources>
+    <!--  Labels  -->
+    <string name="label_diary_ai">Diary AI:</string>
+    <string name="label_add_entry">Add entry</string>
+    <string name="label_entries">Entries</string>
+    <string name="label_glance_header_streak">Streak 🔥</string>
+    <string name="label_glance_header_best_streak">Best Streak</string>
+    <string name="label_glance_header_weekly_summary">Weekly Summary</string>
+    <string name="label_glance_header_latest_entries">Latest Entries</string>
+    <string name="label_weekly_summary_error">Error generating weekly summary</string>
+    <string name="label_button_retry">Retry</string>
+    <string name="label_button_show_all">Show All</string>
+</resources>

@@ -58,9 +58,7 @@ kotlin {
                 implementation(libs.ktor.client.core)
                 implementation(libs.jetbrains.lifecycle.viewmodel)
                 implementation(libs.jetbrains.lifecycle.runtime.compose)
-                dependencies {
-                    implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
-                }
+                implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
                 implementation(libs.koin.compose.viewmodel)
                 api(projects.core.authentication)
                 api(projects.core.analytics)
@@ -71,6 +69,7 @@ kotlin {
                 implementation(projects.feature.diaryProfile)
                 implementation(projects.feature.diaryAuth)
                 implementation(projects.feature.diaryList)
+                implementation(projects.feature.diaryDashboard)
                 implementation(projects.core.sync)
             }
         }

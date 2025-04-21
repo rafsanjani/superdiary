@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.dashboard
+package com.foreverrafs.superdiary.dashboard
 
 import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.utils.DiarySettings

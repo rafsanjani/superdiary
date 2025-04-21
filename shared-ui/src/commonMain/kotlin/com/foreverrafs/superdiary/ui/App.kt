@@ -25,6 +25,7 @@ import androidx.core.bundle.Bundle
 import androidx.core.uri.UriUtils
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -110,7 +111,7 @@ private fun SuperDiaryNavHost(
                     DeeplinkContainer.LinkType.EmailConfirmation,
                     DeeplinkContainer.LinkType.MagicLink,
                     DeeplinkContainer.LinkType.Registration,
-                    -> AppRoute.BottomNavigationScreen(
+                    -> AppRoute.BottomNavigationNavHost(
                         viewState.userInfo,
                     )
 
@@ -122,7 +123,7 @@ private fun SuperDiaryNavHost(
                         if (viewState.isBiometricAuthEnabled == true) {
                             AppRoute.BiometricAuthScreen
                         } else {
-                            AppRoute.BottomNavigationScreen(viewState.userInfo)
+                            AppRoute.BottomNavigationNavHost(viewState.userInfo)
                         }
                     }
                 }
@@ -150,7 +151,7 @@ private fun SuperDiaryNavHost(
                 BiometricLoginScreen(
                     onBiometricAuthSuccess = {
                         navController.navigate(
-                            AppRoute.BottomNavigationScreen(
+                            AppRoute.BottomNavigationNavHost(
                                 userInfo = null,
                             ),
                         ) {
@@ -168,7 +169,7 @@ private fun SuperDiaryNavHost(
                 LoginScreen(
                     onLoginSuccess = {
                         navController.navigate(
-                            AppRoute.BottomNavigationScreen(
+                            AppRoute.BottomNavigationNavHost(
                                 userInfo = it,
                             ),
                         ) {
@@ -214,10 +215,29 @@ private fun SuperDiaryNavHost(
                 RegistrationConfirmationScreen()
             }
 
-            animatedComposable<AppRoute.BottomNavigationScreen>(
+            animatedComposable<AppRoute.CreateDiaryScreen> {
+                CreateDiaryScreen(
+                    navController = navController,
+                    userInfo = userInfo,
+                    sharedTransitionScope = this@SharedTransitionLayout,
+                    animatedContentScope = this@animatedComposable,
+                )
+            }
+
+            // TODO: Move all these navigation events into the diary list module
+            diaryListNavigation<AppRoute.DiaryListNavHost>(
+                navController = navController,
+                sharedTransitionScope = this@SharedTransitionLayout,
+                onAddEntry = {
+                    navController.navigate(route = AppRoute.CreateDiaryScreen)
+                },
+                onProfileClick = { navController.navigate(AppRoute.ProfileScreen) },
+            )
+
+            animatedComposable<AppRoute.BottomNavigationNavHost>(
                 typeMap = mapOf(typeOf<UserInfo?>() to UserInfoNavType),
             ) {
-                val route = it.toRoute<AppRoute.BottomNavigationScreen>()
+                val route = it.toRoute<AppRoute.BottomNavigationNavHost>()
                 val scope = rememberCoroutineScope()
 
                 // Sync can only happen after we are logged in
@@ -231,34 +251,28 @@ private fun SuperDiaryNavHost(
                 }
 
                 BottomNavigationScreen(
-                    rootNavController = navController,
                     onProfileClick = {
                         navController.navigate(AppRoute.ProfileScreen)
                     },
                     userInfo = route.userInfo,
                     animatedContentScope = this@animatedComposable,
                     sharedTransitionScope = this@SharedTransitionLayout,
+                    onAddEntry = {
+                        navController.navigate(AppRoute.CreateDiaryScreen)
+                    },
+                    onSeeAll = {
+                        navController.navigate(AppRoute.DiaryListNavHost)
+                    },
+                    onDiaryClick = {
+                        navController.navigate(
+                            request = NavDeepLinkRequest.Builder.fromUri(
+                                UriUtils.parse("https://api.nebulainnova.co.uk/details/$it"),
+                            )
+                                .build(),
+                        )
+                    },
                 )
             }
-
-            animatedComposable<AppRoute.CreateDiaryScreen> {
-                CreateDiaryScreen(
-                    navController = navController,
-                    userInfo = userInfo,
-                    sharedTransitionScope = this@SharedTransitionLayout,
-                    animatedContentScope = this@animatedComposable,
-                )
-            }
-
-            // TODO: Move all these navigation events into the diary list module
-            diaryListNavigation<AppRoute.DiaryListScreen>(
-                navController = navController,
-                sharedTransitionScope = this@SharedTransitionLayout,
-                onAddEntry = {
-                    navController.navigate(route = AppRoute.CreateDiaryScreen)
-                },
-                onProfileClick = { navController.navigate(AppRoute.ProfileScreen) },
-            )
 
             changePasswordNavigation<AppRoute.ChangePasswordNavHost>(
                 navController = navController,
