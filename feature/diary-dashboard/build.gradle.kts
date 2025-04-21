@@ -51,13 +51,17 @@ kotlin {
             implementation(projects.core.uiComponents)
         }
 
-        commonTest.dependencies {
-            implementation(libs.junit)
-            implementation(projects.core.databaseTest)
-            implementation(libs.kotlinx.coroutines.test)
-            implementation(libs.turbine)
-            implementation(projects.commonTest)
-            implementation(libs.assertk.common)
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(projects.commonTest)
+                implementation(libs.junit)
+                implementation(libs.koin.test)
+                implementation(libs.kotlinx.coroutines.test)
+                implementation(libs.turbine)
+                implementation(projects.core.databaseTest)
+                implementation(libs.assertk.common)
+            }
         }
     }
 }

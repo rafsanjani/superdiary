@@ -27,6 +27,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -62,7 +63,7 @@ import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.utils.toDate
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
-import com.mohamedrejeb.richeditor.ui.material.RichText
+import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlin.math.roundToInt
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -193,6 +194,7 @@ fun DiaryItem(
                     textAlign = TextAlign.Start,
                     maxLines = 1,
                     state = state,
+                    color = LocalContentColor.current,
                 )
             }
         }

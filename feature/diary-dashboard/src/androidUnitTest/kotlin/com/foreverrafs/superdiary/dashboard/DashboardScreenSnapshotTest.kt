@@ -1,13 +1,12 @@
-package com.foreverrafs.superdiary.ui
+package com.foreverrafs.superdiary.dashboard
 
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.common.paparazzi.SnapshotDevice
 import com.foreverrafs.superdiary.core.location.Location
+import com.foreverrafs.superdiary.dashboard.screen.DashboardScreenContent
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
-import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
-import com.foreverrafs.superdiary.ui.feature.dashboard.screen.DashboardScreenContent
 import com.foreverrafs.superdiary.utils.toDate
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
@@ -23,7 +22,7 @@ class DashboardScreenSnapshotTest(
 ) {
     private val testClock = object : Clock {
         // 2023-11-10
-        override fun now(): Instant = Instant.parse("2023-11-10T00:00:00.850951Z")
+        override fun now(): Instant = Instant.Companion.parse("2023-11-10T00:00:00.850951Z")
     }
 
     @get:Rule
@@ -44,7 +43,7 @@ class DashboardScreenSnapshotTest(
                                 entry = "<strong>Awesome</strong> Diary",
                                 date = testClock.now(),
                                 isFavorite = false,
-                                location = Location.Empty,
+                                location = Location.Companion.Empty,
                             )
                         },
                         totalEntries = 3,
@@ -89,7 +88,7 @@ class DashboardScreenSnapshotTest(
                                 entry = "<strong>Awesome</strong> Diary",
                                 date = testClock.now(),
                                 isFavorite = false,
-                                location = Location.Empty,
+                                location = Location.Companion.Empty,
                             )
                         },
                         totalEntries = 3,
@@ -137,7 +136,7 @@ class DashboardScreenSnapshotTest(
                                 entry = "<strong>Awesome</strong> Diary",
                                 date = testClock.now(),
                                 isFavorite = false,
-                                location = Location.Empty,
+                                location = Location.Companion.Empty,
                             )
                         },
                         totalEntries = 3,
@@ -180,7 +179,7 @@ class DashboardScreenSnapshotTest(
                                 entry = "<strong>Awesome</strong> Diary",
                                 date = testClock.now(),
                                 isFavorite = false,
-                                location = Location.Empty,
+                                location = Location.Companion.Empty,
                             )
                         },
                         3,
