@@ -135,6 +135,7 @@ include(":core:database-test")
 include(":core:secrets")
 include(":core:database")
 include(":core:sync")
+include(":core:diary-ai")
 
 // common components shared by other modules
 include(":common-utils")
@@ -142,7 +143,6 @@ include(":common-test")
 include(":desktopApp")
 
 // feature modules, a feature is something a user can directly interact with
-include(":feature:diary-ai")
 include(":feature:diary-profile")
 include(":feature:diary-auth")
 include(":feature:diary-list")

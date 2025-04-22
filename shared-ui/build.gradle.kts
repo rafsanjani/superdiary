@@ -65,7 +65,7 @@ kotlin {
                 api(projects.core.location)
                 api(projects.core.logging)
                 api(projects.designSystem)
-                implementation(projects.feature.diaryAi)
+                implementation(projects.core.diaryAi)
                 implementation(projects.feature.diaryProfile)
                 implementation(projects.feature.diaryAuth)
                 implementation(projects.feature.diaryList)

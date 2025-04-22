@@ -46,7 +46,7 @@ kotlin {
             implementation(projects.core.logging)
             implementation(projects.sharedData)
             implementation(projects.commonUtils)
-            implementation(projects.feature.diaryAi)
+            implementation(projects.core.diaryAi)
             implementation(projects.core.authentication)
             implementation(projects.core.uiComponents)
         }

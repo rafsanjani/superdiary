@@ -25,8 +25,8 @@ dependencies {
     compileOnly(libs.conventionplugins.android)
     compileOnly(libs.conventionplugins.compose)
     compileOnly(libs.conventionplugins.compose.compiler)
-    compileOnly("com.codingfeline.buildkonfig:buildkonfig-gradle-plugin:0.17.1")
-    compileOnly("com.codingfeline.buildkonfig:buildkonfig-compiler:0.17.1")
+    compileOnly(libs.conventionplugins.buildKonfig.compiler)
+    compileOnly(libs.conventionplugins.buildKonfig.plugin)
 }
 
 gradlePlugin {
