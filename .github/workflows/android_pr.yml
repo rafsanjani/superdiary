@@ -66,17 +66,9 @@ jobs:
             -   name: Snapshot test (shared-ui)
                 run: ./gradlew verifyPaparazziDebug --continue
 
-            -   name: Commit and Push Images to GitHub Pages
+            -   name: Create paparazzi report
                 if: failure()
-                run: ./commit-images.sh
-
-            -   name: Generate snapshot difference markdown
-                if: failure()
-                run: ./gradlew createPaparazziReportComment
-
-            -   name: Print out contents of snapshots.md
-                if: failure()
-                run: cat snapshots.md
+                run: ./create_paparazzi_report.sh
 
             -   name: Comment snapshot difference markdown file on PR
                 uses: thollander/actions-comment-pull-request@v3
@@ -215,7 +207,7 @@ jobs:
                     java-version: '17'
 
             -   name: Setup secrets.properties and Configurations/Release.xcconfig
-                run: ./environments.sh
+                run: ./scripts/environments.sh
 
             -   name: Decode keystore file from secrets
                 run: echo "$STORE_FILE_BASE64" | base64 --decode > keystore
