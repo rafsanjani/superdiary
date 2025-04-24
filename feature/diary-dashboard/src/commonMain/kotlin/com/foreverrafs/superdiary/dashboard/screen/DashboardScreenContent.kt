@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -169,11 +170,7 @@ private fun dashboardItems(
         add(
             DashboardSection(
                 content = {
-                    AtAGlance(
-                        modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null)
-                            .fillMaxWidth(),
-                        state = state,
-                    )
+                    Box(modifier = Modifier.fillMaxWidth().height(100.dp))
                 },
                 id = AT_A_GLANCE_ID,
             ),
