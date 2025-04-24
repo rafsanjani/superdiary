@@ -218,7 +218,6 @@ fun DiaryListScreenContent(
         modifier = modifier,
     ) {
         Box(modifier = Modifier.padding(it)) {
-            Box(modifier = Modifier.size(190.dp).background(color = Color.Blue))
             when (state) {
                 is DiaryListViewState.Content -> {
                     DiaryListContent(

@@ -11,7 +11,6 @@ git commit -m "Upload paparazzi failures"
 git push --force origin "paparazzi-snapshots-$BUILD_NUMBER"
 
 # Create a markdown file containing all the error images
-# Output markdown file
 OUTPUT_FILE="snapshots.md" > "$OUTPUT_FILE"
 
 # Environment variable for the pull request number
