@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.dashboard.screen
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -40,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
@@ -170,7 +172,7 @@ private fun dashboardItems(
         add(
             DashboardSection(
                 content = {
-                    Box(modifier = Modifier.fillMaxWidth().height(100.dp))
+                    Box(modifier = Modifier.fillMaxWidth().height(100.dp).background(color = Color.Green))
                 },
                 id = AT_A_GLANCE_ID,
             ),
