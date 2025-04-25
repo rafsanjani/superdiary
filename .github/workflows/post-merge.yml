@@ -35,7 +35,7 @@ jobs:
                     java-version: '17'
 
             -   name: Setup secrets.properties and Configurations/Release.xcconfig
-                run: ./environments.sh
+                run: ./scripts/environments.sh
 
             -   name: Decode keystore file from secrets
                 run: echo "$STORE_FILE_BASE64" | base64 --decode > keystore
