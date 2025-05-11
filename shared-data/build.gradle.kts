@@ -27,7 +27,6 @@ kotlin {
                 implementation(libs.uuid)
                 implementation(projects.preferences.annotation)
                 implementation(libs.androidx.datastore.preferences)
-                implementation(libs.androidx.datastore.okio)
                 implementation(libs.ktor.client.cio)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.supabase.posgrest)
