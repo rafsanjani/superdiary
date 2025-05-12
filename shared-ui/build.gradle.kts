@@ -45,8 +45,6 @@ kotlin {
                 implementation(libs.uuid)
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
-                implementation(libs.androidx.datastore.preferences)
-                implementation(libs.androidx.datastore.core)
                 implementation(libs.jetbrains.navigation.compose)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(compose.components.uiToolingPreview)
