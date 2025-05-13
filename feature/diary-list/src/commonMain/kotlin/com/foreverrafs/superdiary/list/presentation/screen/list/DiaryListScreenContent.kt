@@ -694,7 +694,8 @@ fun DiaryItem(
         // Selection mode icon
         if (inSelectionMode) {
             val iconModifier = Modifier
-                .align(Alignment.CenterEnd)
+                .zIndex(1f)
+                .align(Alignment.TopEnd)
                 .padding(top = 12.dp, start = 4.dp).size(20.dp)
 
             if (selected) {
