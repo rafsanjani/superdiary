@@ -9,7 +9,7 @@ import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.NoCredentialException
 import com.foreverrafs.superdiary.core.SuperDiarySecret
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import io.github.jan.supabase.SupabaseClient
@@ -37,11 +37,9 @@ class AndroidAuth(
         val request: GetCredentialRequest = GetCredentialRequest
             .Builder()
             .addCredentialOption(
-                GetGoogleIdOption
-                    .Builder()
-                    .setFilterByAuthorizedAccounts(false)
-                    .setServerClientId(SuperDiarySecret.googleServerClientId)
-                    .build(),
+                GetSignInWithGoogleOption.Builder(
+                    serverClientId = SuperDiarySecret.googleServerClientId,
+                ).build(),
             )
             .build()
 
