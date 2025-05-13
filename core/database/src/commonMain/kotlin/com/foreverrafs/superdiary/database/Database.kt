@@ -130,6 +130,7 @@ class Database(
             date = diary.date,
             favorite = diary.isFavorite.asLong(),
             markForDelete = diary.markedForDelete,
+            location = LocationDb.fromString(diary.location),
             isSynced = diary.isSynced,
         )
 
