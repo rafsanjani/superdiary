@@ -8,6 +8,11 @@ import assertk.assertions.isNull
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.preferences.DiaryPreference
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
+import com.foreverrafs.superdiary.data.datasource.LocalDataSource
+import com.foreverrafs.superdiary.database.Database
+import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
+import com.foreverrafs.superdiary.domain.usecase.ClearDiariesUseCase
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewModel
 import com.foreverrafs.superdiary.utils.DiarySettings
 import dev.mokkery.answering.returns
@@ -31,6 +36,7 @@ class ProfileScreenViewModelTest {
 
     private val authApi: AuthApi = mock()
     private val preference: DiaryPreference = mock()
+    private val localDataSource = LocalDataSource(Database(testSuperDiaryDatabase))
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @BeforeTest
@@ -41,6 +47,10 @@ class ProfileScreenViewModelTest {
         profileScreenViewModel = ProfileScreenViewModel(
             authApi = authApi,
             preference = preference,
+            clearDiariesUseCase = ClearDiariesUseCase(
+                dataSource = localDataSource,
+                dispatchers = TestAppDispatchers,
+            ),
         )
     }
 

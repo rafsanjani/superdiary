@@ -44,6 +44,9 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.turbine)
             implementation(libs.assertk.common)
+            implementation(projects.core.databaseTest)
+            implementation(projects.core.database)
+            implementation(projects.commonTest)
         }
     }
 }
