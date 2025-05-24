@@ -47,6 +47,7 @@ import com.foreverrafs.superdiary.auth.reset.SendPasswordResetEmailScreen
 import com.foreverrafs.superdiary.core.sync.Synchronizer
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.design.style.animatedComposable
+import com.foreverrafs.superdiary.list.navigation.DiaryListRoute
 import com.foreverrafs.superdiary.list.navigation.diaryListNavigation
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.feature.changepassword.navigation.changePasswordNavigation
@@ -266,7 +267,7 @@ private fun SuperDiaryNavHost(
                     onDiaryClick = {
                         navController.navigate(
                             request = NavDeepLinkRequest.Builder.fromUri(
-                                UriUtils.parse("https://api.nebulainnova.co.uk/details/$it"),
+                                UriUtils.parse("${DiaryListRoute.DetailScreen.URI_PATH}/$it"),
                             )
                                 .build(),
                         )

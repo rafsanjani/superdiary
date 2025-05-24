@@ -132,7 +132,7 @@ class DiaryAiImpl(
     }
 
     companion object {
-        private const val GPT_MODEL = "deepseek-chat"
+        private const val GPT_MODEL = "gpt-4o-mini"
         private const val TAG = "OpenDiaryAI"
     }
 }
