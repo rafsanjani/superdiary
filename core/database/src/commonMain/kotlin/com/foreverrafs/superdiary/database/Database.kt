@@ -142,7 +142,9 @@ class Database(
             .asFlow()
             .mapToList(Dispatchers.Main)
 
-    fun clearDiaries() = queries.deleteAll()
+    fun clearDiaries() {
+        queries.deleteAll()
+    }
 
     private fun Boolean.asLong(): Long = if (this) 1 else 0
     private fun Long.asBoolean(): Boolean = this != 0L
@@ -178,7 +180,9 @@ class Database(
         )
     }
 
-    fun clearChatMessages() = queries.clearChat()
+    fun clearChatMessages() {
+        queries.clearChat()
+    }
 
     fun getChatMessages(): Flow<List<DiaryChatMessageDb>> =
         queries.getChatMessages(
