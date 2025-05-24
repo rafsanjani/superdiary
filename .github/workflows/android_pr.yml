@@ -9,7 +9,7 @@ concurrency:
 jobs:
     danger:
         name: Run Danger (Ktlint, android lint)
-        runs-on: macos-14
+        runs-on: self-hosted
         steps:
             -   uses: actions/checkout@v4
             -   name: Create LFS file list
@@ -43,7 +43,7 @@ jobs:
         name: Snapshot test with paparazzi
         env:
             BUILD_NUMBER: ${{github.event.number}}
-        runs-on: macos-14
+        runs-on: self-hosted
         needs: danger
         steps:
             -   uses: actions/checkout@v4
@@ -113,7 +113,7 @@ jobs:
         env:
             SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
             SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
-        runs-on: ubuntu-latest
+        runs-on: self-hosted
         steps:
             -   uses: actions/checkout@v4
             -   name: Set up JDK
@@ -123,7 +123,7 @@ jobs:
                     distribution: 'zulu'
 
             -   name: Run JVM unit tests
-                run: ./gradlew testDebugUnitTest -Pkover koverXmlReport
+                run: echo $ANDROID_HOME && ./gradlew testDebugUnitTest -Pkover koverXmlReport
 
             -   name: Add coverage Report to PR
                 id: jacoco
@@ -176,7 +176,7 @@ jobs:
 
     androidRelease:
         name: Build android app (release)
-        runs-on: macos-14
+        runs-on: self-hosted
         needs: jvmTest
         env:
             SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
@@ -254,7 +254,7 @@ jobs:
 #
 #    iOSReleaseBuild:
 #        name: Build iOS app (Release)
-#        runs-on: macos-14
+#        runs-on: self-hosted
 #        #        needs: iosTest
 #        steps:
 #            -   uses: actions/checkout@v4
