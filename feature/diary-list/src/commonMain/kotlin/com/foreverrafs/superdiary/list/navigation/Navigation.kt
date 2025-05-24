@@ -18,8 +18,6 @@ inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
     noinline onAddEntry: () -> Unit,
     noinline onProfileClick: () -> Unit,
 ) {
-    val baseUrl = "https://api.nebulainnova.co.uk"
-
     navigation<T>(startDestination = DiaryListRoute.DiaryListScreen) {
         animatedComposable<DiaryListRoute.DiaryListScreen> {
             DiaryListScreen(
@@ -38,7 +36,7 @@ inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
         animatedComposable<DiaryListRoute.DetailScreen>(
             deepLinks = listOf(
                 navDeepLink {
-                    uriPattern = "$baseUrl/details/{diaryId}"
+                    uriPattern = DiaryListRoute.DetailScreen.DEEPLINK_URI_PATTERN
                 },
             ),
         ) { backstackEntry ->

@@ -7,5 +7,10 @@ sealed interface DiaryListRoute {
     data object DiaryListScreen : DiaryListRoute
 
     @Serializable
-    data class DetailScreen(val diaryId: String) : DiaryListRoute
+    data class DetailScreen(val diaryId: String) : DiaryListRoute {
+        companion object {
+            const val URI_PATH = "https://api.nebulainnova.co.uk/details"
+            const val DEEPLINK_URI_PATTERN = "$URI_PATH/{diaryId}"
+        }
+    }
 }
