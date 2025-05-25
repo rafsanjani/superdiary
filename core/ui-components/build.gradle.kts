@@ -31,7 +31,7 @@ kotlin {
             implementation(projects.commonUtils)
             implementation(libs.richTextEditor)
             implementation(projects.sharedData)
-            implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
+            implementation("com.valentinilk.shimmer:compose-shimmer:1.3.3")
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(projects.designSystem)
             implementation(projects.commonUtils)
