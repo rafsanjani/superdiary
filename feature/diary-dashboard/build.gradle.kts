@@ -35,7 +35,7 @@ kotlin {
 
             implementation(libs.richTextEditor)
 
-            implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
+            implementation("com.valentinilk.shimmer:compose-shimmer:1.3.3")
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(libs.kotlinx.serialization.json)
 
