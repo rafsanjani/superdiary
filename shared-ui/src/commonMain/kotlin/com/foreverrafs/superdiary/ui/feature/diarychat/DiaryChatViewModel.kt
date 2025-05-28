@@ -10,6 +10,7 @@ import com.foreverrafs.superdiary.ai.domain.usecase.SaveChatMessageUseCase
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.model.toDto
 import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
+import kotlinx.serialization.json.Json
 
 class DiaryChatViewModel(
     private val diaryAI: DiaryAI,
@@ -47,12 +49,12 @@ class DiaryChatViewModel(
             initialValue = DiaryChatViewState(),
         )
 
-    private val diariesFlow: Flow<Result<List<Diary>>> = getAllDiariesUseCase()
-    private val chatMessagesFlow: Flow<List<DiaryChatMessage>> = getChatMessagesUseCase()
+    private val diaries: Flow<Result<List<Diary>>> = getAllDiariesUseCase()
+    private val chatMessages: Flow<List<DiaryChatMessage>> = getChatMessagesUseCase()
 
     private fun loadDiaries() = viewModelScope.launch {
         _viewState.updateLoadingDiaries(true)
-        diariesFlow.collect { result ->
+        diaries.collect { result ->
             when (result) {
                 is Result.Success -> {
                     _viewState.update {
@@ -75,7 +77,7 @@ class DiaryChatViewModel(
     }
 
     private fun updateChatMessageList(diaries: List<Diary>) = viewModelScope.launch {
-        chatMessagesFlow.collect { messages ->
+        chatMessages.collect { messages ->
             val updatedMessages = messages.toMutableList()
             if (updatedMessages.isEmpty()) updatedMessages += welcomeMessage()
             _viewState.update { it.copy(messages = updatedMessages) }
@@ -89,7 +91,14 @@ class DiaryChatViewModel(
             mutableMessages += systemMessage()
         }
         if (diaries.isNotEmpty()) {
-            mutableMessages += DiaryChatMessage.System(diaries.joinToString())
+            // delete the system message if it's there
+            mutableMessages.firstOrNull { it.role == DiaryChatRole.System }?.let {
+                mutableMessages.remove(it)
+            }
+
+            mutableMessages += DiaryChatMessage.System(
+                content = Json.encodeToString(diaries.map { it.toDto() }),
+            )
         }
         _viewState.update { it.copy(messages = mutableMessages) }
     }
@@ -146,7 +155,19 @@ class DiaryChatViewModel(
 
     private fun systemMessage() = DiaryChatMessage.System(
         content = """
-            You are Journal AI. I will provide you a list of journal entries and their dates. You will respond to follow-up questions based on this information. Do not respond to any questions outside the scope of the provided data.
+            You are Journal AI. I will provide you a json list of journal entries. Each entry contains the following fields: entry, date, and location the entry was made at.
+            You will respond to follow-up questions based on this information. Do not respond to any questions outside the scope of the provided data and do not make a reference to the fact that you a list of json entries.
+            Below is a sample structure of the json you are being fed:
+            [
+                {
+                    "entry": "Some entry. \n,
+                    "id": 835,
+                    "date": "2025-05-28T22:54:52.157Z"
+                }
+            ]
+
+            Here are a few things to note. An object in the array represents a single diary entry, you will be given a list of these, probably in the hundreds.
+            You are supposed to analyse all the data in these objects. The entry ids are not relevant.
         """.trimIndent(),
     )
 
