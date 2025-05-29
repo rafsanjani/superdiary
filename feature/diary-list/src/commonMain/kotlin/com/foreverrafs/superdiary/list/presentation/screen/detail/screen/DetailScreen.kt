@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewModel
 import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewState
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -27,7 +27,7 @@ fun DetailScreen(
     animatedContentScpe: AnimatedContentScope,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: DetailsViewModel = koinInject()
+    val viewModel: DetailsViewModel = koinViewModel()
     val viewState by viewModel.detailsViewState.collectAsState()
 
     LaunchedEffect(diaryId) {
