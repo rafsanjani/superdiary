@@ -79,7 +79,6 @@ class DiaryListSnapshotTests(
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
                         onProfileClick = {},
-                        avatarUrl = "",
                     )
                 }
             }
@@ -112,7 +111,6 @@ class DiaryListSnapshotTests(
                         showSearchBar = true,
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
-                        avatarUrl = "",
                         onProfileClick = {},
                         sharedTransitionScope = this,
                         animatedContentScope = this@SuperDiaryPreviewTheme,
@@ -135,7 +133,6 @@ class DiaryListSnapshotTests(
                         showSearchBar = true,
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
-                        avatarUrl = "",
                         onProfileClick = {},
                         sharedTransitionScope = this,
                         animatedContentScope = this@SuperDiaryPreviewTheme,
@@ -158,7 +155,6 @@ class DiaryListSnapshotTests(
                         showSearchBar = true,
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
-                        avatarUrl = "",
                         onProfileClick = {},
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedContentScope = this@SuperDiaryPreviewTheme,
@@ -180,7 +176,6 @@ class DiaryListSnapshotTests(
                         showSearchBar = true,
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
-                        avatarUrl = "",
                         onProfileClick = {},
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedContentScope = this@SuperDiaryPreviewTheme,

@@ -22,7 +22,6 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DiaryListScreen(
-    avatarUrl: String?,
     navController: NavController,
     onAddEntry: () -> Unit,
     onDiaryClick: (id: Long) -> Unit,
@@ -61,7 +60,6 @@ fun DiaryListScreen(
         showSearchBar = true,
         diaryFilters = diaryFilters,
         diaryListActions = diaryListActions,
-        avatarUrl = avatarUrl,
         sharedTransitionScope = sharedTransitionScope,
         animatedContentScope = animatedContentScope,
         onProfileClick = onProfileClick,

@@ -22,7 +22,6 @@ inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
         animatedComposable<DiaryListRoute.DiaryListScreen> {
             DiaryListScreen(
                 navController = navController,
-                avatarUrl = null,
                 onAddEntry = onAddEntry,
                 onDiaryClick = {
                     navController.navigate(DiaryListRoute.DetailScreen(it.toString()))

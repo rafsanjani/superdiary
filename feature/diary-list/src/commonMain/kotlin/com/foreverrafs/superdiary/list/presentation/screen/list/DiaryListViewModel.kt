@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.list.presentation.screen.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
@@ -32,6 +33,7 @@ internal class DiaryListViewModel(
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
     private val updateDiaryUseCase: UpdateDiaryUseCase,
     private val logger: AggregateLogger,
+    private val authApi: AuthApi,
 ) : ViewModel() {
 
     private val filters: MutableStateFlow<DiaryFilters> = MutableStateFlow(DiaryFilters())
@@ -60,8 +62,9 @@ internal class DiaryListViewModel(
             when (result) {
                 is Result.Failure -> DiaryListViewState.Error(result.error)
                 is Result.Success -> DiaryListViewState.Content(
-                    result.data,
-                    true,
+                    diaries = result.data,
+                    filtered = true,
+                    avatarUrl = authApi.currentUserOrNull()?.avatarUrl,
                 )
             }
         }
@@ -70,8 +73,12 @@ internal class DiaryListViewModel(
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Companion.WhileSubscribed(5000),
-            initialValue = DiaryListViewState.Loading,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = DiaryListViewState.Content(
+                diaries = emptyList(),
+                filtered = false,
+                avatarUrl = authApi.currentUserOrNull()?.avatarUrl,
+            ),
         )
 
     fun applyFilter(newFilters: DiaryFilters) {
@@ -115,7 +122,7 @@ internal class DiaryListViewModel(
 
         return when (result) {
             is Result.Failure -> {
-                logger.e(Tag, result.error) {
+                logger.e(tag = Tag, throwable = result.error) {
                     "Error toggling favorite"
                 }
                 false

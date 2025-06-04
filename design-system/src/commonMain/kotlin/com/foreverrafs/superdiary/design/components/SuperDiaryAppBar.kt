@@ -47,7 +47,7 @@ fun SuperDiaryAppBar(
     // workaround for https://issuetracker.google.com/issues/344343033
     var isPlaced by remember { mutableStateOf(false) }
 
-    val sharedElementModifier = with(sharedTransitionScope) {
+    val appBarSharedElementModifier = with(sharedTransitionScope) {
         if (isPlaced) {
             Modifier.sharedElement(
                 sharedContentState = sharedTransitionScope.rememberSharedContentState(
@@ -73,7 +73,7 @@ fun SuperDiaryAppBar(
                         heading()
                     }
                     .then(
-                        sharedElementModifier,
+                        appBarSharedElementModifier,
                     ),
                 style = MaterialTheme.typography.displayLarge,
                 fontWeight = FontWeight.Bold,

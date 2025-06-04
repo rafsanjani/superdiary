@@ -130,7 +130,6 @@ fun DiaryListScreenContent(
     diaryFilters: DiaryFilters,
     showSearchBar: Boolean,
     diaryListActions: DiaryListActions,
-    avatarUrl: String?,
     onProfileClick: () -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
@@ -191,7 +190,7 @@ fun DiaryListScreenContent(
                         )
                     }
                 },
-                avatarUrl = avatarUrl,
+                avatarUrl = (state as? DiaryListViewState.Content)?.avatarUrl,
                 animatedContentScope = animatedContentScope,
                 sharedTransitionScope = sharedTransitionScope,
                 onProfileClick = onProfileClick,
