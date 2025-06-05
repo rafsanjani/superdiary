@@ -56,7 +56,7 @@ kotlin {
                 implementation(libs.ktor.client.core)
                 implementation(libs.jetbrains.lifecycle.viewmodel)
                 implementation(libs.jetbrains.lifecycle.runtime.compose)
-                implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
+                implementation("com.valentinilk.shimmer:compose-shimmer:1.3.3")
                 implementation(libs.koin.compose.viewmodel)
                 api(projects.core.authentication)
                 api(projects.core.analytics)
