@@ -25,6 +25,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.datetime.LocalDate
 
+data class DiaryListScreenModel(
+    val diaries: List<Diary> = emptyList(),
+    val isLoading: Boolean,
+    val isFiltered: Boolean = false,
+    val avatarUrl: String? = null,
+    val error: Throwable? = null,
+)
+
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class DiaryListViewModel(
     getAllDiariesUseCase: GetAllDiariesUseCase,
@@ -38,7 +46,7 @@ internal class DiaryListViewModel(
 
     private val filters: MutableStateFlow<DiaryFilters> = MutableStateFlow(DiaryFilters())
 
-    val state: StateFlow<DiaryListViewState> = filters
+    val state: StateFlow<DiaryListScreenModel> = filters
         .flatMapLatest { filters ->
             if (filters.entry.isNotEmpty() && filters.date != null) {
                 return@flatMapLatest searchByDateAndEntry(
@@ -60,23 +68,29 @@ internal class DiaryListViewModel(
         }
         .map { result ->
             when (result) {
-                is Result.Failure -> DiaryListViewState.Error(result.error)
-                is Result.Success -> DiaryListViewState.Content(
+                is Result.Failure -> DiaryListScreenModel(
+                    error = result.error,
+                    isLoading = false,
+                )
+
+                is Result.Success -> DiaryListScreenModel(
                     diaries = result.data,
-                    filtered = true,
+                    isFiltered = true,
+                    isLoading = false,
                     avatarUrl = authApi.currentUserOrNull()?.avatarUrl,
                 )
             }
         }
         .catch {
-            emit(DiaryListViewState.Error(it))
+            emit(DiaryListScreenModel(error = it, isLoading = false))
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = DiaryListViewState.Content(
+            initialValue = DiaryListScreenModel(
                 diaries = emptyList(),
-                filtered = false,
+                isFiltered = false,
+                isLoading = true,
                 avatarUrl = authApi.currentUserOrNull()?.avatarUrl,
             ),
         )

@@ -56,7 +56,7 @@ fun DiaryListScreen(
 
     DiaryListScreenContent(
         modifier = modifier.fillMaxSize(),
-        state = screenState,
+        screenModel = screenState,
         showSearchBar = true,
         diaryFilters = diaryFilters,
         diaryListActions = diaryListActions,

@@ -3,8 +3,11 @@ package com.foreverrafs.superdiary.list.presentation
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isFalse
-import assertk.assertions.isInstanceOf
+import assertk.assertions.isNotEmpty
+import assertk.assertions.isNotNull
 import assertk.assertions.isTrue
+import com.foreverrafs.auth.AuthApi
+import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
@@ -17,7 +20,6 @@ import com.foreverrafs.superdiary.list.DiaryFilters
 import com.foreverrafs.superdiary.list.domain.repository.DiaryListRepository
 import com.foreverrafs.superdiary.list.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListViewModel
-import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListViewState
 import com.foreverrafs.superdiary.utils.toDate
 import dev.mokkery.answering.returns
 import dev.mokkery.answering.throws
@@ -34,7 +36,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -43,13 +44,23 @@ import kotlinx.datetime.Clock
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiaryListViewModelTest {
 
-    private val testDispatcher = StandardTestDispatcher()
-
     private val dataSource: DataSource = mock<DataSource>()
 
     private lateinit var diaryListViewModel: DiaryListViewModel
 
     private val repository: DiaryListRepository = mock()
+
+    private val authApi: AuthApi = mock {
+        every { currentUserOrNull() }.returns(
+            UserInfo(
+                id = "user-id",
+                name = "user-name",
+                avatarUrl = "",
+                email = "email",
+                uniqueEmail = "unique_email",
+            ),
+        )
+    }
 
     private val today = Clock.System.now()
 
@@ -61,7 +72,7 @@ class DiaryListViewModelTest {
 
     @BeforeTest
     fun setup() {
-        Dispatchers.setMain(testDispatcher)
+        Dispatchers.setMain(TestAppDispatchers.main)
 
         every { dataSource.findByDate(any()) }.returns(
             flowOf(listOf(diary)),
@@ -83,6 +94,7 @@ class DiaryListViewModelTest {
             updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
             deleteDiaryUseCase = DeleteDiaryUseCase(dataSource, TestAppDispatchers),
             logger = AggregateLogger(emptyList()),
+            authApi = authApi,
         )
     }
 
@@ -99,7 +111,7 @@ class DiaryListViewModelTest {
             val state = awaitItem()
             cancelAndIgnoreRemainingEvents()
 
-            assertThat(state).isInstanceOf<DiaryListViewState.Loading>()
+            assertThat(state.isLoading).isTrue()
         }
     }
 
@@ -122,7 +134,7 @@ class DiaryListViewModelTest {
             delay(100)
 
             val state = awaitItem()
-            assertThat(state).isInstanceOf<DiaryListViewState.Error>()
+            assertThat(state.error).isNotNull()
         }
     }
 
@@ -135,7 +147,7 @@ class DiaryListViewModelTest {
             val state = awaitItem()
             cancelAndIgnoreRemainingEvents()
 
-            assertThat(state).isInstanceOf<DiaryListViewState.Content>()
+            assertThat(state.diaries).isNotEmpty()
         }
     }
 
@@ -151,7 +163,7 @@ class DiaryListViewModelTest {
             skipItems(1)
             val state = awaitItem()
 
-            assertThat(state).isInstanceOf<DiaryListViewState.Content>()
+            assertThat(state.diaries).isNotEmpty()
         }
     }
 
@@ -171,7 +183,7 @@ class DiaryListViewModelTest {
 
             val state = awaitItem()
 
-            assertThat(state).isInstanceOf<DiaryListViewState.Content>()
+            assertThat(state.diaries).isNotEmpty()
         }
     }
 
@@ -179,16 +191,17 @@ class DiaryListViewModelTest {
     fun `Filters - Apply filter with entry and date returns Content state`() = runTest {
         diaryListViewModel.state.test {
             diaryListViewModel.applyFilter(
-                DiaryFilters(
+                newFilters = DiaryFilters(
                     entry = "entry",
                     date = today.toDate(),
                 ),
             )
             skipItems(1)
             val state = awaitItem()
+
             cancelAndIgnoreRemainingEvents()
 
-            assertThat(state).isInstanceOf<DiaryListViewState.Content>()
+            assertThat(state.isFiltered).isTrue()
         }
     }
 
