@@ -18,12 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.foreverrafs.superdiary.list.DiaryFilters
 import com.foreverrafs.superdiary.list.DiaryListActions
-import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListViewModel
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DiaryListScreen(
-    avatarUrl: String?,
     navController: NavController,
     onAddEntry: () -> Unit,
     onDiaryClick: (id: Long) -> Unit,
@@ -32,7 +30,7 @@ fun DiaryListScreen(
     onProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val screenModel: DiaryListViewModel = koinInject()
+    val screenModel: DiaryListViewModel = koinViewModel()
     val screenState by screenModel.state.collectAsState()
 
     var diaryFilters by rememberSaveable(stateSaver = DiaryFilters.Companion.Saver) {
@@ -58,11 +56,10 @@ fun DiaryListScreen(
 
     DiaryListScreenContent(
         modifier = modifier.fillMaxSize(),
-        state = screenState,
+        screenModel = screenState,
         showSearchBar = true,
         diaryFilters = diaryFilters,
         diaryListActions = diaryListActions,
-        avatarUrl = avatarUrl,
         sharedTransitionScope = sharedTransitionScope,
         animatedContentScope = animatedContentScope,
         onProfileClick = onProfileClick,

@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -34,7 +34,7 @@ fun CreateDiaryScreen(
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
 ) {
-    val viewModel: CreateDiaryViewModel = koinInject()
+    val viewModel: CreateDiaryViewModel = koinViewModel()
 
     val richTextState = rememberRichTextState()
     val coroutineScope = rememberCoroutineScope()

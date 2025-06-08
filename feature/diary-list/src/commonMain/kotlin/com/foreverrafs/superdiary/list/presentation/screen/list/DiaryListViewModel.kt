@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.list.presentation.screen.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
@@ -24,6 +25,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.datetime.LocalDate
 
+data class DiaryListScreenModel(
+    val diaries: List<Diary> = emptyList(),
+    val isLoading: Boolean,
+    val isFiltered: Boolean = false,
+    val avatarUrl: String? = null,
+    val error: Throwable? = null,
+)
+
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class DiaryListViewModel(
     getAllDiariesUseCase: GetAllDiariesUseCase,
@@ -32,11 +41,12 @@ internal class DiaryListViewModel(
     private val deleteDiaryUseCase: DeleteDiaryUseCase,
     private val updateDiaryUseCase: UpdateDiaryUseCase,
     private val logger: AggregateLogger,
+    private val authApi: AuthApi,
 ) : ViewModel() {
 
     private val filters: MutableStateFlow<DiaryFilters> = MutableStateFlow(DiaryFilters())
 
-    val state: StateFlow<DiaryListViewState> = filters
+    val state: StateFlow<DiaryListScreenModel> = filters
         .flatMapLatest { filters ->
             if (filters.entry.isNotEmpty() && filters.date != null) {
                 return@flatMapLatest searchByDateAndEntry(
@@ -58,20 +68,31 @@ internal class DiaryListViewModel(
         }
         .map { result ->
             when (result) {
-                is Result.Failure -> DiaryListViewState.Error(result.error)
-                is Result.Success -> DiaryListViewState.Content(
-                    result.data,
-                    true,
+                is Result.Failure -> DiaryListScreenModel(
+                    error = result.error,
+                    isLoading = false,
+                )
+
+                is Result.Success -> DiaryListScreenModel(
+                    diaries = result.data,
+                    isFiltered = true,
+                    isLoading = false,
+                    avatarUrl = authApi.currentUserOrNull()?.avatarUrl,
                 )
             }
         }
         .catch {
-            emit(DiaryListViewState.Error(it))
+            emit(DiaryListScreenModel(error = it, isLoading = false))
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Companion.WhileSubscribed(5000),
-            initialValue = DiaryListViewState.Loading,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = DiaryListScreenModel(
+                diaries = emptyList(),
+                isFiltered = false,
+                isLoading = true,
+                avatarUrl = authApi.currentUserOrNull()?.avatarUrl,
+            ),
         )
 
     fun applyFilter(newFilters: DiaryFilters) {
@@ -115,7 +136,7 @@ internal class DiaryListViewModel(
 
         return when (result) {
             is Result.Failure -> {
-                logger.e(Tag, result.error) {
+                logger.e(tag = Tag, throwable = result.error) {
                     "Error toggling favorite"
                 }
                 false
