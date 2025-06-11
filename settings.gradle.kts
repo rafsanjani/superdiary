@@ -21,7 +21,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2025.06.01")
+            from("io.github.rafsanjani:versions:2025.06.08")
             version("richTextEditor", "1.0.0-rc12")
             version("datastore", "1.2.0-alpha02")
         }
