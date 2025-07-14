@@ -26,7 +26,7 @@ interface AuthApi {
 
     suspend fun updatePassword(password: String): Result<Unit>
 
-    suspend fun currentUserOrNull(): UserInfo?
+    fun currentUserOrNull(): UserInfo?
 
     sealed interface SignInStatus {
         data class LoggedIn(val sessionInfo: SessionInfo) : SignInStatus
@@ -40,7 +40,8 @@ interface AuthApi {
     }
 }
 
-open class AuthException(message: String? = null, cause: Throwable? = null) : Exception(message, cause)
+open class AuthException(message: String? = null, cause: Throwable? = null) :
+    Exception(message, cause)
 
 // When the user hasn't enrolled any of the requested credentials onto their device yet
 class NoCredentialsException(message: String) : AuthException(message)

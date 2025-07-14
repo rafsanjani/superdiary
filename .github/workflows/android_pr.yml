@@ -39,6 +39,24 @@ jobs:
                 env:
                     DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    dependency_guard:
+        name: Check unintended dependency updates
+        needs: danger
+        env:
+            SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
+            SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v4
+            -   name: Set up JDK
+                uses: actions/setup-java@v4
+                with:
+                    java-version: '17'
+                    distribution: 'zulu'
+
+            -   name: Run Dependency Guard
+                run: ./gradlew dependencyGuard
+
     snapshot:
         name: Snapshot test with paparazzi
         env:

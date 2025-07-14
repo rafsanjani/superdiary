@@ -193,7 +193,7 @@ class DefaultSupabaseAuth(
         Result.failure(e)
     }
 
-    override suspend fun currentUserOrNull(): UserInfo? =
+    override fun currentUserOrNull(): UserInfo? =
         client.auth.currentUserOrNull()?.toUserInfo()
 
     @OptIn(SupabaseInternal::class)

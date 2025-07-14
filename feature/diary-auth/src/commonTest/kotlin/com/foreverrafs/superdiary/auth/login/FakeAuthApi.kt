@@ -49,7 +49,7 @@ class FakeAuthApi(
     override suspend fun signIn(email: String, password: String): AuthApi.SignInStatus =
         signInResult
 
-    override suspend fun currentUserOrNull(): UserInfo? =
+    override fun currentUserOrNull(): UserInfo? =
         (signInResult as? AuthApi.SignInStatus.LoggedIn)?.sessionInfo?.userInfo
 
     override suspend fun register(

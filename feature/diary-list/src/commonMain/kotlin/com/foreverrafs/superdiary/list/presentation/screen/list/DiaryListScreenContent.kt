@@ -126,11 +126,10 @@ val DiaryListActions.Companion.Empty: DiaryListActions
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun DiaryListScreenContent(
-    state: DiaryListViewState,
+    screenModel: DiaryListScreenModel,
     diaryFilters: DiaryFilters,
     showSearchBar: Boolean,
     diaryListActions: DiaryListActions,
-    avatarUrl: String?,
     onProfileClick: () -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
@@ -191,7 +190,7 @@ fun DiaryListScreenContent(
                         )
                     }
                 },
-                avatarUrl = avatarUrl,
+                avatarUrl = screenModel.avatarUrl,
                 animatedContentScope = animatedContentScope,
                 sharedTransitionScope = sharedTransitionScope,
                 onProfileClick = onProfileClick,
@@ -199,7 +198,7 @@ fun DiaryListScreenContent(
         },
         floatingActionButton = {
             // Only show FAB when there is an entry
-            if ((state as? DiaryListViewState.Content)?.diaries?.isEmpty() == true) {
+            if (screenModel.diaries.isEmpty()) {
                 return@Scaffold
             }
             FloatingActionButton(
@@ -218,29 +217,30 @@ fun DiaryListScreenContent(
         modifier = modifier,
     ) {
         Box(modifier = Modifier.padding(it)) {
-            when (state) {
-                is DiaryListViewState.Content -> {
-                    DiaryListContent(
-                        modifier = Modifier.fillMaxSize(),
-                        diaries = state.diaries,
-                        isFiltered = state.filtered,
-                        showSearchBar = showSearchBar,
-                        onAddEntry = diaryListActions.onAddEntry,
-                        diaryListActions = diaryListActions,
-                        selectedIds = selectedIds,
-                        diaryFilters = diaryFilters,
-                        clock = clock,
-                        snackbarHostState = snackbarHostState,
-                    )
-                }
-
-                is DiaryListViewState.Error ->
-                    ErrorContent(
-                        modifier = Modifier.fillMaxSize(),
-                    )
-
-                is DiaryListViewState.Loading -> LoadingContent(modifier = Modifier.fillMaxSize())
+            if (screenModel.isLoading) {
+                LoadingContent(modifier = Modifier.fillMaxSize())
+                return@Box
             }
+
+            if (screenModel.error != null) {
+                ErrorContent(
+                    modifier = Modifier.fillMaxSize(),
+                )
+                return@Box
+            }
+
+            DiaryListContent(
+                modifier = Modifier.fillMaxSize(),
+                diaries = screenModel.diaries,
+                isFiltered = screenModel.isFiltered,
+                showSearchBar = showSearchBar,
+                onAddEntry = diaryListActions.onAddEntry,
+                diaryListActions = diaryListActions,
+                selectedIds = selectedIds,
+                diaryFilters = diaryFilters,
+                clock = clock,
+                snackbarHostState = snackbarHostState,
+            )
         }
     }
 }
@@ -368,7 +368,10 @@ fun DiaryList(
                             diary = diary,
                             selected = diary.id in selectedIds,
                             inSelectionMode = inSelectionMode,
-                            modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null)
+                            modifier = Modifier.animateItem(
+                                fadeInSpec = null,
+                                fadeOutSpec = null,
+                            )
                                 .combinedClickable(
                                     onClick = {
                                         if (inSelectionMode) {

@@ -18,7 +18,7 @@ kotlin {
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
                 implementation(compose.components.uiToolingPreview)
-                api("org.jetbrains.compose.ui:ui-backhandler:1.8.1")
+                api("org.jetbrains.compose.ui:ui-backhandler:1.8.2")
                 api("org.jetbrains.compose.material3:material3:1.8.0-alpha03")
                 implementation(libs.coil3.compose)
                 implementation(libs.coil3.compose.core)

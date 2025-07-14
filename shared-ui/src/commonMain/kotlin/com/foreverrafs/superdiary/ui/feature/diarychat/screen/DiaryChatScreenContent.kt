@@ -238,7 +238,7 @@ fun ChatBubble(
                     shape = RoundedCornerShape(4.dp),
                 )
                 .padding(8.dp),
-            style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp, lineHeight = 24.sp),
+            style = MaterialTheme.typography.bodySmall.merge(fontSize = 14.sp, lineHeight = 24.sp),
             color = Color.White,
         )
     }
