@@ -12,6 +12,10 @@ jobs:
         runs-on: self-hosted
         steps:
             -   uses: actions/checkout@v4
+            -   name: Setup Ruby
+                uses: ruby/setup-ruby@v1
+                with:
+                    ruby-version: '3.3'
             -   name: Create LFS file list
                 run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
 
