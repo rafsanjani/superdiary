@@ -21,15 +21,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import androidx.core.bundle.Bundle
-import androidx.core.uri.UriUtils
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavType
+import androidx.navigation.NavUri
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import androidx.savedstate.SavedState
+import androidx.savedstate.read
+import androidx.savedstate.write
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.compose.setSingletonImageLoaderFactory
@@ -267,7 +269,7 @@ private fun SuperDiaryNavHost(
                     onDiaryClick = {
                         navController.navigate(
                             request = NavDeepLinkRequest.Builder.fromUri(
-                                UriUtils.parse("${DiaryListRoute.DetailScreen.URI_PATH}/$it"),
+                                NavUri("${DiaryListRoute.DetailScreen.URI_PATH}/$it"),
                             )
                                 .build(),
                         )
@@ -351,21 +353,28 @@ fun newDiskCache(): DiskCache =
         .build()
 
 object UserInfoNavType : NavType<UserInfo?>(isNullableAllowed = true) {
-    override fun get(bundle: Bundle, key: String): UserInfo? =
-        bundle.getString(key)?.let { Json.decodeFromString(it) }
-
-    override fun parseValue(value: String): UserInfo? {
-        val decodedValue = UriUtils.decode(value)
-        return Json.decodeFromString(decodedValue)
+    override fun put(
+        bundle: SavedState,
+        key: String,
+        value: UserInfo?,
+    ) {
+        bundle.write {
+            putString(
+                key,
+                Json.encodeToString(value),
+            )
+        }
     }
 
-    override fun put(bundle: Bundle, key: String, value: UserInfo?) {
-        bundle.putString(
-            key,
-            Json.encodeToString(value),
-        )
+    override fun get(
+        bundle: SavedState,
+        key: String,
+    ): UserInfo? = bundle.read {
+        Json.decodeFromString(getString(key))
     }
+
+    override fun parseValue(value: String): UserInfo? = Json.decodeFromString(value)
 
     override fun serializeAsValue(value: UserInfo?): String =
-        UriUtils.encode(Json.encodeToString(value))
+        Json.encodeToString(value)
 }
