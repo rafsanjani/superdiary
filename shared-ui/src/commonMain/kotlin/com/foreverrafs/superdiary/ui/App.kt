@@ -21,8 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import androidx.core.bundle.Bundle
-import androidx.core.uri.UriUtils
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDeepLinkRequest
@@ -369,5 +367,5 @@ object UserInfoNavType : NavType<UserInfo?>(isNullableAllowed = true) {
     }
 
     override fun serializeAsValue(value: UserInfo?): String =
-        UriUtils.encode(Json.encodeToString(value))
+        Json.encodeToString(value)
 }
