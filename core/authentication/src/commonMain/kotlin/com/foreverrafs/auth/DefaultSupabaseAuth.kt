@@ -19,6 +19,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
+import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 
@@ -213,9 +214,13 @@ class DefaultSupabaseAuth(
             try {
                 client.auth.parseFragmentAndImportSession(
                     fragment = deeplinkUri?.getFragment().orEmpty(),
-                    onSessionSuccess = {
+                    onFinish = { session ->
                         continuation.resume(
-                            AuthApi.SignInStatus.LoggedIn(it.toSession()),
+                            if (session != null) {
+                                AuthApi.SignInStatus.LoggedIn(session.toSession())
+                            } else {
+                                AuthApi.SignInStatus.Error(Exception("Error logging in"))
+                            },
                         )
                     },
                 )
@@ -254,7 +259,7 @@ class DefaultSupabaseAuth(
 }
 
 internal fun SessionInfoDto.toSession() = SessionInfo(
-    expiresAt = expiresAt,
+    expiresAt = expiresAt.toDeprecatedInstant(),
     accessToken = accessToken,
     refreshToken = refreshToken,
     userInfo = user?.toUserInfo(),

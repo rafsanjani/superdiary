@@ -15,6 +15,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
@@ -69,7 +70,7 @@ class LocalDataSource(private val database: Database) : DataSource {
             second = 59,
         ).toInstant(timeZone)
 
-        return database.findByDateRange(startOfDay, endOfDay).mapToDiary()
+        return database.findByDateRange(startOfDay.toDeprecatedInstant(), endOfDay.toDeprecatedInstant()).mapToDiary()
     }
 
     override suspend fun update(diary: Diary): Int = database.update(diary.toDatabase()).toInt()

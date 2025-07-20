@@ -39,6 +39,7 @@ kotlin {
                 implementation(projects.sharedData)
                 implementation(projects.commonUtils)
                 implementation(libs.kotlin.datetime)
+                implementation("org.jetbrains.androidx.core:core-uri:1.1.0-alpha03")
                 implementation(libs.koin.core)
                 implementation(libs.touchlab.kermit)
                 implementation(libs.koin.compose)
