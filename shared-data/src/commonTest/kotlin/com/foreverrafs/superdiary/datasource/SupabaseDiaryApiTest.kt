@@ -5,6 +5,7 @@ import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
+import co.touchlab.kermit.Logger
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.remote.SupabaseDiaryApi
@@ -32,6 +33,7 @@ class SupabaseDiaryApiTest {
 
     @BeforeTest
     fun setUp() {
+        Logger.setLogWriters(emptyList())
         Dispatchers.setMain(TestAppDispatchers.main)
     }
 
@@ -48,6 +50,10 @@ class SupabaseDiaryApiTest {
             date = Clock.System.now(),
             entry = "Hello world",
         )
+
+        val count = Logger.config.logWriterList
+
+        println(count)
 
         supabaseDiaryApi = SupabaseDiaryApi(
             supabase = createMockedSupabaseClient(

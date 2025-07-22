@@ -20,7 +20,7 @@ android {
         applicationId = "com.foreverrafs.superdiary"
         minSdk = 28
         targetSdk = 35
-        versionCode = 180
+        versionCode = 183
         versionName = "0.0.1"
 
         val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_ANDROID") ?: ""
@@ -161,11 +161,13 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.androidx.core)
     implementation(libs.supabase.compose.auth)
-    implementation(libs.androidx.core.uri)
+//    implementation(libs.androidx.core.uri)
+    implementation(libs.supabase.auth)
     implementation(libs.koin.android)
     implementation(libs.koin.core)
     implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.kotlinx.coroutines.test)
+    implementation("org.jetbrains.androidx.core:core-uri:1.1.0-alpha03")
 }
 
 dependencyGuard {

@@ -1,7 +1,5 @@
 package com.foreverrafs.superdiary.datasource
 
-import co.touchlab.kermit.LogWriter
-import co.touchlab.kermit.Logger
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.SupabaseClientBuilder
 import io.github.jan.supabase.createSupabaseClient
@@ -38,6 +36,5 @@ fun createMockedSupabaseClient(
     }
     install(Realtime)
 
-    Logger.setLogWriters(listOf<LogWriter>())
     configuration()
 }
