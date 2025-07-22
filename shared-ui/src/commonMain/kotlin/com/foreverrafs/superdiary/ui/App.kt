@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import androidx.core.uri.UriUtils
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDeepLinkRequest
@@ -269,7 +270,9 @@ private fun SuperDiaryNavHost(
                     onDiaryClick = {
                         navController.navigate(
                             request = NavDeepLinkRequest.Builder.fromUri(
-                                NavUri("${DiaryListRoute.DetailScreen.URI_PATH}/$it"),
+                                NavUri(
+                                    UriUtils.encode("${DiaryListRoute.DetailScreen.URI_PATH}/$it"),
+                                ),
                             )
                                 .build(),
                         )
@@ -359,22 +362,21 @@ object UserInfoNavType : NavType<UserInfo?>(isNullableAllowed = true) {
         value: UserInfo?,
     ) {
         bundle.write {
-            putString(
-                key,
-                Json.encodeToString(value),
-            )
+            putString(key, UriUtils.encode(Json.encodeToString(value)))
         }
     }
 
     override fun get(
         bundle: SavedState,
         key: String,
-    ): UserInfo? = bundle.read {
-        Json.decodeFromString(getString(key))
+    ): UserInfo? {
+        val valueAsString = bundle.read { getString(key) }
+        return Json.decodeFromString(UriUtils.decode(valueAsString))
     }
 
-    override fun parseValue(value: String): UserInfo? = Json.decodeFromString(value)
+    override fun parseValue(value: String): UserInfo? =
+        Json.decodeFromString(UriUtils.decode(value))
 
     override fun serializeAsValue(value: UserInfo?): String =
-        Json.encodeToString(value)
+        UriUtils.encode(Json.encodeToString(value))
 }

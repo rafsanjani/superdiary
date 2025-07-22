@@ -38,6 +38,7 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
                     compileTaskProvider.configure {
                         compilerOptions {
                             freeCompilerArgs.add("-Xexpect-actual-classes")
+                            freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
                         }
                     }
                 }

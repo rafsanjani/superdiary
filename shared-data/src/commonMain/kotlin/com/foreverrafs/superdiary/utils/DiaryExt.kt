@@ -7,6 +7,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.periodUntil
+import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 
@@ -77,4 +78,4 @@ private fun getDurationString(diary: Diary, clock: Clock = Clock.System): Priori
 }
 
 fun Instant.toDate(): LocalDate = toLocalDateTime(TimeZone.UTC).date
-fun LocalDate.toInstant(): Instant = atStartOfDayIn(TimeZone.UTC)
+fun LocalDate.toInstant(): Instant = atStartOfDayIn(TimeZone.UTC).toDeprecatedInstant()
