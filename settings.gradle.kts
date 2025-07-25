@@ -23,7 +23,6 @@ dependencyResolutionManagement {
         create("libs") {
             from("io.github.rafsanjani:versions:2025.07.20")
             version("richTextEditor", "1.0.0-rc12")
-            version("datastore", "1.2.0-alpha02")
             // Downgrading to 3.1.3 because 3.2.0 doesn't play well with R8
             version("ktor", "3.1.3")
             version("jetbrainsNavigation", "2.9.0-beta03")

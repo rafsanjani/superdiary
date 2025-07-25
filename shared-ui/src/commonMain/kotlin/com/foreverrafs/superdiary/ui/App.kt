@@ -24,9 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.uri.UriUtils
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavType
-import androidx.navigation.NavUri
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
@@ -269,12 +267,7 @@ private fun SuperDiaryNavHost(
                     },
                     onDiaryClick = {
                         navController.navigate(
-                            request = NavDeepLinkRequest.Builder.fromUri(
-                                NavUri(
-                                    UriUtils.encode("${DiaryListRoute.DetailScreen.URI_PATH}/$it"),
-                                ),
-                            )
-                                .build(),
+                            DiaryListRoute.DetailScreen(it.toString()),
                         )
                     },
                 )
