@@ -4,7 +4,6 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.foreverrafs.superdiary.design.style.animatedComposable
@@ -32,13 +31,7 @@ inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
             )
         }
 
-        animatedComposable<DiaryListRoute.DetailScreen>(
-            deepLinks = listOf(
-                navDeepLink {
-                    uriPattern = DiaryListRoute.DetailScreen.DEEPLINK_URI_PATTERN
-                },
-            ),
-        ) { backstackEntry ->
+        animatedComposable<DiaryListRoute.DetailScreen> { backstackEntry ->
             val diaryId: String = backstackEntry.toRoute<DiaryListRoute.DetailScreen>().diaryId
 
             DetailScreen(
