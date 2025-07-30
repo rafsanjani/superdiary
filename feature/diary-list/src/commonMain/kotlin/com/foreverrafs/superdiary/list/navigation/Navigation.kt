@@ -20,7 +20,7 @@ inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
     navigation<T>(startDestination = DiaryListRoute.DiaryListScreen) {
         animatedComposable<DiaryListRoute.DiaryListScreen> {
             DiaryListScreen(
-                navController = navController,
+                onNavigateBack = navController::navigateUp,
                 onAddEntry = onAddEntry,
                 onDiaryClick = {
                     navController.navigate(DiaryListRoute.DetailScreen(it.toString()))
@@ -36,10 +36,10 @@ inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
 
             DetailScreen(
                 diaryId = diaryId,
-                navController = navController,
                 onProfileClick = onProfileClick,
                 sharedTransitionScope = sharedTransitionScope,
                 animatedContentScpe = this@animatedComposable,
+                onNavigateBack = navController::navigateUp,
             )
         }
     }

@@ -12,7 +12,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewModel
 import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewState
 import org.koin.compose.viewmodel.koinViewModel
@@ -21,7 +20,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DetailScreen(
     diaryId: String,
-    navController: NavController,
+    onNavigateBack: () -> Unit,
     onProfileClick: () -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScpe: AnimatedContentScope,
@@ -38,7 +37,7 @@ fun DetailScreen(
         is DetailsViewState.DiarySelected -> {
             DetailScreenContent(
                 modifier = modifier,
-                onNavigateBack = navController::navigateUp,
+                onNavigateBack = onNavigateBack,
                 onDeleteDiary = viewModel::deleteDiary,
                 viewState = state,
                 onProfileClick = onProfileClick,

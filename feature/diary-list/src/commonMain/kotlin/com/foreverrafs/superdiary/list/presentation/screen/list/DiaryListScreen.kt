@@ -15,14 +15,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import com.foreverrafs.superdiary.list.DiaryFilters
 import com.foreverrafs.superdiary.list.DiaryListActions
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DiaryListScreen(
-    navController: NavController,
+    onNavigateBack: () -> Unit,
     onAddEntry: () -> Unit,
     onDiaryClick: (id: Long) -> Unit,
     sharedTransitionScope: SharedTransitionScope,
@@ -50,7 +49,7 @@ fun DiaryListScreen(
             },
             onToggleFavorite = screenModel::toggleFavorite,
             onDiaryClicked = onDiaryClick,
-            onBackPressed = navController::navigateUp,
+            onBackPressed = onNavigateBack,
         )
     }
 
