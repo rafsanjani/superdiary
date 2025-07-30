@@ -58,3 +58,6 @@ fun DetailScreen(
         }
     }
 }
+
+
+
