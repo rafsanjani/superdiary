@@ -1,7 +1,7 @@
 require 'json'
 
-COMPOSE_RULES_VERSION = '0.4.22'
-KTLINT_CLI_VERSION = '1.5.0'
+COMPOSE_RULES_VERSION = '0.4.26'
+KTLINT_CLI_VERSION = '1.7.1'
 
 module Danger
   class DangerKtlint < Plugin
