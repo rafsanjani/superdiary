@@ -6,12 +6,7 @@ struct ComposeView: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> some UIViewController {
         
-        let viewController = ViewController { latitude, longitude in
-            
-            UIHostingController(
-                rootView: GoogleMap(latitude: latitude.doubleValue, longitude: longitude.doubleValue)
-            )
-        }
+        let viewController =  ViewController(nativeViewFactory: SwiftNativeViewFactory())
         
         return viewController.mainViewController()
     }

@@ -27,6 +27,7 @@ kotlin {
             export(projects.core.logging)
             export(projects.core.location)
             export(projects.core.authentication)
+            export(projects.designSystem)
         }
     }
 
