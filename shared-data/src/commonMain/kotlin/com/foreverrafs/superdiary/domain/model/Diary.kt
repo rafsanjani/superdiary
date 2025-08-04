@@ -3,8 +3,8 @@ package com.foreverrafs.superdiary.domain.model
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.data.model.DiaryDto
 import com.foreverrafs.superdiary.database.model.DiaryDb
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 data class Diary(
     val entry: String,

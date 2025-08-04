@@ -18,6 +18,7 @@ import com.foreverrafs.superdiary.domain.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.utils.DiarySettings
 import com.foreverrafs.superdiary.utils.toDate
+import kotlin.time.Clock
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -29,7 +30,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 
 @Suppress("LongParameterList")
 class DashboardViewModel(

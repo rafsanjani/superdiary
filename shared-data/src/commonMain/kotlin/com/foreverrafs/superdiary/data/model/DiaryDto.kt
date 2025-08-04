@@ -3,8 +3,8 @@ package com.foreverrafs.superdiary.data.model
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.database.model.DiaryDb
 import com.foreverrafs.superdiary.domain.model.Diary
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -16,7 +16,7 @@ data class DiaryDto(
     val id: Long? = null,
     @SerialName("date")
     val date: Instant = Clock.System.now(),
-    @SerialName("isFavorite")
+    @SerialName("favorite")
     val isFavorite: Boolean = false,
     @SerialName("location")
     val location: String? = Location.Empty.toString(),

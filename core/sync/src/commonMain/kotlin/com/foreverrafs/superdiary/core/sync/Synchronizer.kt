@@ -74,8 +74,10 @@ class DiarySynchronizer(
 
         pendingSyncs.forEach { entry ->
             launch {
-                if (!entry.isSynced) performSaveSync(entry)
-                if (entry.isMarkedForDelete) performDeleteSync(entry)
+                if (!entry.isSynced) performSaveSync(diary = entry)
+                if (entry.isMarkedForDelete) {
+                    performDeleteSync(diary = entry)
+                }
             }
         }
     }
@@ -90,11 +92,11 @@ class DiarySynchronizer(
         return when (val result = diaryApi.save(diary.toDto())) {
             is Result.Success -> {
                 logger.i(TAG) {
-                    "Successfully synced deleted diary with network"
+                    "Successfully synced saved diary with network"
                 }
                 // Remove sync flag from entry in local database
                 dataSource.update(
-                    diary.copy(isSynced = true),
+                    diary = diary.copy(isSynced = true),
                 )
 
                 true
@@ -102,7 +104,7 @@ class DiarySynchronizer(
 
             is Result.Failure -> {
                 logger.i(TAG) {
-                    "There was an error syncing deleted entry to the network. ${result.error}"
+                    "There was an error syncing saved entry to the network. ${result.error}"
                 }
 
                 false

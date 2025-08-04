@@ -1,6 +1,6 @@
 package com.foreverrafs.auth.model
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 data class SessionInfo(
     val expiresAt: Instant,

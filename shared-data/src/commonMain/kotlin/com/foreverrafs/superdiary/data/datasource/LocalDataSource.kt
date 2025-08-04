@@ -11,11 +11,10 @@ import com.foreverrafs.superdiary.domain.repository.DataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.toDeprecatedInstant
+import kotlinx.datetime.number
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
@@ -36,7 +35,7 @@ class LocalDataSource(private val database: Database) : DataSource {
     override fun find(entry: String): Flow<List<Diary>> =
         database.findDiaryByEntry(entry).mapToDiary()
 
-    override fun find(from: Instant, to: Instant): Flow<List<Diary>> =
+    override fun find(from: kotlin.time.Instant, to: kotlin.time.Instant): Flow<List<Diary>> =
         database.findByDateRange(from, to).map { diaryDbList ->
             diaryDbList.map { it.toDiary() }
         }
@@ -51,7 +50,7 @@ class LocalDataSource(private val database: Database) : DataSource {
      * entries from start of the day 00:00 to midnight 23:59:59
      */
 
-    override fun findByDate(date: Instant): Flow<List<Diary>> {
+    override fun findByDate(date: kotlin.time.Instant): Flow<List<Diary>> {
         val timeZone = TimeZone.currentSystemDefault()
 
         val currentLocalDateTime = date.toLocalDateTime(timeZone)
@@ -63,14 +62,14 @@ class LocalDataSource(private val database: Database) : DataSource {
         // End of day
         val endOfDay = LocalDateTime(
             year = currentDate.year,
-            monthNumber = currentDate.monthNumber,
-            dayOfMonth = currentDate.dayOfMonth,
+            month = currentDate.month.number,
+            day = currentDate.day,
             hour = 23,
             minute = 59,
             second = 59,
         ).toInstant(timeZone)
 
-        return database.findByDateRange(startOfDay.toDeprecatedInstant(), endOfDay.toDeprecatedInstant()).mapToDiary()
+        return database.findByDateRange(startOfDay, endOfDay).mapToDiary()
     }
 
     override suspend fun update(diary: Diary): Int = database.update(diary.toDatabase()).toInt()

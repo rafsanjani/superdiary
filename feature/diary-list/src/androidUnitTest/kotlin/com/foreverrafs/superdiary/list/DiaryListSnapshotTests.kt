@@ -21,7 +21,6 @@ import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import org.junit.Rule
@@ -35,7 +34,7 @@ class DiaryListSnapshotTests(
 ) {
     private val testClock = object : Clock {
         // 2023-11-10
-        override fun now(): Instant = Instant.Companion.parse("2023-11-10T00:00:00.850951Z")
+        override fun now(): kotlin.time.Instant = kotlin.time.Instant.Companion.parse("2023-11-10T00:00:00.850951Z")
     }
 
     @get:Rule

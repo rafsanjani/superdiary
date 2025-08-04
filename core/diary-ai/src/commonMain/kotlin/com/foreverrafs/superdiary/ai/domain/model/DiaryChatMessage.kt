@@ -3,16 +3,15 @@ package com.foreverrafs.superdiary.ai.domain.model
 import com.aallam.openai.api.chat.ChatMessage
 import com.foreverrafs.superdiary.database.model.DiaryChatMessageDb
 import com.foreverrafs.superdiary.database.model.DiaryChatRoleDb
+import kotlin.time.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 
 @Suppress("FunctionName")
 data class DiaryChatMessage(
     val id: String,
     val role: DiaryChatRole,
-    val timestamp: Instant,
+    val timestamp: kotlin.time.Instant,
     val content: String,
 ) {
     @OptIn(ExperimentalUuidApi::class)

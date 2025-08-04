@@ -9,9 +9,9 @@ import com.foreverrafs.superdiary.database.model.DiaryDb
 import com.foreverrafs.superdiary.database.model.LocationDb
 import com.foreverrafs.superdiary.database.model.WeeklySummaryDb
 import kotlin.coroutines.suspendCoroutine
+import kotlin.time.Instant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.Instant
 
 // Converts a date to a long value and vice versa
 val dateAdapter = object : ColumnAdapter<Instant, Long> {

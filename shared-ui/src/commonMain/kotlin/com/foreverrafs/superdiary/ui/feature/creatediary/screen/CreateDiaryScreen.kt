@@ -19,11 +19,11 @@ import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
 import com.foreverrafs.superdiary.utils.DiarySettings
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
+import kotlin.time.Clock
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class)

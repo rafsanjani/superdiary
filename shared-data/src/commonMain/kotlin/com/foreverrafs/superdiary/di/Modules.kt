@@ -29,8 +29,8 @@ import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.domain.validator.DiaryValidator
 import com.foreverrafs.superdiary.domain.validator.DiaryValidatorImpl
+import kotlin.time.Clock
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.datetime.Clock
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.factoryOf

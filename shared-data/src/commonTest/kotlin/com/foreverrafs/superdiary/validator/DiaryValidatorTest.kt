@@ -10,14 +10,14 @@ import com.foreverrafs.superdiary.domain.validator.DiaryValidatorImpl
 import kotlin.test.Test
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimePeriod
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 
 class DiaryValidatorTest {
     private val testClock: Clock = object : Clock {
-        override fun now(): Instant = Instant.parse("2023-05-01T01:01:01.049Z")
+        override fun now(): kotlin.time.Instant =
+            kotlin.time.Instant.parse("2023-05-01T01:01:01.049Z")
     }
 
     private val validator: DiaryValidator = DiaryValidatorImpl(clock = testClock)

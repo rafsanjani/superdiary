@@ -25,7 +25,6 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
@@ -111,7 +110,7 @@ class AddDiaryUseCaseTest {
         val diary = Diary(
             id = 1200L,
             entry = "New Entry",
-            date = Instant.parse("2023-03-03T03:33:25.587Z"),
+            date = kotlin.time.Instant.parse("2023-03-03T03:33:25.587Z"),
             isFavorite = false,
         )
 
