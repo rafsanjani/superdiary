@@ -10,7 +10,7 @@ import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewSta
 import com.foreverrafs.superdiary.list.presentation.screen.detail.screen.DetailScreenContent
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -24,6 +24,7 @@ import dev.mokkery.mock
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -42,6 +43,7 @@ class DiaryChatViewModelTest {
 
     private lateinit var diaryChatViewModel: DiaryChatViewModel
 
+    @OptIn(ExperimentalTime::class)
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())

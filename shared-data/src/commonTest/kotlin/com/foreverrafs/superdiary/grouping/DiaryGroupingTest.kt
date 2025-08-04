@@ -6,7 +6,7 @@ import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.utils.groupByDate
 import kotlin.random.Random
 import kotlin.test.Test
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus

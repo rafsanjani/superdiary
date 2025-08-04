@@ -4,9 +4,12 @@ import androidx.core.uri.Uri
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
-class FakeAuthApi(
+@OptIn(ExperimentalTime::class)
+class FakeAuthApi
+constructor(
     clock: Clock = Clock.System,
 ) : AuthApi {
     var signInResult: AuthApi.SignInStatus = AuthApi.SignInStatus.LoggedIn(

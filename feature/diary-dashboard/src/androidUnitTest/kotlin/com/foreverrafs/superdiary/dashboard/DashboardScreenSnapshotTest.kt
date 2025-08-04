@@ -10,7 +10,7 @@ import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.utils.toDate
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

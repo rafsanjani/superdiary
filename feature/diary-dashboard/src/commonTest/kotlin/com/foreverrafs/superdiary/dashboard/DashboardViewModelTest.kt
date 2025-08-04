@@ -36,6 +36,8 @@ import dev.mokkery.verifySuspend
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -43,12 +45,11 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalTime::class)
 class DashboardViewModelTest {
     private lateinit var dataSource: DataSource
 
@@ -182,6 +183,7 @@ class DashboardViewModelTest {
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `Should save settings when dashboard ordering is changed`() = runTest {
         val viewModel = createDashboardViewModel()

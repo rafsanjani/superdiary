@@ -63,8 +63,8 @@ import com.benasher44.uuid.uuid4
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatMessage
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatRole
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
+import kotlin.time.Clock
 import kotlinx.coroutines.delay
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.content_description_button_send
