@@ -30,7 +30,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 
-
 @OptIn(ExperimentalTime::class)
 class AddDiaryUseCaseTest {
     private val database = Database(testSuperDiaryDatabase)

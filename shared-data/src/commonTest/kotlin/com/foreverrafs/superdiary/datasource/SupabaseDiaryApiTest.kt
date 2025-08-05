@@ -11,8 +11,9 @@ import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.remote.SupabaseDiaryApi
 import com.foreverrafs.superdiary.data.model.DiaryDto
 import io.github.jan.supabase.annotations.SupabaseExperimental
-import io.ktor.client.engine.mock.*
-import io.ktor.util.reflect.*
+import io.ktor.client.engine.mock.respondBadRequest
+import io.ktor.client.engine.mock.respondOk
+import io.ktor.util.reflect.instanceOf
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
