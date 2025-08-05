@@ -12,16 +12,19 @@ import com.foreverrafs.superdiary.common.coroutines.awaitUntil
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlin.time.Clock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LoginScreenViewModelTest {
     private lateinit var loginViewModel: LoginScreenViewModel
+
+    @OptIn(ExperimentalTime::class)
     private val authApi: FakeAuthApi = FakeAuthApi()
 
     @BeforeTest
@@ -92,6 +95,7 @@ class LoginScreenViewModelTest {
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     @Test
     fun `Should emit LoginViewState Success when signInWithGoogle succeeds`() = runTest {
         authApi.signInResult = AuthApi.SignInStatus.LoggedIn(

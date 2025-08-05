@@ -11,22 +11,22 @@ import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.remote.SupabaseDiaryApi
 import com.foreverrafs.superdiary.data.model.DiaryDto
 import io.github.jan.supabase.annotations.SupabaseExperimental
-import io.ktor.client.engine.mock.respondBadRequest
-import io.ktor.client.engine.mock.respondOk
-import io.ktor.util.reflect.instanceOf
+import io.ktor.client.engine.mock.*
+import io.ktor.util.reflect.*
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlin.time.Clock
 import kotlinx.serialization.json.Json
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
 class SupabaseDiaryApiTest {
 
     private lateinit var supabaseDiaryApi: SupabaseDiaryApi
