@@ -132,7 +132,7 @@ class DiaryAiImpl(
     }
 
     companion object {
-        private const val GPT_MODEL = "gpt-4o-mini"
+        private const val GPT_MODEL = "gemini-2.5-flash"
         private const val TAG = "OpenDiaryAI"
     }
 }

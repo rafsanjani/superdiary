@@ -197,17 +197,7 @@ class DashboardViewModel(
             }
             .onCompletion {
                 (mutableState.value as? DashboardScreenState.Content)?.let { appState ->
-                    // Summary has been generated, save it to the database
-                    if (appState.weeklySummary != DEFAULT_SUMMARY_TEXT) {
-                        logger.d(TAG) {
-                            "generateWeeklySummary: Weekly summary generated!"
-                        }
-                        appState.weeklySummary?.let { summary ->
-                            addWeeklySummaryUseCase(
-                                weeklySummary = WeeklySummary(summary),
-                            )
-                        }
-                    } else {
+                    if (appState.weeklySummary == DEFAULT_SUMMARY_TEXT || appState.weeklySummary == ERROR_SUMMARY_TEXT) {
                         logger.e(TAG, it) {
                             "There was an error generating weekly summary"
                         }
@@ -215,6 +205,17 @@ class DashboardViewModel(
                         updateContentState { currentState ->
                             currentState.copy(weeklySummary = "Error generating weekly summary")
                         }
+                        return@onCompletion
+                    }
+
+                    // Summary has been generated, save it to the database
+                    logger.d(TAG) {
+                        "generateWeeklySummary: Weekly summary generated!"
+                    }
+                    appState.weeklySummary?.let { summary ->
+                        addWeeklySummaryUseCase(
+                            weeklySummary = WeeklySummary(summary),
+                        )
                     }
                 }
             }
@@ -339,6 +340,7 @@ class DashboardViewModel(
 
     companion object {
         private const val DEFAULT_SUMMARY_TEXT = "Generating weekly Summary..."
+        private const val ERROR_SUMMARY_TEXT = "Error generating weekly summary"
         private const val TAG = "DashboardViewModel"
     }
 }

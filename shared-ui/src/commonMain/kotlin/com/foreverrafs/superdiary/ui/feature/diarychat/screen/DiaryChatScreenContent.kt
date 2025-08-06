@@ -62,10 +62,12 @@ import androidx.compose.ui.unit.sp
 import com.benasher44.uuid.uuid4
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatMessage
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatRole
+import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
 import kotlin.time.Clock
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.content_description_button_send
 
@@ -248,4 +250,43 @@ fun ChatBubble(
 fun keyboardAsState(): State<Boolean> {
     val isImeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     return rememberUpdatedState(isImeVisible)
+}
+
+@Preview
+@Composable
+private fun PreviewNoMessage() {
+    SuperDiaryPreviewTheme {
+        DiaryChatScreenContent(
+            screenState = DiaryChatViewModel.DiaryChatViewState(),
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewResponding() {
+    SuperDiaryPreviewTheme {
+        DiaryChatScreenContent(
+            screenState = DiaryChatViewModel.DiaryChatViewState(
+                isResponding = true,
+            ),
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewMessagesAndResponding() {
+    SuperDiaryPreviewTheme {
+        DiaryChatScreenContent(
+            screenState = DiaryChatViewModel.DiaryChatViewState(
+                isResponding = true,
+                messages = listOf(
+                    DiaryChatMessage.System("You are diary AI"),
+                    DiaryChatMessage.User("You don't kill a cat, a cat kills you"),
+                    DiaryChatMessage.DiaryAI("How do i kill a cat"),
+                ),
+            ),
+        )
+    }
 }
