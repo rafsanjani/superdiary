@@ -64,7 +64,7 @@ class DiaryChatViewModel(
                                 it.copy(
                                     diaries = result.data,
                                     isLoadingDiaries = false,
-                                    error = null
+                                    error = null,
                                 )
                             }
                             logger.i(TAG) { "Loaded diaries for chat screen: Size = ${result.data.size}" }
@@ -74,7 +74,7 @@ class DiaryChatViewModel(
                             _viewState.update {
                                 it.copy(
                                     isLoadingDiaries = false,
-                                    error = "Failed to load diaries"
+                                    error = "Failed to load diaries",
                                 )
                             }
                             logger.e(TAG) { "Error loading diaries: ${result.error.message}" }
@@ -85,7 +85,7 @@ class DiaryChatViewModel(
                 _viewState.update {
                     it.copy(
                         isLoadingDiaries = false,
-                        error = "Unexpected error loading diaries"
+                        error = "Unexpected error loading diaries",
                     )
                 }
                 logger.e(TAG) { "Unexpected error in diaries collection: $e" }
@@ -101,7 +101,8 @@ class DiaryChatViewModel(
                         listOf(welcomeMessage())
                     }
 
-                    val finalMessages = updateSystemMessageInList(updatedMessages, currentState.diaries)
+                    val finalMessages =
+                        updateSystemMessageInList(updatedMessages, currentState.diaries)
                     _viewState.update { it.copy(messages = finalMessages) }
                 }
             } catch (e: Exception) {
@@ -113,7 +114,7 @@ class DiaryChatViewModel(
 
     private fun updateSystemMessageInList(
         messages: List<DiaryChatMessage>,
-        diaries: List<Diary>
+        diaries: List<Diary>,
     ): List<DiaryChatMessage> {
         val mutableMessages = messages.toMutableList()
 
@@ -124,7 +125,7 @@ class DiaryChatViewModel(
         val systemMsg = if (diaries.isNotEmpty()) {
             try {
                 DiaryChatMessage.System(
-                    content = Json.encodeToString(diaries.map { it.toDto() })
+                    content = Json.encodeToString(diaries.map { it.toDto() }),
                 )
             } catch (e: Exception) {
                 logger.e(TAG) { "Error serializing diaries to JSON: $e" }
@@ -152,7 +153,7 @@ class DiaryChatViewModel(
             it.copy(
                 isResponding = true,
                 messages = updatedMessages,
-                error = null
+                error = null,
             )
         }
 
@@ -165,7 +166,7 @@ class DiaryChatViewModel(
                 _viewState.update {
                     it.copy(
                         isResponding = false,
-                        error = "Failed to generate AI response"
+                        error = "Failed to generate AI response",
                     )
                 }
                 return@launch
@@ -178,7 +179,7 @@ class DiaryChatViewModel(
                 it.copy(
                     isResponding = false,
                     messages = finalMessages,
-                    error = null
+                    error = null,
                 )
             }
 
@@ -190,13 +191,12 @@ class DiaryChatViewModel(
                     logger.e(TAG) { "Failed to save chat messages: $e" }
                 }
             }
-
         } catch (e: Exception) {
             logger.e(TAG) { "Error in queryDiaries: $e" }
             _viewState.update {
                 it.copy(
                     isResponding = false,
-                    error = "An error occurred while processing your query"
+                    error = "An error occurred while processing your query",
                 )
             }
         }
