@@ -162,10 +162,6 @@ co.touchlab:stately-concurrent-collections-jvm:2.1.0
 co.touchlab:stately-concurrent-collections:2.1.0
 co.touchlab:stately-strict-jvm:2.1.0
 co.touchlab:stately-strict:2.1.0
-com.aallam.openai:openai-client-jvm:4.0.1
-com.aallam.openai:openai-client:4.0.1
-com.aallam.openai:openai-core-jvm:4.0.1
-com.aallam.openai:openai-core:4.0.1
 com.benasher44:uuid-jvm:0.8.4
 com.benasher44:uuid:0.8.4
 com.google.accompanist:accompanist-drawablepainter:0.37.3
@@ -367,4 +363,8 @@ org.kotlincrypto.random:crypto-rand-jvm:0.5.1
 org.kotlincrypto.random:crypto-rand:0.5.1
 org.kotlincrypto:error-jvm:0.3.0
 org.kotlincrypto:error:0.3.0
+org.simpmusic.gemini-kotlin:openai-client-jvm:4.0.2
+org.simpmusic.gemini-kotlin:openai-client:4.0.2
+org.simpmusic.gemini-kotlin:openai-core-jvm:4.0.2
+org.simpmusic.gemini-kotlin:openai-core:4.0.2
 org.slf4j:slf4j-api:2.0.17
