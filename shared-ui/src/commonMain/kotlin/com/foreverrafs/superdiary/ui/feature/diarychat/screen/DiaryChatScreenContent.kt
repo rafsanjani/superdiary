@@ -95,7 +95,7 @@ fun DiaryChatScreenContent(
             .padding(8.dp),
     ) {
         val listState = rememberLazyListState()
-        val isKeyboardOpen by keyboardAsState()
+        val isKeyboardOpen by keyboardVisibilityState()
 
         // Scroll to the bottom of the list when the keyboard opens
         LaunchedEffect(isKeyboardOpen) {
@@ -114,7 +114,9 @@ fun DiaryChatScreenContent(
         }
 
         LazyColumn(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             state = listState,
         ) {
@@ -247,19 +249,9 @@ fun ChatBubble(
 }
 
 @Composable
-fun keyboardAsState(): State<Boolean> {
+fun keyboardVisibilityState(): State<Boolean> {
     val isImeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     return rememberUpdatedState(isImeVisible)
-}
-
-@Preview
-@Composable
-private fun PreviewNoMessage() {
-    SuperDiaryPreviewTheme {
-        DiaryChatScreenContent(
-            screenState = DiaryChatViewModel.DiaryChatViewState(),
-        )
-    }
 }
 
 @Preview
