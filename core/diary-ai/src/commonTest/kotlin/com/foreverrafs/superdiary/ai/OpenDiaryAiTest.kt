@@ -50,7 +50,7 @@ class OpenDiaryAiTest {
     )
 
     private val chatCompletion = ChatCompletion(
-        id = "id",
+        idOrNull = "id",
         created = 1200L,
         model = ModelId(""),
         usage = null,
