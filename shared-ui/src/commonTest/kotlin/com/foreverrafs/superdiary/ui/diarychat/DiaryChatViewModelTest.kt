@@ -35,7 +35,6 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@Ignore
 class DiaryChatViewModelTest {
 
     private val dataSource: DataSource = mock<DataSource>()
@@ -81,6 +80,7 @@ class DiaryChatViewModelTest {
     }
 
     @Test
+    @Ignore
     fun `Should update responding to true when generating AI response`() = runTest {
         everySuspend { diaryAI.queryDiaries(any()) }.returns("hello boss")
 
@@ -112,6 +112,7 @@ class DiaryChatViewModelTest {
     }
 
     @Test
+    @Ignore
     fun `Should prepend message prompt to messages when querying initially`() = runTest {
         everySuspend {
             diaryAI.queryDiaries(
