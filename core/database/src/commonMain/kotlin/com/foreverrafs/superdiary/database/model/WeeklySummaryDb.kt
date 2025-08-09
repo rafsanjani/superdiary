@@ -1,9 +1,8 @@
 package com.foreverrafs.superdiary.database.model
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
 
 data class WeeklySummaryDb(
     val summary: String,
-    val date: Instant = Clock.System.now(),
+    val date: kotlin.time.Instant = Clock.System.now(),
 )

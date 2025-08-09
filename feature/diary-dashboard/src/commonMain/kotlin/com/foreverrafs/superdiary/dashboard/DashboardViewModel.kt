@@ -18,6 +18,7 @@ import com.foreverrafs.superdiary.domain.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.utils.DiarySettings
 import com.foreverrafs.superdiary.utils.toDate
+import kotlin.time.Clock
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -29,7 +30,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 
 @Suppress("LongParameterList")
 class DashboardViewModel(
@@ -197,17 +197,7 @@ class DashboardViewModel(
             }
             .onCompletion {
                 (mutableState.value as? DashboardScreenState.Content)?.let { appState ->
-                    // Summary has been generated, save it to the database
-                    if (appState.weeklySummary != DEFAULT_SUMMARY_TEXT) {
-                        logger.d(TAG) {
-                            "generateWeeklySummary: Weekly summary generated!"
-                        }
-                        appState.weeklySummary?.let { summary ->
-                            addWeeklySummaryUseCase(
-                                weeklySummary = WeeklySummary(summary),
-                            )
-                        }
-                    } else {
+                    if (appState.weeklySummary == DEFAULT_SUMMARY_TEXT || appState.weeklySummary == ERROR_SUMMARY_TEXT) {
                         logger.e(TAG, it) {
                             "There was an error generating weekly summary"
                         }
@@ -215,6 +205,17 @@ class DashboardViewModel(
                         updateContentState { currentState ->
                             currentState.copy(weeklySummary = "Error generating weekly summary")
                         }
+                        return@onCompletion
+                    }
+
+                    // Summary has been generated, save it to the database
+                    logger.d(TAG) {
+                        "generateWeeklySummary: Weekly summary generated!"
+                    }
+                    appState.weeklySummary?.let { summary ->
+                        addWeeklySummaryUseCase(
+                            weeklySummary = WeeklySummary(summary),
+                        )
                     }
                 }
             }
@@ -339,6 +340,7 @@ class DashboardViewModel(
 
     companion object {
         private const val DEFAULT_SUMMARY_TEXT = "Generating weekly Summary..."
+        private const val ERROR_SUMMARY_TEXT = "Error generating weekly summary"
         private const val TAG = "DashboardViewModel"
     }
 }

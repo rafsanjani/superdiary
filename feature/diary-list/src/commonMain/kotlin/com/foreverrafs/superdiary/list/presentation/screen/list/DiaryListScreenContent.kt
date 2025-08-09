@@ -104,9 +104,9 @@ import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlin.math.roundToInt
+import kotlin.time.Clock
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 
 val DiaryListActions.Companion.Empty: DiaryListActions
@@ -645,8 +645,7 @@ fun DiaryItem(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.semantics {
-                    stateDescription = if
-                        (diary.isFavorite) {
+                    stateDescription = if (diary.isFavorite) {
                         "Favorite"
                     } else {
                         "Not favorite"
@@ -799,7 +798,7 @@ private fun buildDateAnnotatedString(date: LocalDate): AnnotatedString =
                 fontSize = 16.sp,
             ),
         ) {
-            append(date.dayOfMonth.toString())
+            append(date.day.toString())
         }
         appendLine()
 

@@ -1,7 +1,7 @@
 package com.foreverrafs.superdiary.database.model
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 data class DiaryDb(
     val entry: String,

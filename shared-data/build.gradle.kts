@@ -23,7 +23,7 @@ kotlin {
                 implementation(libs.touchlab.stately)
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.coroutines.test)
-                implementation(libs.openAiKotlin)
+//                implementation("org.simpmusic.gemini-kotlin:openai-client:4.0.2")
                 implementation(libs.uuid)
                 implementation(projects.preferences.annotation)
                 implementation(libs.androidx.datastore.preferences)

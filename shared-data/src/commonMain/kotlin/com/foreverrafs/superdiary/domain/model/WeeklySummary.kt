@@ -1,8 +1,8 @@
 package com.foreverrafs.superdiary.domain.model
 
 import com.foreverrafs.superdiary.database.model.WeeklySummaryDb
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 data class WeeklySummary(
     val summary: String,

@@ -31,6 +31,8 @@ import dev.mokkery.verifySuspend
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -39,9 +41,8 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.datetime.Clock
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
 class DiaryListViewModelTest {
 
     private val dataSource: DataSource = mock<DataSource>()
@@ -70,6 +71,7 @@ class DiaryListViewModelTest {
         isFavorite = false,
     )
 
+    @OptIn(ExperimentalTime::class)
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(TestAppDispatchers.main)

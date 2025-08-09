@@ -19,7 +19,6 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
-import kotlinx.datetime.toDeprecatedInstant
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 
@@ -259,7 +258,7 @@ class DefaultSupabaseAuth(
 }
 
 internal fun SessionInfoDto.toSession() = SessionInfo(
-    expiresAt = expiresAt.toDeprecatedInstant(),
+    expiresAt = expiresAt,
     accessToken = accessToken,
     refreshToken = refreshToken,
     userInfo = user?.toUserInfo(),

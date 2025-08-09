@@ -10,8 +10,7 @@ import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewSta
 import com.foreverrafs.superdiary.list.presentation.screen.detail.screen.DetailScreenContent
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,7 +22,7 @@ class DiaryDetailSnapshotTests(
 ) {
     private val testClock = object : Clock {
         // 2023-11-10
-        override fun now(): Instant = Instant.Companion.parse("2023-11-10T00:00:00.850951Z")
+        override fun now(): kotlin.time.Instant = kotlin.time.Instant.Companion.parse("2023-11-10T00:00:00.850951Z")
     }
 
     @get:Rule

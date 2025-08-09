@@ -16,11 +16,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
 import kotlinx.serialization.json.Json
 
 class DiaryChatViewModel(
@@ -36,104 +34,172 @@ class DiaryChatViewModel(
         val isLoadingDiaries: Boolean = false,
         val messages: List<DiaryChatMessage> = emptyList(),
         val diaries: List<Diary> = emptyList(),
+        val error: String? = null,
     )
 
     private val _viewState = MutableStateFlow(DiaryChatViewState())
-    val viewState: StateFlow<DiaryChatViewState> = _viewState
-        .onStart {
-            loadDiaries()
+    val viewState: StateFlow<DiaryChatViewState> = _viewState.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = DiaryChatViewState(),
+    )
+
+    private val diariesFlow: Flow<Result<List<Diary>>> = getAllDiariesUseCase()
+    private val chatMessagesFlow: Flow<List<DiaryChatMessage>> = getChatMessagesUseCase()
+
+    init {
+        initializeData()
+    }
+
+    private fun initializeData() {
+        // Collect diaries
+        viewModelScope.launch {
+            _viewState.update { it.copy(isLoadingDiaries = true, error = null) }
+
+            try {
+                diariesFlow.collect { result ->
+                    when (result) {
+                        is Result.Success -> {
+                            _viewState.update {
+                                it.copy(
+                                    diaries = result.data,
+                                    isLoadingDiaries = false,
+                                    error = null,
+                                )
+                            }
+                            logger.i(TAG) { "Loaded diaries for chat screen: Size = ${result.data.size}" }
+                        }
+
+                        is Result.Failure -> {
+                            _viewState.update {
+                                it.copy(
+                                    isLoadingDiaries = false,
+                                    error = "Failed to load diaries",
+                                )
+                            }
+                            logger.e(TAG) { "Error loading diaries: ${result.error.message}" }
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                _viewState.update {
+                    it.copy(
+                        isLoadingDiaries = false,
+                        error = "Unexpected error loading diaries",
+                    )
+                }
+                logger.e(TAG) { "Unexpected error in diaries collection: $e" }
+            }
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = DiaryChatViewState(),
-        )
 
-    private val diaries: Flow<Result<List<Diary>>> = getAllDiariesUseCase()
-    private val chatMessages: Flow<List<DiaryChatMessage>> = getChatMessagesUseCase()
-
-    private fun loadDiaries() = viewModelScope.launch {
-        _viewState.updateLoadingDiaries(true)
-        diaries.collect { result ->
-            when (result) {
-                is Result.Success -> {
-                    _viewState.update {
-                        it.copy(
-                            diaries = result.data,
-                            isLoadingDiaries = false,
-                        )
+        // Collect chat messages
+        viewModelScope.launch {
+            try {
+                chatMessagesFlow.collect { messages ->
+                    val currentState = _viewState.value
+                    val updatedMessages = messages.ifEmpty {
+                        listOf(welcomeMessage())
                     }
-                    logger.i(TAG) { "Loaded all result for chat screen: Size = ${result.data.size}" }
-                    updateChatMessageList(result.data)
-                }
 
-                is Result.Failure -> {
-                    logger.e(TAG) {
-                        "Error loading diaries"
-                    }
+                    val finalMessages =
+                        updateSystemMessageInList(updatedMessages, currentState.diaries)
+                    _viewState.update { it.copy(messages = finalMessages) }
                 }
+            } catch (e: Exception) {
+                logger.e(TAG) { "Error collecting chat messages: $e" }
+                _viewState.update { it.copy(error = "Failed to load chat messages") }
             }
         }
     }
 
-    private fun updateChatMessageList(diaries: List<Diary>) = viewModelScope.launch {
-        chatMessages.collect { messages ->
-            val updatedMessages = messages.toMutableList()
-            if (updatedMessages.isEmpty()) updatedMessages += welcomeMessage()
-            _viewState.update { it.copy(messages = updatedMessages) }
-            updateSystemMessage(updatedMessages, diaries)
-        }
-    }
-
-    private fun updateSystemMessage(messages: List<DiaryChatMessage>, diaries: List<Diary>) {
+    private fun updateSystemMessageInList(
+        messages: List<DiaryChatMessage>,
+        diaries: List<Diary>,
+    ): List<DiaryChatMessage> {
         val mutableMessages = messages.toMutableList()
-        if (mutableMessages.none { it.role == DiaryChatRole.System }) {
-            mutableMessages += systemMessage()
-        }
-        if (diaries.isNotEmpty()) {
-            // delete the system message if it's there
-            mutableMessages.firstOrNull { it.role == DiaryChatRole.System }?.let {
-                mutableMessages.remove(it)
-            }
 
-            mutableMessages += DiaryChatMessage.System(
-                content = Json.encodeToString(diaries.map { it.toDto() }),
-            )
+        // Remove existing system message
+        mutableMessages.removeAll { it.role == DiaryChatRole.System }
+
+        // Add a system message based on diary availability
+        val systemMsg = if (diaries.isNotEmpty()) {
+            try {
+                DiaryChatMessage.System(
+                    content = Json.encodeToString(diaries.map { it.toDto() }),
+                )
+            } catch (e: Exception) {
+                logger.e(TAG) { "Error serializing diaries to JSON: $e" }
+                systemMessage()
+            }
+        } else {
+            systemMessage()
         }
-        _viewState.update { it.copy(messages = mutableMessages) }
+
+        mutableMessages.add(0, systemMsg) // Add at the beginning
+        return mutableMessages
     }
 
     fun queryDiaries(query: String) = viewModelScope.launch {
-        val userQuery = DiaryChatMessage.User(query)
-        val updatedMessages = viewState.value.messages + userQuery
-
-        _viewState.updateRespondingState(
-            isResponding = true,
-            messages = updatedMessages,
-        )
-
-        yield()
-        logger.d(TAG) { "queryDiaries: Querying all diaries for: $query" }
-
-        val responseContent = diaryAI.queryDiaries(messages = updatedMessages)
-
-        // There was an error generating the response
-        if (responseContent == null) {
-            _viewState.updateRespondingState(
-                isResponding = false,
-            )
+        if (query.isBlank()) {
+            logger.w(TAG) { "Empty query provided" }
             return@launch
         }
 
-        val diaryAIResponse = DiaryChatMessage.DiaryAI(responseContent)
+        val userQuery = DiaryChatMessage.User(query)
+        val currentMessages = viewState.value.messages
+        val updatedMessages = currentMessages + userQuery
 
-        val finalMessages = updatedMessages + diaryAIResponse
-        saveChatMessagePair(userQuery, diaryAIResponse)
+        _viewState.update {
+            it.copy(
+                isResponding = true,
+                messages = updatedMessages,
+                error = null,
+            )
+        }
 
-        _viewState.updateRespondingState(
-            isResponding = false,
-            messages = finalMessages,
-        )
+        try {
+            logger.d(TAG) { "queryDiaries: Querying all diaries for: $query" }
+
+            val responseContent = diaryAI.queryDiaries(messages = updatedMessages)
+
+            if (responseContent == null) {
+                _viewState.update {
+                    it.copy(
+                        isResponding = false,
+                        error = "Failed to generate AI response",
+                    )
+                }
+                return@launch
+            }
+
+            val diaryAIResponse = DiaryChatMessage.DiaryAI(responseContent)
+            val finalMessages = updatedMessages + diaryAIResponse
+
+            _viewState.update {
+                it.copy(
+                    isResponding = false,
+                    messages = finalMessages,
+                    error = null,
+                )
+            }
+
+            // Save messages asynchronously
+            launch {
+                try {
+                    saveChatMessagePair(userQuery, diaryAIResponse)
+                } catch (e: Exception) {
+                    logger.e(TAG) { "Failed to save chat messages: $e" }
+                }
+            }
+        } catch (e: Exception) {
+            logger.e(TAG) { "Error in queryDiaries: $e" }
+            _viewState.update {
+                it.copy(
+                    isResponding = false,
+                    error = "An error occurred while processing your query",
+                )
+            }
+        }
     }
 
     private fun saveChatMessagePair(
@@ -171,24 +237,11 @@ class DiaryChatViewModel(
         """.trimIndent(),
     )
 
+    fun clearError() {
+        _viewState.update { it.copy(error = null) }
+    }
+
     private companion object {
         private const val TAG = "DiaryChatViewModel"
-
-        private fun MutableStateFlow<DiaryChatViewState>.updateLoadingDiaries(isLoading: Boolean) {
-            update { it.copy(isLoadingDiaries = isLoading) }
-        }
-
-        private fun MutableStateFlow<DiaryChatViewState>.updateRespondingState(
-            isResponding: Boolean,
-            messages: List<DiaryChatMessage>,
-        ) {
-            update { it.copy(isResponding = isResponding, messages = it.messages + messages) }
-        }
-
-        private fun MutableStateFlow<DiaryChatViewState>.updateRespondingState(
-            isResponding: Boolean,
-        ) {
-            update { it.copy(isResponding = isResponding) }
-        }
     }
 }

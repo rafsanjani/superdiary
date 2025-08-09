@@ -148,8 +148,7 @@ fun DiaryItem(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.semantics {
-                    stateDescription = if
-                        (diary.isFavorite) {
+                    stateDescription = if (diary.isFavorite) {
                         "Favorite"
                     } else {
                         "Not favorite"
@@ -271,7 +270,7 @@ internal fun buildDateAnnotatedString(date: LocalDate): AnnotatedString =
                 fontSize = 16.sp,
             ),
         ) {
-            append(date.dayOfMonth.toString())
+            append(date.day.toString())
         }
         appendLine()
 

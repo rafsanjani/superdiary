@@ -17,7 +17,7 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(projects.core.logging)
                 implementation(libs.kotlinx.coroutines.test)
-                implementation(libs.openAiKotlin)
+                implementation("org.simpmusic.gemini-kotlin:openai-client:4.0.2")
                 implementation(libs.kotlin.datetime)
                 implementation(projects.commonUtils)
                 implementation(projects.sharedData)

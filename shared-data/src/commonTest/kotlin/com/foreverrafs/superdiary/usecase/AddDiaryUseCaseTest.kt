@@ -18,18 +18,19 @@ import com.foreverrafs.superdiary.domain.validator.DiaryValidatorImpl
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 
+@OptIn(ExperimentalTime::class)
 class AddDiaryUseCaseTest {
     private val database = Database(testSuperDiaryDatabase)
     private val dataSource: DataSource = LocalDataSource(database)
@@ -111,7 +112,7 @@ class AddDiaryUseCaseTest {
         val diary = Diary(
             id = 1200L,
             entry = "New Entry",
-            date = Instant.parse("2023-03-03T03:33:25.587Z"),
+            date = kotlin.time.Instant.parse("2023-03-03T03:33:25.587Z"),
             isFavorite = false,
         )
 

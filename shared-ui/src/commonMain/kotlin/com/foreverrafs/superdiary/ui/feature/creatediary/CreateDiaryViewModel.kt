@@ -105,7 +105,7 @@ class CreateDiaryViewModel(
             is Result.Success -> {
                 synchronizer.sync(
                     operation = Synchronizer.SyncOperation.Save(
-                        addDiaryResult.data,
+                        diary = addDiaryResult.data,
                     ),
                 )
 

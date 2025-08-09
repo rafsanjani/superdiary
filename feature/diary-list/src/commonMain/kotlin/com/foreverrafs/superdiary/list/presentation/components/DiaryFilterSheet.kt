@@ -42,7 +42,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.foreverrafs.superdiary.list.DiaryFilters
 import com.foreverrafs.superdiary.list.DiarySortCriteria
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -263,7 +262,7 @@ fun DiaryDatePicker(
             TextButton(
                 onClick = {
                     datePickerState.selectedDateMillis?.let { dateMillis ->
-                        val instant = Instant.fromEpochMilliseconds(dateMillis)
+                        val instant = kotlin.time.Instant.fromEpochMilliseconds(dateMillis)
                         val date = instant.toLocalDateTime(TimeZone.UTC).date
 
                         onDateSelect(date)

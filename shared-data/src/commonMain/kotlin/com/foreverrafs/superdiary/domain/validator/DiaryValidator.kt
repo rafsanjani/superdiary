@@ -1,7 +1,8 @@
 package com.foreverrafs.superdiary.domain.validator
 
 import com.foreverrafs.superdiary.domain.model.Diary
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -9,6 +10,7 @@ fun interface DiaryValidator {
     fun validate(diary: Diary)
 }
 
+@OptIn(ExperimentalTime::class)
 class DiaryValidatorImpl(
     private val clock: Clock,
 ) : DiaryValidator {

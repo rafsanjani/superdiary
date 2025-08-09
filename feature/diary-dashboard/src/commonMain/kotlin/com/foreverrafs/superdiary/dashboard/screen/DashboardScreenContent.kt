@@ -56,7 +56,7 @@ import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.utils.toDate
 import com.valentinilk.shimmer.shimmer
 import kotlin.random.Random
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import org.jetbrains.compose.resources.stringResource

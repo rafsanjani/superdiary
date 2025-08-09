@@ -24,7 +24,6 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.datetime.Instant
 
 class DiaryAiRepositoryImplTest {
     private val diaryAI: DiaryAI = mock {
@@ -71,7 +70,7 @@ class DiaryAiRepositoryImplTest {
             DiaryChatMessageDb(
                 id = "123",
                 role = DiaryChatRoleDb.DiaryAI,
-                timestamp = Instant.DISTANT_PAST,
+                timestamp = kotlin.time.Instant.DISTANT_PAST,
                 content = "hi",
             ),
         )

@@ -3,7 +3,6 @@ package com.foreverrafs.superdiary.domain.repository
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.Instant
 
 /**
  * The DataSource represents the lowest level of data retrieval in the
@@ -61,10 +60,10 @@ interface DataSource {
     fun find(entry: String): Flow<List<Diary>>
 
     /** Search for matching diaries for a specific date */
-    fun findByDate(date: Instant): Flow<List<Diary>>
+    fun findByDate(date: kotlin.time.Instant): Flow<List<Diary>>
 
     /** Search for diaries between two dates inclusive */
-    fun find(from: Instant, to: Instant): Flow<List<Diary>>
+    fun find(from: kotlin.time.Instant, to: kotlin.time.Instant): Flow<List<Diary>>
 
     /** Search for a diary by its id */
     fun find(id: Long): Diary?

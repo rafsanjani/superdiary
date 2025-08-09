@@ -18,15 +18,16 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
 class SupabaseDiaryApiTest {
 
     private lateinit var supabaseDiaryApi: SupabaseDiaryApi
