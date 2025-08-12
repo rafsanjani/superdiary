@@ -69,7 +69,7 @@ class DiaryListSnapshotTests(
     @Test
     fun `Loading diary list`() {
         paparazzi.snapshot {
-            SuperDiaryPreviewTheme(modifier = Modifier.Companion.size(deviceSize)) {
+            SuperDiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
                 SharedTransitionLayout {
                     DiaryListScreenContent(
                         animatedContentScope = this@SuperDiaryPreviewTheme,
@@ -88,7 +88,7 @@ class DiaryListSnapshotTests(
     @Test
     fun `Unfiltered non-empty diary list`() {
         paparazzi.snapshot {
-            SuperDiaryPreviewTheme(modifier = Modifier.Companion.height(1500.dp)) {
+            SuperDiaryPreviewTheme(modifier = Modifier.height(1500.dp)) {
                 SharedTransitionLayout {
                     DiaryListScreenContent(
                         screenModel = DiaryListScreenModel(
@@ -124,7 +124,7 @@ class DiaryListSnapshotTests(
     @Test
     fun `Unfiltered empty diary list`() {
         paparazzi.snapshot {
-            SuperDiaryPreviewTheme(modifier = Modifier.Companion.size(deviceSize)) {
+            SuperDiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
                 SharedTransitionLayout {
                     DiaryListScreenContent(
                         screenModel = DiaryListScreenModel(
@@ -148,7 +148,7 @@ class DiaryListSnapshotTests(
     fun `Filtered empty diary list`() {
         paparazzi.snapshot {
             SharedTransitionLayout {
-                SuperDiaryPreviewTheme(modifier = Modifier.Companion.size(deviceSize)) {
+                SuperDiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
                     DiaryListScreenContent(
                         screenModel = DiaryListScreenModel(
                             diaries = emptyList(),
@@ -171,7 +171,7 @@ class DiaryListSnapshotTests(
     fun `Error loading diary list`() {
         paparazzi.snapshot {
             SharedTransitionLayout {
-                SuperDiaryPreviewTheme(modifier = Modifier.Companion.size(deviceSize)) {
+                SuperDiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
                     DiaryListScreenContent(
                         screenModel = DiaryListScreenModel(
                             error = Error("Error loading diaries"),

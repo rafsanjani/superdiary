@@ -237,7 +237,7 @@ private fun dashboardPlaceholderItems(): SnapshotStateList<DashboardSection> =
             DashboardSection(
                 content = {
                     AtAGlance(
-                        modifier = Modifier.Companion.shimmer(),
+                        modifier = Modifier.shimmer(),
                         state = DashboardViewModel.DashboardScreenState.Content(
                             latestEntries = emptyList(),
                             totalEntries = 0,
@@ -263,7 +263,7 @@ private fun dashboardPlaceholderItems(): SnapshotStateList<DashboardSection> =
             DashboardSection(
                 content = { onDismiss ->
                     WeeklySummaryCard(
-                        modifier = Modifier.Companion.shimmer()
+                        modifier = Modifier.shimmer()
                             .animateItem(fadeInSpec = null, fadeOutSpec = null)
                             .fillMaxWidth()
                             .heightIn(max = 200.dp, min = 150.dp),
@@ -280,7 +280,7 @@ private fun dashboardPlaceholderItems(): SnapshotStateList<DashboardSection> =
             DashboardSection(
                 content = {
                     LatestEntries(
-                        modifier = Modifier.Companion.shimmer()
+                        modifier = Modifier.shimmer()
                             .animateItem(
                                 fadeInSpec = null,
                                 fadeOutSpec = null,
