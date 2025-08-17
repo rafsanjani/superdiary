@@ -119,7 +119,5 @@ fun CreateDiaryScreen(
             showSaveDialog = it
         },
         onNavigateBack = navController::navigateUp,
-        animatedContentScope = animatedContentScope,
-        sharedTransitionScope = sharedTransitionScope,
     )
 }
