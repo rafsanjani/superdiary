@@ -25,6 +25,9 @@ data class DiarySettings(
 
     @PreferenceKey.Boolean(default = true)
     val showBiometricAuthDialog: Boolean,
+
+    @PreferenceKey.Boolean(default = true)
+    val dailyReminderEmail: Boolean,
 ) {
     companion object {
         val Empty: DiarySettings = DiarySettings(
@@ -35,6 +38,7 @@ data class DiarySettings(
             isBiometricAuthEnabled = false,
             showLocationPermissionDialog = true,
             showBiometricAuthDialog = true,
+            dailyReminderEmail = true,
         )
     }
 }

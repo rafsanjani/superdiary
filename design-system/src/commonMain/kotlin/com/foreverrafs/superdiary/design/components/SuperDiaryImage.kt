@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.design.components
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.Image
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -46,6 +47,7 @@ fun SuperDiaryImage(
     )
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 @Preview
 private fun Preview() {
@@ -56,6 +58,7 @@ private fun Preview() {
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 @Preview
 private fun PreviewDarkTheme() {

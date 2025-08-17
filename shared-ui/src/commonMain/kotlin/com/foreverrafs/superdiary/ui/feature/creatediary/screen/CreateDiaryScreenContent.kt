@@ -123,8 +123,6 @@ fun CreateDiaryScreenContent(
                     }
                 },
                 avatarUrl = userInfo?.avatarUrl,
-                sharedTransitionScope = sharedTransitionScope,
-                animatedContentScope = animatedContentScope,
             )
         },
         modifier = modifier,

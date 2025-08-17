@@ -1,9 +1,7 @@
 package com.foreverrafs.superdiary.design.components
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +26,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.foreverrafs.superdiary.design.style.LocalAnimatedContentScope
+import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -37,13 +37,14 @@ import superdiary.design_system.generated.resources.app_name
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun SuperDiaryAppBar(
-    animatedContentScope: AnimatedContentScope,
-    sharedTransitionScope: SharedTransitionScope,
     modifier: Modifier = Modifier,
     navigationIcon: @Composable (() -> Unit)? = null,
     onProfileClick: () -> Unit = {},
     avatarUrl: String? = null,
 ) {
+    val animatedContentScope = LocalAnimatedContentScope.current
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+
     // workaround for https://issuetracker.google.com/issues/344343033
     var isPlaced by remember { mutableStateOf(false) }
 
@@ -124,8 +125,6 @@ private fun SuperdiaryAppBarPreview() {
     SuperDiaryPreviewTheme(modifier = Modifier.fillMaxSize()) {
         SharedTransitionLayout {
             SuperDiaryAppBar(
-                animatedContentScope = this@SuperDiaryPreviewTheme,
-                sharedTransitionScope = this,
                 onProfileClick = {},
             )
         }

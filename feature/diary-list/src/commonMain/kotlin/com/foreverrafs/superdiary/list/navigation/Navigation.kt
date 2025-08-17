@@ -25,8 +25,6 @@ inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
                 onDiaryClick = {
                     navController.navigate(DiaryListRoute.DetailScreen(it.toString()))
                 },
-                sharedTransitionScope = sharedTransitionScope,
-                animatedContentScope = this@animatedComposable,
                 onProfileClick = onProfileClick,
             )
         }
@@ -38,8 +36,6 @@ inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
                 diaryId = diaryId,
                 navController = navController,
                 onProfileClick = onProfileClick,
-                sharedTransitionScope = sharedTransitionScope,
-                animatedContentScpe = this@animatedComposable,
             )
         }
     }

@@ -2,9 +2,7 @@
 
 package com.foreverrafs.superdiary.list.presentation.screen.list
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,8 +23,6 @@ fun DiaryListScreen(
     navController: NavController,
     onAddEntry: () -> Unit,
     onDiaryClick: (id: Long) -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedContentScope: AnimatedContentScope,
     onProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -60,8 +56,6 @@ fun DiaryListScreen(
         showSearchBar = true,
         diaryFilters = diaryFilters,
         diaryListActions = diaryListActions,
-        sharedTransitionScope = sharedTransitionScope,
-        animatedContentScope = animatedContentScope,
         onProfileClick = onProfileClick,
     )
 }

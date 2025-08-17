@@ -1,8 +1,6 @@
 package com.foreverrafs.superdiary.list.presentation.screen.detail.screen
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -23,8 +21,6 @@ fun DetailScreen(
     diaryId: String,
     navController: NavController,
     onProfileClick: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedContentScpe: AnimatedContentScope,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: DetailsViewModel = koinViewModel()
@@ -42,8 +38,6 @@ fun DetailScreen(
                 onDeleteDiary = viewModel::deleteDiary,
                 viewState = state,
                 onProfileClick = onProfileClick,
-                animatedContentScope = animatedContentScpe,
-                sharedTransitionScope = sharedTransitionScope,
             )
         }
 

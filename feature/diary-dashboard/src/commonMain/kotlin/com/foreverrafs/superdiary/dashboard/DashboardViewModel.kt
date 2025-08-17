@@ -161,7 +161,7 @@ class DashboardViewModel(
             val newState = func(currentState)
 
             logger.d(TAG) {
-                "updateContentState: Updating content state from $currentState to $newState"
+                "updateContentState: Updating content state from ${currentState::class.simpleName} to ${newState::class.simpleName}"
             }
 
             newState

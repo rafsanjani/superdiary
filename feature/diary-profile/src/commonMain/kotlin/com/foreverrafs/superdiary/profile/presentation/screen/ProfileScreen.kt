@@ -53,11 +53,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.foreverrafs.superdiary.design.components.SuperDiaryImage
+import com.foreverrafs.superdiary.design.style.LocalAnimatedContentScope
+import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
+import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewData
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewModel
 import com.foreverrafs.superdiary.utils.DiarySettings
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import superdiary.feature.diary_profile.generated.resources.Res
 import superdiary.feature.diary_profile.generated.resources.profile_screen_section_dashboard_cards
@@ -96,8 +100,6 @@ fun ProfileScreen(
         settings = settings,
         onUpdateSettings = viewModel::onSettingsUpdated,
         onNavigateBack = onNavigateBack,
-        sharedTransitionScope = sharedTransitionScope,
-        animatedContentScope = animatedContentScope,
     )
 }
 
@@ -110,14 +112,14 @@ fun ProfileScreenContent(
     onLogoutDialogVisibilityChange: (Boolean) -> Unit,
     onUpdateSettings: (DiarySettings) -> Unit,
     onNavigateBack: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedContentScope: AnimatedContentScope,
     isLogoutDialogVisible: Boolean,
     settings: DiarySettings,
     modifier: Modifier = Modifier,
 ) {
     val snackBarkHostState = remember { SnackbarHostState() }
     val currentOnConsumeErrorMessage by rememberUpdatedState(onConsumeErrorMessage)
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+    val animatedContentScope = LocalAnimatedContentScope.current
 
     LaunchedEffect(viewState.errorMessage) {
         if (viewState.errorMessage != null) {
@@ -361,24 +363,24 @@ private fun CheckboxProfileItem(
     }
 }
 
-// @OptIn(ExperimentalSharedTransitionApi::class)
-// @Preview
-// @Composable
-// private fun Preview() {
-//    ProfileScreenContent(
-//        viewState = ProfileScreenViewData(
-//            name = "Rafsanjani Aziz",
-//            email = "foreverrafs@gmail.com",
-//            uniqueEmailAddress = "S2FZ8rv7U@emailparse.nebulainnova.co.uk",
-//        ),
-//        onConsumeErrorMessage = {},
-//        onLogout = {},
-//        settings = DiarySettings.Empty,
-//        onUpdateSettings = {},
-//        onLogoutDialogVisibilityChange = {},
-//        isLogoutDialogVisible = false,
-//        onNavigateBack = {},
-//        sharedTransitionScope = LookaheadScope,
-//        animatedContentScope = this
-//    )
-// }
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Preview
+@Composable
+private fun Preview() {
+    SuperDiaryPreviewTheme {
+        ProfileScreenContent(
+            viewState = ProfileScreenViewData(
+                name = "Rafsanjani Aziz",
+                email = "foreverrafs@gmail.com",
+                uniqueEmailAddress = "S2FZ8rv7U@emailparse.nebulainnova.co.uk",
+            ),
+            onConsumeErrorMessage = {},
+            onLogout = {},
+            settings = DiarySettings.Empty,
+            onUpdateSettings = {},
+            onLogoutDialogVisibilityChange = {},
+            isLogoutDialogVisible = false,
+            onNavigateBack = {},
+        )
+    }
+}

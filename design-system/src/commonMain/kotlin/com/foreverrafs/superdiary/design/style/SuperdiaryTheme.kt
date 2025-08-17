@@ -1,5 +1,8 @@
 package com.foreverrafs.superdiary.design.style
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -12,6 +15,7 @@ import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -153,3 +157,12 @@ fun montserratAlternativesFontFamily(): FontFamily = FontFamily(
         ),
     ),
 )
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope> {
+    error("SharedTransitionScope not present")
+}
+
+val LocalAnimatedContentScope = staticCompositionLocalOf<AnimatedContentScope> {
+    error("AnimatedContentScope not present")
+}
