@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.foreverrafs.superdiary.design.style
 
 import androidx.compose.animation.AnimatedContentScope
