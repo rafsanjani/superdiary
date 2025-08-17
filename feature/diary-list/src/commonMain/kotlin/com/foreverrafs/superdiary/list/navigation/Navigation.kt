@@ -1,7 +1,6 @@
 package com.foreverrafs.superdiary.list.navigation
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
@@ -13,7 +12,6 @@ import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListScreen
 @OptIn(ExperimentalSharedTransitionApi::class)
 inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
     navController: NavHostController,
-    sharedTransitionScope: SharedTransitionScope,
     noinline onAddEntry: () -> Unit,
     noinline onProfileClick: () -> Unit,
 ) {

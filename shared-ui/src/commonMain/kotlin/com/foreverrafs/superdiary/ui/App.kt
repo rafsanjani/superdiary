@@ -229,10 +229,8 @@ private fun SuperDiaryNavHost(
                     )
                 }
 
-                // TODO: Move all these navigation events into the diary list module
                 diaryListNavigation<AppRoute.DiaryListNavHost>(
                     navController = navController,
-                    sharedTransitionScope = this@SharedTransitionLayout,
                     onAddEntry = {
                         navController.navigate(route = AppRoute.CreateDiaryScreen)
                     },
