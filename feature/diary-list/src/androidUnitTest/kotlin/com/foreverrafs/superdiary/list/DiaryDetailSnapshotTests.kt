@@ -11,6 +11,7 @@ import com.foreverrafs.superdiary.list.presentation.screen.detail.screen.DetailS
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import kotlin.time.Clock
+import kotlin.time.Instant
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,7 +23,7 @@ class DiaryDetailSnapshotTests(
 ) {
     private val testClock = object : Clock {
         // 2023-11-10
-        override fun now(): kotlin.time.Instant = kotlin.time.Instant.Companion.parse("2023-11-10T00:00:00.850951Z")
+        override fun now(): Instant = Instant.parse("2023-11-10T00:00:00.850951Z")
     }
 
     @get:Rule
@@ -54,8 +55,6 @@ class DiaryDetailSnapshotTests(
                             ),
                         ),
                         onProfileClick = {},
-                        animatedContentScope = this,
-                        sharedTransitionScope = this@SharedTransitionLayout,
                     )
                 }
             }

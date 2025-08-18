@@ -72,8 +72,6 @@ class DiaryListSnapshotTests(
             SuperDiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
                 SharedTransitionLayout {
                     DiaryListScreenContent(
-                        animatedContentScope = this@SuperDiaryPreviewTheme,
-                        sharedTransitionScope = this,
                         screenModel = DiaryListScreenModel(isLoading = true),
                         showSearchBar = true,
                         diaryFilters = DiaryFilters(),
@@ -113,8 +111,6 @@ class DiaryListSnapshotTests(
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
                         onProfileClick = {},
-                        sharedTransitionScope = this,
-                        animatedContentScope = this@SuperDiaryPreviewTheme,
                     )
                 }
             }
@@ -136,8 +132,6 @@ class DiaryListSnapshotTests(
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
                         onProfileClick = {},
-                        sharedTransitionScope = this,
-                        animatedContentScope = this@SuperDiaryPreviewTheme,
                     )
                 }
             }
@@ -159,8 +153,6 @@ class DiaryListSnapshotTests(
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
                         onProfileClick = {},
-                        sharedTransitionScope = this@SharedTransitionLayout,
-                        animatedContentScope = this@SuperDiaryPreviewTheme,
                     )
                 }
             }
@@ -181,8 +173,6 @@ class DiaryListSnapshotTests(
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
                         onProfileClick = {},
-                        sharedTransitionScope = this@SharedTransitionLayout,
-                        animatedContentScope = this@SuperDiaryPreviewTheme,
                     )
                 }
             }
