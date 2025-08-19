@@ -2,9 +2,7 @@
 
 package com.foreverrafs.superdiary.list.presentation.screen.list
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -131,8 +129,6 @@ fun DiaryListScreenContent(
     showSearchBar: Boolean,
     diaryListActions: DiaryListActions,
     onProfileClick: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedContentScope: AnimatedContentScope,
     modifier: Modifier = Modifier,
     clock: Clock = Clock.System,
 ) {
@@ -191,8 +187,6 @@ fun DiaryListScreenContent(
                     }
                 },
                 avatarUrl = screenModel.avatarUrl,
-                animatedContentScope = animatedContentScope,
-                sharedTransitionScope = sharedTransitionScope,
                 onProfileClick = onProfileClick,
             )
         },

@@ -2,7 +2,6 @@ package com.foreverrafs.superdiary.ui.navigation
 
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -42,8 +41,6 @@ fun BottomNavigationScreen(
     onAddEntry: () -> Unit,
     onSeeAll: () -> Unit,
     onDiaryClick: (diaryId: Long) -> Unit,
-    animatedContentScope: AnimatedContentScope,
-    sharedTransitionScope: SharedTransitionScope,
     modifier: Modifier = Modifier,
 ) {
     // This nav controller is used to navigate between the tabs
@@ -58,8 +55,6 @@ fun BottomNavigationScreen(
             SuperDiaryAppBar(
                 avatarUrl = userInfo?.avatarUrl,
                 onProfileClick = onProfileClick,
-                animatedContentScope = animatedContentScope,
-                sharedTransitionScope = sharedTransitionScope,
             )
         },
         bottomBar = {

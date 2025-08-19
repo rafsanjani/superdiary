@@ -1,9 +1,7 @@
 package com.foreverrafs.superdiary.ui.feature.creatediary.screen
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -88,8 +86,6 @@ fun CreateDiaryScreenContent(
     onRequestLocationPermission: () -> Unit,
     onDontAskAgain: () -> Unit,
     onNavigateBack: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedContentScope: AnimatedContentScope,
     modifier: Modifier = Modifier,
     richTextState: RichTextState = rememberRichTextState(),
 ) {
@@ -123,8 +119,6 @@ fun CreateDiaryScreenContent(
                     }
                 },
                 avatarUrl = userInfo?.avatarUrl,
-                sharedTransitionScope = sharedTransitionScope,
-                animatedContentScope = animatedContentScope,
             )
         },
         modifier = modifier,

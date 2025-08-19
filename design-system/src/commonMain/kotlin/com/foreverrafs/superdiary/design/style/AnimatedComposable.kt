@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
@@ -18,9 +19,13 @@ import kotlin.reflect.KType
 inline fun <reified T : Any> NavGraphBuilder.animatedComposable(
     typeMap: Map<KType, NavType<*>> = emptyMap(),
     deepLinks: List<NavDeepLink> = emptyList(),
-    noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
+    noinline content: @Composable AnimatedContentScope.(navBackStackEntry: NavBackStackEntry) -> Unit,
 ) = composable<T>(
-    content = content,
+    content = {
+        CompositionLocalProvider(LocalAnimatedContentScope provides this) {
+            content(it)
+        }
+    },
     enterTransition = { enterTransition() },
     exitTransition = { exitTransition() },
     popEnterTransition = { enterTransition() },

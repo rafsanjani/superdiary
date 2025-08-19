@@ -40,10 +40,7 @@ class TopAppBarSnapshotTests(
                 SuperDiaryPreviewTheme {
                     Scaffold(
                         topBar = {
-                            SuperDiaryAppBar(
-                                sharedTransitionScope = this@SharedTransitionLayout,
-                                animatedContentScope = this,
-                            )
+                            SuperDiaryAppBar()
                         },
                     ) {
                         Box(

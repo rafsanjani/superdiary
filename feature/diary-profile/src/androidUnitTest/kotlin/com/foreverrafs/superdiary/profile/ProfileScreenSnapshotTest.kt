@@ -46,8 +46,6 @@ class ProfileScreenSnapshotTest(
                         onUpdateSettings = {},
                         settings = DiarySettings.Empty,
                         onNavigateBack = {},
-                        sharedTransitionScope = this@SharedTransitionLayout,
-                        animatedContentScope = this@SuperDiaryPreviewTheme,
                     )
                 }
             }
@@ -72,8 +70,6 @@ class ProfileScreenSnapshotTest(
                         onUpdateSettings = {},
                         settings = DiarySettings.Empty,
                         onNavigateBack = {},
-                        sharedTransitionScope = this@SharedTransitionLayout,
-                        animatedContentScope = this@SuperDiaryPreviewTheme,
                     )
                 }
             }
@@ -99,8 +95,6 @@ class ProfileScreenSnapshotTest(
                         onUpdateSettings = {},
                         settings = DiarySettings.Empty,
                         onNavigateBack = {},
-                        sharedTransitionScope = this@SharedTransitionLayout,
-                        animatedContentScope = this@SuperDiaryPreviewTheme,
                     )
                 }
             }

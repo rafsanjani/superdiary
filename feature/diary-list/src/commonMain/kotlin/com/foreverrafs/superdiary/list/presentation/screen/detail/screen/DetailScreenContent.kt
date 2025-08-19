@@ -1,8 +1,6 @@
 package com.foreverrafs.superdiary.list.presentation.screen.detail.screen
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -59,8 +57,6 @@ fun DetailScreenContent(
     onNavigateBack: () -> Unit,
     onProfileClick: () -> Unit,
     viewState: DetailsViewState.DiarySelected,
-    animatedContentScope: AnimatedContentScope,
-    sharedTransitionScope: SharedTransitionScope,
     modifier: Modifier = Modifier,
 ) {
     val diary = viewState.diary
@@ -93,8 +89,6 @@ fun DetailScreenContent(
                 },
                 avatarUrl = viewState.avatarUrl,
                 onProfileClick = onProfileClick,
-                animatedContentScope = animatedContentScope,
-                sharedTransitionScope = sharedTransitionScope,
             )
         },
         snackbarHost = {
@@ -106,16 +100,12 @@ fun DetailScreenContent(
             color = MaterialTheme.colorScheme.background,
         ) {
             Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .fillMaxSize(),
+                modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 if (!diary.location.isEmpty()) {
                     MapComponent(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(150.dp),
+                        modifier = Modifier.fillMaxWidth().height(150.dp),
                         latitude = diary.location.latitude,
                         longitude = diary.location.longitude,
                     )
@@ -124,21 +114,15 @@ fun DetailScreenContent(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = diary.date
-                        .toLocalDateTime(TimeZone.currentSystemDefault())
-                        .format("EEE - MMMM dd, yyyy - hh:mm a")
-                        .lowercase(),
+                    text = diary.date.toLocalDateTime(TimeZone.currentSystemDefault())
+                        .format("EEE - MMMM dd, yyyy - hh:mm a").lowercase(),
                     style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier
-                        .alpha(0.6f)
-                        .padding(12.dp),
+                    modifier = Modifier.alpha(0.6f).padding(12.dp),
                 )
 
                 RichText(
                     state = richTextState,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
                     style = MaterialTheme.typography.bodyMedium,
                     lineHeight = 32.sp,
                 )

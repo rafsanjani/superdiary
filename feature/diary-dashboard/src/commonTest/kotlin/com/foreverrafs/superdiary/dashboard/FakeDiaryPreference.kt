@@ -17,6 +17,7 @@ internal class FakeDiaryPreference : DiaryPreference {
         isBiometricAuthEnabled = false,
         showLocationPermissionDialog = false,
         showBiometricAuthDialog = false,
+        dailyReminderEmail = true,
     )
 
     override val settings: Flow<DiarySettings>

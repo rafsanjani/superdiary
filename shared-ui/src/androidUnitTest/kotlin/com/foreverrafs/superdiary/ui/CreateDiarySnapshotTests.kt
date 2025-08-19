@@ -44,8 +44,6 @@ class CreateDiarySnapshotTests(
                         showSaveDialog = false,
                         onShowSaveDialogChange = {},
                         onNavigateBack = {},
-                        sharedTransitionScope = this@SharedTransitionLayout,
-                        animatedContentScope = this@SuperDiaryPreviewTheme,
                     )
                 }
             }
@@ -59,8 +57,6 @@ class CreateDiarySnapshotTests(
                 SuperDiaryPreviewTheme {
                     CreateDiaryScreenContent(
                         onNavigateBack = {},
-                        sharedTransitionScope = this@SharedTransitionLayout,
-                        animatedContentScope = this@SuperDiaryPreviewTheme,
                         isGeneratingFromAi = false,
                         onGenerateAI = { _: String, _: Int -> },
                         richTextState = rememberRichTextState().apply {
@@ -113,8 +109,6 @@ class CreateDiarySnapshotTests(
                         showSaveDialog = false,
                         onShowSaveDialogChange = {},
                         onNavigateBack = {},
-                        sharedTransitionScope = this@SharedTransitionLayout,
-                        animatedContentScope = this@SuperDiaryPreviewTheme,
                     )
                 }
             }
@@ -152,8 +146,6 @@ class CreateDiarySnapshotTests(
                         showSaveDialog = false,
                         onShowSaveDialogChange = {},
                         onNavigateBack = {},
-                        sharedTransitionScope = this@SharedTransitionLayout,
-                        animatedContentScope = this@SuperDiaryPreviewTheme,
                     )
                 }
             }
@@ -178,8 +170,6 @@ class CreateDiarySnapshotTests(
                         showSaveDialog = false,
                         onShowSaveDialogChange = {},
                         onNavigateBack = {},
-                        sharedTransitionScope = this@SharedTransitionLayout,
-                        animatedContentScope = this@SuperDiaryPreviewTheme,
                     )
                 }
             }
@@ -204,8 +194,6 @@ class CreateDiarySnapshotTests(
                         showSaveDialog = true,
                         onShowSaveDialogChange = {},
                         onNavigateBack = {},
-                        sharedTransitionScope = this@SharedTransitionLayout,
-                        animatedContentScope = this@SuperDiaryPreviewTheme,
                     )
                 }
             }

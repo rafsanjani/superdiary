@@ -159,7 +159,6 @@ dependencies {
     implementation(projects.feature.diaryAuth)
     implementation(projects.core.analytics)
     implementation(libs.koin.android)
-    implementation(libs.androidx.core)
     implementation(libs.supabase.compose.auth)
     implementation(libs.androidx.core.uri)
     implementation(libs.supabase.auth)

@@ -57,6 +57,7 @@ class DiaryPreferenceTest {
             showLocationPermissionDialog = false,
             showBiometricAuthDialog = false,
             isBiometricAuthEnabled = false,
+            dailyReminderEmail = true,
         )
 
         diaryPreference.save {
@@ -85,6 +86,7 @@ class DiaryPreferenceTest {
             showLocationPermissionDialog = false,
             isBiometricAuthEnabled = false,
             showBiometricAuthDialog = false,
+            dailyReminderEmail = true,
         )
 
         diaryPreference.save {

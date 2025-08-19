@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +47,7 @@ import com.foreverrafs.superdiary.auth.register.screen.RegisterScreen
 import com.foreverrafs.superdiary.auth.register.screen.RegistrationConfirmationScreen
 import com.foreverrafs.superdiary.auth.reset.SendPasswordResetEmailScreen
 import com.foreverrafs.superdiary.core.sync.Synchronizer
+import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.design.style.animatedComposable
 import com.foreverrafs.superdiary.list.navigation.DiaryListRoute
@@ -144,152 +146,150 @@ private fun SuperDiaryNavHost(
     }
 
     SharedTransitionLayout {
-        NavHost(
-            modifier = modifier,
-            navController = navController,
-            startDestination = startDestination,
-        ) {
-            animatedComposable<AppRoute.BiometricAuthScreen> {
-                BiometricLoginScreen(
-                    onBiometricAuthSuccess = {
-                        navController.navigate(
-                            AppRoute.BottomNavigationNavHost(
-                                userInfo = null,
-                            ),
-                        ) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = true
-                            }
-                        }
-                    },
-                )
-            }
-
-            animatedComposable<AppRoute.LoginScreen> {
-                val route = it.toRoute<AppRoute.LoginScreen>()
-
-                LoginScreen(
-                    onLoginSuccess = {
-                        navController.navigate(
-                            AppRoute.BottomNavigationNavHost(
-                                userInfo = it,
-                            ),
-                        ) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = true
-                            }
-                        }
-                    },
-                    onRegisterClick = {
-                        navController.navigate(AppRoute.RegisterScreen)
-                    },
-                    isFromDeeplink = route.isFromDeeplink,
-                    onResetPasswordClick = {
-                        navController.navigate(AppRoute.SendPasswordResetEmailScreen)
-                    },
-                )
-            }
-
-            animatedComposable<AppRoute.SendPasswordResetEmailScreen> {
-                SendPasswordResetEmailScreen()
-            }
-
-            animatedComposable<AppRoute.RegisterScreen> {
-                RegisterScreen(
-                    onLoginClick = {
-                        navController.navigate(AppRoute.LoginScreen()) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = true
-                            }
-                        }
-                    },
-                    onRegisterSuccess = {
-                        navController.navigate(AppRoute.RegistrationConfirmationScreen) {
-                            popUpTo(AppRoute.RegistrationConfirmationScreen) {
-                                inclusive = true
-                            }
-                        }
-                    },
-                )
-            }
-
-            animatedComposable<AppRoute.RegistrationConfirmationScreen> {
-                RegistrationConfirmationScreen()
-            }
-
-            animatedComposable<AppRoute.CreateDiaryScreen> {
-                CreateDiaryScreen(
-                    navController = navController,
-                    userInfo = userInfo,
-                    sharedTransitionScope = this@SharedTransitionLayout,
-                    animatedContentScope = this@animatedComposable,
-                )
-            }
-
-            // TODO: Move all these navigation events into the diary list module
-            diaryListNavigation<AppRoute.DiaryListNavHost>(
+        CompositionLocalProvider(LocalSharedTransitionScope provides this) {
+            NavHost(
+                modifier = modifier,
                 navController = navController,
-                sharedTransitionScope = this@SharedTransitionLayout,
-                onAddEntry = {
-                    navController.navigate(route = AppRoute.CreateDiaryScreen)
-                },
-                onProfileClick = { navController.navigate(AppRoute.ProfileScreen) },
-            )
-
-            animatedComposable<AppRoute.BottomNavigationNavHost>(
-                typeMap = mapOf(typeOf<UserInfo?>() to UserInfoNavType),
+                startDestination = startDestination,
             ) {
-                val route = it.toRoute<AppRoute.BottomNavigationNavHost>()
-                val scope = rememberCoroutineScope()
-
-                // Sync can only happen after we are logged in
-                LifecycleResumeEffect(Unit) {
-                    scope.launch {
-                        synchronizer.startListening()
-                    }
-                    onPauseOrDispose {
-                        synchronizer.stopListening()
-                    }
+                animatedComposable<AppRoute.BiometricAuthScreen> {
+                    BiometricLoginScreen(
+                        onBiometricAuthSuccess = {
+                            navController.navigate(
+                                AppRoute.BottomNavigationNavHost(
+                                    userInfo = null,
+                                ),
+                            ) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
+                            }
+                        },
+                    )
                 }
 
-                BottomNavigationScreen(
-                    onProfileClick = {
-                        navController.navigate(AppRoute.ProfileScreen)
-                    },
-                    userInfo = route.userInfo,
-                    animatedContentScope = this@animatedComposable,
-                    sharedTransitionScope = this@SharedTransitionLayout,
-                    onAddEntry = {
-                        navController.navigate(AppRoute.CreateDiaryScreen)
-                    },
-                    onSeeAll = {
-                        navController.navigate(AppRoute.DiaryListNavHost)
-                    },
-                    onDiaryClick = {
-                        navController.navigate(
-                            DiaryListRoute.DetailScreen(it.toString()),
-                        )
-                    },
-                )
-            }
+                animatedComposable<AppRoute.LoginScreen> {
+                    val route = it.toRoute<AppRoute.LoginScreen>()
 
-            changePasswordNavigation<AppRoute.ChangePasswordNavHost>(
-                navController = navController,
-            )
-
-            animatedComposable<AppRoute.ProfileScreen> {
-                ProfileScreen(
-                    onLogoutComplete = {
-                        navController.navigate(AppRoute.LoginScreen()) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = true
+                    LoginScreen(
+                        onLoginSuccess = {
+                            navController.navigate(
+                                AppRoute.BottomNavigationNavHost(
+                                    userInfo = it,
+                                ),
+                            ) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
                             }
-                        }
+                        },
+                        onRegisterClick = {
+                            navController.navigate(AppRoute.RegisterScreen)
+                        },
+                        isFromDeeplink = route.isFromDeeplink,
+                        onResetPasswordClick = {
+                            navController.navigate(AppRoute.SendPasswordResetEmailScreen)
+                        },
+                    )
+                }
+
+                animatedComposable<AppRoute.SendPasswordResetEmailScreen> {
+                    SendPasswordResetEmailScreen()
+                }
+
+                animatedComposable<AppRoute.RegisterScreen> {
+                    RegisterScreen(
+                        onLoginClick = {
+                            navController.navigate(AppRoute.LoginScreen()) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
+                            }
+                        },
+                        onRegisterSuccess = {
+                            navController.navigate(AppRoute.RegistrationConfirmationScreen) {
+                                popUpTo(AppRoute.RegistrationConfirmationScreen) {
+                                    inclusive = true
+                                }
+                            }
+                        },
+                    )
+                }
+
+                animatedComposable<AppRoute.RegistrationConfirmationScreen> {
+                    RegistrationConfirmationScreen()
+                }
+
+                animatedComposable<AppRoute.CreateDiaryScreen> {
+                    CreateDiaryScreen(
+                        navController = navController,
+                        userInfo = userInfo,
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedContentScope = this@animatedComposable,
+                    )
+                }
+
+                diaryListNavigation<AppRoute.DiaryListNavHost>(
+                    navController = navController,
+                    onAddEntry = {
+                        navController.navigate(route = AppRoute.CreateDiaryScreen)
                     },
-                    onNavigateBack = navController::navigateUp,
-                    sharedTransitionScope = this@SharedTransitionLayout,
-                    animatedContentScope = this@animatedComposable,
+                    onProfileClick = { navController.navigate(AppRoute.ProfileScreen) },
                 )
+
+                animatedComposable<AppRoute.BottomNavigationNavHost>(
+                    typeMap = mapOf(typeOf<UserInfo?>() to UserInfoNavType),
+                ) {
+                    val route = it.toRoute<AppRoute.BottomNavigationNavHost>()
+                    val scope = rememberCoroutineScope()
+
+                    // Sync can only happen after we are logged in
+                    LifecycleResumeEffect(Unit) {
+                        scope.launch {
+                            synchronizer.startListening()
+                        }
+                        onPauseOrDispose {
+                            synchronizer.stopListening()
+                        }
+                    }
+
+                    BottomNavigationScreen(
+                        onProfileClick = {
+                            navController.navigate(AppRoute.ProfileScreen)
+                        },
+                        userInfo = route.userInfo,
+                        onAddEntry = {
+                            navController.navigate(AppRoute.CreateDiaryScreen)
+                        },
+                        onSeeAll = {
+                            navController.navigate(AppRoute.DiaryListNavHost)
+                        },
+                        onDiaryClick = {
+                            navController.navigate(
+                                DiaryListRoute.DetailScreen(it.toString()),
+                            )
+                        },
+                    )
+                }
+
+                changePasswordNavigation<AppRoute.ChangePasswordNavHost>(
+                    navController = navController,
+                )
+
+                animatedComposable<AppRoute.ProfileScreen> {
+                    ProfileScreen(
+                        onLogoutComplete = {
+                            navController.navigate(AppRoute.LoginScreen()) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
+                            }
+                        },
+                        onNavigateBack = navController::navigateUp,
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedContentScope = this@animatedComposable,
+                    )
+                }
             }
         }
     }
