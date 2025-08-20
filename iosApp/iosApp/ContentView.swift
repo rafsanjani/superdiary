@@ -1,19 +1,12 @@
 import SwiftUI
 import GoogleSignIn
 import shared
-import GoogleSignInSwift
-
 
 struct ComposeView: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> some UIViewController {
         
-        let viewController = ViewController { location in
-            
-            UIHostingController(
-                rootView: GoogleMap(location: location)
-            )
-        }
+        let viewController =  ViewController(nativeViewFactory: SwiftNativeViewFactory())
         
         return viewController.mainViewController()
     }

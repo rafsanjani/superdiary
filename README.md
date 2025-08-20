@@ -1,10 +1,8 @@
 # Superdiary ❤️
 
 <div align="left">
-    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/build.yml/badge.svg"  alt="Link to CI build status"/>
-      <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/unit_test_jvm.yml/badge.svg"  alt="Link to CI build status"/>
-    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/unit_test_ios.yml/badge.svg"  alt="Link to CI build status"/>
-    <img src = "https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rafsanjani/129c8d4608ea11b81849152dba085532/raw/dc150ab741a946e2f136d506d1935ab5a4f0fc96/superdiary-badge.json" alt="link to coverage status"/>
+    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/android_pr.yml/badge.svg"  alt="Link to CI build status"/>
+    <img src = "https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rafsanjani/129c8d4608ea11b81849152dba085532/raw/superdiary-badge.json" alt="link to coverage status"/>
 </div>
 A simple diary app, mostly focused on quality architectural patterns and improved testing strategies (unit, snapshot and instrumentation).
 

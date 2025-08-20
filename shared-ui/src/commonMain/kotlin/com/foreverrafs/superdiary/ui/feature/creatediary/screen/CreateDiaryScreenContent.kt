@@ -1,6 +1,7 @@
 package com.foreverrafs.superdiary.ui.feature.creatediary.screen
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,7 +30,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -38,9 +41,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
-import com.foreverrafs.superdiary.ui.components.ConfirmSaveDialog
-import com.foreverrafs.superdiary.ui.components.LocationRationaleDialog
-import com.foreverrafs.superdiary.ui.components.SuperDiaryAppBar
+import com.foreverrafs.superdiary.design.components.ConfirmSaveDialog
+import com.foreverrafs.superdiary.design.components.LocationRationaleDialog
+import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
 import com.foreverrafs.superdiary.ui.feature.creatediary.components.RichTextStyleRow
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
@@ -65,7 +68,11 @@ import superdiary.shared_ui.generated.resources.label_diary_ai
  *    dialog, this callback is invoked, signalling that the user doesn't
  *    want to be disturbed again.
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalComposeUiApi::class,
+    ExperimentalSharedTransitionApi::class,
+)
 @Composable
 fun CreateDiaryScreenContent(
     isGeneratingFromAi: Boolean,
@@ -78,16 +85,29 @@ fun CreateDiaryScreenContent(
     userInfo: UserInfo?,
     onRequestLocationPermission: () -> Unit,
     onDontAskAgain: () -> Unit,
+    onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     richTextState: RichTextState = rememberRichTextState(),
 ) {
+    BackHandler {
+        if (richTextState.toText().isEmpty()) {
+            onNavigateBack()
+        } else {
+            onShowSaveDialogChange(true)
+        }
+    }
+
     Scaffold(
         topBar = {
             SuperDiaryAppBar(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            onShowSaveDialogChange(true)
+                            if (richTextState.annotatedString.isEmpty()) {
+                                onNavigateBack()
+                            } else {
+                                onShowSaveDialogChange(true)
+                            }
                         },
                     ) {
                         Icon(
@@ -99,7 +119,7 @@ fun CreateDiaryScreenContent(
                         )
                     }
                 },
-                userInfo = userInfo,
+                avatarUrl = userInfo?.avatarUrl,
             )
         },
         modifier = modifier,
@@ -109,10 +129,14 @@ fun CreateDiaryScreenContent(
             color = MaterialTheme.colorScheme.background,
         ) {
             if (showLocationPermissionRationale) {
+                val isPermissionDeniedAlways = remember(permissionState) {
+                    permissionState == PermissionState.DeniedAlways || permissionState == PermissionState.NotGranted
+                }
+
                 LocationRationaleDialog(
                     onRequestLocationPermission = onRequestLocationPermission,
                     onDontAskAgain = onDontAskAgain,
-                    permissionState = permissionState,
+                    isPermissionDeniedAlways = isPermissionDeniedAlways,
                 )
             }
 
@@ -120,9 +144,13 @@ fun CreateDiaryScreenContent(
                 ConfirmSaveDialog(
                     onDismiss = {
                         onShowSaveDialogChange(false)
+                        onNavigateBack()
                     },
                     onConfirm = {
                         onSaveDiary(richTextState.toHtml())
+                    },
+                    onDismissRequest = {
+                        onShowSaveDialogChange(false)
                     },
                 )
             }
@@ -159,14 +187,14 @@ fun CreateDiaryScreenContent(
 
                     // Only enable AI suggestions when there is at least 50 characters entered
                     val enableSuggestionChip =
-                        !isGeneratingFromAi && richTextState.annotatedString.text.length >= 50
+                        !isGeneratingFromAi && richTextState.toText().length >= 50
 
                     DiaryAISuggestionChip(
                         words = 50,
                         enabled = enableSuggestionChip,
                         onClick = {
                             onGenerateAI(
-                                richTextState.annotatedString.text,
+                                richTextState.toText(),
                                 50,
                             )
                         },

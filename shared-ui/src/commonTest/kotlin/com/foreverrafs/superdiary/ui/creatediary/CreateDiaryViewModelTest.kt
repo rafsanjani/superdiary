@@ -5,26 +5,28 @@ import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
-import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.preferences.DiaryPreference
+import com.foreverrafs.superdiary.ai.api.DiaryAI
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.core.location.LocationManager
 import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.data.datasource.DataSource
-import com.foreverrafs.superdiary.data.diaryai.DiaryAI
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.usecase.AddDiaryUseCase
-import com.foreverrafs.superdiary.data.utils.DiaryPreference
-import com.foreverrafs.superdiary.data.utils.DiarySettings
+import com.foreverrafs.superdiary.core.sync.Synchronizer
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.repository.DataSource
+import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.ui.creatediary.FakePermissionsControllerWrapper.ActionPerformed.ProvidePermission
 import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
+import com.foreverrafs.superdiary.utils.DiarySettings
 import dev.mokkery.answering.returns
 import dev.mokkery.every
 import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
 import dev.mokkery.mock
 import dev.mokkery.verify
+import dev.mokkery.verify.VerifyMode
 import dev.mokkery.verifySuspend
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -33,11 +35,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.coroutines.yield
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CreateDiaryViewModelTest {
@@ -62,6 +63,10 @@ class CreateDiaryViewModelTest {
 
     private val preference: DiaryPreference = mock()
 
+    private val synchronizer: Synchronizer = mock {
+        everySuspend { sync(any()) } returns true
+    }
+
     private lateinit var createDiaryViewModel: CreateDiaryViewModel
 
     private val permissionsController: FakePermissionsControllerWrapper =
@@ -69,16 +74,16 @@ class CreateDiaryViewModelTest {
 
     @BeforeTest
     fun setup() {
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(TestAppDispatchers.main)
 
         every { preference.settings }.returns(emptyFlow())
         everySuspend { preference.getSnapshot() }.returns(DiarySettings.Empty)
 
         createDiaryViewModel = CreateDiaryViewModel(
             addDiaryUseCase = AddDiaryUseCase(
-                dataSource = dataSource,
                 dispatchers = TestAppDispatchers,
-                validator = {},
+                validator = {}, // lenient validator
+                dataSource = dataSource,
             ),
             diaryAI = diaryAI,
             logger = AggregateLogger(loggers = emptyList()),
@@ -90,6 +95,7 @@ class CreateDiaryViewModelTest {
                 ),
             ),
             preference = preference,
+            synchronizer = synchronizer,
         )
     }
 
@@ -139,7 +145,7 @@ class CreateDiaryViewModelTest {
 
         createDiaryViewModel.onRequestLocationPermission()
 
-        yield()
+        advanceUntilIdle()
 
         assertThat(
             permissionsController.actionPerformed,
@@ -156,7 +162,7 @@ class CreateDiaryViewModelTest {
 
         createDiaryViewModel.onPermanentlyDismissLocationPermissionDialog()
 
-        yield()
+        advanceUntilIdle()
         verifySuspend { preference.save(any()) }
     }
 
@@ -181,6 +187,38 @@ class CreateDiaryViewModelTest {
             expectNoEvents()
 
             assertThat(state.location).isNull()
+        }
+    }
+
+    @Test
+    fun `Should perform data sync after successfully saving an entry`() = runTest {
+        val diary = Diary(id = 12L, entry = "test diary")
+        everySuspend { dataSource.add(diary) } returns diary.id!!
+
+        createDiaryViewModel.saveDiary(diary)
+        advanceUntilIdle()
+
+        verifySuspend(
+            mode = VerifyMode.exactly(1),
+        ) {
+            synchronizer.sync(
+                operation = Synchronizer.SyncOperation.Save(diary),
+            )
+        }
+    }
+
+    @Test
+    fun `Should NOT perform data sync WHEN entry is not saved`() = runTest {
+        val diary = Diary(id = 12L, entry = "test diary")
+        everySuspend { dataSource.add(diary) } returns 0
+
+        createDiaryViewModel.saveDiary(diary)
+        advanceUntilIdle()
+
+        verifySuspend(mode = VerifyMode.not) {
+            synchronizer.sync(
+                operation = Synchronizer.SyncOperation.Save(diary),
+            )
         }
     }
 }

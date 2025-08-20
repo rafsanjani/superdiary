@@ -1,40 +1,20 @@
 @file:Suppress("UnusedPrivateProperty")
 
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+
+
 plugins {
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.sqldelight)
+    id("com.superdiary.multiplatform.kotlin")
+    id("com.superdiary.android.library")
+    alias(libs.plugins.google.ksp)
     alias(libs.plugins.testLogger)
     alias(libs.plugins.kotlin.serialization)
-    id("kotlin-parcelize")
-    kotlin("multiplatform")
+    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.mokkery)
-}
-
-sqldelight {
-    databases.register("SuperDiaryDatabase") {
-        packageName.set("com.foreverrafs.superdiary.database")
-        deriveSchemaFromMigrations.set(true)
-    }
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    androidTarget()
-
-    iosX64()
-    jvm()
-    iosArm64()
-    iosSimulatorArm64()
-
-    compilerOptions {
-        freeCompilerArgs.addAll(
-            "-Xexpect-actual-classes",
-            "-opt-in=com.aallam.openai.api.BetaOpenAI",
-            "-Xskip-prerelease-check",
-        )
-    }
-
     sourceSets {
         commonMain {
             dependencies {
@@ -42,35 +22,31 @@ kotlin {
                 implementation(libs.kotlin.datetime)
                 implementation(libs.touchlab.stately)
                 implementation(libs.koin.core)
-                implementation(libs.kotlin.inject.runtime)
-                implementation(libs.square.sqldelight.coroutinesExt)
                 implementation(libs.kotlinx.coroutines.test)
-                implementation(libs.openAiKotlin)
+//                implementation("org.simpmusic.gemini-kotlin:openai-client:4.0.2")
                 implementation(libs.uuid)
+                implementation(projects.preferences.annotation)
                 implementation(libs.androidx.datastore.preferences)
-                implementation(libs.androidx.datastore.okio)
                 implementation(libs.ktor.client.cio)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.supabase.posgrest)
+                implementation(libs.supabase.realtime)
 
                 // Project dependencies
-                implementation(projects.core.utils)
+                implementation(projects.commonUtils)
                 implementation(projects.core.analytics)
                 implementation(projects.core.secrets)
                 implementation(projects.core.logging)
                 implementation(projects.core.location)
+                implementation(projects.core.database)
             }
+
+            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
         }
 
         androidMain {
             dependencies {
-                implementation(libs.square.sqldelight.driver.android)
-                implementation(libs.square.sqldelight.coroutinesExt)
                 implementation(libs.koin.android)
-            }
-        }
-
-        val androidUnitTest by getting {
-            dependencies {
-                implementation(libs.square.sqldelight.driver.sqlite)
             }
         }
 
@@ -81,6 +57,9 @@ kotlin {
                 implementation(libs.koin.test)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.turbine)
+                implementation(projects.core.databaseTest)
+                implementation("io.ktor:ktor-client-mock:${libs.versions.ktor.get()}")
+                implementation(projects.commonTest)
                 implementation(libs.assertk.common)
             }
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
@@ -105,14 +84,16 @@ kotlin {
 
 android {
     namespace = "com.foreverrafs.data"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+}
 
-    defaultConfig {
-        minSdk = libs.versions.minimumSdk.get().toInt()
-    }
+dependencies {
+    add("kspCommonMainMetadata", projects.preferences.processor)
+}
 
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_17
-        sourceCompatibility = JavaVersion.VERSION_17
+afterEvaluate {
+    tasks.withType<KotlinCompilationTask<*>> {
+        if (name != "kspCommonMainKotlinMetadata") {
+            dependsOn("kspCommonMainKotlinMetadata")
+        }
     }
 }

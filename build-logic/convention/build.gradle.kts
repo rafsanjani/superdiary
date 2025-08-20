@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -12,8 +13,8 @@ java {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 
@@ -24,15 +25,14 @@ dependencies {
     compileOnly(libs.conventionplugins.android)
     compileOnly(libs.conventionplugins.compose)
     compileOnly(libs.conventionplugins.compose.compiler)
-    compileOnly("com.codingfeline.buildkonfig:buildkonfig-gradle-plugin:0.15.2")
-    compileOnly("com.codingfeline.buildkonfig:buildkonfig-compiler:0.15.2")
+    compileOnly(libs.conventionplugins.buildKonfig.compiler)
+    compileOnly(libs.conventionplugins.buildKonfig.plugin)
 }
 
 gradlePlugin {
     val rootPackageName = "com.superdiary.gradle"
 
     plugins {
-
         register("GitHooksConventionPlugin") {
             id = "com.superdiary.githooks"
             implementationClass = "$rootPackageName.codequality.GitHooksConventionPlugin"
@@ -40,7 +40,7 @@ gradlePlugin {
 
         register("KotlinAndroidConventionPlugin") {
             id = "com.superdiary.kotlin.android"
-            implementationClass = "$rootPackageName.kotlinjava.KotlinAndroidConventionPlugin"
+            implementationClass = "$rootPackageName.kotlin.KotlinAndroidConventionPlugin"
         }
 
         register("KtlintConventionPlugin") {
@@ -51,6 +51,31 @@ gradlePlugin {
         register("SecretsConventionPlugin") {
             id = "com.superdiary.secrets"
             implementationClass = "$rootPackageName.secrets.SecretsConventionPlugin"
+        }
+
+        register("SnapshotsDiffPlugin") {
+            id = "com.superdiary.snapshotdiff"
+            implementationClass = "$rootPackageName.snapshots.SnapshotsDiffPlugin"
+        }
+
+        register("AndroidLibraryConventionPlugin") {
+            id = "com.superdiary.android.library"
+            implementationClass = "$rootPackageName.android.AndroidLibraryConventionPlugin"
+        }
+
+        register("AndroidComposeLibraryConventionPlugin") {
+            id = "com.superdiary.compose.library"
+            implementationClass = "$rootPackageName.android.AndroidComposeLibraryConventionPlugin"
+        }
+
+        register("KotlinMultiplatformConventionPlugin") {
+            id = "com.superdiary.multiplatform.kotlin"
+            implementationClass = "$rootPackageName.multiplatform.KotlinMultiplatformConventionPlugin"
+        }
+
+        register("ComposeMultiplatformConventionPlugin") {
+            id = "com.superdiary.multiplatform.compose"
+            implementationClass = "$rootPackageName.multiplatform.ComposeMultiplatformConventionPlugin"
         }
     }
 }

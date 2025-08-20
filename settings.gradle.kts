@@ -5,20 +5,15 @@ pluginManagement {
         mavenCentral()
         google()
         gradlePluginPortal()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
-        maven("https://jitpack.io")
         mavenLocal()
     }
     includeBuild("build-logic")
 }
-System.setProperty("sonar.gradle.skipCompile", "true")
 
 dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven("https://jitpack.io")
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
         mavenLocal()
@@ -26,8 +21,12 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2024.11.17")
-            version("openaiKotlin", "4.0.0-SNAPSHOT")
+            from("io.github.rafsanjani:versions:2025.08.17")
+            version("richTextEditor", "1.0.0-rc12")
+            // Downgrading to 3.1.3 because 3.2.0 doesn't play well with R8
+            version("ktor", "3.1.3")
+            version("jetbrainsNavigation", "2.9.0-beta03")
+            version("gradle", "8.11.0")
         }
     }
 }
@@ -35,7 +34,8 @@ dependencyResolutionManagement {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 plugins {
-    id("org.jetbrains.kotlinx.kover.aggregation") version "0.8.3"
+    id("org.jetbrains.kotlinx.kover.aggregation") version "0.9.1"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
 kover {
@@ -70,6 +70,8 @@ kover {
         "*BackPressHandler*",
         "*SnapshotTheme*",
         "*BottomNavigationScreen*",
+        "*BottomNavigationRoute*",
+        "*Dto*",
         "*DiaryListActions*",
         "*DiaryFilters*",
         "*DiarySortCriteria*",
@@ -81,6 +83,9 @@ kover {
         "*DiaryHeader*",
         "*DiarySearchBar*",
         "*DiarySelectionModifierBar*",
+        "*AndroidDataStorePathResolver",
+        "*.*NavType",
+        "*.RemoteDataSource*",
         "db.*",
         "*di.*",
         "*screen.*",
@@ -88,28 +93,65 @@ kover {
         "*utils.FileSystem_androidKt",
         "*generated.resources.*",
         "*components.*",
+        "*MailManager",
+        "*.navigation.*",
     )
 
     reports {
         includedProjects.add(":shared-data")
         includedProjects.add(":shared-ui")
+        includedProjects.add(":core:sync")
+        includedProjects.add(":common-utils")
+        includedProjects.add(":feature:diary-profile")
+        includedProjects.add(":feature:diary-list")
+        includedProjects.add(":feature:diary-auth")
+        includedProjects.add(":feature:diary-ai")
 
         excludedClasses.addAll(classes)
         excludesAnnotatedBy.add("androidx.compose.runtime.Composable")
+
+        verify {
+            rule {
+                name = "Minimum Coverage Rule"
+                bound {
+                    minValue = 92
+                }
+            }
+        }
     }
 }
 
 rootProject.name = "superdiary"
 include(":androidApp:app")
+include(":design-system")
 include(":androidApp:benchmark")
 include(":shared-data")
-include(":swipe")
 include(":shared-ui")
-include(":core:auth")
+
+// core project modules
+include(":core:authentication")
 include(":core:analytics")
 include(":core:location")
+include(":core:ui-components")
 include(":core:logging")
-include(":core:utils")
+include(":core:database-test")
 include(":core:secrets")
+include(":core:database")
+include(":core:sync")
+include(":core:diary-ai")
+
+// common components shared by other modules
+include(":common-utils")
+include(":common-test")
 include(":desktopApp")
 // include(":benchmark")
+
+// feature modules, a feature is something a user can directly interact with
+include(":feature:diary-profile")
+include(":feature:diary-auth")
+include(":feature:diary-list")
+include(":feature:diary-dashboard")
+
+// annotation processor for datasore preferences
+include(":preferences:annotation")
+include(":preferences:processor")

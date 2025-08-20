@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.ui.di
 
+import com.foreverrafs.auth.BiometricAuth
 import com.foreverrafs.auth.GoogleTokenProvider
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
@@ -12,9 +13,14 @@ object KoinApplication {
         analytics: AnalyticsTracker,
         logger: AggregateLogger,
         googleTokenProvider: GoogleTokenProvider,
+        biometricAuth: BiometricAuth,
     ) = startKoin {
         val tokenModule = module {
             factory<GoogleTokenProvider> { googleTokenProvider }
+        }
+
+        val biometricAuthModule = module {
+            factory<BiometricAuth> { biometricAuth }
         }
         modules(
             modules = listOf(
@@ -23,7 +29,8 @@ object KoinApplication {
                     logger = logger,
                 ),
                 tokenModule,
-            ),
+            )
+                .plus(biometricAuthModule),
         )
     }
 }

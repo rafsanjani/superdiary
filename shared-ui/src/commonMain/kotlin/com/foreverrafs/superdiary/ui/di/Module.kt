@@ -1,35 +1,49 @@
 package com.foreverrafs.superdiary.ui.di
 
 import com.foreverrafs.auth.di.authModule
+import com.foreverrafs.superdiary.ai.di.diaryAiModule
+import com.foreverrafs.superdiary.auth.login.BiometricLoginScreenViewModel
+import com.foreverrafs.superdiary.auth.login.LoginScreenViewModel
+import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
+import com.foreverrafs.superdiary.auth.register.RegisterScreenViewModel
+import com.foreverrafs.superdiary.auth.reset.PasswordResetViewModel
+import com.foreverrafs.superdiary.common.utils.di.utilsModule
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.location.di.locationModule
 import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.core.utils.di.utilsModule
-import com.foreverrafs.superdiary.data.di.platformModule
-import com.foreverrafs.superdiary.data.di.useCaseModule
+import com.foreverrafs.superdiary.core.sync.di.syncModule
+import com.foreverrafs.superdiary.dashboard.di.dashboardModule
+import com.foreverrafs.superdiary.di.platformModule
+import com.foreverrafs.superdiary.di.useCaseModule
+import com.foreverrafs.superdiary.domain.usecase.GetDiaryByIdUseCase
+import com.foreverrafs.superdiary.list.di.diaryListModule
+import com.foreverrafs.superdiary.profile.di.profileModule
 import com.foreverrafs.superdiary.ui.AppViewModel
-import com.foreverrafs.superdiary.ui.feature.auth.login.LoginScreenViewModel
+import com.foreverrafs.superdiary.ui.feature.changepassword.ChangePasswordViewModel
 import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
-import com.foreverrafs.superdiary.ui.feature.dashboard.DashboardViewModel
-import com.foreverrafs.superdiary.ui.feature.details.DetailsViewModel
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
-import com.foreverrafs.superdiary.ui.feature.diarylist.model.DiaryListViewModel
 import com.foreverrafs.superdiary.ui.feature.favorites.FavoriteViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
-internal fun screenModules(): Module = module {
+internal val screensModule: Module = module {
     factoryOf(::LocationPermissionManager)
-    factoryOf(::DiaryListViewModel)
-    factoryOf(::CreateDiaryViewModel)
-    factoryOf(::FavoriteViewModel)
-    factoryOf(::DashboardViewModel)
-    factoryOf(::DiaryChatViewModel)
-    factoryOf(::DetailsViewModel)
-    factoryOf(::LoginScreenViewModel)
-    factoryOf(::AppViewModel)
+    singleOf(::DeeplinkContainer)
+
+    factoryOf(::GetDiaryByIdUseCase)
+    viewModelOf(::CreateDiaryViewModel)
+    viewModelOf(::FavoriteViewModel)
+    viewModelOf(::DiaryChatViewModel)
+    viewModelOf(::RegisterScreenViewModel)
+    viewModelOf(::LoginScreenViewModel)
+    viewModelOf(::AppViewModel)
+    viewModelOf(::PasswordResetViewModel)
+    viewModelOf(::BiometricLoginScreenViewModel)
+    viewModelOf(::ChangePasswordViewModel)
 }
 
 expect fun permissionModule(): Module
@@ -40,12 +54,16 @@ fun compositeModule(
     logger: AggregateLogger,
 ): Module = module {
     includes(
-        utilsModule(),
+        utilsModule,
         locationModule(),
-        useCaseModule(),
+        useCaseModule,
         permissionModule(),
-        screenModules(),
+        screensModule,
         platformModule(analyticsTracker = analytics, aggregateLogger = logger),
         authModule(),
-    )
+    diaryAiModule,
+    profileModule,
+    diaryListModule,
+    dashboardModule,
+    syncModule,)
 }

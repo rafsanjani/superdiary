@@ -1,0 +1,61 @@
+name: Save Release APK
+
+on:
+    push:
+        branches: [ development ]
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    persistReleaseApk:
+        env:
+            SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
+            SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
+            GOOGLE_SERVER_CLIENT_ID: ${{secrets.GOOGLE_SERVER_CLIENT_ID}}
+            MAPS_API_KEY_ANDROID: ${{secrets.MAPS_API_KEY_ANDROID}}
+            OPENAI_KEY: ${{secrets.OPENAI_KEY}}
+            STORE_FILE_BASE64: ${{secrets.SIGNING_KEY_BASE64}}
+            STORE_PASSWORD: ${{secrets.SIGNING_KEYSTORE_PASSWORD}}
+            KEY_ALIAS: ${{secrets.SIGNING_KEY_ALIAS}}
+            KEY_PASSWORD: ${{secrets.SIGNING_KEY_PASSWORD}}
+            SUPABASE_URL: ${{secrets.SUPABASE_URL}}
+            SUPABASE_KEY: ${{secrets.SUPABASE_KEY}}
+
+        name: Save Release APK artifact
+        runs-on: macos-14
+        steps:
+            -   uses: actions/checkout@v5
+                with:
+                    lfs: true
+
+            -   uses: actions/setup-java@v4
+                with:
+                    distribution: 'zulu'
+                    java-version: '17'
+
+            -   name: Setup secrets.properties and Configurations/Release.xcconfig
+                run: ./scripts/environments.sh
+
+            -   name: Decode keystore file from secrets
+                run: echo "$STORE_FILE_BASE64" | base64 --decode > keystore
+
+            -   name: Inject Signing params into gradle.properties
+                run: |
+                    echo STORE_FILE=keystore >> gradle.properties
+                    echo STORE_PASSWORD="$STORE_PASSWORD" >> gradle.properties
+                    echo KEY_PASSWORD="$KEY_PASSWORD" >> gradle.properties
+                    echo KEY_ALIAS="$KEY_ALIAS" >> gradle.properties
+                    cat gradle.properties
+
+            -   name: Setup Gradle
+                uses: gradle/actions/setup-gradle@v4
+
+            -   name: Build Android App (Release)
+                run: ./gradlew androidApp:app:assembleRelease
+
+            -   name: Upload APK artifact
+                uses: actions/upload-artifact@v4
+                with:
+                    name: apk-release
+                    path: androidApp/app/build/outputs/apk/release/app-release.apk

@@ -28,7 +28,8 @@ struct iOSApp: App  {
         KoinApplication.shared.initialize(
             analytics: AppleAnalytics(),
             logger: AggregateLogger(loggers: [SentryLogger(), KermitLogger()]),
-            googleTokenProvider: GoogleTokenProviderImpl()
+            googleTokenProvider: GoogleTokenProviderImpl(),
+            biometricAuth: AppleBiometricAuth()
         )
         
         GMSServices.provideAPIKey(Environment.googleMapsSdkKey)

@@ -17,7 +17,7 @@ class LocationPermissionManager(
 
     private suspend fun readInitialPermissionState() {
         _permissionState.update {
-            val state = permissionsController.getPermissionState(Permission.LOCATION)
+            val state = permissionsController.getPermissionState(LocationPermission)
             logger.i(TAG) {
                 "Initial state of location permission: $state"
             }
@@ -41,7 +41,7 @@ class LocationPermissionManager(
                 "Requesting location permission"
             }
 
-            permissionsController.providePermission(Permission.LOCATION)
+            permissionsController.providePermission(LocationPermission)
 
             logger.i(TAG) {
                 "Location permission granted"

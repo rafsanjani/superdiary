@@ -10,18 +10,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryFilters
-import com.foreverrafs.superdiary.ui.feature.diarylist.DiaryListActions
-import com.foreverrafs.superdiary.ui.feature.diarylist.screen.DiaryList
-import com.foreverrafs.superdiary.ui.feature.diarylist.screen.Empty
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.list.DiaryFilters
+import com.foreverrafs.superdiary.list.DiaryListActions
+import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryList
+import com.foreverrafs.superdiary.list.presentation.screen.list.Empty
 
 @Composable
 fun FavoriteScreenContent(
     state: FavoriteScreenState,
-    onToggleFavorite: suspend (diary: Diary) -> Boolean,
+    onToggleFavorite: suspend (Diary) -> Boolean,
     snackbarHostState: SnackbarHostState,
-    onFavoriteClick: (diary: Long) -> Unit,
+    onFavoriteClick: (diaryId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (state is FavoriteScreenState.Content) {

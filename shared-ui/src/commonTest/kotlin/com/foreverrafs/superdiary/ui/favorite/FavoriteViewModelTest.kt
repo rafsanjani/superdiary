@@ -3,16 +3,18 @@ package com.foreverrafs.superdiary.ui.favorite
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEmpty
+import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
-import com.foreverrafs.superdiary.TestAppDispatchers
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.data.datasource.DataSource
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.usecase.GetFavoriteDiariesUseCase
-import com.foreverrafs.superdiary.data.usecase.UpdateDiaryUseCase
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.repository.DataSource
+import com.foreverrafs.superdiary.domain.usecase.GetFavoriteDiariesUseCase
+import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.favorites.FavoriteViewModel
 import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteScreenState
 import dev.mokkery.answering.returns
+import dev.mokkery.answering.throws
 import dev.mokkery.every
 import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
@@ -84,6 +86,14 @@ class FavoriteViewModelTest {
             assertThat(successState).isInstanceOf<FavoriteScreenState.Content>()
             assertThat((successState as FavoriteScreenState.Content).diaries).isEmpty()
         }
+    }
+
+    @Test
+    fun `Should fail toggle favorite when an error occurs during update`() = runTest {
+        everySuspend { dataSource.update(any()) }.throws(Exception("Error fetching favorites"))
+
+        val result = favoriteViewModel.toggleFavorite(Diary("Hello"))
+        assertThat(result).isFalse()
     }
 
     @Test

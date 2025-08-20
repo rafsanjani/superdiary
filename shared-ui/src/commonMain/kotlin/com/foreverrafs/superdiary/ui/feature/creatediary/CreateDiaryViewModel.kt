@@ -2,17 +2,19 @@ package com.foreverrafs.superdiary.ui.feature.creatediary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.foreverrafs.preferences.DiaryPreference
+import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.core.location.LocationManager
 import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
 import com.foreverrafs.superdiary.core.location.permission.PermissionsControllerWrapper
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.data.diaryai.DiaryAI
-import com.foreverrafs.superdiary.data.model.Diary
-import com.foreverrafs.superdiary.data.usecase.AddDiaryUseCase
-import com.foreverrafs.superdiary.data.utils.DiaryPreference
-import com.foreverrafs.superdiary.data.utils.DiarySettings
+import com.foreverrafs.superdiary.core.sync.Synchronizer
+import com.foreverrafs.superdiary.data.Result
+import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenState
+import com.foreverrafs.superdiary.utils.DiarySettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -29,6 +31,7 @@ class CreateDiaryViewModel(
     private val logger: AggregateLogger,
     private val locationManager: LocationManager,
     private val locationPermissionManager: LocationPermissionManager,
+    private val synchronizer: Synchronizer,
     private val preference: DiaryPreference,
 ) : ViewModel() {
 
@@ -65,7 +68,11 @@ class CreateDiaryViewModel(
                     "Location permission granted. Requesting location updates"
                 }
                 locationManager.requestLocation(
-                    onError = {},
+                    onError = {
+                        logger.e(Tag, it) {
+                            "Error requesting location updates. Entry will not be tagged!"
+                        }
+                    },
                     onLocation = { location ->
                         logger.i(Tag) {
                             "Updating state with location [${location.latitude}, ${location.longitude}]"
@@ -90,9 +97,22 @@ class CreateDiaryViewModel(
     }
 
     fun saveDiary(diary: Diary) = viewModelScope.launch {
-        addDiaryUseCase(diary)
-        logger.i(Tag) {
-            "Diary entry successfully saved: $diary"
+        when (val addDiaryResult = addDiaryUseCase(diary)) {
+            is Result.Failure -> {
+                logger.e(Tag, addDiaryResult.error)
+            }
+
+            is Result.Success -> {
+                synchronizer.sync(
+                    operation = Synchronizer.SyncOperation.Save(
+                        diary = addDiaryResult.data,
+                    ),
+                )
+
+                logger.i(Tag) {
+                    "Diary entry successfully saved: $diary"
+                }
+            }
         }
     }
 
@@ -110,11 +130,9 @@ class CreateDiaryViewModel(
         locationPermissionManager.getPermissionsController()
 
     fun onPermanentlyDismissLocationPermissionDialog() = viewModelScope.launch {
-        val currentDiarySettings = preference.getSnapshot()
-
-        preference.save(
-            currentDiarySettings.copy(showLocationPermissionDialog = false),
-        )
+        preference.save {
+            it.copy(showLocationPermissionDialog = false)
+        }
     }
 
     companion object {

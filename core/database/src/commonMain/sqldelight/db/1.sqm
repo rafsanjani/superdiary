@@ -1,0 +1,13 @@
+import com.foreverrafs.superdiary.database.model.LocationDb;
+import kotlin.time.Instant;
+import kotlin.Boolean;
+
+CREATE TABLE IF NOT EXISTS diary (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  entry TEXT NOT NULL,
+  date INTEGER AS Instant NOT NULL,
+  favorite INTEGER NOT NULL,
+  location TEXT AS LocationDb NOT NULL DEFAULT "0.0,0.0",
+  markForDelete INTEGER AS Boolean NOT NULL,
+  isSynced INTEGER AS Boolean NOT NULL
+);

@@ -2,6 +2,8 @@
 
 import com.android.build.api.dsl.ManagedVirtualDevice
 
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.test)
     alias(libs.plugins.kotlin.android)
@@ -10,20 +12,22 @@ plugins {
 
 android {
     namespace = "com.foreverrafs.benchmark"
-    compileSdk = 34
+    compileSdk = libs.versions.targetSdk.get().toInt()
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
+        }
     }
 
     defaultConfig {
         minSdk = 28
-        targetSdk = 34
+        targetSdk = libs.versions.targetSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

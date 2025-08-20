@@ -7,6 +7,8 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,18 +53,21 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.benasher44.uuid.uuid4
-import com.foreverrafs.superdiary.data.diaryai.DiaryChatMessage
-import com.foreverrafs.superdiary.data.diaryai.DiaryChatRole
+import com.foreverrafs.superdiary.ai.domain.model.DiaryChatMessage
+import com.foreverrafs.superdiary.ai.domain.model.DiaryChatRole
+import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
+import kotlin.time.Clock
 import kotlinx.coroutines.delay
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.content_description_button_send
 
@@ -73,16 +78,24 @@ fun DiaryChatScreenContent(
     onQueryDiaries: (query: String) -> Unit = {},
 ) {
     val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = modifier
+            .clickable(
+                indication = null,
+                onClick = {
+                    keyboardController?.hide()
+                },
+                interactionSource = MutableInteractionSource(),
+            )
             .fillMaxSize()
             .animateContentSize()
             .imePadding()
             .padding(8.dp),
     ) {
         val listState = rememberLazyListState()
-        val isKeyboardOpen by keyboardAsState()
+        val isKeyboardOpen by keyboardVisibilityState()
 
         // Scroll to the bottom of the list when the keyboard opens
         LaunchedEffect(isKeyboardOpen) {
@@ -101,7 +114,9 @@ fun DiaryChatScreenContent(
         }
 
         LazyColumn(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             state = listState,
         ) {
@@ -227,14 +242,43 @@ fun ChatBubble(
                     shape = RoundedCornerShape(4.dp),
                 )
                 .padding(8.dp),
-            style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp, lineHeight = 24.sp),
+            style = MaterialTheme.typography.bodySmall.merge(fontSize = 14.sp, lineHeight = 24.sp),
             color = Color.White,
         )
     }
 }
 
 @Composable
-fun keyboardAsState(): State<Boolean> {
+fun keyboardVisibilityState(): State<Boolean> {
     val isImeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     return rememberUpdatedState(isImeVisible)
+}
+
+@Preview
+@Composable
+private fun PreviewResponding() {
+    SuperDiaryPreviewTheme {
+        DiaryChatScreenContent(
+            screenState = DiaryChatViewModel.DiaryChatViewState(
+                isResponding = true,
+            ),
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewMessagesAndResponding() {
+    SuperDiaryPreviewTheme {
+        DiaryChatScreenContent(
+            screenState = DiaryChatViewModel.DiaryChatViewState(
+                isResponding = true,
+                messages = listOf(
+                    DiaryChatMessage.System("You are diary AI"),
+                    DiaryChatMessage.User("You don't kill a cat, a cat kills you"),
+                    DiaryChatMessage.DiaryAI("How do i kill a cat"),
+                ),
+            ),
+        )
+    }
 }
