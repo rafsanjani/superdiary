@@ -21,7 +21,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2025.08.17")
+            from("io.github.rafsanjani:versions:2025.08.24")
             version("richTextEditor", "1.0.0-rc12")
             // Downgrading to 3.1.3 because 3.2.0 doesn't play well with R8
             version("ktor", "3.1.3")
