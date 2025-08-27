@@ -12,7 +12,7 @@ import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListScreen
 @OptIn(ExperimentalSharedTransitionApi::class)
 inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
     navController: NavHostController,
-    noinline onBackPressed: () -> Unit,
+    noinline onBackPress: () -> Unit,
     noinline onAddEntry: () -> Unit,
     noinline onProfileClick: () -> Unit,
 ) {
@@ -24,7 +24,7 @@ inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
                     navController.navigate(DiaryListRoute.DetailScreen(it.toString()))
                 },
                 onProfileClick = onProfileClick,
-                onBackpressed = navController::navigateUp,
+                onBackPress = navController::navigateUp,
             )
         }
 
@@ -34,7 +34,7 @@ inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
             DetailScreen(
                 diaryId = diaryId,
                 onProfileClick = onProfileClick,
-                onBackPress = onBackPressed,
+                onBackPress = onBackPress,
             )
         }
     }

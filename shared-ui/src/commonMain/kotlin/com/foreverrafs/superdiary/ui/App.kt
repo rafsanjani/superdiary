@@ -232,7 +232,7 @@ private fun SuperDiaryNavHost(
                         navController.navigate(route = AppRoute.CreateDiaryScreen)
                     },
                     onProfileClick = { navController.navigate(AppRoute.ProfileScreen) },
-                    onBackPressed = navController::navigateUp,
+                    onBackPress = navController::navigateUp,
                 )
 
                 animatedComposable<AppRoute.BottomNavigationNavHost>(
