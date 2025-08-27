@@ -10,11 +10,6 @@ android {
     namespace = "com.foreverrafs.superdiary.benchmark"
     compileSdk = libs.versions.targetSdk.get().toInt()
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
     kotlin {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_11

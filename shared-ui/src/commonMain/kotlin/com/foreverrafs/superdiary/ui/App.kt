@@ -17,13 +17,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.core.uri.UriUtils
-import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -46,10 +44,11 @@ import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
 import com.foreverrafs.superdiary.auth.register.screen.RegisterScreen
 import com.foreverrafs.superdiary.auth.register.screen.RegistrationConfirmationScreen
 import com.foreverrafs.superdiary.auth.reset.SendPasswordResetEmailScreen
-import com.foreverrafs.superdiary.core.sync.Synchronizer
+import com.foreverrafs.superdiary.core.sync.SyncEffect
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.design.style.animatedComposable
+import com.foreverrafs.superdiary.domain.Synchronizer
 import com.foreverrafs.superdiary.list.navigation.DiaryListRoute
 import com.foreverrafs.superdiary.list.navigation.diaryListNavigation
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
@@ -58,7 +57,6 @@ import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScree
 import com.foreverrafs.superdiary.ui.navigation.AppRoute
 import com.foreverrafs.superdiary.ui.navigation.BottomNavigationScreen
 import kotlin.reflect.typeOf
-import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import okio.FileSystem
 import org.jetbrains.compose.resources.painterResource
@@ -78,12 +76,12 @@ fun App(modifier: Modifier = Modifier) {
     val appViewState by appViewModel.viewState.collectAsStateWithLifecycle()
     val synchronizer: Synchronizer = koinInject()
 
+    SyncEffect(synchronizer)
     SuperDiaryTheme {
         setSingletonImageLoaderFactory(::getAsyncImageLoader)
         SuperDiaryNavHost(
             viewState = appViewState,
             modifier = modifier,
-            synchronizer = synchronizer,
         )
     }
 }
@@ -92,7 +90,6 @@ fun App(modifier: Modifier = Modifier) {
 @Composable
 private fun SuperDiaryNavHost(
     viewState: AppSessionState,
-    synchronizer: Synchronizer,
     modifier: Modifier = Modifier,
 ) {
     // This userInfo is used when a session is automatically restored after app is launched.
@@ -235,23 +232,13 @@ private fun SuperDiaryNavHost(
                         navController.navigate(route = AppRoute.CreateDiaryScreen)
                     },
                     onProfileClick = { navController.navigate(AppRoute.ProfileScreen) },
+                    onBackPressed = navController::navigateUp,
                 )
 
                 animatedComposable<AppRoute.BottomNavigationNavHost>(
                     typeMap = mapOf(typeOf<UserInfo?>() to UserInfoNavType),
                 ) {
                     val route = it.toRoute<AppRoute.BottomNavigationNavHost>()
-                    val scope = rememberCoroutineScope()
-
-                    // Sync can only happen after we are logged in
-                    LifecycleResumeEffect(Unit) {
-                        scope.launch {
-                            synchronizer.startListening()
-                        }
-                        onPauseOrDispose {
-                            synchronizer.stopListening()
-                        }
-                    }
 
                     BottomNavigationScreen(
                         onProfileClick = {
@@ -286,8 +273,6 @@ private fun SuperDiaryNavHost(
                             }
                         },
                         onNavigateBack = navController::navigateUp,
-                        sharedTransitionScope = this@SharedTransitionLayout,
-                        animatedContentScope = this@animatedComposable,
                     )
                 }
             }

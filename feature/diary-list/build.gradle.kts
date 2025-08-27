@@ -37,6 +37,7 @@ kotlin {
             implementation(libs.richTextEditor)
             implementation(projects.core.location)
             implementation(projects.sharedData)
+            implementation(projects.core.sync)
             implementation(projects.core.database)
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(projects.designSystem)

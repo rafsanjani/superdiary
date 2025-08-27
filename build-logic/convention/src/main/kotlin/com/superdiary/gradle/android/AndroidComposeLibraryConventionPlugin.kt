@@ -4,7 +4,6 @@ import com.android.build.api.dsl.LibraryBuildFeatures
 import com.android.build.api.dsl.LibraryExtension
 import com.superdiary.gradle.findVersion
 import com.superdiary.gradle.kotlin.configureKotlin
-import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -20,11 +19,6 @@ class AndroidComposeLibraryConventionPlugin : Plugin<Project> {
 
                 defaultConfig {
                     minSdk = findVersion("minimumSdk").toInt()
-                }
-
-                compileOptions {
-                    targetCompatibility = JavaVersion.VERSION_17
-                    sourceCompatibility = JavaVersion.VERSION_17
                 }
             }
 

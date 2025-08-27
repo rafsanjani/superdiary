@@ -1,6 +1,7 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
+    id("com.superdiary.multiplatform.compose")
     id("com.superdiary.multiplatform.kotlin")
     id("com.superdiary.android.library")
     alias(libs.plugins.kotlin.parcelize)
@@ -15,6 +16,8 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlin.datetime)
                 implementation(libs.koin.core)
+                implementation(compose.runtime)
+                implementation(libs.jetbrains.lifecycle.runtime.compose)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(projects.core.logging)
                 implementation(projects.commonUtils)

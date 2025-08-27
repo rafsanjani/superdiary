@@ -13,10 +13,5 @@ kotlin {
 
 android {
     namespace = "com.foreverrafs.preferences"
-    compileSdk = 35
-
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_17
-        sourceCompatibility = JavaVersion.VERSION_17
-    }
+    compileSdk = libs.versions.compileSdk.get().toInt()
 }

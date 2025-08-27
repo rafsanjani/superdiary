@@ -1,10 +1,14 @@
 package com.foreverrafs.superdiary.core.sync
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.compose.LifecycleStartEffect
 import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.remote.DiaryApi
 import com.foreverrafs.superdiary.data.model.toDiary
+import com.foreverrafs.superdiary.domain.Synchronizer
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.toDto
 import com.foreverrafs.superdiary.domain.repository.DataSource
@@ -13,17 +17,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
-interface Synchronizer {
-    sealed class SyncOperation {
-        data class Save(val diary: Diary) : SyncOperation()
-        data class Delete(val diary: Diary) : SyncOperation()
-    }
-
-    suspend fun startListening()
-    suspend fun sync(operation: SyncOperation): Boolean
-    fun stopListening()
-}
 
 class DiarySynchronizer(
     private val diaryApi: DiaryApi,
@@ -44,6 +37,9 @@ class DiarySynchronizer(
         diaryApiListeningJob = coroutineScope.launch(appCoroutineDispatchers.main) {
             // fetch all entries from remote
             diaryApi.fetchAll().collect { diaryDtoList ->
+                // Delete all entries from the database
+                dataSource.deleteAll()
+
                 // insert remote entries into database. This will set isSynced flag
                 // to true and trigger an update for observers
                 val savedEntries = dataSource.addAll(diaryDtoList.map { it.toDiary() })
@@ -89,12 +85,17 @@ class DiarySynchronizer(
 
     private suspend fun performSaveSync(diary: Diary): Boolean {
         // Attempt to write the saved diary into the network
+        logger.i(TAG) {
+            "Writing saved entry onto the network"
+        }
+
         return when (val result = diaryApi.save(diary.toDto())) {
             is Result.Success -> {
                 logger.i(TAG) {
                     "Successfully synced saved diary with network"
                 }
-                // Remove sync flag from entry in local database
+
+                // Remove the sync flag from entry in the local database
                 dataSource.update(
                     diary = diary.copy(isSynced = true),
                 )
@@ -154,5 +155,21 @@ class DiarySynchronizer(
 
     companion object {
         private const val TAG = "DiarySynchronizer"
+    }
+}
+
+@Composable
+fun SyncEffect(
+    synchronizer: Synchronizer,
+) {
+    val scope = rememberCoroutineScope()
+
+    LifecycleStartEffect(Unit) {
+        scope.launch {
+            synchronizer.startListening()
+        }
+        onStopOrDispose {
+            synchronizer.stopListening()
+        }
     }
 }

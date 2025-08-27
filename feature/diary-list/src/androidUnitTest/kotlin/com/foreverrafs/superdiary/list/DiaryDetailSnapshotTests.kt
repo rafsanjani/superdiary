@@ -40,7 +40,7 @@ class DiaryDetailSnapshotTests(
                 SuperDiaryPreviewTheme {
                     DetailScreenContent(
                         onDeleteDiary = {},
-                        onNavigateBack = {},
+                        onBackPress = {},
                         viewState = DetailsViewState.DiarySelected(
                             Diary(
                                 entry = """

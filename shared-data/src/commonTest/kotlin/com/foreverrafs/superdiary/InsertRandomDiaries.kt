@@ -4,10 +4,12 @@ import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
+import kotlin.time.ExperimentalTime
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 
+@OptIn(ExperimentalTime::class)
 suspend fun insertRandomDiaries(dataSource: DataSource, count: Int = 30) {
     val relaxedAddDiaryUseCase = AddDiaryUseCase(dataSource, TestAppDispatchers) {}
 
