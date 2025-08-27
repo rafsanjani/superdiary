@@ -46,6 +46,7 @@ class DiarySynchronizerTest {
     private val datasource: DataSource = mock {
         everySuspend { update(any()) } returns 1
         everySuspend { delete(any()) } returns 1
+        everySuspend { deleteAll() } returns Unit
         everySuspend { getPendingDeletes() } returns listOf(
             Diary(
                 entry = "Hello World",
@@ -61,7 +62,6 @@ class DiarySynchronizerTest {
         )
         everySuspend { addAll(any()) } returns 100L
     }
-
     private val synchronizer = DiarySynchronizer(
         diaryApi = diaryApi,
         dataSource = datasource,
