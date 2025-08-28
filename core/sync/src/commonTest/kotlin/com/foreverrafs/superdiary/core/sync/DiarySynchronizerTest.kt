@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package com.foreverrafs.superdiary.core.sync
 
 import assertk.assertThat
@@ -8,6 +10,7 @@ import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.remote.DiaryApi
 import com.foreverrafs.superdiary.data.model.DiaryDto
+import com.foreverrafs.superdiary.domain.Synchronizer
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import dev.mokkery.answering.returns
@@ -20,6 +23,7 @@ import dev.mokkery.verifySuspend
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -42,6 +46,7 @@ class DiarySynchronizerTest {
     private val datasource: DataSource = mock {
         everySuspend { update(any()) } returns 1
         everySuspend { delete(any()) } returns 1
+        everySuspend { deleteAll() } returns Unit
         everySuspend { getPendingDeletes() } returns listOf(
             Diary(
                 entry = "Hello World",
@@ -57,7 +62,6 @@ class DiarySynchronizerTest {
         )
         everySuspend { addAll(any()) } returns 100L
     }
-
     private val synchronizer = DiarySynchronizer(
         diaryApi = diaryApi,
         dataSource = datasource,

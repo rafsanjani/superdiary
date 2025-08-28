@@ -12,18 +12,19 @@ import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListScreen
 @OptIn(ExperimentalSharedTransitionApi::class)
 inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
     navController: NavHostController,
+    noinline onBackPress: () -> Unit,
     noinline onAddEntry: () -> Unit,
     noinline onProfileClick: () -> Unit,
 ) {
     navigation<T>(startDestination = DiaryListRoute.DiaryListScreen) {
         animatedComposable<DiaryListRoute.DiaryListScreen> {
             DiaryListScreen(
-                navController = navController,
                 onAddEntry = onAddEntry,
                 onDiaryClick = {
                     navController.navigate(DiaryListRoute.DetailScreen(it.toString()))
                 },
                 onProfileClick = onProfileClick,
+                onBackPress = navController::navigateUp,
             )
         }
 
@@ -32,8 +33,8 @@ inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
 
             DetailScreen(
                 diaryId = diaryId,
-                navController = navController,
                 onProfileClick = onProfileClick,
+                onBackPress = onBackPress,
             )
         }
     }

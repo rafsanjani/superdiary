@@ -9,7 +9,6 @@ import com.foreverrafs.superdiary.core.location.permission.LocationPermissionMan
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
 import com.foreverrafs.superdiary.core.location.permission.PermissionsControllerWrapper
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.core.sync.Synchronizer
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
@@ -31,7 +30,6 @@ class CreateDiaryViewModel(
     private val logger: AggregateLogger,
     private val locationManager: LocationManager,
     private val locationPermissionManager: LocationPermissionManager,
-    private val synchronizer: Synchronizer,
     private val preference: DiaryPreference,
 ) : ViewModel() {
 
@@ -103,12 +101,6 @@ class CreateDiaryViewModel(
             }
 
             is Result.Success -> {
-                synchronizer.sync(
-                    operation = Synchronizer.SyncOperation.Save(
-                        diary = addDiaryResult.data,
-                    ),
-                )
-
                 logger.i(Tag) {
                     "Diary entry successfully saved: $diary"
                 }

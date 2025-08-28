@@ -9,6 +9,7 @@ import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
+import com.foreverrafs.superdiary.domain.NoOpSynchronizer
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
@@ -37,7 +38,13 @@ class AddDiaryUseCaseTest {
     private val validator: DiaryValidator = DiaryValidatorImpl(Clock.System)
 
     private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers)
-    private val addDiaryUseCase = AddDiaryUseCase(dataSource, TestAppDispatchers, validator)
+    private val addDiaryUseCase =
+        AddDiaryUseCase(
+            dataSource = dataSource,
+            dispatchers = TestAppDispatchers,
+            synchronizer = NoOpSynchronizer,
+            validator = validator,
+        )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @BeforeTest

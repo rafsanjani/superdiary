@@ -10,7 +10,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewModel
 import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewState
 import org.koin.compose.viewmodel.koinViewModel
@@ -19,8 +18,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DetailScreen(
     diaryId: String,
-    navController: NavController,
     onProfileClick: () -> Unit,
+    onBackPress: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: DetailsViewModel = koinViewModel()
@@ -34,7 +33,7 @@ fun DetailScreen(
         is DetailsViewState.DiarySelected -> {
             DetailScreenContent(
                 modifier = modifier,
-                onNavigateBack = navController::navigateUp,
+                onBackPress = onBackPress,
                 onDeleteDiary = viewModel::deleteDiary,
                 viewState = state,
                 onProfileClick = onProfileClick,

@@ -54,7 +54,7 @@ import superdiary.feature.diary_list.generated.resources.label_diary_deleted
 @Composable
 fun DetailScreenContent(
     onDeleteDiary: (diary: Diary) -> Unit,
-    onNavigateBack: () -> Unit,
+    onBackPress: () -> Unit,
     onProfileClick: () -> Unit,
     viewState: DetailsViewState.DiarySelected,
     modifier: Modifier = Modifier,
@@ -78,7 +78,7 @@ fun DetailScreenContent(
             SuperDiaryAppBar(
                 navigationIcon = {
                     IconButton(
-                        onClick = onNavigateBack,
+                        onClick = onBackPress,
                     ) {
                         Icon(
                             modifier = Modifier.clip(CircleShape),
@@ -146,7 +146,7 @@ fun DetailScreenContent(
                                 )
                             }
 
-                            onNavigateBack()
+                            onBackPress()
                         }
                     },
                 )

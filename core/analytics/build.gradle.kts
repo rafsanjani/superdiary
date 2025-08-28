@@ -1,12 +1,10 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
-    plugins {
-        id("com.superdiary.multiplatform.kotlin")
-        id("com.superdiary.android.library")
-        alias(libs.plugins.kotlin.serialization)
-        alias(libs.plugins.kotlin.parcelize)
-    }
+    id("com.superdiary.multiplatform.kotlin")
+    id("com.superdiary.android.library")
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -63,10 +61,5 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minimumSdk.get().toInt()
-    }
-
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_17
-        sourceCompatibility = JavaVersion.VERSION_17
     }
 }

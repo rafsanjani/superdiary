@@ -17,10 +17,12 @@ plugins {
 android {
     compileSdk = 35
     defaultConfig {
+        compileSdk = libs.versions.compileSdk.get().toInt()
+
         applicationId = "com.foreverrafs.superdiary"
         minSdk = 28
-        targetSdk = 35
-        versionCode = 216
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        versionCode = 214
         versionName = "0.0.1"
 
         val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_ANDROID") ?: ""
@@ -35,8 +37,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     buildFeatures {

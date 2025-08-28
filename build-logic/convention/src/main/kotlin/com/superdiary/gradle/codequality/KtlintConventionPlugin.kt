@@ -17,7 +17,7 @@ class KtlintConventionPlugin : Plugin<Project> {
                 pluginManager.apply("org.jlleitschuh.gradle.ktlint")
 
                 ktlint {
-                    version.set("1.5.0")
+                    version.set("1.7.1")
 
                     filter {
                         exclude { it.file.path.contains("${layout.buildDirectory.get()}") }
