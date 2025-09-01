@@ -73,7 +73,7 @@ class LoginScreenViewModelTest {
 
     @Test
     fun `Should emit LoginViewState Error when signInWithGoogle fails`() = runTest {
-        authApi.signInResult = AuthApi.SignInStatus.Error(Exception("Error logging in"))
+        authApi.signInResult = AuthApi.SessionStatus.Unauthenticated(Exception("Error logging in"))
 
         loginViewModel.viewState.test {
             loginViewModel.onLoginWithGoogle()
@@ -85,7 +85,7 @@ class LoginScreenViewModelTest {
 
     @Test
     fun `Should emit LoginViewState Error when email login fails`() = runTest {
-        authApi.signInResult = AuthApi.SignInStatus.Error(Exception("Error logging in"))
+        authApi.signInResult = AuthApi.SessionStatus.Unauthenticated(Exception("Error logging in"))
 
         loginViewModel.viewState.test {
             loginViewModel.onLoginWithEmail("email", "pass")
@@ -98,7 +98,7 @@ class LoginScreenViewModelTest {
     @OptIn(ExperimentalTime::class)
     @Test
     fun `Should emit LoginViewState Success when signInWithGoogle succeeds`() = runTest {
-        authApi.signInResult = AuthApi.SignInStatus.LoggedIn(
+        authApi.signInResult = AuthApi.SessionStatus.Authenticated(
             SessionInfo(
                 expiresAt = Clock.System.now(),
                 accessToken = "",

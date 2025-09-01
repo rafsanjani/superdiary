@@ -18,10 +18,12 @@ class AndroidAuth(
     private val supabaseClient: SupabaseClient,
     private val logger: AggregateLogger,
     private val contextProvider: AndroidContextProvider,
-) : AuthApi by DefaultSupabaseAuth(supabaseClient, logger) {
-
+) : AuthApi by DefaultSupabaseAuth(
+    client = supabaseClient,
+    logger = logger,
+) {
     /** Use the credentials manager to sign in with Google on Android */
-    override suspend fun signInWithGoogle(): AuthApi.SignInStatus {
+    override suspend fun signInWithGoogle(): AuthApi.SessionStatus {
         logger.d(TAG) { "Starting Google sign-in process with CredentialManager" }
         // This must be an activity context
         val hostActivityContext = contextProvider.getContext()
@@ -54,15 +56,15 @@ class AndroidAuth(
         } catch (e: GetCredentialException) {
             return if (e is NoCredentialException) {
                 logger.e(TAG) { "No Google credentials available for sign-in." }
-                AuthApi.SignInStatus.Error(
+                AuthApi.SessionStatus.Unauthenticated(
                     NoCredentialsException("No Google credentials available!"),
                 )
             } else {
-                return AuthApi.SignInStatus.Error(e)
+                return AuthApi.SessionStatus.Unauthenticated(e)
             }
         } catch (e: GoogleIdTokenParsingException) {
             logger.e(TAG) { "Error parsing Google ID token: ${e.message}" }
-            return AuthApi.SignInStatus.Error(e)
+            return AuthApi.SessionStatus.Unauthenticated(e)
         }
 
         return if (googleIdToken != null) {
@@ -70,7 +72,7 @@ class AndroidAuth(
             signInWithGoogle(googleIdToken)
         } else {
             logger.e(TAG) { "Google ID token retrieval failed. No token available for sign-in." }
-            AuthApi.SignInStatus.Error(Exception("Error logging in with Google"))
+            AuthApi.SessionStatus.Unauthenticated(Exception("Error logging in with Google"))
         }
     }
 

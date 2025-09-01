@@ -12,7 +12,7 @@ class FakeAuthApi
 constructor(
     clock: Clock = Clock.System,
 ) : AuthApi {
-    var signInResult: AuthApi.SignInStatus = AuthApi.SignInStatus.LoggedIn(
+    var signInResult: AuthApi.SessionStatus = AuthApi.SessionStatus.Authenticated(
         SessionInfo(
             expiresAt = clock.now(),
             accessToken = "test-access-token",
@@ -33,7 +33,7 @@ constructor(
     override suspend fun sendPasswordResetEmail(email: String): Result<Unit> =
         sendPasswordResetEmailResult
 
-    override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SignInStatus {
+    override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SessionStatus {
         TODO("Not yet implemented")
     }
 
@@ -41,19 +41,19 @@ constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun signInWithGoogle(): AuthApi.SignInStatus =
+    override suspend fun signInWithGoogle(): AuthApi.SessionStatus =
         signInResult
 
-    override suspend fun signInWithGoogle(googleIdToken: String): AuthApi.SignInStatus =
+    override suspend fun signInWithGoogle(googleIdToken: String): AuthApi.SessionStatus =
         signInResult
 
-    override suspend fun restoreSession(): AuthApi.SignInStatus = signInResult
+    override suspend fun restoreSession(): AuthApi.SessionStatus = signInResult
 
-    override suspend fun signIn(email: String, password: String): AuthApi.SignInStatus =
+    override suspend fun signIn(email: String, password: String): AuthApi.SessionStatus =
         signInResult
 
     override fun currentUserOrNull(): UserInfo? =
-        (signInResult as? AuthApi.SignInStatus.LoggedIn)?.sessionInfo?.userInfo
+        (signInResult as? AuthApi.SessionStatus.Authenticated)?.sessionInfo?.userInfo
 
     override suspend fun register(
         name: String,
