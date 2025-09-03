@@ -16,3 +16,5 @@ desktopApp/datastore.preferences_pb
 desktopApp/diary_preferences.preferences_pb
 shared-ui/datastore.preferences_pb
 secrets.properties
+compose-rules.jar
+ktlint

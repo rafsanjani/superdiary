@@ -1,5 +1,14 @@
 #!/bin/sh
 
 echo "Running static analysis."
+# download ktlin cli with curl if it doesn't exist
+if [ ! -f ktlint ]; then
+    curl -L https://github.com/pinterest/ktlint/releases/download/1.7.1/ktlint -o ktlint
+    chmod +x ktlint
+fi
 
-./gradlew ktlintCheck
+# download compose rules with curl if it doesn't exist
+if [ ! -f compose-rules.jar ]; then
+    curl -L https://github.com/mrmans0n/compose-rules/releases/download/v0.4.27/ktlint-compose-0.4.27-all.jar -o compose-rules.jar
+fi
+./ktlint --ruleset=compose-rules.jar '**/*.kt' '**/*.kts' '!**/build/**'
