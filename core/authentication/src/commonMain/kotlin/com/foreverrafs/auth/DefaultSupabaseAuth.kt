@@ -1,6 +1,7 @@
 package com.foreverrafs.auth
 
 import androidx.core.uri.Uri
+import com.foreverrafs.auth.AuthApi.SessionStatus.Authenticated
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
@@ -19,6 +20,8 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 
@@ -35,15 +38,15 @@ class DefaultSupabaseAuth(
     private val client: SupabaseClient,
     private val logger: AggregateLogger,
 ) : AuthApi {
-    override suspend fun signInWithGoogle(): AuthApi.SignInStatus =
+    override suspend fun signInWithGoogle(): AuthApi.SessionStatus =
         try {
             client.auth.signInWith(provider = Google)
             getSessionStatus()
         } catch (e: RestException) {
-            AuthApi.SignInStatus.Error(e)
+            AuthApi.SessionStatus.Unauthenticated(e)
         }
 
-    override suspend fun signInWithGoogle(googleIdToken: String): AuthApi.SignInStatus = try {
+    override suspend fun signInWithGoogle(googleIdToken: String): AuthApi.SessionStatus = try {
         client.auth.signInWith(IDToken) {
             idToken = googleIdToken
             provider = Google
@@ -53,27 +56,48 @@ class DefaultSupabaseAuth(
         logger.e(tag = Tag, throwable = e)
         if (e is BadRequestRestException) {
             // Rewrite exception into a domain type
-            AuthApi.SignInStatus.Error(TokenExpiredException(message = e.message))
+            AuthApi.SessionStatus.Unauthenticated(TokenExpiredException(message = e.message))
         } else {
-            AuthApi.SignInStatus.Error(e)
+            AuthApi.SessionStatus.Unauthenticated(e)
         }
     }
 
-    private suspend fun getSessionStatus(): AuthApi.SignInStatus {
+    override fun sessionStatus(): Flow<AuthApi.SessionStatus> =
+        client.auth.sessionStatus.map { sessionStatus ->
+            when (sessionStatus) {
+                is SessionStatus.Authenticated -> Authenticated(
+                    sessionInfo = sessionStatus.session.toSession(),
+                )
+
+                is SessionStatus.Initializing -> AuthApi.SessionStatus.Unauthenticated(
+                    Exception("Session is initializing"),
+                )
+
+                is SessionStatus.NotAuthenticated -> AuthApi.SessionStatus.Unauthenticated(
+                    Exception("User is not authenticated"),
+                )
+
+                is SessionStatus.RefreshFailure -> AuthApi.SessionStatus.Unauthenticated(
+                    Exception("Session refresh failed"),
+                )
+            }
+        }
+
+    private suspend fun getSessionStatus(): AuthApi.SessionStatus {
         val currentSession = client.auth.currentSessionOrNull()
 
         return if (currentSession != null) {
             associateUniqueEmailToUser()
-            AuthApi.SignInStatus.LoggedIn(currentSession.toSession())
+            AuthApi.SessionStatus.Authenticated(currentSession.toSession())
         } else {
             logger.e(Tag) {
                 "User was authenticated, but the session was null."
             }
-            AuthApi.SignInStatus.Error(Exception("User was authenticated, but the session was null."))
+            AuthApi.SessionStatus.Unauthenticated(Exception("User was authenticated, but the session was null."))
         }
     }
 
-    override suspend fun restoreSession(): AuthApi.SignInStatus {
+    override suspend fun restoreSession(): AuthApi.SessionStatus {
         // Wait for session to be initialized
         while (client.auth.sessionStatus.value == SessionStatus.Initializing) {
             logger.i(Tag) {
@@ -88,22 +112,22 @@ class DefaultSupabaseAuth(
         val currentSession = client.auth.currentSessionOrNull()
 
         return if (currentSession != null) {
-            AuthApi.SignInStatus.LoggedIn(
+            AuthApi.SessionStatus.Authenticated(
                 currentSession.toSession(),
             )
         } else {
-            AuthApi.SignInStatus.Error(Exception("No session information found!"))
+            AuthApi.SessionStatus.Unauthenticated(Exception("No session information found!"))
         }
     }
 
-    override suspend fun signIn(email: String, password: String): AuthApi.SignInStatus = try {
+    override suspend fun signIn(email: String, password: String): AuthApi.SessionStatus = try {
         client.auth.signInWith(Email) {
             this.email = email
             this.password = password
         }
         getSessionStatus()
     } catch (exception: Exception) {
-        AuthApi.SignInStatus.Error(exception.transform())
+        AuthApi.SessionStatus.Unauthenticated(exception.transform())
     }
 
     override suspend fun register(
@@ -197,7 +221,7 @@ class DefaultSupabaseAuth(
         client.auth.currentUserOrNull()?.toUserInfo()
 
     @OptIn(SupabaseInternal::class)
-    override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SignInStatus =
+    override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SessionStatus =
         suspendCoroutine { continuation ->
             logger.i(Tag) {
                 "Confirming authentication with token $deeplinkUri"
@@ -205,7 +229,7 @@ class DefaultSupabaseAuth(
 
             if (deeplinkUri.toString().contains("error")) {
                 continuation.resume(
-                    AuthApi.SignInStatus.Error(Exception("Invalid confirmation link")),
+                    AuthApi.SessionStatus.Unauthenticated(Exception("Invalid confirmation link")),
                 )
                 return@suspendCoroutine
             }
@@ -216,9 +240,9 @@ class DefaultSupabaseAuth(
                     onFinish = { session ->
                         continuation.resume(
                             if (session != null) {
-                                AuthApi.SignInStatus.LoggedIn(session.toSession())
+                                AuthApi.SessionStatus.Authenticated(session.toSession())
                             } else {
-                                AuthApi.SignInStatus.Error(Exception("Error logging in"))
+                                AuthApi.SessionStatus.Unauthenticated(Exception("Error logging in"))
                             },
                         )
                     },
@@ -226,7 +250,7 @@ class DefaultSupabaseAuth(
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
                 continuation.resume(
-                    AuthApi.SignInStatus.Error(e),
+                    AuthApi.SessionStatus.Unauthenticated(e),
                 )
             }
         }

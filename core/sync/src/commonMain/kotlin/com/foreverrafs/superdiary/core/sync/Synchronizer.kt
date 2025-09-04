@@ -161,10 +161,11 @@ class DiarySynchronizer(
 @Composable
 fun SyncEffect(
     synchronizer: Synchronizer,
+    key1: Any? = null,
 ) {
     val scope = rememberCoroutineScope()
 
-    LifecycleStartEffect(Unit) {
+    LifecycleStartEffect(key1) {
         scope.launch {
             synchronizer.startListening()
         }

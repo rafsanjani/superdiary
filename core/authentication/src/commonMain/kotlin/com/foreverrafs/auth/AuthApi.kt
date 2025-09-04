@@ -3,15 +3,18 @@ package com.foreverrafs.auth
 import androidx.core.uri.Uri
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
+import kotlinx.coroutines.flow.Flow
 
 class TokenExpiredException(message: String?) : Exception(message)
 
 interface AuthApi {
-    suspend fun signInWithGoogle(): SignInStatus
-    suspend fun signInWithGoogle(googleIdToken: String): SignInStatus
+    suspend fun signInWithGoogle(): SessionStatus
+    suspend fun signInWithGoogle(googleIdToken: String): SessionStatus
 
-    suspend fun restoreSession(): SignInStatus
-    suspend fun signIn(email: String, password: String): SignInStatus
+    suspend fun restoreSession(): SessionStatus
+
+    fun sessionStatus(): Flow<SessionStatus>
+    suspend fun signIn(email: String, password: String): SessionStatus
     suspend fun register(
         name: String,
         email: String,
@@ -20,7 +23,7 @@ interface AuthApi {
 
     suspend fun signOut(): Result<Unit>
 
-    suspend fun handleAuthDeeplink(deeplinkUri: Uri?): SignInStatus
+    suspend fun handleAuthDeeplink(deeplinkUri: Uri?): SessionStatus
 
     suspend fun sendPasswordResetEmail(email: String): Result<Unit>
 
@@ -28,9 +31,9 @@ interface AuthApi {
 
     fun currentUserOrNull(): UserInfo?
 
-    sealed interface SignInStatus {
-        data class LoggedIn(val sessionInfo: SessionInfo) : SignInStatus
-        data class Error(val exception: Exception) : SignInStatus
+    sealed interface SessionStatus {
+        data class Authenticated(val sessionInfo: SessionInfo) : SessionStatus
+        data class Unauthenticated(val exception: Exception) : SessionStatus
     }
 
     sealed interface RegistrationStatus {

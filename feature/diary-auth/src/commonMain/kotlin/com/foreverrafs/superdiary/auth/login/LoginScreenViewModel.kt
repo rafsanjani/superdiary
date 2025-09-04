@@ -28,13 +28,13 @@ class LoginScreenViewModel(
             }
 
             when (val result = authApi.signInWithGoogle()) {
-                is AuthApi.SignInStatus.Error -> _viewState.update {
+                is AuthApi.SessionStatus.Unauthenticated -> _viewState.update {
                     LoginViewState.Error(
                         error = AuthException(cause = result.exception),
                     )
                 }
 
-                is AuthApi.SignInStatus.LoggedIn -> _viewState.update { currentState ->
+                is AuthApi.SessionStatus.Authenticated -> _viewState.update { currentState ->
                     result.sessionInfo.userInfo?.let {
                         LoginViewState.Success(it)
                     } ?: currentState
@@ -49,13 +49,13 @@ class LoginScreenViewModel(
             }
 
             when (val result = authApi.signIn(username.toString(), password.toString())) {
-                is AuthApi.SignInStatus.Error -> _viewState.update {
+                is AuthApi.SessionStatus.Unauthenticated -> _viewState.update {
                     LoginViewState.Error(
                         error = AuthException(cause = result.exception),
                     )
                 }
 
-                is AuthApi.SignInStatus.LoggedIn -> _viewState.update { currentState ->
+                is AuthApi.SessionStatus.Authenticated -> _viewState.update { currentState ->
                     result.sessionInfo.userInfo?.let {
                         LoginViewState.Success(it)
                     } ?: currentState
