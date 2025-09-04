@@ -1,6 +1,7 @@
 package com.foreverrafs.auth
 
 import androidx.core.uri.Uri
+import com.foreverrafs.auth.AuthApi.SessionStatus.Authenticated
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
@@ -61,17 +62,26 @@ class DefaultSupabaseAuth(
         }
     }
 
-    override fun sessionStatus(): Flow<AuthApi.SessionStatus> = client.auth.sessionStatus.map { sessionStatus ->
-        when (sessionStatus) {
-            is SessionStatus.Authenticated -> AuthApi.SessionStatus.Authenticated(
-                sessionInfo = sessionStatus.session.toSession(),
-            )
+    override fun sessionStatus(): Flow<AuthApi.SessionStatus> =
+        client.auth.sessionStatus.map { sessionStatus ->
+            when (sessionStatus) {
+                is SessionStatus.Authenticated -> Authenticated(
+                    sessionInfo = sessionStatus.session.toSession(),
+                )
 
-            else -> AuthApi.SessionStatus.Unauthenticated(
-                exception = Exception("Error during authentication"),
-            )
+                is SessionStatus.Initializing -> AuthApi.SessionStatus.Unauthenticated(
+                    Exception("Session is initializing"),
+                )
+
+                is SessionStatus.NotAuthenticated -> AuthApi.SessionStatus.Unauthenticated(
+                    Exception("User is not authenticated"),
+                )
+
+                is SessionStatus.RefreshFailure -> AuthApi.SessionStatus.Unauthenticated(
+                    Exception("Session refresh failed"),
+                )
+            }
         }
-    }
 
     private suspend fun getSessionStatus(): AuthApi.SessionStatus {
         val currentSession = client.auth.currentSessionOrNull()
