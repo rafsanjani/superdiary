@@ -6,10 +6,11 @@ import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 @OptIn(ExperimentalTime::class)
-class FakeAuthApi
-constructor(
+class FakeAuthApi(
     clock: Clock = Clock.System,
 ) : AuthApi {
     var signInResult: AuthApi.SessionStatus = AuthApi.SessionStatus.Authenticated(
@@ -24,6 +25,10 @@ constructor(
                 avatarUrl = "avatar-url",
             ),
         ),
+    )
+
+    override fun sessionStatus(): Flow<AuthApi.SessionStatus> = flowOf(
+        signInResult,
     )
 
     var sendPasswordResetEmailResult: Result<Unit> = Result.success(Unit)
