@@ -15,12 +15,12 @@ plugins {
 }
 
 android {
-    compileSdk = 35
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
         compileSdk = libs.versions.compileSdk.get().toInt()
 
         applicationId = "com.foreverrafs.superdiary"
-        minSdk = 28
+        minSdk = libs.versions.minimumSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 222
         versionName = "0.0.1"
