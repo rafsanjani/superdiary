@@ -82,8 +82,6 @@ android {
 
             manifestPlaceholders["sentryEnvironment"] = "benchmark"
             signingConfig = signingConfigs.getByName("debug")
-            isMinifyEnabled = false
-            isDebuggable = true
         }
     }
 }
