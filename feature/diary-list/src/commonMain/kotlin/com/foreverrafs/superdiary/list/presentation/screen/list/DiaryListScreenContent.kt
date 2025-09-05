@@ -69,6 +69,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -196,6 +197,7 @@ fun DiaryListScreenContent(
                 return@Scaffold
             }
             FloatingActionButton(
+                modifier = Modifier.testTag("button_add_entry"),
                 onClick = diaryListActions.onAddEntry,
                 shape = RoundedCornerShape(4.dp),
             ) {

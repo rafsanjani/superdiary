@@ -6,6 +6,7 @@
 package com.foreverrafs.benchmark
 
 import android.os.SystemClock
+import androidx.benchmark.macro.MacrobenchmarkScope
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.BySelector
 import androidx.test.uiautomator.Direction
@@ -16,19 +17,35 @@ import androidx.test.uiautomator.Until
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-object AppScenarios {
-    fun mainNavigationItems(device: UiDevice) {
-        device.waitForIdle()
+fun MacrobenchmarkScope.mainNavigationItems() {
+    device.waitForIdle()
 
-        // -------------
-        // Dashboard
-        // -------------
-        device.testDashboard() || return
+    // -------------
+    // Dashboard
+    // -------------
+    device.testDashboard() || return
 
-        // -------------
-        // Favorites
-        // -------------
-        device.testFavorites() || return
+    // -------------
+    // Favorites
+    // -------------
+    device.testFavorites() || return
+}
+
+fun MacrobenchmarkScope.performLogin() {
+    device.waitForIdle()
+
+    with(device) {
+        runAction(By.res("input_username")) {
+            text = "johndoe@gmail.com"
+        }
+
+        runAction(By.res("input_password")) {
+            text = "myawesomepassword2011@gmail.com"
+        }
+
+        runAction(By.res("button_login")) {
+            click()
+        }
     }
 }
 
@@ -45,7 +62,15 @@ private fun UiDevice.testDashboard(): Boolean {
 private fun UiDevice.addEntryFromDashboard() {
     waitForObject(By.res("dashboard_content_list"), 30.seconds)
 
+    runAction(By.res("glance_section_see_all")) {
+        click()
+    }
+
     runAction(By.res("button_add_entry")) {
+        click()
+    }
+
+    runAction(By.res("request_location_cancel")) {
         click()
     }
 
@@ -53,7 +78,7 @@ private fun UiDevice.addEntryFromDashboard() {
         text = "Hello Diary, I miss you"
     }
 
-    runAction(By.res("button_save_diary")) {
+    runAction(By.res("navigate_back_button")) {
         click()
     }
 }
@@ -88,7 +113,8 @@ fun UiDevice.waitForObject(selector: BySelector, timeout: Duration = 5.seconds):
     error("Object with selector [$selector] not found")
 }
 
-fun <R> UiDevice.wait(condition: SearchCondition<R>, timeout: Duration): R = wait(condition, timeout.inWholeMilliseconds)
+fun <R> UiDevice.wait(condition: SearchCondition<R>, timeout: Duration): R =
+    wait(condition, timeout.inWholeMilliseconds)
 
 private fun UiDevice.runAction(
     selector: BySelector,

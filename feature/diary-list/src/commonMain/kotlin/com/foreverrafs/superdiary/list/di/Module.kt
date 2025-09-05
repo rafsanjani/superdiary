@@ -18,6 +18,5 @@ val diaryListModule = module {
     factoryOf(::DiaryListRepositoryImpl) { bind<DiaryListRepository>() }
     factoryOf(::GetAllDiariesUseCase)
     factoryOf(::GetDiaryByIdUseCase)
-
     factoryOf(::DetailsViewModel)
 }

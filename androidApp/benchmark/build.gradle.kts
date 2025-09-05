@@ -9,7 +9,7 @@ android {
     compileSdk = libs.versions.targetSdk.get().toInt()
 
     kotlin {
-       jvmToolchain(21)
+        jvmToolchain(21)
     }
 
     defaultConfig {
@@ -19,7 +19,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         testInstrumentationRunnerArguments += mapOf(
-            "androidx.benchmark.suppressErrors" to "EMULATOR"
+            "androidx.benchmark.suppressErrors" to "EMULATOR",
         )
     }
 
@@ -27,8 +27,15 @@ android {
         create("benchmark") {
             isDebuggable = true
             signingConfig = getByName("debug").signingConfig
-            matchingFallbacks += listOf("release")
+            matchingFallbacks += listOf("demoRelease")
         }
+    }
+
+    flavorDimensions.add("mode")
+
+    productFlavors {
+        create("demo") { dimension = "mode" }
+        create("standard") { dimension = "mode" }
     }
 
     targetProjectPath = ":androidApp:app"

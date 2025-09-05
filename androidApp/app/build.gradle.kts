@@ -84,6 +84,18 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    flavorDimensions.add("mode")
+
+    productFlavors {
+        create("standard") { dimension = "mode" }
+
+        create("demo") {
+            applicationIdSuffix = ".demo"
+            manifestPlaceholders["applicationName"] = "superdiary demo"
+            dimension = "mode"
+        }
+    }
 }
 
 fun configureReleaseSigning() {
@@ -156,6 +168,8 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.google.material)
     implementation(projects.sharedUi)
+    implementation(projects.sharedData)
+    implementation(projects.core.diaryAi)
     implementation(projects.feature.diaryAuth)
     implementation(projects.core.analytics)
     implementation(libs.koin.android)
@@ -169,5 +183,5 @@ dependencies {
 }
 
 dependencyGuard {
-    configuration("releaseRuntimeClasspath")
+    configuration("standardReleaseRuntimeClasspath")
 }

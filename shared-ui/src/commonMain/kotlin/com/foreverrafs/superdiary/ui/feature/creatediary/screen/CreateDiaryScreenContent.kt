@@ -102,6 +102,8 @@ fun CreateDiaryScreenContent(
             SuperDiaryAppBar(
                 navigationIcon = {
                     IconButton(
+                        modifier = Modifier
+                            .testTag("navigate_back_button"),
                         onClick = {
                             if (richTextState.annotatedString.isEmpty()) {
                                 onNavigateBack()
@@ -222,7 +224,9 @@ fun CreateDiaryScreenContent(
                 // editable state
                 OutlinedRichTextEditor(
                     state = richTextState,
-                    modifier = Modifier.testTag("diary_text_field").focusRequester(focusRequester)
+                    modifier = Modifier
+                        .testTag("diary_text_field")
+                        .focusRequester(focusRequester)
                         .weight(1f).fillMaxWidth(),
                     textStyle = MaterialTheme.typography.bodyMedium.copy(
                         lineHeight = 25.sp,
