@@ -6,7 +6,7 @@ import androidx.compose.ui.viewinterop.UIKitViewController
 import com.foreverrafs.superdiary.design.LocalNativeViewFactory
 
 @Composable
-actual fun MapComponent(
+actual fun GoogleMap(
     latitude: Double,
     longitude: Double,
     modifier: Modifier,

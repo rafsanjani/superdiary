@@ -14,7 +14,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberUpdatedMarkerState
 
 @Composable
-actual fun MapComponent(
+actual fun GoogleMap(
     latitude: Double,
     longitude: Double,
     modifier: Modifier,

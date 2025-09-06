@@ -8,7 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -21,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -36,7 +41,7 @@ import superdiary.design_system.generated.resources.app_name
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun SuperDiaryAppBar(
+fun AppBar(
     modifier: Modifier = Modifier,
     navigationIcon: @Composable (() -> Unit)? = null,
     onProfileClick: () -> Unit = {},
@@ -85,7 +90,7 @@ fun SuperDiaryAppBar(
         ),
         actions = {
             with(sharedTransitionScope) {
-                SuperDiaryImage(
+                Image(
                     modifier = Modifier
                         .sharedElement(
                             sharedContentState = sharedTransitionScope.rememberSharedContentState(
@@ -106,10 +111,12 @@ fun SuperDiaryAppBar(
         navigationIcon = {
             with(sharedTransitionScope) {
                 Box(
-                    modifier = Modifier.sharedElement(
-                        sharedContentState = sharedTransitionScope.rememberSharedContentState("navigation_icon"),
-                        animatedVisibilityScope = animatedContentScope,
-                    ),
+                    modifier = Modifier
+                        .testTag("navigate_back_button")
+                        .sharedElement(
+                            sharedContentState = sharedTransitionScope.rememberSharedContentState("navigation_icon"),
+                            animatedVisibilityScope = animatedContentScope,
+                        ),
                 ) {
                     navigationIcon?.invoke()
                 }
@@ -118,13 +125,33 @@ fun SuperDiaryAppBar(
     )
 }
 
+@Composable
+fun SuperdiaryNavigationIcon(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    contentDescription: String? = null,
+) {
+    IconButton(
+        modifier = modifier
+            .testTag("navigate_back_button"),
+        onClick = onClick,
+    ) {
+        Icon(
+            modifier = Modifier
+                .clip(CircleShape),
+            imageVector = Icons.Default.ArrowBackIosNew,
+            contentDescription = contentDescription,
+        )
+    }
+}
+
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Preview
 @Composable
 private fun SuperdiaryAppBarPreview() {
     SuperDiaryPreviewTheme(modifier = Modifier.fillMaxSize()) {
         SharedTransitionLayout {
-            SuperDiaryAppBar(
+            AppBar(
                 onProfileClick = {},
             )
         }

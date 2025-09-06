@@ -13,13 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SuggestionChip
@@ -33,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.testTag
@@ -43,14 +37,14 @@ import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
 import com.foreverrafs.superdiary.design.components.ConfirmSaveDialog
 import com.foreverrafs.superdiary.design.components.LocationRationaleDialog
-import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
+import com.foreverrafs.superdiary.design.components.AppBar
+import com.foreverrafs.superdiary.design.components.SuperdiaryNavigationIcon
 import com.foreverrafs.superdiary.ui.feature.creatediary.components.RichTextStyleRow
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
 import org.jetbrains.compose.resources.stringResource
 import superdiary.shared_ui.generated.resources.Res
-import superdiary.shared_ui.generated.resources.content_description_navigate_back
 import superdiary.shared_ui.generated.resources.label_diary_ai
 
 /**
@@ -99,11 +93,9 @@ fun CreateDiaryScreenContent(
 
     Scaffold(
         topBar = {
-            SuperDiaryAppBar(
+            AppBar(
                 navigationIcon = {
-                    IconButton(
-                        modifier = Modifier
-                            .testTag("navigate_back_button"),
+                    SuperdiaryNavigationIcon(
                         onClick = {
                             if (richTextState.annotatedString.isEmpty()) {
                                 onNavigateBack()
@@ -111,14 +103,7 @@ fun CreateDiaryScreenContent(
                                 onShowSaveDialogChange(true)
                             }
                         },
-                    ) {
-                        Icon(
-                            modifier = Modifier
-                                .clip(CircleShape),
-                            imageVector = Icons.Default.ArrowBackIosNew,
-                            contentDescription = stringResource(Res.string.content_description_navigate_back),
-                        )
-                    }
+                    )
                 },
                 avatarUrl = userInfo?.avatarUrl,
             )

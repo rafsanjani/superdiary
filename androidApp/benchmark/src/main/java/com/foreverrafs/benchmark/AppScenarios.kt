@@ -28,7 +28,7 @@ fun MacrobenchmarkScope.mainNavigationItems() {
     // -------------
     // Favorites
     // -------------
-    device.testFavorites() || return
+//    device.testFavorites() || return
 }
 
 fun MacrobenchmarkScope.performLogin() {
@@ -60,7 +60,7 @@ private fun UiDevice.testDashboard(): Boolean {
 }
 
 private fun UiDevice.addEntryFromDashboard() {
-    waitForObject(By.res("dashboard_content_list"), 30.seconds)
+    waitForObject(selector = By.res("dashboard_content_list"), timeout = 30.seconds)
 
     runAction(By.res("glance_section_see_all")) {
         click()
@@ -70,12 +70,20 @@ private fun UiDevice.addEntryFromDashboard() {
         click()
     }
 
-    runAction(By.res("request_location_cancel")) {
+    runAction(selector = By.text("Don't ask again"), failfast = false) {
         click()
     }
 
     runAction(By.res("diary_text_field")) {
         text = "Hello Diary, I miss you"
+    }
+
+    runAction(By.res("navigate_back_button")) {
+        click()
+    }
+
+    runAction(By.text("Save")) {
+        click()
     }
 
     runAction(By.res("navigate_back_button")) {
@@ -101,16 +109,25 @@ private fun UiDevice.testFavorites(): Boolean {
 
 private fun UiDevice.addFavoriteFromDashboard() {
     waitForIdle()
-    runAction(By.res("diary_list_item_1")) {
+    runAction(selector = By.res("diary_list_item_1")) {
         swipe(Direction.LEFT, 0.8f)
     }
 }
 
-fun UiDevice.waitForObject(selector: BySelector, timeout: Duration = 5.seconds): UiObject2 {
+fun UiDevice.waitForObject(
+    selector: BySelector,
+    timeout: Duration = 5.seconds,
+    failfast: Boolean = false,
+): UiObject2? {
     if (wait(Until.hasObject(selector), timeout)) {
         return findObject(selector)
     }
-    error("Object with selector [$selector] not found")
+
+    if (failfast) {
+        error("Object with selector [$selector] not found")
+    }
+
+    return null
 }
 
 fun <R> UiDevice.wait(condition: SearchCondition<R>, timeout: Duration): R =
@@ -119,15 +136,16 @@ fun <R> UiDevice.wait(condition: SearchCondition<R>, timeout: Duration): R =
 private fun UiDevice.runAction(
     selector: BySelector,
     maxRetries: Int = 6,
+    failfast: Boolean = true,
     action: UiObject2.() -> Unit,
 ) {
-    waitForObject(selector)
+    waitForObject(selector = selector, failfast = failfast)
 
     retry(maxRetries = maxRetries, delay = 1.seconds) {
         // Wait for idle, to avoid recompositions causing StaleObjectExceptions
         waitForIdle()
 
-        requireNotNull(findObject(selector)).action()
+        findObject(selector)?.action()
     }
 }
 

@@ -33,7 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.foreverrafs.superdiary.design.components.PasswordInputField
-import com.foreverrafs.superdiary.design.components.SuperDiaryButton
+import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.ui.feature.changepassword.ChangePasswordViewModel
 import com.foreverrafs.superdiary.ui.feature.changepassword.ChangePasswordViewModel.ChangePasswordScreenAction
@@ -147,7 +147,7 @@ internal fun ChangePasswordScreenContent(
                     viewState.passwordStrength == PasswordStrength.Strong &&
                     viewState.isProcessing == false
 
-                SuperDiaryButton(
+                PrimaryButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 32.dp),
