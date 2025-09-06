@@ -31,11 +31,9 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberOverscrollEffect
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -65,10 +63,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -87,8 +85,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.foreverrafs.superdiary.common.utils.format
+import com.foreverrafs.superdiary.design.components.AppBar
 import com.foreverrafs.superdiary.design.components.ConfirmDeleteDialog
-import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
+import com.foreverrafs.superdiary.design.components.SuperdiaryNavigationIcon
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.list.DiaryFilters
 import com.foreverrafs.superdiary.list.DiaryListActions
@@ -174,17 +173,9 @@ fun DiaryListScreenContent(
 
     Scaffold(
         topBar = {
-            SuperDiaryAppBar(
+            AppBar(
                 navigationIcon = {
-                    IconButton(
-                        onClick = ::onBack,
-                    ) {
-                        Icon(
-                            modifier = Modifier.clip(CircleShape),
-                            imageVector = Icons.Default.ArrowBackIosNew,
-                            contentDescription = "Navigate back",
-                        )
-                    }
+                    SuperdiaryNavigationIcon(onClick = ::onBack)
                 },
                 avatarUrl = screenModel.avatarUrl,
                 onProfileClick = onProfileClick,
@@ -196,6 +187,7 @@ fun DiaryListScreenContent(
                 return@Scaffold
             }
             FloatingActionButton(
+                modifier = Modifier.testTag("button_add_entry"),
                 onClick = diaryListActions.onAddEntry,
                 shape = RoundedCornerShape(4.dp),
             ) {

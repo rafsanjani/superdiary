@@ -9,11 +9,13 @@ import com.foreverrafs.superdiary.domain.validator.DiaryValidator
 import com.foreverrafs.superdiary.domain.validator.DiaryValidatorImpl
 import kotlin.test.Test
 import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 
+@OptIn(ExperimentalTime::class)
 class DiaryValidatorTest {
     private val testClock: Clock = object : Clock {
         override fun now(): kotlin.time.Instant =

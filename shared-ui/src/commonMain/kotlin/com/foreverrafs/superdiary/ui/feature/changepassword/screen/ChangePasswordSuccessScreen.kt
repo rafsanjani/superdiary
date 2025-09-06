@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.foreverrafs.superdiary.design.components.BodyMediumText
-import com.foreverrafs.superdiary.design.components.SuperDiaryButton
+import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.components.TitleMediumText
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -55,7 +55,7 @@ fun ChangePasswordSuccessScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            SuperDiaryButton(
+            PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
                 text = "Continue",
                 onClick = onPrimaryButtonClick,

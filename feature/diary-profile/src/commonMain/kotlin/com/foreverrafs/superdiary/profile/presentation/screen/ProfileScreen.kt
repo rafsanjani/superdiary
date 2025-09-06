@@ -50,7 +50,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.foreverrafs.superdiary.design.components.SuperDiaryImage
+import com.foreverrafs.superdiary.design.components.Image
 import com.foreverrafs.superdiary.design.style.LocalAnimatedContentScope
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
@@ -171,7 +171,7 @@ fun ProfileScreenContent(
                         }
                         Spacer(modifier = Modifier.height(24.dp))
 
-                        SuperDiaryImage(
+                        Image(
                             modifier = Modifier
                                 .sharedElement(
                                     sharedContentState = sharedTransitionScope.rememberSharedContentState(

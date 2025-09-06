@@ -48,7 +48,7 @@ import com.foreverrafs.auth.NoCredentialsException
 import com.foreverrafs.auth.UserAlreadyRegisteredException
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.design.components.PasswordInputField
-import com.foreverrafs.superdiary.design.components.SuperDiaryButton
+import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.components.SuperDiaryInputField
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import kotlinx.coroutines.launch
@@ -179,7 +179,7 @@ fun LoginScreenContent(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                SuperDiaryButton(
+                PrimaryButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("button_login"),

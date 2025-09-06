@@ -11,8 +11,9 @@ import com.foreverrafs.superdiary.ui.di.compositeModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.startKoin
+import org.koin.core.module.Module
 
-class DiaryApp : Application(), KoinComponent {
+abstract class BaseDiaryApp : Application(), KoinComponent {
     private val androidContextProvider = AndroidContextProvider.getInstance()
     override fun onCreate() {
         super.onCreate()
@@ -47,20 +48,22 @@ class DiaryApp : Application(), KoinComponent {
         )
     }
 
+    open fun koinModules(): List<Module> = compositeModule(
+        analytics = AndroidAnalytics(),
+        logger = AggregateLogger(
+            loggers = listOf(
+                SentryLogger(),
+                KermitLogger(),
+            ),
+        ),
+    )
+
     private fun initializeKoin() {
         startKoin {
-            androidContext(this@DiaryApp)
+            androidContext(this@BaseDiaryApp)
 
             modules(
-                modules = compositeModule(
-                    analytics = AndroidAnalytics(),
-                    logger = AggregateLogger(
-                        loggers = listOf(
-                            SentryLogger(),
-                            KermitLogger(),
-                        ),
-                    ),
-                ),
+                modules = koinModules(),
             )
         }
     }

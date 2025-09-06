@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.android.test)
     alias(libs.plugins.kotlin.android)
@@ -11,9 +9,7 @@ android {
     compileSdk = libs.versions.targetSdk.get().toInt()
 
     kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_11
-        }
+        jvmToolchain(21)
     }
 
     defaultConfig {
@@ -21,18 +17,28 @@ android {
         targetSdk = libs.versions.targetSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        testInstrumentationRunnerArguments += mapOf(
+            "androidx.benchmark.suppressErrors" to "EMULATOR",
+        )
     }
 
     buildTypes {
         create("benchmark") {
             isDebuggable = true
             signingConfig = getByName("debug").signingConfig
-            matchingFallbacks += listOf("release")
+            matchingFallbacks += listOf("demoRelease")
         }
     }
 
+    flavorDimensions.add("mode")
+
+    productFlavors {
+        create("demo") { dimension = "mode" }
+        create("standard") { dimension = "mode" }
+    }
+
     targetProjectPath = ":androidApp:app"
-    experimentalProperties["android.experimental.self-instrumenting"] = true
 }
 
 androidComponents {

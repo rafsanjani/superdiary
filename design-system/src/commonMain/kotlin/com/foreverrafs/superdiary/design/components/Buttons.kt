@@ -10,7 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SuperDiaryButton(
+fun PrimaryButton(
     text: String,
     onClick: () -> Unit,
     enabled: Boolean,

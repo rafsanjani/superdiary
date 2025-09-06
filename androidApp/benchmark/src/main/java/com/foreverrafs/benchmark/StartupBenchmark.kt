@@ -27,12 +27,14 @@ class StartupBenchmark {
 
     @Test
     fun startup() = benchmarkRule.measureRepeated(
-        packageName = "com.foreverrafs.superdiary",
+        packageName = "com.foreverrafs.superdiary.demo",
         metrics = listOf(StartupTimingMetric()),
         iterations = 5,
         startupMode = StartupMode.COLD,
     ) {
         pressHome()
         startActivityAndWait()
+        performLogin()
+        mainNavigationItems()
     }
 }

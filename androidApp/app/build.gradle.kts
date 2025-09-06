@@ -15,12 +15,12 @@ plugins {
 }
 
 android {
-    compileSdk = 35
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
         compileSdk = libs.versions.compileSdk.get().toInt()
 
         applicationId = "com.foreverrafs.superdiary"
-        minSdk = 28
+        minSdk = libs.versions.minimumSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 223
         versionName = "0.0.1"
@@ -82,8 +82,18 @@ android {
 
             manifestPlaceholders["sentryEnvironment"] = "benchmark"
             signingConfig = signingConfigs.getByName("debug")
-            isMinifyEnabled = false
-            isDebuggable = true
+        }
+    }
+
+    flavorDimensions.add("mode")
+
+    productFlavors {
+        create("standard") { dimension = "mode" }
+
+        create("demo") {
+            applicationIdSuffix = ".demo"
+            manifestPlaceholders["applicationName"] = "superdiary demo"
+            dimension = "mode"
         }
     }
 }
@@ -158,6 +168,8 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.google.material)
     implementation(projects.sharedUi)
+    implementation(projects.sharedData)
+    implementation(projects.core.diaryAi)
     implementation(projects.feature.diaryAuth)
     implementation(projects.core.analytics)
     implementation(libs.koin.android)
@@ -171,5 +183,5 @@ dependencies {
 }
 
 dependencyGuard {
-    configuration("releaseRuntimeClasspath")
+    configuration("standardReleaseRuntimeClasspath")
 }

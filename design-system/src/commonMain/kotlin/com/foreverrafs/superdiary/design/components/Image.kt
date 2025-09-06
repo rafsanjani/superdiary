@@ -17,7 +17,7 @@ import superdiary.design_system.generated.resources.Res
 import superdiary.design_system.generated.resources.default_avatar
 
 @Composable
-fun SuperDiaryImage(
+fun Image(
     url: String?,
     modifier: Modifier = Modifier,
 ) {
@@ -52,7 +52,7 @@ fun SuperDiaryImage(
 @Preview
 private fun Preview() {
     SuperDiaryPreviewTheme {
-        SuperDiaryImage(
+        Image(
             url = null,
         )
     }
@@ -63,7 +63,7 @@ private fun Preview() {
 @Preview
 private fun PreviewDarkTheme() {
     SuperDiaryPreviewTheme(darkTheme = true) {
-        SuperDiaryImage(
+        Image(
             url = null,
         )
     }

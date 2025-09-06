@@ -428,11 +428,15 @@ private fun LatestEntries(
 ) {
     Column(modifier) {
         Row(
-            modifier = Modifier.clickable(
-                indication = null,
-                interactionSource = MutableInteractionSource(),
-                onClick = onSeeAll,
-            ).fillMaxWidth().padding(bottom = 8.dp),
+            modifier = Modifier
+                .testTag("glance_section_see_all")
+                .clickable(
+                    indication = null,
+                    interactionSource = MutableInteractionSource(),
+                    onClick = onSeeAll,
+                )
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(

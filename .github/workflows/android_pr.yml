@@ -242,7 +242,7 @@ jobs:
                 uses: gradle/actions/setup-gradle@v4
 
             -   name: Build Android App (Release)
-                run: ./gradlew androidApp:app:assembleRelease
+                run: ./gradlew androidApp:app:assembleStandardRelease
 
             -   name: Get latest artifact ID
                 run: |
@@ -259,7 +259,7 @@ jobs:
                 run: |
                     gh release download -p '*.zip' -R jakewharton/diffuse 0.3.0
                     unzip diffuse-0.3.0.zip
-                    ./diffuse-0.3.0/bin/diffuse diff app-release.apk androidApp/app/build/outputs/apk/release/app-release.apk > apk_differences.txt
+                    ./diffuse-0.3.0/bin/diffuse diff app-release.apk androidApp/app/build/outputs/apk/standard/release/app-standard-release.apk > apk_differences.txt
                     { echo "\`\`\`"; head -n 17 apk_differences.txt; echo "\`\`\`"; echo; } >> apk_differences_summary.txt
 
             -   name: Post APK diff to Pull Request

@@ -32,7 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.foreverrafs.superdiary.design.components.SuperDiaryButton
+import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.components.SuperDiaryInputField
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -161,7 +161,7 @@ private fun SuccessScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        SuperDiaryButton(
+        PrimaryButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag("button_open_email"),
@@ -215,7 +215,7 @@ private fun InputScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        SuperDiaryButton(
+        PrimaryButton(
             modifier = Modifier.fillMaxWidth().testTag("button_reset_password"),
             onClick = onResetPasswordClick,
             enabled = viewState.isEmailValid && !viewState.isLoading,

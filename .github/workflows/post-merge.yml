@@ -52,10 +52,10 @@ jobs:
                 uses: gradle/actions/setup-gradle@v4
 
             -   name: Build Android App (Release)
-                run: ./gradlew androidApp:app:assembleRelease
+                run: ./gradlew androidApp:app:assembleStandardRelease
 
             -   name: Upload APK artifact
                 uses: actions/upload-artifact@v4
                 with:
                     name: apk-release
-                    path: androidApp/app/build/outputs/apk/release/app-release.apk
+                    path: androidApp/app/build/outputs/apk/standard/release/app-standard-release.apk

@@ -8,12 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -30,13 +25,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.common.utils.format
+import com.foreverrafs.superdiary.design.components.AppBar
 import com.foreverrafs.superdiary.design.components.ConfirmDeleteDialog
-import com.foreverrafs.superdiary.design.components.MapComponent
-import com.foreverrafs.superdiary.design.components.SuperDiaryAppBar
+import com.foreverrafs.superdiary.design.components.GoogleMap
+import com.foreverrafs.superdiary.design.components.SuperdiaryNavigationIcon
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewState
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
@@ -75,17 +70,11 @@ fun DetailScreenContent(
     Scaffold(
         modifier = modifier,
         topBar = {
-            SuperDiaryAppBar(
+            AppBar(
                 navigationIcon = {
-                    IconButton(
+                    SuperdiaryNavigationIcon(
                         onClick = onBackPress,
-                    ) {
-                        Icon(
-                            modifier = Modifier.clip(CircleShape),
-                            imageVector = Icons.Default.ArrowBackIosNew,
-                            contentDescription = "",
-                        )
-                    }
+                    )
                 },
                 avatarUrl = viewState.avatarUrl,
                 onProfileClick = onProfileClick,
@@ -104,7 +93,7 @@ fun DetailScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 if (!diary.location.isEmpty()) {
-                    MapComponent(
+                    GoogleMap(
                         modifier = Modifier.fillMaxWidth().height(150.dp),
                         latitude = diary.location.latitude,
                         longitude = diary.location.longitude,
