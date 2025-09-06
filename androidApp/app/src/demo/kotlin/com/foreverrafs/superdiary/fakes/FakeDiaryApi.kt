@@ -44,7 +44,8 @@ class FakeDiaryApi : DiaryApi {
                 if (diary.id != null) {
                     diary
                 } else {
-                    diary.copy(id = currentDiaries.size.toLong())
+                    val nextId = (currentDiaries.mapNotNull { it.id }.maxOrNull() ?: -1L) + 1
+                    diary.copy(id = nextId)
                 }
 
             val existingIndex = currentDiaries.indexOfFirst { it.id == diary.id }
