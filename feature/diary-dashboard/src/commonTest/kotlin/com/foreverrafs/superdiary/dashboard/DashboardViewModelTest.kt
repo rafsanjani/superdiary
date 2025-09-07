@@ -14,6 +14,7 @@ import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
+import com.foreverrafs.superdiary.dashboard.domain.GenerateWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import com.foreverrafs.superdiary.domain.repository.DataSource
@@ -82,13 +83,18 @@ class DashboardViewModelTest {
         calculateStreakUseCase = CalculateStreakUseCase(TestAppDispatchers),
         addWeeklySummaryUseCase = AddWeeklySummaryUseCase(dataSource, TestAppDispatchers),
         getWeeklySummaryUseCase = GetWeeklySummaryUseCase(dataSource, TestAppDispatchers),
-        diaryAI = diaryAI,
         calculateBestStreakUseCase = CalculateBestStreakUseCase(TestAppDispatchers),
         updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
         logger = AggregateLogger(emptyList()),
         preference = diaryPreference,
         clock = Clock.System,
         biometricAuth = biometricAuth,
+        generateWeeklySummaryUseCase = GenerateWeeklySummaryUseCase(
+            logger = AggregateLogger(),
+            dataSource = dataSource,
+            diaryAI = diaryAI,
+            clock = Clock.System,
+        ),
     )
 
     @Test
@@ -115,7 +121,7 @@ class DashboardViewModelTest {
         val viewModel = createDashboardViewModel()
 
         viewModel.state.test {
-            skipItems(2)
+            skipItems(1)
             val state = awaitItem()
             cancelAndIgnoreRemainingEvents()
 
@@ -149,7 +155,7 @@ class DashboardViewModelTest {
 
         viewModel.state.test {
             // Skip the loading state
-            skipItems(2)
+            skipItems(1)
             val state = awaitItem() as? DashboardViewModel.DashboardScreenState.Content
 
             cancelAndIgnoreRemainingEvents()
@@ -174,7 +180,7 @@ class DashboardViewModelTest {
 
         viewModel.state.test {
             // Skip the loading state
-            skipItems(2)
+            skipItems(1)
             val state = awaitItem() as? DashboardViewModel.DashboardScreenState.Content
 
             cancelAndIgnoreRemainingEvents()
@@ -286,20 +292,21 @@ class DashboardViewModelTest {
     }
 
     @Test
-    fun `Should enable biometric authentication when biometric auth succeeds`() = runTest {
+    fun `Should attempt biometric authentication if option is enabled`() = runTest {
         every { dataSource.fetchAll() }.returns(
             flowOf(
                 listOf(Diary("Hello World")),
             ),
         )
         everySuspend { dataSource.getWeeklySummary() } returns WeeklySummary("This is your weekly summary")
-
         everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Success
+        everySuspend { biometricAuth.canAuthenticate() } returns true
 
         val viewModel = createDashboardViewModel()
 
         viewModel.state.test {
-            skipItems(2)
+            // skip loading state
+            skipItems(1)
 
             viewModel.onEnableBiometricAuth()
             val state = awaitItem()
@@ -350,25 +357,25 @@ class DashboardViewModelTest {
                 ),
             )
             everySuspend { dataSource.getWeeklySummary() } returns WeeklySummary("This is your weekly summary")
-
             everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Success
             every { biometricAuth.canAuthenticate() } returns true
+
             diaryPreference.settingsResult =
                 DiarySettings.Empty.copy(showBiometricAuthDialog = true)
 
             val viewModel = createDashboardViewModel()
 
             viewModel.state.test {
-                skipItems(2)
+                skipItems(1)
 
                 viewModel.onEnableBiometricAuth()
                 val state = awaitItem()
-
                 assertThat(state).isInstanceOf<DashboardViewModel.DashboardScreenState.Content>()
+
                 val content = state as? DashboardViewModel.DashboardScreenState.Content
 
-                assertThat(content?.isBiometricAuthError).isNull()
-                assertThat(content?.showBiometricAuthDialog).isEqualTo(true)
+                assertThat(content?.showBiometricAuthDialog).isNotNull()
+                assertThat(content?.showBiometricAuthDialog).isEqualTo(false)
             }
         }
 
@@ -391,7 +398,7 @@ class DashboardViewModelTest {
             val viewModel = createDashboardViewModel()
 
             viewModel.state.test {
-                skipItems(2)
+                skipItems(1)
 
                 viewModel.onEnableBiometricAuth()
                 val state = awaitItem()

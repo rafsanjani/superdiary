@@ -1,7 +1,7 @@
 package com.foreverrafs.superdiary.core.logging
 
 class AggregateLogger(
-    private val loggers: List<Logger>,
+    private val loggers: List<Logger> = emptyList(),
 ) {
     fun v(tag: String, throwable: Throwable? = null, message: () -> String = { "" }) {
         loggers.forEach { logger ->

@@ -1,7 +1,6 @@
 package com.foreverrafs.auth
 
 import androidx.core.uri.Uri
-import com.foreverrafs.auth.AuthApi.SessionStatus.Authenticated
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
@@ -65,7 +64,7 @@ class DefaultSupabaseAuth(
     override fun sessionStatus(): Flow<AuthApi.SessionStatus> =
         client.auth.sessionStatus.map { sessionStatus ->
             when (sessionStatus) {
-                is SessionStatus.Authenticated -> Authenticated(
+                is SessionStatus.Authenticated -> AuthApi.SessionStatus.Authenticated(
                     sessionInfo = sessionStatus.session.toSession(),
                 )
 

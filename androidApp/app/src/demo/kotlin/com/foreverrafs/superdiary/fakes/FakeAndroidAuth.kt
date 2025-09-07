@@ -35,6 +35,10 @@ class FakeAndroidAuth(
             sessionInfo = sessionInfo,
         )
 
+    override suspend fun signInWithGoogle(): AuthApi.SessionStatus = AuthApi.SessionStatus.Authenticated(
+        sessionInfo = sessionInfo,
+    )
+
     override fun currentUserOrNull(): UserInfo? = userInfo
 
     override suspend fun signOut(): Result<Unit> = Result.success(Unit)
