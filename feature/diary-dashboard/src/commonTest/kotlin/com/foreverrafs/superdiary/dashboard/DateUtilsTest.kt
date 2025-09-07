@@ -26,7 +26,7 @@ class DateUtilsTest {
     }
 
     @Test
-    fun `should return false when dates are in different weeks across months`() {
+    fun `should return true when dates are in the same week across months`() {
         val date1 = LocalDate(2023, 10, 31) // Tuesday
         val date2 = LocalDate(2023, 11, 1) // Wednesday
         assertThat(date1.isInSameWeekAs(date2))
