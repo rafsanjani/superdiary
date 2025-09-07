@@ -218,10 +218,10 @@ class DashboardViewModel(
     }
 
     fun onEnableBiometricAuth() = viewModelScope.launch {
-        enableBiometricAuth()
+        initializeBiometricAuth()
     }
 
-    private suspend fun enableBiometricAuth() {
+    private suspend fun initializeBiometricAuth() {
         if (!biometricAuth.canAuthenticate()) {
             logger.i(TAG) {
                 "Biometric authentication is not available"
