@@ -102,8 +102,8 @@ class DiaryAiImpl(
         var response = ""
 
         return openAI.chatCompletions(request)
-            .mapNotNull {
-                it.choices.firstOrNull()?.delta?.content?.let {
+            .mapNotNull { chunk ->
+                chunk.choices.firstOrNull()?.delta?.content?.let {
                     response += it
                 }
                 response

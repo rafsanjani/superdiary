@@ -14,6 +14,7 @@ import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
+import com.foreverrafs.superdiary.dashboard.domain.GenerateWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import com.foreverrafs.superdiary.domain.repository.DataSource
@@ -82,13 +83,18 @@ class DashboardViewModelTest {
         calculateStreakUseCase = CalculateStreakUseCase(TestAppDispatchers),
         addWeeklySummaryUseCase = AddWeeklySummaryUseCase(dataSource, TestAppDispatchers),
         getWeeklySummaryUseCase = GetWeeklySummaryUseCase(dataSource, TestAppDispatchers),
-        diaryAI = diaryAI,
         calculateBestStreakUseCase = CalculateBestStreakUseCase(TestAppDispatchers),
         updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
         logger = AggregateLogger(emptyList()),
         preference = diaryPreference,
         clock = Clock.System,
         biometricAuth = biometricAuth,
+        generateWeeklySummaryUseCase = GenerateWeeklySummaryUseCase(
+            logger = AggregateLogger(),
+            dataSource = dataSource,
+            diaryAI = diaryAI,
+            clock = Clock.System,
+        ),
     )
 
     @Test
