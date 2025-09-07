@@ -160,32 +160,14 @@ class DashboardViewModel(
     }
 
     private fun generateWeeklySummary(diaries: List<Diary>) = viewModelScope.launch {
-        logger.i(TAG) {
-            "generateWeeklySummary: Fetching weekly summary for ${diaries.size} entries"
-        }
-        val latestWeeklySummary = getWeeklySummaryUseCase()
-
-        latestWeeklySummary?.let {
-            val difference = clock.now() - latestWeeklySummary.date
-
-            if (difference.inWholeDays <= 7L) {
-                logger.i(TAG) {
-                    "generateWeeklySummary: Weekly summary was generated ${difference.inWholeDays} days ago." + " Skip generation for now"
+        generateWeeklySummaryUseCase(diaries)
+            .collect { summary ->
+                updateContentState { state ->
+                    state.copy(
+                        weeklySummary = summary,
+                    )
                 }
-                updateContentState { currentState ->
-                    currentState.copy(weeklySummary = latestWeeklySummary.summary)
-                }
-                return@launch
             }
-        }
-
-        generateWeeklySummaryUseCase(diaries).collect { summary ->
-            updateContentState { state ->
-                state.copy(
-                    weeklySummary = summary,
-                )
-            }
-        }
     }
 
     private fun calculateStreak(diaries: List<Diary>) = viewModelScope.launch {
