@@ -33,11 +33,11 @@ class GenerateWeeklySummaryUseCase(
 
             if (difference.inWholeDays <= 7L) {
                 logger.i(TAG) {
-                    "generateWeeklySummary: Weekly summary was generated ${difference.inWholeDays} days ago." +
-                        " Skip generation for now"
+                    "generateWeeklySummary: Weekly summary was generated ${difference.inWholeDays} days ago. Skip generation for now"
                 }
 
                 emit(lastWeeklySummary.summary)
+                return@flow
             }
         }
 
