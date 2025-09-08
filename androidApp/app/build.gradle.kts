@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    id("io.sentry.android.gradle") version "5.9.0"
+    id("io.sentry.android.gradle") version "5.10.0"
     id("com.google.firebase.appdistribution") version "5.1.1"
     id("com.dropbox.dependency-guard") version "0.5.0"
 }
