@@ -27,12 +27,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'adopt'
-          java-version: '21'
-
       - name: Bump Version Code
         run: |
           cd androidApp/app
