@@ -15,4 +15,4 @@ jobs:
             -   name: Sync master with develop branch
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                run: gh pr create --head main --base development -t "fast forward development to main" -b "Fast forward development to main"
+                run: gh pr create --head development --base main -t "fast forward development to main" -b "Fast forward development to main"
