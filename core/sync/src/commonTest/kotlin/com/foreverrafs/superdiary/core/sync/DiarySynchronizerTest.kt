@@ -17,6 +17,7 @@ import dev.mokkery.answering.returns
 import dev.mokkery.every
 import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
+import dev.mokkery.matcher.varargs.anyVarargs
 import dev.mokkery.mock
 import dev.mokkery.verify.VerifyMode
 import dev.mokkery.verifySuspend
@@ -60,7 +61,7 @@ class DiarySynchronizerTest {
                 isSynced = false,
             ),
         )
-        everySuspend { addAll(any()) } returns 100L
+        everySuspend { save(anyVarargs<Diary>().toList()) } returns 100L
     }
     private val synchronizer = DiarySynchronizer(
         diaryApi = diaryApi,
@@ -209,7 +210,7 @@ class DiarySynchronizerTest {
 
         // Should only process a single emission even though there will be two
         verifySuspend(mode = VerifyMode.exactly(1)) {
-            datasource.addAll(any())
+            datasource.save(anyVarargs<Diary>().toList())
         }
     }
 }

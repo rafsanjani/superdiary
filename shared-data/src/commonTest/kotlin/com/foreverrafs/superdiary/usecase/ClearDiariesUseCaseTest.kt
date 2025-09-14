@@ -37,7 +37,7 @@ class ClearDiariesUseCaseTest {
     @Test
     fun `Clearing diaries should delete all diaries`() = runTest {
         // add an entry
-        dataSource.add(Diary("Hello World!"))
+        dataSource.save(Diary("Hello World!"))
 
         // clear all the entries
         clearDiariesUseCase()

@@ -4,6 +4,7 @@ import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.dashboard.isInSameWeekAs
 import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.utils.toDate
 import kotlin.time.Clock
@@ -25,18 +26,18 @@ class GenerateWeeklySummaryUseCase(
             "generateWeeklySummary: Fetching weekly summary for ${diaries.size} entries"
         }
 
-        val lastWeeklySummary = dataSource.getWeeklySummary()
+        val previous: WeeklySummary? = dataSource.getOne()
 
         // Check if weekly summary was generated less than 7 days ago
-        if (lastWeeklySummary != null) {
-            val difference = clock.now() - lastWeeklySummary.date
+        if (previous != null) {
+            val difference = clock.now() - previous.date
 
             if (difference.inWholeDays <= 7L) {
                 logger.i(TAG) {
                     "generateWeeklySummary: Weekly summary was generated ${difference.inWholeDays} days ago. Skip generation for now"
                 }
 
-                emit(lastWeeklySummary.summary)
+                emit(previous.summary)
                 return@flow
             }
         }
@@ -47,7 +48,12 @@ class GenerateWeeklySummaryUseCase(
 
         emitAll(
             flow = diaryAI
-                .generateSummary(thisWeekEntries)
+                .generateSummary(thisWeekEntries) {
+                    logger.i(TAG) {
+                        "generateWeeklySummary: Saving generated summary into database"
+                    }
+                    dataSource.save(it)
+                }
                 .catch { cause ->
                     logger.e(TAG, cause) {
                         "generateWeeklySummary: An error occurred generating weekly summary"

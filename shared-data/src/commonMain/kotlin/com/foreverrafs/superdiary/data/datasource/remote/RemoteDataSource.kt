@@ -25,7 +25,7 @@ class RemoteDataSource(
 
     private var dataCache: List<DiaryDto>? = null
 
-    override suspend fun add(diary: Diary): Long {
+    override suspend fun save(diary: Diary): Long {
         val dto = diary.toDto()
 
         return try {
@@ -77,7 +77,7 @@ class RemoteDataSource(
             it.map { dto -> dto.toDiary() }
         }
 
-    override fun fetchFavorites(): Flow<List<Diary>> {
+    override fun fetch(): Flow<List<Diary>> {
         TODO("Not yet implemented")
     }
 
@@ -99,19 +99,19 @@ class RemoteDataSource(
         TODO("Not yet implemented")
     }
 
-    override fun getLatestEntries(count: Int): Flow<List<Diary>> {
+    override fun getLatest(count: Int): Flow<List<Diary>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun countEntries(): Long {
+    override suspend fun count(): Long {
         TODO("Not yet implemented")
     }
 
-    override suspend fun insertWeeklySummary(summary: WeeklySummary) {
+    override suspend fun save(summary: WeeklySummary) {
         TODO("Not yet implemented")
     }
 
-    override fun getWeeklySummary(): WeeklySummary? {
+    override fun getOne(): WeeklySummary? {
         TODO("Not yet implemented")
     }
 
@@ -119,7 +119,7 @@ class RemoteDataSource(
         TODO("Not yet implemented")
     }
 
-    override suspend fun addAll(diaries: List<Diary>): Long {
+    override suspend fun save(diaries: List<Diary>): Long {
         TODO("Not yet implemented")
     }
     companion object {

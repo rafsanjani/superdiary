@@ -17,6 +17,7 @@ import dev.mokkery.verifySuspend
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -25,9 +26,10 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 
+@OptIn(ExperimentalTime::class)
 class DiaryAiRepositoryImplTest {
     private val diaryAI: DiaryAI = mock {
-        every { generateSummary(any()) } returns flowOf()
+        every { generateSummary(any(), any()) } returns flowOf()
         every { generateDiary(any(), any()) } returns flowOf()
     }
 
@@ -59,9 +61,9 @@ class DiaryAiRepositoryImplTest {
 
     @Test
     fun `Should generate summary when requested`() = runTest {
-        diaryAiRepository.generateSummary(diaries = emptyList())
+        diaryAiRepository.generateSummary(diaries = emptyList(), onCompletion = {})
 
-        verifySuspend { diaryAI.generateSummary(diaries = emptyList()) }
+        verifySuspend { diaryAI.generateSummary(diaries = emptyList(), any()) }
     }
 
     @Test

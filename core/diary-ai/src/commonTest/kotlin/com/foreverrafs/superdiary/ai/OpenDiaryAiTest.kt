@@ -77,7 +77,7 @@ class OpenDiaryAiTest {
     fun `Should return weekly summary`() = runTest {
         every { openAI.chatCompletions(any(), any()) }.returns(flowOf(chatCompletionChunk))
 
-        openDiaryAI.generateSummary(emptyList()).test {
+        openDiaryAI.generateSummary(diaries = emptyList(), onCompletion = {}).test {
             val summary = awaitItem()
             awaitComplete()
 

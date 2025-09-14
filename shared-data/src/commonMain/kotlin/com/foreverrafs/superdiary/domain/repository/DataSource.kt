@@ -16,7 +16,7 @@ interface DataSource {
      *
      * @return 1 if the operation succeeded and 0 otherwise.
      */
-    suspend fun add(diary: Diary): Long
+    suspend fun save(diary: Diary): Long
 
     /**
      * Adds all diary items to the datasource. This operation is synchronous
@@ -24,7 +24,7 @@ interface DataSource {
      *
      * @return The number of inserted entries
      */
-    suspend fun addAll(diaries: List<Diary>): Long
+    suspend fun save(diaries: List<Diary>): Long
 
     /**
      * Updates an existing item with the same id with the properties of the new
@@ -51,7 +51,7 @@ interface DataSource {
      *
      * @return a list of diary items that were fetched
      */
-    fun fetchFavorites(): Flow<List<Diary>>
+    fun fetch(): Flow<List<Diary>>
 
     /**
      * Search for matching Diaries with entries matching [entry]. This will
@@ -72,16 +72,16 @@ interface DataSource {
     suspend fun deleteAll()
 
     /** Obtains the latest [count] entries from the datasource */
-    fun getLatestEntries(count: Int): Flow<List<Diary>>
+    fun getLatest(count: Int): Flow<List<Diary>>
 
     /** Count all the entries available in the database */
-    suspend fun countEntries(): Long
+    suspend fun count(): Long
 
     /** Insert a weekly summary */
-    suspend fun insertWeeklySummary(summary: WeeklySummary)
+    suspend fun save(summary: WeeklySummary)
 
     /** Fetch all weekly summary entries */
-    fun getWeeklySummary(): WeeklySummary?
+    fun getOne(): WeeklySummary?
 
     /** Clear all chat messages from the system */
     suspend fun clearChatMessages()
