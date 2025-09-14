@@ -18,11 +18,9 @@ import com.foreverrafs.superdiary.dashboard.domain.GenerateWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import com.foreverrafs.superdiary.domain.repository.DataSource
-import com.foreverrafs.superdiary.domain.usecase.AddWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.CalculateBestStreakUseCase
 import com.foreverrafs.superdiary.domain.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.domain.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.utils.DiarySettings
 import dev.mokkery.answering.returns
@@ -30,6 +28,7 @@ import dev.mokkery.answering.throws
 import dev.mokkery.every
 import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
+import dev.mokkery.matcher.varargs.anyVarargs
 import dev.mokkery.mock
 import dev.mokkery.verify
 import dev.mokkery.verify.VerifyMode
@@ -50,7 +49,7 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 
-@OptIn(ExperimentalTime::class)
+@OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
 class DashboardViewModelTest {
     private lateinit var dataSource: DataSource
 
@@ -81,8 +80,6 @@ class DashboardViewModelTest {
     ): DashboardViewModel = DashboardViewModel(
         getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers),
         calculateStreakUseCase = CalculateStreakUseCase(TestAppDispatchers),
-        addWeeklySummaryUseCase = AddWeeklySummaryUseCase(dataSource, TestAppDispatchers),
-        getWeeklySummaryUseCase = GetWeeklySummaryUseCase(dataSource, TestAppDispatchers),
         calculateBestStreakUseCase = CalculateBestStreakUseCase(TestAppDispatchers),
         updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
         logger = AggregateLogger(emptyList()),
@@ -114,14 +111,17 @@ class DashboardViewModelTest {
                 listOf(Diary("Hello World")),
             ),
         )
-        everySuspend { dataSource.getWeeklySummary() }.returns(
+        everySuspend { dataSource.getOne() }.returns(
             WeeklySummary("This is your weekly summary"),
         )
 
         val viewModel = createDashboardViewModel()
 
         viewModel.state.test {
-            skipItems(1)
+            val initialState = awaitItem()
+            assertThat(initialState).isInstanceOf<DashboardViewModel.DashboardScreenState.Loading>()
+            advanceUntilIdle()
+
             val state = awaitItem()
             cancelAndIgnoreRemainingEvents()
 
@@ -139,7 +139,7 @@ class DashboardViewModelTest {
             flowOf(listOf(Diary("Hello World"))),
         )
 
-        every { dataSource.getWeeklySummary() }.returns(
+        every { dataSource.getOne() }.returns(
             WeeklySummary(
                 summary = "Old diary summary",
                 date = Clock.System.now().minus(
@@ -149,13 +149,22 @@ class DashboardViewModelTest {
                 ),
             ),
         )
-        every { diaryAI.generateSummary(any()) }.returns(flowOf("New Diary Summary"))
+        every {
+            diaryAI.generateSummary(
+                diaries = anyVarargs<Diary>().toList(),
+                onCompletion = any(),
+            )
+        }.returns(flowOf("New Diary Summary"))
 
         val viewModel = createDashboardViewModel()
 
         viewModel.state.test {
             // Skip the loading state
-            skipItems(1)
+            val initialState = awaitItem()
+            assertThat(initialState).isInstanceOf<DashboardViewModel.DashboardScreenState.Loading>()
+
+            advanceUntilIdle()
+
             val state = awaitItem() as? DashboardViewModel.DashboardScreenState.Content
 
             cancelAndIgnoreRemainingEvents()
@@ -167,20 +176,29 @@ class DashboardViewModelTest {
     @Test
     fun `Should generate weekly summary when weekly summary is older than a week`() = runTest {
         every { dataSource.fetchAll() }.returns(flowOf(listOf(Diary("Hello World"))))
-        everySuspend { dataSource.insertWeeklySummary(any()) }.returns(Unit)
-        every { dataSource.getWeeklySummary() }.returns(
-            WeeklySummary(
+        everySuspend { dataSource.save(summary = any()) }.returns(Unit)
+        every { dataSource.getOne() }.returns(
+            value = WeeklySummary(
                 summary = "Old diary summary",
                 date = Clock.System.now().minus(value = 20, unit = DateTimeUnit.DAY, TimeZone.UTC),
             ),
         )
-        every { diaryAI.generateSummary(any()) }.returns(flowOf("New Diary Summary"))
+        every {
+            diaryAI.generateSummary(
+                diaries = anyVarargs<Diary>().toList(),
+                onCompletion = any(),
+            )
+        }
+            .returns(flowOf("New Diary Summary"))
 
         val viewModel = createDashboardViewModel()
 
         viewModel.state.test {
-            // Skip the loading state
-            skipItems(1)
+            val initialState = awaitItem()
+            assertThat(initialState).isInstanceOf<DashboardViewModel.DashboardScreenState.Loading>()
+
+            advanceUntilIdle()
+
             val state = awaitItem() as? DashboardViewModel.DashboardScreenState.Content
 
             cancelAndIgnoreRemainingEvents()
@@ -269,7 +287,7 @@ class DashboardViewModelTest {
                 listOf(Diary("Hello World")),
             ),
         )
-        everySuspend { dataSource.getWeeklySummary() } returns WeeklySummary("This is your weekly summary")
+        everySuspend { dataSource.getOne() } returns WeeklySummary("This is your weekly summary")
 
         everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Error(
             Exception("failed"),
@@ -298,7 +316,7 @@ class DashboardViewModelTest {
                 listOf(Diary("Hello World")),
             ),
         )
-        everySuspend { dataSource.getWeeklySummary() } returns WeeklySummary("This is your weekly summary")
+        everySuspend { dataSource.getOne() } returns WeeklySummary("This is your weekly summary")
         everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Success
         everySuspend { biometricAuth.canAuthenticate() } returns true
 
@@ -327,7 +345,7 @@ class DashboardViewModelTest {
                     listOf(Diary("Hello World")),
                 ),
             )
-            everySuspend { dataSource.getWeeklySummary() } returns WeeklySummary("This is your weekly summary")
+            everySuspend { dataSource.getOne() } returns WeeklySummary("This is your weekly summary")
 
             everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Failed
             every { biometricAuth.canAuthenticate() } returns false
@@ -356,7 +374,7 @@ class DashboardViewModelTest {
                     listOf(Diary("Hello World")),
                 ),
             )
-            everySuspend { dataSource.getWeeklySummary() } returns WeeklySummary("This is your weekly summary")
+            everySuspend { dataSource.getOne() } returns WeeklySummary("This is your weekly summary")
             everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Success
             every { biometricAuth.canAuthenticate() } returns true
 
@@ -387,7 +405,7 @@ class DashboardViewModelTest {
                     listOf(Diary("Hello World")),
                 ),
             )
-            everySuspend { dataSource.getWeeklySummary() } returns WeeklySummary("This is your weekly summary")
+            everySuspend { dataSource.getOne() } returns WeeklySummary("This is your weekly summary")
 
             everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Success
             every { biometricAuth.canAuthenticate() } returns true

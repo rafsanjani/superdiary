@@ -22,7 +22,7 @@ class AddDiaryUseCase(
 
             // new diary entries are created without ids and let to the database to auto generate them
             // after adding an entry, the generated id is returned from the database
-            val diaryId = dataSource.add(diary)
+            val diaryId = dataSource.save(diary)
 
             // Update the diary with the newly generated id and return it
 

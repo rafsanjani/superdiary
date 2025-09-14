@@ -10,7 +10,7 @@ class AddWeeklySummaryUseCase(
     private val dispatchers: AppCoroutineDispatchers,
 ) {
     suspend operator fun invoke(weeklySummary: WeeklySummary) = withContext(dispatchers.io) {
-        dataSource.insertWeeklySummary(
+        dataSource.save(
             weeklySummary,
         )
     }

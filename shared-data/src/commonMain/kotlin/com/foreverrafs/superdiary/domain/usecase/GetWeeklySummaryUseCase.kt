@@ -10,5 +10,5 @@ class GetWeeklySummaryUseCase(
     private val dispatchers: AppCoroutineDispatchers,
 ) {
     suspend operator fun invoke(): WeeklySummary? =
-        withContext(dispatchers.io) { dataSource.getWeeklySummary() }
+        withContext(dispatchers.io) { dataSource.getOne() }
 }

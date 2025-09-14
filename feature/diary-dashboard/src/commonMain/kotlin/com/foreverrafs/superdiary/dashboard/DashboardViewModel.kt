@@ -9,11 +9,9 @@ import com.foreverrafs.superdiary.dashboard.domain.GenerateWeeklySummaryUseCase
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
-import com.foreverrafs.superdiary.domain.usecase.AddWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.CalculateBestStreakUseCase
 import com.foreverrafs.superdiary.domain.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.domain.usecase.GetWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.utils.DiarySettings
 import com.foreverrafs.superdiary.utils.toDate
@@ -33,8 +31,6 @@ class DashboardViewModel(
     getAllDiariesUseCase: GetAllDiariesUseCase,
     private val calculateStreakUseCase: CalculateStreakUseCase,
     private val calculateBestStreakUseCase: CalculateBestStreakUseCase,
-    private val addWeeklySummaryUseCase: AddWeeklySummaryUseCase,
-    private val getWeeklySummaryUseCase: GetWeeklySummaryUseCase,
     private val updateDiaryUseCase: UpdateDiaryUseCase,
     private val preference: DiaryPreference,
     private val biometricAuth: BiometricAuth,
@@ -78,65 +74,63 @@ class DashboardViewModel(
             "Loading dashboard content"
         }
 
-        launch {
-            getAllDiariesResult.combine(preference.settings) { result, settings ->
-                when (result) {
-                    is Result.Failure -> {
-                        logger.e(TAG, result.error) {
-                            "Error loading dashboard contents"
-                        }
-
-                        DashboardScreenState.Error(
-                            message = result.error.message.orEmpty(),
-                        )
+        getAllDiariesResult.combine(preference.settings) { result, settings ->
+            when (result) {
+                is Result.Failure -> {
+                    logger.e(TAG, result.error) {
+                        "Error loading dashboard contents"
                     }
 
-                    is Result.Success -> {
-                        val diaries = result.data
+                    DashboardScreenState.Error(
+                        message = result.error.message.orEmpty(),
+                    )
+                }
 
-                        logger.i(TAG) {
-                            "Dashboard content refreshed!"
-                        }
+                is Result.Success -> {
+                    val diaries = result.data
 
-                        val shouldShowBiometricDialog =
-                            settings.showBiometricAuthDialog && biometricAuth.canAuthenticate() && !settings.isBiometricAuthEnabled
-
-                        if (diaries.isNotEmpty()) {
-                            generateWeeklySummary(diaries)
-                            calculateStreak(diaries)
-                        }
-
-                        DashboardScreenState.Content(
-                            latestEntries = diaries.sortedByDescending { it.date }.take(4),
-                            totalEntries = diaries.size.toLong(),
-                            weeklySummary = if (diaries.isEmpty()) {
-                                """
-
-                                """.trimIndent()
-                            } else {
-                                DEFAULT_SUMMARY_TEXT
-                            },
-                            currentStreak = Streak(
-                                count = 0,
-                                startDate = clock.now().toDate(),
-                                endDate = clock.now().toDate(),
-                            ),
-                            bestStreak = Streak(
-                                count = 0,
-                                startDate = clock.now().toDate(),
-                                endDate = clock.now().toDate(),
-                            ),
-                            showBiometricAuthDialog = shouldShowBiometricDialog,
-                            showLatestEntries = settings.showLatestEntries,
-                            showAtaGlance = settings.showAtAGlance,
-                            showWeeklySummary = settings.showWeeklySummary,
-                        )
+                    logger.i(TAG) {
+                        "Dashboard content refreshed!"
                     }
+
+                    val shouldShowBiometricDialog =
+                        settings.showBiometricAuthDialog && biometricAuth.canAuthenticate() && !settings.isBiometricAuthEnabled
+
+                    if (diaries.isNotEmpty()) {
+                        generateWeeklySummary(diaries)
+                        calculateStreak(diaries)
+                    }
+
+                    DashboardScreenState.Content(
+                        latestEntries = diaries.sortedByDescending { it.date }.take(4),
+                        totalEntries = diaries.size.toLong(),
+                        weeklySummary = if (diaries.isEmpty()) {
+                            """
+
+                            """.trimIndent()
+                        } else {
+                            DEFAULT_SUMMARY_TEXT
+                        },
+                        currentStreak = Streak(
+                            count = 0,
+                            startDate = clock.now().toDate(),
+                            endDate = clock.now().toDate(),
+                        ),
+                        bestStreak = Streak(
+                            count = 0,
+                            startDate = clock.now().toDate(),
+                            endDate = clock.now().toDate(),
+                        ),
+                        showBiometricAuthDialog = shouldShowBiometricDialog,
+                        showLatestEntries = settings.showLatestEntries,
+                        showAtaGlance = settings.showAtAGlance,
+                        showWeeklySummary = settings.showWeeklySummary,
+                    )
                 }
-            }.collect { updatedState ->
-                mutableState.update {
-                    updatedState
-                }
+            }
+        }.collect { updatedState ->
+            mutableState.update {
+                updatedState
             }
         }
     }
@@ -147,7 +141,8 @@ class DashboardViewModel(
      */
     private fun updateContentState(func: (current: DashboardScreenState.Content) -> DashboardScreenState.Content) {
         mutableState.update { state ->
-            val currentState = state as? DashboardScreenState.Content ?: DashboardScreenState.Content()
+            val currentState =
+                state as? DashboardScreenState.Content ?: DashboardScreenState.Content()
 
             val newState = func(currentState)
 

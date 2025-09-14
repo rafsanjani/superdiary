@@ -42,7 +42,7 @@ class DiarySynchronizer(
 
                 // insert remote entries into database. This will set isSynced flag
                 // to true and trigger an update for observers
-                val savedEntries = dataSource.addAll(diaryDtoList.map { it.toDiary() })
+                val savedEntries = dataSource.save(diaryDtoList.map { it.toDiary() })
 
                 logger.i(TAG) {
                     "Saved $savedEntries new items to local database"

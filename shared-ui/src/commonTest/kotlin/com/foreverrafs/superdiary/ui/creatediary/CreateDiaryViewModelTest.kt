@@ -121,12 +121,12 @@ class CreateDiaryViewModelTest {
 
         permissionsController.permissionStateResult = PermissionState.Granted
 
-        everySuspend { dataSource.add(diary) }.returns(100L)
+        everySuspend { dataSource.save(diary) }.returns(100L)
 
         createDiaryViewModel.saveDiary(diary)
         delay(100)
 
-        verifySuspend { dataSource.add(diary) }
+        verifySuspend { dataSource.save(diary) }
     }
 
     @Test
@@ -198,7 +198,7 @@ class CreateDiaryViewModelTest {
     @Ignore
     fun `Should perform data sync after successfully saving an entry`() = runTest {
         val diary = Diary(id = 12L, entry = "test diary")
-        everySuspend { dataSource.add(diary) } returns diary.id!!
+        everySuspend { dataSource.save(diary) } returns diary.id!!
 
         createDiaryViewModel.saveDiary(diary)
         advanceUntilIdle()
@@ -215,7 +215,7 @@ class CreateDiaryViewModelTest {
     @Test
     fun `Should NOT perform data sync WHEN entry is not saved`() = runTest {
         val diary = Diary(id = 12L, entry = "test diary")
-        everySuspend { dataSource.add(diary) } returns 0
+        everySuspend { dataSource.save(diary) } returns 0
 
         createDiaryViewModel.saveDiary(diary)
         advanceUntilIdle()

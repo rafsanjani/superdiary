@@ -20,9 +20,9 @@ import kotlinx.datetime.toLocalDateTime
 
 @Suppress("TooManyFunctions")
 class LocalDataSource(private val database: Database) : DataSource {
-    override suspend fun add(diary: Diary): Long = database.insert(diary.toDatabase())
+    override suspend fun save(diary: Diary): Long = database.insert(diary.toDatabase())
 
-    override suspend fun addAll(diaries: List<Diary>): Long =
+    override suspend fun save(diaries: List<Diary>): Long =
         database.insert(diaries.map { it.toDatabase() })
 
     override suspend fun delete(diaries: List<Diary>): Int =
@@ -30,7 +30,7 @@ class LocalDataSource(private val database: Database) : DataSource {
 
     override fun fetchAll(): Flow<List<Diary>> = database.getAllDiaries().mapToDiary()
 
-    override fun fetchFavorites(): Flow<List<Diary>> = database.getFavoriteDiaries().mapToDiary()
+    override fun fetch(): Flow<List<Diary>> = database.getFavoriteDiaries().mapToDiary()
 
     override fun find(entry: String): Flow<List<Diary>> =
         database.findDiaryByEntry(entry).mapToDiary()
@@ -76,15 +76,15 @@ class LocalDataSource(private val database: Database) : DataSource {
 
     override suspend fun deleteAll() = database.clearDiaries()
 
-    override fun getLatestEntries(count: Int): Flow<List<Diary>> =
+    override fun getLatest(count: Int): Flow<List<Diary>> =
         database.getLatestEntries(count).mapToDiary()
 
-    override suspend fun countEntries(): Long = database.countEntries()
+    override suspend fun count(): Long = database.countEntries()
 
-    override suspend fun insertWeeklySummary(summary: WeeklySummary) =
+    override suspend fun save(summary: WeeklySummary) =
         database.insertWeeklySummary(summary = summary.toDatabase())
 
-    override fun getWeeklySummary(): WeeklySummary? = database.getWeeklySummary()?.toWeeklySummary()
+    override fun getOne(): WeeklySummary? = database.getWeeklySummary()?.toWeeklySummary()
     override suspend fun clearChatMessages() {
         database.clearChatMessages()
     }
