@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.auth.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
+import com.foreverrafs.auth.AuthException
 import com.foreverrafs.superdiary.auth.login.screen.LoginViewState
 import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,13 +28,13 @@ class LoginScreenViewModel(
             }
 
             when (val result = authApi.signInWithGoogle()) {
-                is AuthApi.SignInStatus.Error -> _viewState.update {
+                is AuthApi.SessionStatus.Unauthenticated -> _viewState.update {
                     LoginViewState.Error(
-                        error = result.exception,
+                        error = AuthException(cause = result.exception),
                     )
                 }
 
-                is AuthApi.SignInStatus.LoggedIn -> _viewState.update { currentState ->
+                is AuthApi.SessionStatus.Authenticated -> _viewState.update { currentState ->
                     result.sessionInfo.userInfo?.let {
                         LoginViewState.Success(it)
                     } ?: currentState
@@ -41,20 +42,20 @@ class LoginScreenViewModel(
             }
         }
 
-    fun onLoginWithEmail(username: String, password: String) =
+    fun onLoginWithEmail(username: CharSequence, password: CharSequence) =
         viewModelScope.launch(coroutineDispatchers.main) {
             _viewState.update {
                 LoginViewState.Processing
             }
 
-            when (val result = authApi.signIn(username, password)) {
-                is AuthApi.SignInStatus.Error -> _viewState.update {
+            when (val result = authApi.signIn(username.toString(), password.toString())) {
+                is AuthApi.SessionStatus.Unauthenticated -> _viewState.update {
                     LoginViewState.Error(
-                        error = result.exception,
+                        error = AuthException(cause = result.exception),
                     )
                 }
 
-                is AuthApi.SignInStatus.LoggedIn -> _viewState.update { currentState ->
+                is AuthApi.SessionStatus.Authenticated -> _viewState.update { currentState ->
                     result.sessionInfo.userInfo?.let {
                         LoginViewState.Success(it)
                     } ?: currentState

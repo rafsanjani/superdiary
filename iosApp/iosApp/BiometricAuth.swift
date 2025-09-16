@@ -10,22 +10,22 @@ import Foundation
 import shared
 import LocalAuthentication
 
-class AppleBiometricAuth : BiometricAuth{
+class AppleBiometricAuth: BiometricAuth {
     let context = LAContext()
-    
+
     func canAuthenticate() -> Bool {
         context.localizedCancelTitle = "Cancel"
-        
+
         var error: NSError?
         guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
             print(error?.localizedDescription ?? "Can't evaluate policy")
             return false
         }
-        
+
         return true
     }
-    
-   
+
+
     func startBiometricAuth() async throws -> any BiometricAuthAuthResult {
         do {
             try await context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Log in to your account")
@@ -35,5 +35,4 @@ class AppleBiometricAuth : BiometricAuth{
             return BiometricAuthAuthResultFailed()
         }
     }
-    
 }

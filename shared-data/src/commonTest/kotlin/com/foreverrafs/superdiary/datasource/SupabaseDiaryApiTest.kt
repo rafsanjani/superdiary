@@ -5,6 +5,7 @@ import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
+import co.touchlab.kermit.Logger
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.remote.SupabaseDiaryApi
@@ -17,21 +18,23 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
 class SupabaseDiaryApiTest {
 
     private lateinit var supabaseDiaryApi: SupabaseDiaryApi
 
     @BeforeTest
     fun setUp() {
+        Logger.setLogWriters(emptyList())
         Dispatchers.setMain(TestAppDispatchers.main)
     }
 
@@ -48,6 +51,10 @@ class SupabaseDiaryApiTest {
             date = Clock.System.now(),
             entry = "Hello world",
         )
+
+        val count = Logger.config.logWriterList
+
+        println(count)
 
         supabaseDiaryApi = SupabaseDiaryApi(
             supabase = createMockedSupabaseClient(

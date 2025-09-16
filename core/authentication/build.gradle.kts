@@ -1,28 +1,15 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
+    id("com.superdiary.multiplatform.compose")
+    id("com.superdiary.multiplatform.kotlin")
+    id("com.superdiary.android.library")
     alias(libs.plugins.google.ksp)
-    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.parcelize)
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    androidTarget()
-
-    jvm()
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
-
-    compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-    }
-
     sourceSets {
         commonMain {
             dependencies {
@@ -37,7 +24,8 @@ kotlin {
 
                 implementation(dependencies.platform(libs.supabase.bom))
                 implementation(libs.supabase.posgrest)
-                implementation(libs.androidx.core.uri)
+//                implementation(libs.androidx.core.uri)
+                implementation("org.jetbrains.androidx.core:core-uri:1.0.0-alpha01")
                 implementation(libs.supabase.auth)
                 implementation(libs.supabase.realtime)
                 implementation(libs.supabase.compose.auth)
@@ -53,7 +41,7 @@ kotlin {
                 implementation(libs.google.playservices.location)
                 implementation(libs.moko.permissions.compose)
                 implementation(libs.ktor.client.json)
-                implementation("androidx.biometric:biometric:1.4.0-alpha02")
+                implementation("androidx.biometric:biometric:1.4.0-alpha04")
 
                 // this isn't a bom
                 implementation(libs.androidx.credentials.bom)
@@ -85,23 +73,5 @@ kotlin {
 }
 
 android {
-    buildFeatures {
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
-
     namespace = "com.foreverrafs.core.authentication"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minimumSdk.get().toInt()
-    }
-
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_17
-        sourceCompatibility = JavaVersion.VERSION_17
-    }
 }

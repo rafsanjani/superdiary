@@ -1,16 +1,16 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
-    alias(libs.plugins.android.library)
-    kotlin("multiplatform")
-    id("kotlin-parcelize")
+    id("com.superdiary.multiplatform.kotlin")
+    id("com.superdiary.android.library")
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     androidTarget()
 
-    iosX64()
     jvm()
     iosArm64()
     iosSimulatorArm64()
@@ -61,10 +61,5 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minimumSdk.get().toInt()
-    }
-
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_17
-        sourceCompatibility = JavaVersion.VERSION_17
     }
 }

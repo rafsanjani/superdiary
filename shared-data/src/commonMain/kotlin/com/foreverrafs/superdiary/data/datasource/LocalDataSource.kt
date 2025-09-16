@@ -11,18 +11,18 @@ import com.foreverrafs.superdiary.domain.repository.DataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.number
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
 @Suppress("TooManyFunctions")
 class LocalDataSource(private val database: Database) : DataSource {
-    override suspend fun add(diary: Diary): Long = database.insert(diary.toDatabase())
+    override suspend fun save(diary: Diary): Long = database.insert(diary.toDatabase())
 
-    override suspend fun addAll(diaries: List<Diary>): Long =
+    override suspend fun save(diaries: List<Diary>): Long =
         database.insert(diaries.map { it.toDatabase() })
 
     override suspend fun delete(diaries: List<Diary>): Int =
@@ -30,12 +30,12 @@ class LocalDataSource(private val database: Database) : DataSource {
 
     override fun fetchAll(): Flow<List<Diary>> = database.getAllDiaries().mapToDiary()
 
-    override fun fetchFavorites(): Flow<List<Diary>> = database.getFavoriteDiaries().mapToDiary()
+    override fun fetch(): Flow<List<Diary>> = database.getFavoriteDiaries().mapToDiary()
 
     override fun find(entry: String): Flow<List<Diary>> =
         database.findDiaryByEntry(entry).mapToDiary()
 
-    override fun find(from: Instant, to: Instant): Flow<List<Diary>> =
+    override fun find(from: kotlin.time.Instant, to: kotlin.time.Instant): Flow<List<Diary>> =
         database.findByDateRange(from, to).map { diaryDbList ->
             diaryDbList.map { it.toDiary() }
         }
@@ -50,7 +50,7 @@ class LocalDataSource(private val database: Database) : DataSource {
      * entries from start of the day 00:00 to midnight 23:59:59
      */
 
-    override fun findByDate(date: Instant): Flow<List<Diary>> {
+    override fun findByDate(date: kotlin.time.Instant): Flow<List<Diary>> {
         val timeZone = TimeZone.currentSystemDefault()
 
         val currentLocalDateTime = date.toLocalDateTime(timeZone)
@@ -62,8 +62,8 @@ class LocalDataSource(private val database: Database) : DataSource {
         // End of day
         val endOfDay = LocalDateTime(
             year = currentDate.year,
-            monthNumber = currentDate.monthNumber,
-            dayOfMonth = currentDate.dayOfMonth,
+            month = currentDate.month.number,
+            day = currentDate.day,
             hour = 23,
             minute = 59,
             second = 59,
@@ -76,15 +76,15 @@ class LocalDataSource(private val database: Database) : DataSource {
 
     override suspend fun deleteAll() = database.clearDiaries()
 
-    override fun getLatestEntries(count: Int): Flow<List<Diary>> =
+    override fun getLatest(count: Int): Flow<List<Diary>> =
         database.getLatestEntries(count).mapToDiary()
 
-    override suspend fun countEntries(): Long = database.countEntries()
+    override suspend fun count(): Long = database.countEntries()
 
-    override suspend fun insertWeeklySummary(summary: WeeklySummary) =
+    override suspend fun save(summary: WeeklySummary) =
         database.insertWeeklySummary(summary = summary.toDatabase())
 
-    override fun getWeeklySummary(): WeeklySummary? = database.getWeeklySummary()?.toWeeklySummary()
+    override fun getOne(): WeeklySummary? = database.getWeeklySummary()?.toWeeklySummary()
     override suspend fun clearChatMessages() {
         database.clearChatMessages()
     }

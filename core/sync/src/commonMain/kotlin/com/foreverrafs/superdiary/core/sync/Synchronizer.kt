@@ -1,10 +1,14 @@
 package com.foreverrafs.superdiary.core.sync
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.compose.LifecycleStartEffect
 import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.remote.DiaryApi
 import com.foreverrafs.superdiary.data.model.toDiary
+import com.foreverrafs.superdiary.domain.Synchronizer
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.toDto
 import com.foreverrafs.superdiary.domain.repository.DataSource
@@ -13,17 +17,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
-interface Synchronizer {
-    sealed class SyncOperation {
-        data class Save(val diary: Diary) : SyncOperation()
-        data class Delete(val diary: Diary) : SyncOperation()
-    }
-
-    suspend fun startListening()
-    suspend fun sync(operation: SyncOperation): Boolean
-    fun stopListening()
-}
 
 class DiarySynchronizer(
     private val diaryApi: DiaryApi,
@@ -44,9 +37,12 @@ class DiarySynchronizer(
         diaryApiListeningJob = coroutineScope.launch(appCoroutineDispatchers.main) {
             // fetch all entries from remote
             diaryApi.fetchAll().collect { diaryDtoList ->
+                // Delete all entries from the database
+                dataSource.deleteAll()
+
                 // insert remote entries into database. This will set isSynced flag
                 // to true and trigger an update for observers
-                val savedEntries = dataSource.addAll(diaryDtoList.map { it.toDiary() })
+                val savedEntries = dataSource.save(diaryDtoList.map { it.toDiary() })
 
                 logger.i(TAG) {
                     "Saved $savedEntries new items to local database"
@@ -74,8 +70,10 @@ class DiarySynchronizer(
 
         pendingSyncs.forEach { entry ->
             launch {
-                if (!entry.isSynced) performSaveSync(entry)
-                if (entry.isMarkedForDelete) performDeleteSync(entry)
+                if (!entry.isSynced) performSaveSync(diary = entry)
+                if (entry.isMarkedForDelete) {
+                    performDeleteSync(diary = entry)
+                }
             }
         }
     }
@@ -87,14 +85,19 @@ class DiarySynchronizer(
 
     private suspend fun performSaveSync(diary: Diary): Boolean {
         // Attempt to write the saved diary into the network
+        logger.i(TAG) {
+            "Writing saved entry onto the network"
+        }
+
         return when (val result = diaryApi.save(diary.toDto())) {
             is Result.Success -> {
                 logger.i(TAG) {
-                    "Successfully synced deleted diary with network"
+                    "Successfully synced saved diary with network"
                 }
-                // Remove sync flag from entry in local database
+
+                // Remove the sync flag from entry in the local database
                 dataSource.update(
-                    diary.copy(isSynced = true),
+                    diary = diary.copy(isSynced = true),
                 )
 
                 true
@@ -102,7 +105,7 @@ class DiarySynchronizer(
 
             is Result.Failure -> {
                 logger.i(TAG) {
-                    "There was an error syncing deleted entry to the network. ${result.error}"
+                    "There was an error syncing saved entry to the network. ${result.error}"
                 }
 
                 false
@@ -152,5 +155,22 @@ class DiarySynchronizer(
 
     companion object {
         private const val TAG = "DiarySynchronizer"
+    }
+}
+
+@Composable
+fun SyncEffect(
+    synchronizer: Synchronizer,
+    key1: Any? = null,
+) {
+    val scope = rememberCoroutineScope()
+
+    LifecycleStartEffect(key1) {
+        scope.launch {
+            synchronizer.startListening()
+        }
+        onStopOrDispose {
+            synchronizer.stopListening()
+        }
     }
 }

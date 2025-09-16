@@ -1,12 +1,11 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
+    id("com.superdiary.multiplatform.kotlin")
+    id("com.superdiary.android.library")
     alias(libs.plugins.google.ksp)
-    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.sqldelight)
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.kotlin.parcelize)
 }
 
 sqldelight {
@@ -19,17 +18,6 @@ sqldelight {
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    androidTarget()
-
-    iosX64()
-    jvm()
-    iosArm64()
-    iosSimulatorArm64()
-
-    compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-    }
-
     sourceSets {
         commonMain {
             dependencies {
@@ -79,14 +67,4 @@ kotlin {
 
 android {
     namespace = "com.foreverrafs.core.database"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minimumSdk.get().toInt()
-    }
-
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_17
-        sourceCompatibility = JavaVersion.VERSION_17
-    }
 }

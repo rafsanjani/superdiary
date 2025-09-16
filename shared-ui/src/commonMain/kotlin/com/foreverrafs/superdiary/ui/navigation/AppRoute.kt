@@ -3,6 +3,9 @@ package com.foreverrafs.superdiary.ui.navigation
 import com.foreverrafs.auth.model.UserInfo
 import kotlinx.serialization.Serializable
 
+/**
+ * Root application routes where each individual route here is a nested navigation graph.
+ */
 sealed interface AppRoute {
     @Serializable
     data object BiometricAuthScreen : AppRoute
@@ -17,21 +20,18 @@ sealed interface AppRoute {
     data object RegistrationConfirmationScreen : AppRoute
 
     @Serializable
-    data class BottomNavigationScreen(
+    data class BottomNavigationNavHost(
         val userInfo: UserInfo?,
     ) : AppRoute
-
-    @Serializable
-    data class DetailScreen(val diaryId: String) : AppRoute
 
     @Serializable
     data object CreateDiaryScreen : AppRoute
 
     @Serializable
-    data object DiaryListScreen : AppRoute
+    data object DiaryListNavHost : AppRoute
 
     @Serializable
-    data object ChangePasswordScreen : AppRoute
+    data object ChangePasswordNavHost : AppRoute
 
     @Serializable
     data object SendPasswordResetEmailScreen : AppRoute

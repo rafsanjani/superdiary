@@ -4,37 +4,17 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 
 plugins {
+    id("com.superdiary.multiplatform.kotlin")
+    id("com.superdiary.android.library")
     alias(libs.plugins.google.ksp)
-    alias(libs.plugins.android.library)
     alias(libs.plugins.testLogger)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.mokkery)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    androidTarget()
-
-    jvm()
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach {
-        it.binaries.forEach { binary ->
-            binary.linkerOpts += "-lsqlite3"
-        }
-    }
-
-    compilerOptions {
-        freeCompilerArgs.addAll(
-            "-Xexpect-actual-classes",
-            "-opt-in=com.aallam.openai.api.BetaOpenAI",
-            "-Xskip-prerelease-check",
-        )
-    }
-
     sourceSets {
         commonMain {
             dependencies {
@@ -43,11 +23,10 @@ kotlin {
                 implementation(libs.touchlab.stately)
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.coroutines.test)
-                implementation(libs.openAiKotlin)
+//                implementation("org.simpmusic.gemini-kotlin:openai-client:4.0.2")
                 implementation(libs.uuid)
                 implementation(projects.preferences.annotation)
                 implementation(libs.androidx.datastore.preferences)
-                implementation(libs.androidx.datastore.okio)
                 implementation(libs.ktor.client.cio)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.supabase.posgrest)
@@ -105,16 +84,6 @@ kotlin {
 
 android {
     namespace = "com.foreverrafs.data"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minimumSdk.get().toInt()
-    }
-
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_17
-        sourceCompatibility = JavaVersion.VERSION_17
-    }
 }
 
 dependencies {

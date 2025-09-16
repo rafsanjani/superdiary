@@ -24,13 +24,13 @@ jobs:
             FIREBASE_DISTRIBUTION_APP_ID: ${{secrets.FIREBASE_DISTRIBUTION_APP_ID}}
             FIREBASE_DISTRIBUTION_SERVICE_ACCOUNT: ${{secrets.FIREBASE_DISTRIBUTION_SERVICE_ACCOUNT}}
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v5
                 with:
                     lfs: true
-            -   uses: actions/setup-java@v4
+            -   uses: actions/setup-java@v5
                 with:
                     distribution: 'zulu'
-                    java-version: '17'
+                    java-version: '21'
 
             -   name: Setup secrets.properties
                 run: |

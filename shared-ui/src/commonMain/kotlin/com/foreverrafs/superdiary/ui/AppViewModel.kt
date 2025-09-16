@@ -10,6 +10,7 @@ import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
 import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -48,7 +49,10 @@ class AppViewModel(
     private val _viewState: MutableStateFlow<AppSessionState> =
         MutableStateFlow(AppSessionState.Processing)
 
+    val appSessionStatus: Flow<AuthApi.SessionStatus> = authApi.sessionStatus()
+
     private val pendingDeeplink = deeplinkContainer.pop()
+
     val viewState: StateFlow<AppSessionState> = _viewState.onStart {
         restoreSession()
     }
@@ -117,7 +121,7 @@ class AppViewModel(
 
         _viewState.update {
             when (sessionRestoreStatus) {
-                is AuthApi.SignInStatus.Error -> {
+                is AuthApi.SessionStatus.Unauthenticated -> {
                     logger.w(
                         tag = TAG,
                         throwable = sessionRestoreStatus.exception,
@@ -128,7 +132,7 @@ class AppViewModel(
                     )
                 }
 
-                is AuthApi.SignInStatus.LoggedIn -> {
+                is AuthApi.SessionStatus.Authenticated -> {
                     logger.d(TAG) { "Session restored. Token expires on ${sessionRestoreStatus.sessionInfo.expiresAt}" }
                     logger.d(TAG) { "Session user ${sessionRestoreStatus.sessionInfo.userInfo}" }
 
@@ -153,14 +157,14 @@ class AppViewModel(
         val result =
             authApi.handleAuthDeeplink(pendingDeeplink?.payload)
     ) {
-        is AuthApi.SignInStatus.LoggedIn -> {
+        is AuthApi.SessionStatus.Authenticated -> {
             logger.d(TAG) {
                 "Auth deeplink successfully processed. A session for the user should have been started by now"
             }
             Result.Success(result.sessionInfo)
         }
 
-        is AuthApi.SignInStatus.Error -> {
+        is AuthApi.SessionStatus.Unauthenticated -> {
             logger.e(
                 tag = TAG,
                 throwable = result.exception,

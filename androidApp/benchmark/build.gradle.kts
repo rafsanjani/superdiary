@@ -6,34 +6,39 @@ plugins {
 
 android {
     namespace = "com.foreverrafs.superdiary.benchmark"
-    compileSdk = 34
+    compileSdk = libs.versions.targetSdk.get().toInt()
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        jvmToolchain(21)
     }
 
     defaultConfig {
         minSdk = 28
-        targetSdk = 35
+        targetSdk = libs.versions.targetSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        testInstrumentationRunnerArguments += mapOf(
+            "androidx.benchmark.suppressErrors" to "EMULATOR",
+        )
     }
 
     buildTypes {
         create("benchmark") {
             isDebuggable = true
             signingConfig = getByName("debug").signingConfig
-            matchingFallbacks += listOf("release")
+            matchingFallbacks += listOf("demoRelease")
         }
     }
 
+    flavorDimensions.add("mode")
+
+    productFlavors {
+        create("demo") { dimension = "mode" }
+        create("standard") { dimension = "mode" }
+    }
+
     targetProjectPath = ":androidApp:app"
-    experimentalProperties["android.experimental.self-instrumenting"] = true
 }
 
 androidComponents {

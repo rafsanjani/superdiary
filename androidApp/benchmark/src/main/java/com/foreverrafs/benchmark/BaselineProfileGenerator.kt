@@ -21,7 +21,7 @@ class BaselineProfileGenerator {
             startActivityAndWait()
 
             //  Run through the main navigation items
-            AppScenarios.mainNavigationItems(device)
+            mainNavigationItems()
         }
     }
 }

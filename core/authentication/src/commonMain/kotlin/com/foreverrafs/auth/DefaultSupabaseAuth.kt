@@ -19,6 +19,8 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 
@@ -35,15 +37,15 @@ class DefaultSupabaseAuth(
     private val client: SupabaseClient,
     private val logger: AggregateLogger,
 ) : AuthApi {
-    override suspend fun signInWithGoogle(): AuthApi.SignInStatus =
+    override suspend fun signInWithGoogle(): AuthApi.SessionStatus =
         try {
             client.auth.signInWith(provider = Google)
             getSessionStatus()
         } catch (e: RestException) {
-            AuthApi.SignInStatus.Error(e)
+            AuthApi.SessionStatus.Unauthenticated(e)
         }
 
-    override suspend fun signInWithGoogle(googleIdToken: String): AuthApi.SignInStatus = try {
+    override suspend fun signInWithGoogle(googleIdToken: String): AuthApi.SessionStatus = try {
         client.auth.signInWith(IDToken) {
             idToken = googleIdToken
             provider = Google
@@ -53,54 +55,78 @@ class DefaultSupabaseAuth(
         logger.e(tag = Tag, throwable = e)
         if (e is BadRequestRestException) {
             // Rewrite exception into a domain type
-            AuthApi.SignInStatus.Error(TokenExpiredException(message = e.message))
+            AuthApi.SessionStatus.Unauthenticated(TokenExpiredException(message = e.message))
         } else {
-            AuthApi.SignInStatus.Error(e)
+            AuthApi.SessionStatus.Unauthenticated(e)
         }
     }
 
-    private suspend fun getSessionStatus(): AuthApi.SignInStatus {
+    override fun sessionStatus(): Flow<AuthApi.SessionStatus> =
+        client.auth.sessionStatus.map { sessionStatus ->
+            when (sessionStatus) {
+                is SessionStatus.Authenticated -> AuthApi.SessionStatus.Authenticated(
+                    sessionInfo = sessionStatus.session.toSession(),
+                )
+
+                is SessionStatus.Initializing -> AuthApi.SessionStatus.Unauthenticated(
+                    Exception("Session is initializing"),
+                )
+
+                is SessionStatus.NotAuthenticated -> AuthApi.SessionStatus.Unauthenticated(
+                    Exception("User is not authenticated"),
+                )
+
+                is SessionStatus.RefreshFailure -> AuthApi.SessionStatus.Unauthenticated(
+                    Exception("Session refresh failed"),
+                )
+            }
+        }
+
+    private suspend fun getSessionStatus(): AuthApi.SessionStatus {
         val currentSession = client.auth.currentSessionOrNull()
 
         return if (currentSession != null) {
             associateUniqueEmailToUser()
-            AuthApi.SignInStatus.LoggedIn(currentSession.toSession())
+            AuthApi.SessionStatus.Authenticated(currentSession.toSession())
         } else {
-            AuthApi.SignInStatus.Error(Exception("User was authenticated, but the session was null."))
+            logger.e(Tag) {
+                "User was authenticated, but the session was null."
+            }
+            AuthApi.SessionStatus.Unauthenticated(Exception("User was authenticated, but the session was null."))
         }
     }
 
-    override suspend fun restoreSession(): AuthApi.SignInStatus {
+    override suspend fun restoreSession(): AuthApi.SessionStatus {
         // Wait for session to be initialized
         while (client.auth.sessionStatus.value == SessionStatus.Initializing) {
-            logger.d(Tag) {
+            logger.i(Tag) {
                 "Waiting for session to be initialized"
             }
             delay(100)
         }
 
-        logger.d(Tag) {
+        logger.i(Tag) {
             "Session Initialized. Attempting to get current session"
         }
         val currentSession = client.auth.currentSessionOrNull()
 
         return if (currentSession != null) {
-            AuthApi.SignInStatus.LoggedIn(
+            AuthApi.SessionStatus.Authenticated(
                 currentSession.toSession(),
             )
         } else {
-            AuthApi.SignInStatus.Error(Exception("No session information found!"))
+            AuthApi.SessionStatus.Unauthenticated(Exception("No session information found!"))
         }
     }
 
-    override suspend fun signIn(email: String, password: String): AuthApi.SignInStatus = try {
+    override suspend fun signIn(email: String, password: String): AuthApi.SessionStatus = try {
         client.auth.signInWith(Email) {
             this.email = email
             this.password = password
         }
         getSessionStatus()
-    } catch (e: Exception) {
-        AuthApi.SignInStatus.Error(e)
+    } catch (exception: Exception) {
+        AuthApi.SessionStatus.Unauthenticated(exception.transform())
     }
 
     override suspend fun register(
@@ -118,21 +144,33 @@ class DefaultSupabaseAuth(
 
         AuthApi.RegistrationStatus.Success
     } catch (exception: RestException) {
-        val error = if (
-            exception.message?.contains(USER_REGISTERED_ERROR, true) == true
-        ) {
-            UserAlreadyRegisteredException(exception.message.orEmpty())
-        } else {
-            exception
-        }
+        AuthApi.RegistrationStatus.Error(
+            exception.transform(),
+        )
+    }
 
-        AuthApi.RegistrationStatus.Error(error)
+    private fun Exception.transform(): AuthException = when {
+        message?.contains(
+            USER_REGISTERED_ERROR,
+            true,
+        ) == true -> UserAlreadyRegisteredException(message.orEmpty())
+
+        message?.contains(
+            INVALID_LOGIN_CREDENTIALS,
+            true,
+        ) == true -> InvalidCredentialsException(message.orEmpty())
+
+        else -> {
+            GenericAuthException(this, this.message)
+        }
     }
 
     private suspend fun associateUniqueEmailToUser() {
-        if (!currentUserOrNull()?.uniqueEmail.isNullOrEmpty()) {
-            logger.d(Tag) {
-                "User already has a unique email. Skipping update."
+        val currentUniqueEmail = currentUserOrNull()?.uniqueEmail
+
+        if (currentUniqueEmail.isNullOrBlank()) {
+            logger.i(Tag) {
+                "User already has a unique email. Skipping update. Email is $currentUniqueEmail"
             }
             return
         }
@@ -148,6 +186,25 @@ class DefaultSupabaseAuth(
                 put("unique_email", JsonPrimitive(uniqueEmail))
             }
         }
+        logger.i(Tag) {
+            "Associated unique email with user."
+        }
+    }
+
+    override suspend fun updatePassword(password: String): Result<Unit> = try {
+        logger.i(Tag) {
+            "Setting new password for user!"
+        }
+
+        client.auth.updateUser {
+            this.password = password
+        }
+        Result.success(Unit)
+    } catch (e: Exception) {
+        logger.e(Tag, e) {
+            "Error setting new password for user!"
+        }
+        Result.failure(e)
     }
 
     override suspend fun signOut(): Result<Unit> = try {
@@ -159,19 +216,19 @@ class DefaultSupabaseAuth(
         Result.failure(e)
     }
 
-    override suspend fun currentUserOrNull(): UserInfo? =
+    override fun currentUserOrNull(): UserInfo? =
         client.auth.currentUserOrNull()?.toUserInfo()
 
     @OptIn(SupabaseInternal::class)
-    override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SignInStatus =
+    override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SessionStatus =
         suspendCoroutine { continuation ->
-            logger.d(Tag) {
+            logger.i(Tag) {
                 "Confirming authentication with token $deeplinkUri"
             }
 
             if (deeplinkUri.toString().contains("error")) {
                 continuation.resume(
-                    AuthApi.SignInStatus.Error(Exception("Invalid confirmation link")),
+                    AuthApi.SessionStatus.Unauthenticated(Exception("Invalid confirmation link")),
                 )
                 return@suspendCoroutine
             }
@@ -179,28 +236,32 @@ class DefaultSupabaseAuth(
             try {
                 client.auth.parseFragmentAndImportSession(
                     fragment = deeplinkUri?.getFragment().orEmpty(),
-                    onSessionSuccess = {
+                    onFinish = { session ->
                         continuation.resume(
-                            AuthApi.SignInStatus.LoggedIn(it.toSession()),
+                            if (session != null) {
+                                AuthApi.SessionStatus.Authenticated(session.toSession())
+                            } else {
+                                AuthApi.SessionStatus.Unauthenticated(Exception("Error logging in"))
+                            },
                         )
                     },
                 )
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
                 continuation.resume(
-                    AuthApi.SignInStatus.Error(e),
+                    AuthApi.SessionStatus.Unauthenticated(e),
                 )
             }
         }
 
     override suspend fun sendPasswordResetEmail(email: String): Result<Unit> = try {
-        logger.d(Tag) {
+        logger.i(Tag) {
             "Sending password reset email to $email"
         }
         client.auth.resetPasswordForEmail(
             email,
         )
-        logger.d(Tag) {
+        logger.i(Tag) {
             "Password reset email sent to $email"
         }
         Result.success(Unit)
@@ -214,6 +275,7 @@ class DefaultSupabaseAuth(
 
     companion object {
         private const val USER_REGISTERED_ERROR = "User already registered"
+        private const val INVALID_LOGIN_CREDENTIALS = "Invalid login credentials"
         private val Tag = DefaultSupabaseAuth::class.simpleName.orEmpty()
     }
 }

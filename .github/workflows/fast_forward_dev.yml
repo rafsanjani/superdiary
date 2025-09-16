@@ -8,11 +8,11 @@ jobs:
     build:
         runs-on: macos-14
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v5
                 with:
                     lfs: true
 
             -   name: Sync master with develop branch
                 env:
                     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                run: gh pr create --head main --base development -t "fast forward development to main" -b "Fast forward development to main"
+                run: gh pr create --head development --base main -t "fast forward development to main" -b "Fast forward development to main"

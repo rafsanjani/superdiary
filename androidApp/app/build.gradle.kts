@@ -1,23 +1,28 @@
 @file:Suppress("UnusedPrivateProperty")
 
+import io.sentry.android.gradle.extensions.InstrumentationFeature
+
+
 plugins {
     kotlin("android")
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    id("io.sentry.android.gradle") version "5.3.0"
+    alias(libs.plugins.sentry)
     id("com.google.firebase.appdistribution") version "5.1.1"
     id("com.dropbox.dependency-guard") version "0.5.0"
 }
 
 android {
-    compileSdk = 35
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
+        compileSdk = libs.versions.compileSdk.get().toInt()
+
         applicationId = "com.foreverrafs.superdiary"
-        minSdk = 28
-        targetSdk = 35
-        versionCode = 61
+        minSdk = libs.versions.minimumSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        versionCode = 232
         versionName = "0.0.1"
 
         val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_ANDROID") ?: ""
@@ -32,8 +37,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     buildFeatures {
@@ -77,8 +82,18 @@ android {
 
             manifestPlaceholders["sentryEnvironment"] = "benchmark"
             signingConfig = signingConfigs.getByName("debug")
-            isMinifyEnabled = false
-            isDebuggable = true
+        }
+    }
+
+    flavorDimensions.add("mode")
+
+    productFlavors {
+        create("standard") { dimension = "mode" }
+
+        create("demo") {
+            applicationIdSuffix = ".demo"
+            manifestPlaceholders["applicationName"] = "superdiary demo"
+            dimension = "mode"
         }
     }
 }
@@ -122,6 +137,21 @@ sentry {
     includeSourceContext.set(true)
     autoUploadProguardMapping.set(true)
     uploadNativeSymbols.set(true)
+
+    tracingInstrumentation {
+        enabled = true
+        features = setOf(
+            InstrumentationFeature.DATABASE,
+            InstrumentationFeature.FILE_IO,
+            InstrumentationFeature.OKHTTP,
+            InstrumentationFeature.COMPOSE,
+        )
+    }
+
+    autoInstallation {
+        enabled = true
+        sentryVersion = libs.versions.sentry.get()
+    }
 }
 
 // This is only used for loading google maps api keys at the moment.
@@ -138,12 +168,14 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.google.material)
     implementation(projects.sharedUi)
+    implementation(projects.sharedData)
+    implementation(projects.core.diaryAi)
     implementation(projects.feature.diaryAuth)
     implementation(projects.core.analytics)
     implementation(libs.koin.android)
-    implementation(libs.androidx.core)
     implementation(libs.supabase.compose.auth)
     implementation(libs.androidx.core.uri)
+    implementation(libs.supabase.auth)
     implementation(libs.koin.android)
     implementation(libs.koin.core)
     implementation(libs.kotlinx.serialization.json)
@@ -151,5 +183,5 @@ dependencies {
 }
 
 dependencyGuard {
-    configuration("releaseRuntimeClasspath")
+    configuration("standardReleaseRuntimeClasspath")
 }

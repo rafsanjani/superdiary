@@ -1,38 +1,28 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.compose.compiler)
+    id("com.superdiary.multiplatform.compose")
+    id("com.superdiary.multiplatform.kotlin")
+    id("com.superdiary.android.library")
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.parcelize)
 }
 
 kotlin {
-    applyDefaultHierarchyTemplate()
-    androidTarget()
-
-    jvm()
-    jvmToolchain(17)
-
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64(),
-    )
-
     sourceSets {
         commonMain {
             dependencies {
                 implementation(compose.components.resources)
-                implementation(compose.material3)
                 implementation(compose.foundation)
                 implementation(compose.materialIconsExtended)
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
                 implementation(compose.components.uiToolingPreview)
+                api(libs.jetbrains.compose.ui.backhandler)
+                api("org.jetbrains.compose.material3:material3:1.9.0-alpha04")
                 implementation(libs.coil3.compose)
                 implementation(libs.coil3.compose.core)
+                implementation(libs.jetbrains.navigation.compose)
                 implementation(libs.coil3.network.ktor)
                 implementation(libs.coil3.multiplatform)
                 implementation(libs.ktor.client.core)
@@ -85,23 +75,4 @@ kotlin {
 
 android {
     namespace = "com.foreverrafs.superdiary.design"
-
-    buildFeatures {
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
-
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minimumSdk.get().toInt()
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
 }

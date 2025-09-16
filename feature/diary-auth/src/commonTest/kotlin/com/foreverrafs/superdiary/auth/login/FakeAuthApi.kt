@@ -4,12 +4,16 @@ import androidx.core.uri.Uri
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
+@OptIn(ExperimentalTime::class)
 class FakeAuthApi(
     clock: Clock = Clock.System,
 ) : AuthApi {
-    var signInResult: AuthApi.SignInStatus = AuthApi.SignInStatus.LoggedIn(
+    var signInResult: AuthApi.SessionStatus = AuthApi.SessionStatus.Authenticated(
         SessionInfo(
             expiresAt = clock.now(),
             accessToken = "test-access-token",
@@ -23,6 +27,10 @@ class FakeAuthApi(
         ),
     )
 
+    override fun sessionStatus(): Flow<AuthApi.SessionStatus> = flowOf(
+        signInResult,
+    )
+
     var sendPasswordResetEmailResult: Result<Unit> = Result.success(Unit)
     var registerWithEmailResult: AuthApi.RegistrationStatus = AuthApi.RegistrationStatus.Success
     var signOutResult = Result.success(Unit)
@@ -30,23 +38,27 @@ class FakeAuthApi(
     override suspend fun sendPasswordResetEmail(email: String): Result<Unit> =
         sendPasswordResetEmailResult
 
-    override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SignInStatus {
+    override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SessionStatus {
         TODO("Not yet implemented")
     }
 
-    override suspend fun signInWithGoogle(): AuthApi.SignInStatus =
+    override suspend fun updatePassword(password: String): Result<Unit> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun signInWithGoogle(): AuthApi.SessionStatus =
         signInResult
 
-    override suspend fun signInWithGoogle(googleIdToken: String): AuthApi.SignInStatus =
+    override suspend fun signInWithGoogle(googleIdToken: String): AuthApi.SessionStatus =
         signInResult
 
-    override suspend fun restoreSession(): AuthApi.SignInStatus = signInResult
+    override suspend fun restoreSession(): AuthApi.SessionStatus = signInResult
 
-    override suspend fun signIn(email: String, password: String): AuthApi.SignInStatus =
+    override suspend fun signIn(email: String, password: String): AuthApi.SessionStatus =
         signInResult
 
-    override suspend fun currentUserOrNull(): UserInfo? =
-        (signInResult as? AuthApi.SignInStatus.LoggedIn)?.sessionInfo?.userInfo
+    override fun currentUserOrNull(): UserInfo? =
+        (signInResult as? AuthApi.SessionStatus.Authenticated)?.sessionInfo?.userInfo
 
     override suspend fun register(
         name: String,

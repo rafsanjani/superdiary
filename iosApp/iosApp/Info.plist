@@ -2,20 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>NSFaceIDUsageDescription</key>
-    <string>Your biometrics is required to authenticate</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>LSApplicationCategoryType</key>
-	<string></string>
-	<key>CFBundleDisplayName</key>
-	<string></string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string></string>
 	<key>CFBundleExecutable</key>
 	<string>superdiary</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -55,20 +51,18 @@
 	<string>$(GIDServerClientID)</string>
 	<key>GOOGLE_MAPS_SDK_KEY</key>
 	<string>${GOOGLE_MAPS_SDK_KEY}</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Your biometrics is required to authenticate</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location is required to tag your entries when they are made</string>
 	<key>SENTRY_BASE_URL</key>
 	<string>${SENTRY_BASE_URL}</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>font/mont_bold.ttf</string>
-		<string>font/mont_regular.ttf</string>
-		<string>font/right_regular.ttf</string>
-	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

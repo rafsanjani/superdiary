@@ -5,9 +5,6 @@ pluginManagement {
         mavenCentral()
         google()
         gradlePluginPortal()
-        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
-        maven("https://jitpack.io")
         mavenLocal()
     }
     includeBuild("build-logic")
@@ -17,7 +14,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven("https://jitpack.io")
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
         mavenLocal()
@@ -25,10 +21,10 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2025.03.02")
-            version("compose-multiplatform", "1.8.0-alpha03")
-            // Because the all versions newer than this do not play well with compose 1.8.0-alpha03
-            version("richTextEditor", "1.0.0-rc09")
+            from("io.github.rafsanjani:versions:2025.09.14")
+            version("compose-multiplatform", "1.9.0-rc02")
+            version("mokkery", "2.10.0")
+            version("paparazzi", "2.0.0-alpha02")
         }
     }
 }
@@ -37,6 +33,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 plugins {
     id("org.jetbrains.kotlinx.kover.aggregation") version "0.9.1"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
 kover {
@@ -94,12 +91,15 @@ kover {
         "*utils.FileSystem_androidKt",
         "*generated.resources.*",
         "*components.*",
+        "*MailManager",
+        "*.navigation.*",
     )
 
     reports {
         includedProjects.add(":shared-data")
         includedProjects.add(":shared-ui")
         includedProjects.add(":core:sync")
+        includedProjects.add(":common-utils")
         includedProjects.add(":feature:diary-profile")
         includedProjects.add(":feature:diary-list")
         includedProjects.add(":feature:diary-auth")
@@ -124,22 +124,31 @@ include(":androidApp:app")
 include(":design-system")
 include(":androidApp:benchmark")
 include(":shared-data")
-include(":swipe")
 include(":shared-ui")
+
+// core project modules
 include(":core:authentication")
 include(":core:analytics")
 include(":core:location")
+include(":core:ui-components")
 include(":core:logging")
-include(":common-utils")
-include(":core:sync")
-include(":common-test")
+include(":core:database-test")
 include(":core:secrets")
 include(":core:database")
-include(":core:database-test")
+include(":core:sync")
+include(":core:diary-ai")
+
+// common components shared by other modules
+include(":common-utils")
+include(":common-test")
 include(":desktopApp")
-include(":feature:diary-ai")
+
+// feature modules, a feature is something a user can directly interact with
 include(":feature:diary-profile")
 include(":feature:diary-auth")
 include(":feature:diary-list")
+include(":feature:diary-dashboard")
+
+// annotation processor for datasore preferences
 include(":preferences:annotation")
 include(":preferences:processor")

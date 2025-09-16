@@ -16,6 +16,7 @@ import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.AddWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.CalculateBestStreakUseCase
 import com.foreverrafs.superdiary.domain.usecase.CalculateStreakUseCase
+import com.foreverrafs.superdiary.domain.usecase.ClearDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.CountDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
@@ -28,8 +29,8 @@ import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.domain.validator.DiaryValidator
 import com.foreverrafs.superdiary.domain.validator.DiaryValidatorImpl
+import kotlin.time.Clock
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.datetime.Clock
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.factoryOf
@@ -67,6 +68,7 @@ val useCaseModule = module {
     factoryOf(::DeleteDiaryUseCase)
     factoryOf(::UpdateDiaryUseCase)
     factoryOf(::GetLatestEntriesUseCase)
+    factoryOf(::ClearDiariesUseCase)
     factoryOf(::CountDiariesUseCase)
     factoryOf(::CalculateStreakUseCase)
     factoryOf(::AddWeeklySummaryUseCase)

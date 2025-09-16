@@ -9,9 +9,9 @@ import com.foreverrafs.superdiary.database.model.DiaryDb
 import com.foreverrafs.superdiary.database.model.LocationDb
 import com.foreverrafs.superdiary.database.model.WeeklySummaryDb
 import kotlin.coroutines.suspendCoroutine
+import kotlin.time.Instant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.Instant
 
 // Converts a date to a long value and vice versa
 val dateAdapter = object : ColumnAdapter<Instant, Long> {
@@ -88,7 +88,9 @@ class Database(
         queries.transaction {
             afterCommit {
                 continuation.resumeWith(
-                    Result.success(ids.size),
+                    Result.success(
+                        queries.getAffectedRows().executeAsOne().toInt(),
+                    ),
                 )
             }
 
@@ -128,6 +130,7 @@ class Database(
             date = diary.date,
             favorite = diary.isFavorite.asLong(),
             markForDelete = diary.markedForDelete,
+            location = LocationDb.fromString(diary.location),
             isSynced = diary.isSynced,
         )
 
@@ -139,7 +142,9 @@ class Database(
             .asFlow()
             .mapToList(Dispatchers.Main)
 
-    fun clearDiaries() = queries.deleteAll()
+    fun clearDiaries() {
+        queries.deleteAll()
+    }
 
     private fun Boolean.asLong(): Long = if (this) 1 else 0
     private fun Long.asBoolean(): Boolean = this != 0L
@@ -175,7 +180,9 @@ class Database(
         )
     }
 
-    fun clearChatMessages() = queries.clearChat()
+    fun clearChatMessages() {
+        queries.clearChat()
+    }
 
     fun getChatMessages(): Flow<List<DiaryChatMessageDb>> =
         queries.getChatMessages(

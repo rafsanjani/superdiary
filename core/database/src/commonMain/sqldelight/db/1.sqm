@@ -1,5 +1,5 @@
 import com.foreverrafs.superdiary.database.model.LocationDb;
-import kotlinx.datetime.Instant;
+import kotlin.time.Instant;
 import kotlin.Boolean;
 
 CREATE TABLE IF NOT EXISTS diary (

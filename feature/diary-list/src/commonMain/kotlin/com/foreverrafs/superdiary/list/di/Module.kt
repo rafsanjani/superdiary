@@ -4,7 +4,8 @@ import com.foreverrafs.superdiary.list.data.DiaryListRepositoryImpl
 import com.foreverrafs.superdiary.list.domain.repository.DiaryListRepository
 import com.foreverrafs.superdiary.list.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.list.domain.usecase.GetDiaryByIdUseCase
-import com.foreverrafs.superdiary.list.presentation.DiaryListViewModel
+import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewModel
+import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListViewModel
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
@@ -17,4 +18,5 @@ val diaryListModule = module {
     factoryOf(::DiaryListRepositoryImpl) { bind<DiaryListRepository>() }
     factoryOf(::GetAllDiariesUseCase)
     factoryOf(::GetDiaryByIdUseCase)
+    factoryOf(::DetailsViewModel)
 }

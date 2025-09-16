@@ -2,22 +2,21 @@
 
 package com.foreverrafs.superdiary.database.model
 
+import kotlin.time.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 
 @Suppress("FunctionName")
 data class DiaryChatMessageDb(
     val id: String,
     val role: DiaryChatRoleDb,
-    val timestamp: Instant,
+    val timestamp: kotlin.time.Instant,
     val content: String,
 ) {
     companion object {
         fun User(content: String) = DiaryChatMessageDb(
             id = Uuid.random().toString(),
-            timestamp = Clock.System.now(),
+            timestamp = kotlin.time.Clock.System.now(),
             role = DiaryChatRoleDb.User,
             content = content,
         )

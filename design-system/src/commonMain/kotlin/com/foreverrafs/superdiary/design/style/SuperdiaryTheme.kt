@@ -1,16 +1,23 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.foreverrafs.superdiary.design.style
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -25,6 +32,7 @@ import superdiary.design_system.generated.resources.montserrat_alternatives_regu
 import superdiary.design_system.generated.resources.montserrat_alternatives_semibold
 import superdiary.design_system.generated.resources.righteous_regular
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Suppress("ktlint:compose:modifier-missing-check")
 @Composable
 fun SuperDiaryTheme(
@@ -96,20 +104,24 @@ fun SuperDiaryTheme(
             fontSize = 14.sp,
             fontWeight = FontWeight.Normal,
         ),
-    )
-    val shapes = Shapes(
-        small = RoundedCornerShape(4.dp),
-        medium = RoundedCornerShape(4.dp),
-        large = RoundedCornerShape(0.dp),
+        bodyLarge = TextStyle(
+            fontFamily = montserratAlternativesFontFamily(),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Normal,
+        ),
     )
 
-    MaterialTheme(
+    MaterialExpressiveTheme(
         colorScheme = colorScheme,
         typography = typography,
-        shapes = shapes,
+        shapes = Shapes(
+            small = RoundedCornerShape(4.dp),
+            medium = RoundedCornerShape(4.dp),
+            large = RoundedCornerShape(0.dp),
+        ),
+        motionScheme = MotionScheme.expressive(),
     ) {
         Surface(
-            modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background,
             content = content,
         )
@@ -147,3 +159,12 @@ fun montserratAlternativesFontFamily(): FontFamily = FontFamily(
         ),
     ),
 )
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope> {
+    error("SharedTransitionScope not present")
+}
+
+val LocalAnimatedContentScope = staticCompositionLocalOf<AnimatedContentScope> {
+    error("AnimatedContentScope not present")
+}

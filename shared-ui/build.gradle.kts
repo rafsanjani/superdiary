@@ -1,27 +1,19 @@
 @file:Suppress("UnusedPrivateProperty")
 
-
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.compose.compiler)
+    id("com.superdiary.multiplatform.compose")
+    id("com.superdiary.multiplatform.kotlin")
+    id("com.superdiary.android.library")
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.testLogger)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.paparazzi)
-    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.mokkery)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    applyDefaultHierarchyTemplate()
-    androidTarget()
-
-    jvm()
-    jvmToolchain(17)
-
     listOf(
         iosArm64(),
         iosSimulatorArm64(),
@@ -35,6 +27,7 @@ kotlin {
             export(projects.core.logging)
             export(projects.core.location)
             export(projects.core.authentication)
+            export(projects.designSystem)
         }
     }
 
@@ -42,21 +35,18 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(compose.components.resources)
-                implementation(compose.material3)
                 implementation(compose.foundation)
                 implementation(compose.materialIconsExtended)
                 implementation(projects.sharedData)
                 implementation(projects.commonUtils)
                 implementation(libs.kotlin.datetime)
+                implementation("org.jetbrains.androidx.core:core-uri:1.1.0-alpha03")
                 implementation(libs.koin.core)
                 implementation(libs.touchlab.kermit)
                 implementation(libs.koin.compose)
-                implementation(projects.swipe)
                 implementation(libs.uuid)
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
-                implementation(libs.androidx.datastore.preferences)
-                implementation(libs.androidx.datastore.core)
                 implementation(libs.jetbrains.navigation.compose)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(compose.components.uiToolingPreview)
@@ -66,19 +56,20 @@ kotlin {
                 implementation(libs.coil3.network.ktor)
                 implementation(libs.coil3.multiplatform)
                 implementation(libs.ktor.client.core)
-                dependencies {
-                    implementation("com.valentinilk.shimmer:compose-shimmer:1.3.2")
-                }
+                implementation(libs.jetbrains.lifecycle.viewmodel)
+                implementation(libs.jetbrains.lifecycle.runtime.compose)
+                implementation("com.valentinilk.shimmer:compose-shimmer:1.3.3")
                 implementation(libs.koin.compose.viewmodel)
                 api(projects.core.authentication)
                 api(projects.core.analytics)
                 api(projects.core.location)
                 api(projects.core.logging)
                 api(projects.designSystem)
-                implementation(projects.feature.diaryAi)
+                implementation(projects.core.diaryAi)
                 implementation(projects.feature.diaryProfile)
                 implementation(projects.feature.diaryAuth)
                 implementation(projects.feature.diaryList)
+                implementation(projects.feature.diaryDashboard)
                 implementation(projects.core.sync)
             }
         }
@@ -144,27 +135,6 @@ kotlin {
 
 android {
     namespace = "com.foreverrafs.superdiary.shared"
-
-    buildFeatures {
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
-
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minimumSdk.get().toInt()
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    sourceSets["main"].res.srcDirs("src/commonMain/resources")
 }
 
 afterEvaluate {
@@ -193,5 +163,5 @@ tasks.named("iosArm64ResolveResourcesFromDependencies") {
     }
 }
 dependencies {
-    testImplementation(project(":shared-data"))
+    testImplementation(projects.sharedData)
 }

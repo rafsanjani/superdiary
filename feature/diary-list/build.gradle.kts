@@ -1,11 +1,10 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
-    alias(libs.plugins.android.library)
+    id("com.superdiary.multiplatform.compose")
+    id("com.superdiary.multiplatform.kotlin")
+    id("com.superdiary.android.library")
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.mokkery)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.paparazzi)
@@ -13,19 +12,6 @@ plugins {
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    androidTarget()
-
-    jvm()
-
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach {
-        it.binaries.forEach { binary ->
-            binary.linkerOpts += "-lsqlite3"
-        }
-    }
-
     sourceSets {
         androidUnitTest.dependencies {
             implementation(libs.google.testparameterinjector)
@@ -38,7 +24,6 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(projects.core.logging)
             implementation(libs.jetbrains.navigation.compose)
@@ -51,12 +36,12 @@ kotlin {
             implementation(projects.commonUtils)
             implementation(libs.richTextEditor)
             implementation(projects.core.location)
-            implementation(projects.swipe)
             implementation(projects.sharedData)
+            implementation(projects.core.sync)
             implementation(projects.core.database)
-            implementation("org.mobilenativefoundation.store:store5:5.1.0-alpha06")
-            implementation("org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
+            implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(projects.designSystem)
+            implementation(libs.kotlinx.serialization.json)
         }
 
         commonTest.dependencies {
@@ -74,14 +59,4 @@ kotlin {
 
 android {
     namespace = "com.foreverrafs.superdiary.diarylist"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minimumSdk.get().toInt()
-    }
-
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_17
-        sourceCompatibility = JavaVersion.VERSION_17
-    }
 }

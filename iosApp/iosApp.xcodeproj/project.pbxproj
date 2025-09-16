@@ -21,6 +21,7 @@
 		58E13CEC2CDAEBB5007F1210 /* GoogleMapsUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 58E13CEB2CDAEBB5007F1210 /* GoogleMapsUtils */; };
 		58E13CEE2CDAEC04007F1210 /* GoogleMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E13CED2CDAEC04007F1210 /* GoogleMap.swift */; };
 		58E13CF02CDB7DD1007F1210 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E13CEF2CDB7DD1007F1210 /* LocationManager.swift */; };
+		58F4F6CC2E3DAEAA000A4D82 /* SwiftNativeViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F4F6CB2E3DAEAA000A4D82 /* SwiftNativeViewFactory.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 		C98CCA9FD0F556E704236CA0 /* SentryLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98CC057FF70F7A94560708E /* SentryLogger.swift */; };
 		C98CCF64845DD8BB67A3E6A3 /* AppleAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98CCA5351B0C568D0A6027B /* AppleAnalytics.swift */; };
@@ -51,6 +52,7 @@
 		58DACF1F2C9E2ECE00664937 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		58E13CED2CDAEC04007F1210 /* GoogleMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMap.swift; sourceTree = "<group>"; };
 		58E13CEF2CDB7DD1007F1210 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		58F4F6CB2E3DAEAA000A4D82 /* SwiftNativeViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftNativeViewFactory.swift; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* superdiary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = superdiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 				58E13CEF2CDB7DD1007F1210 /* LocationManager.swift */,
 				587B21332CDC0B160081E14F /* auth */,
 				58033CFB2D437DB700A97874 /* BiometricAuth.swift */,
+				58F4F6CB2E3DAEAA000A4D82 /* SwiftNativeViewFactory.swift */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -300,6 +303,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58F4F6CC2E3DAEAA000A4D82 /* SwiftNativeViewFactory.swift in Sources */,
 				58A8DBF22CA21EC60084B125 /* Environment.swift in Sources */,
 				58E13CEE2CDAEC04007F1210 /* GoogleMap.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
@@ -461,7 +465,7 @@
 					"-framework",
 					shared,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.foreverrafs.superdiary;
+				PRODUCT_BUNDLE_IDENTIFIER = com.foreverrafs.diary;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -495,7 +499,7 @@
 					"-framework",
 					shared,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.foreverrafs.superdiary;
+				PRODUCT_BUNDLE_IDENTIFIER = com.foreverrafs.diary;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

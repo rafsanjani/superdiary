@@ -12,16 +12,19 @@ import com.foreverrafs.superdiary.common.coroutines.awaitUntil
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.datetime.Clock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LoginScreenViewModelTest {
     private lateinit var loginViewModel: LoginScreenViewModel
+
+    @OptIn(ExperimentalTime::class)
     private val authApi: FakeAuthApi = FakeAuthApi()
 
     @BeforeTest
@@ -70,7 +73,7 @@ class LoginScreenViewModelTest {
 
     @Test
     fun `Should emit LoginViewState Error when signInWithGoogle fails`() = runTest {
-        authApi.signInResult = AuthApi.SignInStatus.Error(Exception("Error logging in"))
+        authApi.signInResult = AuthApi.SessionStatus.Unauthenticated(Exception("Error logging in"))
 
         loginViewModel.viewState.test {
             loginViewModel.onLoginWithGoogle()
@@ -82,7 +85,7 @@ class LoginScreenViewModelTest {
 
     @Test
     fun `Should emit LoginViewState Error when email login fails`() = runTest {
-        authApi.signInResult = AuthApi.SignInStatus.Error(Exception("Error logging in"))
+        authApi.signInResult = AuthApi.SessionStatus.Unauthenticated(Exception("Error logging in"))
 
         loginViewModel.viewState.test {
             loginViewModel.onLoginWithEmail("email", "pass")
@@ -92,9 +95,10 @@ class LoginScreenViewModelTest {
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     @Test
     fun `Should emit LoginViewState Success when signInWithGoogle succeeds`() = runTest {
-        authApi.signInResult = AuthApi.SignInStatus.LoggedIn(
+        authApi.signInResult = AuthApi.SessionStatus.Authenticated(
             SessionInfo(
                 expiresAt = Clock.System.now(),
                 accessToken = "",

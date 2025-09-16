@@ -11,14 +11,22 @@ jobs:
         name: Run Danger (Ktlint, android lint)
         runs-on: macos-14
         steps:
-            -   uses: actions/checkout@v4
-                with:
-                    lfs: true
+            -   uses: actions/checkout@v5
+            -   name: Create LFS file list
+                run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
 
-            -   uses: actions/setup-java@v4
+            -   name: Restore LFS cache
+                uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+                with:
+                    path: .git/lfs
+                    key: ${{runner.os}}-lfs-${{hashFiles('.lfs-assets-id')}}
+            -   name: Git LFS Pull
+                run: GIT_TRACE=1 git lfs pull
+
+            -   uses: actions/setup-java@v5
                 with:
                     distribution: 'zulu'
-                    java-version: '17'
+                    java-version: '21'
 
             -   name: Setup Gradle
                 uses: gradle/actions/setup-gradle@v4
@@ -31,6 +39,24 @@ jobs:
                 env:
                     DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    dependency_guard:
+        name: Check unintended dependency updates
+        needs: danger
+        env:
+            SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
+            SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v5
+            -   name: Set up JDK
+                uses: actions/setup-java@v5
+                with:
+                    java-version: '21'
+                    distribution: 'zulu'
+
+            -   name: Run Dependency Guard
+                run: ./gradlew dependencyGuard
+
     snapshot:
         name: Snapshot test with paparazzi
         env:
@@ -38,32 +64,29 @@ jobs:
         runs-on: macos-14
         needs: danger
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v5
+            -   name: Restore LFS cache
+                uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
                 with:
-                    lfs: true
+                    path: .git/lfs
+                    key: ${{runner.os}}-lfs-${{hashFiles('.lfs-assets-id')}}
+            -   name: Git LFS Pull
+                run: GIT_TRACE=1 git lfs pull
 
-            -   uses: actions/setup-java@v4
+            -   uses: actions/setup-java@v5
                 with:
                     distribution: 'zulu'
-                    java-version: '17'
+                    java-version: '21'
 
             -   name: Setup Gradle
                 uses: gradle/actions/setup-gradle@v4
 
             -   name: Snapshot test (shared-ui)
-                run: ./gradlew verifyPaparazzi --continue
+                run: ./gradlew verifyPaparazziDebug --continue
 
-            -   name: Commit and Push Images to GitHub Pages
+            -   name: Create paparazzi report
                 if: failure()
-                run: ./commit-images.sh
-
-            -   name: Generate snapshot difference markdown
-                if: failure()
-                run: ./gradlew createPaparazziReportComment
-
-            -   name: Print out contents of snapshots.md
-                if: failure()
-                run: cat snapshots.md
+                run: ./create_paparazzi_report.sh
 
             -   name: Comment snapshot difference markdown file on PR
                 uses: thollander/actions-comment-pull-request@v3
@@ -72,6 +95,7 @@ jobs:
                     file-path: snapshots.md
                     github-token: ${{secrets.GITHUB_TOKEN}}
                     comment-tag: snapshots
+                    mode: recreate
 
     iosTest:
         name: Run iOS unit tests
@@ -81,14 +105,19 @@ jobs:
         runs-on: macos-latest
         needs: danger
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v5
+            -   name: Restore LFS cache
+                uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
                 with:
-                    lfs: true
+                    path: .git/lfs
+                    key: ${{runner.os}}-lfs-${{hashFiles('.lfs-assets-id')}}
+            -   name: Git LFS Pull
+                run: GIT_TRACE=1 git lfs pull
 
-            -   uses: actions/setup-java@v4
+            -   uses: actions/setup-java@v5
                 with:
                     distribution: 'zulu'
-                    java-version: '17'
+                    java-version: '21'
 
             -   name: Setup Gradle
                 uses: gradle/actions/setup-gradle@v4
@@ -104,11 +133,11 @@ jobs:
             SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v5
             -   name: Set up JDK
-                uses: actions/setup-java@v4
+                uses: actions/setup-java@v5
                 with:
-                    java-version: '17'
+                    java-version: '21'
                     distribution: 'zulu'
 
             -   name: Run JVM unit tests
@@ -116,7 +145,7 @@ jobs:
 
             -   name: Add coverage Report to PR
                 id: jacoco
-                uses: madrapps/jacoco-report@v1.7.1
+                uses: madrapps/jacoco-report@v1.7.2
                 with:
                     paths: |
                         ${{ github.workspace }}/build/reports/kover/report.xml
@@ -134,7 +163,7 @@ jobs:
 
             -   name: Post changed files coverage violation
                 if: ${{ steps.jacoco.outputs.coverage-changed-files  < 80.0 }}
-                uses: actions/github-script@v7
+                uses: actions/github-script@v8
                 with:
                     script: |
                         core.setFailed('Coverage for changed files ${{steps.jacoco.outputs.coverage-changed-files}} is less than 80%!')
@@ -144,7 +173,7 @@ jobs:
 
             -   name: Post overall coverage violation
                 if: ${{ steps.jacoco.outputs.coverage-overall  < 90.0 }}
-                uses: actions/github-script@v7
+                uses: actions/github-script@v8
                 with:
                     script: |
                         core.setFailed('Coverage for total project: ${{steps.jacoco.outputs.coverage-overall}} is less than 90%!')
@@ -181,16 +210,22 @@ jobs:
             SUPABASE_KEY: ${{secrets.SUPABASE_KEY}}
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v5
+            -   name: Restore LFS cache
+                uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
                 with:
-                    lfs: true
-            -   uses: actions/setup-java@v4
+                    path: .git/lfs
+                    key: ${{runner.os}}-lfs-${{hashFiles('.lfs-assets-id')}}
+            -   name: Git LFS Pull
+                run: GIT_TRACE=1 git lfs pull
+
+            -   uses: actions/setup-java@v5
                 with:
                     distribution: 'zulu'
-                    java-version: '17'
+                    java-version: '21'
 
             -   name: Setup secrets.properties and Configurations/Release.xcconfig
-                run: ./environments.sh
+                run: ./scripts/environments.sh
 
             -   name: Decode keystore file from secrets
                 run: echo "$STORE_FILE_BASE64" | base64 --decode > keystore
@@ -207,7 +242,7 @@ jobs:
                 uses: gradle/actions/setup-gradle@v4
 
             -   name: Build Android App (Release)
-                run: ./gradlew androidApp:app:assembleRelease
+                run: ./gradlew androidApp:app:assembleStandardRelease
 
             -   name: Get latest artifact ID
                 run: |
@@ -224,7 +259,7 @@ jobs:
                 run: |
                     gh release download -p '*.zip' -R jakewharton/diffuse 0.3.0
                     unzip diffuse-0.3.0.zip
-                    ./diffuse-0.3.0/bin/diffuse diff app-release.apk androidApp/app/build/outputs/apk/release/app-release.apk > apk_differences.txt
+                    ./diffuse-0.3.0/bin/diffuse diff app-standard-release.apk androidApp/app/build/outputs/apk/standard/release/app-standard-release.apk > apk_differences.txt
                     { echo "\`\`\`"; head -n 17 apk_differences.txt; echo "\`\`\`"; echo; } >> apk_differences_summary.txt
 
             -   name: Post APK diff to Pull Request
@@ -246,7 +281,7 @@ jobs:
 #            -   uses: actions/setup-java@v4
 #                with:
 #                    distribution: 'zulu'
-#                    java-version: '17'
+#                    java-version: '21'
 #
 #            -   name: Setup secrets.properties and Configurations/Release.xcconfig
 #                run: ./environments.sh

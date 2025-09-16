@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -26,6 +27,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -35,20 +37,30 @@ import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.foreverrafs.auth.AuthException
+import com.foreverrafs.auth.GenericAuthException
+import com.foreverrafs.auth.InvalidCredentialsException
 import com.foreverrafs.auth.NoCredentialsException
+import com.foreverrafs.auth.UserAlreadyRegisteredException
 import com.foreverrafs.auth.model.UserInfo
-import com.foreverrafs.superdiary.design.components.SuperDiaryButton
+import com.foreverrafs.superdiary.design.components.PasswordInputField
+import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.components.SuperDiaryInputField
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import superdiary.feature.diary_auth.generated.resources.Res
+import superdiary.feature.diary_auth.generated.resources.error_generic_error
+import superdiary.feature.diary_auth.generated.resources.error_invalid_credentials
+import superdiary.feature.diary_auth.generated.resources.error_no_credentials
+import superdiary.feature.diary_auth.generated.resources.error_user_already_registered
 import superdiary.feature.diary_auth.generated.resources.google_icon
 import superdiary.feature.diary_auth.generated.resources.label_google_button
 import superdiary.feature.diary_auth.generated.resources.label_login
@@ -64,7 +76,7 @@ fun LoginScreenContent(
     viewState: LoginViewState,
     onSignInSuccess: (UserInfo) -> Unit,
     isFromDeeplink: Boolean,
-    onLoginClick: (username: String, password: String) -> Unit,
+    onLoginClick: (username: CharSequence, password: CharSequence) -> Unit,
     onLoginWithGoogle: () -> Unit,
     onRegisterClick: () -> Unit,
     onResetPasswordClick: () -> Unit,
@@ -76,23 +88,24 @@ fun LoginScreenContent(
         mutableStateOf(true)
     }
 
-    LaunchedEffect(viewState) {
-        when (viewState) {
-            is LoginViewState.Error -> {
-                if (viewState.error is NoCredentialsException) {
-                    snackbarHostState.showSnackbar(
-                        viewState.error.message.orEmpty(),
-                    )
-                }
+    val scope = rememberCoroutineScope()
 
-                enableLoginButton = true
+    when (viewState) {
+        is LoginViewState.Error -> {
+            val message = viewState.error.toStringResource()?.let { stringResource(it) }
+
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    message = message.orEmpty(),
+                )
             }
-
-            is LoginViewState.Idle -> enableLoginButton = true
-            is LoginViewState.Processing -> enableLoginButton = false
-
-            is LoginViewState.Success -> currentOnSignInSuccess(viewState.userInfo)
+            enableLoginButton = true
         }
+
+        is LoginViewState.Idle -> enableLoginButton = true
+        is LoginViewState.Processing -> enableLoginButton = false
+
+        is LoginViewState.Success -> currentOnSignInSuccess(viewState.userInfo)
     }
 
     LaunchedEffect(isFromDeeplink) {
@@ -115,8 +128,8 @@ fun LoginScreenContent(
                     .padding(horizontal = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                var username by remember { mutableStateOf("") }
-                var password by remember { mutableStateOf("") }
+                val username = rememberTextFieldState("")
+                val password = rememberTextFieldState("")
 
                 Spacer(modifier = Modifier.height(40.dp))
 
@@ -140,28 +153,21 @@ fun LoginScreenContent(
                         .fillMaxWidth()
                         .testTag("input_username"),
                     label = stringResource(Res.string.label_username),
-                    value = username,
-                    onValueChange = {
-                        username = it
-                    },
                     placeholder = "john.doe@gmail.com",
+                    state = username,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                SuperDiaryInputField(
+                PasswordInputField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("input_password"),
                     label = stringResource(Res.string.label_password),
-                    value = password,
-                    onValueChange = {
-                        password = it
-                    },
+                    state = password,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
                     ),
-                    visualTransformation = PasswordVisualTransformation(),
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -173,12 +179,12 @@ fun LoginScreenContent(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                SuperDiaryButton(
+                PrimaryButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("button_login"),
                     onClick = {
-                        onLoginClick(username, password)
+                        onLoginClick(username.text, password.text)
                     },
                     enabled = enableLoginButton,
                     text = stringResource(Res.string.label_login),
@@ -317,6 +323,14 @@ private fun LoginDivider(modifier: Modifier = Modifier) {
     }
 }
 
+private fun AuthException.toStringResource(): StringResource? = when (this.cause) {
+    is GenericAuthException -> Res.string.error_generic_error
+    is InvalidCredentialsException -> Res.string.error_invalid_credentials
+    is NoCredentialsException -> Res.string.error_no_credentials
+    is UserAlreadyRegisteredException -> Res.string.error_user_already_registered
+    else -> null
+}
+
 @Composable
 @Preview
 private fun LoginPreview() {
@@ -326,6 +340,24 @@ private fun LoginPreview() {
             onLoginClick = { _, _ -> },
             onRegisterClick = {},
             viewState = LoginViewState.Idle,
+            onSignInSuccess = {},
+            isFromDeeplink = false,
+            onResetPasswordClick = {},
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun LoginPreviewError() {
+    SuperDiaryTheme {
+        LoginScreenContent(
+            onLoginWithGoogle = {},
+            onLoginClick = { _, _ -> },
+            onRegisterClick = {},
+            viewState = LoginViewState.Error(
+                InvalidCredentialsException("Error Logging in"),
+            ),
             onSignInSuccess = {},
             isFromDeeplink = false,
             onResetPasswordClick = {},

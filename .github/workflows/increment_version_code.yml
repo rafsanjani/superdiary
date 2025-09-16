@@ -25,13 +25,7 @@ jobs:
       FIREBASE_DISTRIBUTION_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_DISTRIBUTION_SERVICE_ACCOUNT }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'adopt'
-          java-version: '17'
+        uses: actions/checkout@v5
 
       - name: Bump Version Code
         run: |

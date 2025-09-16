@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
-import kotlinx.datetime.Instant
 
 @Deprecated("Use DiaryApi instead")
 class RemoteDataSource(
@@ -26,7 +25,7 @@ class RemoteDataSource(
 
     private var dataCache: List<DiaryDto>? = null
 
-    override suspend fun add(diary: Diary): Long {
+    override suspend fun save(diary: Diary): Long {
         val dto = diary.toDto()
 
         return try {
@@ -78,7 +77,7 @@ class RemoteDataSource(
             it.map { dto -> dto.toDiary() }
         }
 
-    override fun fetchFavorites(): Flow<List<Diary>> {
+    override fun fetch(): Flow<List<Diary>> {
         TODO("Not yet implemented")
     }
 
@@ -86,13 +85,13 @@ class RemoteDataSource(
         TODO("Not yet implemented")
     }
 
-    override fun find(from: Instant, to: Instant): Flow<List<Diary>> {
+    override fun find(from: kotlin.time.Instant, to: kotlin.time.Instant): Flow<List<Diary>> {
         TODO("Not yet implemented")
     }
 
     override fun find(id: Long): Diary? = dataCache?.firstOrNull { it.id == id }?.toDiary()
 
-    override fun findByDate(date: Instant): Flow<List<Diary>> {
+    override fun findByDate(date: kotlin.time.Instant): Flow<List<Diary>> {
         TODO("Not yet implemented")
     }
 
@@ -100,19 +99,19 @@ class RemoteDataSource(
         TODO("Not yet implemented")
     }
 
-    override fun getLatestEntries(count: Int): Flow<List<Diary>> {
+    override fun getLatest(count: Int): Flow<List<Diary>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun countEntries(): Long {
+    override suspend fun count(): Long {
         TODO("Not yet implemented")
     }
 
-    override suspend fun insertWeeklySummary(summary: WeeklySummary) {
+    override suspend fun save(summary: WeeklySummary) {
         TODO("Not yet implemented")
     }
 
-    override fun getWeeklySummary(): WeeklySummary? {
+    override fun getOne(): WeeklySummary? {
         TODO("Not yet implemented")
     }
 
@@ -120,7 +119,7 @@ class RemoteDataSource(
         TODO("Not yet implemented")
     }
 
-    override suspend fun addAll(diaries: List<Diary>): Long {
+    override suspend fun save(diaries: List<Diary>): Long {
         TODO("Not yet implemented")
     }
     companion object {

@@ -1,11 +1,10 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
-    alias(libs.plugins.android.library)
+    id("com.superdiary.multiplatform.compose")
+    id("com.superdiary.multiplatform.kotlin")
+    id("com.superdiary.android.library")
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.mokkery)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.paparazzi)
@@ -13,12 +12,6 @@ plugins {
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    androidTarget()
-
-    jvm()
-    iosArm64()
-    iosSimulatorArm64()
-
     sourceSets {
         androidUnitTest.dependencies {
             implementation(libs.google.testparameterinjector)
@@ -29,12 +22,12 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
             implementation(compose.foundation)
-            implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.materialIconsExtended)
             implementation(projects.core.logging)
-            implementation("org.jetbrains.androidx.core:core-uri:1.1.0-alpha02")
+//            implementation(libs.androidx.core.uri)
+            implementation("org.jetbrains.androidx.core:core-uri:1.0.0-alpha01")
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
@@ -42,7 +35,7 @@ kotlin {
             implementation(projects.core.authentication)
             implementation(projects.commonUtils)
             implementation(projects.sharedData)
-            implementation("org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
+            implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(projects.designSystem)
         }
 
@@ -60,14 +53,4 @@ kotlin {
 
 android {
     namespace = "com.foreverrafs.superdiary.auth"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minimumSdk.get().toInt()
-    }
-
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_17
-        sourceCompatibility = JavaVersion.VERSION_17
-    }
 }

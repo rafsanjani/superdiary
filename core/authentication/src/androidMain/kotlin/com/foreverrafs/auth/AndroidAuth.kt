@@ -9,7 +9,7 @@ import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.NoCredentialException
 import com.foreverrafs.superdiary.core.SuperDiarySecret
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import io.github.jan.supabase.SupabaseClient
@@ -18,10 +18,12 @@ class AndroidAuth(
     private val supabaseClient: SupabaseClient,
     private val logger: AggregateLogger,
     private val contextProvider: AndroidContextProvider,
-) : AuthApi by DefaultSupabaseAuth(supabaseClient, logger) {
-
+) : AuthApi by DefaultSupabaseAuth(
+    client = supabaseClient,
+    logger = logger,
+) {
     /** Use the credentials manager to sign in with Google on Android */
-    override suspend fun signInWithGoogle(): AuthApi.SignInStatus {
+    override suspend fun signInWithGoogle(): AuthApi.SessionStatus {
         logger.d(TAG) { "Starting Google sign-in process with CredentialManager" }
         // This must be an activity context
         val hostActivityContext = contextProvider.getContext()
@@ -37,11 +39,9 @@ class AndroidAuth(
         val request: GetCredentialRequest = GetCredentialRequest
             .Builder()
             .addCredentialOption(
-                GetGoogleIdOption
-                    .Builder()
-                    .setFilterByAuthorizedAccounts(false)
-                    .setServerClientId(SuperDiarySecret.googleServerClientId)
-                    .build(),
+                GetSignInWithGoogleOption.Builder(
+                    serverClientId = SuperDiarySecret.googleServerClientId,
+                ).build(),
             )
             .build()
 
@@ -56,15 +56,15 @@ class AndroidAuth(
         } catch (e: GetCredentialException) {
             return if (e is NoCredentialException) {
                 logger.e(TAG) { "No Google credentials available for sign-in." }
-                AuthApi.SignInStatus.Error(
+                AuthApi.SessionStatus.Unauthenticated(
                     NoCredentialsException("No Google credentials available!"),
                 )
             } else {
-                return AuthApi.SignInStatus.Error(e)
+                return AuthApi.SessionStatus.Unauthenticated(e)
             }
         } catch (e: GoogleIdTokenParsingException) {
             logger.e(TAG) { "Error parsing Google ID token: ${e.message}" }
-            return AuthApi.SignInStatus.Error(e)
+            return AuthApi.SessionStatus.Unauthenticated(e)
         }
 
         return if (googleIdToken != null) {
@@ -72,7 +72,7 @@ class AndroidAuth(
             signInWithGoogle(googleIdToken)
         } else {
             logger.e(TAG) { "Google ID token retrieval failed. No token available for sign-in." }
-            AuthApi.SignInStatus.Error(Exception("Error logging in with Google"))
+            AuthApi.SessionStatus.Unauthenticated(Exception("Error logging in with Google"))
         }
     }
 

@@ -1,5 +1,8 @@
 package com.foreverrafs.superdiary.design.style
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,6 +14,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SuperDiaryPreviewTheme(
     modifier: Modifier = Modifier,
@@ -27,8 +31,16 @@ fun SuperDiaryPreviewTheme(
                     .padding(it),
                 color = MaterialTheme.colorScheme.background,
             ) {
-                CompositionLocalProvider(LocalInspectionMode provides true) {
-                    content()
+                SharedTransitionLayout {
+                    AnimatedContent(targetState = Unit) {
+                        CompositionLocalProvider(
+                            LocalInspectionMode provides true,
+                            LocalSharedTransitionScope provides this@SharedTransitionLayout,
+                            LocalAnimatedContentScope provides this,
+                        ) {
+                            content()
+                        }
+                    }
                 }
             }
         }

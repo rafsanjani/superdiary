@@ -8,6 +8,7 @@ import assertk.assertions.isNull
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.preferences.DiaryPreference
+import com.foreverrafs.superdiary.profile.domain.usecase.SignOutUseCase
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewModel
 import com.foreverrafs.superdiary.utils.DiarySettings
 import dev.mokkery.answering.returns
@@ -31,6 +32,11 @@ class ProfileScreenViewModelTest {
 
     private val authApi: AuthApi = mock()
     private val preference: DiaryPreference = mock()
+    private val signOutUseCase: SignOutUseCase = SignOutUseCase(
+        authApi = mock(),
+        dataSource = mock(),
+        preferences = mock(),
+    )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @BeforeTest
@@ -41,6 +47,7 @@ class ProfileScreenViewModelTest {
         profileScreenViewModel = ProfileScreenViewModel(
             authApi = authApi,
             preference = preference,
+            signOutUseCase = signOutUseCase,
         )
     }
 
