@@ -162,6 +162,7 @@ tasks.named("iosArm64ResolveResourcesFromDependencies") {
         }
     }
 }
+
 dependencies {
     testImplementation(projects.sharedData)
 }
