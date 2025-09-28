@@ -21,7 +21,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2025.09.21")
+            from("io.github.rafsanjani:versions:2025.09.28")
             version("compose-multiplatform", "1.9.0-rc02")
             version("mokkery", "2.10.0")
             version("paparazzi", "2.0.0-alpha02")
