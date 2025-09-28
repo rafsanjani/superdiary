@@ -9,7 +9,7 @@ concurrency:
 jobs:
     danger:
         name: Run Danger (Ktlint, android lint)
-        runs-on: macos-14
+        runs-on: macos-15
         steps:
             -   uses: actions/checkout@v5
             -   name: Create LFS file list
@@ -61,7 +61,7 @@ jobs:
         name: Snapshot test with paparazzi
         env:
             BUILD_NUMBER: ${{github.event.number}}
-        runs-on: macos-14
+        runs-on: macos-15
         needs: danger
         steps:
             -   uses: actions/checkout@v5
@@ -194,7 +194,7 @@ jobs:
 
     androidRelease:
         name: Build android app (release)
-        runs-on: macos-14
+        runs-on: macos-15
         needs: jvmTest
         env:
             SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
