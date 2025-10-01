@@ -49,7 +49,7 @@ jobs:
                     cat gradle.properties
 
             -   name: Setup Gradle
-                uses: gradle/actions/setup-gradle@v4
+                uses: gradle/actions/setup-gradle@v5
 
             -   name: Build Android App (Release)
                 run: ./gradlew androidApp:app:assembleStandardRelease
