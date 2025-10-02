@@ -22,7 +22,7 @@ android {
         applicationId = "com.foreverrafs.superdiary"
         minSdk = libs.versions.minimumSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 248
+        versionCode = 249
         versionName = "0.0.1"
 
         val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_ANDROID") ?: ""
