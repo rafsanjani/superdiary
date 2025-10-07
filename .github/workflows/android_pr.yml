@@ -29,7 +29,7 @@ jobs:
                     java-version: '21'
 
             -   name: Setup Gradle
-                uses: gradle/actions/setup-gradle@v4
+                uses: gradle/actions/setup-gradle@v5
 
             -   name: Danger Checks
                 run: |
@@ -79,7 +79,7 @@ jobs:
                     java-version: '21'
 
             -   name: Setup Gradle
-                uses: gradle/actions/setup-gradle@v4
+                uses: gradle/actions/setup-gradle@v5
 
             -   name: Snapshot test (shared-ui)
                 run: ./gradlew verifyPaparazziDebug --continue
@@ -120,7 +120,7 @@ jobs:
                     java-version: '21'
 
             -   name: Setup Gradle
-                uses: gradle/actions/setup-gradle@v4
+                uses: gradle/actions/setup-gradle@v5
 
             -   name: Unit tests iOS
                 run: ./gradlew iosSimulatorArm64Test
@@ -239,7 +239,7 @@ jobs:
                     cat gradle.properties
 
             -   name: Setup Gradle
-                uses: gradle/actions/setup-gradle@v4
+                uses: gradle/actions/setup-gradle@v5
 
             -   name: Build Android App (Release)
                 run: ./gradlew androidApp:app:assembleStandardRelease

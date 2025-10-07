@@ -22,10 +22,6 @@ class AndroidComposeLibraryConventionPlugin : Plugin<Project> {
                 }
             }
 
-            buildFeatures {
-                compose = true
-            }
-
             configureKotlin()
         }
     }
