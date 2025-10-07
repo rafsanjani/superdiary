@@ -122,6 +122,22 @@ jobs:
             -   name: Setup Gradle
                 uses: gradle/actions/setup-gradle@v5
 
+            -   name: Setup Gradle
+                uses: gradle/actions/setup-gradle@v5
+                with:
+                    validate-wrappers: true
+                    add-job-summary-as-pr-comment: 'on-failure'
+
+            -   name: Cache Gradle packages
+                uses: actions/cache@v5
+                with:
+                    path: |
+                        ~/.gradle/caches
+                        ~/.gradle/wrapper
+                    key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+                    restore-keys: |
+                        ${{ runner.os }}-gradle-
+
             -   name: Unit tests iOS
                 run: ./gradlew iosSimulatorArm64Test
 
@@ -139,6 +155,22 @@ jobs:
                 with:
                     java-version: '21'
                     distribution: 'zulu'
+
+            -   name: Setup Gradle
+                uses: gradle/actions/setup-gradle@v5
+                with:
+                    validate-wrappers: true
+                    add-job-summary-as-pr-comment: 'on-failure'
+
+            -   name: Cache Gradle packages
+                uses: actions/cache@v5
+                with:
+                    path: |
+                        ~/.gradle/caches
+                        ~/.gradle/wrapper
+                    key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+                    restore-keys: |
+                        ${{ runner.os }}-gradle-
 
             -   name: Run JVM unit tests
                 run: ./gradlew testDebugUnitTest -Pkover koverXmlReport
@@ -167,9 +199,6 @@ jobs:
                 with:
                     script: |
                         core.setFailed('Coverage for changed files ${{steps.jacoco.outputs.coverage-changed-files}} is less than 80%!')
-
-            #  -   name: Verify minimum code coverage (90%)
-            #      run: ./gradlew testDebugUnitTest -Pkover koverVerify
 
             -   name: Post overall coverage violation
                 if: ${{ steps.jacoco.outputs.coverage-overall  < 90.0 }}
