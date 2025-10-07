@@ -19,12 +19,6 @@ kotlin {
         implementation(projects.sharedUi)
         implementation(projects.sharedData)
     }
-
-    compilerOptions {
-        freeCompilerArgs.addAll(
-            "-Xskip-prerelease-check",
-        )
-    }
 }
 
 composeCompiler {

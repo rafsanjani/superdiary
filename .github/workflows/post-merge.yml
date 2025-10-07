@@ -23,7 +23,7 @@ jobs:
             SUPABASE_KEY: ${{secrets.SUPABASE_KEY}}
 
         name: Save Release APK artifact
-        runs-on: macos-14
+        runs-on: macos-15
         steps:
             -   uses: actions/checkout@v5
                 with:
@@ -49,7 +49,7 @@ jobs:
                     cat gradle.properties
 
             -   name: Setup Gradle
-                uses: gradle/actions/setup-gradle@v4
+                uses: gradle/actions/setup-gradle@v5
 
             -   name: Build Android App (Release)
                 run: ./gradlew androidApp:app:assembleStandardRelease
