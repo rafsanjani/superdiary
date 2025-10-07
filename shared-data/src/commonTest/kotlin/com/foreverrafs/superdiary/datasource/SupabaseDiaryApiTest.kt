@@ -52,10 +52,6 @@ class SupabaseDiaryApiTest {
             entry = "Hello world",
         )
 
-        val count = Logger.config.logWriterList
-
-        println(count)
-
         supabaseDiaryApi = SupabaseDiaryApi(
             supabase = createMockedSupabaseClient(
                 requestHandler = {

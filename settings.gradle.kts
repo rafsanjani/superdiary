@@ -22,8 +22,8 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
             from("io.github.rafsanjani:versions:2025.09.28")
-            version("compose-multiplatform", "1.9.0-rc02")
-            version("mokkery", "2.10.0")
+            // Because 3.2.4 is making internal calls to android.util.Log which dey borst my mind
+            version("supabase","3.2.3")
             version("paparazzi", "2.0.0-alpha02")
         }
     }
