@@ -129,7 +129,7 @@ jobs:
                     add-job-summary-as-pr-comment: 'on-failure'
 
             -   name: Cache Gradle packages
-                uses: actions/cache@v5
+                uses: actions/cache@v4
                 with:
                     path: |
                         ~/.gradle/caches
@@ -163,7 +163,7 @@ jobs:
                     add-job-summary-as-pr-comment: 'on-failure'
 
             -   name: Cache Gradle packages
-                uses: actions/cache@v5
+                uses: actions/cache@v4
                 with:
                     path: |
                         ~/.gradle/caches
