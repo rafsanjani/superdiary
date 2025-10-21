@@ -19,7 +19,7 @@ kotlin {
                 implementation(libs.touchlab.stately)
                 implementation(compose.components.uiToolingPreview)
                 api(libs.jetbrains.compose.ui.backhandler)
-                api("org.jetbrains.compose.material3:material3:1.9.0-alpha04")
+                api("org.jetbrains.compose.material3:material3:1.9.0")
                 implementation(libs.coil3.compose)
                 implementation(libs.coil3.compose.core)
                 implementation(libs.jetbrains.navigation.compose)
