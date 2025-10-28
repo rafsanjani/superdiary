@@ -28,7 +28,7 @@ kotlin {
             implementation(projects.core.logging)
             implementation(libs.androidx.core.uri)
             implementation("androidx.navigationevent:navigationevent:1.0.0-beta01")
-            implementation("org.jetbrains.androidx.navigationevent:navigationevent-compose:1.0.0-alpha02")
+            implementation("org.jetbrains.androidx.navigationevent:navigationevent-compose:1.0.0-SNAPSHOT+update-templates-demos")
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
