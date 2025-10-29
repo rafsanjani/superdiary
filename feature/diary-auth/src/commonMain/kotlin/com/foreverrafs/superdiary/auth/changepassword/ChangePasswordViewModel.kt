@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.changepassword
+package com.foreverrafs.superdiary.auth.changepassword
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

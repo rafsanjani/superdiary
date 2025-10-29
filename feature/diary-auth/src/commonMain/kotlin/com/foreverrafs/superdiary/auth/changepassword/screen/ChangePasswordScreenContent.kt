@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.changepassword.screen
+package com.foreverrafs.superdiary.auth.changepassword.screen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -33,15 +33,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.foreverrafs.superdiary.auth.changepassword.ChangePasswordViewModel
+import com.foreverrafs.superdiary.auth.changepassword.ChangePasswordViewModel.ChangePasswordScreenAction
+import com.foreverrafs.superdiary.auth.changepassword.PasswordStrength
 import com.foreverrafs.superdiary.design.components.PasswordInputField
 import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
-import com.foreverrafs.superdiary.ui.feature.changepassword.ChangePasswordViewModel
-import com.foreverrafs.superdiary.ui.feature.changepassword.ChangePasswordViewModel.ChangePasswordScreenAction
-import com.foreverrafs.superdiary.ui.feature.changepassword.PasswordStrength
 import org.jetbrains.compose.resources.painterResource
-import superdiary.shared_ui.generated.resources.Res
-import superdiary.shared_ui.generated.resources.logo
+import superdiary.feature.diary_auth.generated.resources.Res
+import superdiary.feature.diary_auth.generated.resources.logo
 
 @Composable
 internal fun ChangePasswordScreenContent(

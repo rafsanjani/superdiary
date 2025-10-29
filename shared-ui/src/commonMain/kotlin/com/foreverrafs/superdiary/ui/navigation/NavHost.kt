@@ -34,18 +34,14 @@ import coil3.disk.DiskCache
 import coil3.memory.MemoryCache
 import coil3.request.CachePolicy
 import coil3.request.crossfade
-import com.foreverrafs.superdiary.auth.login.screen.BiometricAuthScreen
-import com.foreverrafs.superdiary.auth.login.screen.LoginScreen
+import com.foreverrafs.superdiary.auth.navigation.AuthNavigation
 import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
-import com.foreverrafs.superdiary.auth.register.screen.RegisterScreen
-import com.foreverrafs.superdiary.auth.register.screen.RegistrationConfirmationScreen
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.list.navigation.DiaryListNavigation
 import com.foreverrafs.superdiary.list.navigation.DiaryListRoute
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.AppSessionState
-import com.foreverrafs.superdiary.ui.feature.changepassword.navigation.ChangePasswordNavigation
 import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -110,7 +106,9 @@ internal fun SuperDiaryNavHost(
                             onLogoutComplete = {
                                 backStack.clear()
                                 backStack.add(
-                                    AppRoute.LoginScreen(isFromDeeplink = false),
+                                    AppRoute.AuthenticationNavHost(
+                                        showLoginScreen = true,
+                                    ),
                                 )
                             },
                             onNavigateBack = { backStack.removeAt(backStack.lastIndex) },
@@ -133,27 +131,18 @@ internal fun SuperDiaryNavHost(
                         )
                     }
 
-                    entry<AppRoute.BiometricAuthScreen> {
-                        BiometricAuthScreen(
-                            onBiometricAuthSuccess = {
-                                backStack.add(
-                                    AppRoute.BottomNavigationNavHost(userInfo = null),
-                                )
-
-                                backStack.remove(AppRoute.BiometricAuthScreen)
+                    entry<AppRoute.AuthenticationNavHost> { key ->
+                        AuthNavigation(
+                            onPasswordChangeComplete = {
+                                backStack.clear()
+                                backStack.add(AppRoute.BottomNavigationNavHost(null))
                             },
-                        )
-                    }
-
-                    entry<AppRoute.LoginScreen> { key ->
-                        LoginScreen(
-                            onRegisterClick = {
-                                backStack.add(AppRoute.RegisterScreen)
-                            },
-                            onResetPasswordClick = {
-                                backStack.add(AppRoute.ChangePasswordNavHost())
-                            },
-                            onLoginSuccess = {
+                            onBackPress = { backStack.removeAt(backStack.lastIndex) },
+                            requiresNewPassword = key.requiresNewPassword,
+                            isFromDeepLink = key.isFromDeepLink,
+                            showLoginScreen = key.showLoginScreen,
+                            showBiometricAuth = key.showBiometricAuth,
+                            onAuthenticationSuccess = {
                                 backStack.removeAt(backStack.lastIndex)
                                 backStack.add(
                                     AppRoute.BottomNavigationNavHost(
@@ -161,36 +150,6 @@ internal fun SuperDiaryNavHost(
                                     ),
                                 )
                             },
-                            isFromDeeplink = key.isFromDeeplink,
-                        )
-                    }
-
-                    entry<AppRoute.RegisterScreen> {
-                        RegisterScreen(
-                            onLoginClick = {
-                                backStack.removeAt(backStack.lastIndex)
-                            },
-                            onRegisterSuccess = {
-                                backStack.removeAt(backStack.lastIndex)
-                                backStack.add(
-                                    AppRoute.RegistrationConfirmationScreen,
-                                )
-                            },
-                        )
-                    }
-
-                    entry<AppRoute.RegistrationConfirmationScreen> {
-                        RegistrationConfirmationScreen()
-                    }
-
-                    entry<AppRoute.ChangePasswordNavHost> { key ->
-                        ChangePasswordNavigation(
-                            onPasswordChangeComplete = {
-                                backStack.clear()
-                                backStack.add(AppRoute.BottomNavigationNavHost(null))
-                            },
-                            onBackPress = { backStack.removeAt(backStack.lastIndex) },
-                            requiresNewPassword = key.requiresNewPassword,
                         )
                     }
 
@@ -209,10 +168,6 @@ internal fun SuperDiaryNavHost(
 
 private val navigationSerializersModule = SerializersModule {
     polymorphic(NavKey::class) {
-        subclass(
-            subclass = AppRoute.LoginScreen::class,
-            serializer = AppRoute.LoginScreen.serializer(),
-        )
 
         subclass(
             subclass = AppRoute.CreateDiaryScreen::class,
@@ -225,13 +180,8 @@ private val navigationSerializersModule = SerializersModule {
         )
 
         subclass(
-            subclass = AppRoute.BiometricAuthScreen::class,
-            serializer = AppRoute.BiometricAuthScreen.serializer(),
-        )
-
-        subclass(
-            subclass = AppRoute.ChangePasswordNavHost::class,
-            serializer = AppRoute.ChangePasswordNavHost.serializer(),
+            subclass = AppRoute.AuthenticationNavHost::class,
+            serializer = AppRoute.AuthenticationNavHost.serializer(),
         )
     }
 }
@@ -248,16 +198,21 @@ fun getStartDestination(viewState: AppSessionState): NavKey = remember(viewState
                     viewState.userInfo,
                 )
 
-                DeeplinkContainer.LinkType.PasswordRecovery -> AppRoute.ChangePasswordNavHost(
+                DeeplinkContainer.LinkType.PasswordRecovery -> AppRoute.AuthenticationNavHost(
                     requiresNewPassword = true,
                 )
 
-                DeeplinkContainer.LinkType.Invalid -> AppRoute.LoginScreen(isFromDeeplink = true)
+                DeeplinkContainer.LinkType.Invalid -> AppRoute.AuthenticationNavHost(
+                    isFromDeepLink = true,
+                    showLoginScreen = true,
+                )
                 // Session was restored from disk and didn't originate from an email link
                 null -> {
                     // If user has biometrics enabled, show a screen asking them for that, else go straight to bottom navigation screen
                     if (viewState.isBiometricAuthEnabled == true) {
-                        AppRoute.BiometricAuthScreen
+                        AppRoute.AuthenticationNavHost(
+                            showBiometricAuth = true,
+                        )
                     } else {
                         AppRoute.BottomNavigationNavHost(viewState.userInfo)
                     }
@@ -266,14 +221,16 @@ fun getStartDestination(viewState: AppSessionState): NavKey = remember(viewState
         }
 
         is AppSessionState.Error -> {
-            AppRoute.LoginScreen(
-                isFromDeeplink = viewState.isFromDeeplink,
+            AppRoute.AuthenticationNavHost(
+                isFromDeepLink = viewState.isFromDeeplink,
             )
         }
 
         is AppSessionState.Processing,
         is AppSessionState.UnAuthenticated,
-        -> AppRoute.LoginScreen(isFromDeeplink = false)
+        -> AppRoute.AuthenticationNavHost(
+            isFromDeepLink = false,
+        )
     }
 }
 

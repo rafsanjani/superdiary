@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.changepassword.screen
+package com.foreverrafs.superdiary.auth.changepassword.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -41,10 +41,14 @@ fun ChangePasswordSuccessScreen(
         },
     )
 
-    Surface(modifier = modifier.fillMaxSize()) {
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+    ) { padding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .padding(padding)
+                .padding(16.dp),
         ) {
             Spacer(
                 modifier = Modifier.weight(0.3f),

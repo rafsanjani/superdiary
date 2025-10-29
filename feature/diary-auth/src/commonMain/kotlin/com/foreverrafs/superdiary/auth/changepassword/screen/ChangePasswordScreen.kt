@@ -1,10 +1,10 @@
-package com.foreverrafs.superdiary.ui.feature.changepassword.screen
+package com.foreverrafs.superdiary.auth.changepassword.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.foreverrafs.superdiary.ui.feature.changepassword.ChangePasswordViewModel
+import com.foreverrafs.superdiary.auth.changepassword.ChangePasswordViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
