@@ -11,5 +11,5 @@ sealed interface ChangePasswordRoute : NavKey {
     data object PasswordChangeSuccessScreen : ChangePasswordRoute
 
     @Serializable
-    data object SendPasswordResetEmailScreen: ChangePasswordRoute
+    data object SendPasswordResetEmailScreen : ChangePasswordRoute
 }
