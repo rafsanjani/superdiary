@@ -27,18 +27,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
 import com.foreverrafs.superdiary.design.components.AppBar
 import com.foreverrafs.superdiary.design.components.ConfirmSaveDialog
 import com.foreverrafs.superdiary.design.components.LocationRationaleDialog
 import com.foreverrafs.superdiary.design.components.SuperdiaryNavigationIcon
+import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.ui.feature.creatediary.components.RichTextStyleRow
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
@@ -83,13 +87,19 @@ fun CreateDiaryScreenContent(
     modifier: Modifier = Modifier,
     richTextState: RichTextState = rememberRichTextState(),
 ) {
-    BackHandler {
-        if (richTextState.toText().isEmpty()) {
-            onNavigateBack()
-        } else {
-            onShowSaveDialogChange(true)
-        }
-    }
+    NavigationBackHandler(
+        isBackEnabled = true,
+        state = rememberNavigationEventState(
+            currentInfo = NavigationEventInfo.None,
+        ),
+        onBackCompleted = {
+            if (richTextState.toText().isEmpty()) {
+                onNavigateBack()
+            } else {
+                onShowSaveDialogChange(true)
+            }
+        },
+    )
 
     Scaffold(
         topBar = {
@@ -237,4 +247,25 @@ private fun DiaryAISuggestionChip(words: Int, enabled: Boolean, onClick: () -> U
         },
         enabled = enabled,
     )
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    SuperDiaryPreviewTheme {
+        CreateDiaryScreenContent(
+            isGeneratingFromAi = false,
+            onGenerateAI = { _: String, _: Int -> },
+            richTextState = rememberRichTextState().apply {},
+            onSaveDiary = {},
+            onDontAskAgain = {},
+            showLocationPermissionRationale = false,
+            onRequestLocationPermission = {},
+            permissionState = PermissionState.NotDetermined,
+            userInfo = null,
+            showSaveDialog = false,
+            onShowSaveDialogChange = {},
+            onNavigateBack = {},
+        )
+    }
 }

@@ -1,8 +1,6 @@
 package com.foreverrafs.superdiary.ui.feature.creatediary.screen
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,7 +8,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.BindEffect
 import com.foreverrafs.superdiary.core.location.Location
@@ -29,10 +26,9 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CreateDiaryScreen(
-    navController: NavHostController,
     userInfo: UserInfo?,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedContentScope: AnimatedContentScope,
+    onDiarySave: () -> Unit,
+    onNavigateBack: () -> Unit,
 ) {
     val viewModel: CreateDiaryViewModel = koinViewModel()
 
@@ -102,7 +98,7 @@ fun CreateDiaryScreen(
                 ),
             )
 
-            navController.popBackStack()
+            onDiarySave()
         },
         onRequestLocationPermission = {
             showLocationPermissionRationale = false
@@ -118,6 +114,6 @@ fun CreateDiaryScreen(
         onShowSaveDialogChange = {
             showSaveDialog = it
         },
-        onNavigateBack = navController::navigateUp,
+        onNavigateBack = onNavigateBack,
     )
 }

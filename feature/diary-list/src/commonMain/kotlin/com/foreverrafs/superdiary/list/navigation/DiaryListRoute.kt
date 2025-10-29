@@ -1,8 +1,9 @@
 package com.foreverrafs.superdiary.list.navigation
 
+import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
-sealed interface DiaryListRoute {
+sealed interface DiaryListRoute : NavKey {
     @Serializable
     data object DiaryListScreen : DiaryListRoute
 

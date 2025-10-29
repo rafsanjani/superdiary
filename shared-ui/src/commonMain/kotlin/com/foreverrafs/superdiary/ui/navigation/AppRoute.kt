@@ -1,12 +1,13 @@
 package com.foreverrafs.superdiary.ui.navigation
 
+import androidx.navigation3.runtime.NavKey
 import com.foreverrafs.auth.model.UserInfo
 import kotlinx.serialization.Serializable
 
 /**
  * Root application routes where each individual route here is a nested navigation graph.
  */
-sealed interface AppRoute {
+sealed interface AppRoute : NavKey {
     @Serializable
     data object BiometricAuthScreen : AppRoute
 
@@ -31,10 +32,7 @@ sealed interface AppRoute {
     data object DiaryListNavHost : AppRoute
 
     @Serializable
-    data object ChangePasswordNavHost : AppRoute
-
-    @Serializable
-    data object SendPasswordResetEmailScreen : AppRoute
+    data class ChangePasswordNavHost(val requiresNewPassword: Boolean = false) : AppRoute
 
     @Serializable
     data object ProfileScreen : AppRoute

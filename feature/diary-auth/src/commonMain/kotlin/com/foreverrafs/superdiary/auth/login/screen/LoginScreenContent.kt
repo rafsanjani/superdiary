@@ -40,6 +40,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.foreverrafs.auth.AuthException
 import com.foreverrafs.auth.GenericAuthException
@@ -55,7 +56,6 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import superdiary.feature.diary_auth.generated.resources.Res
 import superdiary.feature.diary_auth.generated.resources.error_generic_error
 import superdiary.feature.diary_auth.generated.resources.error_invalid_credentials

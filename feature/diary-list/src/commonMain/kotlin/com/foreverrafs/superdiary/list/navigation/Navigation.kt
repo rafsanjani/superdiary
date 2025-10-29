@@ -1,41 +1,69 @@
 package com.foreverrafs.superdiary.list.navigation
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
-import androidx.navigation.navigation
-import androidx.navigation.toRoute
-import com.foreverrafs.superdiary.design.style.animatedComposable
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.navigation3.runtime.EntryProviderScope
+import androidx.navigation3.runtime.NavEntryDecorator
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
+import androidx.savedstate.serialization.SavedStateConfiguration
 import com.foreverrafs.superdiary.list.presentation.screen.detail.screen.DetailScreen
 import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListScreen
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
 
-@OptIn(ExperimentalSharedTransitionApi::class)
-inline fun <reified T : Any> NavGraphBuilder.diaryListNavigation(
-    navController: NavHostController,
-    noinline onBackPress: () -> Unit,
-    noinline onAddEntry: () -> Unit,
-    noinline onProfileClick: () -> Unit,
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun EntryProviderScope<NavKey>.DiaryListNavigation(
+    onBackPress: () -> Unit,
+    onAddEntry: () -> Unit,
+    onProfileClick: () -> Unit,
 ) {
-    navigation<T>(startDestination = DiaryListRoute.DiaryListScreen) {
-        animatedComposable<DiaryListRoute.DiaryListScreen> {
-            DiaryListScreen(
-                onAddEntry = onAddEntry,
-                onDiaryClick = {
-                    navController.navigate(DiaryListRoute.DetailScreen(it.toString()))
-                },
-                onProfileClick = onProfileClick,
-                onBackPress = navController::navigateUp,
-            )
-        }
+    val backStack = rememberNavBackStack(
+        configuration = SavedStateConfiguration {
+            serializersModule = SerializersModule {
+                polymorphic(NavKey::class) {
+                    subclass(
+                        subclass = DiaryListRoute.DiaryListScreen::class,
+                        serializer = DiaryListRoute.DiaryListScreen.serializer(),
+                    )
+                    subclass(
+                        subclass = DiaryListRoute.DetailScreen::class,
+                        serializer = DiaryListRoute.DetailScreen.serializer(),
+                    )
+                }
+            }
+        },
+        DiaryListRoute.DiaryListScreen,
+    )
 
-        animatedComposable<DiaryListRoute.DetailScreen> { backstackEntry ->
-            val diaryId: String = backstackEntry.toRoute<DiaryListRoute.DetailScreen>().diaryId
-
-            DetailScreen(
-                diaryId = diaryId,
-                onProfileClick = onProfileClick,
-                onBackPress = onBackPress,
-            )
-        }
-    }
+    NavDisplay(
+        backStack = backStack,
+        onBack = onBackPress,
+        entryDecorators = listOf<NavEntryDecorator<NavKey>>(
+            rememberSaveableStateHolderNavEntryDecorator(),
+        ),
+        entryProvider = entryProvider {
+            entry<DiaryListRoute.DetailScreen> { key ->
+                DetailScreen(
+                    diaryId = key.diaryId,
+                    onProfileClick = onProfileClick,
+                    onBackPress = { backStack.removeAt(backStack.lastIndex) },
+                )
+            }
+            entry<DiaryListRoute.DiaryListScreen> {
+                DiaryListScreen(
+                    onAddEntry = onAddEntry,
+                    onDiaryClick = {
+                        backStack.add(DiaryListRoute.DetailScreen(it.toString()))
+                    },
+                    onProfileClick = onProfileClick,
+                    onBackPress = onBackPress,
+                )
+            }
+        },
+    )
 }

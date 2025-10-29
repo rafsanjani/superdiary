@@ -1,11 +1,6 @@
 package com.foreverrafs.superdiary.ui.navigation
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -16,8 +11,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -73,7 +66,7 @@ fun BottomNavigationScreen(
                     navController = navController,
                     startDestination = BottomNavigationRoute.DashboardTab,
                 ) {
-                    animatedComposable<BottomNavigationRoute.DashboardTab> {
+                    composable<BottomNavigationRoute.DashboardTab> {
                         DashboardTab(
                             snackbarHostState = snackbarHostState,
                             onAddEntry = onAddEntry,
@@ -82,14 +75,14 @@ fun BottomNavigationScreen(
                         )
                     }
 
-                    animatedComposable<BottomNavigationRoute.FavoriteTab> {
+                    composable<BottomNavigationRoute.FavoriteTab> {
                         FavoriteTab(
                             snackbarHostState = snackbarHostState,
                             onFavoriteClick = onDiaryClick,
                         )
                     }
 
-                    animatedComposable<BottomNavigationRoute.DiaryChatTab> {
+                    composable<BottomNavigationRoute.DiaryChatTab> {
                         DiaryChatTab()
                     }
                 }
@@ -97,27 +90,3 @@ fun BottomNavigationScreen(
         )
     }
 }
-
-private inline fun <reified T : Any> NavGraphBuilder.animatedComposable(
-    noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
-) = composable<T>(
-    content = content,
-    enterTransition = { enterTransition() },
-    exitTransition = { exitTransition() },
-    popEnterTransition = { enterTransition() },
-    popExitTransition = { exitTransition() },
-)
-
-private fun enterTransition() = fadeIn(
-    animationSpec = tween(
-        durationMillis = 300,
-        easing = LinearEasing,
-    ),
-)
-
-private fun exitTransition() = fadeOut(
-    animationSpec = tween(
-        durationMillis = 300,
-        easing = LinearEasing,
-    ),
-)

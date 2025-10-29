@@ -8,7 +8,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
@@ -21,11 +20,7 @@ inline fun <reified T : Any> NavGraphBuilder.animatedComposable(
     deepLinks: List<NavDeepLink> = emptyList(),
     noinline content: @Composable AnimatedContentScope.(navBackStackEntry: NavBackStackEntry) -> Unit,
 ) = composable<T>(
-    content = {
-        CompositionLocalProvider(LocalAnimatedContentScope provides this) {
-            content(it)
-        }
-    },
+    content = content,
     enterTransition = { enterTransition() },
     exitTransition = { exitTransition() },
     popEnterTransition = { enterTransition() },

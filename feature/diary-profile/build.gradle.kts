@@ -23,7 +23,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(compose.foundation)
             implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            implementation(compose.preview)
             implementation(compose.materialIconsExtended)
             implementation(projects.core.logging)
             implementation(libs.kotlinx.coroutines.test)

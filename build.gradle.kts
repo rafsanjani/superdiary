@@ -1,7 +1,7 @@
 import javax.xml.parsers.DocumentBuilderFactory
 
 plugins {
-    id("org.jetbrains.compose.hot-reload") version "1.0.0-rc02" apply false
+    alias(libs.plugins.compose.hot.reload) apply false
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.android) apply false
@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.android.test) apply false
     alias(libs.plugins.kotlin.parcelize) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.ktlint) apply false
     id("com.superdiary.ktlint")
     id("com.superdiary.githooks")

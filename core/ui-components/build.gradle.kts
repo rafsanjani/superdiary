@@ -21,7 +21,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
             implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            implementation(compose.preview)
             implementation(compose.materialIconsExtended)
             implementation(libs.kotlinx.coroutines.test)
             implementation(projects.commonUtils)
