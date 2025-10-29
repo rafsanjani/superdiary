@@ -13,19 +13,34 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.foreverrafs.superdiary.design.components.BodyMediumText
 import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.components.TitleMediumText
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ChangePasswordSuccessScreen(
-    onPrimaryButtonClick: () -> Unit,
+    onContinueClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    NavigationBackHandler(
+        isBackEnabled = true,
+        state = rememberNavigationEventState(
+            currentInfo = NavigationEventInfo.None,
+        ),
+        onBackCompleted = {
+            // Disable back navigation on this screen
+        },
+    )
+
     Surface(modifier = modifier.fillMaxSize()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -58,7 +73,7 @@ fun ChangePasswordSuccessScreen(
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
                 text = "Continue",
-                onClick = onPrimaryButtonClick,
+                onClick = onContinueClick,
                 enabled = true,
             )
         }
@@ -70,7 +85,7 @@ fun ChangePasswordSuccessScreen(
 private fun ChangePasswordSuccessScreenPreview() {
     SuperDiaryPreviewTheme {
         ChangePasswordSuccessScreen(
-            onPrimaryButtonClick = {},
+            onContinueClick = {},
         )
     }
 }

@@ -44,6 +44,7 @@ fun SuperDiaryInputField(
     placeholder: String? = null,
     readOnly: Boolean = false,
     isError: Boolean = false,
+    maxLines: Int = Int.MAX_VALUE,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
@@ -76,6 +77,7 @@ fun SuperDiaryInputField(
             },
             visualTransformation = visualTransformation,
             isError = isError,
+            maxLines = maxLines,
         )
         errorLabel?.let {
             Text(

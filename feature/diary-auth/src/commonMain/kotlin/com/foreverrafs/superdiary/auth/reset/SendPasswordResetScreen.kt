@@ -32,6 +32,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.components.SuperDiaryInputField
 import org.jetbrains.compose.resources.painterResource
@@ -53,8 +56,18 @@ fun SendPasswordResetEmailScreen(
         initialValue = PasswordResetViewState(),
     )
 
+    NavigationBackHandler(
+        isBackEnabled = true,
+        state = rememberNavigationEventState(
+            currentInfo = NavigationEventInfo.None,
+        ),
+        onBackCompleted = {
+            // Disable back navigation on this screen
+        },
+    )
+
     SendPasswordResetEmailScreenContent(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         viewState = viewState,
         onEmailChange = passwordResetViewModel::onEmailChange,
         onResetPasswordClick = passwordResetViewModel::onResetPassword,
@@ -211,6 +224,7 @@ private fun InputScreen(
             isError = !viewState.isEmailValid,
             errorLabel = viewState.inputErrorMessage,
             readOnly = viewState.isLoading,
+            maxLines = 1,
         )
 
         Spacer(modifier = Modifier.weight(1f))

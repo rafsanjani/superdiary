@@ -27,7 +27,7 @@ import com.foreverrafs.superdiary.auth.login.BiometricLoginScreenViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun BiometricLoginScreen(
+fun BiometricAuthScreen(
     onBiometricAuthSuccess: () -> Unit,
 ) {
     val viewModel: BiometricLoginScreenViewModel = koinViewModel()

@@ -27,12 +27,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.permission.PermissionState
 import com.foreverrafs.superdiary.design.components.AppBar
@@ -83,13 +85,19 @@ fun CreateDiaryScreenContent(
     modifier: Modifier = Modifier,
     richTextState: RichTextState = rememberRichTextState(),
 ) {
-    BackHandler {
-        if (richTextState.toText().isEmpty()) {
-            onNavigateBack()
-        } else {
-            onShowSaveDialogChange(true)
-        }
-    }
+    NavigationBackHandler(
+        isBackEnabled = true,
+        state = rememberNavigationEventState(
+            currentInfo = NavigationEventInfo.None,
+        ),
+        onBackCompleted = {
+            if (richTextState.toText().isEmpty()) {
+                onNavigateBack()
+            } else {
+                onShowSaveDialogChange(true)
+            }
+        },
+    )
 
     Scaffold(
         topBar = {

@@ -36,7 +36,7 @@ fun SuperDiaryPreviewTheme(
                         CompositionLocalProvider(
                             LocalInspectionMode provides true,
                             LocalSharedTransitionScope provides this@SharedTransitionLayout,
-                            LocalAnimatedContentScope provides this,
+//                            LocalAnimatedContentScope provides this,
                         ) {
                             content()
                         }

@@ -3,8 +3,10 @@ package com.foreverrafs.superdiary.auth.register.screen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.backhandler.BackHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.foreverrafs.superdiary.auth.register.RegisterScreenViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -19,9 +21,15 @@ fun RegisterScreen(
         initialValue = RegisterScreenState.Idle,
     )
 
-    BackHandler {
-        // Prevent user from navigating back from this screen
-    }
+    NavigationBackHandler(
+        isBackEnabled = true,
+        state = rememberNavigationEventState(
+            currentInfo = NavigationEventInfo.None,
+        ),
+        onBackCompleted = {
+            // Disable back navigation on this screen
+        },
+    )
 
     RegisterScreenContent(
         viewState = signInStatus,
