@@ -7,33 +7,33 @@ import kotlinx.serialization.Serializable
 /**
  * Root application routes where each individual route here is a nested navigation graph.
  */
-sealed interface AppRoute {
+sealed interface AppRoute : NavKey {
     @Serializable
-    data object BiometricAuthScreen : NavKey, AppRoute
+    data object BiometricAuthScreen : AppRoute
 
     @Serializable
-    data class LoginScreen(val isFromDeeplink: Boolean = false) : NavKey, AppRoute
+    data class LoginScreen(val isFromDeeplink: Boolean = false) : AppRoute
 
     @Serializable
-    data object RegisterScreen : NavKey, AppRoute
+    data object RegisterScreen : AppRoute
 
     @Serializable
-    data object RegistrationConfirmationScreen : NavKey, AppRoute
+    data object RegistrationConfirmationScreen : AppRoute
 
     @Serializable
     data class BottomNavigationNavHost(
         val userInfo: UserInfo?,
-    ) : NavKey, AppRoute
+    ) : AppRoute
 
     @Serializable
-    data object CreateDiaryScreen : AppRoute, NavKey
+    data object CreateDiaryScreen : AppRoute
 
     @Serializable
-    data object DiaryListNavHost : AppRoute, NavKey
+    data object DiaryListNavHost : AppRoute
 
     @Serializable
-    data class ChangePasswordNavHost(val requiresNewPassword: Boolean = false) : AppRoute, NavKey
+    data class ChangePasswordNavHost(val requiresNewPassword: Boolean = false) : AppRoute
 
     @Serializable
-    data object ProfileScreen : AppRoute, NavKey
+    data object ProfileScreen : AppRoute
 }
