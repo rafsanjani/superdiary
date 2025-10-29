@@ -13,6 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.navigationevent.NavigationEventDispatcher
+import androidx.navigationevent.NavigationEventDispatcherOwner
+import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -36,6 +39,7 @@ fun SuperDiaryPreviewTheme(
                         CompositionLocalProvider(
                             LocalInspectionMode provides true,
                             LocalSharedTransitionScope provides this@SharedTransitionLayout,
+                            LocalNavigationEventDispatcherOwner provides TestNavigationDispatcher,
 //                            LocalAnimatedContentScope provides this,
                         ) {
                             content()
@@ -45,4 +49,9 @@ fun SuperDiaryPreviewTheme(
             }
         }
     }
+}
+
+private object TestNavigationDispatcher : NavigationEventDispatcherOwner {
+    override val navigationEventDispatcher: NavigationEventDispatcher
+        get() = NavigationEventDispatcher()
 }

@@ -131,7 +131,7 @@ fun LoginScreenContent(
                 val username = rememberTextFieldState("")
                 val password = rememberTextFieldState("")
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(40.dp))
 
                 Image(
                     modifier = Modifier.size(100.dp),
