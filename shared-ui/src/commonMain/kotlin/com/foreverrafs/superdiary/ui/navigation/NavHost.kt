@@ -228,6 +228,11 @@ private val navigationSerializersModule = SerializersModule {
             subclass = AppRoute.BiometricAuthScreen::class,
             serializer = AppRoute.BiometricAuthScreen.serializer(),
         )
+
+        subclass(
+            subclass = AppRoute.ChangePasswordNavHost::class,
+            serializer = AppRoute.ChangePasswordNavHost.serializer(),
+        )
     }
 }
 
