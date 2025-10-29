@@ -170,6 +170,7 @@ internal fun SuperDiaryNavHost(
                                 backStack.removeAt(backStack.lastIndex)
                             },
                             onRegisterSuccess = {
+                                backStack.removeAt(backStack.lastIndex)
                                 backStack.add(
                                     AppRoute.RegistrationConfirmationScreen,
                                 )
