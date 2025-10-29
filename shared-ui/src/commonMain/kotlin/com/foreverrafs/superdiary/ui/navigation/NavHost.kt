@@ -154,6 +154,7 @@ internal fun SuperDiaryNavHost(
                                 backStack.add(AppRoute.ChangePasswordNavHost())
                             },
                             onLoginSuccess = {
+                                backStack.removeAt(backStack.lastIndex)
                                 backStack.add(
                                     AppRoute.BottomNavigationNavHost(
                                         userInfo = it,
