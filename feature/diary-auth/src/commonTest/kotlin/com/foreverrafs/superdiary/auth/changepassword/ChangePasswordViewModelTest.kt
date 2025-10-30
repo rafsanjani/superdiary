@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.changepassword
+package com.foreverrafs.superdiary.auth.changepassword
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
@@ -9,8 +9,6 @@ import assertk.assertions.isNull
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.auth.changepassword.ChangePasswordViewModel
-import com.foreverrafs.superdiary.auth.changepassword.PasswordStrength
 import dev.mokkery.answering.returns
 import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
