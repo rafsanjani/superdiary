@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.ui.di
 
 import com.foreverrafs.auth.di.authModule
 import com.foreverrafs.superdiary.ai.di.diaryAiModule
+import com.foreverrafs.superdiary.auth.di.diaryAuthModule
 import com.foreverrafs.superdiary.auth.login.BiometricLoginScreenViewModel
 import com.foreverrafs.superdiary.auth.login.LoginScreenViewModel
 import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
@@ -20,7 +21,6 @@ import com.foreverrafs.superdiary.domain.usecase.GetDiaryByIdUseCase
 import com.foreverrafs.superdiary.list.di.diaryListModule
 import com.foreverrafs.superdiary.profile.di.profileModule
 import com.foreverrafs.superdiary.ui.AppViewModel
-import com.foreverrafs.superdiary.ui.feature.changepassword.ChangePasswordViewModel
 import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
 import com.foreverrafs.superdiary.ui.feature.favorites.FavoriteViewModel
@@ -43,7 +43,6 @@ internal val screensModule: Module = module {
     viewModelOf(::AppViewModel)
     viewModelOf(::PasswordResetViewModel)
     viewModelOf(::BiometricLoginScreenViewModel)
-    viewModelOf(::ChangePasswordViewModel)
 }
 
 expect fun permissionModule(): Module
@@ -65,4 +64,5 @@ fun compositeModule(
     diaryListModule,
     dashboardModule,
     syncModule,
+    diaryAuthModule,
 )

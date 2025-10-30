@@ -32,9 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigationevent.NavigationEventInfo
-import androidx.navigationevent.compose.NavigationBackHandler
-import androidx.navigationevent.compose.rememberNavigationEventState
 import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.components.SuperDiaryInputField
 import org.jetbrains.compose.resources.painterResource
@@ -54,16 +51,6 @@ fun SendPasswordResetEmailScreen(
     val passwordResetViewModel: PasswordResetViewModel = koinViewModel()
     val viewState by passwordResetViewModel.viewState.collectAsStateWithLifecycle(
         initialValue = PasswordResetViewState(),
-    )
-
-    NavigationBackHandler(
-        isBackEnabled = true,
-        state = rememberNavigationEventState(
-            currentInfo = NavigationEventInfo.None,
-        ),
-        onBackCompleted = {
-            // Disable back navigation on this screen
-        },
     )
 
     SendPasswordResetEmailScreenContent(
