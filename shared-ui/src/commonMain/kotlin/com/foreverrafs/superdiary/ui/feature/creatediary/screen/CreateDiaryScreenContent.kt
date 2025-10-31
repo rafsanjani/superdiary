@@ -37,7 +37,7 @@ import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import com.foreverrafs.auth.model.UserInfo
-import com.foreverrafs.superdiary.core.location.permission.PermissionState
+import com.foreverrafs.superdiary.core.permission.PermissionState
 import com.foreverrafs.superdiary.design.components.AppBar
 import com.foreverrafs.superdiary.design.components.ConfirmSaveDialog
 import com.foreverrafs.superdiary.design.components.LocationRationaleDialog

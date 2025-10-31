@@ -4,11 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.ai.api.DiaryAI
-import com.foreverrafs.superdiary.core.location.LocationManager
-import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
-import com.foreverrafs.superdiary.core.location.permission.PermissionState
-import com.foreverrafs.superdiary.core.location.permission.PermissionsControllerWrapper
+import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
+import com.foreverrafs.superdiary.core.permission.LocationManager
+import com.foreverrafs.superdiary.core.permission.LocationPermissionManager
+import com.foreverrafs.superdiary.core.permission.PermissionState
+import com.foreverrafs.superdiary.core.permission.PermissionsControllerWrapper
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
@@ -71,13 +72,13 @@ class CreateDiaryViewModel(
                             "Error requesting location updates. Entry will not be tagged!"
                         }
                     },
-                    onLocation = { location ->
+                    onLocation = { latitude, longitude ->
                         logger.i(Tag) {
-                            "Updating state with location [${location.latitude}, ${location.longitude}]"
+                            "Updating state with location [${latitude}, ${longitude}]"
                         }
 
                         _screenState.update {
-                            it.copy(location = location)
+                            it.copy(location = Location(latitude, longitude))
                         }
 
                         logger.i(Tag) {

@@ -9,9 +9,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.foreverrafs.auth.model.UserInfo
-import com.foreverrafs.superdiary.core.location.BindEffect
 import com.foreverrafs.superdiary.core.location.Location
-import com.foreverrafs.superdiary.core.location.permission.PermissionState
+import com.foreverrafs.superdiary.core.permission.BindEffect
+import com.foreverrafs.superdiary.core.permission.PermissionState
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
 import com.foreverrafs.superdiary.utils.DiarySettings
