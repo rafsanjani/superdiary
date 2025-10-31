@@ -235,7 +235,7 @@
 			);
 			mainGroup = 7555FF72242A565900829871;
 			packageReferences = (
-				7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
+				7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "" */,
 				58E13CE72CDAEB61007F1210 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
 				58E13CEA2CDAEBB5007F1210 /* XCRemoteSwiftPackageReference "google-maps-ios-utils" */,
 				587B21342CDC0B6B0081E14F /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
@@ -294,7 +294,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$SRCROOT/..\"\n./gradlew :shared-ui:embedAndSignAppleFrameworkForXcode\n";
+			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :shared-ui:embedAndSignAppleFrameworkForXcode";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -554,7 +554,7 @@
 				version = 6.0.0;
 			};
 		};
-		7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+		7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa/";
 			requirement = {
@@ -587,7 +587,7 @@
 		};
 		87DFA0F460294F61AFDC1588 /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			package = 7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "" */;
 			productName = Sentry;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -8,11 +8,10 @@ import assertk.assertions.isNull
 import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
-import com.foreverrafs.superdiary.core.location.Location
-import com.foreverrafs.superdiary.core.location.LocationManager
-import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
-import com.foreverrafs.superdiary.core.location.permission.PermissionState
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
+import com.foreverrafs.superdiary.core.permission.LocationManager
+import com.foreverrafs.superdiary.core.permission.LocationPermissionManager
+import com.foreverrafs.superdiary.core.permission.PermissionState
 import com.foreverrafs.superdiary.domain.Synchronizer
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
@@ -49,12 +48,13 @@ class CreateDiaryViewModelTest {
     private val dataSource: DataSource = mock()
 
     private val locationManager: LocationManager = object : LocationManager {
-        override fun requestLocation(onError: (Exception) -> Unit, onLocation: (Location) -> Unit) {
+        override fun requestLocation(
+            onError: (Exception) -> Unit,
+            onLocation: (Double, Double) -> Unit,
+        ) {
             onLocation(
-                Location(
-                    latitude = 1.0,
-                    longitude = 1.0,
-                ),
+                1.0,
+                1.0,
             )
         }
 

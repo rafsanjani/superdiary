@@ -138,6 +138,7 @@ include(":core:database-test")
 include(":core:secrets")
 include(":core:database")
 include(":core:sync")
+include(":core:permission")
 include(":core:diary-ai")
 
 // common components shared by other modules

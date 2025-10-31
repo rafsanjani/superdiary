@@ -7,7 +7,7 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-actual fun permissionModule(): Module = module {
+actual fun savedStateModule(): Module = module {
     singleOf(::PermissionsController) { bind<PermissionsController>() }
     single<SavedStateHandle> { SavedStateHandle() }
 }

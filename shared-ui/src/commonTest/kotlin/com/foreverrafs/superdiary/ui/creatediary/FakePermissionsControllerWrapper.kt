@@ -1,8 +1,8 @@
 package com.foreverrafs.superdiary.ui.creatediary
 
-import com.foreverrafs.superdiary.core.location.permission.Permission
-import com.foreverrafs.superdiary.core.location.permission.PermissionState
-import com.foreverrafs.superdiary.core.location.permission.PermissionsControllerWrapper
+import com.foreverrafs.superdiary.core.permission.Permission
+import com.foreverrafs.superdiary.core.permission.PermissionState
+import com.foreverrafs.superdiary.core.permission.PermissionsControllerWrapper
 
 class FakePermissionsControllerWrapper : PermissionsControllerWrapper {
     sealed interface ActionPerformed {

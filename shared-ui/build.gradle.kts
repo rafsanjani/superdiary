@@ -66,12 +66,14 @@ kotlin {
                 api(projects.core.location)
                 api(projects.core.logging)
                 api(projects.designSystem)
+                api(projects.core.permission)
                 implementation(projects.core.diaryAi)
                 implementation(projects.feature.diaryProfile)
                 implementation(projects.feature.diaryAuth)
                 implementation(projects.feature.diaryList)
                 implementation(projects.feature.diaryDashboard)
                 implementation(projects.core.sync)
+                implementation(projects.core.permission)
             }
         }
 
