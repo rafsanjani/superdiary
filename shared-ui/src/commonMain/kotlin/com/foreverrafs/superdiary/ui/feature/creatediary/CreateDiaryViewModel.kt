@@ -74,7 +74,7 @@ class CreateDiaryViewModel(
                     },
                     onLocation = { latitude, longitude ->
                         logger.i(Tag) {
-                            "Updating state with location [${latitude}, ${longitude}]"
+                            "Updating state with location [$latitude, $longitude]"
                         }
 
                         _screenState.update {
