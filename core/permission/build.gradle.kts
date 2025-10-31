@@ -56,5 +56,5 @@ kotlin {
 }
 
 android {
-    namespace = "com.foreverrafs.core.location"
+    namespace = "com.foreverrafs.core.permission"
 }
