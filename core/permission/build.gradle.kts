@@ -28,8 +28,10 @@ kotlin {
             dependencies {
                 implementation(libs.koin.android)
                 implementation(libs.google.playservices.location)
-                implementation(libs.moko.permissions.compose)
-                implementation(libs.moko.permissions.location)
+
+                // These need to be api because we are typealiasing directly into a few things, implementation alone won't cut it
+                api(libs.moko.permissions.compose)
+                api(libs.moko.permissions.location)
             }
         }
 
@@ -48,8 +50,8 @@ kotlin {
             dependencies {
                 implementation(libs.square.sqldelight.driver.native)
                 implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.moko.permissions.compose)
-                implementation(libs.moko.permissions.location)
+                api(libs.moko.permissions.compose)
+                api(libs.moko.permissions.location)
             }
         }
     }

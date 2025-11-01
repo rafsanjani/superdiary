@@ -15,9 +15,9 @@ import com.foreverrafs.superdiary.core.permission.PermissionState
 import com.foreverrafs.superdiary.domain.Synchronizer
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
-import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
+import com.foreverrafs.superdiary.creatediary.AddDiaryUseCase
+import com.foreverrafs.superdiary.creatediary.screen.CreateDiaryViewModel
 import com.foreverrafs.superdiary.ui.creatediary.FakePermissionsControllerWrapper.ActionPerformed.ProvidePermission
-import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
 import com.foreverrafs.superdiary.utils.DiarySettings
 import dev.mokkery.answering.returns
 import dev.mokkery.every

@@ -19,7 +19,7 @@ import org.junit.runner.RunWith
 @OptIn(ExperimentalSharedTransitionApi::class)
 @RunWith(TestParameterInjector::class)
 class DiaryDetailSnapshotTests(
-    @TestParameter val snapshotDevice: SnapshotDevice,
+    @param:TestParameter val snapshotDevice: SnapshotDevice,
 ) {
     private val testClock = object : Clock {
         // 2023-11-10

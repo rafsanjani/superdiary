@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.creatediary
+package com.foreverrafs.superdiary.creatediary.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,10 +10,9 @@ import com.foreverrafs.superdiary.core.permission.LocationManager
 import com.foreverrafs.superdiary.core.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.permission.PermissionState
 import com.foreverrafs.superdiary.core.permission.PermissionsControllerWrapper
+import com.foreverrafs.superdiary.creatediary.AddDiaryUseCase
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
-import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
-import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenState
 import com.foreverrafs.superdiary.utils.DiarySettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,14 +37,14 @@ class CreateDiaryViewModel(
         .permissionState
         .stateIn(
             viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Companion.WhileSubscribed(5000),
             initialValue = PermissionState.NotDetermined,
         )
 
     val diarySettings: StateFlow<DiarySettings> = preference.settings.stateIn(
         viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
-        DiarySettings.Empty,
+        SharingStarted.Companion.WhileSubscribed(5000),
+        DiarySettings.Companion.Empty,
     )
 
     private val _screenState: MutableStateFlow<CreateDiaryScreenState> = MutableStateFlow(
@@ -56,7 +55,7 @@ class CreateDiaryViewModel(
         .onStart { startLocationUpdates() }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Companion.WhileSubscribed(5000),
             initialValue = CreateDiaryScreenState(),
         )
 

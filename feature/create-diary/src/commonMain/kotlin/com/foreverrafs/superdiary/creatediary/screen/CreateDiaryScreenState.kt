@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.creatediary.screen
+package com.foreverrafs.superdiary.creatediary.screen
 
 import com.foreverrafs.superdiary.core.location.Location
 

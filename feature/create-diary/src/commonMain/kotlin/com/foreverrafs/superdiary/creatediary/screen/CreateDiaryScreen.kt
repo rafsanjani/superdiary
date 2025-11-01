@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.creatediary.screen
+package com.foreverrafs.superdiary.creatediary.screen
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.runtime.Composable
@@ -8,12 +8,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.core.permission.BindEffect
 import com.foreverrafs.superdiary.core.permission.PermissionState
 import com.foreverrafs.superdiary.domain.model.Diary
-import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
 import com.foreverrafs.superdiary.utils.DiarySettings
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import kotlin.time.Clock
@@ -26,7 +24,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CreateDiaryScreen(
-    userInfo: UserInfo?,
+    avatarUrl: String?,
     onDiarySave: () -> Unit,
     onNavigateBack: () -> Unit,
 ) {
@@ -109,7 +107,7 @@ fun CreateDiaryScreen(
             showLocationPermissionRationale = false
             viewModel.onPermanentlyDismissLocationPermissionDialog()
         },
-        userInfo = userInfo,
+        avatarUrl = avatarUrl,
         showSaveDialog = showSaveDialog,
         onShowSaveDialogChange = {
             showSaveDialog = it

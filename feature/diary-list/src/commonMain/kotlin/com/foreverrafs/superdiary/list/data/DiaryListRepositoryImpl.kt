@@ -6,6 +6,7 @@ import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.toDatabase
 import com.foreverrafs.superdiary.list.domain.repository.DiaryListRepository
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -24,6 +25,7 @@ class DiaryListRepositoryImpl(
         val result = database.deleteDiaries(diary.mapNotNull { it.id })
         Result.Success(result)
     } catch (e: Exception) {
+        if (e is CancellationException) throw e
         Result.Failure(e)
     }
 
