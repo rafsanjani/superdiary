@@ -51,7 +51,7 @@ import superdiary.feature.create_diary.generated.resources.Res
 import superdiary.feature.create_diary.generated.resources.label_diary_ai
 
 /**
- * Then the main screen the user sees when they try to create a diary entry. It
+ * The main screen the user sees when they try to create a diary entry. It
  * provides a rich text editor and a few tools for generating entries using
  * AI.
  *
