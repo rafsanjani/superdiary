@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.creatediary
+package com.foreverrafs.superdiary.creatediary
 
 import app.cash.turbine.test
 import assertk.assertThat
@@ -12,12 +12,11 @@ import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.core.permission.LocationManager
 import com.foreverrafs.superdiary.core.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.permission.PermissionState
+import com.foreverrafs.superdiary.creatediary.FakePermissionsControllerWrapper.ActionPerformed
+import com.foreverrafs.superdiary.creatediary.screen.CreateDiaryViewModel
 import com.foreverrafs.superdiary.domain.Synchronizer
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
-import com.foreverrafs.superdiary.creatediary.AddDiaryUseCase
-import com.foreverrafs.superdiary.creatediary.screen.CreateDiaryViewModel
-import com.foreverrafs.superdiary.ui.creatediary.FakePermissionsControllerWrapper.ActionPerformed.ProvidePermission
 import com.foreverrafs.superdiary.utils.DiarySettings
 import dev.mokkery.answering.returns
 import dev.mokkery.every
@@ -155,7 +154,7 @@ class CreateDiaryViewModelTest {
             permissionsController.actionPerformed,
         )
             .isNotNull()
-            .isInstanceOf(ProvidePermission::class)
+            .isInstanceOf(ActionPerformed.ProvidePermission::class)
     }
 
     @Test

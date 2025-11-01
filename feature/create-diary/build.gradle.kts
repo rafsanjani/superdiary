@@ -6,6 +6,7 @@ plugins {
     id("com.superdiary.android.library")
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.paparazzi)
+    alias(libs.plugins.mokkery)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -32,6 +33,13 @@ kotlin {
             implementation(projects.sharedData)
             implementation(projects.core.logging)
             implementation(projects.core.permission)
+        }
+
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.turbine)
+            implementation(libs.assertk.common)
+            implementation(projects.commonTest)
         }
     }
 }

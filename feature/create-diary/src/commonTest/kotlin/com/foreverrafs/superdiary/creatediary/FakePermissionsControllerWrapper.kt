@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.creatediary
+package com.foreverrafs.superdiary.creatediary
 
 import com.foreverrafs.superdiary.core.permission.Permission
 import com.foreverrafs.superdiary.core.permission.PermissionState
