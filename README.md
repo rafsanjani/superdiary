@@ -1,4 +1,4 @@
-# Superdiary ❤️
+# Superdiary 
 
 <div align="left">
     <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/android_pr.yml/badge.svg"  alt="Link to CI build status"/>
