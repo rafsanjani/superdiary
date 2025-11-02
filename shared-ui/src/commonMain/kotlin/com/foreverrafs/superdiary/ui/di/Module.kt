@@ -14,6 +14,7 @@ import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.core.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.permission.di.permissionsModule
 import com.foreverrafs.superdiary.core.sync.di.syncModule
+import com.foreverrafs.superdiary.creatediary.di.createDiaryModule
 import com.foreverrafs.superdiary.dashboard.di.dashboardModule
 import com.foreverrafs.superdiary.di.platformModule
 import com.foreverrafs.superdiary.di.useCaseModule
@@ -58,6 +59,7 @@ fun compositeModule(
     platformModule(analyticsTracker = analytics, aggregateLogger = logger),
     authModule(),
     diaryAiModule,
+    createDiaryModule,
     profileModule,
     diaryListModule,
     dashboardModule,
