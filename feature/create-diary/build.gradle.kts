@@ -22,6 +22,7 @@ kotlin {
             implementation(projects.core.diaryAi)
             implementation(compose.foundation)
             implementation(compose.preview)
+            implementation(libs.kotlin.datetime)
             implementation(compose.components.resources)
             implementation(compose.materialIconsExtended)
             implementation(libs.richTextEditor)
@@ -31,6 +32,7 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(projects.sharedData)
+            implementation(projects.core.database)
             implementation(projects.core.logging)
             implementation(projects.core.permission)
         }
@@ -39,6 +41,7 @@ kotlin {
             implementation(kotlin("test"))
             implementation(libs.turbine)
             implementation(libs.assertk.common)
+            implementation(projects.core.databaseTest)
             implementation(projects.commonTest)
             implementation(libs.kotlinx.coroutines.test)
         }

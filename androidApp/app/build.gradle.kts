@@ -1,5 +1,6 @@
 @file:Suppress("UnusedPrivateProperty")
 
+import com.google.firebase.appdistribution.gradle.firebaseAppDistributionDefault
 import io.sentry.android.gradle.extensions.InstrumentationFeature
 
 
@@ -61,7 +62,7 @@ android {
             manifestPlaceholders["applicationName"] = "superdiary"
 
             val applicationId = System.getenv("FIREBASE_DISTRIBUTION_APP_ID")
-            firebaseAppDistribution {
+            firebaseAppDistributionDefault {
                 appId = applicationId
                 artifactType = "APK"
                 groups = "default"

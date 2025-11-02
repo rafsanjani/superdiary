@@ -1,9 +1,10 @@
-package com.foreverrafs.superdiary.usecase
+package com.foreverrafs.superdiary.creatediary
 
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
+import assertk.assertions.isNotEmpty
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
@@ -12,8 +13,6 @@ import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.NoOpSynchronizer
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
-import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
-import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.domain.validator.DiaryValidator
 import com.foreverrafs.superdiary.domain.validator.DiaryValidatorImpl
 import kotlin.test.AfterTest
@@ -21,6 +20,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
@@ -37,7 +37,6 @@ class AddDiaryUseCaseTest {
     private val dataSource: DataSource = LocalDataSource(database)
     private val validator: DiaryValidator = DiaryValidatorImpl(Clock.System)
 
-    private val getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers)
     private val addDiaryUseCase =
         AddDiaryUseCase(
             dataSource = dataSource,
@@ -68,13 +67,12 @@ class AddDiaryUseCaseTest {
         )
         addDiaryUseCase(diary)
 
-        getAllDiariesUseCase().test {
+        dataSource.fetchAll().test {
             val items = awaitItem()
             cancelAndConsumeRemainingEvents()
 
-            assertThat(items).isInstanceOf(Result.Success::class)
-            val firstItem = (items as? Result.Success)?.data?.first()
-            assertThat(firstItem?.id).isEqualTo(1000L)
+            val firstItem = (items).first()
+            assertThat(firstItem.id).isEqualTo(1000L)
         }
     }
 
@@ -119,17 +117,17 @@ class AddDiaryUseCaseTest {
         val diary = Diary(
             id = 1200L,
             entry = "New Entry",
-            date = kotlin.time.Instant.parse("2023-03-03T03:33:25.587Z"),
+            date = Instant.parse("2023-03-03T03:33:25.587Z"),
             isFavorite = false,
         )
 
         relaxedAddDiaryUseCase(diary)
 
-        getAllDiariesUseCase().test {
+        dataSource.fetchAll().test {
             val items = awaitItem()
             cancelAndConsumeRemainingEvents()
 
-            assertThat(items).isInstanceOf(Result.Success::class)
+            assertThat(items).isNotEmpty()
         }
     }
 }
