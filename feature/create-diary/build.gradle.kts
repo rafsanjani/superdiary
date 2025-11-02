@@ -40,6 +40,7 @@ kotlin {
             implementation(libs.turbine)
             implementation(libs.assertk.common)
             implementation(projects.commonTest)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }
