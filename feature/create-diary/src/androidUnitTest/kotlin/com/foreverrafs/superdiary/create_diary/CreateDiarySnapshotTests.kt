@@ -1,12 +1,14 @@
-package com.foreverrafs.superdiary.ui
+package com.foreverrafs.superdiary.creatediary
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.runtime.Composable
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.common.paparazzi.SnapshotDevice
+import com.foreverrafs.superdiary.creatediary.screen.CreateDiaryScreenContent
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
-import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreenContent
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
+import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import dev.icerock.moko.permissions.PermissionState
 import org.junit.Rule
@@ -16,7 +18,7 @@ import org.junit.runner.RunWith
 @OptIn(ExperimentalSharedTransitionApi::class)
 @RunWith(TestParameterInjector::class)
 class CreateDiarySnapshotTests(
-    @TestParameter val snapshotDevice: SnapshotDevice,
+    @param:TestParameter val snapshotDevice: SnapshotDevice,
 ) {
 
     @get:Rule
@@ -25,23 +27,41 @@ class CreateDiarySnapshotTests(
         useDeviceResolution = true,
     )
 
+    @Composable
+    private fun SnapshotContent(
+        isGeneratingFromAi: Boolean = false,
+        showLocationPermissionRationale: Boolean = false,
+        permissionState: PermissionState = PermissionState.NotDetermined,
+        avatarUrl: String? = null,
+        richTextState: RichTextState = rememberRichTextState(),
+        showSaveDialog: Boolean = false,
+    ) {
+        CreateDiaryScreenContent(
+            isGeneratingFromAi = isGeneratingFromAi,
+            onGenerateAI = { _: String, _: Int -> },
+            richTextState = richTextState,
+            onSaveDiary = {},
+            onDontAskAgain = {},
+            showLocationPermissionRationale = showLocationPermissionRationale,
+            onRequestLocationPermission = {},
+            permissionState = permissionState,
+            avatarUrl = avatarUrl,
+            showSaveDialog = showSaveDialog,
+            onShowSaveDialogChange = {},
+            onNavigateBack = {},
+        )
+    }
+
     @Test
     fun `Create Diary Screen - empty`() {
         paparazzi.snapshot {
             SuperDiaryPreviewTheme {
-                CreateDiaryScreenContent(
+                SnapshotContent(
                     isGeneratingFromAi = false,
-                    onGenerateAI = { _: String, _: Int -> },
-                    richTextState = rememberRichTextState().apply {},
-                    onSaveDiary = {},
-                    onDontAskAgain = {},
                     showLocationPermissionRationale = false,
-                    onRequestLocationPermission = {},
                     permissionState = PermissionState.NotDetermined,
-                    userInfo = null,
+                    avatarUrl = null,
                     showSaveDialog = false,
-                    onShowSaveDialogChange = {},
-                    onNavigateBack = {},
                 )
             }
         }
@@ -51,23 +71,11 @@ class CreateDiarySnapshotTests(
     fun `Create Diary Screen - very few words`() {
         paparazzi.snapshot {
             SuperDiaryPreviewTheme {
-                CreateDiaryScreenContent(
-                    onNavigateBack = {},
+                SnapshotContent(
                     isGeneratingFromAi = false,
-                    onGenerateAI = { _: String, _: Int -> },
                     richTextState = rememberRichTextState().apply {
-                        setText(
-                            "A four word line",
-                        )
+                        setText("Hello World!")
                     },
-                    onSaveDiary = {},
-                    showLocationPermissionRationale = false,
-                    onRequestLocationPermission = {},
-                    onDontAskAgain = {},
-                    permissionState = PermissionState.NotGranted,
-                    userInfo = null,
-                    showSaveDialog = false,
-                    onShowSaveDialogChange = {},
                 )
             }
         }
@@ -77,9 +85,8 @@ class CreateDiarySnapshotTests(
     fun `Create Diary Screen - with content`() {
         paparazzi.snapshot {
             SuperDiaryPreviewTheme {
-                CreateDiaryScreenContent(
+                SnapshotContent(
                     isGeneratingFromAi = false,
-                    onGenerateAI = { _: String, _: Int -> },
                     richTextState = rememberRichTextState().apply {
                         setText(
                             """
@@ -94,15 +101,6 @@ class CreateDiarySnapshotTests(
                             """.trimIndent(),
                         )
                     },
-                    onSaveDiary = {},
-                    showLocationPermissionRationale = false,
-                    onRequestLocationPermission = {},
-                    onDontAskAgain = {},
-                    permissionState = PermissionState.NotGranted,
-                    userInfo = null,
-                    showSaveDialog = false,
-                    onShowSaveDialogChange = {},
-                    onNavigateBack = {},
                 )
             }
         }
@@ -112,9 +110,8 @@ class CreateDiarySnapshotTests(
     fun `Create Diary Screen - with content - generating from AI`() {
         paparazzi.snapshot {
             SuperDiaryPreviewTheme {
-                CreateDiaryScreenContent(
+                SnapshotContent(
                     isGeneratingFromAi = true,
-                    onGenerateAI = { _: String, _: Int -> },
                     richTextState = rememberRichTextState().apply {
                         setText(
                             """
@@ -129,15 +126,6 @@ class CreateDiarySnapshotTests(
                             """.trimIndent(),
                         )
                     },
-                    onSaveDiary = {},
-                    showLocationPermissionRationale = false,
-                    onRequestLocationPermission = {},
-                    onDontAskAgain = {},
-                    permissionState = PermissionState.NotGranted,
-                    userInfo = null,
-                    showSaveDialog = false,
-                    onShowSaveDialogChange = {},
-                    onNavigateBack = {},
                 )
             }
         }
@@ -147,19 +135,8 @@ class CreateDiarySnapshotTests(
     fun `Create Diary Screen - Location Permission Dialog`() {
         paparazzi.snapshot {
             SuperDiaryPreviewTheme {
-                CreateDiaryScreenContent(
-                    isGeneratingFromAi = false,
-                    onGenerateAI = { _: String, _: Int -> },
-                    richTextState = rememberRichTextState().apply {},
-                    onSaveDiary = {},
-                    onDontAskAgain = {},
+                SnapshotContent(
                     showLocationPermissionRationale = true,
-                    onRequestLocationPermission = {},
-                    permissionState = PermissionState.NotDetermined,
-                    userInfo = null,
-                    showSaveDialog = false,
-                    onShowSaveDialogChange = {},
-                    onNavigateBack = {},
                 )
             }
         }
@@ -169,19 +146,9 @@ class CreateDiarySnapshotTests(
     fun `Create Diary Screen - Confirm Save Dialog`() {
         paparazzi.snapshot {
             SuperDiaryPreviewTheme {
-                CreateDiaryScreenContent(
-                    isGeneratingFromAi = false,
-                    onGenerateAI = { _: String, _: Int -> },
-                    richTextState = rememberRichTextState().apply {},
-                    onSaveDiary = {},
-                    onDontAskAgain = {},
+                SnapshotContent(
                     showLocationPermissionRationale = false,
-                    onRequestLocationPermission = {},
-                    permissionState = PermissionState.NotDetermined,
-                    userInfo = null,
                     showSaveDialog = true,
-                    onShowSaveDialogChange = {},
-                    onNavigateBack = {},
                 )
             }
         }

@@ -1,22 +1,20 @@
 package com.foreverrafs.superdiary
 
-import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
-import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 
 @OptIn(ExperimentalTime::class)
 suspend fun insertRandomDiaries(dataSource: DataSource, count: Int = 30) {
-    val relaxedAddDiaryUseCase = AddDiaryUseCase(dataSource, TestAppDispatchers) {}
-
     // March 03, 2023
-    var currentDate = kotlin.time.Instant.parse(input = "2023-03-03T02:35:53.049Z")
+    var currentDate = Instant.parse(input = "2023-03-03T02:35:53.049Z")
+
     repeat(count) {
-        relaxedAddDiaryUseCase(
+        dataSource.save(
             Diary(
                 entry = "Diary Entry #$it",
                 date = currentDate,

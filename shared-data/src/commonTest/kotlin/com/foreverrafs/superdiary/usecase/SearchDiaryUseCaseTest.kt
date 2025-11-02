@@ -13,7 +13,6 @@ import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
-import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryBetweenDatesUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByEntryUseCase
@@ -22,6 +21,7 @@ import com.foreverrafs.superdiary.utils.toInstant
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -30,7 +30,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kotlinx.datetime.LocalDate
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
 class SearchDiaryUseCaseTest {
 
     private val database = Database(testSuperDiaryDatabase)
@@ -131,14 +131,9 @@ class SearchDiaryUseCaseTest {
     fun `Searching for diary for a valid date returns entries`() = runTest {
         insertEntries()
 
-        val relaxedAddDiaryUseCase = AddDiaryUseCase(
-            dispatchers = TestAppDispatchers,
-            validator = {},
-            dataSource = dataSource,
-        )
         val date = LocalDate.parse("2023-03-03")
 
-        relaxedAddDiaryUseCase(Diary(entry = "", date = date.toInstant(), isFavorite = false))
+        dataSource.save(Diary(entry = "", date = date.toInstant(), isFavorite = false))
 
         searchDiaryByDateUseCase(date = date.toInstant()).test {
             val diaries = awaitItem()

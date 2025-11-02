@@ -36,13 +36,13 @@ import coil3.request.CachePolicy
 import coil3.request.crossfade
 import com.foreverrafs.superdiary.auth.navigation.AuthNavigation
 import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
+import com.foreverrafs.superdiary.creatediary.screen.CreateDiaryScreen
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.list.navigation.DiaryListNavigation
 import com.foreverrafs.superdiary.list.navigation.DiaryListRoute
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.AppSessionState
-import com.foreverrafs.superdiary.ui.feature.creatediary.screen.CreateDiaryScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import okio.FileSystem
@@ -155,7 +155,7 @@ internal fun SuperDiaryNavHost(
 
                     entry<AppRoute.CreateDiaryScreen> {
                         CreateDiaryScreen(
-                            userInfo = userInfo,
+                            avatarUrl = userInfo?.avatarUrl,
                             onDiarySave = { backStack.removeAt(backStack.lastIndex) },
                             onNavigateBack = { backStack.removeAt(backStack.lastIndex) },
                         )

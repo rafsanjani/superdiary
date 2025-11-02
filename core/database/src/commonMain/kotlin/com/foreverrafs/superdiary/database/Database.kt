@@ -8,15 +8,15 @@ import com.foreverrafs.superdiary.database.model.DiaryChatRoleDb
 import com.foreverrafs.superdiary.database.model.DiaryDb
 import com.foreverrafs.superdiary.database.model.LocationDb
 import com.foreverrafs.superdiary.database.model.WeeklySummaryDb
-import kotlin.coroutines.suspendCoroutine
 import kotlin.time.Instant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 // Converts a date to a long value and vice versa
 val dateAdapter = object : ColumnAdapter<Instant, Long> {
     override fun decode(databaseValue: Long): Instant =
-        Instant.Companion.fromEpochMilliseconds(databaseValue)
+        Instant.fromEpochMilliseconds(databaseValue)
 
     override fun encode(value: Instant): Long = value.toEpochMilliseconds()
 }
@@ -84,7 +84,7 @@ class Database(
 
     private fun deleteDiary(id: Long) = queries.delete(id)
 
-    suspend fun deleteDiaries(ids: List<Long>): Int = suspendCoroutine { continuation ->
+    suspend fun deleteDiaries(ids: List<Long>): Int = suspendCancellableCoroutine { continuation ->
         queries.transaction {
             afterCommit {
                 continuation.resumeWith(
@@ -159,7 +159,7 @@ class Database(
         mapper = { date, summary ->
             WeeklySummaryDb(
                 summary = summary,
-                date = Instant.Companion.parse(date),
+                date = Instant.parse(date),
             )
         },
     ).executeAsOneOrNull()

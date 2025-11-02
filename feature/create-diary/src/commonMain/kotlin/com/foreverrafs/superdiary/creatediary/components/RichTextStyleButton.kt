@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.creatediary.components
+package com.foreverrafs.superdiary.creatediary.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape

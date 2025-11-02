@@ -12,7 +12,6 @@ import com.foreverrafs.superdiary.data.datasource.remote.RemoteDataSource
 import com.foreverrafs.superdiary.data.datasource.remote.SupabaseDiaryApi
 import com.foreverrafs.superdiary.database.di.databaseModule
 import com.foreverrafs.superdiary.domain.repository.DataSource
-import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.AddWeeklySummaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.CalculateBestStreakUseCase
 import com.foreverrafs.superdiary.domain.usecase.CalculateStreakUseCase
@@ -58,8 +57,6 @@ val useCaseModule = module {
         )
     }
     factoryOf(::DiaryValidatorImpl) { bind<DiaryValidator>() }
-
-    factoryOf(::AddDiaryUseCase)
 
     factoryOf(::GetFavoriteDiariesUseCase)
     factoryOf(::SearchDiaryBetweenDatesUseCase)

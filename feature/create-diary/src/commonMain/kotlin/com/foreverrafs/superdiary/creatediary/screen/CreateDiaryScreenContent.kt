@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.creatediary.screen
+package com.foreverrafs.superdiary.creatediary.screen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -36,23 +36,22 @@ import androidx.compose.ui.unit.sp
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
-import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.permission.PermissionState
+import com.foreverrafs.superdiary.creatediary.components.RichTextStyleRow
 import com.foreverrafs.superdiary.design.components.AppBar
 import com.foreverrafs.superdiary.design.components.ConfirmSaveDialog
 import com.foreverrafs.superdiary.design.components.LocationRationaleDialog
 import com.foreverrafs.superdiary.design.components.SuperdiaryNavigationIcon
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
-import com.foreverrafs.superdiary.ui.feature.creatediary.components.RichTextStyleRow
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
 import org.jetbrains.compose.resources.stringResource
-import superdiary.shared_ui.generated.resources.Res
-import superdiary.shared_ui.generated.resources.label_diary_ai
+import superdiary.feature.create_diary.generated.resources.Res
+import superdiary.feature.create_diary.generated.resources.label_diary_ai
 
 /**
- * Main screen the user sees when the try to create a diary entry. It
+ * The main screen the user sees when they try to create a diary entry. It
  * provides a rich text editor and a few tools for generating entries using
  * AI.
  *
@@ -80,7 +79,7 @@ fun CreateDiaryScreenContent(
     onSaveDiary: (entry: String) -> Unit,
     showLocationPermissionRationale: Boolean,
     permissionState: PermissionState,
-    userInfo: UserInfo?,
+    avatarUrl: String?,
     onRequestLocationPermission: () -> Unit,
     onDontAskAgain: () -> Unit,
     onNavigateBack: () -> Unit,
@@ -115,7 +114,7 @@ fun CreateDiaryScreenContent(
                         },
                     )
                 },
-                avatarUrl = userInfo?.avatarUrl,
+                avatarUrl = avatarUrl,
             )
         },
         modifier = modifier,
@@ -181,7 +180,7 @@ fun CreateDiaryScreenContent(
                         style = MaterialTheme.typography.bodyMedium,
                     )
 
-                    // Only enable AI suggestions when there is at least 50 characters entered
+                    // Only enable AI suggestions when there are at least 50 characters entered
                     val enableSuggestionChip =
                         !isGeneratingFromAi && richTextState.toText().length >= 50
 
@@ -262,7 +261,7 @@ private fun Preview() {
             showLocationPermissionRationale = false,
             onRequestLocationPermission = {},
             permissionState = PermissionState.NotDetermined,
-            userInfo = null,
+            avatarUrl = null,
             showSaveDialog = false,
             onShowSaveDialogChange = {},
             onNavigateBack = {},
