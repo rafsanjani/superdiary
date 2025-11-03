@@ -1,5 +1,6 @@
 @file:Suppress("UnusedPrivateProperty")
 
+import com.google.firebase.appdistribution.gradle.firebaseAppDistributionDefault
 import io.sentry.android.gradle.extensions.InstrumentationFeature
 
 
@@ -10,7 +11,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     alias(libs.plugins.sentry)
-    id("com.google.firebase.appdistribution") version "5.1.1"
+    id("com.google.firebase.appdistribution") version "5.2.0"
     id("com.dropbox.dependency-guard") version "0.5.0"
 }
 
@@ -22,7 +23,7 @@ android {
         applicationId = "com.foreverrafs.superdiary"
         minSdk = libs.versions.minimumSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 276
+        versionCode = 280
         versionName = "0.0.1"
 
         val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_ANDROID") ?: ""
@@ -61,7 +62,7 @@ android {
             manifestPlaceholders["applicationName"] = "superdiary"
 
             val applicationId = System.getenv("FIREBASE_DISTRIBUTION_APP_ID")
-            firebaseAppDistribution {
+            firebaseAppDistributionDefault {
                 appId = applicationId
                 artifactType = "APK"
                 groups = "default"

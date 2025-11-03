@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
-actual fun permissionModule(): Module = module {
+actual fun savedStateModule(): Module = module {
     single<SavedStateHandle> {
         SavedStateHandle()
     }

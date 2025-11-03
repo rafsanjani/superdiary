@@ -10,25 +10,22 @@ import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
-import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.list.data.DiaryListRepositoryImpl
 import com.foreverrafs.superdiary.list.domain.usecase.GetDiaryByIdUseCase
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
 class GetDiaryByIdUseCaseTest {
     private val database = Database(testSuperDiaryDatabase)
     private val dataSource: DataSource = LocalDataSource(database = database)
-    private val addDiaryUseCase = AddDiaryUseCase(dataSource, TestAppDispatchers) {
-        // no-op validator
-    }
 
     private val getDiaryByIdUseCase = GetDiaryByIdUseCase(
         repository = DiaryListRepositoryImpl(
@@ -50,14 +47,13 @@ class GetDiaryByIdUseCaseTest {
     @Test
     fun `Getting a dairy by id should return it`() = runTest {
         // Insert a diary into the database
-        val result = addDiaryUseCase(
+        dataSource.save(
             Diary(
                 id = 12345L,
                 entry = "Hello World",
             ),
         )
 
-        println(result)
         // Fetch the diary we just inserted
         val diary = getDiaryByIdUseCase(id = 12345L)
 
@@ -69,7 +65,7 @@ class GetDiaryByIdUseCaseTest {
     @Test
     fun `Getting invalid diary id should return null`() = runTest {
         // Insert a diary into the database
-        addDiaryUseCase(
+        dataSource.save(
             Diary(
                 id = 12345L,
                 entry = "Hello World",

@@ -50,7 +50,6 @@ kotlin {
                 implementation(libs.touchlab.stately)
                 implementation(libs.jetbrains.navigation.compose)
                 implementation(libs.kotlinx.serialization.json)
-                implementation(compose.preview)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.coil3.compose)
                 implementation(libs.coil3.compose.core)
@@ -66,12 +65,15 @@ kotlin {
                 api(projects.core.location)
                 api(projects.core.logging)
                 api(projects.designSystem)
+                api(projects.core.permission)
                 implementation(projects.core.diaryAi)
                 implementation(projects.feature.diaryProfile)
                 implementation(projects.feature.diaryAuth)
                 implementation(projects.feature.diaryList)
                 implementation(projects.feature.diaryDashboard)
+                implementation(projects.feature.createDiary)
                 implementation(projects.core.sync)
+                implementation(projects.core.permission)
             }
         }
 

@@ -138,6 +138,7 @@ include(":core:database-test")
 include(":core:secrets")
 include(":core:database")
 include(":core:sync")
+include(":core:permission")
 include(":core:diary-ai")
 
 // common components shared by other modules
@@ -150,6 +151,7 @@ include(":feature:diary-profile")
 include(":feature:diary-auth")
 include(":feature:diary-list")
 include(":feature:diary-dashboard")
+include(":feature:create-diary")
 
 // annotation processor for datasore preferences
 include(":preferences:annotation")

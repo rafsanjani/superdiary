@@ -17,12 +17,14 @@ import com.foreverrafs.superdiary.domain.model.toDatabase
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 
+@OptIn(ExperimentalTime::class)
 class DiaryListRepositoryImplTest {
 
     private val database: Database = Database(testSuperDiaryDatabase)
