@@ -39,7 +39,7 @@ kotlin {
                 implementation(compose.materialIconsExtended)
                 implementation(projects.sharedData)
                 implementation(projects.commonUtils)
-                implementation("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-alpha03")
+                implementation("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-SNAPSHOT+update-templates-demos")
                 implementation(libs.kotlin.datetime)
                 implementation(libs.androidx.core.uri)
                 implementation(libs.koin.core)
