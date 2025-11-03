@@ -2,7 +2,6 @@
 
 package com.foreverrafs.superdiary.design.style
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -165,6 +164,6 @@ val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope>
     error("SharedTransitionScope not present")
 }
 
-val LocalAnimatedContentScope = staticCompositionLocalOf<AnimatedContentScope> {
-    error("AnimatedContentScope not present")
-}
+// val LocalAnimatedContentScope = staticCompositionLocalOf<AnimatedContentScope> {
+//    error("AnimatedContentScope not present")
+// }

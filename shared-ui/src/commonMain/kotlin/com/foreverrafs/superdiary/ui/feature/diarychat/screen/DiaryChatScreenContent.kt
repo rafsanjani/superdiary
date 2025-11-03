@@ -57,6 +57,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.benasher44.uuid.uuid4
@@ -67,7 +68,6 @@ import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
 import kotlin.time.Clock
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import superdiary.shared_ui.generated.resources.Res
 import superdiary.shared_ui.generated.resources.content_description_button_send
 

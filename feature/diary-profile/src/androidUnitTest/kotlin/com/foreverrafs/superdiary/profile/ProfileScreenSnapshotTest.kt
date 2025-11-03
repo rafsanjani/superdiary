@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 @OptIn(ExperimentalSharedTransitionApi::class)
 @RunWith(TestParameterInjector::class)
 class ProfileScreenSnapshotTest(
-    @TestParameter val snapshotDevice: SnapshotDevice,
+    @param:TestParameter val snapshotDevice: SnapshotDevice,
 ) {
 
     @get:Rule

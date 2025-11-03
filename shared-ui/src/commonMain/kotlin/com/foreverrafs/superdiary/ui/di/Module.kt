@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.ui.di
 
 import com.foreverrafs.auth.di.authModule
 import com.foreverrafs.superdiary.ai.di.diaryAiModule
+import com.foreverrafs.superdiary.auth.di.diaryAuthModule
 import com.foreverrafs.superdiary.auth.login.BiometricLoginScreenViewModel
 import com.foreverrafs.superdiary.auth.login.LoginScreenViewModel
 import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
@@ -9,10 +10,11 @@ import com.foreverrafs.superdiary.auth.register.RegisterScreenViewModel
 import com.foreverrafs.superdiary.auth.reset.PasswordResetViewModel
 import com.foreverrafs.superdiary.common.utils.di.utilsModule
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
-import com.foreverrafs.superdiary.core.location.di.locationModule
-import com.foreverrafs.superdiary.core.location.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
+import com.foreverrafs.superdiary.core.permission.LocationPermissionManager
+import com.foreverrafs.superdiary.core.permission.di.permissionsModule
 import com.foreverrafs.superdiary.core.sync.di.syncModule
+import com.foreverrafs.superdiary.creatediary.di.createDiaryModule
 import com.foreverrafs.superdiary.dashboard.di.dashboardModule
 import com.foreverrafs.superdiary.di.platformModule
 import com.foreverrafs.superdiary.di.useCaseModule
@@ -20,8 +22,6 @@ import com.foreverrafs.superdiary.domain.usecase.GetDiaryByIdUseCase
 import com.foreverrafs.superdiary.list.di.diaryListModule
 import com.foreverrafs.superdiary.profile.di.profileModule
 import com.foreverrafs.superdiary.ui.AppViewModel
-import com.foreverrafs.superdiary.ui.feature.changepassword.ChangePasswordViewModel
-import com.foreverrafs.superdiary.ui.feature.creatediary.CreateDiaryViewModel
 import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
 import com.foreverrafs.superdiary.ui.feature.favorites.FavoriteViewModel
 import org.koin.core.module.Module
@@ -35,7 +35,6 @@ internal val screensModule: Module = module {
     singleOf(::DeeplinkContainer)
 
     factoryOf(::GetDiaryByIdUseCase)
-    viewModelOf(::CreateDiaryViewModel)
     viewModelOf(::FavoriteViewModel)
     viewModelOf(::DiaryChatViewModel)
     viewModelOf(::RegisterScreenViewModel)
@@ -43,10 +42,9 @@ internal val screensModule: Module = module {
     viewModelOf(::AppViewModel)
     viewModelOf(::PasswordResetViewModel)
     viewModelOf(::BiometricLoginScreenViewModel)
-    viewModelOf(::ChangePasswordViewModel)
 }
 
-expect fun permissionModule(): Module
+expect fun savedStateModule(): Module
 
 /** This is the only component that is exposed outside of this module */
 fun compositeModule(
@@ -54,15 +52,17 @@ fun compositeModule(
     logger: AggregateLogger,
 ): List<Module> = listOf(
     utilsModule,
-    locationModule(),
+    savedStateModule(),
+    permissionsModule(),
     useCaseModule,
-    permissionModule(),
     screensModule,
     platformModule(analyticsTracker = analytics, aggregateLogger = logger),
     authModule(),
     diaryAiModule,
+    createDiaryModule,
     profileModule,
     diaryListModule,
     dashboardModule,
     syncModule,
+    diaryAuthModule,
 )

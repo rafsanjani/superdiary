@@ -41,7 +41,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.diary_auth.generated.resources.Res
@@ -301,6 +303,19 @@ private fun InputField(
             },
             visualTransformation = visualTransformation,
             maxLines = 1,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    SuperDiaryPreviewTheme {
+        RegisterScreenContent(
+            viewState = RegisterScreenState.Idle,
+            onRegisterClick = { name, username, password -> },
+            onRegisterSuccess = {},
+            onLoginClick = {},
         )
     }
 }

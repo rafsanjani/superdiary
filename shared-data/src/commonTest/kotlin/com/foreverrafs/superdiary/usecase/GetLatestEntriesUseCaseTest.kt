@@ -4,13 +4,11 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEmpty
-import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
-import com.foreverrafs.superdiary.domain.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetLatestEntriesUseCase
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -32,9 +30,6 @@ class GetLatestEntriesUseCaseTest {
     private val database = Database(testSuperDiaryDatabase)
     private val dataSource: DataSource = LocalDataSource(database)
 
-    private val addDiaryUseCase = AddDiaryUseCase(dataSource, TestAppDispatchers) {
-        // no-op validator
-    }
     private val getLatestEntriesUseCase = GetLatestEntriesUseCase(dataSource)
 
     @BeforeTest
@@ -67,7 +62,7 @@ class GetLatestEntriesUseCaseTest {
         )
 
         items.forEach { diary ->
-            addDiaryUseCase(diary)
+            dataSource.save(diary)
         }
 
         getLatestEntriesUseCase(2).test {

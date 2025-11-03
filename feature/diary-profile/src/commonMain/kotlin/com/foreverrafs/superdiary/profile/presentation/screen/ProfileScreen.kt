@@ -47,11 +47,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.foreverrafs.superdiary.design.components.Image
-import com.foreverrafs.superdiary.design.style.LocalAnimatedContentScope
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
@@ -59,7 +59,6 @@ import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewData
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewModel
 import com.foreverrafs.superdiary.utils.DiarySettings
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import superdiary.feature.diary_profile.generated.resources.Res
 import superdiary.feature.diary_profile.generated.resources.profile_screen_section_dashboard_cards
@@ -115,7 +114,7 @@ fun ProfileScreenContent(
     val snackBarkHostState = remember { SnackbarHostState() }
     val currentOnConsumeErrorMessage by rememberUpdatedState(onConsumeErrorMessage)
     val sharedTransitionScope = LocalSharedTransitionScope.current
-    val animatedContentScope = LocalAnimatedContentScope.current
+//    val animatedContentScope = LocalAnimatedContentScope.current
 
     LaunchedEffect(viewState.errorMessage) {
         if (viewState.errorMessage != null) {
@@ -173,12 +172,12 @@ fun ProfileScreenContent(
 
                         Image(
                             modifier = Modifier
-                                .sharedElement(
-                                    sharedContentState = sharedTransitionScope.rememberSharedContentState(
-                                        key = "profile_image",
-                                    ),
-                                    animatedVisibilityScope = animatedContentScope,
-                                )
+//                                .sharedElement(
+//                                    sharedContentState = sharedTransitionScope.rememberSharedContentState(
+//                                        key = "profile_image",
+//                                    ),
+//                                    animatedVisibilityScope = animatedContentScope,
+//                                )
                                 .size(72.dp)
                                 .clip(CircleShape),
                             url = viewState.avatarUrl,

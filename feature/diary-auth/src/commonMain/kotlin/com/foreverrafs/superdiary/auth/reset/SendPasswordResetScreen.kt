@@ -54,7 +54,7 @@ fun SendPasswordResetEmailScreen(
     )
 
     SendPasswordResetEmailScreenContent(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         viewState = viewState,
         onEmailChange = passwordResetViewModel::onEmailChange,
         onResetPasswordClick = passwordResetViewModel::onResetPassword,
@@ -211,6 +211,7 @@ private fun InputScreen(
             isError = !viewState.isEmailValid,
             errorLabel = viewState.inputErrorMessage,
             readOnly = viewState.isLoading,
+            maxLines = 1,
         )
 
         Spacer(modifier = Modifier.weight(1f))
