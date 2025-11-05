@@ -6,8 +6,8 @@ import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.common.paparazzi.SnapshotDevice
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
-import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewState
-import com.foreverrafs.superdiary.list.presentation.screen.detail.screen.DetailScreenContent
+import com.foreverrafs.superdiary.list.presentation.detail.DetailsViewState
+import com.foreverrafs.superdiary.list.presentation.detail.screen.DetailScreenContent
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import kotlin.time.Clock

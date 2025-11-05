@@ -153,6 +153,7 @@ include(":feature:diary-auth")
 include(":feature:diary-list")
 include(":feature:diary-dashboard")
 include(":feature:create-diary")
+include(":feature:diary-favorite")
 
 // annotation processor for datasore preferences
 include(":preferences:annotation")

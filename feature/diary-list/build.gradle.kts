@@ -26,6 +26,7 @@ kotlin {
             implementation(compose.preview)
             implementation(compose.materialIconsExtended)
             implementation(projects.core.logging)
+            implementation(projects.core.uiComponents)
             implementation(libs.jetbrains.navigation.compose)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.koin.compose)

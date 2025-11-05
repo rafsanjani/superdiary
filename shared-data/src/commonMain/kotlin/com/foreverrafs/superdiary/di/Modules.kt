@@ -19,6 +19,7 @@ import com.foreverrafs.superdiary.domain.usecase.ClearDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.CountDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
+import com.foreverrafs.superdiary.domain.usecase.GetDiaryByIdUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetFavoriteDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetLatestEntriesUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetWeeklySummaryUseCase
@@ -70,6 +71,7 @@ val useCaseModule = module {
     factoryOf(::CalculateStreakUseCase)
     factoryOf(::AddWeeklySummaryUseCase)
     factoryOf(::GetWeeklySummaryUseCase)
+    factoryOf(::GetDiaryByIdUseCase)
     factoryOf(::GetAllDiariesUseCase)
     factoryOf(::CalculateBestStreakUseCase)
     factoryOf(::SupabaseDiaryApi) { bind<DiaryApi>() }

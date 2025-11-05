@@ -11,9 +11,9 @@ import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetDiaryByIdUseCase
-import com.foreverrafs.superdiary.list.presentation.screen.detail.DeleteDiaryState
-import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewModel
-import com.foreverrafs.superdiary.list.presentation.screen.detail.DetailsViewState
+import com.foreverrafs.superdiary.list.presentation.detail.DeleteDiaryState
+import com.foreverrafs.superdiary.list.presentation.detail.DetailsViewModel
+import com.foreverrafs.superdiary.list.presentation.detail.DetailsViewState
 import dev.mokkery.answering.returns
 import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
