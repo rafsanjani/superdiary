@@ -25,7 +25,7 @@ class GetCurrentUserUseCaseTest {
             name = "Rafs",
             email = "rafs@example.com",
             avatarUrl = "",
-            uniqueEmail = ""
+            uniqueEmail = "",
         )
 
         everySuspend { repository.getUserInfo() } returns Result.success(expectedUser)

@@ -24,7 +24,7 @@ class ProfileRepositoryImplTest {
             name = "Rafs",
             email = "rafs@example.com",
             avatarUrl = "",
-            uniqueEmail = ""
+            uniqueEmail = "",
         )
 
         every { authApi.currentUserOrNull() } returns user

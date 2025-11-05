@@ -140,7 +140,6 @@ class SignOutUseCaseTest {
 
             val result = signOutUseCase.invoke()
 
-
             assertThat(result.isFailure).isTrue()
             assertThat(result.exceptionOrNull()).isEqualTo(unexpectedException)
         }
