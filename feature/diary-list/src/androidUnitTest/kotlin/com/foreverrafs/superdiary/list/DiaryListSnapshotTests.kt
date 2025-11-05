@@ -11,12 +11,14 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import app.cash.paparazzi.Paparazzi
 import com.android.ide.common.rendering.api.SessionParams
+import com.components.diarylist.DiaryFilters
+import com.components.diarylist.DiaryListActions
 import com.foreverrafs.common.paparazzi.SnapshotDevice
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
-import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListScreenContent
-import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListScreenModel
+import com.foreverrafs.superdiary.list.presentation.list.DiaryListScreenContent
+import com.foreverrafs.superdiary.list.presentation.list.DiaryListScreenModel
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import kotlin.time.Clock
@@ -35,7 +37,7 @@ class DiaryListSnapshotTests(
     private val testClock = object : Clock {
         // 2023-11-10
         override fun now(): kotlin.time.Instant =
-            kotlin.time.Instant.Companion.parse("2023-11-10T00:00:00.850951Z")
+            kotlin.time.Instant.parse("2023-11-10T00:00:00.850951Z")
     }
 
     @get:Rule
@@ -96,11 +98,11 @@ class DiaryListSnapshotTests(
                                     entry = "Hello Diary $it",
                                     date = testClock.now().minus(
                                         value = 1,
-                                        unit = DateTimeUnit.Companion.MONTH,
-                                        timeZone = TimeZone.Companion.UTC,
+                                        unit = DateTimeUnit.MONTH,
+                                        timeZone = TimeZone.UTC,
                                     ),
                                     isFavorite = false,
-                                    location = Location.Companion.Empty,
+                                    location = Location.Empty,
                                 )
                             },
                             isFiltered = false,

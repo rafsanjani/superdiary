@@ -10,8 +10,8 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
-import com.foreverrafs.superdiary.list.presentation.screen.detail.screen.DetailScreen
-import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListScreen
+import com.foreverrafs.superdiary.list.presentation.detail.screen.DetailScreen
+import com.foreverrafs.superdiary.list.presentation.list.DiaryListScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 

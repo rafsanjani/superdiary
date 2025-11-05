@@ -17,9 +17,9 @@ import androidx.navigation.compose.rememberNavController
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.dashboard.screen.DashboardTab
 import com.foreverrafs.superdiary.design.components.AppBar
+import com.foreverrafs.superdiary.favorite.screen.FavoriteTab
 import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
 import com.foreverrafs.superdiary.ui.feature.diarychat.screen.DiaryChatTab
-import com.foreverrafs.superdiary.ui.feature.favorites.screen.FavoriteTab
 
 /**
  * Provides a navigation entry point for all the screens that rely on

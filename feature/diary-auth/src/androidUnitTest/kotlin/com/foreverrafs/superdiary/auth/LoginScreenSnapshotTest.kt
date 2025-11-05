@@ -14,7 +14,7 @@ import org.junit.runner.RunWith
 
 @RunWith(TestParameterInjector::class)
 class LoginScreenSnapshotTest(
-    @TestParameter val snapshotDevice: SnapshotDevice,
+    @param:TestParameter val snapshotDevice: SnapshotDevice,
 ) {
 
     @get:Rule

@@ -23,7 +23,7 @@ import org.junit.runner.RunWith
 
 @RunWith(TestParameterInjector::class)
 class TopAppBarSnapshotTests(
-    @TestParameter val snapshotDevice: SnapshotDevice,
+    @param:TestParameter val snapshotDevice: SnapshotDevice,
 ) {
 
     @get:Rule

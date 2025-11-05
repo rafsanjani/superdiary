@@ -6,6 +6,7 @@ import assertk.assertions.isFalse
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import assertk.assertions.isTrue
+import com.components.diarylist.DiaryFilters
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
@@ -16,10 +17,9 @@ import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
-import com.foreverrafs.superdiary.list.DiaryFilters
 import com.foreverrafs.superdiary.list.domain.repository.DiaryListRepository
 import com.foreverrafs.superdiary.list.domain.usecase.GetAllDiariesUseCase
-import com.foreverrafs.superdiary.list.presentation.screen.list.DiaryListViewModel
+import com.foreverrafs.superdiary.list.presentation.list.DiaryListViewModel
 import com.foreverrafs.superdiary.utils.toDate
 import dev.mokkery.answering.returns
 import dev.mokkery.answering.throws
