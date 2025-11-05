@@ -115,7 +115,6 @@ class DiaryChatViewModelTest {
         }
     }
 
-
     @Test
     fun `Should include system and welcome messages right after initialization`() = runTest {
         // No history already configured in setup

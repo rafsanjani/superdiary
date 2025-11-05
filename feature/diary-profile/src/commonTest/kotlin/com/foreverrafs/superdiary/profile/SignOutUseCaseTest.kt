@@ -45,9 +45,7 @@ class SignOutUseCaseTest {
     @Test
     fun `should complete successfully when sign out succeeds`() =
         runTest(testDispatcher) {
-            // When
             val result = signOutUseCase.invoke()
-
 
             assertThat(result.isSuccess).isTrue()
             assertThat(result.getOrNull()).isEqualTo(Unit)
@@ -56,14 +54,11 @@ class SignOutUseCaseTest {
     @Test
     fun `should return failure and stop when authApi signOut fails`() =
         runTest(testDispatcher) {
-            // Given
             val exception = Exception("Auth API failure")
 
             everySuspend { authApi.signOut() } throws exception
 
-            // When
             val result = signOutUseCase.invoke()
-
 
             assertThat(result.isFailure).isTrue()
             assertThat(result.exceptionOrNull()).isEqualTo(exception)
@@ -72,14 +67,10 @@ class SignOutUseCaseTest {
     @Test
     fun `should return failure and stop when preferences clearing fails`() =
         runTest(testDispatcher) {
-            // Given
             val exception = Exception("Preferences clear failure")
             everySuspend { preferences.clear() } throws exception
 
-            // When
             val result = signOutUseCase.invoke()
-
-
 
             assertThat(result.isFailure).isTrue()
             assertThat(result.exceptionOrNull()).isEqualTo(exception)
@@ -88,13 +79,10 @@ class SignOutUseCaseTest {
     @Test
     fun `should return failure and stop when dataSource deletion fails`() =
         runTest(testDispatcher) {
-            // Given
             val exception = Exception("DataSource deleteAll failure")
             everySuspend { dataSource.deleteAll() } throws exception
 
-            // When
             val result = signOutUseCase.invoke()
-
 
             assertThat(result.isFailure).isTrue()
             assertThat(result.exceptionOrNull()).isEqualTo(exception)
@@ -103,11 +91,9 @@ class SignOutUseCaseTest {
     @Test
     fun `should return failure when clearing chat messages fails`() =
         runTest(testDispatcher) {
-            // Given
             val exception = Exception("DataSource clearChatMessages failure")
             everySuspend { dataSource.clearChatMessages() } throws exception
 
-            // When
             val result = signOutUseCase.invoke()
 
             assertThat(result.isFailure).isTrue()
@@ -117,15 +103,11 @@ class SignOutUseCaseTest {
     @Test
     fun `should return failure when sign out operation fails`() =
         runTest(testDispatcher) {
-            // Given
             val exception = Exception("Auth API failure")
             everySuspend { authApi.signOut() } throws exception
 
-            // When
             val result = signOutUseCase.invoke()
 
-
-            // Then
             verifySuspend(VerifyMode.exactly(1)) { authApi.signOut() }
 
             assertThat(result.isFailure).isTrue()
