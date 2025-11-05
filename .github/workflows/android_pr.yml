@@ -166,7 +166,7 @@ jobs:
                 uses: actions/github-script@v8
                 with:
                     script: |
-                        core.setFailed('Coverage for changed files ${{steps.jacoco.outputs.coverage-changed-files}} is less than 80%!')
+                        core.setFailed('Coverage for changed files ${{steps.jacoco.outputs.coverage-changed-files}}% is less than 80%!')
 
             #  -   name: Verify minimum code coverage (90%)
             #      run: ./gradlew testDebugUnitTest -Pkover koverVerify
@@ -176,7 +176,7 @@ jobs:
                 uses: actions/github-script@v8
                 with:
                     script: |
-                        core.setFailed('Coverage for total project: ${{steps.jacoco.outputs.coverage-overall}} is less than 90%!')
+                        core.setFailed('Coverage for total project: ${{steps.jacoco.outputs.coverage-overall}}% is less than 90%!')
 
 
             -   name: Update dynamic badge gist
