@@ -161,7 +161,7 @@ fun DiaryList(
                                         if (inSelectionMode) {
                                             diaryListActions.onToggleSelection(diary.id)
                                         } else {
-                                            diaryListActions.onDiaryClicked(diary.id!!)
+                                            diary.id?.let(diaryListActions.onDiaryClicked)
                                         }
                                     },
                                     onLongClick = {
