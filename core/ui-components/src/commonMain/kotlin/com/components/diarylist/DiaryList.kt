@@ -145,7 +145,7 @@ fun DiaryList(
 
                     items(
                         items = diaries,
-                        key = { item -> item.id!! },
+                        key = { item -> item.id ?: item.hashCode() },
                     ) { diary ->
 
                         DiaryItem(
