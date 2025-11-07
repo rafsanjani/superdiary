@@ -21,7 +21,7 @@ kotlin {
                 implementation(compose.preview)
                 api(libs.jetbrains.compose.ui.backhandler)
                 api("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-alpha03")
-                api("org.jetbrains.compose.material3:material3:1.10.0-alpha03")
+                api("org.jetbrains.compose.material3:material3:1.10.0-alpha04")
                 implementation(libs.coil3.compose)
                 implementation(libs.coil3.compose.core)
                 implementation(libs.jetbrains.navigation.compose)
