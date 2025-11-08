@@ -1,0 +1,46 @@
+name: Dependency Guard Baseline Updater
+
+on:
+    pull_request:
+        types: [opened, edited, synchronize, reopened]
+
+jobs:
+    dependency-guard-baseline:
+        if: startsWith(github.event.pull_request.title, 'Update dependency')
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout PR source branch
+              uses: actions/checkout@v5
+              with:
+                  ref: ${{ github.event.pull_request.head.ref }}
+                  repository: ${{ github.event.pull_request.head.repo.full_name }}
+                  token: ${{ secrets.SECRET_GITHUB }}
+                  fetch-depth: 0
+
+
+            - name: Setup Java
+              uses: actions/setup-java@v5
+              with:
+                  distribution: 'zulu'
+                  java-version: '21'
+
+            - name: Setup Gradle
+              uses: gradle/actions/setup-gradle@v5
+
+            - name: Run Dependency Guard Baseline
+              run: ./gradlew dependencyGuardBaseline
+
+            - name: Commit and push updated files
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+
+                  if [[ -n "$(git status --porcelain)" ]]; then
+                    echo "🔹 Changes detected, committing..."
+                    git add -A
+                    git commit -m "chore: update dependency guard baseline"
+                    git push origin HEAD:${{ github.event.pull_request.head.ref }}
+                  else
+                    echo "✅ No changes to commit."
+                  fi
