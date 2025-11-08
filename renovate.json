@@ -1,5 +1,9 @@
 {
   "extends": [
     "config:recommended"
-  ]
+  ],
+  "automerge": true,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "platformAutomerge": true
 }
