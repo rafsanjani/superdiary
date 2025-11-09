@@ -1,9 +1,9 @@
-package com.foreverrafs.superdiary.ui.feature.diarychat.screen
+package com.foreverrafs.superdiary.chat.presentation.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
+import com.foreverrafs.superdiary.chat.presentation.DiaryChatViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

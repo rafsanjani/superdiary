@@ -41,7 +41,6 @@
     <string name="content_description_navigate_back">Navigate back</string>
     <string name="content_description_save_entry">Save entry</string>
     <string name="content_description_delete_entry">Delete entry</string>
-    <string name="content_description_button_send">Send</string>
     <string name="content_description_button_login">Login Button</string>
 
     <!--  Formatted Strings  -->

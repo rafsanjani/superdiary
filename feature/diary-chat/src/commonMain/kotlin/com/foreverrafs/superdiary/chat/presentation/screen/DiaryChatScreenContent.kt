@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.ui.feature.diarychat.screen
+package com.foreverrafs.superdiary.chat.presentation.screen
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.RepeatMode
@@ -30,14 +30,11 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -60,17 +57,23 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.benasher44.uuid.uuid4
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatMessage
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatRole
+import com.foreverrafs.superdiary.chat.presentation.DiaryChatViewModel
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
-import com.foreverrafs.superdiary.ui.feature.diarychat.DiaryChatViewModel
+import com.mohamedrejeb.richeditor.model.rememberRichTextState
+import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlin.time.Clock
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import superdiary.shared_ui.generated.resources.Res
-import superdiary.shared_ui.generated.resources.content_description_button_send
+import superdiary.feature.diary_chat.generated.resources.Res
+import superdiary.feature.diary_chat.generated.resources.content_description_button_send
+import superdiary.feature.diary_chat.generated.resources.ic_send
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 fun DiaryChatScreenContent(
     screenState: DiaryChatViewModel.DiaryChatViewState,
@@ -144,10 +147,10 @@ fun DiaryChatScreenContent(
                     ChatBubble(
                         modifier = Modifier.alpha(alpha),
                         chatItem = DiaryChatMessage(
-                            id = uuid4().toString(),
+                            id = Uuid.random().toString(),
                             role = DiaryChatRole.DiaryAI,
                             timestamp = Clock.System.now(),
-                            content = "Gathering thoughts...",
+                            content = "Responding.",
                         ),
                     )
                 }
@@ -206,7 +209,7 @@ fun DiaryChatScreenContent(
                 ),
             ) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.Send,
+                    painter = painterResource(Res.drawable.ic_send),
                     contentDescription = null,
                 )
             }
@@ -234,8 +237,14 @@ fun ChatBubble(
             DiaryChatRole.System -> throw IllegalArgumentException("System chat messages should not be rendered")
         }
 
-        Text(
-            text = chatItem.content,
+        val richTextState = rememberRichTextState()
+
+        LaunchedEffect(chatItem) {
+            richTextState.setMarkdown(chatItem.content)
+        }
+
+        RichText(
+            state = richTextState,
             modifier = alignmentAndPaddingModifier
                 .background(
                     color = backgroundColor,
