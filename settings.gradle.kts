@@ -26,8 +26,6 @@ dependencyResolutionManagement {
             version("gradle", "8.12.0")
             // Because 3.2.4 is making internal calls to android.util.Log which dey borst my mind
             version("supabase","3.2.3")
-            version("compose-multiplatform", "1.10.0-beta01")
-            version("paparazzi", "2.0.0-alpha02")
         }
     }
 }
@@ -100,7 +98,6 @@ kover {
 
     reports {
         includedProjects.add(":shared-data")
-        includedProjects.add(":shared-ui")
         includedProjects.add(":core:sync")
         includedProjects.add(":common-utils")
         includedProjects.add(":feature:diary-profile")
@@ -127,7 +124,8 @@ include(":androidApp:app")
 include(":design-system")
 include(":androidApp:benchmark")
 include(":shared-data")
-include(":shared-ui")
+include(":navigation")
+include(":umbrella")
 
 // core project modules
 include(":core:authentication")

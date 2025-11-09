@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DividerDefaults
@@ -58,9 +57,11 @@ import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewData
 import com.foreverrafs.superdiary.profile.presentation.ProfileScreenViewModel
 import com.foreverrafs.superdiary.utils.DiarySettings
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import superdiary.feature.diary_profile.generated.resources.Res
+import superdiary.feature.diary_profile.generated.resources.ic_arrow_back
 import superdiary.feature.diary_profile.generated.resources.profile_screen_section_dashboard_cards
 import superdiary.feature.diary_profile.generated.resources.unique_email_address_label
 
@@ -164,7 +165,7 @@ fun ProfileScreenContent(
                         ) {
                             Icon(
                                 modifier = Modifier.clip(CircleShape),
-                                imageVector = Icons.Default.ArrowBackIosNew,
+                                painter = painterResource(Res.drawable.ic_arrow_back),
                                 contentDescription = "",
                             )
                         }
