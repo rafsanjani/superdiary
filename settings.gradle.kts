@@ -22,7 +22,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2025.11.08")
+            from("io.github.rafsanjani:versions:2025.11.09")
             version("gradle", "8.12.0")
             // Because 3.2.4 is making internal calls to android.util.Log which dey borst my mind
             version("supabase","3.2.3")
