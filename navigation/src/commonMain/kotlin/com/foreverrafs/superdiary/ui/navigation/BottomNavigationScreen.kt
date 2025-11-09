@@ -51,7 +51,22 @@ fun BottomNavigationScreen(
             )
         },
         bottomBar = {
-            SuperDiaryBottomBar(navController)
+            SuperDiaryBottomBar(
+                tabs = listOf(
+                    BottomNavigationRoute.DashboardTab,
+                    BottomNavigationRoute.FavoriteTab,
+                    BottomNavigationRoute.DiaryChatTab,
+                ),
+                onTabSelected = { tab ->
+                    navController.navigate(tab) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+            )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { contentPadding ->
