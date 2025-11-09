@@ -6,7 +6,7 @@ on:
 
 jobs:
     dependency-guard-baseline:
-        if: startsWith(github.event.pull_request.title, 'Update dependency')
+        if: ${{ github.event.label.name == 'dependencies' }}
         runs-on: ubuntu-latest
 
         steps:
