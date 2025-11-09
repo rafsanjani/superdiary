@@ -19,12 +19,11 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(projects.core.logging)
-                implementation(compose.foundation)
+                implementation(libs.jetbrains.compose.foundation)
                 implementation(libs.kotlinx.coroutines.test)
 
                 implementation(dependencies.platform(libs.supabase.bom))
                 implementation(libs.supabase.posgrest)
-//                implementation(libs.androidx.core.uri)
                 implementation("org.jetbrains.androidx.core:core-uri:1.0.0-alpha01")
                 implementation(libs.supabase.auth)
                 implementation(libs.supabase.realtime)

@@ -17,11 +17,10 @@ kotlin {
         }
 
         commonMain.dependencies {
-            implementation(compose.foundation)
-            implementation(compose.preview)
+            implementation(libs.jetbrains.compose.foundation)
+            implementation(libs.jetbrains.compose.preview)
             implementation(libs.kotlin.datetime)
-            implementation(compose.components.resources)
-            implementation(compose.materialIconsExtended)
+            implementation(libs.jetbrains.compose.resources)
             implementation(libs.richTextEditor)
             implementation(projects.designSystem)
             implementation(libs.koin.core)

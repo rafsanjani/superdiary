@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.TextObfuscationMode
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +29,10 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.painterResource
+import superdiary.design_system.generated.resources.Res
+import superdiary.design_system.generated.resources.ic_visibility
+import superdiary.design_system.generated.resources.ic_visibility_off
 
 @Deprecated("Please use the variant which accepts a TextFieldState")
 @Composable
@@ -191,11 +192,12 @@ fun PasswordInputField(
         trailingIcon = {
             IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                 val visibilityIcon =
-                    if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                    if (isPasswordVisible) Res.drawable.ic_visibility else Res.drawable.ic_visibility_off
+
                 val description = if (isPasswordVisible) "Show password" else "Hide password"
 
                 Icon(
-                    imageVector = visibilityIcon,
+                    painter = painterResource(visibilityIcon),
                     contentDescription = description,
                 )
             }

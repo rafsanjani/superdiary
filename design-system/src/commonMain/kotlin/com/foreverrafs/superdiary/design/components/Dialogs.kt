@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ShareLocation
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
@@ -26,6 +24,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import org.jetbrains.compose.resources.painterResource
+import superdiary.design_system.generated.resources.Res
+import superdiary.design_system.generated.resources.ic_share_location
 
 @Composable
 expect fun ConfirmDeleteDialog(
@@ -117,7 +118,7 @@ fun LocationRationaleDialog(
             ) {
                 Column {
                     Icon(
-                        imageVector = Icons.Default.ShareLocation,
+                        painter = painterResource(Res.drawable.ic_share_location),
                         contentDescription = null,
                         modifier = Modifier
                             .padding(top = 35.dp)

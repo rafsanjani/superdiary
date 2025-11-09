@@ -20,7 +20,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(projects.core.logging)
                 implementation(projects.commonUtils)
-                implementation(compose.foundation)
+                implementation(libs.jetbrains.compose.foundation)
                 implementation(libs.kotlinx.coroutines.test)
             }
         }
