@@ -73,6 +73,7 @@ kotlin {
                 implementation(projects.feature.diaryDashboard)
                 implementation(projects.feature.createDiary)
                 implementation(projects.feature.diaryFavorite)
+                implementation(projects.feature.diaryChat)
                 implementation(projects.core.sync)
                 implementation(projects.core.permission)
             }

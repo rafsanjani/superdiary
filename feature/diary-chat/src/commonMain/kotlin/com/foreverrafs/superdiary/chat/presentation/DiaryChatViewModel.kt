@@ -1,17 +1,13 @@
-package com.foreverrafs.superdiary.ui.feature.diarychat
+package com.foreverrafs.superdiary.chat.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatMessage
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatRole
-import com.foreverrafs.superdiary.ai.domain.usecase.GetChatMessagesUseCase
-import com.foreverrafs.superdiary.ai.domain.usecase.SaveChatMessageUseCase
+import com.foreverrafs.superdiary.chat.domain.repository.DiaryChatRepository
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
-import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.toDto
-import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,11 +18,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class DiaryChatViewModel(
-    private val diaryAI: DiaryAI,
-    getAllDiariesUseCase: GetAllDiariesUseCase,
     private val logger: AggregateLogger,
-    private val saveChatMessageUseCase: SaveChatMessageUseCase,
-    getChatMessagesUseCase: GetChatMessagesUseCase,
+    private val repository: DiaryChatRepository,
 ) : ViewModel() {
 
     data class DiaryChatViewState(
@@ -44,8 +37,8 @@ class DiaryChatViewModel(
         initialValue = DiaryChatViewState(),
     )
 
-    private val diariesFlow: Flow<Result<List<Diary>>> = getAllDiariesUseCase()
-    private val chatMessagesFlow: Flow<List<DiaryChatMessage>> = getChatMessagesUseCase()
+    private val diariesFlow: Flow<List<Diary>> = repository.getAllDiaries()
+    private val chatMessagesFlow: Flow<List<DiaryChatMessage>> = repository.getChatMessages()
 
     init {
         initializeData()
@@ -58,28 +51,14 @@ class DiaryChatViewModel(
 
             try {
                 diariesFlow.collect { result ->
-                    when (result) {
-                        is Result.Success -> {
-                            _viewState.update {
-                                it.copy(
-                                    diaries = result.data,
-                                    isLoadingDiaries = false,
-                                    error = null,
-                                )
-                            }
-                            logger.i(TAG) { "Loaded diaries for chat screen: Size = ${result.data.size}" }
-                        }
-
-                        is Result.Failure -> {
-                            _viewState.update {
-                                it.copy(
-                                    isLoadingDiaries = false,
-                                    error = "Failed to load diaries",
-                                )
-                            }
-                            logger.e(TAG) { "Error loading diaries: ${result.error.message}" }
-                        }
+                    _viewState.update {
+                        it.copy(
+                            diaries = result,
+                            isLoadingDiaries = false,
+                            error = null,
+                        )
                     }
+                    logger.i(TAG) { "Loaded diaries for chat screen: Size = ${result.size}" }
                 }
             } catch (e: Exception) {
                 _viewState.update {
@@ -160,7 +139,7 @@ class DiaryChatViewModel(
         try {
             logger.d(TAG) { "queryDiaries: Querying all diaries for: $query" }
 
-            val responseContent = diaryAI.queryDiaries(messages = updatedMessages)
+            val responseContent = repository.queryDiaries(messages = updatedMessages)
 
             if (responseContent == null) {
                 _viewState.update {
@@ -207,8 +186,8 @@ class DiaryChatViewModel(
         diaryAIResponse: DiaryChatMessage,
     ) =
         viewModelScope.launch {
-            saveChatMessageUseCase(userQuery)
-            saveChatMessageUseCase(diaryAIResponse)
+            repository.saveChatMessage(userQuery)
+            repository.saveChatMessage(diaryAIResponse)
             logger.i(TAG) { "Message pair saved to DB" }
         }
 
@@ -234,6 +213,10 @@ class DiaryChatViewModel(
 
             Here are a few things to note. An object in the array represents a single diary entry, you will be given a list of these, probably in the hundreds.
             You are supposed to analyse all the data in these objects. The entry ids are not relevant.
+
+            When outputting a response, always prefer markdown so that it can be rendered in any markdown reader.
+            try to keep the response as concise as possible and don't bloat it with unnecessary information unless
+            it is necessary.
         """.trimIndent(),
     )
 
