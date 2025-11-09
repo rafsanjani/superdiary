@@ -192,7 +192,7 @@ jobs:
     androidRelease:
         name: Build android app (release)
         runs-on: macos-15
-        needs: jvmTest
+        needs: danger
         env:
             SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
             SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
