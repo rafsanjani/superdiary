@@ -166,7 +166,7 @@ fun ProfileScreenContent(
                             Icon(
                                 modifier = Modifier.clip(CircleShape),
                                 painter = painterResource(Res.drawable.ic_arrow_back),
-                                contentDescription = "",
+                                contentDescription = "Navigate back",
                             )
                         }
                         Spacer(modifier = Modifier.height(24.dp))
