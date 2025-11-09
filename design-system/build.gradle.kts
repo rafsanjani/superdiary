@@ -20,7 +20,7 @@ kotlin {
                 implementation(libs.touchlab.stately)
                 implementation(compose.preview)
                 api(libs.jetbrains.compose.ui.backhandler)
-                api("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-alpha05+dev3227")
+                api("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-SNAPSHOT+update-templates-demos")
                 api("org.jetbrains.compose.material3:material3:1.10.0-alpha05+dev3227")
                 implementation(libs.coil3.compose)
                 implementation(libs.coil3.compose.core)
