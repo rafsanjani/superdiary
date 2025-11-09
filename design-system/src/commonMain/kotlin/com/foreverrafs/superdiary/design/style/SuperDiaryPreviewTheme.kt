@@ -40,7 +40,6 @@ fun SuperDiaryPreviewTheme(
                             LocalInspectionMode provides true,
                             LocalSharedTransitionScope provides this@SharedTransitionLayout,
                             LocalNavigationEventDispatcherOwner provides TestNavigationDispatcher,
-//                            LocalAnimatedContentScope provides this,
                         ) {
                             content()
                         }

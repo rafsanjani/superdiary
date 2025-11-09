@@ -7,7 +7,6 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -37,18 +36,15 @@ import coil3.request.crossfade
 import com.foreverrafs.superdiary.auth.navigation.AuthNavigation
 import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
 import com.foreverrafs.superdiary.creatediary.screen.CreateDiaryScreen
+import com.foreverrafs.superdiary.design.components.BrandLogo
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.list.navigation.DiaryListNavigation
-import com.foreverrafs.superdiary.list.navigation.DiaryListRoute
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.AppSessionState
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import okio.FileSystem
-import org.jetbrains.compose.resources.painterResource
-import superdiary.shared_ui.generated.resources.Res
-import superdiary.shared_ui.generated.resources.logo
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -96,7 +92,7 @@ internal fun SuperDiaryNavHost(
                                 backStack.add(AppRoute.DiaryListNavHost)
                             },
                             onDiaryClick = {
-                                backStack.add(DiaryListRoute.DetailScreen(it.toString()))
+                                // deeplink into details section of diary list route with the diary id
                             },
                         )
                     }
@@ -255,13 +251,11 @@ private fun LoadingScreen() {
                     ),
                 )
 
-                Image(
+                BrandLogo(
                     modifier = Modifier.size(96.dp).graphicsLayer {
                         scaleX = scale
                         scaleY = scale
                     },
-                    painter = painterResource(Res.drawable.logo),
-                    contentDescription = null,
                 )
             }
         }

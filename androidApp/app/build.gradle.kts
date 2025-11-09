@@ -167,7 +167,7 @@ secrets {
 dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.google.material)
-    implementation(projects.sharedUi)
+    implementation(projects.navigation)
     implementation(projects.sharedData)
     implementation(projects.core.diaryAi)
     implementation(projects.feature.diaryAuth)
@@ -178,6 +178,8 @@ dependencies {
     implementation(libs.supabase.auth)
     implementation(libs.koin.android)
     implementation(libs.koin.core)
+    implementation(projects.core.authentication)
+    implementation(projects.core.logging)
     implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.kotlinx.coroutines.test)
 }
