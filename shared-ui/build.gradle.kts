@@ -34,9 +34,9 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(compose.components.resources)
-                implementation(compose.foundation)
                 implementation(compose.materialIconsExtended)
+                implementation(libs.jetbrains.compose.resources)
+                implementation(libs.jetbrains.compose.foundation)
                 implementation(projects.sharedData)
                 implementation(projects.commonUtils)
                 implementation("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-alpha05+dev3227")
@@ -86,10 +86,6 @@ kotlin {
                 implementation(libs.junit)
                 implementation(libs.koin.test)
                 implementation(libs.kotlinx.coroutines.test)
-                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-                implementation(
-                    compose.uiTest,
-                )
                 implementation(libs.turbine)
                 implementation(projects.commonTest)
             }
@@ -140,34 +136,4 @@ kotlin {
 
 android {
     namespace = "com.foreverrafs.superdiary.shared"
-}
-
-afterEvaluate {
-    tasks.named("iosSimulatorArm64ResolveResourcesFromDependencies") {
-        doFirst {
-            rootProject.subprojects.forEach {
-                delete(it.layout.buildDirectory.file("kover/kover.artifact"))
-            }
-        }
-    }
-}
-
-tasks.named("iosSimulatorArm64ResolveResourcesFromDependencies") {
-    doFirst {
-        rootProject.subprojects.forEach {
-            delete(it.layout.buildDirectory.file("kover/kover.artifact"))
-        }
-    }
-}
-
-tasks.named("iosArm64ResolveResourcesFromDependencies") {
-    doFirst {
-        rootProject.subprojects.forEach {
-            delete(it.layout.buildDirectory.file("kover/kover.artifact"))
-        }
-    }
-}
-
-dependencies {
-    testImplementation(projects.sharedData)
 }

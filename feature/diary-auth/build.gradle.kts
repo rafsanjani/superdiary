@@ -21,10 +21,9 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
-            implementation(compose.foundation)
-            implementation(compose.components.resources)
-            implementation(compose.preview)
-            implementation(compose.materialIconsExtended)
+            implementation(libs.jetbrains.compose.foundation)
+            implementation(libs.jetbrains.compose.resources)
+            implementation(libs.jetbrains.compose.preview)
             implementation(projects.core.logging)
             implementation(libs.androidx.core.uri)
 
@@ -38,6 +37,8 @@ kotlin {
             implementation(projects.sharedData)
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(projects.designSystem)
+
+             implementation(compose.materialIconsExtended)
         }
 
         commonTest.dependencies {

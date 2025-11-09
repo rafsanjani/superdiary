@@ -11,7 +11,7 @@ kotlin {
     jvm()
     sourceSets.commonMain.dependencies {
         implementation(compose.desktop.currentOs)
-        implementation(compose.foundation)
+        implementation(libs.jetbrains.compose.foundation)
         implementation(libs.koin.jvm)
         implementation(projects.core.analytics)
         implementation(projects.core.logging)
