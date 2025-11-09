@@ -6,7 +6,7 @@ on:
 
 jobs:
     dependency-guard-baseline:
-        if: ${{ github.event.label.name == 'dependencies' }}
+        if: contains(join(github.event.pull_request.labels.*.name, ','), 'dependencies')
         runs-on: ubuntu-latest
 
         steps:
