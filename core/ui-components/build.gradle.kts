@@ -20,9 +20,8 @@ kotlin {
 
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
-            implementation(compose.components.resources)
-            implementation(compose.preview)
-            implementation(compose.materialIconsExtended)
+            implementation(libs.jetbrains.compose.resources)
+            implementation(libs.jetbrains.compose.preview)
             implementation(libs.kotlinx.coroutines.test)
             implementation(projects.commonUtils)
             implementation(libs.koin.compose.viewmodel)
@@ -36,6 +35,8 @@ kotlin {
             implementation(projects.designSystem)
             implementation(projects.commonUtils)
             implementation(libs.kotlinx.serialization.json)
+
+             implementation(compose.materialIconsExtended)
         }
 
         commonTest.dependencies {

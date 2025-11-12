@@ -23,7 +23,7 @@ android {
         applicationId = "com.foreverrafs.superdiary"
         minSdk = libs.versions.minimumSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 280
+        versionCode = 283
         versionName = "0.0.1"
 
         val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_ANDROID") ?: ""
@@ -167,7 +167,7 @@ secrets {
 dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.google.material)
-    implementation(projects.sharedUi)
+    implementation(projects.navigation)
     implementation(projects.sharedData)
     implementation(projects.core.diaryAi)
     implementation(projects.feature.diaryAuth)
@@ -178,6 +178,8 @@ dependencies {
     implementation(libs.supabase.auth)
     implementation(libs.koin.android)
     implementation(libs.koin.core)
+    implementation(projects.core.authentication)
+    implementation(projects.core.logging)
     implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.kotlinx.coroutines.test)
 }

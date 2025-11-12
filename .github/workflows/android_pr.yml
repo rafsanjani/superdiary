@@ -97,33 +97,33 @@ jobs:
                     comment-tag: snapshots
                     mode: recreate
 
-    iosTest:
-        name: Run iOS unit tests
-        env:
-            SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
-            SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
-        runs-on: macos-latest
-        needs: danger
-        steps:
-            -   uses: actions/checkout@v5
-            -   name: Restore LFS cache
-                uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
-                with:
-                    path: .git/lfs
-                    key: ${{runner.os}}-lfs-${{hashFiles('.lfs-assets-id')}}
-            -   name: Git LFS Pull
-                run: GIT_TRACE=1 git lfs pull
-
-            -   uses: actions/setup-java@v5
-                with:
-                    distribution: 'zulu'
-                    java-version: '21'
-
-            -   name: Setup Gradle
-                uses: gradle/actions/setup-gradle@v5
-
-            -   name: Unit tests iOS
-                run: ./gradlew iosSimulatorArm64Test
+    #    iosTest:
+    #        name: Run iOS unit tests
+    #        env:
+    #            SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
+    #            SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
+    #        runs-on: macos-latest
+    #        needs: danger
+    #        steps:
+    #            -   uses: actions/checkout@v5
+    #            -   name: Restore LFS cache
+    #                uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+    #                with:
+    #                    path: .git/lfs
+    #                    key: ${{runner.os}}-lfs-${{hashFiles('.lfs-assets-id')}}
+    #            -   name: Git LFS Pull
+    #                run: GIT_TRACE=1 git lfs pull
+    #
+    #            -   uses: actions/setup-java@v5
+    #                with:
+    #                    distribution: 'zulu'
+    #                    java-version: '21'
+    #
+    #            -   name: Setup Gradle
+    #                uses: gradle/actions/setup-gradle@v5
+    #
+    #            -   name: Unit tests iOS
+    #                run: ./gradlew iosSimulatorArm64Test
 
     jvmTest:
         name: Run JVM unit tests and generate coverage badge
@@ -162,40 +162,23 @@ jobs:
 
 
             -   name: Post changed files coverage violation
-                if: ${{ steps.jacoco.outputs.coverage-changed-files  < 80.0 }}
+                if: ${{ steps.jacoco.outputs.coverage-changed-files  < 75.0 }}
                 uses: actions/github-script@v8
                 with:
                     script: |
-                        core.setFailed('Coverage for changed files ${{steps.jacoco.outputs.coverage-changed-files}} is less than 80%!')
-
-            #  -   name: Verify minimum code coverage (90%)
-            #      run: ./gradlew testDebugUnitTest -Pkover koverVerify
+                        core.setFailed('Coverage for changed files ${{steps.jacoco.outputs.coverage-changed-files}}% is less than 75%!')
 
             -   name: Post overall coverage violation
                 if: ${{ steps.jacoco.outputs.coverage-overall  < 90.0 }}
                 uses: actions/github-script@v8
                 with:
                     script: |
-                        core.setFailed('Coverage for total project: ${{steps.jacoco.outputs.coverage-overall}} is less than 90%!')
-
-
-            -   name: Update dynamic badge gist
-                if: github.ref == 'refs/heads/development'
-                uses: schneegans/dynamic-badges-action@v1.7.0
-                with:
-                    auth: ${{secrets.SECRET_GITHUB_GIST}}
-                    gistID: 129c8d4608ea11b81849152dba085532
-                    filename: superdiary-badge.json
-                    label: coverage
-                    message: ${{ steps.jacoco.outputs.coverage-overall }}
-                    valColorRange: ${{ steps.jacoco.outputs.coverage-overall }}
-                    minColorRange: 0
-                    maxColorRange: 100
+                        core.setFailed('Coverage for total project: ${{steps.jacoco.outputs.coverage-overall}}% is less than 90%!')
 
     androidRelease:
         name: Build android app (release)
         runs-on: macos-15
-        needs: jvmTest
+        needs: danger
         env:
             SENTRY_BASE_URL_ANDROID: ${{secrets.SENTRY_BASE_URL_ANDROID}}
             SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}

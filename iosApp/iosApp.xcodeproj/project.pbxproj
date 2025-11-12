@@ -15,8 +15,6 @@
 		587B21362CDC0B6B0081E14F /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 587B21352CDC0B6B0081E14F /* GoogleSignIn */; };
 		587B21382CDC0B6B0081E14F /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 587B21372CDC0B6B0081E14F /* GoogleSignInSwift */; };
 		58A8DBF22CA21EC60084B125 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A8DBF12CA21EC60084B125 /* Environment.swift */; };
-		58DACF202C9E2ECE00664937 /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 58DACF1E2C9E2ECE00664937 /* Debug.xcconfig */; };
-		58DACF212C9E2ECE00664937 /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 58DACF1F2C9E2ECE00664937 /* Release.xcconfig */; };
 		58E13CE92CDAEB61007F1210 /* GoogleMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 58E13CE82CDAEB61007F1210 /* GoogleMaps */; };
 		58E13CEC2CDAEBB5007F1210 /* GoogleMapsUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 58E13CEB2CDAEBB5007F1210 /* GoogleMapsUtils */; };
 		58E13CEE2CDAEC04007F1210 /* GoogleMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E13CED2CDAEC04007F1210 /* GoogleMap.swift */; };
@@ -217,7 +215,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 2600;
 				ORGANIZATIONNAME = orgName;
 				TargetAttributes = {
 					7555FF7A242A565900829871 = {
@@ -235,7 +233,7 @@
 			);
 			mainGroup = 7555FF72242A565900829871;
 			packageReferences = (
-				7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "" */,
+				7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				58E13CE72CDAEB61007F1210 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
 				58E13CEA2CDAEBB5007F1210 /* XCRemoteSwiftPackageReference "google-maps-ios-utils" */,
 				587B21342CDC0B6B0081E14F /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
@@ -254,8 +252,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				58DACF202C9E2ECE00664937 /* Debug.xcconfig in Resources */,
-				58DACF212C9E2ECE00664937 /* Release.xcconfig in Resources */,
 				058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */,
 				058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */,
 			);
@@ -294,7 +290,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :shared-ui:embedAndSignAppleFrameworkForXcode";
+			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :umbrella:embedAndSignAppleFrameworkForXcode\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -324,6 +320,7 @@
 			baseConfigurationReference = 58DACF1E2C9E2ECE00664937 /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -355,6 +352,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = JJ8NPE3EB2;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -376,6 +374,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -386,6 +385,7 @@
 			baseConfigurationReference = 58DACF1F2C9E2ECE00664937 /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -417,6 +417,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = JJ8NPE3EB2;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -432,6 +433,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
@@ -451,7 +453,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../shared-ui/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
+					"$(SRCROOT)/../umbrella/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
 				);
 				INFOPLIST_FILE = iosApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "";
@@ -480,12 +482,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
-				DEVELOPMENT_TEAM = JJ8NPE3EB2;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../shared-ui/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
+					"$(SRCROOT)/../umbrella/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
 				);
 				INFOPLIST_FILE = iosApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "";
@@ -554,7 +555,7 @@
 				version = 6.0.0;
 			};
 		};
-		7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "" */ = {
+		7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa/";
 			requirement = {
@@ -587,7 +588,7 @@
 		};
 		87DFA0F460294F61AFDC1588 /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "" */;
+			package = 7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = Sentry;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -1,5 +1,10 @@
 {
   "extends": [
     "config:recommended"
-  ]
+  ],
+  "labels": ["dependencies"],
+  "automerge": true,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "platformAutomerge": true
 }

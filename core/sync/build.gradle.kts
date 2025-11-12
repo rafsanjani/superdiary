@@ -16,7 +16,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlin.datetime)
                 implementation(libs.koin.core)
-                implementation(compose.runtime)
+                implementation(libs.jetbrains.compose.runtime)
                 implementation(libs.jetbrains.lifecycle.runtime.compose)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(projects.core.logging)
