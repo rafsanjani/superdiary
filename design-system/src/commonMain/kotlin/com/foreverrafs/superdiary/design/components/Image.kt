@@ -2,8 +2,10 @@ package com.foreverrafs.superdiary.design.components
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.Image
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.tooling.preview.Preview
 import coil3.compose.LocalPlatformContext
@@ -38,6 +40,9 @@ fun Image(
         modifier = modifier,
         contentDescription = null,
         painter = painter,
+        colorFilter = ColorFilter.tint(
+            color = MaterialTheme.colorScheme.onSurface,
+        ),
     )
 }
 
