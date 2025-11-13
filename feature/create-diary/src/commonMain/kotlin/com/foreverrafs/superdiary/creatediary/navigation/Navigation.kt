@@ -41,7 +41,7 @@ fun EntryProviderScope<NavKey>.CreateDiaryNavigation(
             entry<CreateDiaryRoute.CreateDiary> {
                 CreateDiaryScreen(
                     onDiarySaveComplete = onDiarySaveComplete,
-                    onDiarySaveAbort = onDiarySaveAbort
+                    onDiarySaveAbort = onDiarySaveAbort,
                 )
             }
         },

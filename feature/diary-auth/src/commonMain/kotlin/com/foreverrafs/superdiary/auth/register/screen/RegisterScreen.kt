@@ -31,7 +31,6 @@ fun RegisterScreen(
         },
     )
 
-
     RegisterScreenContent(
         viewState = signInStatus,
         onRegisterClick = screenModel::onRegisterClick,
