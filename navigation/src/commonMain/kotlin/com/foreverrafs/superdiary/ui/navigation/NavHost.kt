@@ -79,7 +79,7 @@ internal fun SuperDiaryNavHost(
                     rememberSaveableStateHolderNavEntryDecorator(),
                 ),
                 entryProvider = entryProvider {
-                    entry<AppRoute.BottomNavigationNavHost> { key ->
+                    entry<AppRoute.TopLevelGraph> { key ->
                         BottomNavigationScreen(
                             userInfo = key.userInfo,
                             onProfileClick = {
@@ -89,7 +89,7 @@ internal fun SuperDiaryNavHost(
                                 backStack.add(AppRoute.CreateDiaryScreen)
                             },
                             onSeeAll = {
-                                backStack.add(AppRoute.DiaryListNavHost)
+                                backStack.add(AppRoute.DiaryListGraph)
                             },
                             onDiaryClick = {
                                 // deeplink into details section of diary list route with the diary id
@@ -102,7 +102,7 @@ internal fun SuperDiaryNavHost(
                             onLogoutComplete = {
                                 backStack.clear()
                                 backStack.add(
-                                    AppRoute.AuthenticationNavHost(
+                                    AppRoute.AuthenticationGraph(
                                         showLoginScreen = true,
                                     ),
                                 )
@@ -111,7 +111,7 @@ internal fun SuperDiaryNavHost(
                         )
                     }
 
-                    entry<AppRoute.DiaryListNavHost> {
+                    entry<AppRoute.DiaryListGraph> {
                         DiaryListNavigation(
                             onBackPress = { backStack.removeAt(backStack.lastIndex) },
                             onAddEntry = {
@@ -127,11 +127,11 @@ internal fun SuperDiaryNavHost(
                         )
                     }
 
-                    entry<AppRoute.AuthenticationNavHost> { key ->
+                    entry<AppRoute.AuthenticationGraph> { key ->
                         AuthNavigation(
                             onPasswordChangeComplete = {
                                 backStack.clear()
-                                backStack.add(AppRoute.BottomNavigationNavHost(null))
+                                backStack.add(AppRoute.TopLevelGraph(null))
                             },
                             onBackPress = { backStack.removeAt(backStack.lastIndex) },
                             requiresNewPassword = key.requiresNewPassword,
@@ -141,7 +141,7 @@ internal fun SuperDiaryNavHost(
                             onAuthenticationSuccess = {
                                 backStack.removeAt(backStack.lastIndex)
                                 backStack.add(
-                                    AppRoute.BottomNavigationNavHost(
+                                    AppRoute.TopLevelGraph(
                                         userInfo = it,
                                     ),
                                 )
@@ -171,13 +171,13 @@ private val navigationSerializersModule = SerializersModule {
         )
 
         subclass(
-            subclass = AppRoute.BottomNavigationNavHost::class,
-            serializer = AppRoute.BottomNavigationNavHost.serializer(),
+            subclass = AppRoute.TopLevelGraph::class,
+            serializer = AppRoute.TopLevelGraph.serializer(),
         )
 
         subclass(
-            subclass = AppRoute.AuthenticationNavHost::class,
-            serializer = AppRoute.AuthenticationNavHost.serializer(),
+            subclass = AppRoute.AuthenticationGraph::class,
+            serializer = AppRoute.AuthenticationGraph.serializer(),
         )
     }
 }
@@ -190,15 +190,15 @@ fun getStartDestination(viewState: AppSessionState): NavKey = remember(viewState
                 DeeplinkContainer.LinkType.EmailConfirmation,
                 DeeplinkContainer.LinkType.MagicLink,
                 DeeplinkContainer.LinkType.Registration,
-                -> AppRoute.BottomNavigationNavHost(
+                -> AppRoute.TopLevelGraph(
                     viewState.userInfo,
                 )
 
-                DeeplinkContainer.LinkType.PasswordRecovery -> AppRoute.AuthenticationNavHost(
+                DeeplinkContainer.LinkType.PasswordRecovery -> AppRoute.AuthenticationGraph(
                     requiresNewPassword = true,
                 )
 
-                DeeplinkContainer.LinkType.Invalid -> AppRoute.AuthenticationNavHost(
+                DeeplinkContainer.LinkType.Invalid -> AppRoute.AuthenticationGraph(
                     isFromDeepLink = true,
                     showLoginScreen = true,
                 )
@@ -206,25 +206,25 @@ fun getStartDestination(viewState: AppSessionState): NavKey = remember(viewState
                 null -> {
                     // If user has biometrics enabled, show a screen asking them for that, else go straight to bottom navigation screen
                     if (viewState.isBiometricAuthEnabled == true) {
-                        AppRoute.AuthenticationNavHost(
+                        AppRoute.AuthenticationGraph(
                             showBiometricAuth = true,
                         )
                     } else {
-                        AppRoute.BottomNavigationNavHost(viewState.userInfo)
+                        AppRoute.TopLevelGraph(viewState.userInfo)
                     }
                 }
             }
         }
 
         is AppSessionState.Error -> {
-            AppRoute.AuthenticationNavHost(
+            AppRoute.AuthenticationGraph(
                 isFromDeepLink = viewState.isFromDeeplink,
             )
         }
 
         is AppSessionState.Processing,
         is AppSessionState.UnAuthenticated,
-        -> AppRoute.AuthenticationNavHost(
+        -> AppRoute.AuthenticationGraph(
             isFromDeepLink = false,
         )
     }

@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 sealed interface AppRoute : NavKey {
 
     @Serializable
-    data class BottomNavigationNavHost(
+    data class TopLevelGraph(
         val userInfo: UserInfo?,
     ) : AppRoute
 
@@ -18,10 +18,10 @@ sealed interface AppRoute : NavKey {
     data object CreateDiaryScreen : AppRoute
 
     @Serializable
-    data object DiaryListNavHost : AppRoute
+    data object DiaryListGraph : AppRoute
 
     @Serializable
-    data class AuthenticationNavHost(
+    data class AuthenticationGraph(
         val requiresNewPassword: Boolean = false,
         val showLoginScreen: Boolean = true,
         val isFromDeepLink: Boolean = false,
