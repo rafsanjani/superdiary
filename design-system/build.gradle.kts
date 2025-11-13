@@ -26,6 +26,7 @@ kotlin {
                 implementation(libs.jetbrains.navigation.compose)
                 implementation(libs.coil3.network.ktor)
                 implementation(libs.coil3.multiplatform)
+                implementation(libs.ktor.client.cio)
                 implementation(libs.ktor.client.core)
             }
         }

@@ -18,17 +18,17 @@ import com.foreverrafs.superdiary.ui.navigation.SuperDiaryTab
 
 @Composable
 fun SuperDiaryBottomBar(
-    tabs: List<SuperDiaryTab>,
-    onTabSelected: (SuperDiaryTab) -> Unit,
+    items: List<SuperDiaryTab>,
+    onItemClick: (SuperDiaryTab) -> Unit,
 ) {
     NavigationBar {
         var selectedTab by remember {
             mutableStateOf(
-                tabs.firstOrNull() ?: throw IllegalArgumentException("You should add at least one tab"),
+                items.firstOrNull() ?: throw IllegalArgumentException("You should add at least one tab"),
             )
         }
 
-        tabs.forEach { tab ->
+        items.forEach { tab ->
             val selected = selectedTab == tab
 
             BottomNavigationItem(
@@ -36,7 +36,7 @@ fun SuperDiaryBottomBar(
                 selected = selected,
             ) {
                 selectedTab = tab
-                onTabSelected(tab)
+                onItemClick(tab)
             }
         }
     }

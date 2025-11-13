@@ -8,7 +8,6 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.StackedBarChart
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import kotlinx.serialization.Serializable
@@ -61,12 +60,5 @@ sealed interface TopLevelRoute : SuperDiaryTab {
 
     companion object Companion {
         val Items: List<TopLevelRoute> = listOf(DashboardTab, FavoriteTab, DiaryChatTab)
-
-        val Saver: Saver<TopLevelRoute, String> = Saver(
-            save = { it::class.qualifiedName },
-            restore = { qualifiedClass ->
-                Items.firstOrNull { it::class.qualifiedName == qualifiedClass } ?: DashboardTab
-            },
-        )
     }
 }

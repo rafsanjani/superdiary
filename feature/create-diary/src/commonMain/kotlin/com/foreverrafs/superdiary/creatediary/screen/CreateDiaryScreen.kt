@@ -23,10 +23,9 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun CreateDiaryScreen(
-    avatarUrl: String?,
-    onDiarySave: () -> Unit,
-    onNavigateBack: () -> Unit,
+internal fun CreateDiaryScreen(
+    onDiarySaveComplete: () -> Unit,
+    onDiarySaveAbort: () -> Unit,
 ) {
     val viewModel: CreateDiaryViewModel = koinViewModel()
 
@@ -96,7 +95,7 @@ fun CreateDiaryScreen(
                 ),
             )
 
-            onDiarySave()
+            onDiarySaveComplete()
         },
         onRequestLocationPermission = {
             showLocationPermissionRationale = false
@@ -107,11 +106,11 @@ fun CreateDiaryScreen(
             showLocationPermissionRationale = false
             viewModel.onPermanentlyDismissLocationPermissionDialog()
         },
-        avatarUrl = avatarUrl,
+        avatarUrl = screenState.avatarUrl,
         showSaveDialog = showSaveDialog,
         onShowSaveDialogChange = {
             showSaveDialog = it
         },
-        onNavigateBack = onNavigateBack,
+        onNavigateBack = onDiarySaveAbort,
     )
 }

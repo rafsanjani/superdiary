@@ -14,7 +14,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +34,7 @@ import coil3.request.CachePolicy
 import coil3.request.crossfade
 import com.foreverrafs.superdiary.auth.navigation.AuthNavigation
 import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
-import com.foreverrafs.superdiary.creatediary.screen.CreateDiaryScreen
+import com.foreverrafs.superdiary.creatediary.navigation.CreateDiaryNavigation
 import com.foreverrafs.superdiary.design.components.BrandLogo
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
@@ -52,11 +51,6 @@ internal fun SuperDiaryNavHost(
     viewState: AppSessionState,
     modifier: Modifier = Modifier,
 ) {
-    // This userInfo is used when a session is automatically restored after app is launched.
-    val userInfo by remember(viewState) {
-        mutableStateOf((viewState as? AppSessionState.Authenticated)?.userInfo)
-    }
-
     // App is attempting to load a session from storage. Show a loading screen
     if (viewState is AppSessionState.Processing) {
         LoadingScreen()
@@ -86,7 +80,7 @@ internal fun SuperDiaryNavHost(
                                 backStack.add(AppRoute.ProfileScreen)
                             },
                             onAddEntry = {
-                                backStack.add(AppRoute.CreateDiaryScreen)
+                                backStack.add(AppRoute.CreateDiaryGraph)
                             },
                             onSeeAll = {
                                 backStack.add(AppRoute.DiaryListGraph)
@@ -116,7 +110,7 @@ internal fun SuperDiaryNavHost(
                             onBackPress = { backStack.removeAt(backStack.lastIndex) },
                             onAddEntry = {
                                 backStack.add(
-                                    AppRoute.CreateDiaryScreen,
+                                    AppRoute.CreateDiaryGraph,
                                 )
                             },
                             onProfileClick = {
@@ -149,11 +143,10 @@ internal fun SuperDiaryNavHost(
                         )
                     }
 
-                    entry<AppRoute.CreateDiaryScreen> {
-                        CreateDiaryScreen(
-                            avatarUrl = userInfo?.avatarUrl,
-                            onDiarySave = { backStack.removeAt(backStack.lastIndex) },
-                            onNavigateBack = { backStack.removeAt(backStack.lastIndex) },
+                    entry<AppRoute.CreateDiaryGraph> {
+                        CreateDiaryNavigation(
+                            onDiarySaveComplete = backStack::removeLast,
+                            onDiarySaveAbort = backStack::removeLast,
                         )
                     }
                 },
@@ -164,15 +157,19 @@ internal fun SuperDiaryNavHost(
 
 private val navigationSerializersModule = SerializersModule {
     polymorphic(NavKey::class) {
-
         subclass(
-            subclass = AppRoute.CreateDiaryScreen::class,
-            serializer = AppRoute.CreateDiaryScreen.serializer(),
+            subclass = AppRoute.CreateDiaryGraph::class,
+            serializer = AppRoute.CreateDiaryGraph.serializer(),
         )
 
         subclass(
             subclass = AppRoute.TopLevelGraph::class,
             serializer = AppRoute.TopLevelGraph.serializer(),
+        )
+
+        subclass(
+            subclass = AppRoute.DiaryListGraph::class,
+            serializer = AppRoute.DiaryListGraph.serializer(),
         )
 
         subclass(

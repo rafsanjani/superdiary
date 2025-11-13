@@ -15,7 +15,7 @@ sealed interface AppRoute : NavKey {
     ) : AppRoute
 
     @Serializable
-    data object CreateDiaryScreen : AppRoute
+    data object CreateDiaryGraph : AppRoute
 
     @Serializable
     data object DiaryListGraph : AppRoute

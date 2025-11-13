@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.creatediary
+package com.foreverrafs.superdiary.creatediary.usecase
 
 import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.data.Result
@@ -7,9 +7,9 @@ import com.foreverrafs.superdiary.domain.Synchronizer
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.validator.DiaryValidator
-import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.cancellation.CancellationException
 
 class AddDiaryUseCase(
     private val dataSource: DataSource,
