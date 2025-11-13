@@ -13,9 +13,9 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed interface BottomNavigationRoute {
+sealed interface TopLevelRoute : SuperDiaryTab {
     @Serializable
-    data object DashboardTab : BottomNavigationRoute, SuperDiaryTab {
+    data object DashboardTab : TopLevelRoute {
         override val selectedIcon: VectorPainter
             @Composable
             get() = rememberVectorPainter(Icons.Filled.StackedBarChart)
@@ -30,7 +30,7 @@ sealed interface BottomNavigationRoute {
     }
 
     @Serializable
-    data object FavoriteTab : BottomNavigationRoute, SuperDiaryTab {
+    data object FavoriteTab : TopLevelRoute {
         override val selectedIcon: VectorPainter
             @Composable
             get() = rememberVectorPainter(Icons.Default.Favorite)
@@ -45,7 +45,7 @@ sealed interface BottomNavigationRoute {
     }
 
     @Serializable
-    data object DiaryChatTab : BottomNavigationRoute, SuperDiaryTab {
+    data object DiaryChatTab : TopLevelRoute {
         override val selectedIcon: VectorPainter
             @Composable
             get() = rememberVectorPainter(Icons.AutoMirrored.Filled.Chat)
@@ -56,5 +56,9 @@ sealed interface BottomNavigationRoute {
                 title = "Diary AI",
                 icon = rememberVectorPainter(Icons.AutoMirrored.Outlined.Chat),
             )
+    }
+
+    companion object Companion {
+        val Items: List<TopLevelRoute> = listOf(DashboardTab, FavoriteTab, DiaryChatTab)
     }
 }

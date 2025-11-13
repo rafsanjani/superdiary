@@ -233,7 +233,7 @@
 			);
 			mainGroup = 7555FF72242A565900829871;
 			packageReferences = (
-				7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
+				7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "" */,
 				58E13CE72CDAEB61007F1210 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
 				58E13CEA2CDAEBB5007F1210 /* XCRemoteSwiftPackageReference "google-maps-ios-utils" */,
 				587B21342CDC0B6B0081E14F /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
@@ -448,7 +448,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
-				DEVELOPMENT_TEAM = JJ8NPE3EB2;
+				DEVELOPMENT_TEAM = "${TEAM_ID}";
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -555,7 +555,7 @@
 				version = 6.0.0;
 			};
 		};
-		7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+		7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa/";
 			requirement = {
@@ -588,7 +588,7 @@
 		};
 		87DFA0F460294F61AFDC1588 /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			package = 7E27683A6CF243FD932E01C2 /* XCRemoteSwiftPackageReference "" */;
 			productName = Sentry;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -6,11 +6,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.tooling.preview.Preview
-import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import org.jetbrains.compose.resources.painterResource
 import superdiary.design_system.generated.resources.Res
@@ -23,6 +24,7 @@ fun Image(
 ) {
     val model = ImageRequest
         .Builder(LocalPlatformContext.current)
+        .crossfade(true)
         .data(url)
         .build()
 
@@ -31,19 +33,16 @@ fun Image(
         fallback = painterResource(Res.drawable.default_avatar),
         error = painterResource(Res.drawable.default_avatar),
         placeholder = painterResource(Res.drawable.default_avatar),
+        filterQuality = FilterQuality.High,
     )
-
-    val colorFilter = if (painter.state.value is AsyncImagePainter.State.Success) {
-        null
-    } else {
-        ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
-    }
 
     Image(
         modifier = modifier,
         contentDescription = null,
         painter = painter,
-        colorFilter = colorFilter,
+        colorFilter = ColorFilter.tint(
+            color = MaterialTheme.colorScheme.onSurface,
+        ),
     )
 }
 

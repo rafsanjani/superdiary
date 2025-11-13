@@ -33,6 +33,7 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(projects.sharedData)
             implementation(projects.core.database)
+            implementation(projects.core.authentication)
             implementation(projects.core.logging)
             implementation(projects.core.permission)
         }

@@ -14,7 +14,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +34,7 @@ import coil3.request.CachePolicy
 import coil3.request.crossfade
 import com.foreverrafs.superdiary.auth.navigation.AuthNavigation
 import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
-import com.foreverrafs.superdiary.creatediary.screen.CreateDiaryScreen
+import com.foreverrafs.superdiary.creatediary.navigation.CreateDiaryNavigation
 import com.foreverrafs.superdiary.design.components.BrandLogo
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
@@ -52,11 +51,6 @@ internal fun SuperDiaryNavHost(
     viewState: AppSessionState,
     modifier: Modifier = Modifier,
 ) {
-    // This userInfo is used when a session is automatically restored after app is launched.
-    val userInfo by remember(viewState) {
-        mutableStateOf((viewState as? AppSessionState.Authenticated)?.userInfo)
-    }
-
     // App is attempting to load a session from storage. Show a loading screen
     if (viewState is AppSessionState.Processing) {
         LoadingScreen()
@@ -79,17 +73,17 @@ internal fun SuperDiaryNavHost(
                     rememberSaveableStateHolderNavEntryDecorator(),
                 ),
                 entryProvider = entryProvider {
-                    entry<AppRoute.BottomNavigationNavHost> { key ->
+                    entry<AppRoute.TopLevelGraph> { key ->
                         BottomNavigationScreen(
                             userInfo = key.userInfo,
                             onProfileClick = {
                                 backStack.add(AppRoute.ProfileScreen)
                             },
                             onAddEntry = {
-                                backStack.add(AppRoute.CreateDiaryScreen)
+                                backStack.add(AppRoute.CreateDiaryGraph)
                             },
                             onSeeAll = {
-                                backStack.add(AppRoute.DiaryListNavHost)
+                                backStack.add(AppRoute.DiaryListGraph)
                             },
                             onDiaryClick = {
                                 // deeplink into details section of diary list route with the diary id
@@ -102,7 +96,7 @@ internal fun SuperDiaryNavHost(
                             onLogoutComplete = {
                                 backStack.clear()
                                 backStack.add(
-                                    AppRoute.AuthenticationNavHost(
+                                    AppRoute.AuthenticationGraph(
                                         showLoginScreen = true,
                                     ),
                                 )
@@ -111,12 +105,12 @@ internal fun SuperDiaryNavHost(
                         )
                     }
 
-                    entry<AppRoute.DiaryListNavHost> {
+                    entry<AppRoute.DiaryListGraph> {
                         DiaryListNavigation(
                             onBackPress = { backStack.removeAt(backStack.lastIndex) },
                             onAddEntry = {
                                 backStack.add(
-                                    AppRoute.CreateDiaryScreen,
+                                    AppRoute.CreateDiaryGraph,
                                 )
                             },
                             onProfileClick = {
@@ -127,11 +121,11 @@ internal fun SuperDiaryNavHost(
                         )
                     }
 
-                    entry<AppRoute.AuthenticationNavHost> { key ->
+                    entry<AppRoute.AuthenticationGraph> { key ->
                         AuthNavigation(
                             onPasswordChangeComplete = {
                                 backStack.clear()
-                                backStack.add(AppRoute.BottomNavigationNavHost(null))
+                                backStack.add(AppRoute.TopLevelGraph(null))
                             },
                             onBackPress = { backStack.removeAt(backStack.lastIndex) },
                             requiresNewPassword = key.requiresNewPassword,
@@ -141,7 +135,7 @@ internal fun SuperDiaryNavHost(
                             onAuthenticationSuccess = {
                                 backStack.removeAt(backStack.lastIndex)
                                 backStack.add(
-                                    AppRoute.BottomNavigationNavHost(
+                                    AppRoute.TopLevelGraph(
                                         userInfo = it,
                                     ),
                                 )
@@ -149,11 +143,10 @@ internal fun SuperDiaryNavHost(
                         )
                     }
 
-                    entry<AppRoute.CreateDiaryScreen> {
-                        CreateDiaryScreen(
-                            avatarUrl = userInfo?.avatarUrl,
-                            onDiarySave = { backStack.removeAt(backStack.lastIndex) },
-                            onNavigateBack = { backStack.removeAt(backStack.lastIndex) },
+                    entry<AppRoute.CreateDiaryGraph> {
+                        CreateDiaryNavigation(
+                            onDiarySaveComplete = backStack::removeLast,
+                            onDiarySaveAbort = backStack::removeLast,
                         )
                     }
                 },
@@ -164,20 +157,24 @@ internal fun SuperDiaryNavHost(
 
 private val navigationSerializersModule = SerializersModule {
     polymorphic(NavKey::class) {
-
         subclass(
-            subclass = AppRoute.CreateDiaryScreen::class,
-            serializer = AppRoute.CreateDiaryScreen.serializer(),
+            subclass = AppRoute.CreateDiaryGraph::class,
+            serializer = AppRoute.CreateDiaryGraph.serializer(),
         )
 
         subclass(
-            subclass = AppRoute.BottomNavigationNavHost::class,
-            serializer = AppRoute.BottomNavigationNavHost.serializer(),
+            subclass = AppRoute.TopLevelGraph::class,
+            serializer = AppRoute.TopLevelGraph.serializer(),
         )
 
         subclass(
-            subclass = AppRoute.AuthenticationNavHost::class,
-            serializer = AppRoute.AuthenticationNavHost.serializer(),
+            subclass = AppRoute.DiaryListGraph::class,
+            serializer = AppRoute.DiaryListGraph.serializer(),
+        )
+
+        subclass(
+            subclass = AppRoute.AuthenticationGraph::class,
+            serializer = AppRoute.AuthenticationGraph.serializer(),
         )
     }
 }
@@ -190,15 +187,15 @@ fun getStartDestination(viewState: AppSessionState): NavKey = remember(viewState
                 DeeplinkContainer.LinkType.EmailConfirmation,
                 DeeplinkContainer.LinkType.MagicLink,
                 DeeplinkContainer.LinkType.Registration,
-                -> AppRoute.BottomNavigationNavHost(
+                -> AppRoute.TopLevelGraph(
                     viewState.userInfo,
                 )
 
-                DeeplinkContainer.LinkType.PasswordRecovery -> AppRoute.AuthenticationNavHost(
+                DeeplinkContainer.LinkType.PasswordRecovery -> AppRoute.AuthenticationGraph(
                     requiresNewPassword = true,
                 )
 
-                DeeplinkContainer.LinkType.Invalid -> AppRoute.AuthenticationNavHost(
+                DeeplinkContainer.LinkType.Invalid -> AppRoute.AuthenticationGraph(
                     isFromDeepLink = true,
                     showLoginScreen = true,
                 )
@@ -206,25 +203,25 @@ fun getStartDestination(viewState: AppSessionState): NavKey = remember(viewState
                 null -> {
                     // If user has biometrics enabled, show a screen asking them for that, else go straight to bottom navigation screen
                     if (viewState.isBiometricAuthEnabled == true) {
-                        AppRoute.AuthenticationNavHost(
+                        AppRoute.AuthenticationGraph(
                             showBiometricAuth = true,
                         )
                     } else {
-                        AppRoute.BottomNavigationNavHost(viewState.userInfo)
+                        AppRoute.TopLevelGraph(viewState.userInfo)
                     }
                 }
             }
         }
 
         is AppSessionState.Error -> {
-            AppRoute.AuthenticationNavHost(
+            AppRoute.AuthenticationGraph(
                 isFromDeepLink = viewState.isFromDeeplink,
             )
         }
 
         is AppSessionState.Processing,
         is AppSessionState.UnAuthenticated,
-        -> AppRoute.AuthenticationNavHost(
+        -> AppRoute.AuthenticationGraph(
             isFromDeepLink = false,
         )
     }
