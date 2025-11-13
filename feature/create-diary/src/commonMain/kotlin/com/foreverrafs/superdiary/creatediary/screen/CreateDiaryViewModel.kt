@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.creatediary.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.core.location.Location
@@ -10,7 +11,7 @@ import com.foreverrafs.superdiary.core.permission.LocationManager
 import com.foreverrafs.superdiary.core.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.permission.PermissionState
 import com.foreverrafs.superdiary.core.permission.PermissionsControllerWrapper
-import com.foreverrafs.superdiary.creatediary.AddDiaryUseCase
+import com.foreverrafs.superdiary.creatediary.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.utils.DiarySettings
@@ -31,32 +32,37 @@ class CreateDiaryViewModel(
     private val locationManager: LocationManager,
     private val locationPermissionManager: LocationPermissionManager,
     private val preference: DiaryPreference,
+    authApi: AuthApi,
 ) : ViewModel() {
 
     val permissionState: StateFlow<PermissionState> = locationPermissionManager
         .permissionState
         .stateIn(
             viewModelScope,
-            started = SharingStarted.Companion.WhileSubscribed(5000),
+            started = SharingStarted.WhileSubscribed(5000),
             initialValue = PermissionState.NotDetermined,
         )
 
     val diarySettings: StateFlow<DiarySettings> = preference.settings.stateIn(
         viewModelScope,
-        SharingStarted.Companion.WhileSubscribed(5000),
-        DiarySettings.Companion.Empty,
+        SharingStarted.WhileSubscribed(5000),
+        DiarySettings.Empty,
     )
 
     private val _screenState: MutableStateFlow<CreateDiaryScreenState> = MutableStateFlow(
-        CreateDiaryScreenState(),
+        CreateDiaryScreenState(
+            avatarUrl = authApi.currentUserOrNull()?.avatarUrl,
+        ),
     )
 
     val screenState: StateFlow<CreateDiaryScreenState> = _screenState
         .onStart { startLocationUpdates() }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Companion.WhileSubscribed(5000),
-            initialValue = CreateDiaryScreenState(),
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = CreateDiaryScreenState(
+                avatarUrl = authApi.currentUserOrNull()?.avatarUrl,
+            ),
         )
 
     private fun startLocationUpdates() = viewModelScope.launch {
@@ -95,9 +101,9 @@ class CreateDiaryViewModel(
     }
 
     fun saveDiary(diary: Diary) = viewModelScope.launch {
-        when (val addDiaryResult = addDiaryUseCase(diary)) {
+        when (val result = addDiaryUseCase(diary)) {
             is Result.Failure -> {
-                logger.e(Tag, addDiaryResult.error)
+                logger.e(Tag, result.error)
             }
 
             is Result.Success -> {
@@ -118,6 +124,7 @@ class CreateDiaryViewModel(
     // Workaround for getting a handle on the PermissionController for requesting
     // location permissions. Explored a few alternatives and settled with this
     // because it provided the most modular solution at a little cost.
+    // TODO: Put this into a CompositionLocal in the root nav
     fun getPermissionsController(): PermissionsControllerWrapper =
         locationPermissionManager.getPermissionsController()
 

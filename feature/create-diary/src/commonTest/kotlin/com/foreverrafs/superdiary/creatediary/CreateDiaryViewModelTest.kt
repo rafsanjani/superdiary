@@ -5,6 +5,7 @@ import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
+import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
@@ -14,6 +15,7 @@ import com.foreverrafs.superdiary.core.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.permission.PermissionState
 import com.foreverrafs.superdiary.creatediary.FakePermissionsControllerWrapper.ActionPerformed
 import com.foreverrafs.superdiary.creatediary.screen.CreateDiaryViewModel
+import com.foreverrafs.superdiary.creatediary.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.domain.Synchronizer
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
@@ -45,6 +47,10 @@ class CreateDiaryViewModelTest {
     private val diaryAI: DiaryAI = mock()
 
     private val dataSource: DataSource = mock()
+
+    private val authApi: AuthApi = mock {
+        every { currentUserOrNull() } returns null
+    }
 
     private val locationManager: LocationManager = object : LocationManager {
         override fun requestLocation(
@@ -95,6 +101,7 @@ class CreateDiaryViewModelTest {
                 ),
             ),
             preference = preference,
+            authApi = authApi,
         )
     }
 

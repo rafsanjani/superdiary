@@ -6,6 +6,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
+import com.foreverrafs.superdiary.creatediary.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.database.Database
