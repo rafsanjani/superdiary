@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.chat.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.foreverrafs.superdiary.ai.ToonEncoder
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatMessage
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatRole
 import com.foreverrafs.superdiary.chat.domain.repository.DiaryChatRepository
@@ -20,6 +21,7 @@ import kotlinx.serialization.json.Json
 class DiaryChatViewModel(
     private val logger: AggregateLogger,
     private val repository: DiaryChatRepository,
+    private val toonEncoder: ToonEncoder,
 ) : ViewModel() {
 
     data class DiaryChatViewState(

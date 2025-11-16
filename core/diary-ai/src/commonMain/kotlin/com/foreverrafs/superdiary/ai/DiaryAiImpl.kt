@@ -135,7 +135,7 @@ class DiaryAiImpl(
                 ?.content
                 .orEmpty()
         } catch (e: Exception) {
-            logger.e(TAG, e)
+            logger.e(tag = TAG, throwable = e)
             null
         }
     }

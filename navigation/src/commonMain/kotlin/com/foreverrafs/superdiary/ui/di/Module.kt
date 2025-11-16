@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.ui.di
 
 import com.foreverrafs.auth.di.authModule
 import com.foreverrafs.superdiary.ai.di.diaryAiModule
+import com.foreverrafs.superdiary.ai.di.toonModule
 import com.foreverrafs.superdiary.auth.di.diaryAuthModule
 import com.foreverrafs.superdiary.chat.di.diaryChatModule
 import com.foreverrafs.superdiary.common.utils.di.utilsModule
@@ -48,4 +49,5 @@ fun compositeModule(
     diaryAuthModule,
     favoriteModule,
     diaryChatModule,
+    toonModule,
 )

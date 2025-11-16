@@ -29,7 +29,8 @@ struct iOSApp: App  {
             analytics: AppleAnalytics(),
             logger: AggregateLogger(loggers: [SentryLogger(), KermitLogger()]),
             googleTokenProvider: GoogleTokenProviderImpl(),
-            biometricAuth: AppleBiometricAuth()
+            biometricAuth: AppleBiometricAuth(),
+            toonEncoder: SwiftToonEncoder()
         )
         
         GMSServices.provideAPIKey(Environment.googleMapsSdkKey)
