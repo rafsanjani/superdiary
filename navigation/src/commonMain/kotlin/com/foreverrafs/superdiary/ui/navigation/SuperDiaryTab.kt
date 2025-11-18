@@ -3,8 +3,9 @@ package com.foreverrafs.superdiary.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.VectorPainter
+import androidx.navigation3.runtime.NavKey
 
-interface SuperDiaryTab {
+interface SuperDiaryTab : NavKey {
     val selectedIcon: VectorPainter
         @Composable get
 

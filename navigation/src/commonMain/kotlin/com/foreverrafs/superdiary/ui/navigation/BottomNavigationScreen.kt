@@ -9,11 +9,12 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.chat.presentation.screen.DiaryChatTab
 import com.foreverrafs.superdiary.dashboard.screen.DashboardTab
@@ -36,11 +37,12 @@ fun BottomNavigationScreen(
     onDiaryClick: (diaryId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    // This nav controller is used to navigate between the tabs
-    val navController = rememberNavController()
-
     // This snackbar host state is used to show snackbars on the main screen
     val snackbarHostState = remember { SnackbarHostState() }
+
+    val topLevelBackStack: TopLevelBackStack<Any> by remember {
+        mutableStateOf(TopLevelBackStack(startKey = TopLevelRoute.DashboardTab))
+    }
 
     Scaffold(
         modifier = modifier,
@@ -51,22 +53,29 @@ fun BottomNavigationScreen(
             )
         },
         bottomBar = {
-            SuperDiaryBottomBar(navController)
+            SuperDiaryBottomBar(
+                items = TopLevelRoute.Items,
+                onItemClick = {
+                    topLevelBackStack.addTopLevel(it)
+                },
+            )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { contentPadding ->
-
         Surface(
             modifier = Modifier
-                .padding(contentPadding)
-                .consumeWindowInsets(contentPadding),
+                .padding(paddingValues = contentPadding)
+                .consumeWindowInsets(paddingValues = contentPadding),
             color = MaterialTheme.colorScheme.background,
-            content = {
-                NavHost(
-                    navController = navController,
-                    startDestination = BottomNavigationRoute.DashboardTab,
-                ) {
-                    composable<BottomNavigationRoute.DashboardTab> {
+        ) {
+            NavDisplay(
+                backStack = topLevelBackStack.backStack,
+                entryProvider = entryProvider {
+                    entry<TopLevelRoute.DiaryChatTab> {
+                        DiaryChatTab()
+                    }
+
+                    entry<TopLevelRoute.DashboardTab> {
                         DashboardTab(
                             snackbarHostState = snackbarHostState,
                             onAddEntry = onAddEntry,
@@ -75,18 +84,14 @@ fun BottomNavigationScreen(
                         )
                     }
 
-                    composable<BottomNavigationRoute.FavoriteTab> {
+                    entry<TopLevelRoute.FavoriteTab> {
                         FavoriteTab(
                             snackbarHostState = snackbarHostState,
                             onFavoriteClick = onDiaryClick,
                         )
                     }
-
-                    composable<BottomNavigationRoute.DiaryChatTab> {
-                        DiaryChatTab()
-                    }
-                }
-            },
-        )
+                },
+            )
+        }
     }
 }

@@ -4,4 +4,5 @@ import com.foreverrafs.superdiary.core.location.Location
 
 data class CreateDiaryScreenState(
     val location: Location? = null,
+    val avatarUrl: String? = null,
 )
