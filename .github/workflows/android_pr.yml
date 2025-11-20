@@ -11,7 +11,7 @@ jobs:
         name: Run Danger (Ktlint, android lint)
         runs-on: macos-15
         steps:
-            -   uses: actions/checkout@v5
+            -   uses: actions/checkout@v6
             -   name: Create LFS file list
                 run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
 
@@ -47,7 +47,7 @@ jobs:
             SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v5
+            -   uses: actions/checkout@v6
             -   name: Set up JDK
                 uses: actions/setup-java@v5
                 with:
@@ -64,7 +64,7 @@ jobs:
         runs-on: macos-15
         needs: danger
         steps:
-            -   uses: actions/checkout@v5
+            -   uses: actions/checkout@v6
             -   name: Restore LFS cache
                 uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
                 with:
@@ -133,7 +133,7 @@ jobs:
             SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v5
+            -   uses: actions/checkout@v6
             -   name: Set up JDK
                 uses: actions/setup-java@v5
                 with:
@@ -193,7 +193,7 @@ jobs:
             SUPABASE_KEY: ${{secrets.SUPABASE_KEY}}
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         steps:
-            -   uses: actions/checkout@v5
+            -   uses: actions/checkout@v6
             -   name: Restore LFS cache
                 uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
                 with:
