@@ -106,7 +106,7 @@ class DiaryAiImpl(
         var response = ""
 
         return openAI.chatCompletions(request)
-            .onCompletion { it ->
+            .onCompletion {
                 if (it == null) {
                     onCompletion(WeeklySummary(response))
                 }

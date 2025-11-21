@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -154,6 +155,7 @@ fun LoginScreenContent(
                         .testTag("input_username"),
                     label = stringResource(Res.string.label_username),
                     placeholder = "john.doe@gmail.com",
+                    lineLimits = TextFieldLineLimits.SingleLine,
                     state = username,
                 )
 

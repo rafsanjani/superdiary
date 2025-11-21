@@ -1,9 +1,9 @@
 package com.superdiary.gradle.android
 
-import com.android.build.api.dsl.LibraryBuildFeatures
 import com.android.build.api.dsl.LibraryExtension
 import com.superdiary.gradle.findVersion
 import com.superdiary.gradle.kotlin.configureKotlin
+import com.superdiary.gradle.multiplatform.composeCompiler
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -23,12 +23,13 @@ class AndroidComposeLibraryConventionPlugin : Plugin<Project> {
             }
 
             configureKotlin()
+            composeCompiler {
+                reportsDestination.set(target.layout.buildDirectory.dir("compose_compiler"))
+                metricsDestination.set(target.layout.buildDirectory.dir("compose_compiler"))
+            }
         }
     }
 }
 
 private fun Project.android(action: LibraryExtension.() -> Unit) =
     extensions.configure<LibraryExtension>(action)
-
-private fun Project.buildFeatures(action: LibraryBuildFeatures.() -> Unit) =
-    extensions.configure<LibraryBuildFeatures>(action)
