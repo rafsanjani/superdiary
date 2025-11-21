@@ -9,16 +9,15 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DiaryChatTab(
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
 ) {
     val viewModel: DiaryChatViewModel = koinViewModel()
     val screenState by viewModel.viewState.collectAsState()
-
 
     DiaryChatScreenContent(
         snackbarHostState = snackbarHostState,
         screenState = screenState,
         onQueryDiaries = viewModel::queryDiaries,
-        onDismissError = viewModel::dismissError
+        onDismissError = viewModel::dismissError,
     )
 }
