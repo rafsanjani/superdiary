@@ -66,7 +66,7 @@ class DiaryChatViewModelTest {
     }
 
     @Test
-    fun `Should include system and welcome messages right after initialization`() = runTest {
+    fun `Should include system and context messages right after initialization`() = runTest {
         diaryChatViewModel.viewState.test {
             val state = awaitUntil { it is DiaryChatViewState.Initialized && it.messages.isNotEmpty() }
                 as? DiaryChatViewState.Initialized
