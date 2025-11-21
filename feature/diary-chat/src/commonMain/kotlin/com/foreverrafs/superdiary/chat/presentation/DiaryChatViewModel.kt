@@ -24,88 +24,105 @@ sealed interface DiaryChatViewState {
         val messages: List<DiaryChatMessage> = emptyList(),
         val errorText: String? = null,
         val isResponding: Boolean = false,
-    ) : DiaryChatViewState
+    ) : DiaryChatViewState {
+        /**
+         * These are messages that can be rendered and displayed onto the UI
+         */
+        val displayMessages: List<DiaryChatMessage> get() = messages.filter { message -> message.role != DiaryChatRole.System }
+    }
 }
 
 class DiaryChatViewModel(
     private val logger: AggregateLogger,
     private val repository: DiaryChatRepository,
-    private val dispatchers: AppCoroutineDispatchers
+    private val dispatchers: AppCoroutineDispatchers,
 ) : ViewModel() {
     private val _viewState = MutableStateFlow<DiaryChatViewState>(DiaryChatViewState.Loading)
 
-    private val messages: MutableList<DiaryChatMessage> = mutableListOf()
-    val viewState = _viewState.onStart { initializeContext() }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = DiaryChatViewState.Loading,
-    )
+//    private val messages: MutableList<DiaryChatMessage> = mutableListOf()
+
+    val viewState = _viewState
+        .onStart { initializeContext() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = DiaryChatViewState.Loading,
+        )
 
     private fun initializeContext() = viewModelScope.launch(dispatchers.main) {
         // Add the system message
-        messages.add(
-            DiaryChatMessage.System(
-                content = DiaryAI.QUERY_PROMPT,
-            ),
-        )
-
-        // Observe all the diaries
-        repository.getAllDiaries().catch {
-            updateInitializedState {
-                it.copy(
-                    errorText = "Error initializing diaries"
-                )
-            }
-        }.collect { diaries ->
-            logger.i(Tag) {
-                "Found ${diaries.size} diaries"
-            }
-
-            val json = Json.encodeToString(
-                value = diaries.map {
-                    it.toDto().copy(id = null)
-                },
-            )
-
-            // Remove the diaries if it already exists in the message chain
-            if (messages.size > 1) {
-                logger.i(Tag) {
-                    "There are already diaries in the chain, removing the item at position: 1"
-                }
-                messages.removeAt(1)
-            }
-
-            // Add the diaries exactly as the second element in the messages
-            messages.add(
-                index = 1,
-                element = DiaryChatMessage.System(
-                    content = json,
+        updateInitializedState { currentState ->
+            currentState.copy(
+                messages = currentState.messages + DiaryChatMessage.System(
+                    content = DiaryAI.QUERY_PROMPT,
                 ),
             )
-
-            updateInitializedState {
-                it.copy(
-                    messages = filterMessages()
-                )
-            }
         }
+
+        // Observe all the diaries
+        repository.getAllDiaries()
+            .catch {
+                updateInitializedState {
+                    it.copy(
+                        errorText = "Error initializing diaries",
+                    )
+                }
+            }.collect { diaries ->
+                logger.i(Tag) {
+                    "Found ${diaries.size} diaries"
+                }
+
+                updateInitializedState { currentState ->
+                    val messages = currentState.messages.toMutableList()
+
+                    // Remove the diaries if it already exists in the message chain
+                    if (messages.size > 1) {
+                        logger.i(Tag) {
+                            "There are already diaries in the chain, removing the item at position: 1"
+                        }
+                        messages.removeAt(1)
+                    }
+
+                    /**
+                     * Add the diaries exactly as the second element in the message chain. This is essential
+                     * because we might persist the chat history, in which case, we always want to replace this
+                     * message with the latest diary entries
+                     */
+                    messages.add(
+                        index = 1,
+                        element = DiaryChatMessage.System(
+                            content = Json.encodeToString(
+                                value = diaries.map {
+                                    it.toDto().copy(id = null)
+                                },
+                            ),
+                        ),
+                    )
+                    currentState.copy(
+                        messages = messages,
+                    )
+                }
+            }
     }
 
     fun queryDiaries(query: String) = viewModelScope.launch(dispatchers.main) {
-        val userMessage = DiaryChatMessage.User(
-            content = query,
-        )
-
-        messages.add(userMessage)
-
-        updateInitializedState {
-            it.copy(
+        // Add the user's query to the list of messages and render it immediately
+        updateInitializedState { currentState ->
+            currentState.copy(
                 isResponding = true,
-                messages = filterMessages(),
+                messages = currentState.messages + DiaryChatMessage.User(
+                    content = query,
+                ),
             )
         }
 
-        val response = repository.queryDiaries(messages)
+        val messages = (_viewState.value as? DiaryChatViewState.Initialized)?.messages
+
+        logger.i(Tag) {
+            "Querying diaries with ${messages?.size} messages"
+        }
+
+        val response = repository.queryDiaries(messages.orEmpty())
 
         if (response.isNullOrBlank()) {
             logger.e(Tag) {
@@ -121,26 +138,18 @@ class DiaryChatViewModel(
             return@launch
         }
 
-        messages.add(
-            DiaryChatMessage.DiaryAI(
-                content = response,
-            ),
-        )
-
         logger.i(Tag) {
-            "Successfully added query response to message chain. Items: ${messages.size}"
+            "Successfully added query response to message chain"
         }
 
         updateInitializedState {
             it.copy(
                 isResponding = false,
-                messages = filterMessages(),
+                messages = it.messages + DiaryChatMessage.DiaryAI(
+                    content = response,
+                ),
             )
         }
-    }
-
-    private fun filterMessages(): List<DiaryChatMessage> = messages.filter { message ->
-        message.role == DiaryChatRole.User || message.role == DiaryChatRole.DiaryAI
     }
 
     fun dismissError() = _viewState.update {
@@ -151,7 +160,7 @@ class DiaryChatViewModel(
     }
 
     private fun updateInitializedState(
-        func: (current: DiaryChatViewState.Initialized) -> DiaryChatViewState.Initialized
+        func: (current: DiaryChatViewState.Initialized) -> DiaryChatViewState.Initialized,
     ) {
         _viewState.update { state ->
             val currentState = state as? DiaryChatViewState.Initialized ?: DiaryChatViewState.Initialized()

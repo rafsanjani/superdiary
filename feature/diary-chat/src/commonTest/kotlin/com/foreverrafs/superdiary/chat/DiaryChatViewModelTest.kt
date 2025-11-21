@@ -33,7 +33,6 @@ class DiaryChatViewModelTest {
 
     private val diaryChatRepository: DiaryChatRepository = mock<DiaryChatRepository>()
 
-
     private lateinit var diaryChatViewModel: DiaryChatViewModel
 
     @OptIn(ExperimentalTime::class)
@@ -55,7 +54,9 @@ class DiaryChatViewModelTest {
         everySuspend { diaryChatRepository.saveChatMessage(any()) }.returns(Unit)
 
         diaryChatViewModel = DiaryChatViewModel(
-            logger = AggregateLogger(emptyList()), repository = diaryChatRepository, dispatchers = TestAppDispatchers
+            logger = AggregateLogger(emptyList()),
+            repository = diaryChatRepository,
+            dispatchers = TestAppDispatchers,
         )
     }
 
@@ -66,19 +67,14 @@ class DiaryChatViewModelTest {
 
     @Test
     fun `Should include system and welcome messages right after initialization`() = runTest {
-        // No history already configured in setup
         diaryChatViewModel.viewState.test {
-            // Skip the loading stage
-            skipItems(1)
+            val state = awaitUntil { it is DiaryChatViewState.Initialized && it.messages.isNotEmpty() }
+                as? DiaryChatViewState.Initialized
 
-            val state = awaitItem() as DiaryChatViewState.Initialized
-
-            assertThat(state.messages.size).isEqualTo(2)
-
+            assertThat(state?.messages?.size).isEqualTo(2)
             cancelAndIgnoreRemainingEvents()
         }
     }
-
 
     @Test
     fun `Should show an error message when AI returns null`() = runTest {
@@ -105,7 +101,9 @@ class DiaryChatViewModelTest {
 
         // Recreate VM to re-run init collection with the failing flow
         diaryChatViewModel = DiaryChatViewModel(
-            logger = AggregateLogger(emptyList()), repository = diaryChatRepository, dispatchers = TestAppDispatchers
+            logger = AggregateLogger(emptyList()),
+            repository = diaryChatRepository,
+            dispatchers = TestAppDispatchers,
         )
 
         diaryChatViewModel.viewState.test {

@@ -78,11 +78,12 @@ import superdiary.feature.diary_chat.generated.resources.ic_send
 @Composable
 fun DiaryChatScreenContent(
     screenState: DiaryChatViewState,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     onQueryDiaries: (query: String) -> Unit = {},
     onDismissError: () -> Unit = {},
-    snackbarHostState: SnackbarHostState,
 ) {
+    val currentOnDismissError by rememberUpdatedState(onDismissError)
     when (screenState) {
         is DiaryChatViewState.Loading -> {
             Box(
@@ -101,7 +102,7 @@ fun DiaryChatScreenContent(
                 screenState.errorText?.let {
                     snackbarHostState.showSnackbar(it)
                     delay(2000)
-                    onDismissError()
+                    currentOnDismissError()
                 }
             }
 
@@ -116,8 +117,8 @@ fun DiaryChatScreenContent(
             ) {
                 val listState = rememberLazyListState()
 
-                LaunchedEffect(screenState.messages) {
-                    listState.animateScrollToItem(screenState.messages.size)
+                LaunchedEffect(screenState.displayMessages) {
+                    listState.animateScrollToItem(screenState.displayMessages.size)
                 }
 
                 LazyColumn(
@@ -126,7 +127,7 @@ fun DiaryChatScreenContent(
                     state = listState,
                 ) {
                     items(
-                        items = screenState.messages,
+                        items = screenState.displayMessages,
                         key = { item -> item.id },
                     ) { item ->
                         ChatBubble(
@@ -285,6 +286,7 @@ private fun PreviewMessagesAndResponding() {
                     DiaryChatMessage.DiaryAI("How do i kill a cat"),
                 ),
             ),
-            snackbarHostState = remember { SnackbarHostState() })
+            snackbarHostState = remember { SnackbarHostState() },
+        )
     }
 }
