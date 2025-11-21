@@ -22,8 +22,8 @@ val diaryAiModule: Module = module {
     single<OpenAI> {
         OpenAI(
             token = SuperDiarySecret.openAIKey,
-            timeout = Timeout(socket = 15.seconds),
-            logging = LoggingConfig(logLevel = LogLevel.None),
+            timeout = Timeout(socket = 10.seconds),
+            logging = LoggingConfig(logLevel = LogLevel.All),
             host = OpenAIHost(
                 baseUrl = "https://generativelanguage.googleapis.com/v1beta/openai/",
             ),

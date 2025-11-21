@@ -34,6 +34,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -59,7 +60,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatMessage
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatRole
-import com.foreverrafs.superdiary.chat.presentation.DiaryChatUiModel
 import com.foreverrafs.superdiary.chat.presentation.DiaryChatViewState
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
@@ -67,6 +67,7 @@ import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlin.time.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.diary_chat.generated.resources.Res
@@ -79,6 +80,8 @@ fun DiaryChatScreenContent(
     screenState: DiaryChatViewState,
     modifier: Modifier = Modifier,
     onQueryDiaries: (query: String) -> Unit = {},
+    onDismissError: () -> Unit = {},
+    snackbarHostState: SnackbarHostState,
 ) {
     when (screenState) {
         is DiaryChatViewState.Loading -> {
@@ -94,45 +97,45 @@ fun DiaryChatScreenContent(
             val focusRequester = remember { FocusRequester() }
             val keyboardController = LocalSoftwareKeyboardController.current
 
+            LaunchedEffect(screenState.errorText) {
+                screenState.errorText?.let {
+                    snackbarHostState.showSnackbar(it)
+                    delay(2000)
+                    onDismissError()
+                }
+            }
+
             Column(
-                modifier = modifier
-                    .clickable(
-                        indication = null,
-                        onClick = {
-                            keyboardController?.hide()
-                        },
-                        interactionSource = MutableInteractionSource(),
-                    )
-                    .fillMaxSize()
-                    .imePadding()
-                    .padding(8.dp),
+                modifier = modifier.clickable(
+                    indication = null,
+                    onClick = {
+                        keyboardController?.hide()
+                    },
+                    interactionSource = MutableInteractionSource(),
+                ).fillMaxSize().imePadding().padding(8.dp),
             ) {
                 val listState = rememberLazyListState()
 
-                LaunchedEffect(screenState.model.messages) {
-                    listState.animateScrollToItem(screenState.model.messages.size)
+                LaunchedEffect(screenState.messages) {
+                    listState.animateScrollToItem(screenState.messages.size)
                 }
 
                 LazyColumn(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
+                    modifier = Modifier.weight(1f).fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     state = listState,
                 ) {
                     items(
-                        items = screenState.model.messages,
+                        items = screenState.messages,
                         key = { item -> item.id },
                     ) { item ->
                         ChatBubble(
                             chatItem = item,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .animateItem(),
+                            modifier = Modifier.fillMaxWidth().animateItem(),
                         )
                     }
 
-                    if (screenState.model.isResponding) {
+                    if (screenState.isResponding) {
                         item {
                             val alphaAnimation = rememberInfiniteTransition("alphaAnimation")
                             val alpha by alphaAnimation.animateFloat(
@@ -171,8 +174,7 @@ fun DiaryChatScreenContent(
 
                     // Input area
                     OutlinedTextField(
-                        modifier = Modifier.focusRequester(focusRequester).weight(1f)
-                            .heightIn(min = 48.dp),
+                        modifier = Modifier.focusRequester(focusRequester).weight(1f).heightIn(min = 48.dp),
                         maxLines = 1,
                         value = input,
                         onValueChange = { input = it },
@@ -190,7 +192,7 @@ fun DiaryChatScreenContent(
                     // Send button
                     val description = stringResource(Res.string.content_description_button_send)
                     IconButton(
-                        enabled = input.isNotEmpty() && !screenState.model.isResponding,
+                        enabled = input.isNotEmpty() && !screenState.isResponding,
                         modifier = Modifier.size(48.dp).semantics(true) {
                             this.contentDescription = description
                         },
@@ -242,12 +244,10 @@ fun ChatBubble(
 
         RichText(
             state = richTextState,
-            modifier = alignmentAndPaddingModifier
-                .background(
-                    color = backgroundColor,
-                    shape = RoundedCornerShape(4.dp),
-                )
-                .padding(8.dp),
+            modifier = alignmentAndPaddingModifier.background(
+                color = backgroundColor,
+                shape = RoundedCornerShape(4.dp),
+            ).padding(8.dp),
             style = MaterialTheme.typography.bodySmall.merge(fontSize = 14.sp, lineHeight = 24.sp),
             color = Color.White,
         )
@@ -266,8 +266,9 @@ private fun PreviewResponding() {
     SuperDiaryPreviewTheme {
         DiaryChatScreenContent(
             screenState = DiaryChatViewState.Initialized(
-                DiaryChatUiModel(isResponding = true),
+                isResponding = true,
             ),
+            snackbarHostState = remember { SnackbarHostState() },
         )
     }
 }
@@ -278,15 +279,12 @@ private fun PreviewMessagesAndResponding() {
     SuperDiaryPreviewTheme {
         DiaryChatScreenContent(
             screenState = DiaryChatViewState.Initialized(
-                DiaryChatUiModel(
-                    isResponding = true,
-                    messages = listOf(
-                        DiaryChatMessage.System("You are diary AI"),
-                        DiaryChatMessage.User("You don't kill a cat, a cat kills you"),
-                        DiaryChatMessage.DiaryAI("How do i kill a cat"),
-                    ),
+                isResponding = true,
+                messages = listOf(
+                    DiaryChatMessage.User("You don't kill a cat, a cat kills you"),
+                    DiaryChatMessage.DiaryAI("How do i kill a cat"),
                 ),
             ),
-        )
+            snackbarHostState = remember { SnackbarHostState() })
     }
 }

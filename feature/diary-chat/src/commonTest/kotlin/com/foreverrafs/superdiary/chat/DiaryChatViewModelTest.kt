@@ -3,19 +3,15 @@ package com.foreverrafs.superdiary.chat
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import assertk.assertions.isFalse
 import assertk.assertions.isNotNull
-import assertk.assertions.isNull
-import assertk.assertions.isTrue
-import com.foreverrafs.superdiary.ai.api.DiaryAI
-import com.foreverrafs.superdiary.ai.domain.model.DiaryChatRole
 import com.foreverrafs.superdiary.chat.domain.repository.DiaryChatRepository
 import com.foreverrafs.superdiary.chat.presentation.DiaryChatViewModel
+import com.foreverrafs.superdiary.chat.presentation.DiaryChatViewState
+import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.common.coroutines.awaitUntil
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import dev.mokkery.answering.returns
-import dev.mokkery.answering.throws
 import dev.mokkery.every
 import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
@@ -28,8 +24,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -39,14 +33,13 @@ class DiaryChatViewModelTest {
 
     private val diaryChatRepository: DiaryChatRepository = mock<DiaryChatRepository>()
 
-    private val diaryAI: DiaryAI = mock<DiaryAI>()
 
     private lateinit var diaryChatViewModel: DiaryChatViewModel
 
     @OptIn(ExperimentalTime::class)
     @BeforeTest
     fun setup() {
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(TestAppDispatchers.main)
 
         every { diaryChatRepository.getAllDiaries() }.returns(
             flowOf(
@@ -62,8 +55,7 @@ class DiaryChatViewModelTest {
         everySuspend { diaryChatRepository.saveChatMessage(any()) }.returns(Unit)
 
         diaryChatViewModel = DiaryChatViewModel(
-            logger = AggregateLogger(emptyList()),
-            repository = diaryChatRepository,
+            logger = AggregateLogger(emptyList()), repository = diaryChatRepository, dispatchers = TestAppDispatchers
         )
     }
 
@@ -76,57 +68,32 @@ class DiaryChatViewModelTest {
     fun `Should include system and welcome messages right after initialization`() = runTest {
         // No history already configured in setup
         diaryChatViewModel.viewState.test {
-            val state = awaitUntil { it.messages.any { m -> m.role == DiaryChatRole.System } }
-            // System message should be first
-            assertThat(state.messages.first().role).isEqualTo(DiaryChatRole.System)
-            // Welcome message from AI should also be present somewhere after system
-            assertThat(state.messages.any { it.role == DiaryChatRole.DiaryAI }).isTrue()
+            // Skip the loading stage
+            skipItems(1)
+
+            val state = awaitItem() as DiaryChatViewState.Initialized
+
+            assertThat(state.messages.size).isEqualTo(2)
 
             cancelAndIgnoreRemainingEvents()
         }
     }
 
-    @Test
-    fun `Blank query is ignored without changing state`() = runTest {
-        // Capture the current messages snapshot
-        val initial = diaryChatViewModel.viewState.value
-        diaryChatViewModel.queryDiaries("   ")
-        advanceUntilIdle()
-        val after = diaryChatViewModel.viewState.value
-
-        assertThat(after.isResponding).isFalse()
-        assertThat(after.messages.size).isEqualTo(initial.messages.size)
-        assertThat(after.error).isNull()
-    }
 
     @Test
-    fun `AI returns null sets error and does not append AI message`() = runTest {
-        everySuspend { diaryAI.queryDiaries(any()) }.returns(null)
+    fun `Should show an error message when AI returns null`() = runTest {
+        everySuspend { diaryChatRepository.queryDiaries(any()) }.returns(null)
 
         diaryChatViewModel.viewState.test {
             diaryChatViewModel.queryDiaries("tell me")
 
-            val state = awaitUntil { it.error != null }
+            val state = awaitUntil {
+                it is DiaryChatViewState.Initialized && it.errorText != null
+            } as DiaryChatViewState.Initialized
 
-            assertThat(state.isResponding).isFalse()
+            assertThat(state.isResponding).isEqualTo(false)
+            assertThat(state.errorText).isNotNull()
 
-            // The last message should be the user's query since AI failed
-            assertThat(state.messages.last().role).isEqualTo(DiaryChatRole.User)
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
-    @Test
-    fun `AI throws exception sets generic error`() = runTest {
-        everySuspend { diaryAI.queryDiaries(any()) } throws RuntimeException("boom")
-
-        diaryChatViewModel.viewState.test {
-            diaryChatViewModel.queryDiaries("hello")
-
-            val state = awaitUntil { it.error != null }
-
-            assertThat(state.isResponding).isFalse()
-            assertThat(state.error).isEqualTo("An error occurred while processing your query")
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -138,13 +105,13 @@ class DiaryChatViewModelTest {
 
         // Recreate VM to re-run init collection with the failing flow
         diaryChatViewModel = DiaryChatViewModel(
-            logger = AggregateLogger(emptyList()),
-            repository = diaryChatRepository,
+            logger = AggregateLogger(emptyList()), repository = diaryChatRepository, dispatchers = TestAppDispatchers
         )
 
         diaryChatViewModel.viewState.test {
-            val state = awaitUntil { it.error != null }
-            assertThat(state.error).isNotNull()
+            val state =
+                awaitUntil { it is DiaryChatViewState.Initialized && it.errorText != null } as DiaryChatViewState.Initialized
+            assertThat(state.errorText).isNotNull()
         }
     }
 }

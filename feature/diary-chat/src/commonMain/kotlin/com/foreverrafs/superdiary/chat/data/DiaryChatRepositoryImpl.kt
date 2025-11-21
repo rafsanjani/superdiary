@@ -19,7 +19,11 @@ class DiaryChatRepositoryImpl(
         it.map { it.toDiary() }
     }
 
-    override suspend fun queryDiaries(messages: List<DiaryChatMessage>): String? = diaryAI.queryDiaries(messages)
+    override suspend fun queryDiaries(messages: List<DiaryChatMessage>): String? = try {
+        diaryAI.queryDiaries(messages)
+    } catch (_: Exception) {
+        null
+    }
 
     override suspend fun saveChatMessage(message: DiaryChatMessage) {
         database.saveChatMessage(message.toDatabase())
