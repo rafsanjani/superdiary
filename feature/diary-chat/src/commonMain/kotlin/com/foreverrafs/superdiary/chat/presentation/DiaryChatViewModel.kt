@@ -41,13 +41,11 @@ class DiaryChatViewModel(
 
 //    private val messages: MutableList<DiaryChatMessage> = mutableListOf()
 
-    val viewState = _viewState
-        .onStart { initializeContext() }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = DiaryChatViewState.Loading,
-        )
+    val viewState = _viewState.onStart { initializeContext() }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = DiaryChatViewState.Loading,
+    )
 
     private fun initializeContext() = viewModelScope.launch(dispatchers.main) {
         // Add the system message
@@ -60,52 +58,54 @@ class DiaryChatViewModel(
         }
 
         // Observe all the diaries
-        repository.getAllDiaries()
-            .catch {
-                updateInitializedState {
-                    it.copy(
-                        errorText = "Error initializing diaries",
-                    )
-                }
-            }.collect { diaries ->
-                logger.i(Tag) {
-                    "Found ${diaries.size} diaries"
-                }
-
-                updateInitializedState { currentState ->
-                    val messages = currentState.messages.toMutableList()
-
-                    // Remove the diaries if it already exists in the message chain
-                    if (messages.size > 1) {
-                        logger.i(Tag) {
-                            "There are already diaries in the chain, removing the item at position: 1"
-                        }
-                        messages.removeAt(1)
-                    }
-
-                    /**
-                     * Add the diaries exactly as the second element in the message chain. This is essential
-                     * because we might persist the chat history, in which case, we always want to replace this
-                     * message with the latest diary entries
-                     */
-                    messages.add(
-                        index = 1,
-                        element = DiaryChatMessage.System(
-                            content = Json.encodeToString(
-                                value = diaries.map {
-                                    it.toDto().copy(id = null)
-                                },
-                            ),
-                        ),
-                    )
-                    currentState.copy(
-                        messages = messages,
-                    )
-                }
+        repository.getAllDiaries().catch {
+            updateInitializedState {
+                it.copy(
+                    errorText = "Error initializing diaries",
+                )
             }
+        }.collect { diaries ->
+            logger.i(Tag) {
+                "Found ${diaries.size} diaries"
+            }
+
+            updateInitializedState { currentState ->
+                val messages = currentState.messages.toMutableList()
+
+                // Remove the diaries if it already exists in the message chain
+                if (messages.size > 1) {
+                    logger.i(Tag) {
+                        "There are already diaries in the chain, removing the item at position: 1"
+                    }
+                    messages.removeAt(1)
+                }
+
+                /**
+                 * Add the diaries exactly as the second element in the message chain. This is essential
+                 * because we might persist the chat history, in which case, we always want to replace this
+                 * message with the latest diary entries
+                 */
+                messages.add(
+                    index = 1,
+                    element = DiaryChatMessage.System(
+                        content = Json.encodeToString(
+                            value = diaries.map {
+                                it.toDto().copy(id = null)
+                            },
+                        ),
+                    ),
+                )
+                currentState.copy(
+                    messages = messages,
+                )
+            }
+        }
     }
 
     fun queryDiaries(query: String) = viewModelScope.launch(dispatchers.main) {
+        // Don't process empty queries
+        if (query.isEmpty()) return@launch
+
         // Add the user's query to the list of messages and render it immediately
         updateInitializedState { currentState ->
             currentState.copy(
