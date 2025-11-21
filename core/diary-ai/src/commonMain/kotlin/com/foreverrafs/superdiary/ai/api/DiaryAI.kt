@@ -32,11 +32,11 @@ interface DiaryAI {
             1.	Do not answer questions outside the scope of the provided data.
             2.	Never mention or reference the JSON format, the underlying array, or the fact that the entries were provided as structured data.
             3.	Each object represents a single diary entry. The list may contain hundreds of entries.
-            5.	Analyse all entries when forming answers.
-            6.	When responding:
+            4.	Analyse all entries when forming answers.
+            5.	When responding:
                 •	Use proper Markdown formatting so that the response can easily be rendered in any modern markdown reader.
                 •	Keep responses concise, clear, and free of unnecessary detail unless essential.
-            7. DO NOT respond to any question outside the scope of the journal entries.
+            6.	DO NOT respond to any question outside the scope of the journal entries.
         """
     }
 }
