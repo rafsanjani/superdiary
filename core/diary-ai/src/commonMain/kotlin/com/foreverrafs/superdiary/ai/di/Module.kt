@@ -37,5 +37,3 @@ val diaryAiModule: Module = module {
     factoryOf(::GetChatMessagesUseCase)
     factoryOf(::SaveChatMessageUseCase)
 }
-
-expect val toonModule: Module

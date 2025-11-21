@@ -26,14 +26,6 @@ kotlin {
             }
         }
 
-        androidMain.dependencies {
-            implementation("br.com.vexpera:kotlin-toon:1.0.0")
-        }
-
-        jvmMain.dependencies {
-            implementation("br.com.vexpera:kotlin-toon:1.0.0")
-        }
-
         commonTest {
             dependencies {
                 implementation(kotlin("test"))
