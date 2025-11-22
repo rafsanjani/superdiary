@@ -39,7 +39,6 @@ class DiaryChatViewModel(
 ) : ViewModel() {
     private val _viewState = MutableStateFlow<DiaryChatViewState>(DiaryChatViewState.Loading)
 
-//    private val messages: MutableList<DiaryChatMessage> = mutableListOf()
 
     val viewState = _viewState.onStart { initializeContext() }.stateIn(
         scope = viewModelScope,
@@ -48,11 +47,13 @@ class DiaryChatViewModel(
     )
 
     private fun initializeContext() = viewModelScope.launch(dispatchers.main) {
-        // Add the system message
+        //  Reset chat messages when re-initialising and add the system message
         updateInitializedState { currentState ->
             currentState.copy(
-                messages = currentState.messages + DiaryChatMessage.System(
-                    content = DiaryAI.QUERY_PROMPT,
+                messages = listOf(
+                    DiaryChatMessage.System(
+                        content = DiaryAI.QUERY_PROMPT,
+                    )
                 ),
             )
         }
