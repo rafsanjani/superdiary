@@ -39,7 +39,6 @@ class DiaryChatViewModel(
 ) : ViewModel() {
     private val _viewState = MutableStateFlow<DiaryChatViewState>(DiaryChatViewState.Loading)
 
-
     val viewState = _viewState.onStart { initializeContext() }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -53,7 +52,7 @@ class DiaryChatViewModel(
                 messages = listOf(
                     DiaryChatMessage.System(
                         content = DiaryAI.QUERY_PROMPT,
-                    )
+                    ),
                 ),
             )
         }
