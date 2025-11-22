@@ -12,15 +12,13 @@ plugins {
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     sourceSets {
-        androidUnitTest.dependencies {
-        }
-
         commonMain.dependencies {
             implementation(projects.core.logging)
             implementation(projects.core.diaryAi)
             implementation(projects.designSystem)
             implementation(projects.core.database)
             implementation(projects.sharedData)
+            implementation(projects.commonUtils)
 
             // replace this with a catalog entry
             implementation(compose.material3)

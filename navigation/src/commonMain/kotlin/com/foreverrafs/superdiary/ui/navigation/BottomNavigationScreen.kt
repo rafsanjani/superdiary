@@ -72,7 +72,9 @@ fun BottomNavigationScreen(
                 backStack = topLevelBackStack.backStack,
                 entryProvider = entryProvider {
                     entry<TopLevelRoute.DiaryChatTab> {
-                        DiaryChatTab()
+                        DiaryChatTab(
+                            snackbarHostState = snackbarHostState,
+                        )
                     }
 
                     entry<TopLevelRoute.DashboardTab> {

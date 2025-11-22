@@ -10,13 +10,12 @@ plugins {
 }
 kotlin {
     listOf(
-    iosArm64(),
-    iosSimulatorArm64(),
+        iosArm64(),
+        iosSimulatorArm64(),
     ).forEach {
         it.binaries.framework {
             baseName = "shared"
             linkerOpts += "-lsqlite3"
-            linkerOpts += "-ld_classic"
 
             export(projects.core.analytics)
             export(projects.core.logging)
@@ -24,6 +23,7 @@ kotlin {
             export(projects.core.authentication)
             export(projects.designSystem)
             export(projects.navigation)
+            export(projects.core.diaryAi)
         }
     }
 
@@ -36,6 +36,7 @@ kotlin {
                 api(projects.navigation)
                 api(projects.core.authentication)
                 api(projects.designSystem)
+                api(projects.core.diaryAi)
             }
         }
     }
