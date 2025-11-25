@@ -10,7 +10,6 @@ plugins {
     alias(libs.plugins.paparazzi)
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     sourceSets {
         androidUnitTest.dependencies {
@@ -27,16 +26,14 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.kotlin.datetime)
             implementation(projects.core.location)
-            implementation(projects.commonUtils)
             implementation(libs.richTextEditor)
             implementation(projects.sharedData)
-            implementation("com.valentinilk.shimmer:compose-shimmer:1.3.3")
+            implementation(libs.shimmer)
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(projects.designSystem)
-            implementation(projects.commonUtils)
             implementation(libs.kotlinx.serialization.json)
 
-             implementation(compose.materialIconsExtended)
+            implementation(compose.materialIconsExtended)
         }
 
         commonTest.dependencies {

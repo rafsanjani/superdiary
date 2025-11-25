@@ -24,7 +24,7 @@ kotlin {
 
                 implementation(dependencies.platform(libs.supabase.bom))
                 implementation(libs.supabase.posgrest)
-                implementation("org.jetbrains.androidx.core:core-uri:1.0.0-alpha01")
+                implementation(libs.androidx.core.uri)
                 implementation(libs.supabase.auth)
                 implementation(libs.supabase.realtime)
                 implementation(libs.supabase.compose.auth)
@@ -40,9 +40,8 @@ kotlin {
                 implementation(libs.google.playservices.location)
                 implementation(libs.moko.permissions.compose)
                 implementation(libs.ktor.client.json)
-                implementation("androidx.biometric:biometric:1.4.0-alpha04")
+                implementation(libs.androidx.biometric)
 
-                // this isn't a bom
                 implementation(libs.androidx.credentials.bom)
                 implementation(libs.androidx.credentials.playServicesAuth)
                 implementation(libs.google.playservices.identity)

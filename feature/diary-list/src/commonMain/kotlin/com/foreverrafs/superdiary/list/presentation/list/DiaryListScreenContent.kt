@@ -57,7 +57,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
@@ -79,6 +78,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import com.components.diarylist.DiaryFilters
 import com.components.diarylist.DiaryList
 import com.components.diarylist.DiaryListActions
@@ -114,28 +116,26 @@ fun DiaryListScreenContent(
         mutableStateOf(setOf<Long>())
     }
 
-    @Suppress("NAME_SHADOWING")
-    val diaryListActions =
-        remember {
-            diaryListActions.copy(
-                onAddSelection = { diaryId ->
-                    diaryId?.let {
-                        selectedIds = selectedIds.plus(diaryId)
-                    }
-                },
-                onRemoveSelection = { diaryId ->
-                    diaryId?.let {
-                        selectedIds = selectedIds.minus(diaryId)
-                    }
-                },
-                onToggleSelection = {
-                    selectedIds = selectedIds.addOrRemove(it)
-                },
-                onCancelSelection = {
-                    selectedIds = emptySet()
-                },
-            )
-        }
+    @Suppress("NAME_SHADOWING") val diaryListActions = remember {
+        diaryListActions.copy(
+            onAddSelection = { diaryId ->
+                diaryId?.let {
+                    selectedIds = selectedIds.plus(diaryId)
+                }
+            },
+            onRemoveSelection = { diaryId ->
+                diaryId?.let {
+                    selectedIds = selectedIds.minus(diaryId)
+                }
+            },
+            onToggleSelection = {
+                selectedIds = selectedIds.addOrRemove(it)
+            },
+            onCancelSelection = {
+                selectedIds = emptySet()
+            },
+        )
+    }
 
     fun onBack() {
         if (selectedIds.isNotEmpty()) {
@@ -145,9 +145,13 @@ fun DiaryListScreenContent(
         }
     }
 
-    BackHandler {
-        onBack()
-    }
+    NavigationBackHandler(
+        isBackEnabled = true,
+        state = rememberNavigationEventState(
+            currentInfo = NavigationEventInfo.None,
+        ),
+        onBackCompleted = ::onBack
+    )
 
     Scaffold(
         topBar = {
@@ -245,17 +249,15 @@ private fun DiaryListContent(
             onConfirm = {
                 coroutineScope.launch {
                     showConfirmDeleteDialog = false
-                    val isSuccess =
-                        diaryListActions.onDeleteDiaries(
-                            diaries.filter { selectedIds.contains(it.id) },
-                        )
+                    val isSuccess = diaryListActions.onDeleteDiaries(
+                        diaries.filter { selectedIds.contains(it.id) },
+                    )
 
-                    val message =
-                        if (isSuccess) {
-                            "${selectedIds.size} item(s) deleted!"
-                        } else {
-                            "Error deleting diaries"
-                        }
+                    val message = if (isSuccess) {
+                        "${selectedIds.size} item(s) deleted!"
+                    } else {
+                        "Error deleting diaries"
+                    }
 
                     diaryListActions.onCancelSelection()
 
@@ -281,8 +283,7 @@ private fun DiaryListContent(
             DiaryList(
                 modifier = Modifier.fillMaxSize(),
                 diaries = diaries,
-                inSelectionMode =
-                selectedIds.isNotEmpty(),
+                inSelectionMode = selectedIds.isNotEmpty(),
                 diaryFilters = diaryFilters,
                 selectedIds = selectedIds,
                 showSearchBar = showSearchBar,
@@ -357,8 +358,7 @@ private fun EmptyDiaryList(
 }
 
 private enum class Anchors {
-    Start,
-    End,
+    Start, End,
 }
 
 /** This is reused in DashboardScreenContent */
@@ -385,28 +385,23 @@ fun DiaryItem(
     }
 
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .onSizeChanged {
-                draggableWidth = it.width.toFloat()
-                state.updateAnchors(
-                    DraggableAnchors {
-                        Anchors.Start at 0f
-                        Anchors.End at -(draggableWidth * 0.25f)
-                    },
-                )
-            }
-            .anchoredDraggable(
-                state = state,
-                flingBehavior = AnchoredDraggableDefaults.flingBehavior(
-                    state = state,
-                    positionalThreshold = { distance: Float -> distance * 0.25f },
-                ),
-                orientation = Orientation.Horizontal,
-                overscrollEffect = rememberOverscrollEffect(),
+        modifier = modifier.fillMaxWidth().onSizeChanged {
+            draggableWidth = it.width.toFloat()
+            state.updateAnchors(
+                DraggableAnchors {
+                    Anchors.Start at 0f
+                    Anchors.End at -(draggableWidth * 0.25f)
+                },
             )
-            .height(110.dp)
-            .padding(padding),
+        }.anchoredDraggable(
+            state = state,
+            flingBehavior = AnchoredDraggableDefaults.flingBehavior(
+                state = state,
+                positionalThreshold = { distance: Float -> distance * 0.25f },
+            ),
+            orientation = Orientation.Horizontal,
+            overscrollEffect = rememberOverscrollEffect(),
+        ).height(110.dp).padding(padding),
     ) {
         Card(
             shape = RoundedCornerShape(
@@ -415,20 +410,17 @@ fun DiaryItem(
                 topEnd = 8.dp,
                 bottomEnd = 0.dp,
             ),
-            modifier = Modifier
-                .zIndex(.9f)
-                .fillMaxWidth()
-                .offset {
-                    IntOffset(
-                        // Workaround for offset getting read before being initialized bug in anchoreddraggable
-                        x = if (state.offset.isNaN()) {
-                            0
-                        } else {
-                            state.offset.roundToInt()
-                        },
-                        y = 0,
-                    )
-                },
+            modifier = Modifier.zIndex(.9f).fillMaxWidth().offset {
+                IntOffset(
+                    // Workaround for offset getting read before being initialized bug in anchoreddraggable
+                    x = if (state.offset.isNaN()) {
+                        0
+                    } else {
+                        state.offset.roundToInt()
+                    },
+                    y = 0,
+                )
+            },
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surfaceVariant,
             ),
@@ -465,16 +457,12 @@ fun DiaryItem(
 
                 // Diary Entry
                 RichText(
-                    modifier = Modifier
-                        .weight(8f)
-                        .clearAndSetSemantics { }
-                        .padding(
-                            start = 8.dp,
-                            end = 8.dp,
-                            bottom = 8.dp,
-                            top = 16.dp,
-                        )
-                        .align(Alignment.Top),
+                    modifier = Modifier.weight(8f).clearAndSetSemantics { }.padding(
+                        start = 8.dp,
+                        end = 8.dp,
+                        bottom = 8.dp,
+                        top = 16.dp,
+                    ).align(Alignment.Top),
                     letterSpacing = (-0.3).sp,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
@@ -486,10 +474,8 @@ fun DiaryItem(
         }
         // Selection mode icon
         if (inSelectionMode) {
-            val iconModifier = Modifier
-                .zIndex(1f)
-                .align(Alignment.TopEnd)
-                .padding(top = 12.dp, start = 4.dp).size(20.dp)
+            val iconModifier =
+                Modifier.zIndex(1f).align(Alignment.TopEnd).padding(top = 12.dp, start = 4.dp).size(20.dp)
 
             if (selected) {
                 Icon(
@@ -514,10 +500,7 @@ fun DiaryItem(
 
         val coroutineScope = rememberCoroutineScope()
         Box(
-            modifier = Modifier
-                .size(totalSize)
-                .zIndex(.1f)
-                .align(Alignment.CenterEnd),
+            modifier = Modifier.size(totalSize).zIndex(.1f).align(Alignment.CenterEnd),
             contentAlignment = Alignment.Center,
         ) {
             IconButton(
@@ -549,17 +532,15 @@ private fun DateCard(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .fillMaxHeight()
-            .background(
-                color = MaterialTheme.colorScheme.secondaryContainer,
-                shape = RoundedCornerShape(
-                    topStart = 0.dp,
-                    topEnd = 12.dp,
-                    bottomStart = 12.dp,
-                    bottomEnd = 0.dp,
-                ),
+        modifier = modifier.fillMaxHeight().background(
+            color = MaterialTheme.colorScheme.secondaryContainer,
+            shape = RoundedCornerShape(
+                topStart = 0.dp,
+                topEnd = 12.dp,
+                bottomStart = 12.dp,
+                bottomEnd = 0.dp,
             ),
+        ),
         contentAlignment = Alignment.Center,
     ) {
         Text(
@@ -575,45 +556,44 @@ private fun DateCard(
 }
 
 @Composable
-private fun buildDateAnnotatedString(date: LocalDate): AnnotatedString =
-    buildAnnotatedString {
-        append(
-            date.format("E").uppercase(),
-        )
+private fun buildDateAnnotatedString(date: LocalDate): AnnotatedString = buildAnnotatedString {
+    append(
+        date.format("E").uppercase(),
+    )
 
-        appendLine()
+    appendLine()
 
-        withStyle(
-            SpanStyle(
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 16.sp,
-            ),
-        ) {
-            append(date.day.toString())
-        }
-        appendLine()
-
-        withStyle(
-            SpanStyle(
-                fontWeight = FontWeight.Normal,
-                fontSize = 14.sp,
-            ),
-        ) {
-            append(
-                date.format("MMM").uppercase(),
-            )
-        }
-        appendLine()
-
-        withStyle(
-            SpanStyle(
-                fontWeight = FontWeight.Normal,
-                fontSize = 14.sp,
-            ),
-        ) {
-            append(date.year.toString())
-        }
+    withStyle(
+        SpanStyle(
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 16.sp,
+        ),
+    ) {
+        append(date.day.toString())
     }
+    appendLine()
+
+    withStyle(
+        SpanStyle(
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp,
+        ),
+    ) {
+        append(
+            date.format("MMM").uppercase(),
+        )
+    }
+    appendLine()
+
+    withStyle(
+        SpanStyle(
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp,
+        ),
+    ) {
+        append(date.year.toString())
+    }
+}
 
 @Composable
 private fun ErrorContent(modifier: Modifier = Modifier) {
