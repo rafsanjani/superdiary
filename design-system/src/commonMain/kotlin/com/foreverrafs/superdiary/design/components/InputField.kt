@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.material3.Icon
@@ -101,6 +102,7 @@ fun SuperDiaryInputField(
     placeholder: String? = null,
     readOnly: Boolean = false,
     isError: Boolean = false,
+    lineLimits: TextFieldLineLimits = TextFieldLineLimits.Default,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
     val text by snapshotFlow { state.text }.collectAsState(initial = state.text)
@@ -124,6 +126,7 @@ fun SuperDiaryInputField(
                 )
             }
         },
+        lineLimits = lineLimits,
         labelPosition = TextFieldLabelPosition.Above(alignment = Alignment.Start),
         keyboardOptions = keyboardOptions,
         readOnly = readOnly,

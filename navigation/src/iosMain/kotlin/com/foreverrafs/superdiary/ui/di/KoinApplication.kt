@@ -22,6 +22,7 @@ object KoinApplication {
         val biometricAuthModule = module {
             factory<BiometricAuth> { biometricAuth }
         }
+
         modules(
             modules = compositeModule(
                 analytics = analytics,

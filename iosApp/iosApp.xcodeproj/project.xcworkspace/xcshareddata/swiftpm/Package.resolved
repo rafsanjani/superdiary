@@ -1,5 +1,5 @@
 {
-  "originHash" : "3a84996c0b9b1534fd00096ea5cdda925c0926607cf7eb19628f34a9bdf83367",
+  "originHash" : "f0c1b1c64bebe464895b1d2a5c0e24f3d681e96ee1ee0334bcc068439f58fac6",
   "pins" : [
     {
       "identity" : "app-check",
@@ -89,6 +89,15 @@
       "state" : {
         "revision" : "5a601a24aa1b3fb29fcdb824633f050e08257e92",
         "version" : "8.30.1"
+      }
+    },
+    {
+      "identity" : "toonencoder",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mattt/TOONEncoder.git",
+      "state" : {
+        "revision" : "643f4f26483f0d16f54738a6faf3ee78b92c4366",
+        "version" : "0.1.1"
       }
     }
   ],
