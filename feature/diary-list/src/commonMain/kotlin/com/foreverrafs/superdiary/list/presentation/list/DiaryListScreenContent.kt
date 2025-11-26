@@ -99,7 +99,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
-
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun DiaryListScreenContent(
@@ -116,7 +115,8 @@ fun DiaryListScreenContent(
         mutableStateOf(setOf<Long>())
     }
 
-    @Suppress("NAME_SHADOWING") val diaryListActions = remember {
+    @Suppress("NAME_SHADOWING")
+    val diaryListActions = remember {
         diaryListActions.copy(
             onAddSelection = { diaryId ->
                 diaryId?.let {
@@ -150,7 +150,7 @@ fun DiaryListScreenContent(
         state = rememberNavigationEventState(
             currentInfo = NavigationEventInfo.None,
         ),
-        onBackCompleted = ::onBack
+        onBackCompleted = ::onBack,
     )
 
     Scaffold(
@@ -358,7 +358,8 @@ private fun EmptyDiaryList(
 }
 
 private enum class Anchors {
-    Start, End,
+    Start,
+    End,
 }
 
 /** This is reused in DashboardScreenContent */
@@ -475,7 +476,8 @@ fun DiaryItem(
         // Selection mode icon
         if (inSelectionMode) {
             val iconModifier =
-                Modifier.zIndex(1f).align(Alignment.TopEnd).padding(top = 12.dp, start = 4.dp).size(20.dp)
+                Modifier.zIndex(1f).align(Alignment.TopEnd).padding(top = 12.dp, start = 4.dp)
+                    .size(20.dp)
 
             if (selected) {
                 Icon(
