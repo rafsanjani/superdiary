@@ -28,7 +28,6 @@ import dev.mokkery.answering.throws
 import dev.mokkery.every
 import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
-import dev.mokkery.matcher.varargs.anyVarargs
 import dev.mokkery.mock
 import dev.mokkery.verify
 import dev.mokkery.verify.VerifyMode
@@ -151,7 +150,7 @@ class DashboardViewModelTest {
         )
         every {
             diaryAI.generateSummary(
-                diaries = anyVarargs<Diary>().toList(),
+                diaries = any(),
                 onCompletion = any(),
             )
         }.returns(flowOf("New Diary Summary"))
@@ -185,7 +184,7 @@ class DashboardViewModelTest {
         )
         every {
             diaryAI.generateSummary(
-                diaries = anyVarargs<Diary>().toList(),
+                diaries = any(),
                 onCompletion = any(),
             )
         }
