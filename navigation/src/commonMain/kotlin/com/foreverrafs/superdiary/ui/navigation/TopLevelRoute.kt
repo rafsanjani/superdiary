@@ -10,7 +10,11 @@ import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.navigation3.runtime.NavKey
+import androidx.savedstate.serialization.SavedStateConfiguration
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
 
 @Serializable
 sealed interface TopLevelRoute : SuperDiaryTab {
@@ -59,6 +63,16 @@ sealed interface TopLevelRoute : SuperDiaryTab {
     }
 
     companion object Companion {
-        val Items: List<TopLevelRoute> = listOf(DashboardTab, FavoriteTab, DiaryChatTab)
+        val Items: Set<TopLevelRoute> = setOf(DashboardTab, FavoriteTab, DiaryChatTab)
+
+        val SavedStateConfiguration = SavedStateConfiguration {
+            serializersModule = SerializersModule {
+                polymorphic(baseClass = NavKey::class) {
+                    subclass(subclass = DashboardTab::class, DashboardTab.serializer())
+                    subclass(subclass = FavoriteTab::class, FavoriteTab.serializer())
+                    subclass(subclass = DiaryChatTab::class, DiaryChatTab.serializer())
+                }
+            }
+        }
     }
 }

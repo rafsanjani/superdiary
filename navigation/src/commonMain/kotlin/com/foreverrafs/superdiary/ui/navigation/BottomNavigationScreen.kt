@@ -9,10 +9,10 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.foreverrafs.auth.model.UserInfo
@@ -40,9 +40,13 @@ fun BottomNavigationScreen(
     // This snackbar host state is used to show snackbars on the main screen
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val topLevelBackStack: TopLevelBackStack<Any> by remember {
-        mutableStateOf(TopLevelBackStack(startKey = TopLevelRoute.DashboardTab))
-    }
+    val navigationState = rememberNavigationState(
+        startRoute = TopLevelRoute.DashboardTab,
+        topLevelRoutes = TopLevelRoute.Items,
+        configuration = TopLevelRoute.SavedStateConfiguration,
+    )
+
+    val navigator = remember { Navigator(navigationState) }
 
     Scaffold(
         modifier = modifier,
@@ -54,9 +58,10 @@ fun BottomNavigationScreen(
         },
         bottomBar = {
             SuperDiaryBottomBar(
-                items = TopLevelRoute.Items,
+                items = TopLevelRoute.Items.toList(),
+                selected = navigationState.topLevelRoute,
                 onItemClick = {
-                    topLevelBackStack.addTopLevel(it)
+                    navigator.navigate(it)
                 },
             )
         },
@@ -68,31 +73,33 @@ fun BottomNavigationScreen(
                 .consumeWindowInsets(paddingValues = contentPadding),
             color = MaterialTheme.colorScheme.background,
         ) {
+            val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
+                entry<TopLevelRoute.DiaryChatTab> {
+                    DiaryChatTab(
+                        snackbarHostState = snackbarHostState,
+                    )
+                }
+
+                entry<TopLevelRoute.DashboardTab> {
+                    DashboardTab(
+                        snackbarHostState = snackbarHostState,
+                        onAddEntry = onAddEntry,
+                        onSeeAll = onSeeAll,
+                        onDiaryClick = onDiaryClick,
+                    )
+                }
+
+                entry<TopLevelRoute.FavoriteTab> {
+                    FavoriteTab(
+                        snackbarHostState = snackbarHostState,
+                        onFavoriteClick = onDiaryClick,
+                    )
+                }
+            }
+
             NavDisplay(
-                backStack = topLevelBackStack.backStack,
-                entryProvider = entryProvider {
-                    entry<TopLevelRoute.DiaryChatTab> {
-                        DiaryChatTab(
-                            snackbarHostState = snackbarHostState,
-                        )
-                    }
-
-                    entry<TopLevelRoute.DashboardTab> {
-                        DashboardTab(
-                            snackbarHostState = snackbarHostState,
-                            onAddEntry = onAddEntry,
-                            onSeeAll = onSeeAll,
-                            onDiaryClick = onDiaryClick,
-                        )
-                    }
-
-                    entry<TopLevelRoute.FavoriteTab> {
-                        FavoriteTab(
-                            snackbarHostState = snackbarHostState,
-                            onFavoriteClick = onDiaryClick,
-                        )
-                    }
-                },
+                entries = navigationState.toEntries(entryProvider),
+                onBack = navigator::goBack,
             )
         }
     }
