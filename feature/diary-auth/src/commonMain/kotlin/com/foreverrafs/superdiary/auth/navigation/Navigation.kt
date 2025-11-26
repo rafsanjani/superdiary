@@ -81,6 +81,7 @@ fun EntryProviderScope<NavKey>.AuthNavigation(
         startDestination,
     )
 
+
     NavDisplay(
         backStack = backStack,
         onBack = {
@@ -94,7 +95,7 @@ fun EntryProviderScope<NavKey>.AuthNavigation(
             rememberSaveableStateHolderNavEntryDecorator(),
         ),
         entryProvider = entryProvider {
-            entry<AuthRoute.ChangePasswordScreen> { key ->
+            entry<AuthRoute.ChangePasswordScreen> {
                 ChangePasswordScreen(
                     onPasswordChangeSuccess = {
                         backStack.clear()
