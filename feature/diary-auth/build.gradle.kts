@@ -26,7 +26,7 @@ kotlin {
             implementation(libs.jetbrains.compose.preview)
             implementation(projects.core.logging)
             implementation(libs.androidx.core.uri)
-            implementation("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-alpha05")
+            implementation("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-SNAPSHOT+release-1-10")
 
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines.test)
