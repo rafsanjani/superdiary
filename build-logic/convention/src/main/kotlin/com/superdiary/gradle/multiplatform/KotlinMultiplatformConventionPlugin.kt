@@ -1,6 +1,5 @@
 package com.superdiary.gradle.multiplatform
 
-import com.superdiary.gradle.kotlin.configureKotlin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -20,8 +19,6 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
         extensions.configure<KotlinMultiplatformExtension> {
             applyDefaultHierarchyTemplate()
             jvm()
-
-            jvmToolchain(21)
 
             if (pluginManager.hasPlugin("com.android.library")) {
                 androidTarget()
@@ -62,7 +59,6 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
                     }
                 }
             }
-            configureKotlin()
         }
     }
 }

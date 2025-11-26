@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     sourceSets {
         commonMain {
@@ -45,21 +44,17 @@ kotlin {
                 implementation(libs.coil3.compose)
                 implementation(libs.coil3.multiplatform)
                 implementation(libs.coil3.network.ktor)
-
-                implementation(libs.jetbrains.navigation.compose)
+                api(libs.jetbrains.compose.ui.backhandler)
+                implementation("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-alpha05")
             }
         }
 
         commonTest {
-            dependencies {
-            }
-
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
         }
 
         androidUnitTest {
-            dependencies {
-            }
+            dependencies {}
         }
 
         jvmMain {

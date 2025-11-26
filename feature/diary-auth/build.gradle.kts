@@ -26,6 +26,7 @@ kotlin {
             implementation(libs.jetbrains.compose.preview)
             implementation(projects.core.logging)
             implementation(libs.androidx.core.uri)
+            implementation("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-alpha05")
 
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines.test)
@@ -38,7 +39,7 @@ kotlin {
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(projects.designSystem)
 
-             implementation(compose.materialIconsExtended)
+            implementation(compose.materialIconsExtended)
         }
 
         commonTest.dependencies {
