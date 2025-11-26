@@ -45,7 +45,7 @@ kotlin {
                 implementation(libs.coil3.multiplatform)
                 implementation(libs.coil3.network.ktor)
                 api(libs.jetbrains.compose.ui.backhandler)
-                implementation("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-alpha05")
+                implementation("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-SNAPSHOT+release-1-10")
             }
         }
 

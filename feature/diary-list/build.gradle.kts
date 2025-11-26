@@ -35,7 +35,7 @@ kotlin {
             implementation(projects.commonUtils)
             implementation(libs.richTextEditor)
             implementation(projects.core.location)
-            implementation("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-alpha05")
+            implementation("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-SNAPSHOT+release-1-10")
             implementation(projects.sharedData)
             implementation(projects.core.sync)
             implementation(projects.core.database)
