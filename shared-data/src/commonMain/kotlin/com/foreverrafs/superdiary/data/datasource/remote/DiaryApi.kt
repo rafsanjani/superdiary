@@ -18,5 +18,12 @@ interface DiaryApi {
     /** Save the diary entry into the remote database */
     suspend fun save(diary: DiaryDto): Result<Boolean>
 
+    /**
+     * Fetches the top n diary items
+     */
+    suspend fun fetch(count: Int): Result<List<DiaryDto>>
+
+    suspend fun countItems(): Result<Long>
+
     suspend fun delete(diary: DiaryDto): Result<Boolean>
 }

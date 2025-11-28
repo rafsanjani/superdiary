@@ -5,22 +5,24 @@ import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.BiometricAuth
 import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
+import com.foreverrafs.superdiary.dashboard.domain.CountEntriesUseCase
 import com.foreverrafs.superdiary.dashboard.domain.GenerateWeeklySummaryUseCase
+import com.foreverrafs.superdiary.dashboard.domain.GetRecentEntriesUseCase
 import com.foreverrafs.superdiary.data.Result
+import com.foreverrafs.superdiary.data.getOrElse
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.domain.usecase.CalculateBestStreakUseCase
 import com.foreverrafs.superdiary.domain.usecase.CalculateStreakUseCase
-import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.utils.DiarySettings
 import com.foreverrafs.superdiary.utils.toDate
 import kotlin.time.Clock
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -28,8 +30,9 @@ import kotlinx.coroutines.launch
 
 @Suppress("LongParameterList")
 class DashboardViewModel(
-    getAllDiariesUseCase: GetAllDiariesUseCase,
     private val calculateStreakUseCase: CalculateStreakUseCase,
+    private val getRecentEntriesUseCase: GetRecentEntriesUseCase,
+    private val countEntriesUseCase: CountEntriesUseCase,
     private val calculateBestStreakUseCase: CalculateBestStreakUseCase,
     private val updateDiaryUseCase: UpdateDiaryUseCase,
     private val preference: DiaryPreference,
@@ -57,7 +60,6 @@ class DashboardViewModel(
 
     private val mutableState = MutableStateFlow<DashboardScreenState>(DashboardScreenState.Loading)
 
-    private val getAllDiariesResult: Flow<Result<List<Diary>>> = getAllDiariesUseCase()
 
     val state: StateFlow<DashboardScreenState> = mutableState.onStart {
         viewModelScope.launch {
@@ -70,12 +72,21 @@ class DashboardViewModel(
     )
 
     private fun loadDashboardContent() = viewModelScope.launch {
+        // Transition to loading state if it isn't already there
+        mutableState.update {
+            it as? DashboardScreenState.Loading ?: DashboardScreenState.Loading
+        }
+
         logger.i(TAG) {
             "Loading dashboard content"
         }
 
-        getAllDiariesResult.combine(preference.settings) { result, settings ->
-            when (result) {
+        val latestEntriesDeferred: Deferred<Result<List<Diary>>> =
+            async { getRecentEntriesUseCase(count = 5) }
+        val countEntriesDeferred: Deferred<Result<Long>> = async { countEntriesUseCase() }
+
+        preference.settings.collect { settings ->
+            val state = when (val result = latestEntriesDeferred.await()) {
                 is Result.Failure -> {
                     logger.e(TAG, result.error) {
                         "Error loading dashboard contents"
@@ -103,7 +114,7 @@ class DashboardViewModel(
 
                     DashboardScreenState.Content(
                         latestEntries = diaries.sortedByDescending { it.date }.take(4),
-                        totalEntries = diaries.size.toLong(),
+                        totalEntries = countEntriesDeferred.await().getOrElse { 0L },
                         weeklySummary = if (diaries.isEmpty()) {
                             """
 
@@ -128,12 +139,12 @@ class DashboardViewModel(
                     )
                 }
             }
-        }.collect { updatedState ->
-            mutableState.update {
-                updatedState
-            }
+
+            mutableState.update { state }
         }
     }
+
+    fun onRetry() = loadDashboardContent()
 
     /**
      * Only use this function if you are sure the current state of the screen
@@ -277,7 +288,6 @@ class DashboardViewModel(
 
     companion object {
         private const val DEFAULT_SUMMARY_TEXT = "Generating weekly Summary..."
-        private const val ERROR_SUMMARY_TEXT = "Error generating weekly summary"
         private const val TAG = "DashboardViewModel"
     }
 }

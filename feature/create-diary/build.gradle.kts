@@ -28,7 +28,7 @@ kotlin {
             implementation(projects.designSystem)
             implementation(libs.koin.core)
             implementation(projects.commonUtils)
-            implementation("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-SNAPSHOT+release-1-10")
+            implementation(libs.jetbrains.compose.navigation3)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(projects.sharedData)

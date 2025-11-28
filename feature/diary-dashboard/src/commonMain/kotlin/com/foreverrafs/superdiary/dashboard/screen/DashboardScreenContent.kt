@@ -27,6 +27,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -35,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -58,6 +61,7 @@ import com.foreverrafs.superdiary.utils.toDate
 import com.valentinilk.shimmer.shimmer
 import kotlin.random.Random
 import kotlin.time.Clock
+import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import org.jetbrains.compose.resources.stringResource
@@ -80,11 +84,13 @@ private const val WEEKLY_SUMMARY_ID = "weeklysummary"
 fun DashboardScreenContent(
     state: DashboardViewModel.DashboardScreenState,
     onAddEntry: () -> Unit,
+    snackbarHostState: SnackbarHostState,
     onDisableBiometricAuth: () -> Unit,
     onToggleLatestEntries: () -> Unit,
     onToggleWeeklySummaryCard: () -> Unit,
     onToggleGlanceCard: () -> Unit,
     onSeeAll: () -> Unit,
+    onRetry: () -> Unit,
     onEnableBiometric: () -> Unit,
     onDiaryClick: (diaryId: Long) -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
@@ -93,6 +99,8 @@ fun DashboardScreenContent(
     var showBiometricAuthDialog by remember {
         mutableStateOf(false)
     }
+
+    val coroutineScope = rememberCoroutineScope()
 
     val dashboardItems = when (state) {
         is DashboardViewModel.DashboardScreenState.Content -> {
@@ -107,11 +115,26 @@ fun DashboardScreenContent(
             )
         }
 
-        is DashboardViewModel.DashboardScreenState.Error -> TODO()
+        is DashboardViewModel.DashboardScreenState.Error -> {
+            coroutineScope.launch {
+                val result = snackbarHostState.showSnackbar(
+                    message = "Error loading dashboard items",
+                    actionLabel = "Retry",
+                    withDismissAction = true,
+                )
+
+                if (result == SnackbarResult.ActionPerformed) {
+                    onRetry()
+                }
+            }
+            mutableStateListOf()
+        }
+
         is DashboardViewModel.DashboardScreenState.Loading -> {
             dashboardPlaceholderItems()
         }
     }
+
 
     if (showBiometricAuthDialog) {
         ConfirmBiometricAuthDialog(
@@ -592,6 +615,7 @@ private fun DashboardScreenPreview() {
             onToggleLatestEntries = {},
             onToggleWeeklySummaryCard = {},
             onToggleGlanceCard = {},
-        )
+            onRetry = {},
+            snackbarHostState = remember { SnackbarHostState() })
     }
 }

@@ -15,6 +15,7 @@ import com.foreverrafs.superdiary.domain.repository.DataSource
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -36,18 +37,24 @@ class DiarySynchronizer(
 
         diaryApiListeningJob = coroutineScope.launch(appCoroutineDispatchers.main) {
             // fetch all entries from remote
-            diaryApi.fetchAll().collect { diaryDtoList ->
-                // Delete all entries from the database
-                dataSource.deleteAll()
-
-                // insert remote entries into database. This will set isSynced flag
-                // to true and trigger an update for observers
-                val savedEntries = dataSource.save(diaryDtoList.map { it.toDiary() })
-
-                logger.i(TAG) {
-                    "Saved $savedEntries new items to local database"
+            diaryApi.fetchAll()
+                .catch {
+                    logger.e(TAG, it) {
+                        "Error fetching diaries"
+                    }
                 }
-            }
+                .collect { diaryDtoList ->
+                    // Delete all entries from the database
+                    dataSource.deleteAll()
+
+                    // insert remote entries into database. This will set isSynced flag
+                    // to true and trigger an update for observers
+                    val savedEntries = dataSource.save(diaryDtoList.map { it.toDiary() })
+
+                    logger.i(TAG) {
+                        "Saved $savedEntries new items to local database"
+                    }
+                }
         }
     }
 

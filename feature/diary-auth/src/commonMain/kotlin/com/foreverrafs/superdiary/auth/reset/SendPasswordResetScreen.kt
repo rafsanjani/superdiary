@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -38,6 +38,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import superdiary.feature.diary_auth.generated.resources.Res
+import superdiary.feature.diary_auth.generated.resources.ic_check_circle
 import superdiary.feature.diary_auth.generated.resources.label_login_input_username
 import superdiary.feature.diary_auth.generated.resources.label_open_email
 import superdiary.feature.diary_auth.generated.resources.label_reset_password_button
@@ -140,7 +141,7 @@ private fun SuccessScreen(
 ) {
     Column {
         Image(
-            imageVector = Icons.Default.CheckCircle,
+            painter = painterResource(Res.drawable.ic_check_circle),
             contentDescription = "Success",
             modifier = Modifier
                 .size(52.dp)
@@ -201,17 +202,23 @@ private fun InputScreen(
     onEmailChange: (String) -> Unit,
     onResetPasswordClick: () -> Unit,
 ) {
+    val currentOnEmailChange by rememberUpdatedState(onEmailChange)
+    val email = rememberTextFieldState()
+
+    LaunchedEffect(email.text) {
+        currentOnEmailChange(email.text.toString())
+    }
+
     Column {
         SuperDiaryInputField(
             modifier = Modifier.fillMaxWidth().testTag("input_email"),
+            state = email,
             label = stringResource(Res.string.label_login_input_username),
-            value = viewState.email,
-            onValueChange = onEmailChange,
             placeholder = "john.doe@gmail.com",
-            isError = !viewState.isEmailValid,
-            errorLabel = viewState.inputErrorMessage,
+            lineLimits = TextFieldLineLimits.SingleLine,
             readOnly = viewState.isLoading,
-            maxLines = 1,
+            errorLabel = viewState.inputErrorMessage,
+            isError = !viewState.isEmailValid,
         )
 
         Spacer(modifier = Modifier.weight(1f))

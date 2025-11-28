@@ -61,5 +61,7 @@ fun DashboardTab(
                 )
             }
         },
+        snackbarHostState = snackbarHostState,
+        onRetry = screenModel::onRetry
     )
 }
