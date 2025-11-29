@@ -75,6 +75,7 @@ kover {
         "*DiarySortCriteria*",
         "*BuildKonfig*",
         "*DatabaseDriver*",
+        "*Result*",
         "Modules*",
         "*Theme*",
         "*DiaryFilterSheet*",
