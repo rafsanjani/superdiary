@@ -203,7 +203,7 @@ private fun InputScreen(
     onResetPasswordClick: () -> Unit,
 ) {
     val currentOnEmailChange by rememberUpdatedState(onEmailChange)
-    val email = rememberTextFieldState()
+    val email = rememberTextFieldState(initialText = viewState.email)
 
     LaunchedEffect(email.text) {
         currentOnEmailChange(email.text.toString())
