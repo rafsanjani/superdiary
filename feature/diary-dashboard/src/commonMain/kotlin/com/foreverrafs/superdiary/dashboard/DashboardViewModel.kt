@@ -110,7 +110,7 @@ class DashboardViewModel(
                     }
 
                     DashboardScreenState.Content(
-                        latestEntries = diaries.sortedByDescending { it.date }.take(4),
+                        latestEntries = diaries.take(4),
                         totalEntries = countEntriesDeferred.await().getOrElse { 0L },
                         weeklySummary = if (diaries.isEmpty()) {
                             """
