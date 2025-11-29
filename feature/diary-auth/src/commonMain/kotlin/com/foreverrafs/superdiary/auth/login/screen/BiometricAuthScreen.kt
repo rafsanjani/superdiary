@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -24,7 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.foreverrafs.superdiary.auth.login.BiometricLoginScreenState
 import com.foreverrafs.superdiary.auth.login.BiometricLoginScreenViewModel
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
+import superdiary.feature.diary_auth.generated.resources.Res
+import superdiary.feature.diary_auth.generated.resources.ic_fingerprint
 
 @Composable
 fun BiometricAuthScreen(
@@ -89,8 +90,8 @@ fun BiometricLoginScreenContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             Icon(
-                imageVector = Icons.Default.Fingerprint,
                 contentDescription = null,
+                painter = painterResource(Res.drawable.ic_fingerprint),
                 modifier = Modifier.size(72.dp),
             )
 

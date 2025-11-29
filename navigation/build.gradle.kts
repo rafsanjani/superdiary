@@ -17,10 +17,12 @@ kotlin {
 
                 // project dependency
                 implementation(projects.core.sync)
+                implementation(projects.core.database)
                 implementation(projects.designSystem)
 
                 implementation(libs.koin.compose.viewmodel)
 
+                // TODO: Remove this dependency
                 implementation(compose.materialIconsExtended)
 
                 // feature modules
@@ -45,7 +47,7 @@ kotlin {
                 implementation(libs.coil3.multiplatform)
                 implementation(libs.coil3.network.ktor)
                 api(libs.jetbrains.compose.ui.backhandler)
-                implementation("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-SNAPSHOT+release-1-10")
+                implementation(libs.jetbrains.compose.navigation3)
             }
         }
 

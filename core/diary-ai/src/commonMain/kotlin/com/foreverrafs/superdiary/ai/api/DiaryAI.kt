@@ -12,7 +12,7 @@ interface DiaryAI {
     /** Generates a summary from a list of diary entries. */
     fun generateSummary(
         diaries: List<Diary>,
-        onCompletion: suspend (summary: WeeklySummary) -> Unit,
+        onCompletion: suspend (summary: WeeklySummary?) -> Unit,
     ): Flow<String>
 
     suspend fun queryDiaries(

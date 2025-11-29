@@ -15,7 +15,6 @@
 		587B21362CDC0B6B0081E14F /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 587B21352CDC0B6B0081E14F /* GoogleSignIn */; };
 		587B21382CDC0B6B0081E14F /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 587B21372CDC0B6B0081E14F /* GoogleSignInSwift */; };
 		589AF7CA2ECA187B0084C112 /* TOONEncoder in Frameworks */ = {isa = PBXBuildFile; productRef = 589AF7C92ECA187B0084C112 /* TOONEncoder */; };
-		589AF7CC2ECA189E0084C112 /* SwiftToonEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 589AF7CB2ECA18990084C112 /* SwiftToonEncoder.swift */; };
 		58A8DBF22CA21EC60084B125 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A8DBF12CA21EC60084B125 /* Environment.swift */; };
 		58E13CE92CDAEB61007F1210 /* GoogleMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 58E13CE82CDAEB61007F1210 /* GoogleMaps */; };
 		58E13CEC2CDAEBB5007F1210 /* GoogleMapsUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 58E13CEB2CDAEBB5007F1210 /* GoogleMapsUtils */; };
@@ -47,7 +46,6 @@
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
 		58033CFB2D437DB700A97874 /* BiometricAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricAuth.swift; sourceTree = "<group>"; };
 		58072E362CDD90C000B59193 /* GoogleTokenProviderImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleTokenProviderImpl.swift; sourceTree = "<group>"; };
-		589AF7CB2ECA18990084C112 /* SwiftToonEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftToonEncoder.swift; sourceTree = "<group>"; };
 		58A8DBF12CA21EC60084B125 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		58DACF1E2C9E2ECE00664937 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		58DACF1F2C9E2ECE00664937 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
@@ -133,7 +131,6 @@
 		7555FF7D242A565900829871 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
-				589AF7CB2ECA18990084C112 /* SwiftToonEncoder.swift */,
 				058557BA273AAA24004C7B11 /* Assets.xcassets */,
 				7555FF82242A565900829871 /* ContentView.swift */,
 				7555FF8C242A565B00829871 /* Info.plist */,
@@ -308,7 +305,6 @@
 			files = (
 				58F4F6CC2E3DAEAA000A4D82 /* SwiftNativeViewFactory.swift in Sources */,
 				58A8DBF22CA21EC60084B125 /* Environment.swift in Sources */,
-				589AF7CC2ECA189E0084C112 /* SwiftToonEncoder.swift in Sources */,
 				58E13CEE2CDAEC04007F1210 /* GoogleMap.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
 				58072E372CDD90C000B59193 /* GoogleTokenProviderImpl.swift in Sources */,

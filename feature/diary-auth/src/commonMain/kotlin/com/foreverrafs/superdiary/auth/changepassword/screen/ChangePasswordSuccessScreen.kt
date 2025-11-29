@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -24,6 +22,9 @@ import com.foreverrafs.superdiary.design.components.BodyMediumText
 import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.components.TitleMediumText
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
+import org.jetbrains.compose.resources.painterResource
+import superdiary.feature.diary_auth.generated.resources.Res
+import superdiary.feature.diary_auth.generated.resources.ic_check_circle
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -62,7 +63,7 @@ fun ChangePasswordSuccessScreen(
 
             Icon(
                 modifier = Modifier.size(52.dp),
-                imageVector = Icons.Default.CheckCircle,
+                painter = painterResource(Res.drawable.ic_check_circle),
                 contentDescription = null,
             )
 

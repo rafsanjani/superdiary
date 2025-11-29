@@ -21,7 +21,7 @@ kotlin {
                 api(libs.jetbrains.compose.material3)
                 implementation(libs.coil3.compose)
                 implementation(libs.coil3.compose.core)
-                implementation(libs.jetbrains.navigation.compose)
+                implementation(libs.jetbrains.compose.navigation3)
                 implementation(libs.coil3.network.ktor)
                 implementation(libs.coil3.multiplatform)
                 implementation(libs.ktor.client.cio)
