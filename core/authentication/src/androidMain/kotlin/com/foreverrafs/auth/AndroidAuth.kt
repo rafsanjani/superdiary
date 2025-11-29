@@ -69,14 +69,12 @@ class AndroidAuth(
         }
     }
 
-    private fun resolveCredentialException(e: GetCredentialException): Exception {
-        return when (e) {
-            is GetCredentialCancellationException -> NoCredentialsException("Authentication cancelled!")
-            is NoCredentialException -> NoCredentialsException("No Google credentials found!")
-            is GetCredentialInterruptedException -> NoCredentialsException("Authentication cancelled!")
-            is GetCredentialUnknownException -> NoCredentialsException("An unknown error occurred!")
-            else -> NoCredentialsException("An unknown error occurred!")
-        }
+    private fun resolveCredentialException(e: GetCredentialException): Exception = when (e) {
+        is GetCredentialCancellationException -> NoCredentialsException("Authentication cancelled!")
+        is NoCredentialException -> NoCredentialsException("No Google credentials found!")
+        is GetCredentialInterruptedException -> NoCredentialsException("Authentication cancelled!")
+        is GetCredentialUnknownException -> NoCredentialsException("An unknown error occurred!")
+        else -> NoCredentialsException("An unknown error occurred!")
     }
 
     private fun getGoogleIdToken(result: GetCredentialResponse): String? {

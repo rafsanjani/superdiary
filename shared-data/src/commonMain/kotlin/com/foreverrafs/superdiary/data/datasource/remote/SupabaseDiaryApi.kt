@@ -15,7 +15,8 @@ class SupabaseDiaryApi(
     private val supabase: SupabaseClient,
 ) : DiaryApi {
     @OptIn(SupabaseExperimental::class)
-    override fun fetchAll(): Flow<List<DiaryDto>> = supabase.from(TABLE_NAME).selectAsFlow(DiaryDto::id)
+    override fun fetchAll(): Flow<List<DiaryDto>> =
+        supabase.from(TABLE_NAME).selectAsFlow(DiaryDto::id)
 
     override suspend fun delete(diary: DiaryDto): Result<Boolean> = try {
         supabase.from(TABLE_NAME).delete {
@@ -37,33 +38,29 @@ class SupabaseDiaryApi(
         Result.Failure(e)
     }
 
-    override suspend fun fetch(count: Int): Result<List<DiaryDto>> {
-        return try {
-            val data: List<DiaryDto> = supabase.from(TABLE_NAME).select {
-                limit(count = count.toLong())
-                order(column = "date", order = Order.DESCENDING)
-            }.decodeList()
+    override suspend fun fetch(count: Int): Result<List<DiaryDto>> = try {
+        val data: List<DiaryDto> = supabase.from(TABLE_NAME).select {
+            limit(count = count.toLong())
+            order(column = "date", order = Order.DESCENDING)
+        }.decodeList()
 
-            Result.Success(data)
-        } catch (e: Exception) {
-            if (e is CancellationException) throw e
-            Result.Failure(e)
-        }
+        Result.Success(data)
+    } catch (e: Exception) {
+        if (e is CancellationException) throw e
+        Result.Failure(e)
     }
 
-    override suspend fun countItems(): Result<Long> {
-        return try {
-            val count = supabase
-                .from(TABLE_NAME)
-                .select {
-                    count(count = Count.EXACT)
-                }
-                .countOrNull()
-            Result.Success(count ?: 0L)
-        } catch (e: Exception) {
-            if (e is CancellationException) throw e
-            Result.Failure(e)
-        }
+    override suspend fun countItems(): Result<Long> = try {
+        val count = supabase
+            .from(TABLE_NAME)
+            .select {
+                count(count = Count.EXACT)
+            }
+            .countOrNull()
+        Result.Success(count ?: 0L)
+    } catch (e: Exception) {
+        if (e is CancellationException) throw e
+        Result.Failure(e)
     }
 
     companion object {

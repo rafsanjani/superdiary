@@ -1,6 +1,5 @@
 package com.foreverrafs.superdiary.data
 
-
 /**
  * A sealed interface representing a result of an operation, which can either be a [Success] or a [Failure].
  * This is a more expressive way to handle errors than throwing exceptions.
@@ -71,11 +70,9 @@ inline fun <T> Result<T>.onFailure(action: (exception: Throwable) -> Unit): Resu
  * Returns the encapsulated value if this instance represents [Result.Success] or the
  * result of [onFailure] function for the encapsulated [Throwable] exception if it is [Result.Failure].
  */
-inline fun <R, T : R> Result<T>.getOrElse(onFailure: (exception: Throwable) -> R): R {
-    return when (this) {
-        is Result.Success -> data
-        is Result.Failure -> onFailure(error)
-    }
+inline fun <R, T : R> Result<T>.getOrElse(onFailure: (exception: Throwable) -> R): R = when (this) {
+    is Result.Success -> data
+    is Result.Failure -> onFailure(error)
 }
 
 /**
@@ -85,11 +82,9 @@ inline fun <R, T : R> Result<T>.getOrElse(onFailure: (exception: Throwable) -> R
 inline fun <R, T> Result<T>.fold(
     onSuccess: (value: T) -> R,
     onFailure: (exception: Throwable) -> R,
-): R {
-    return when (this) {
-        is Result.Success -> onSuccess(data)
-        is Result.Failure -> onFailure(error)
-    }
+): R = when (this) {
+    is Result.Success -> onSuccess(data)
+    is Result.Failure -> onFailure(error)
 }
 
 /**
@@ -97,11 +92,9 @@ inline fun <R, T> Result<T>.fold(
  * if this instance represents [Result.Success].
  * Returns the original [Result.Failure] unchanged.
  */
-inline fun <R, T> Result<T>.map(transform: (value: T) -> R): Result<R> {
-    return when (this) {
-        is Result.Success -> Result.Success(transform(data))
-        is Result.Failure -> this
-    }
+inline fun <R, T> Result<T>.map(transform: (value: T) -> R): Result<R> = when (this) {
+    is Result.Success -> Result.Success(transform(data))
+    is Result.Failure -> this
 }
 
 /**
@@ -110,20 +103,16 @@ inline fun <R, T> Result<T>.map(transform: (value: T) -> R): Result<R> {
  * If [transform] throws an exception, it is caught and a [Result.Failure] is returned.
  * Returns the original [Result.Failure] unchanged.
  */
-inline fun <R, T> Result<T>.mapCatching(transform: (value: T) -> R): Result<R> {
-    return when (this) {
-        is Result.Success -> asResult { transform(data) }
-        is Result.Failure -> this
-    }
+inline fun <R, T> Result<T>.mapCatching(transform: (value: T) -> R): Result<R> = when (this) {
+    is Result.Success -> asResult { transform(data) }
+    is Result.Failure -> this
 }
 
 /**
  * Helper function to run a block of code and wrap the result in a [Result] object.
  */
-inline fun <T> asResult(block: () -> T): Result<T> {
-    return try {
-        Result.Success(block())
-    } catch (e: Throwable) {
-        Result.Failure(e)
-    }
+inline fun <T> asResult(block: () -> T): Result<T> = try {
+    Result.Success(block())
+} catch (e: Throwable) {
+    Result.Failure(e)
 }

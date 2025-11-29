@@ -13,8 +13,8 @@ import androidx.compose.ui.unit.dp
 fun PrimaryButton(
     text: String,
     onClick: () -> Unit,
-    enabled: Boolean = true,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     Button(
         modifier = modifier

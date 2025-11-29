@@ -8,21 +8,19 @@ class CountEntriesUseCase(
     private val diaryApi: DiaryApi,
     private val logger: AggregateLogger,
 ) {
-    suspend operator fun invoke(): Result<Long> {
-        return when (val result = diaryApi.countItems()) {
-            is Result.Failure -> {
-                logger.e(TAG, result.error) {
-                    "Error counting entries"
-                }
-                Result.Failure(result.error)
+    suspend operator fun invoke(): Result<Long> = when (val result = diaryApi.countItems()) {
+        is Result.Failure -> {
+            logger.e(TAG, result.error) {
+                "Error counting entries"
             }
+            Result.Failure(result.error)
+        }
 
-            is Result.Success -> {
-                logger.i(TAG) {
-                    "Successfully counted entries: ${result.data}"
-                }
-                Result.Success(result.data)
+        is Result.Success -> {
+            logger.i(TAG) {
+                "Successfully counted entries: ${result.data}"
             }
+            Result.Success(result.data)
         }
     }
 
