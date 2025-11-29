@@ -21,8 +21,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -64,8 +62,10 @@ import kotlin.time.Clock
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.diary_dashboard.generated.resources.Res
+import superdiary.feature.diary_dashboard.generated.resources.ic_close
 import superdiary.feature.diary_dashboard.generated.resources.label_add_entry
 import superdiary.feature.diary_dashboard.generated.resources.label_button_retry
 import superdiary.feature.diary_dashboard.generated.resources.label_button_show_all
@@ -134,7 +134,6 @@ fun DashboardScreenContent(
             dashboardPlaceholderItems()
         }
     }
-
 
     if (showBiometricAuthDialog) {
         ConfirmBiometricAuthDialog(
@@ -526,7 +525,7 @@ private fun WeeklySummaryCard(
 
                 Icon(
                     modifier = Modifier.clickable(onClick = onDismiss),
-                    imageVector = Icons.Default.Close,
+                    painter = painterResource(Res.drawable.ic_close),
                     contentDescription = null,
                 )
             }
@@ -616,6 +615,7 @@ private fun DashboardScreenPreview() {
             onToggleWeeklySummaryCard = {},
             onToggleGlanceCard = {},
             onRetry = {},
-            snackbarHostState = remember { SnackbarHostState() })
+            snackbarHostState = remember { SnackbarHostState() },
+        )
     }
 }

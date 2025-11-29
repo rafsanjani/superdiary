@@ -17,10 +17,12 @@ kotlin {
 
                 // project dependency
                 implementation(projects.core.sync)
+                implementation(projects.core.database)
                 implementation(projects.designSystem)
 
                 implementation(libs.koin.compose.viewmodel)
 
+                // TODO: Remove this dependency
                 implementation(compose.materialIconsExtended)
 
                 // feature modules

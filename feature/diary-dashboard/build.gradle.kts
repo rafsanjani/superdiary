@@ -21,7 +21,6 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
-            implementation(compose.materialIconsExtended)
             implementation(libs.jetbrains.compose.resources)
             implementation(libs.jetbrains.compose.preview)
 
@@ -42,6 +41,7 @@ kotlin {
             implementation(projects.designSystem)
             implementation(projects.core.location)
             implementation(projects.commonUtils)
+            implementation(projects.core.database)
             implementation(projects.core.logging)
             implementation(projects.sharedData)
             implementation(projects.commonUtils)
@@ -54,6 +54,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(projects.commonTest)
+                implementation(projects.core.databaseTest)
                 implementation(libs.junit)
                 implementation(libs.koin.test)
                 implementation(libs.kotlinx.coroutines.test)

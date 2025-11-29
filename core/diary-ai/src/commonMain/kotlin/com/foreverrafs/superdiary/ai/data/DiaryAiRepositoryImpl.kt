@@ -20,7 +20,7 @@ internal class DiaryAiRepositoryImpl(
 
     override fun generateSummary(
         diaries: List<Diary>,
-        onCompletion: (WeeklySummary) -> Unit,
+        onCompletion: (WeeklySummary?) -> Unit,
     ): Flow<String> =
         diaryAI.generateSummary(diaries, onCompletion)
 

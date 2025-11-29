@@ -2,7 +2,6 @@ package com.foreverrafs.superdiary.dashboard
 
 import app.cash.turbine.test
 import assertk.assertThat
-import assertk.assertions.contains
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
@@ -13,14 +12,21 @@ import com.foreverrafs.auth.BiometricAuth
 import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
+import com.foreverrafs.superdiary.common.coroutines.awaitUntil
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
+import com.foreverrafs.superdiary.dashboard.domain.CountEntriesUseCase
 import com.foreverrafs.superdiary.dashboard.domain.GenerateWeeklySummaryUseCase
+import com.foreverrafs.superdiary.dashboard.domain.GetRecentEntriesUseCase
+import com.foreverrafs.superdiary.data.Result
+import com.foreverrafs.superdiary.data.datasource.remote.DiaryApi
+import com.foreverrafs.superdiary.data.model.DiaryDto
+import com.foreverrafs.superdiary.database.Database
+import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.CalculateBestStreakUseCase
 import com.foreverrafs.superdiary.domain.usecase.CalculateStreakUseCase
-import com.foreverrafs.superdiary.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.utils.DiarySettings
 import dev.mokkery.answering.returns
@@ -44,15 +50,18 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.minus
 
 @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
 class DashboardViewModelTest {
     private lateinit var dataSource: DataSource
 
     private val diaryAI: DiaryAI = mock()
+
+    private val diaryApi: DiaryApi = mock {
+        everySuspend { countItems() } returns Result.Success(0)
+        everySuspend { fetch(any()) } returns Result.Success(emptyList())
+        every { fetchAll() } returns flowOf(listOf(DiaryDto("hello world")))
+    }
 
     private val biometricAuth: BiometricAuth = mock {
         everySuspend { canAuthenticate() } returns true
@@ -67,6 +76,7 @@ class DashboardViewModelTest {
         dataSource = mock()
 
         every { dataSource.fetchAll() }.returns(flowOf())
+        every { diaryApi.fetchAll() } returns flowOf()
     }
 
     @AfterTest
@@ -77,7 +87,6 @@ class DashboardViewModelTest {
     private fun createDashboardViewModel(
         diaryPreference: DiaryPreference = this.diaryPreference,
     ): DashboardViewModel = DashboardViewModel(
-        getAllDiariesUseCase = GetAllDiariesUseCase(dataSource, TestAppDispatchers),
         calculateStreakUseCase = CalculateStreakUseCase(TestAppDispatchers),
         calculateBestStreakUseCase = CalculateBestStreakUseCase(TestAppDispatchers),
         updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
@@ -87,10 +96,12 @@ class DashboardViewModelTest {
         biometricAuth = biometricAuth,
         generateWeeklySummaryUseCase = GenerateWeeklySummaryUseCase(
             logger = AggregateLogger(),
-            dataSource = dataSource,
             diaryAI = diaryAI,
             clock = Clock.System,
+            database = Database(testSuperDiaryDatabase),
         ),
+        getRecentEntriesUseCase = GetRecentEntriesUseCase(diaryApi, AggregateLogger()),
+        countEntriesUseCase = CountEntriesUseCase(diaryApi, AggregateLogger()),
     )
 
     @Test
@@ -100,109 +111,6 @@ class DashboardViewModelTest {
             val state = awaitItem()
 
             assertThat(state).isInstanceOf<DashboardViewModel.DashboardScreenState.Loading>()
-        }
-    }
-
-    @Test
-    fun `Should generate weekly summary if diaries isn't empty`() = runTest {
-        every { dataSource.fetchAll() }.returns(
-            flowOf(
-                listOf(Diary("Hello World")),
-            ),
-        )
-        everySuspend { dataSource.getOne() }.returns(
-            WeeklySummary("This is your weekly summary"),
-        )
-
-        val viewModel = createDashboardViewModel()
-
-        viewModel.state.test {
-            val initialState = awaitItem()
-            assertThat(initialState).isInstanceOf<DashboardViewModel.DashboardScreenState.Loading>()
-            advanceUntilIdle()
-
-            val state = awaitItem()
-            cancelAndIgnoreRemainingEvents()
-
-            assertThat(state).isInstanceOf<DashboardViewModel.DashboardScreenState.Content>()
-            val content: DashboardViewModel.DashboardScreenState.Content =
-                state as DashboardViewModel.DashboardScreenState.Content
-
-            assertThat(content.weeklySummary!!).contains("This is your weekly summary")
-        }
-    }
-
-    @Test
-    fun `Should only generate weekly summary every week`() = runTest {
-        every { dataSource.fetchAll() }.returns(
-            flowOf(listOf(Diary("Hello World"))),
-        )
-
-        every { dataSource.getOne() }.returns(
-            WeeklySummary(
-                summary = "Old diary summary",
-                date = Clock.System.now().minus(
-                    value = 5,
-                    unit = DateTimeUnit.DAY,
-                    timeZone = TimeZone.UTC,
-                ),
-            ),
-        )
-        every {
-            diaryAI.generateSummary(
-                diaries = any(),
-                onCompletion = any(),
-            )
-        }.returns(flowOf("New Diary Summary"))
-
-        val viewModel = createDashboardViewModel()
-
-        viewModel.state.test {
-            // Skip the loading state
-            val initialState = awaitItem()
-            assertThat(initialState).isInstanceOf<DashboardViewModel.DashboardScreenState.Loading>()
-
-            advanceUntilIdle()
-
-            val state = awaitItem() as? DashboardViewModel.DashboardScreenState.Content
-
-            cancelAndIgnoreRemainingEvents()
-            assertThat(state).isNotNull()
-            assertThat(state?.weeklySummary).isEqualTo("Old diary summary")
-        }
-    }
-
-    @Test
-    fun `Should generate weekly summary when weekly summary is older than a week`() = runTest {
-        every { dataSource.fetchAll() }.returns(flowOf(listOf(Diary("Hello World"))))
-        everySuspend { dataSource.save(summary = any()) }.returns(Unit)
-        every { dataSource.getOne() }.returns(
-            value = WeeklySummary(
-                summary = "Old diary summary",
-                date = Clock.System.now().minus(value = 20, unit = DateTimeUnit.DAY, TimeZone.UTC),
-            ),
-        )
-        every {
-            diaryAI.generateSummary(
-                diaries = any(),
-                onCompletion = any(),
-            )
-        }
-            .returns(flowOf("New Diary Summary"))
-
-        val viewModel = createDashboardViewModel()
-
-        viewModel.state.test {
-            val initialState = awaitItem()
-            assertThat(initialState).isInstanceOf<DashboardViewModel.DashboardScreenState.Loading>()
-
-            advanceUntilIdle()
-
-            val state = awaitItem() as? DashboardViewModel.DashboardScreenState.Content
-
-            cancelAndIgnoreRemainingEvents()
-            assertThat(state).isNotNull()
-            assertThat(state?.weeklySummary).isEqualTo("New Diary Summary")
         }
     }
 
@@ -258,12 +166,16 @@ class DashboardViewModelTest {
 
     @Test
     fun `Should show error screen when loading diaries throw an error`() = runTest {
-        every { dataSource.fetchAll() }.throws(Exception("Error fetching diaries"))
+        every { diaryApi.fetchAll() } throws (Exception("Error fetching diaries"))
+        everySuspend { diaryApi.fetch(any()) } returns Result.Failure(Exception("Error fetching diaries"))
+
         val viewModel = createDashboardViewModel()
 
         viewModel.state.test {
-            skipItems(1)
-            assertThat(awaitItem()).isInstanceOf(DashboardViewModel.DashboardScreenState.Error::class)
+            val state =
+                awaitUntil { it is DashboardViewModel.DashboardScreenState.Error } as DashboardViewModel.DashboardScreenState.Error
+
+            assertThat(state.message).isEqualTo("Error fetching diaries")
         }
     }
 
@@ -305,6 +217,8 @@ class DashboardViewModelTest {
 
             assertThat(content?.isBiometricAuthError).isNotNull()
             assertThat(content?.isBiometricAuthError).isEqualTo(true)
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
@@ -362,6 +276,8 @@ class DashboardViewModelTest {
 
                 assertThat(content?.isBiometricAuthError).isEqualTo(true)
                 assertThat(content?.showBiometricAuthDialog).isEqualTo(false)
+
+                cancelAndIgnoreRemainingEvents()
             }
         }
 

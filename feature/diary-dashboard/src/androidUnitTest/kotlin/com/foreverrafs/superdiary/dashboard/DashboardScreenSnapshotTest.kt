@@ -1,5 +1,7 @@
 package com.foreverrafs.superdiary.dashboard
 
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.common.paparazzi.SnapshotDevice
 import com.foreverrafs.superdiary.core.location.Location
@@ -17,11 +19,12 @@ import org.junit.runner.RunWith
 
 @RunWith(TestParameterInjector::class)
 class DashboardScreenSnapshotTest(
-    @TestParameter val snapshotDevice: SnapshotDevice,
+    @param:TestParameter val snapshotDevice: SnapshotDevice,
 ) {
     private val testClock = object : Clock {
         // 2023-11-10
-        override fun now(): kotlin.time.Instant = kotlin.time.Instant.Companion.parse("2023-11-10T00:00:00.850951Z")
+        override fun now(): kotlin.time.Instant =
+            kotlin.time.Instant.parse("2023-11-10T00:00:00.850951Z")
     }
 
     @get:Rule
@@ -42,7 +45,7 @@ class DashboardScreenSnapshotTest(
                                 entry = "<strong>Awesome</strong> Diary",
                                 date = testClock.now(),
                                 isFavorite = false,
-                                location = Location.Companion.Empty,
+                                location = Location.Empty,
                             )
                         },
                         totalEntries = 3,
@@ -70,6 +73,8 @@ class DashboardScreenSnapshotTest(
                     onToggleLatestEntries = {},
                     onToggleWeeklySummaryCard = {},
                     onToggleGlanceCard = {},
+                    snackbarHostState = remember { SnackbarHostState() },
+                    onRetry = {},
                 )
             }
         }
@@ -87,7 +92,7 @@ class DashboardScreenSnapshotTest(
                                 entry = "<strong>Awesome</strong> Diary",
                                 date = testClock.now(),
                                 isFavorite = false,
-                                location = Location.Companion.Empty,
+                                location = Location.Empty,
                             )
                         },
                         totalEntries = 3,
@@ -116,6 +121,8 @@ class DashboardScreenSnapshotTest(
                     onToggleLatestEntries = {},
                     onToggleWeeklySummaryCard = {},
                     onToggleGlanceCard = {},
+                    snackbarHostState = remember { SnackbarHostState() },
+                    onRetry = {},
                 )
             }
         }
@@ -135,7 +142,7 @@ class DashboardScreenSnapshotTest(
                                 entry = "<strong>Awesome</strong> Diary",
                                 date = testClock.now(),
                                 isFavorite = false,
-                                location = Location.Companion.Empty,
+                                location = Location.Empty,
                             )
                         },
                         totalEntries = 3,
@@ -161,6 +168,8 @@ class DashboardScreenSnapshotTest(
                     onToggleLatestEntries = {},
                     onToggleWeeklySummaryCard = {},
                     onToggleGlanceCard = {},
+                    snackbarHostState = remember { SnackbarHostState() },
+                    onRetry = {},
                 )
             }
         }
@@ -178,7 +187,7 @@ class DashboardScreenSnapshotTest(
                                 entry = "<strong>Awesome</strong> Diary",
                                 date = testClock.now(),
                                 isFavorite = false,
-                                location = Location.Companion.Empty,
+                                location = Location.Empty,
                             )
                         },
                         3,
@@ -207,6 +216,8 @@ class DashboardScreenSnapshotTest(
                     onToggleLatestEntries = {},
                     onToggleWeeklySummaryCard = {},
                     onToggleGlanceCard = {},
+                    snackbarHostState = remember { SnackbarHostState() },
+                    onRetry = {},
                 )
             }
         }

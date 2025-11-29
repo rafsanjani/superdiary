@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface DiaryAiRepository {
     fun generateDiary(prompt: String, wordCount: Int): Flow<String>
-    fun generateSummary(diaries: List<Diary>, onCompletion: (WeeklySummary) -> Unit): Flow<String>
+    fun generateSummary(diaries: List<Diary>, onCompletion: (WeeklySummary?) -> Unit): Flow<String>
     suspend fun saveChatMessage(message: DiaryChatMessage)
     fun getChatMessages(): Flow<List<DiaryChatMessage>>
     suspend fun clearChatMessages()

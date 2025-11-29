@@ -60,11 +60,8 @@ class DashboardViewModel(
 
     private val mutableState = MutableStateFlow<DashboardScreenState>(DashboardScreenState.Loading)
 
-
     val state: StateFlow<DashboardScreenState> = mutableState.onStart {
-        viewModelScope.launch {
-            loadDashboardContent()
-        }
+        loadDashboardContent()
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),

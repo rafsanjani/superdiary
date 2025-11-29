@@ -12,6 +12,7 @@ import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onCompletion
@@ -74,7 +75,7 @@ class DiaryAiImpl(
 
     override fun generateSummary(
         diaries: List<Diary>,
-        onCompletion: suspend (WeeklySummary) -> Unit,
+        onCompletion: suspend (WeeklySummary?) -> Unit,
     ): Flow<String> {
         val weeklySummaryGeneratorPrompt = """
             You are Journal AI. I will give you a combined list of entries written over a period of
@@ -106,6 +107,12 @@ class DiaryAiImpl(
         var response = ""
 
         return openAI.chatCompletions(request)
+            .catch {
+                logger.e(TAG, it) {
+                    "Error generating weekly summary"
+                }
+                onCompletion(null)
+            }
             .onCompletion {
                 if (it == null) {
                     onCompletion(WeeklySummary(response))
