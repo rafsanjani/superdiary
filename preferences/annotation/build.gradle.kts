@@ -1,14 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
-}
-
-kotlin {
-    jvm()
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
-    androidTarget()
+    id("com.superdiary.multiplatform.kotlin")
 }
 
 android {

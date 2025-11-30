@@ -38,7 +38,7 @@ fun Modifier.fadingEdges(
 
                 // Bottom Gradient
                 val remainingScroll = scrollState.maxValue - scrollState.value
-                val bottomGradientHeight = min(edgeHeight.toFloat(), remainingScroll.toFloat())
+                val bottomGradientHeight = min(edgeHeight, remainingScroll.toFloat())
                 if (bottomGradientHeight > 0f) {
                     val bottomEndY = size.height - remainingScroll
                     drawRect(
