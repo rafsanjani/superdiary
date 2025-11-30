@@ -5,7 +5,6 @@ import com.superdiary.gradle.multiplatform.applyAllMultiplatformTargets
 
 plugins {
     id("com.superdiary.multiplatform.kotlin")
-    id("com.superdiary.android.library")
 }
 
 kotlin {
@@ -25,8 +24,4 @@ kotlin {
             implementation(libs.cashapp.paparazzi)
         }
     }
-}
-
-android {
-    namespace = "com.foreverrafs.common.test"
 }

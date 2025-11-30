@@ -54,7 +54,3 @@ kotlin {
         }
     }
 }
-
-android {
-    namespace = "com.foreverrafs.superdiary.auth"
-}

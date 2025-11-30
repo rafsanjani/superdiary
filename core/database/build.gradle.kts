@@ -68,7 +68,3 @@ kotlin {
         }
     }
 }
-
-android {
-    namespace = "com.foreverrafs.core.database"
-}

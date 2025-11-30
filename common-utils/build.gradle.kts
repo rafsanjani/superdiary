@@ -5,7 +5,6 @@ import com.superdiary.gradle.multiplatform.applyAllMultiplatformTargets
 
 plugins {
     id("com.superdiary.multiplatform.kotlin")
-    id("com.superdiary.android.library")
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -28,8 +27,4 @@ kotlin {
             }
         }
     }
-}
-
-android {
-    namespace = "com.foreverrafs.common.utils"
 }

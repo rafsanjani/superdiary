@@ -46,7 +46,3 @@ kotlin {
         }
     }
 }
-
-android {
-    namespace = "com.foreverrafs.core.database.test"
-}

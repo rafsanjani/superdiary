@@ -12,7 +12,3 @@ plugins {
 kotlin {
     applyAllMultiplatformTargets()
 }
-
-android {
-    namespace = "com.foreverrafs.core.secrets"
-}

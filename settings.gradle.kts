@@ -6,6 +6,7 @@ pluginManagement {
         google()
         gradlePluginPortal()
         mavenLocal()
+        maven(url = "https://central.sonatype.com/repository/maven-snapshots/")
     }
     includeBuild("build-logic")
 }
@@ -16,6 +17,7 @@ dependencyResolutionManagement {
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+        maven(url = "https://central.sonatype.com/repository/maven-snapshots/")
         mavenLocal()
     }
 
@@ -24,6 +26,8 @@ dependencyResolutionManagement {
             from("io.github.rafsanjani:versions:2025.11.30")
             // Because 3.2.4 is making internal calls to android.util.Log which dey borst my mind
             version("supabase", "3.2.3")
+            version("kotlin", "2.3.0-RC")
+            version("paparazzi", "2.0.0-SNAPSHOT")
         }
     }
 }

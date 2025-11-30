@@ -48,12 +48,3 @@ kotlin {
         }
     }
 }
-
-android {
-    namespace = "com.foreverrafs.core.analytics"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minimumSdk.get().toInt()
-    }
-}

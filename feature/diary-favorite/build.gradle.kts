@@ -51,7 +51,3 @@ kotlin {
         }
     }
 }
-
-android {
-    namespace = "com.foreverrafs.superdiary.favorite"
-}

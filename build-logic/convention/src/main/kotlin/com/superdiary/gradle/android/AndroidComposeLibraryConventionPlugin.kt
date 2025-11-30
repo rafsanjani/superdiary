@@ -11,7 +11,7 @@ import org.gradle.kotlin.dsl.configure
 class AndroidComposeLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            pluginManager.apply("com.android.library")
+            pluginManager.apply("com.android.kotlin.multiplatform.library")
             pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
 
             android {

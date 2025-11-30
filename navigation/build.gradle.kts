@@ -71,7 +71,3 @@ kotlin {
         }
     }
 }
-
-android {
-    namespace = "com.foreverrafs.superdiary.navigation"
-}
