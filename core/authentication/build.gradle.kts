@@ -1,5 +1,8 @@
 @file:Suppress("UnusedPrivateProperty")
 
+import com.superdiary.gradle.multiplatform.applyAllMultiplatformTargets
+
+
 plugins {
     id("com.superdiary.multiplatform.compose")
     id("com.superdiary.multiplatform.kotlin")
@@ -10,6 +13,7 @@ plugins {
 }
 
 kotlin {
+    applyAllMultiplatformTargets()
     sourceSets {
         commonMain {
             dependencies {

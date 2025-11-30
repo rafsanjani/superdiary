@@ -1,5 +1,8 @@
 @file:Suppress("UnusedPrivateProperty")
 
+import com.superdiary.gradle.multiplatform.applyAllMultiplatformTargets
+
+
 plugins {
     id("com.superdiary.multiplatform.compose")
     id("com.superdiary.multiplatform.kotlin")
@@ -12,6 +15,7 @@ plugins {
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
+    applyAllMultiplatformTargets()
     sourceSets {
         androidUnitTest.dependencies {
             implementation(libs.google.testparameterinjector)
@@ -34,7 +38,7 @@ kotlin {
             implementation(projects.sharedData)
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(projects.designSystem)
-             implementation(compose.materialIconsExtended)
+            implementation(compose.materialIconsExtended)
         }
 
         commonTest.dependencies {

@@ -1,5 +1,6 @@
 @file:Suppress("UnusedPrivateProperty")
 
+import com.superdiary.gradle.multiplatform.applyAllMultiplatformTargets
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 
@@ -15,6 +16,7 @@ plugins {
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
+    applyAllMultiplatformTargets()
     sourceSets {
         commonMain {
             dependencies {

@@ -11,20 +11,9 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
         with(pluginManager) {
             apply("org.jetbrains.kotlin.multiplatform")
-            apply("com.android.library")
         }
 
         extensions.configure<KotlinMultiplatformExtension> {
-            applyDefaultHierarchyTemplate()
-            jvm()
-
-            if (pluginManager.hasPlugin("com.android.library")) {
-                androidTarget()
-            }
-
-            iosArm64()
-            iosSimulatorArm64()
-
             targets.withType<KotlinNativeTarget>().configureEach {
                 binaries.configureEach {
                     linkerOpts("-lsqlite3")
@@ -43,5 +32,17 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
                 }
             }
         }
+    }
+}
+
+fun Project.applyAllMultiplatformTargets() {
+    extensions.configure<KotlinMultiplatformExtension> {
+        pluginManager.apply("com.android.library")
+
+        applyDefaultHierarchyTemplate()
+        jvm()
+        iosArm64()
+        iosSimulatorArm64()
+        androidTarget()
     }
 }

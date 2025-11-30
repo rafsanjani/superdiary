@@ -1,5 +1,8 @@
 @file:Suppress("UnusedPrivateProperty")
 
+import com.superdiary.gradle.multiplatform.applyAllMultiplatformTargets
+
+
 plugins {
     id("com.superdiary.multiplatform.compose")
     id("com.superdiary.multiplatform.kotlin")
@@ -11,6 +14,7 @@ plugins {
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
+    applyAllMultiplatformTargets()
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.logging)

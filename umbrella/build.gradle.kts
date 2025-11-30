@@ -1,6 +1,7 @@
 @file:Suppress("UnusedPrivateProperty")
 @file:OptIn(ExperimentalSwiftExportDsl::class)
 
+import com.superdiary.gradle.multiplatform.applyAllMultiplatformTargets
 import org.jetbrains.kotlin.gradle.swiftexport.ExperimentalSwiftExportDsl
 
 
@@ -9,6 +10,7 @@ plugins {
     id("com.superdiary.android.library")
 }
 kotlin {
+    applyAllMultiplatformTargets()
     listOf(
         iosArm64(),
         iosSimulatorArm64(),

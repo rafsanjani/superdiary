@@ -1,3 +1,5 @@
+import com.superdiary.gradle.multiplatform.applyAllMultiplatformTargets
+
 plugins {
     id("com.superdiary.multiplatform.kotlin")
     id("com.superdiary.android.library")
@@ -5,6 +7,7 @@ plugins {
 }
 
 kotlin {
+    applyAllMultiplatformTargets()
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization.json)
