@@ -11,6 +11,7 @@ import com.foreverrafs.superdiary.core.permission.di.permissionsModule
 import com.foreverrafs.superdiary.core.sync.di.syncModule
 import com.foreverrafs.superdiary.creatediary.di.createDiaryModule
 import com.foreverrafs.superdiary.dashboard.di.dashboardModule
+import com.foreverrafs.superdiary.database.di.databaseModule
 import com.foreverrafs.superdiary.di.platformModule
 import com.foreverrafs.superdiary.di.useCaseModule
 import com.foreverrafs.superdiary.favorite.di.favoriteModule
@@ -35,6 +36,7 @@ fun compositeModule(
     utilsModule,
     savedStateModule(),
     permissionsModule(),
+    databaseModule(),
     useCaseModule,
     appModule,
     platformModule(analyticsTracker = analytics, aggregateLogger = logger),

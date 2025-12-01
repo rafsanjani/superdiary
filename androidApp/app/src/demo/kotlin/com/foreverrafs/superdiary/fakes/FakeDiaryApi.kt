@@ -20,6 +20,8 @@ class FakeDiaryApi : DiaryApi {
         override fun now(): Instant = Instant.parse("2025-04-04T01:01:01.049Z")
     }
 
+    override suspend fun countItems(): Result<Long> = Result.Success(initialDiaries.size.toLong())
+
     val initialDiaries = (0..10).map {
         DiaryDto(
             entry = "Fake Diary Entry ${it + 1}",
@@ -40,13 +42,12 @@ class FakeDiaryApi : DiaryApi {
 
     override suspend fun save(diary: DiaryDto): Result<Boolean> {
         diariesFlow.update { currentDiaries ->
-            val diaryToSave =
-                if (diary.id != null) {
-                    diary
-                } else {
-                    val nextId = (currentDiaries.mapNotNull { it.id }.maxOrNull() ?: -1L) + 1
-                    diary.copy(id = nextId)
-                }
+            val diaryToSave = if (diary.id != null) {
+                diary
+            } else {
+                val nextId = (currentDiaries.mapNotNull { it.id }.maxOrNull() ?: -1L) + 1
+                diary.copy(id = nextId)
+            }
 
             val existingIndex = currentDiaries.indexOfFirst { it.id == diary.id }
 
@@ -66,8 +67,7 @@ class FakeDiaryApi : DiaryApi {
 
         diariesFlow.update { currentDiaries ->
             val newList = currentDiaries.toMutableList()
-            removed =
-                newList.removeIf { it.id == diary.id }
+            removed = newList.removeIf { it.id == diary.id }
             newList
         }
 
@@ -79,4 +79,6 @@ class FakeDiaryApi : DiaryApi {
             )
         }
     }
+
+    override suspend fun fetch(count: Int): Result<List<DiaryDto>> = Result.Success(initialDiaries)
 }

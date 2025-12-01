@@ -10,7 +10,6 @@ plugins {
     alias(libs.plugins.paparazzi)
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     sourceSets {
         androidUnitTest.dependencies {
@@ -22,12 +21,11 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
             implementation(libs.jetbrains.compose.foundation)
-             implementation(compose.materialIconsExtended)
+            implementation(compose.materialIconsExtended)
             implementation(libs.jetbrains.compose.resources)
             implementation(libs.jetbrains.compose.preview)
             implementation(projects.core.logging)
             implementation(projects.core.uiComponents)
-            implementation(libs.jetbrains.navigation.compose)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.koin.compose)
             implementation(projects.commonUtils)
@@ -37,7 +35,7 @@ kotlin {
             implementation(projects.commonUtils)
             implementation(libs.richTextEditor)
             implementation(projects.core.location)
-            implementation("org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-SNAPSHOT+release-1-10")
+            implementation(libs.jetbrains.compose.navigation3)
             implementation(projects.sharedData)
             implementation(projects.core.sync)
             implementation(projects.core.database)

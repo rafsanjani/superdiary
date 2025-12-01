@@ -94,6 +94,7 @@ fun LoginScreenContent(
     when (viewState) {
         is LoginViewState.Error -> {
             val message = viewState.error.toStringResource()?.let { stringResource(it) }
+                ?: viewState.error.message
 
             scope.launch {
                 snackbarHostState.showSnackbar(
@@ -124,9 +125,7 @@ fun LoginScreenContent(
             color = MaterialTheme.colorScheme.background,
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 20.dp),
+                modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 val username = rememberTextFieldState("")
@@ -224,11 +223,10 @@ private fun RegisterText(
             append(stringResource(Res.string.label_register_message))
         }
         withStyle(
-            MaterialTheme.typography.bodyMedium.toSpanStyle()
-                .copy(
-                    fontWeight = FontWeight.Bold,
-                    textDecoration = TextDecoration.Underline,
-                ),
+            MaterialTheme.typography.bodyMedium.toSpanStyle().copy(
+                fontWeight = FontWeight.Bold,
+                textDecoration = TextDecoration.Underline,
+            ),
         ) {
             withLink(
                 LinkAnnotation.Clickable(
@@ -358,7 +356,7 @@ private fun LoginPreviewError() {
             onLoginClick = { _, _ -> },
             onRegisterClick = {},
             viewState = LoginViewState.Error(
-                InvalidCredentialsException("Error Logging in"),
+                error = InvalidCredentialsException("Error Logging in"),
             ),
             onSignInSuccess = {},
             isFromDeeplink = false,

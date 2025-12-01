@@ -26,7 +26,7 @@ kotlin {
             implementation(libs.jetbrains.compose.preview)
             implementation(projects.core.logging)
             implementation(libs.androidx.core.uri)
-
+            implementation(libs.jetbrains.compose.navigation3)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.koin.compose)
@@ -37,8 +37,6 @@ kotlin {
             implementation(projects.sharedData)
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(projects.designSystem)
-
-             implementation(compose.materialIconsExtended)
         }
 
         commonTest.dependencies {

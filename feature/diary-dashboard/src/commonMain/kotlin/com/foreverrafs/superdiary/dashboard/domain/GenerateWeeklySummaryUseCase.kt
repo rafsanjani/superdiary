@@ -3,9 +3,11 @@ package com.foreverrafs.superdiary.dashboard.domain
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.dashboard.isInSameWeekAs
+import com.foreverrafs.superdiary.data.mapper.toWeeklySummary
+import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
-import com.foreverrafs.superdiary.domain.repository.DataSource
+import com.foreverrafs.superdiary.domain.model.toDatabase
 import com.foreverrafs.superdiary.utils.toDate
 import kotlin.time.Clock
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +17,7 @@ import kotlinx.coroutines.flow.flow
 
 class GenerateWeeklySummaryUseCase(
     private val logger: AggregateLogger,
-    private val dataSource: DataSource,
+    private val database: Database,
     private val diaryAI: DiaryAI,
     private val clock: Clock,
 ) {
@@ -26,7 +28,7 @@ class GenerateWeeklySummaryUseCase(
             "generateWeeklySummary: Fetching weekly summary for ${diaries.size} entries"
         }
 
-        val previous: WeeklySummary? = dataSource.getOne()
+        val previous: WeeklySummary? = database.getWeeklySummary()?.toWeeklySummary()
 
         // Check if weekly summary was generated less than 7 days ago
         if (previous != null) {
@@ -52,7 +54,9 @@ class GenerateWeeklySummaryUseCase(
                     logger.i(TAG) {
                         "generateWeeklySummary: Saving generated summary into database"
                     }
-                    dataSource.save(it)
+                    it?.let {
+                        database.insertWeeklySummary(it.toDatabase())
+                    }
                 }
                 .catch { cause ->
                     logger.e(TAG, cause) {

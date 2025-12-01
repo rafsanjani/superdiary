@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     sourceSets {
         commonMain {
@@ -18,10 +17,12 @@ kotlin {
 
                 // project dependency
                 implementation(projects.core.sync)
+                implementation(projects.core.database)
                 implementation(projects.designSystem)
 
                 implementation(libs.koin.compose.viewmodel)
 
+                // TODO: Remove this dependency
                 implementation(compose.materialIconsExtended)
 
                 // feature modules
@@ -45,21 +46,17 @@ kotlin {
                 implementation(libs.coil3.compose)
                 implementation(libs.coil3.multiplatform)
                 implementation(libs.coil3.network.ktor)
-
-                implementation(libs.jetbrains.navigation.compose)
+                api(libs.jetbrains.compose.ui.backhandler)
+                implementation(libs.jetbrains.compose.navigation3)
             }
         }
 
         commonTest {
-            dependencies {
-            }
-
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
         }
 
         androidUnitTest {
-            dependencies {
-            }
+            dependencies {}
         }
 
         jvmMain {

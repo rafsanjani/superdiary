@@ -11,19 +11,18 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     alias(libs.plugins.sentry)
-    id("com.google.firebase.appdistribution") version "5.2.0"
-    id("com.dropbox.dependency-guard") version "0.5.0"
+    alias(libs.plugins.firebase.appdistribution)
+    alias(libs.plugins.dependencyguard)
 }
 
 android {
-    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
         compileSdk = libs.versions.compileSdk.get().toInt()
 
         applicationId = "com.foreverrafs.superdiary"
         minSdk = libs.versions.minimumSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 291
+        versionCode = 294
         versionName = "0.0.1"
 
         val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_ANDROID") ?: ""
@@ -176,7 +175,6 @@ dependencies {
     implementation(libs.supabase.compose.auth)
     implementation(libs.androidx.core.uri)
     implementation(libs.supabase.auth)
-    implementation(libs.koin.android)
     implementation(libs.koin.core)
     implementation(projects.core.authentication)
     implementation(projects.core.logging)

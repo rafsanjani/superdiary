@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.mokkery)
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     sourceSets {
         androidUnitTest.dependencies {
@@ -29,6 +28,7 @@ kotlin {
             implementation(projects.designSystem)
             implementation(libs.koin.core)
             implementation(projects.commonUtils)
+            implementation(libs.jetbrains.compose.navigation3)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(projects.sharedData)

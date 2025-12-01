@@ -83,7 +83,7 @@ class DiaryListViewModelTest {
         every { dataSource.fetchAll() }
             .returns(flowOf(emptyList()))
 
-        every { dataSource.find(any() as String) }.returns(
+        every { dataSource.find(entry = any()) }.returns(
             flowOf(listOf(diary)),
         )
 
