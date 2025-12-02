@@ -28,7 +28,6 @@ kotlin {
                 implementation(libs.supabase.auth)
                 implementation(libs.supabase.realtime)
                 implementation(libs.supabase.compose.auth)
-                implementation(libs.ktor.client.cio)
                 implementation(libs.ktor.client.json)
                 implementation(projects.commonUtils)
                 implementation(projects.core.secrets)
@@ -64,6 +63,7 @@ kotlin {
                 implementation(libs.square.sqldelight.driver.native)
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.moko.permissions.compose)
+                implementation(libs.ktor.client.darwin)
                 implementation(libs.ktor.client.ios)
             }
         }

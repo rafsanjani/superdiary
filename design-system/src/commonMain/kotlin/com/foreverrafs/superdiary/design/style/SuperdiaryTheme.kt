@@ -163,7 +163,3 @@ fun montserratAlternativesFontFamily(): FontFamily = FontFamily(
 val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope> {
     error("SharedTransitionScope not present")
 }
-
-// val LocalAnimatedContentScope = staticCompositionLocalOf<AnimatedContentScope> {
-//    error("AnimatedContentScope not present")
-// }

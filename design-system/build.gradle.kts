@@ -1,5 +1,3 @@
-@file:Suppress("UnusedPrivateProperty")
-
 plugins {
     id("com.superdiary.multiplatform.compose")
     id("com.superdiary.multiplatform.kotlin")
@@ -13,8 +11,8 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.jetbrains.compose.resources)
+                implementation(libs.jetbrains.compose.material3)
                 implementation(libs.jetbrains.compose.foundation)
-                implementation(compose.material3)
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
                 implementation(libs.jetbrains.compose.preview)

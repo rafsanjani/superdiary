@@ -1,10 +1,5 @@
-@file:Suppress("UnusedPrivateProperty")
-@file:OptIn(ExperimentalSwiftExportDsl::class)
-
-import org.jetbrains.kotlin.gradle.swiftexport.ExperimentalSwiftExportDsl
-
-
 plugins {
+    id("com.superdiary.multiplatform.compose")
     id("com.superdiary.multiplatform.kotlin")
     id("com.superdiary.android.library")
 }
