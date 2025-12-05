@@ -14,7 +14,6 @@
 		58072E372CDD90C000B59193 /* GoogleTokenProviderImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58072E362CDD90C000B59193 /* GoogleTokenProviderImpl.swift */; };
 		587B21362CDC0B6B0081E14F /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 587B21352CDC0B6B0081E14F /* GoogleSignIn */; };
 		587B21382CDC0B6B0081E14F /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 587B21372CDC0B6B0081E14F /* GoogleSignInSwift */; };
-		589AF7CA2ECA187B0084C112 /* TOONEncoder in Frameworks */ = {isa = PBXBuildFile; productRef = 589AF7C92ECA187B0084C112 /* TOONEncoder */; };
 		58A8DBF22CA21EC60084B125 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A8DBF12CA21EC60084B125 /* Environment.swift */; };
 		58E13CE92CDAEB61007F1210 /* GoogleMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 58E13CE82CDAEB61007F1210 /* GoogleMaps */; };
 		58E13CEC2CDAEBB5007F1210 /* GoogleMapsUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 58E13CEB2CDAEBB5007F1210 /* GoogleMapsUtils */; };
@@ -65,7 +64,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				587B21382CDC0B6B0081E14F /* GoogleSignInSwift in Frameworks */,
-				589AF7CA2ECA187B0084C112 /* TOONEncoder in Frameworks */,
 				58E13CEC2CDAEBB5007F1210 /* GoogleMapsUtils in Frameworks */,
 				587B21362CDC0B6B0081E14F /* GoogleSignIn in Frameworks */,
 				58E13CE92CDAEB61007F1210 /* GoogleMaps in Frameworks */,
@@ -204,7 +202,6 @@
 				58E13CEB2CDAEBB5007F1210 /* GoogleMapsUtils */,
 				587B21352CDC0B6B0081E14F /* GoogleSignIn */,
 				587B21372CDC0B6B0081E14F /* GoogleSignInSwift */,
-				589AF7C92ECA187B0084C112 /* TOONEncoder */,
 			);
 			productName = iosApp;
 			productReference = 7555FF7B242A565900829871 /* superdiary.app */;
@@ -240,7 +237,6 @@
 				58E13CE72CDAEB61007F1210 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
 				58E13CEA2CDAEBB5007F1210 /* XCRemoteSwiftPackageReference "google-maps-ios-utils" */,
 				587B21342CDC0B6B0081E14F /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
-				589AF7C82ECA187B0084C112 /* XCRemoteSwiftPackageReference "TOONEncoder" */,
 			);
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
 			projectDirPath = "";
@@ -277,7 +273,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# This script is responsable to upload debug symbols and source context for Sentry.\nsource ~/.zshrc\nif which sentry-cli >/dev/null; then\nexport SENTRY_ORG=rafsanjani-inc\nexport SENTRY_PROJECT=superdiary-ios\nif [ ! $? -eq 0 ]; then\necho \"warning: sentry-cli - $ERROR\"\nfi\nelse\necho \"warning: sentry-cli not installed, download from https://github.com/getsentry/sentry-cli/releases\"\nfi\n";
+			shellScript = "# This script is responsible to upload debug symbols and source context for Sentry.\nsource ~/.zshrc\nif which sentry-cli >/dev/null; then\nexport SENTRY_ORG=rafsanjani-inc\nexport SENTRY_PROJECT=superdiary-ios\nif [ ! $? -eq 0 ]; then\necho \"warning: sentry-cli - $ERROR\"\nfi\nelse\necho \"warning: sentry-cli not installed, download from https://github.com/getsentry/sentry-cli/releases\"\nfi\n";
 		};
 		7555FFB5242A651A00829871 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -544,14 +540,6 @@
 				minimumVersion = 8.0.0;
 			};
 		};
-		589AF7C82ECA187B0084C112 /* XCRemoteSwiftPackageReference "TOONEncoder" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/mattt/TOONEncoder.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.1;
-			};
-		};
 		58E13CE72CDAEB61007F1210 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/googlemaps/ios-maps-sdk";
@@ -588,11 +576,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 587B21342CDC0B6B0081E14F /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
-		};
-		589AF7C92ECA187B0084C112 /* TOONEncoder */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 589AF7C82ECA187B0084C112 /* XCRemoteSwiftPackageReference "TOONEncoder" */;
-			productName = TOONEncoder;
 		};
 		58E13CE82CDAEB61007F1210 /* GoogleMaps */ = {
 			isa = XCSwiftPackageProductDependency;

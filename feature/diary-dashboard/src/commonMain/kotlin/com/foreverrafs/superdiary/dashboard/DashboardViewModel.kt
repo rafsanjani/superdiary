@@ -90,7 +90,7 @@ class DashboardViewModel(
                     }
 
                     DashboardScreenState.Error(
-                        message = result.error.message.orEmpty(),
+                        message = result.error.message.orEmpty()
                     )
                 }
 
@@ -163,14 +163,13 @@ class DashboardViewModel(
     }
 
     private fun generateWeeklySummary(diaries: List<Diary>) = viewModelScope.launch {
-        generateWeeklySummaryUseCase(diaries)
-            .collect { summary ->
-                updateContentState { state ->
-                    state.copy(
-                        weeklySummary = summary,
-                    )
-                }
+        generateWeeklySummaryUseCase(diaries).collect { summary ->
+            updateContentState { state ->
+                state.copy(
+                    weeklySummary = summary,
+                )
             }
+        }
     }
 
     private fun calculateStreak(diaries: List<Diary>) = viewModelScope.launch {

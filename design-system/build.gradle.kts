@@ -22,7 +22,6 @@ kotlin {
                 implementation(libs.jetbrains.compose.navigation3)
                 implementation(libs.coil3.network.ktor)
                 implementation(libs.coil3.multiplatform)
-                implementation(libs.ktor.client.cio)
                 implementation(libs.ktor.client.core)
             }
         }
@@ -47,7 +46,6 @@ kotlin {
         jvmMain {
             dependencies {
                 implementation(compose.desktop.currentOs)
-                implementation(libs.ktor.client.cio)
                 implementation(libs.kotlinx.coroutines.swing)
             }
         }

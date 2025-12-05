@@ -53,7 +53,6 @@ kotlin {
             dependencies {
                 implementation(libs.square.sqldelight.driver.native)
                 implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.ktor.client.ios)
             }
         }
 

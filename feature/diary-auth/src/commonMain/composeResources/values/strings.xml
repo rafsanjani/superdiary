@@ -9,7 +9,7 @@
     <string name="label_login_input_username">Email</string>
     <string name="label_login_title">Welcome back!</string>
     <string name="label_register_title">Create an account</string>
-    <string name="label_register_message">Don't have an account yet? </string>
+    <string name="label_register_message">Don't have an account yet?</string>
     <string name="label_register">Register</string>
 
     <string name="dialog_biometric_auth_error_title">Authentication failed</string>
@@ -20,7 +20,7 @@
     <string name="error_invalid_credentials">Invalid credentials</string>"
     <string name="error_no_credentials">No credentials</string>"
     <string name="error_user_already_registered">User already registered</string>"
-    <string name="error_generic_error">Generic error</string>"
+    <string name="error_generic_error">Sorry something went wrong!</string>"
     <string name="registration_success_message">Thank you for registering!</string>"
     <string name="registration_email_confirmation_prompt">Please confirm your email</string>"
 </resources>
