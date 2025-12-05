@@ -24,21 +24,6 @@
 -dontwarn androidx.test.platform.app.InstrumentationRegistry
 -keepattributes EnclosingMethod
 
--dontwarn io.ktor.client.network.sockets.SocketTimeoutException
--dontwarn io.ktor.client.plugins.HttpRequestRetry$Configuration
--dontwarn io.ktor.client.plugins.HttpRequestRetry$Plugin
--dontwarn io.ktor.client.plugins.HttpRequestRetry$ShouldRetryContext
--dontwarn io.ktor.client.plugins.HttpRequestRetry
--dontwarn io.ktor.client.plugins.HttpTimeout$HttpTimeoutCapabilityConfiguration
--dontwarn io.ktor.client.plugins.HttpTimeout$Plugin
--dontwarn io.ktor.client.plugins.HttpTimeout
--dontwarn io.ktor.client.plugins.observer.ResponseObserver$Plugin
--dontwarn io.ktor.client.plugins.observer.ResponseObserver
--dontwarn io.ktor.util.KtorDsl
--dontwarn io.ktor.utils.io.CoroutinesKt
--dontwarn io.ktor.utils.io.core.ByteReadPacket
--dontwarn io.ktor.utils.io.core.Input
-
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
@@ -48,3 +33,16 @@
 -dontwarn androidx.window.extensions.core.util.function.Consumer
 -dontwarn androidx.window.extensions.core.util.function.Function
 -dontwarn androidx.window.extensions.core.util.function.Predicate
+
+
+-dontwarn io.micrometer.context.ContextAccessor
+-dontwarn javax.enterprise.inject.spi.Extension
+-dontwarn org.apache.log4j.Level
+-dontwarn org.apache.log4j.Logger
+-dontwarn org.apache.log4j.Priority
+-dontwarn org.apache.logging.log4j.LogManager
+-dontwarn org.apache.logging.log4j.Logger
+-dontwarn org.apache.logging.log4j.message.MessageFactory
+-dontwarn org.apache.logging.log4j.spi.ExtendedLogger
+-dontwarn org.apache.logging.log4j.spi.ExtendedLoggerWrapper
+-dontwarn reactor.blockhound.integration.BlockHoundIntegration
