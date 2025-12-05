@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.chat.presentation.screen
 
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -34,6 +35,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -67,7 +69,6 @@ import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlin.time.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.diary_chat.generated.resources.Res
@@ -100,8 +101,7 @@ fun DiaryChatScreenContent(
 
             LaunchedEffect(screenState.errorText) {
                 screenState.errorText?.let {
-                    snackbarHostState.showSnackbar(it)
-                    delay(2000)
+                    snackbarHostState.showSnackbar(message = it, duration = SnackbarDuration.Long)
                     currentOnDismissError()
                 }
             }
@@ -132,7 +132,13 @@ fun DiaryChatScreenContent(
                     ) { item ->
                         ChatBubble(
                             chatItem = item,
-                            modifier = Modifier.fillMaxWidth().animateItem(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .animateItem(
+                                    fadeInSpec = tween(durationMillis = 1000, easing = LinearEasing),
+                                    fadeOutSpec = tween(durationMillis = 1000, easing = LinearEasing),
+                                    placementSpec = tween(durationMillis = 1000, easing = LinearEasing),
+                                ),
                         )
                     }
 
@@ -143,7 +149,7 @@ fun DiaryChatScreenContent(
                                 initialValue = 0.5f,
                                 targetValue = 1f,
                                 animationSpec = infiniteRepeatable(
-                                    tween(1000),
+                                    animation = tween(1000),
                                     repeatMode = RepeatMode.Reverse,
                                 ),
                             )
@@ -231,16 +237,14 @@ fun ChatBubble(
     Box(modifier = modifier) {
         val alignmentAndPaddingModifier = when (chatItem.role) {
             DiaryChatRole.DiaryAI -> Modifier.padding(end = 44.dp).align(Alignment.CenterStart)
-
             DiaryChatRole.User -> Modifier.padding(start = 44.dp).align(Alignment.CenterEnd)
-
             DiaryChatRole.System -> throw IllegalArgumentException("System chat messages should not be rendered")
         }
 
         val richTextState = rememberRichTextState()
 
         LaunchedEffect(chatItem) {
-            richTextState.setMarkdown(chatItem.content)
+            richTextState.setHtml(chatItem.content)
         }
 
         RichText(

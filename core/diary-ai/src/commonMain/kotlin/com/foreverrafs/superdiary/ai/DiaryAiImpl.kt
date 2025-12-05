@@ -2,11 +2,10 @@ package com.foreverrafs.superdiary.ai
 
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.clients.google.GoogleModels
-import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
+import ai.koog.prompt.executor.model.PromptExecutor
 import ai.koog.prompt.streaming.StreamFrame
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatMessage
-import com.foreverrafs.superdiary.core.SuperDiarySecret
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
@@ -16,9 +15,9 @@ import kotlinx.coroutines.flow.map
 /** A diary AI implementation using Open AI */
 class DiaryAiImpl(
     private val logger: AggregateLogger,
+    private val promptExecutor: PromptExecutor,
 ) : DiaryAI {
 
-    private val promptExecutor = simpleGoogleAIExecutor(SuperDiarySecret.openAIKey)
     override fun generateDiary(
         prompt: String,
         wordCount: Int,
@@ -124,16 +123,20 @@ class DiaryAiImpl(
             prompt = prompt("generate-diary") {
                 // Add the instruction
                 system {
-                    text(text = messages.take(messages.size - 1).joinToString(separator = "\n"))
+                    text(
+                        text = messages.take(
+                            (messages.size - 1).coerceAtLeast(0),
+                        ).joinToString(separator = "\n"),
+                    )
                 }
 
                 // Add the prompt
                 user {
-                    text(messages.last().content)
+                    text(messages.lastOrNull()?.content.orEmpty())
                 }
             },
             model = GPT_MODEL,
-        ).first().content
+        ).firstOrNull()?.content.orEmpty()
     } catch (e: Exception) {
         logger.e(TAG, e) { "Error querying diaries" }
         ""
