@@ -92,7 +92,6 @@ class DashboardViewModelTest {
         updateDiaryUseCase = UpdateDiaryUseCase(dataSource, TestAppDispatchers),
         logger = AggregateLogger(emptyList()),
         preference = diaryPreference,
-        clock = Clock.System,
         biometricAuth = biometricAuth,
         generateWeeklySummaryUseCase = GenerateWeeklySummaryUseCase(
             logger = AggregateLogger(),

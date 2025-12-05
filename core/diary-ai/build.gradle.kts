@@ -17,10 +17,10 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(projects.core.logging)
                 implementation(libs.kotlinx.coroutines.test)
-                implementation("org.simpmusic.gemini-kotlin:openai-client:4.0.2")
                 implementation(libs.kotlin.datetime)
                 implementation(projects.commonUtils)
                 implementation(projects.sharedData)
+                implementation("ai.koog:koog-agents:0.5.4")
                 implementation(projects.core.database)
                 implementation(projects.core.secrets)
             }

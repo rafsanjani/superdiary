@@ -1,6 +1,5 @@
 package com.foreverrafs.superdiary.ai.domain.model
 
-import com.aallam.openai.api.chat.ChatMessage
 import com.foreverrafs.superdiary.database.model.DiaryChatMessageDb
 import com.foreverrafs.superdiary.database.model.DiaryChatRoleDb
 import kotlin.time.Clock
@@ -45,12 +44,6 @@ fun DiaryChatMessage.toDatabase() = DiaryChatMessageDb(
     timestamp = timestamp,
     content = content,
 )
-
-fun DiaryChatMessage.toNetworkChatMessage() = when (role) {
-    DiaryChatRole.User -> ChatMessage.User(content)
-    DiaryChatRole.DiaryAI -> ChatMessage.Assistant(content)
-    DiaryChatRole.System -> ChatMessage.System(content)
-}
 
 fun DiaryChatMessageDb.toDiaryChatMessage(): DiaryChatMessage = when (role) {
     DiaryChatRoleDb.User -> DiaryChatMessage.User(content)

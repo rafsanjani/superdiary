@@ -1,4 +1,4 @@
-package com.foreverrafs.superdiary.create_diary
+package com.foreverrafs.superdiary.creatediary
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.runtime.Composable

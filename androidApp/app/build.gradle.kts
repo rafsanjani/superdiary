@@ -5,10 +5,9 @@ import io.sentry.android.gradle.extensions.InstrumentationFeature
 
 
 plugins {
-    kotlin("android")
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.android)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     alias(libs.plugins.sentry)
     alias(libs.plugins.firebase.appdistribution)
@@ -93,6 +92,14 @@ android {
             applicationIdSuffix = ".demo"
             manifestPlaceholders["applicationName"] = "superdiary demo"
             dimension = "mode"
+        }
+    }
+
+    packaging {
+        resources {
+            excludes += "META-INF/INDEX.LIST"
+            excludes += "META-INF/DEPENDENCIES"
+            excludes += "META-INF/io.netty.versions.properties"
         }
     }
 }

@@ -16,8 +16,6 @@ import com.foreverrafs.superdiary.domain.usecase.CalculateBestStreakUseCase
 import com.foreverrafs.superdiary.domain.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.utils.DiarySettings
-import com.foreverrafs.superdiary.utils.toDate
-import kotlin.time.Clock
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,7 +37,6 @@ class DashboardViewModel(
     private val biometricAuth: BiometricAuth,
     private val generateWeeklySummaryUseCase: GenerateWeeklySummaryUseCase,
     private val logger: AggregateLogger,
-    private val clock: Clock,
 ) : ViewModel() {
     sealed interface DashboardScreenState {
         data object Loading : DashboardScreenState
@@ -83,15 +80,17 @@ class DashboardViewModel(
         val countEntriesDeferred: Deferred<Result<Long>> = async { countEntriesUseCase() }
 
         preference.settings.collect { settings ->
-            val state = when (val result = latestEntriesDeferred.await()) {
+            when (val result = latestEntriesDeferred.await()) {
                 is Result.Failure -> {
                     logger.e(TAG, result.error) {
                         "Error loading dashboard contents"
                     }
 
-                    DashboardScreenState.Error(
-                        message = result.error.message.orEmpty()
-                    )
+                    mutableState.update {
+                        DashboardScreenState.Error(
+                            message = result.error.message.orEmpty(),
+                        )
+                    }
                 }
 
                 is Result.Success -> {
@@ -109,35 +108,18 @@ class DashboardViewModel(
                         calculateStreak(diaries)
                     }
 
-                    DashboardScreenState.Content(
-                        latestEntries = diaries.take(4),
-                        totalEntries = countEntriesDeferred.await().getOrElse { 0L },
-                        weeklySummary = if (diaries.isEmpty()) {
-                            """
-
-                            """.trimIndent()
-                        } else {
-                            DEFAULT_SUMMARY_TEXT
-                        },
-                        currentStreak = Streak(
-                            count = 0,
-                            startDate = clock.now().toDate(),
-                            endDate = clock.now().toDate(),
-                        ),
-                        bestStreak = Streak(
-                            count = 0,
-                            startDate = clock.now().toDate(),
-                            endDate = clock.now().toDate(),
-                        ),
-                        showBiometricAuthDialog = shouldShowBiometricDialog,
-                        showLatestEntries = settings.showLatestEntries,
-                        showAtaGlance = settings.showAtAGlance,
-                        showWeeklySummary = settings.showWeeklySummary,
-                    )
+                    updateContentState {
+                        it.copy(
+                            latestEntries = diaries.take(4),
+                            totalEntries = countEntriesDeferred.await().getOrElse { 0L },
+                            showBiometricAuthDialog = shouldShowBiometricDialog,
+                            showLatestEntries = settings.showLatestEntries,
+                            showAtaGlance = settings.showAtAGlance,
+                            showWeeklySummary = settings.showWeeklySummary,
+                        )
+                    }
                 }
             }
-
-            mutableState.update { state }
         }
     }
 
@@ -147,7 +129,7 @@ class DashboardViewModel(
      * Only use this function if you are sure the current state of the screen
      * is [DashboardScreenState.Content]
      */
-    private fun updateContentState(func: (current: DashboardScreenState.Content) -> DashboardScreenState.Content) {
+    private suspend fun updateContentState(func: suspend (current: DashboardScreenState.Content) -> DashboardScreenState.Content) {
         mutableState.update { state ->
             val currentState =
                 state as? DashboardScreenState.Content ?: DashboardScreenState.Content()
