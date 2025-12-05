@@ -9,7 +9,7 @@
     <string name="label_login_input_username">Email</string>
     <string name="label_login_title">Welcome back!</string>
     <string name="label_register_title">Create an account</string>
-    <string name="label_register_message">Don't have an account yet?</string>
+    <string name="label_register_message">Don't have an account yet?\u0020</string>
     <string name="label_register">Register</string>
 
     <string name="dialog_biometric_auth_error_title">Authentication failed</string>
