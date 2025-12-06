@@ -45,8 +45,6 @@ kotlin {
                 implementation(libs.coil3.compose.core)
                 implementation(libs.coil3.compose)
                 implementation(libs.coil3.multiplatform)
-                implementation(libs.coil3.network.ktor)
-                api(libs.jetbrains.compose.ui.backhandler)
                 implementation(libs.jetbrains.compose.navigation3)
             }
         }
@@ -62,7 +60,6 @@ kotlin {
         jvmMain {
             dependencies {
                 implementation(libs.koin.jvm)
-                implementation(libs.ktor.client.cio)
             }
         }
     }

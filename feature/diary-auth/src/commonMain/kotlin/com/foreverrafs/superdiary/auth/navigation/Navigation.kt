@@ -81,7 +81,6 @@ fun EntryProviderScope<NavKey>.AuthNavigation(
         startDestination,
     )
 
-
     NavDisplay(
         backStack = backStack,
         onBack = {

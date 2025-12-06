@@ -1,13 +1,9 @@
-@file:Suppress("UnusedPrivateProperty")
-@file:OptIn(ExperimentalSwiftExportDsl::class)
-
-import org.jetbrains.kotlin.gradle.swiftexport.ExperimentalSwiftExportDsl
-
-
 plugins {
+    id("com.superdiary.multiplatform.compose")
     id("com.superdiary.multiplatform.kotlin")
     id("com.superdiary.android.library")
 }
+
 kotlin {
     listOf(
         iosArm64(),
@@ -16,6 +12,7 @@ kotlin {
         it.binaries.framework {
             baseName = "shared"
             linkerOpts += "-lsqlite3"
+            freeCompilerArgs += "-Xbinary=bundleId=com.foreverrafs.shared"
 
             export(projects.core.analytics)
             export(projects.core.logging)
@@ -36,6 +33,7 @@ kotlin {
                 api(projects.navigation)
                 api(projects.core.authentication)
                 api(projects.designSystem)
+                api(libs.kotlinx.serialization.json)
                 api(projects.core.diaryAi)
             }
         }
