@@ -24,6 +24,7 @@ module Danger
 
         markdown_contents = File.read(output_file)
         restore_stash
+        cleanup
         fail markdown_contents
       end
     end
@@ -35,6 +36,11 @@ module Danger
 
     def restore_stash
       system("git stash pop")
+    end
+
+    def cleanup
+      system("rm -rf delta-*")
+      system("rm -rf snapshots.md")
     end
 
     def verify_paparazzi
