@@ -83,7 +83,7 @@ module Danger
         delta_files.each do |file|
           filename = File.basename(file)
           encoded_filename = URI.encode_www_form_component(filename)
-          f.puts "#### #{filename}"
+          f.puts "## #{filename}"
           f.puts "<img alt=\"paparazzi failure\" src=\"#{REPO_RAW_URL}/#{branch_name}/#{encoded_filename}\"/>\n\n"
         end
       end
