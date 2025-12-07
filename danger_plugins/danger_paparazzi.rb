@@ -49,8 +49,8 @@ module Danger
 
     def setup_git
       puts "Setting up commit username and email"
-      system("git config --global user.name '#{GIT_USER_NAME}'")
-      system("git config --global user.email '#{GIT_USER_EMAIL}'")
+      system("git config user.name '#{GIT_USER_NAME}'")
+      system("git config user.email '#{GIT_USER_EMAIL}'")
     end
 
     def create_orphan_branch(branch_name)
