@@ -1,2 +1,2 @@
-require_relative './danger_plugins/ktlint_danger_plugin.rb'
+Dir["#{__dir__}/danger_plugins/*.rb"].each { |f| require_relative f }
 ktlint.lint(inline_mode: true)

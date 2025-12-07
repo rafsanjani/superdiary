@@ -1,6 +1,7 @@
 package com.foreverrafs.superdiary.creatediary
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.common.paparazzi.SnapshotDevice
@@ -135,9 +136,7 @@ class CreateDiarySnapshotTests(
     fun `Create Diary Screen - Location Permission Dialog`() {
         paparazzi.snapshot {
             SuperDiaryPreviewTheme {
-                SnapshotContent(
-                    showLocationPermissionRationale = true,
-                )
+                Text("An Awesome failure")
             }
         }
     }
