@@ -112,7 +112,7 @@ module Danger
 
       return if targets.empty?
 
-      command = "ktlint --ruleset=compose-rules.jar #{targets.join(' ')} --reporter=json --relative --log-level=none"
+      command = "./ktlint --ruleset=compose-rules.jar #{targets.join(' ')} --reporter=json --relative --log-level=none"
       [JSON.parse(`#{command}`)]
     end
 
