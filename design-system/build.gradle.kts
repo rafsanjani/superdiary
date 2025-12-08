@@ -1,5 +1,3 @@
-@file:Suppress("UnusedPrivateProperty")
-
 plugins {
     id("com.superdiary.multiplatform.compose")
     id("com.superdiary.multiplatform.kotlin")
@@ -13,8 +11,8 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.jetbrains.compose.resources)
+                implementation(libs.jetbrains.compose.material3)
                 implementation(libs.jetbrains.compose.foundation)
-                implementation(compose.material3)
                 implementation(libs.richTextEditor)
                 implementation(libs.touchlab.stately)
                 implementation(libs.jetbrains.compose.preview)
@@ -24,7 +22,6 @@ kotlin {
                 implementation(libs.jetbrains.compose.navigation3)
                 implementation(libs.coil3.network.ktor)
                 implementation(libs.coil3.multiplatform)
-                implementation(libs.ktor.client.cio)
                 implementation(libs.ktor.client.core)
             }
         }
@@ -49,7 +46,6 @@ kotlin {
         jvmMain {
             dependencies {
                 implementation(compose.desktop.currentOs)
-                implementation(libs.ktor.client.cio)
                 implementation(libs.kotlinx.coroutines.swing)
             }
         }

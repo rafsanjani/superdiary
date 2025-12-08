@@ -1,75 +1,64 @@
 package com.foreverrafs.superdiary.ai
 
-import com.aallam.openai.api.chat.ChatCompletionRequest
-import com.aallam.openai.api.chat.ChatMessage
-import com.aallam.openai.api.chat.ChatRole
-import com.aallam.openai.api.model.ModelId
-import com.aallam.openai.client.OpenAI
+import ai.koog.prompt.dsl.prompt
+import ai.koog.prompt.executor.clients.google.GoogleModels
+import ai.koog.prompt.executor.model.PromptExecutor
+import ai.koog.prompt.streaming.StreamFrame
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatMessage
-import com.foreverrafs.superdiary.ai.domain.model.toNetworkChatMessage
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
 
 /** A diary AI implementation using Open AI */
 class DiaryAiImpl(
-    private val openAI: OpenAI,
     private val logger: AggregateLogger,
+    private val promptExecutor: PromptExecutor,
 ) : DiaryAI {
+
     override fun generateDiary(
         prompt: String,
         wordCount: Int,
     ): Flow<String> {
-        val generateDiaryMessages = mutableListOf<ChatMessage>()
         // Add the instruction
-        generateDiaryMessages.add(
-            ChatMessage(
-                role = ChatRole.System,
-                content = """
+        val systemMessage = """
                     You are Journal AI, you can rewrite every statement I give you into a $wordCount word informal journal.
                     You are not supposed to write anything yet and you do not respond to questions. You are very empathic and
                     should avoid the use of any foul or deeply strong language. You can be witty at times and carry a bit of humor.
                     You will never make a reference to the fact that you are an AI no matter what.
-                """.trimIndent(),
-            ),
-        )
+        """.trimIndent()
 
-        // Add the prompt
-        generateDiaryMessages.add(
-            ChatMessage(
-                role = ChatRole.User,
-                content = prompt,
-            ),
-        )
+        return promptExecutor.executeStreaming(
+            prompt = prompt("generate-diary") {
+                system {
+                    text(systemMessage)
+                }
 
-        val chatCompletionRequest = ChatCompletionRequest(
-            model = ModelId(GPT_MODEL),
-            messages = generateDiaryMessages.toList(),
-        )
+                user {
+                    text(prompt)
+                }
+            },
+            model = GPT_MODEL,
+        ).map { response ->
+            when (response) {
+                is StreamFrame.Append -> response.text
 
-        var assistantMessages: String? = null
-        return openAI.chatCompletions(chatCompletionRequest).map {
-            it.choices.first().delta?.content.orEmpty()
-        }.onEach {
-            assistantMessages += it
-        }.onCompletion { error ->
-            if (error != null) {
-                logger.e(tag = TAG, throwable = error)
-                return@onCompletion
+                is StreamFrame.End -> {
+                    logger.i(TAG) {
+                        "Diary generation completed: ${response.finishReason}"
+                    }
+                    ""
+                }
+
+                is StreamFrame.ToolCall -> {
+                    logger.i(TAG) {
+                        "Diary generation completed: ${response.content}"
+                    }
+                    ""
+                }
             }
-            generateDiaryMessages.add(
-                ChatMessage(
-                    role = ChatRole.Assistant,
-                    content = assistantMessages,
-                ),
-            )
         }
     }
 
@@ -84,71 +73,77 @@ class DiaryAiImpl(
             Make sure you punctuate it properly as well. This should be in the first person narrative.
         """.trimIndent()
 
-        val generateDiaryMessages = mutableListOf<ChatMessage>()
-        // Add the instruction
-        generateDiaryMessages.add(
-            ChatMessage.System(
-                content = weeklySummaryGeneratorPrompt,
-            ),
-        )
-
-        // Add the prompt
-        generateDiaryMessages.add(
-            ChatMessage.User(
-                content = diaries.joinToString { it.entry },
-            ),
-        )
-
-        val request = ChatCompletionRequest(
-            model = ModelId(GPT_MODEL),
-            messages = generateDiaryMessages.toList(),
-        )
-
-        var response = ""
-
-        return openAI.chatCompletions(request)
-            .catch {
-                logger.e(TAG, it) {
-                    "Error generating weekly summary"
+        var totalSummary = ""
+        return promptExecutor.executeStreaming(
+            prompt = prompt("generate-diary") {
+                // Add the instruction
+                system {
+                    text(weeklySummaryGeneratorPrompt)
                 }
-                onCompletion(null)
-            }
-            .onCompletion {
-                if (it == null) {
-                    onCompletion(WeeklySummary(response))
+
+                // Add the prompt
+                user {
+                    text(diaries.joinToString { it.entry })
+                }
+            },
+            model = GPT_MODEL,
+        ).map { response ->
+            when (response) {
+                is StreamFrame.Append -> {
+                    totalSummary += response.text
+                    totalSummary
+                }
+
+                is StreamFrame.End -> {
+                    logger.i(TAG) {
+                        "Diary generation completed: ${response.finishReason}"
+                    }
+                    onCompletion(
+                        WeeklySummary(
+                            summary = totalSummary,
+                        ),
+                    )
+                    ""
+                }
+
+                is StreamFrame.ToolCall -> {
+                    logger.i(TAG) {
+                        "Diary generation completed: ${response.content}"
+                    }
+                    ""
                 }
             }
-            .mapNotNull { chunk ->
-                chunk.choices.firstOrNull()?.delta?.content?.let {
-                    response += it
-                }
-                response
-            }
+        }
     }
 
     override suspend fun queryDiaries(
         messages: List<DiaryChatMessage>,
-    ): String? {
-        val request = ChatCompletionRequest(
-            model = ModelId(GPT_MODEL),
-            messages = messages.map { it.toNetworkChatMessage() },
-        )
+    ): String = try {
+        promptExecutor.execute(
+            prompt = prompt("generate-diary") {
+                // Add the instruction
+                system {
+                    text(
+                        text = messages.take(
+                            (messages.size - 1).coerceAtLeast(0),
+                        ).joinToString(separator = "\n"),
+                    )
+                }
 
-        return try {
-            openAI.chatCompletion(request)
-                .choices
-                .firstOrNull()
-                ?.message
-                ?.content
-                .orEmpty()
-        } catch (e: Exception) {
-            logger.e(tag = TAG, throwable = e)
-            null
-        }
+                // Add the prompt
+                user {
+                    text(messages.lastOrNull()?.content.orEmpty())
+                }
+            },
+            model = GPT_MODEL,
+        ).firstOrNull()?.content.orEmpty()
+    } catch (e: Exception) {
+        logger.e(TAG, e) { "Error querying diaries" }
+        ""
     }
 
     companion object {
-        private const val GPT_MODEL = "gemini-2.5-flash-lite"
+        private val GPT_MODEL = GoogleModels.Gemini2_5Flash
         private const val TAG = "OpenDiaryAI"
     }
 }
