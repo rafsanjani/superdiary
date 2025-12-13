@@ -81,21 +81,13 @@ jobs:
             -   name: Setup Gradle
                 uses: gradle/actions/setup-gradle@v5
 
-            -   name: Snapshot test (shared-ui)
-                run: ./gradlew verifyPaparazziDebug --continue
-
-            -   name: Create paparazzi report
-                if: failure()
-                run: ./create_paparazzi_report.sh
-
-            -   name: Comment snapshot difference markdown file on PR
-                uses: thollander/actions-comment-pull-request@v3
-                if: failure()
-                with:
-                    file-path: snapshots.md
-                    github-token: ${{secrets.GITHUB_TOKEN}}
-                    comment-tag: snapshots
-                    mode: recreate
+            -   name: Snapshot Test
+                run: |
+                    gem install bundler
+                    bundle install
+                    bundle exec danger --dangerfile=PaparazziDangerFile --fail-on-errors=true
+                env:
+                    DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     #    iosTest:
     #        name: Run iOS unit tests
