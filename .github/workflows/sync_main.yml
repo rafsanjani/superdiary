@@ -14,7 +14,7 @@ jobs:
           lfs: true
 
       - name: Sync main with develop branch
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
             token: ${{ secrets.SECRET_GITHUB }}
             base: main
