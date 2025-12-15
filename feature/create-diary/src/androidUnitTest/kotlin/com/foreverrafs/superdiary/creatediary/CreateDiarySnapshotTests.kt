@@ -136,7 +136,9 @@ class CreateDiarySnapshotTests(
     fun `Create Diary Screen - Location Permission Dialog`() {
         paparazzi.snapshot {
             SuperDiaryPreviewTheme {
-                Text("An Awesome failure")
+                SnapshotContent(
+                    showLocationPermissionRationale = true,
+                )
             }
         }
     }
