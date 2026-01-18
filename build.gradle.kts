@@ -60,12 +60,3 @@ tasks.register("printLineCoverage") {
     }
 }
 
-tasks.register<Delete>("deepClean") {
-    group = "build"
-    description = "Deletes all build directories in all subprojects"
-
-    delete(
-        rootProject.buildDir,
-        rootProject.subprojects.map { it.buildDir }
-    )
-}
