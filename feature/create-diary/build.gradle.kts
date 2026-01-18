@@ -5,7 +5,7 @@ plugins {
     id("com.superdiary.multiplatform.kotlin")
     id("com.superdiary.android.library")
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.paparazzi)
+    // alias(libs.plugins.paparazzi)
     alias(libs.plugins.mokkery)
 }
 
@@ -47,8 +47,4 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
         }
     }
-}
-
-android {
-    namespace = "com.foreverrafs.superdiary.create"
 }

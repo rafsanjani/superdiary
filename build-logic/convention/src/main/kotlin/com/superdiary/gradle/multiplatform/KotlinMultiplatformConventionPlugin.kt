@@ -1,5 +1,8 @@
 package com.superdiary.gradle.multiplatform
 
+import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget
+import com.superdiary.gradle.findVersion
+import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -13,15 +16,25 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
         with(pluginManager) {
             apply("org.jetbrains.kotlin.multiplatform")
-            apply("com.android.library")
+            apply("com.android.kotlin.multiplatform.library")
         }
 
         extensions.configure<KotlinMultiplatformExtension> {
             applyDefaultHierarchyTemplate()
             jvm()
 
-            if (pluginManager.hasPlugin("com.android.library")) {
-                androidTarget()
+            if (pluginManager.hasPlugin("com.android.kotlin.multiplatform.library")) {
+                androidLibrary {
+                    val module = target.path
+                        .replaceFirst(":", "")
+                        .replace(":", ".")
+                        .replace("-", ".")
+
+                    namespace = "com.foreverrafs.superdiary.$module"
+                    androidResources.enable = true
+                    compileSdk = findVersion("compileSdk").toInt()
+                    minSdk = findVersion("minimumSdk").toInt()
+                }
             }
 
             iosArm64()
@@ -62,3 +75,6 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
         }
     }
 }
+
+fun KotlinMultiplatformExtension.androidLibrary(configure: Action<KotlinMultiplatformAndroidLibraryTarget>): Unit =
+    extensions.configure("androidLibrary", configure)

@@ -5,7 +5,3 @@ plugins {
     id("com.superdiary.android.library")
     id("com.superdiary.secrets")
 }
-
-android {
-    namespace = "com.foreverrafs.core.secrets"
-}

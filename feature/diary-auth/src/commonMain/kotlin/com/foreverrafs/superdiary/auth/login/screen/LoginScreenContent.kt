@@ -49,6 +49,7 @@ import com.foreverrafs.auth.InvalidCredentialsException
 import com.foreverrafs.auth.NoCredentialsException
 import com.foreverrafs.auth.UserAlreadyRegisteredException
 import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.superdiary.design.components.BrandLogo
 import com.foreverrafs.superdiary.design.components.PasswordInputField
 import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.components.SuperDiaryInputField
@@ -133,9 +134,8 @@ fun LoginScreenContent(
 
                 Spacer(modifier = Modifier.height(40.dp))
 
-                Image(
+                BrandLogo(
                     modifier = Modifier.size(100.dp),
-                    painter = painterResource(Res.drawable.logo),
                     contentDescription = "brand logo",
                 )
 

@@ -7,9 +7,8 @@ import io.sentry.android.gradle.extensions.InstrumentationFeature
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlin.android)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    alias(libs.plugins.sentry)
+    id("io.sentry.android.gradle").version("6.0.0-rc.1")
     alias(libs.plugins.firebase.appdistribution)
     alias(libs.plugins.dependencyguard)
 }

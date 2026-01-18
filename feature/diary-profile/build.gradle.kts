@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.mokkery)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.paparazzi)
+    // alias(libs.plugins.paparazzi)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -49,8 +49,4 @@ kotlin {
             implementation(projects.commonTest)
         }
     }
-}
-
-android {
-    namespace = "com.foreverrafs.superdiary.profile"
 }

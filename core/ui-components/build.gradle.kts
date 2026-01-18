@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.mokkery)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.paparazzi)
+    // alias(libs.plugins.paparazzi)
 }
 
 kotlin {
@@ -45,8 +45,4 @@ kotlin {
             implementation(libs.assertk.common)
         }
     }
-}
-
-android {
-    namespace = "com.components.superdiary.ui.common"
 }

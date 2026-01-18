@@ -54,11 +54,6 @@ gradlePlugin {
             implementationClass = "$rootPackageName.android.AndroidLibraryConventionPlugin"
         }
 
-        register("AndroidComposeLibraryConventionPlugin") {
-            id = "com.superdiary.compose.library"
-            implementationClass = "$rootPackageName.android.AndroidComposeLibraryConventionPlugin"
-        }
-
         register("KotlinMultiplatformConventionPlugin") {
             id = "com.superdiary.multiplatform.kotlin"
             implementationClass = "$rootPackageName.multiplatform.KotlinMultiplatformConventionPlugin"

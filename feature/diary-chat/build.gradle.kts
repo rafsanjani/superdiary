@@ -21,7 +21,7 @@ kotlin {
             implementation(projects.commonUtils)
 
             // replace this with a catalog entry
-            implementation(compose.material3)
+            implementation(libs.jetbrains.compose.material3)
 
             // compose dependencies
             implementation(libs.jetbrains.compose.runtime)
@@ -61,8 +61,4 @@ kotlin {
             implementation(projects.commonTest)
         }
     }
-}
-
-android {
-    namespace = "com.foreverrafs.superdiary.chat"
 }
