@@ -5,7 +5,7 @@ plugins {
     id("com.superdiary.multiplatform.kotlin")
     id("com.superdiary.android.library")
     alias(libs.plugins.kotlin.serialization)
-    // alias(libs.plugins.paparazzi)
+    // alias(libs.plugins.paparazzi) // Disabled due to incompatibility with the new Android multiplatform plugin
     alias(libs.plugins.mokkery)
 }
 

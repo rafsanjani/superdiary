@@ -20,7 +20,6 @@ kotlin {
             implementation(projects.sharedData)
             implementation(projects.commonUtils)
 
-            // replace this with a catalog entry
             implementation(libs.jetbrains.compose.material3)
 
             // compose dependencies
