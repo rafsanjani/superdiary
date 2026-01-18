@@ -1,13 +1,9 @@
 plugins {
-    id("com.superdiary.android.library")
-    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
 }
 
 kotlin {
     jvm()
-    androidTarget()
-
     sourceSets {
         commonMain.dependencies {
             implementation(projects.preferences.annotation)
@@ -16,8 +12,4 @@ kotlin {
             implementation("com.google.devtools.ksp:symbol-processing-api:2.3.4")
         }
     }
-}
-
-android {
-    namespace = "com.foreverrafs.preferences.processor"
 }

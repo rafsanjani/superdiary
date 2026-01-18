@@ -56,7 +56,3 @@ kotlin {
         }
     }
 }
-
-android {
-    namespace = "com.foreverrafs.core.permission"
-}

@@ -22,7 +22,6 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
             from("io.github.rafsanjani:versions:2026.01.18")
-            version("gradle", "8.12.0")
             // Because 3.2.4 is making internal calls to android.util.Log which dey borst my mind
             version("supabase", "3.2.3")
         }
@@ -122,7 +121,8 @@ kover {
 rootProject.name = "superdiary"
 include(":androidApp:app")
 include(":design-system")
-include(":androidApp:benchmark")
+// commenting this out because it doesn't work with agp 9.0 and the new android multiplatform plugin
+//include(":androidApp:benchmark")
 include(":shared-data")
 include(":navigation")
 include(":umbrella")

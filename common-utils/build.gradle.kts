@@ -25,7 +25,3 @@ kotlin {
         }
     }
 }
-
-android {
-    namespace = "com.foreverrafs.common.utils"
-}

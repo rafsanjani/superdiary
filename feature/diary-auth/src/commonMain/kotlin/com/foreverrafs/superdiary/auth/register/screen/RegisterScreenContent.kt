@@ -43,6 +43,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.foreverrafs.superdiary.design.components.BrandLogo
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -112,9 +113,8 @@ internal fun RegisterScreenContent(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Image(
+                BrandLogo(
                     modifier = Modifier.size(100.dp),
-                    painter = painterResource(Res.drawable.logo),
                     contentDescription = "brand logo",
                 )
 
