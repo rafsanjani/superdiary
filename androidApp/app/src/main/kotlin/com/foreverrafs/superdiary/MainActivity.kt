@@ -1,13 +1,10 @@
 package com.foreverrafs.superdiary
 
-//import androidx.compose.ui.semantics.testTagsAsResourceId
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.semantics
 import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.ui.App
@@ -28,11 +25,7 @@ class MainActivity : AppCompatActivity() {
         setContent {
             enableEdgeToEdge()
 
-            App(
-                modifier = Modifier.semantics {
-//                    testTagsAsResourceId = true
-                },
-            )
+            App()
         }
     }
 
