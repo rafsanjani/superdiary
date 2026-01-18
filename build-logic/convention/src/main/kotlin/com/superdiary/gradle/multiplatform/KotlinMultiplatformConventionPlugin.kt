@@ -30,7 +30,7 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
                         .replace(":", ".")
                         .replace("-", ".")
 
-                    withHostTest {  }
+                    withHostTest { }
 
                     namespace = "com.foreverrafs.superdiary.$module"
                     androidResources.enable = true
