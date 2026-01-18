@@ -14,6 +14,8 @@ kotlin {
             dependencies {
                 implementation(libs.jetbrains.compose.runtime)
                 implementation(libs.jetbrains.compose.foundation)
+                implementation(libs.jetbrains.lifecycle.runtime.compose)
+                implementation(libs.androidx.core.uri)
 
                 // project dependency
                 implementation(projects.core.sync)

@@ -133,7 +133,7 @@ jobs:
                     distribution: 'zulu'
 
             -   name: Run JVM unit tests
-                run: ./gradlew testDebugUnitTest -Pkover koverXmlReport
+                run: ./gradlew testAndroidHostTest -Pkover koverXmlReport
 
             -   name: Add coverage Report to PR
                 id: jacoco

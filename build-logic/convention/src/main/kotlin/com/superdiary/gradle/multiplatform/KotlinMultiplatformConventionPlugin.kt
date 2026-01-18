@@ -30,6 +30,8 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
                         .replace(":", ".")
                         .replace("-", ".")
 
+                    withHostTest {  }
+
                     namespace = "com.foreverrafs.superdiary.$module"
                     androidResources.enable = true
                     compileSdk = findVersion("compileSdk").toInt()

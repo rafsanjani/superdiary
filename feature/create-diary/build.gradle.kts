@@ -24,6 +24,7 @@ kotlin {
             implementation(libs.jetbrains.compose.preview)
             implementation(libs.kotlin.datetime)
             implementation(libs.jetbrains.compose.resources)
+            implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(libs.richTextEditor)
             implementation(projects.designSystem)
             implementation(libs.koin.core)
