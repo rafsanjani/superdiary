@@ -59,3 +59,4 @@ tasks.register("printLineCoverage") {
         println("%.1f".format(coveragePercent))
     }
 }
+

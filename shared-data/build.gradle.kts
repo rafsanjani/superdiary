@@ -80,10 +80,6 @@ kotlin {
     }
 }
 
-android {
-    namespace = "com.foreverrafs.data"
-}
-
 dependencies {
     add("kspCommonMainMetadata", projects.preferences.processor)
 }

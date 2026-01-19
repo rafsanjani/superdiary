@@ -10,10 +10,11 @@ import superdiary.design_system.generated.resources.logo
 @Composable
 fun BrandLogo(
     modifier: Modifier = Modifier,
+    contentDescription: String? = null,
 ) {
     Image(
         modifier = modifier,
         painter = painterResource(Res.drawable.logo),
-        contentDescription = null,
+        contentDescription = contentDescription,
     )
 }

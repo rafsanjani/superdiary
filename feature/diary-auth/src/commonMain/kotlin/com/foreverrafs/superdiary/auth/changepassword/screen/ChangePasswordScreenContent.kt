@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.foreverrafs.superdiary.auth.changepassword.ChangePasswordViewModel
 import com.foreverrafs.superdiary.auth.changepassword.ChangePasswordViewModel.ChangePasswordScreenAction
 import com.foreverrafs.superdiary.auth.changepassword.PasswordStrength
+import com.foreverrafs.superdiary.design.components.BrandLogo
 import com.foreverrafs.superdiary.design.components.PasswordInputField
 import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
@@ -92,9 +93,7 @@ internal fun ChangePasswordScreenContent(
 
                 Spacer(modifier = Modifier.height(54.dp))
 
-                Image(
-                    painter = painterResource(Res.drawable.logo),
-                    contentDescription = null,
+                BrandLogo(
                     modifier = Modifier.size(72.dp),
                 )
 

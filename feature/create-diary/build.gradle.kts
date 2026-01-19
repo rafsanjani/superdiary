@@ -5,7 +5,7 @@ plugins {
     id("com.superdiary.multiplatform.kotlin")
     id("com.superdiary.android.library")
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.paparazzi)
+    // alias(libs.plugins.paparazzi) // Disabled due to incompatibility with the new Android multiplatform plugin
     alias(libs.plugins.mokkery)
 }
 
@@ -24,6 +24,7 @@ kotlin {
             implementation(libs.jetbrains.compose.preview)
             implementation(libs.kotlin.datetime)
             implementation(libs.jetbrains.compose.resources)
+            implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(libs.richTextEditor)
             implementation(projects.designSystem)
             implementation(libs.koin.core)
@@ -47,8 +48,4 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
         }
     }
-}
-
-android {
-    namespace = "com.foreverrafs.superdiary.create"
 }

@@ -7,9 +7,8 @@ import io.sentry.android.gradle.extensions.InstrumentationFeature
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlin.android)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    alias(libs.plugins.sentry)
+    id("io.sentry.android.gradle").version("6.0.0-rc.1")
     alias(libs.plugins.firebase.appdistribution)
     alias(libs.plugins.dependencyguard)
 }
@@ -21,7 +20,7 @@ android {
         applicationId = "com.foreverrafs.superdiary"
         minSdk = libs.versions.minimumSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 340
+        versionCode = 341
         versionName = "0.0.1"
 
         val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_ANDROID") ?: ""

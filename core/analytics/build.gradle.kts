@@ -9,8 +9,6 @@ plugins {
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    androidTarget()
-
     jvm()
     iosArm64()
     iosSimulatorArm64()
@@ -48,14 +46,5 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
             }
         }
-    }
-}
-
-android {
-    namespace = "com.foreverrafs.core.analytics"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minimumSdk.get().toInt()
     }
 }
