@@ -2,6 +2,7 @@
 
 import com.google.firebase.appdistribution.gradle.firebaseAppDistributionDefault
 import io.sentry.android.gradle.extensions.InstrumentationFeature
+import java.io.ByteArrayOutputStream
 
 
 plugins {
@@ -16,11 +17,12 @@ plugins {
 android {
     defaultConfig {
         compileSdk = libs.versions.compileSdk.get().toInt()
+        println(getGitCommitCount())
 
         applicationId = "com.foreverrafs.superdiary"
         minSdk = libs.versions.minimumSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 341
+        versionCode = getGitCommitCount()
         versionName = "0.0.1"
 
         val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_ANDROID") ?: ""
@@ -100,6 +102,18 @@ android {
             excludes += "META-INF/DEPENDENCIES"
             excludes += "META-INF/io.netty.versions.properties"
         }
+    }
+}
+
+fun Project.getGitCommitCount(): Int {
+    return try {
+        val result = providers.exec {
+            commandLine("git", "rev-list", "--count", "HEAD")
+        }.standardOutput.asText.get()
+
+        result.trim().toInt()
+    } catch (e: Exception) {
+        throw e
     }
 }
 
