@@ -2,6 +2,7 @@
 
 import com.google.firebase.appdistribution.gradle.firebaseAppDistributionDefault
 import io.sentry.android.gradle.extensions.InstrumentationFeature
+import java.io.ByteArrayOutputStream
 
 
 plugins {
@@ -16,6 +17,7 @@ plugins {
 android {
     defaultConfig {
         compileSdk = libs.versions.compileSdk.get().toInt()
+        println(getGitCommitCount())
 
         applicationId = "com.foreverrafs.superdiary"
         minSdk = libs.versions.minimumSdk.get().toInt()
@@ -103,14 +105,15 @@ android {
     }
 }
 
-fun getGitCommitCount(): Int {
+fun Project.getGitCommitCount(): Int {
     return try {
-        val proc = ProcessBuilder("git", "rev-list", "--count", "HEAD").start()
-        proc.waitFor(5, TimeUnit.SECONDS)
-        proc.inputStream.bufferedReader().readText().trim().toInt()
+        val result = providers.exec {
+            commandLine("git", "rev-list", "--count", "HEAD")
+        }.standardOutput.asText.get()
+
+        result.trim().toInt()
     } catch (e: Exception) {
-        logger.error("Failed to get git commit count", e)
-        342
+        throw e
     }
 }
 
