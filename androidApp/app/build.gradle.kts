@@ -20,7 +20,7 @@ android {
         applicationId = "com.foreverrafs.superdiary"
         minSdk = libs.versions.minimumSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 341
+        versionCode = getGitCommitCount()
         versionName = "0.0.1"
 
         val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_ANDROID") ?: ""
@@ -100,6 +100,17 @@ android {
             excludes += "META-INF/DEPENDENCIES"
             excludes += "META-INF/io.netty.versions.properties"
         }
+    }
+}
+
+fun getGitCommitCount(): Int {
+    return try {
+        val proc = ProcessBuilder("git", "rev-list", "--count", "HEAD").start()
+        proc.waitFor(5, TimeUnit.SECONDS)
+        proc.inputStream.bufferedReader().readText().trim().toInt()
+    } catch (e: Exception) {
+        logger.error("Failed to get git commit count", e)
+        342
     }
 }
 
