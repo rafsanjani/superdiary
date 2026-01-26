@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    id("io.sentry.android.gradle").version("6.0.0-rc.1")
+    alias(libs.plugins.sentry)
     alias(libs.plugins.firebase.appdistribution)
     alias(libs.plugins.dependencyguard)
 }
@@ -168,12 +168,13 @@ sentry {
     }
 
     autoInstallation {
+        val versionCatalogs = extensions.getByType<VersionCatalogsExtension>().named("libs")
         enabled = true
-        sentryVersion = libs.versions.sentry.get()
+        sentryVersion =  versionCatalogs.findVersion("sentry").get().requiredVersion
     }
 }
 
-// This is only used for loading google maps api keys at the moment.
+// This is only used for loading Google Maps api keys at the moment.
 secrets {
     propertiesFileName = "secrets.properties"
     defaultPropertiesFileName = "local.defaults.properties"
