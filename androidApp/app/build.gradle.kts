@@ -2,13 +2,14 @@
 
 import com.google.firebase.appdistribution.gradle.firebaseAppDistributionDefault
 import io.sentry.android.gradle.extensions.InstrumentationFeature
+import java.io.ByteArrayOutputStream
 
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    id("io.sentry.android.gradle").version("6.0.0-rc.1")
+    alias(libs.plugins.sentry)
     alias(libs.plugins.firebase.appdistribution)
     alias(libs.plugins.dependencyguard)
 }
@@ -16,11 +17,12 @@ plugins {
 android {
     defaultConfig {
         compileSdk = libs.versions.compileSdk.get().toInt()
+        println(getGitCommitCount())
 
         applicationId = "com.foreverrafs.superdiary"
         minSdk = libs.versions.minimumSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 341
+        versionCode = getGitCommitCount()
         versionName = "0.0.1"
 
         val sentryBaseUrl = System.getenv("SENTRY_BASE_URL_ANDROID") ?: ""
@@ -103,6 +105,18 @@ android {
     }
 }
 
+fun Project.getGitCommitCount(): Int {
+    return try {
+        val result = providers.exec {
+            commandLine("git", "rev-list", "--count", "HEAD")
+        }.standardOutput.asText.get()
+
+        result.trim().toInt()
+    } catch (e: Exception) {
+        throw e
+    }
+}
+
 fun configureReleaseSigning() {
     val storeFile = findProperty("STORE_FILE")?.toString()
     val keyAlias = findProperty("KEY_ALIAS")?.toString()
@@ -154,12 +168,13 @@ sentry {
     }
 
     autoInstallation {
+        val versionCatalogs = extensions.getByType<VersionCatalogsExtension>().named("libs")
         enabled = true
-        sentryVersion = libs.versions.sentry.get()
+        sentryVersion =  versionCatalogs.findVersion("sentry").get().requiredVersion
     }
 }
 
-// This is only used for loading google maps api keys at the moment.
+// This is only used for loading Google Maps api keys at the moment.
 secrets {
     propertiesFileName = "secrets.properties"
     defaultPropertiesFileName = "local.defaults.properties"
