@@ -17,8 +17,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DividerDefaults
@@ -62,6 +60,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import superdiary.feature.diary_profile.generated.resources.Res
 import superdiary.feature.diary_profile.generated.resources.ic_arrow_back
+import superdiary.feature.diary_profile.generated.resources.ic_logout
 import superdiary.feature.diary_profile.generated.resources.profile_screen_section_dashboard_cards
 import superdiary.feature.diary_profile.generated.resources.unique_email_address_label
 
@@ -270,7 +269,7 @@ fun ProfileScreenContent(
                                 modifier = Modifier.padding(horizontal = 16.dp),
                             ) {
                                 Icon(
-                                    painter = rememberVectorPainter(Icons.AutoMirrored.Filled.Logout),
+                                    painter = painterResource(Res.drawable.ic_logout),
                                     contentDescription = null,
                                     modifier = Modifier.size(24.dp),
                                     tint = MaterialTheme.colorScheme.error,
