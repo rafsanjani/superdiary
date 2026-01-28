@@ -24,19 +24,19 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.uuid)
-                implementation(projects.preferences.annotation)
+                implementation(project(":preferences:annotation"))
                 implementation(libs.androidx.datastore.preferences)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.supabase.posgrest)
                 implementation(libs.supabase.realtime)
 
                 // Project dependencies
-                implementation(projects.commonUtils)
-                implementation(projects.core.analytics)
-                implementation(projects.core.secrets)
-                implementation(projects.core.logging)
-                implementation(projects.core.location)
-                implementation(projects.core.database)
+                implementation(project(":common-utils"))
+                implementation(project(":core:analytics"))
+                implementation(project(":core:secrets"))
+                implementation(project(":core:logging"))
+                implementation(project(":core:location"))
+                implementation(project(":core:database"))
             }
 
             kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
@@ -55,9 +55,9 @@ kotlin {
                 implementation(libs.koin.test)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.turbine)
-                implementation(projects.core.databaseTest)
+                implementation(project(":core:database-test"))
                 implementation("io.ktor:ktor-client-mock:${libs.versions.ktor.get()}")
-                implementation(projects.commonTest)
+                implementation(project(":common-test"))
                 implementation(libs.assertk.common)
             }
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
@@ -81,7 +81,7 @@ kotlin {
 }
 
 dependencies {
-    add("kspCommonMainMetadata", projects.preferences.processor)
+    add("kspCommonMainMetadata", project(":preferences:processor"))
 }
 
 afterEvaluate {

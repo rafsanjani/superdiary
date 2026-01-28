@@ -14,27 +14,27 @@ kotlin {
             linkerOpts += "-lsqlite3"
             freeCompilerArgs += "-Xbinary=bundleId=com.foreverrafs.shared"
 
-            export(projects.core.analytics)
-            export(projects.core.logging)
-            export(projects.core.location)
-            export(projects.core.authentication)
-            export(projects.designSystem)
-            export(projects.navigation)
-            export(projects.core.diaryAi)
+            export(project(":core:analytics"))
+            export(project(":core:logging"))
+            export(project(":core:location"))
+            export(project(":core:authentication"))
+            export(project(":design-system"))
+            export(project(":navigation"))
+            export(project(":core:diary-ai"))
         }
     }
 
     sourceSets {
         commonMain {
             dependencies {
-                api(projects.core.analytics)
-                api(projects.core.logging)
-                api(projects.core.location)
-                api(projects.navigation)
-                api(projects.core.authentication)
-                api(projects.designSystem)
+                api(project(":core:analytics"))
+                api(project(":core:logging"))
+                api(project(":core:location"))
+                api(project(":navigation"))
+                api(project(":core:authentication"))
+                api(project(":design-system"))
                 api(libs.kotlinx.serialization.json)
-                api(projects.core.diaryAi)
+                api(project(":core:diary-ai"))
             }
         }
     }

@@ -14,7 +14,7 @@ kotlin {
     sourceSets {
         androidUnitTest.dependencies {
             implementation(libs.google.testparameterinjector)
-            implementation(projects.commonTest)
+            implementation(project(":common-test"))
         }
 
         commonMain.dependencies {
@@ -24,23 +24,23 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(libs.jetbrains.compose.resources)
             implementation(libs.jetbrains.compose.preview)
-            implementation(projects.core.logging)
-            implementation(projects.core.uiComponents)
+            implementation(project(":core:logging"))
+            implementation(project(":core:ui-components"))
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.koin.compose)
-            implementation(projects.commonUtils)
+            implementation(project(":common-utils"))
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.kotlin.datetime)
-            implementation(projects.core.authentication)
-            implementation(projects.commonUtils)
+            implementation(project(":core:authentication"))
+            implementation(project(":common-utils"))
             implementation(libs.richTextEditor)
-            implementation(projects.core.location)
+            implementation(project(":core:location"))
             implementation(libs.jetbrains.compose.navigation3)
-            implementation(projects.sharedData)
-            implementation(projects.core.sync)
-            implementation(projects.core.database)
+            implementation(project(":shared-data"))
+            implementation(project(":core:sync"))
+            implementation(project(":core:database"))
             implementation(libs.jetbrains.lifecycle.runtime.compose)
-            implementation(projects.designSystem)
+            implementation(project(":design-system"))
             implementation(libs.kotlinx.serialization.json)
         }
 
@@ -48,10 +48,10 @@ kotlin {
             implementation(kotlin("test"))
             implementation(libs.junit)
             implementation(libs.koin.test)
-            implementation(projects.core.databaseTest)
+            implementation(project(":core:database-test"))
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.turbine)
-            implementation(projects.commonTest)
+            implementation(project(":common-test"))
             implementation(libs.assertk.common)
         }
     }

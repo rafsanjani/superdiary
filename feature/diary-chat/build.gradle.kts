@@ -13,12 +13,12 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.logging)
-            implementation(projects.core.diaryAi)
-            implementation(projects.designSystem)
-            implementation(projects.core.database)
-            implementation(projects.sharedData)
-            implementation(projects.commonUtils)
+            implementation(project(":core:logging"))
+            implementation(project(":core:diary-ai"))
+            implementation(project(":design-system"))
+            implementation(project(":core:database"))
+            implementation(project(":shared-data"))
+            implementation(project(":common-utils"))
 
             implementation(libs.jetbrains.compose.material3)
 
@@ -57,7 +57,7 @@ kotlin {
             // coroutines
             implementation(libs.kotlinx.coroutines.test)
 
-            implementation(projects.commonTest)
+            implementation(project(":common-test"))
         }
     }
 }

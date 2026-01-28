@@ -26,7 +26,7 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.square.sqldelight.coroutinesExt)
                 implementation(libs.kotlinx.serialization.json)
-                implementation(projects.core.logging)
+                implementation(project(":core:logging"))
                 implementation(libs.kotlinx.coroutines.test)
             }
         }

@@ -19,11 +19,11 @@ kotlin {
                 implementation(libs.jetbrains.compose.runtime)
                 implementation(libs.jetbrains.lifecycle.runtime.compose)
                 implementation(libs.kotlinx.serialization.json)
-                implementation(projects.core.logging)
-                implementation(projects.commonUtils)
+                implementation(project(":core:logging"))
+                implementation(project(":common-utils"))
                 implementation(libs.kotlinx.coroutines.core)
-                implementation(projects.sharedData)
-                implementation(projects.core.location)
+                implementation(project(":shared-data"))
+                implementation(project(":core:location"))
                 implementation(libs.kotlinx.coroutines.test)
             }
         }
@@ -35,7 +35,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.turbine)
                 implementation(libs.assertk.common)
-                implementation(projects.commonTest)
+                implementation(project(":common-test"))
             }
         }
 

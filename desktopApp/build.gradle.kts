@@ -13,11 +13,11 @@ kotlin {
         implementation(compose.desktop.currentOs)
         implementation(libs.jetbrains.compose.foundation)
         implementation(libs.koin.jvm)
-        implementation(projects.core.analytics)
-        implementation(projects.core.logging)
-        implementation(projects.core.database)
-        implementation(projects.navigation)
-        implementation(projects.sharedData)
+        implementation(project(":core:analytics"))
+        implementation(project(":core:logging"))
+        implementation(project(":core:database"))
+        implementation(project(":navigation"))
+        implementation(project(":shared-data"))
     }
 }
 

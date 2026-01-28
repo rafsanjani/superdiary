@@ -15,7 +15,7 @@ kotlin {
     sourceSets {
         androidUnitTest.dependencies {
             implementation(libs.google.testparameterinjector)
-            implementation(projects.commonTest)
+            implementation(project(":common-test"))
         }
 
         commonMain.dependencies {
@@ -38,28 +38,28 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
 
             // project dependencies
-            implementation(projects.designSystem)
-            implementation(projects.core.location)
-            implementation(projects.commonUtils)
-            implementation(projects.core.database)
-            implementation(projects.core.logging)
-            implementation(projects.sharedData)
-            implementation(projects.commonUtils)
-            implementation(projects.core.diaryAi)
-            implementation(projects.core.authentication)
-            implementation(projects.core.uiComponents)
+            implementation(project(":design-system"))
+            implementation(project(":core:location"))
+            implementation(project(":common-utils"))
+            implementation(project(":core:database"))
+            implementation(project(":core:logging"))
+            implementation(project(":shared-data"))
+            implementation(project(":common-utils"))
+            implementation(project(":core:diary-ai"))
+            implementation(project(":core:authentication"))
+            implementation(project(":core:ui-components"))
         }
 
         commonTest {
             dependencies {
                 implementation(kotlin("test"))
-                implementation(projects.commonTest)
-                implementation(projects.core.databaseTest)
+                implementation(project(":common-test"))
+                implementation(project(":core:database-test"))
                 implementation(libs.junit)
                 implementation(libs.koin.test)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.turbine)
-                implementation(projects.core.databaseTest)
+                implementation(project(":core:database-test"))
                 implementation(libs.assertk.common)
             }
         }

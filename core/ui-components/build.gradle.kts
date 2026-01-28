@@ -14,7 +14,7 @@ kotlin {
     sourceSets {
         androidUnitTest.dependencies {
             implementation(libs.google.testparameterinjector)
-            implementation(projects.commonTest)
+            implementation(project(":common-test"))
         }
 
         commonMain.dependencies {
@@ -22,15 +22,15 @@ kotlin {
             implementation(libs.jetbrains.compose.resources)
             implementation(libs.jetbrains.compose.preview)
             implementation(libs.kotlinx.coroutines.test)
-            implementation(projects.commonUtils)
+            implementation(project(":common-utils"))
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.kotlin.datetime)
-            implementation(projects.core.location)
+            implementation(project(":core:location"))
             implementation(libs.richTextEditor)
-            implementation(projects.sharedData)
+            implementation(project(":shared-data"))
             implementation(libs.shimmer)
             implementation(libs.jetbrains.lifecycle.runtime.compose)
-            implementation(projects.designSystem)
+            implementation(project(":design-system"))
             implementation(libs.kotlinx.serialization.json)
 
             implementation(compose.materialIconsExtended)
@@ -38,10 +38,10 @@ kotlin {
 
         commonTest.dependencies {
             implementation(libs.junit)
-            implementation(projects.core.databaseTest)
+            implementation(project(":core:database-test"))
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.turbine)
-            implementation(projects.commonTest)
+            implementation(project(":common-test"))
             implementation(libs.assertk.common)
         }
     }

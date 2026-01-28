@@ -26,7 +26,6 @@ val properties = Properties().apply {
 android {
     defaultConfig {
         compileSdk = libs.versions.compileSdk.get().toInt()
-        println(getGitCommitCount())
 
         applicationId = "com.foreverrafs.superdiary"
         minSdk = libs.versions.minimumSdk.get().toInt()
@@ -188,18 +187,18 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.google.material)
     implementation(platform("io.sentry:sentry-bom:8.31.0"))
-    implementation(projects.navigation)
-    implementation(projects.sharedData)
-    implementation(projects.core.diaryAi)
-    implementation(projects.feature.diaryAuth)
-    implementation(projects.core.analytics)
+    implementation(project(":navigation"))
+    implementation(project(":shared-data"))
+    implementation(project(":core:diary-ai"))
+    implementation(project(":feature:diary-auth"))
+    implementation(project(":core:analytics"))
     implementation(libs.koin.android)
     implementation(libs.supabase.compose.auth)
     implementation(libs.androidx.core.uri)
     implementation(libs.supabase.auth)
     implementation(libs.koin.core)
-    implementation(projects.core.authentication)
-    implementation(projects.core.logging)
+    implementation(project(":core:authentication"))
+    implementation(project(":core:logging"))
     implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.kotlinx.coroutines.test)
 }

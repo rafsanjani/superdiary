@@ -12,7 +12,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.koin.core)
-                implementation(projects.commonUtils)
+                implementation(project(":common-utils"))
                 implementation(libs.turbine)
             }
         }

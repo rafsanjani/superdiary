@@ -12,39 +12,39 @@ plugins {
 kotlin {
     sourceSets {
         androidUnitTest.dependencies {
-            implementation(projects.commonTest)
+            implementation(project(":common-test"))
             implementation(libs.google.testparameterinjector)
         }
 
         commonMain.dependencies {
             implementation(compose.materialIconsExtended)
-            implementation(projects.core.location)
-            implementation(projects.core.diaryAi)
+            implementation(project(":core:location"))
+            implementation(project(":core:diary-ai"))
             implementation(libs.jetbrains.compose.foundation)
             implementation(libs.jetbrains.compose.preview)
             implementation(libs.kotlin.datetime)
             implementation(libs.jetbrains.compose.resources)
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(libs.richTextEditor)
-            implementation(projects.designSystem)
+            implementation(project(":design-system"))
             implementation(libs.koin.core)
-            implementation(projects.commonUtils)
+            implementation(project(":common-utils"))
             implementation(libs.jetbrains.compose.navigation3)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
-            implementation(projects.sharedData)
-            implementation(projects.core.database)
-            implementation(projects.core.authentication)
-            implementation(projects.core.logging)
-            implementation(projects.core.permission)
+            implementation(project(":shared-data"))
+            implementation(project(":core:database"))
+            implementation(project(":core:authentication"))
+            implementation(project(":core:logging"))
+            implementation(project(":core:permission"))
         }
 
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.turbine)
             implementation(libs.assertk.common)
-            implementation(projects.core.databaseTest)
-            implementation(projects.commonTest)
+            implementation(project(":core:database-test"))
+            implementation(project(":common-test"))
             implementation(libs.kotlinx.coroutines.test)
         }
     }

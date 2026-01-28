@@ -18,9 +18,9 @@ kotlin {
                 implementation(libs.androidx.core.uri)
 
                 // project dependency
-                implementation(projects.core.sync)
-                implementation(projects.core.database)
-                implementation(projects.designSystem)
+                implementation(project(":core:sync"))
+                implementation(project(":core:database"))
+                implementation(project(":design-system"))
 
                 implementation(libs.koin.compose.viewmodel)
 
@@ -28,22 +28,22 @@ kotlin {
                 implementation(compose.materialIconsExtended)
 
                 // feature modules
-                implementation(projects.feature.diaryFavorite)
-                implementation(projects.feature.diaryChat)
-                implementation(projects.feature.createDiary)
-                implementation(projects.feature.diaryProfile)
-                implementation(projects.feature.diaryAuth)
-                implementation(projects.feature.diaryDashboard)
-                implementation(projects.feature.diaryList)
+                implementation(project(":feature:diary-favorite"))
+                implementation(project(":feature:diary-chat"))
+                implementation(project(":feature:create-diary"))
+                implementation(project(":feature:diary-profile"))
+                implementation(project(":feature:diary-auth"))
+                implementation(project(":feature:diary-dashboard"))
+                implementation(project(":feature:diary-list"))
 
-                implementation(projects.core.authentication)
-                implementation(projects.core.logging)
-                implementation(projects.core.diaryAi)
-                implementation(projects.core.analytics)
-                implementation(projects.core.permission)
-                implementation(projects.commonUtils)
+                implementation(project(":core:authentication"))
+                implementation(project(":core:logging"))
+                implementation(project(":core:diary-ai"))
+                implementation(project(":core:analytics"))
+                implementation(project(":core:permission"))
+                implementation(project(":common-utils"))
 
-                implementation(projects.sharedData)
+                implementation(project(":shared-data"))
                 implementation(libs.coil3.compose.core)
                 implementation(libs.coil3.compose)
                 implementation(libs.coil3.multiplatform)

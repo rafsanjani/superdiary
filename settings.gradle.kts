@@ -29,7 +29,6 @@ dependencyResolutionManagement {
     }
 }
 
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 plugins {
     id("org.jetbrains.kotlinx.kover.aggregation") version "0.9.4"

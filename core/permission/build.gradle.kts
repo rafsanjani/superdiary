@@ -18,8 +18,8 @@ kotlin {
                 implementation(libs.touchlab.stately)
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.serialization.json)
-                implementation(projects.core.logging)
-                implementation(projects.commonUtils)
+                implementation(project(":core:logging"))
+                implementation(project(":common-utils"))
                 implementation(libs.jetbrains.compose.foundation)
                 implementation(libs.kotlinx.coroutines.test)
             }

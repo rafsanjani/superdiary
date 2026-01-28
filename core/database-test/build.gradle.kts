@@ -12,7 +12,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(projects.core.database)
+                implementation(project(":core:database"))
                 implementation(libs.kotlin.datetime)
             }
         }

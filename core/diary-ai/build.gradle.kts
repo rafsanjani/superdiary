@@ -15,14 +15,14 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.koin.core)
-                implementation(projects.core.logging)
+                implementation(project(":core:logging"))
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.kotlin.datetime)
-                implementation(projects.commonUtils)
-                implementation(projects.sharedData)
+                implementation(project(":common-utils"))
+                implementation(project(":shared-data"))
                 implementation("ai.koog:koog-agents:0.6.0")
-                implementation(projects.core.database)
-                implementation(projects.core.secrets)
+                implementation(project(":core:database"))
+                implementation(project(":core:secrets"))
             }
         }
 
@@ -33,7 +33,7 @@ kotlin {
                 implementation(libs.koin.test)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.turbine)
-                implementation(projects.core.databaseTest)
+                implementation(project(":core:database-test"))
                 implementation(libs.assertk.common)
             }
         }

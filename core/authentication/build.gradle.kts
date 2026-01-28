@@ -18,7 +18,7 @@ kotlin {
                 implementation(libs.touchlab.stately)
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.serialization.json)
-                implementation(projects.core.logging)
+                implementation(project(":core:logging"))
                 implementation(libs.jetbrains.compose.foundation)
                 implementation(libs.kotlinx.coroutines.test)
 
@@ -29,8 +29,8 @@ kotlin {
                 implementation(libs.supabase.realtime)
                 implementation(libs.supabase.compose.auth)
                 implementation(libs.ktor.client.json)
-                implementation(projects.commonUtils)
-                implementation(projects.core.secrets)
+                implementation(project(":common-utils"))
+                implementation(project(":core:secrets"))
             }
         }
         androidMain {
