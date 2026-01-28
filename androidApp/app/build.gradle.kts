@@ -14,7 +14,13 @@ plugins {
 }
 
 val properties = Properties().apply {
-    load(rootProject.file("secrets.properties").inputStream())
+    val file = rootProject.file("secrets.properties")
+
+    if (file.exists()) {
+        load(file.inputStream())
+    } else {
+        load(rootProject.file("secrets.defaults.properties").inputStream())
+    }
 }
 
 android {
