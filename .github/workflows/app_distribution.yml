@@ -4,6 +4,7 @@ name: Nightly Build
 on:
     schedule:
         -   cron: '0 0 * * *'
+    workflow_dispatch:
 
 jobs:
     androidRelease:
@@ -32,14 +33,8 @@ jobs:
                     distribution: 'zulu'
                     java-version: '21'
 
-            -   name: Setup secrets.properties
-                run: |
-                    touch secrets.properties
-                    echo "OPENAI_KEY=$OPENAI_KEY" >> secrets.properties
-                    echo "GOOGLE_SERVER_CLIENT_ID=$GOOGLE_SERVER_CLIENT_ID" >> secrets.properties
-                    echo "MAPS_API_KEY=$MAPS_API_KEY_ANDROID" >> secrets.properties
-                    echo "SUPABASE_KEY=$SUPABASE_KEY" >> secrets.properties
-                    echo "SUPABASE_URL=$SUPABASE_URL" >> secrets.properties
+            -   name: Setup secrets.properties and Configurations/Release.xcconfig
+                run: ./scripts/environments.sh
 
             -   name: Decode keystore file from secrets
                 run: echo "$STORE_FILE_BASE64" | base64 --decode > keystore
@@ -67,4 +62,4 @@ jobs:
                 run: ./gradlew androidApp:app:assembleRelease
 
             -   name: Upload to firebase
-                run: ./gradlew androidApp:app:appDistributionUploadRelease
+                run: ./gradlew androidApp:app:appDistributionUploadStandardRelease
