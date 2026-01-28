@@ -71,7 +71,11 @@ android {
             manifestPlaceholders["sentryEnvironment"] = "production"
             manifestPlaceholders["applicationName"] = "superdiary"
 
-            val applicationId = System.getenv("FIREBASE_DISTRIBUTION_APP_ID")
+            val applicationId = properties.getProperty("FIREBASE_DISTRIBUTION_APP_ID")
+            if (applicationId.isNullOrBlank()) {
+                logger.warn("FIREBASE_DISTRIBUTION_APP_ID is not set or is empty in secrets.properties. This is required for Firebase App Distribution.")
+            }
+
             firebaseAppDistributionDefault {
                 appId = applicationId
                 artifactType = "APK"

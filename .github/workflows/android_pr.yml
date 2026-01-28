@@ -57,37 +57,37 @@ jobs:
             -   name: Run Dependency Guard
                 run: ./gradlew dependencyGuard
 
-#    snapshot:
-#        name: Snapshot test with paparazzi
-#        env:
-#            BUILD_NUMBER: ${{github.event.number}}
-#        runs-on: macos-15
-#        needs: danger
-#        steps:
-#            -   uses: actions/checkout@v6
-#            -   name: Restore LFS cache
-#                uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
-#                with:
-#                    path: .git/lfs
-#                    key: ${{runner.os}}-lfs-${{hashFiles('.lfs-assets-id')}}
-#            -   name: Git LFS Pull
-#                run: GIT_TRACE=1 git lfs pull
-#
-#            -   uses: actions/setup-java@v5
-#                with:
-#                    distribution: 'zulu'
-#                    java-version: '21'
-#
-#            -   name: Setup Gradle
-#                uses: gradle/actions/setup-gradle@v5
-#
-#            -   name: Snapshot Test
-#                run: |
-#                    gem install bundler
-#                    bundle install
-#                    bundle exec danger --dangerfile=PaparazziDangerFile --fail-on-errors=true
-#                env:
-#                    DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #    snapshot:
+    #        name: Snapshot test with paparazzi
+    #        env:
+    #            BUILD_NUMBER: ${{github.event.number}}
+    #        runs-on: macos-15
+    #        needs: danger
+    #        steps:
+    #            -   uses: actions/checkout@v6
+    #            -   name: Restore LFS cache
+    #                uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5.0.2
+    #                with:
+    #                    path: .git/lfs
+    #                    key: ${{runner.os}}-lfs-${{hashFiles('.lfs-assets-id')}}
+    #            -   name: Git LFS Pull
+    #                run: GIT_TRACE=1 git lfs pull
+    #
+    #            -   uses: actions/setup-java@v5
+    #                with:
+    #                    distribution: 'zulu'
+    #                    java-version: '21'
+    #
+    #            -   name: Setup Gradle
+    #                uses: gradle/actions/setup-gradle@v5
+    #
+    #            -   name: Snapshot Test
+    #                run: |
+    #                    gem install bundler
+    #                    bundle install
+    #                    bundle exec danger --dangerfile=PaparazziDangerFile --fail-on-errors=true
+    #                env:
+    #                    DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     #    iosTest:
     #        name: Run iOS unit tests
@@ -184,6 +184,7 @@ jobs:
             SUPABASE_URL: ${{secrets.SUPABASE_URL}}
             SUPABASE_KEY: ${{secrets.SUPABASE_KEY}}
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            FIREBASE_DISTRIBUTION_APP_ID: ${{ secrets.FIREBASE_DISTRIBUTION_APP_ID }}
         steps:
             -   uses: actions/checkout@v6
             -   name: Restore LFS cache
