@@ -32,7 +32,7 @@ dependencyResolutionManagement {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 plugins {
-    id("org.jetbrains.kotlinx.kover.aggregation") version "0.9.4"
+    id("org.jetbrains.kotlinx.kover.aggregation") version "0.9.5"
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
