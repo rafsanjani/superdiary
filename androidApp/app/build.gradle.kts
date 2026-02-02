@@ -2,16 +2,25 @@
 
 import com.google.firebase.appdistribution.gradle.firebaseAppDistributionDefault
 import io.sentry.android.gradle.extensions.InstrumentationFeature
-import java.io.ByteArrayOutputStream
+import org.jetbrains.kotlin.konan.properties.Properties
 
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     alias(libs.plugins.sentry)
     alias(libs.plugins.firebase.appdistribution)
     alias(libs.plugins.dependencyguard)
+}
+
+val properties = Properties().apply {
+    val file = rootProject.file("secrets.properties")
+
+    if (file.exists()) {
+        load(file.inputStream())
+    } else {
+        load(rootProject.file("secrets.defaults.properties").inputStream())
+    }
 }
 
 android {
@@ -32,6 +41,7 @@ android {
             )
         }
 
+        resValue("string", "google_maps_key", properties.getProperty("MAPS_API_KEY"))
         manifestPlaceholders["sentryBaseUrl"] = sentryBaseUrl
         manifestPlaceholders["applicationName"] = "superdiary"
     }
@@ -43,6 +53,7 @@ android {
 
     buildFeatures {
         buildConfig = true
+        resValues = true
     }
 
     namespace = "com.foreverrafs.superdiary.app"
@@ -60,7 +71,11 @@ android {
             manifestPlaceholders["sentryEnvironment"] = "production"
             manifestPlaceholders["applicationName"] = "superdiary"
 
-            val applicationId = System.getenv("FIREBASE_DISTRIBUTION_APP_ID")
+            val applicationId = properties.getProperty("FIREBASE_DISTRIBUTION_APP_ID")
+            if (applicationId.isNullOrBlank()) {
+                logger.warn("FIREBASE_DISTRIBUTION_APP_ID is not set or is empty in secrets.properties. This is required for Firebase App Distribution.")
+            }
+
             firebaseAppDistributionDefault {
                 appId = applicationId
                 artifactType = "APK"
@@ -87,7 +102,10 @@ android {
     flavorDimensions.add("mode")
 
     productFlavors {
-        create("standard") { dimension = "mode" }
+        create("standard") {
+            dimension = "mode"
+            isDefault = true
+        }
 
         create("demo") {
             applicationIdSuffix = ".demo"
@@ -105,16 +123,14 @@ android {
     }
 }
 
-fun Project.getGitCommitCount(): Int {
-    return try {
-        val result = providers.exec {
-            commandLine("git", "rev-list", "--count", "HEAD")
-        }.standardOutput.asText.get()
+fun Project.getGitCommitCount(): Int = try {
+    val result = providers.exec {
+        commandLine("git", "rev-list", "--count", "HEAD")
+    }.standardOutput.asText.get()
 
-        result.trim().toInt()
-    } catch (e: Exception) {
-        throw e
-    }
+    result.trim().toInt()
+} catch (e: Exception) {
+    throw e
 }
 
 fun configureReleaseSigning() {
@@ -166,27 +182,12 @@ sentry {
             InstrumentationFeature.COMPOSE,
         )
     }
-
-    autoInstallation {
-        val versionCatalogs = extensions.getByType<VersionCatalogsExtension>().named("libs")
-        enabled = true
-        sentryVersion =  versionCatalogs.findVersion("sentry").get().requiredVersion
-    }
-}
-
-// This is only used for loading Google Maps api keys at the moment.
-secrets {
-    propertiesFileName = "secrets.properties"
-    defaultPropertiesFileName = "local.defaults.properties"
-
-    // These values from secrets.properties are used in :core:secrets module to generate runtime secrets.
-    ignoreList.add("OPENAI_KEY")
-    ignoreList.add("GOOGLE_SERVER_CLIENT_ID")
 }
 
 dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.google.material)
+    implementation(platform("io.sentry:sentry-bom:8.31.0"))
     implementation(projects.navigation)
     implementation(projects.sharedData)
     implementation(projects.core.diaryAi)

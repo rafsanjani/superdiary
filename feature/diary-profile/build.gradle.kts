@@ -34,7 +34,6 @@ kotlin {
             implementation(projects.sharedData)
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(projects.designSystem)
-             implementation(compose.materialIconsExtended)
         }
 
         commonTest.dependencies {
