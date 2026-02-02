@@ -40,13 +40,6 @@ class RemoteDataSource(
         }
     }
 
-    override suspend fun getPendingDeletes(): List<Diary> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getPendingSyncs(): List<Diary> {
-        TODO("Not yet implemented")
-    }
     override suspend fun delete(diaries: List<Diary>): Int {
         supabase.from(TABLE_NAME)
             .delete {
@@ -122,6 +115,7 @@ class RemoteDataSource(
     override suspend fun save(diaries: List<Diary>): Long {
         TODO("Not yet implemented")
     }
+
     companion object {
         private const val TABLE_NAME = "diary"
         private const val TAG = "RemoteDataSource"

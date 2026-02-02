@@ -136,7 +136,6 @@ include(":core:logging")
 include(":core:database-test")
 include(":core:secrets")
 include(":core:database")
-include(":core:sync")
 include(":core:permission")
 include(":core:diary-ai")
 
