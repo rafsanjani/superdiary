@@ -11,7 +11,6 @@ import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
-import com.foreverrafs.superdiary.domain.NoOpSynchronizer
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.validator.DiaryValidator
@@ -42,7 +41,6 @@ class AddDiaryUseCaseTest {
         AddDiaryUseCase(
             dataSource = dataSource,
             dispatchers = TestAppDispatchers,
-            synchronizer = NoOpSynchronizer,
             validator = validator,
         )
 

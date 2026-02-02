@@ -39,6 +39,4 @@ fun DiaryDto.toDatabase(): DiaryDb = DiaryDb(
     date = date,
     isFavorite = isFavorite,
     location = Location.toString(),
-    markedForDelete = false,
-    isSynced = true,
 )

@@ -8,7 +8,6 @@ import com.foreverrafs.superdiary.common.utils.di.utilsModule
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.core.permission.di.permissionsModule
-import com.foreverrafs.superdiary.core.sync.di.syncModule
 import com.foreverrafs.superdiary.creatediary.di.createDiaryModule
 import com.foreverrafs.superdiary.dashboard.di.dashboardModule
 import com.foreverrafs.superdiary.database.di.databaseModule
@@ -46,7 +45,6 @@ fun compositeModule(
     profileModule,
     diaryListModule,
     dashboardModule,
-    syncModule,
     diaryAuthModule,
     favoriteModule,
     diaryChatModule,
