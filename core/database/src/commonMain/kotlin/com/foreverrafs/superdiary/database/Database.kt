@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 // Converts a date to a long value and vice versa
-val dateAdapter = object : ColumnAdapter<Instant, Long> {
+val instantAdapter = object : ColumnAdapter<Instant, Long> {
     override fun decode(databaseValue: Long): Instant = Instant.fromEpochMilliseconds(databaseValue)
 
     override fun encode(value: Instant): Long = value.toEpochMilliseconds()
@@ -27,12 +27,22 @@ class Database(
     private val queries = database.databaseQueries
 
     private val diaryMapper =
-        { id: Long, entry: String, date: Instant, favorite: Long, location: LocationDb? ->
+        { id: Long,
+          entry: String,
+          date: Instant,
+          favorite: Long,
+          location: LocationDb?,
+          updatedAt: Instant,
+          isSynced: Long,
+          isMarkedForDelete: Long ->
             DiaryDb(
                 id = id,
                 entry = entry,
                 date = date,
                 isFavorite = favorite.asBoolean(),
+                updatedAt = updatedAt,
+                isSynced = isSynced.asBoolean(),
+                isMarkedForDelete = isMarkedForDelete.asBoolean(),
                 location = location.toString(),
             )
         }
@@ -44,6 +54,9 @@ class Database(
             date = diary.date,
             favorite = diary.isFavorite.asLong(),
             location = LocationDb.fromString(diary.location),
+            updated_at = diary.updatedAt,
+            is_synced = diary.isSynced.asLong(),
+            is_marked_for_delete = diary.isMarkedForDelete.asLong(),
         )
 
         return queries.lastInsertRowId().executeAsOne()
@@ -84,6 +97,9 @@ class Database(
 
     fun findById(id: Long): DiaryDb? = queries.findById(id, diaryMapper).executeAsOneOrNull()
 
+    fun findByIdIncludingDeleted(id: Long): DiaryDb? =
+        queries.findByIdIncludingDeleted(id, diaryMapper).executeAsOneOrNull()
+
     fun getAllDiaries(): Flow<List<DiaryDb>> = queries.selectAll(
         mapper = diaryMapper,
     ).asFlow().mapToList(Dispatchers.Main)
@@ -98,13 +114,20 @@ class Database(
     ).asFlow().mapToList(Dispatchers.Main)
 
     fun update(diary: DiaryDb): Long {
-        queries.update(
-            id = diary.id,
-            entry = diary.entry,
-            date = diary.date,
-            favorite = diary.isFavorite.asLong(),
-            location = LocationDb.fromString(diary.location),
-        )
+        try {
+            queries.update(
+                id = diary.id,
+                entry = diary.entry,
+                date = diary.date,
+                favorite = diary.isFavorite.asLong(),
+                location = LocationDb.fromString(diary.location),
+                updated_at = diary.updatedAt,
+                is_synced = diary.isSynced.asLong(),
+                is_marked_for_delete = diary.isMarkedForDelete.asLong(),
+            )
+        } catch (e: Exception) {
+            println(e.message)
+        }
 
         return queries.getAffectedRows().executeAsOne()
     }
@@ -122,6 +145,28 @@ class Database(
         queries.getLatestEntries(count.toLong(), diaryMapper).asFlow().mapToList(Dispatchers.Main)
 
     fun countEntries(): Long = queries.countEntries().executeAsOne()
+
+    fun getPendingSyncDiaries(): List<DiaryDb> = queries.pendingSync(
+        mapper = diaryMapper,
+    ).executeAsList()
+
+    fun getPendingDeleteDiaries(): List<DiaryDb> = queries.pendingDelete(
+        mapper = diaryMapper,
+    ).executeAsList()
+
+    fun markDiarySynced(id: Long) {
+        queries.markSynced(id)
+    }
+
+    fun markDiariesDeleted(ids: List<Long>, updatedAt: Instant): Int {
+        queries.transaction {
+            ids.forEach { id ->
+                queries.markDeleted(updatedAt, id)
+            }
+        }
+
+        return queries.getAffectedRows().executeAsOne().toInt()
+    }
 
     fun getWeeklySummary(): WeeklySummaryDb? = queries.getWeeklySummary(
         mapper = { date, summary ->

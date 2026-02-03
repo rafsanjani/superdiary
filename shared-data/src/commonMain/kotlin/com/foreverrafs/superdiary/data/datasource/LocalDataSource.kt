@@ -8,6 +8,7 @@ import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import com.foreverrafs.superdiary.domain.model.toDatabase
 import com.foreverrafs.superdiary.domain.repository.DataSource
+import kotlin.time.Clock
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
@@ -19,14 +20,21 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
 @Suppress("TooManyFunctions")
-class LocalDataSource(private val database: Database) : DataSource {
-    override suspend fun save(diary: Diary): Long = database.insert(diary.toDatabase())
+class LocalDataSource(
+    internal val database: Database,
+    private val clock: Clock = Clock.System,
+) : DataSource {
+    override suspend fun save(diary: Diary): Long =
+        database.insert(diary.markDirty(clock).toDatabase())
 
     override suspend fun save(diaries: List<Diary>): Long =
-        database.insert(diaries.map { it.toDatabase() })
+        database.insert(diaries.map { it.markDirty(clock).toDatabase() })
 
     override suspend fun delete(diaries: List<Diary>): Int =
-        database.deleteDiaries(diaries.mapNotNull { it.id })
+        database.markDiariesDeleted(
+            ids = diaries.mapNotNull { it.id },
+            updatedAt = clock.now(),
+        )
 
     override fun fetchAll(): Flow<List<Diary>> = database.getAllDiaries().mapToDiary()
 
@@ -72,7 +80,8 @@ class LocalDataSource(private val database: Database) : DataSource {
         return database.findByDateRange(startOfDay, endOfDay).mapToDiary()
     }
 
-    override suspend fun update(diary: Diary): Int = database.update(diary.toDatabase()).toInt()
+    override suspend fun update(diary: Diary): Int =
+        database.update(diary.markDirty(clock).toDatabase()).toInt()
 
     override suspend fun deleteAll() = database.clearDiaries()
 
@@ -92,4 +101,10 @@ class LocalDataSource(private val database: Database) : DataSource {
     private fun Flow<List<DiaryDb>>?.mapToDiary() =
         this?.map { diaryDtoList -> diaryDtoList.map { it.toDiary() } }
             ?: emptyFlow()
+
+    private fun Diary.markDirty(clock: Clock): Diary = copy(
+        updatedAt = clock.now(),
+        isSynced = false,
+        isMarkedForDelete = false,
+    )
 }

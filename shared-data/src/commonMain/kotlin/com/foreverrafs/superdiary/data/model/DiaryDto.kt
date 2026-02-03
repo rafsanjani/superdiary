@@ -20,6 +20,10 @@ data class DiaryDto(
     val isFavorite: Boolean = false,
     @SerialName("location")
     val location: String? = Location.Empty.toString(),
+    @SerialName("updated_at")
+    val updatedAt: Instant = date,
+    @SerialName("is_deleted")
+    val isDeleted: Boolean = false,
 )
 
 fun DiaryDto.toDiary(): Diary = Diary(
@@ -28,9 +32,10 @@ fun DiaryDto.toDiary(): Diary = Diary(
     date = date,
     isFavorite = isFavorite,
     location = Location.fromString(location ?: Location.Empty.toString()),
+    updatedAt = updatedAt,
     // a fresh entry from the network should be considered synced
     isSynced = true,
-    isMarkedForDelete = false,
+    isMarkedForDelete = isDeleted,
 )
 
 fun DiaryDto.toDatabase(): DiaryDb = DiaryDb(
@@ -39,4 +44,7 @@ fun DiaryDto.toDatabase(): DiaryDb = DiaryDb(
     date = date,
     isFavorite = isFavorite,
     location = Location.toString(),
+    updatedAt = updatedAt,
+    isSynced = true,
+    isMarkedForDelete = isDeleted,
 )

@@ -7,8 +7,8 @@ import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.DataStorePathResolver
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
+import com.foreverrafs.superdiary.data.datasource.OfflineFirstDataSource
 import com.foreverrafs.superdiary.data.datasource.remote.DiaryApi
-import com.foreverrafs.superdiary.data.datasource.remote.RemoteDataSource
 import com.foreverrafs.superdiary.data.datasource.remote.SupabaseDiaryApi
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.AddWeeklySummaryUseCase
@@ -38,10 +38,8 @@ import org.koin.dsl.module
 
 @OptIn(InternalCoroutinesApi::class)
 val useCaseModule = module {
-    singleOf(::RemoteDataSource) { bind<DataSource>() }
-
-    // The local datasource will get injected by default
-    singleOf(::LocalDataSource) { bind<DataSource>() }
+    singleOf(::LocalDataSource)
+    singleOf(::OfflineFirstDataSource) { bind<DataSource>() }
 
     factory<Clock> { Clock.System }
 

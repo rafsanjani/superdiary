@@ -10,6 +10,7 @@ import io.github.jan.supabase.postgrest.query.Order
 import io.github.jan.supabase.realtime.selectAsFlow
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
+import kotlin.time.Clock
 
 class SupabaseDiaryApi(
     private val supabase: SupabaseClient,
@@ -19,7 +20,11 @@ class SupabaseDiaryApi(
         supabase.from(TABLE_NAME).selectAsFlow(DiaryDto::id)
 
     override suspend fun delete(diary: DiaryDto): Result<Boolean> = try {
-        supabase.from(TABLE_NAME).delete {
+        val deleted = diary.copy(
+            isDeleted = true,
+            updatedAt = Clock.System.now(),
+        )
+        supabase.from(TABLE_NAME).update(deleted) {
             filter {
                 DiaryDto::id eq diary.id
             }
@@ -31,7 +36,7 @@ class SupabaseDiaryApi(
     }
 
     override suspend fun save(diary: DiaryDto): Result<Boolean> = try {
-        supabase.from(TABLE_NAME).insert(diary)
+        supabase.from(TABLE_NAME).upsert(diary)
         Result.Success(true)
     } catch (e: Exception) {
         if (e is CancellationException) throw e
@@ -40,6 +45,9 @@ class SupabaseDiaryApi(
 
     override suspend fun fetch(count: Int): Result<List<DiaryDto>> = try {
         val data: List<DiaryDto> = supabase.from(TABLE_NAME).select {
+            filter {
+                DiaryDto::isDeleted eq false
+            }
             limit(count = count.toLong())
             order(column = "date", order = Order.DESCENDING)
         }.decodeList()
@@ -55,6 +63,9 @@ class SupabaseDiaryApi(
             .from(TABLE_NAME)
             .select {
                 count(count = Count.EXACT)
+                filter {
+                    DiaryDto::isDeleted eq false
+                }
             }
             .countOrNull()
         Result.Success(count ?: 0L)
