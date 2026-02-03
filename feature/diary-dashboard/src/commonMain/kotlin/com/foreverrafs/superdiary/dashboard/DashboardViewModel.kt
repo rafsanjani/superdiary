@@ -44,7 +44,7 @@ class DashboardViewModel(
         data class Content(
             val latestEntries: List<Diary> = emptyList(),
             val totalEntries: Long = 0L,
-            val weeklySummary: String? = null,
+            val weeklySummary: String? = "",
             val currentStreak: Streak? = null,
             val bestStreak: Streak? = null,
             val showBiometricAuthDialog: Boolean? = null,
@@ -265,7 +265,6 @@ class DashboardViewModel(
     }
 
     companion object {
-        private const val DEFAULT_SUMMARY_TEXT = "Generating weekly Summary..."
         private const val TAG = "DashboardViewModel"
     }
 }

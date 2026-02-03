@@ -1,7 +1,7 @@
 package com.foreverrafs.superdiary.ai
 
 import ai.koog.prompt.dsl.prompt
-import ai.koog.prompt.executor.clients.google.GoogleModels
+import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import ai.koog.prompt.executor.model.PromptExecutor
 import ai.koog.prompt.streaming.StreamFrame
 import com.foreverrafs.superdiary.ai.api.DiaryAI
@@ -40,7 +40,7 @@ class DiaryAiImpl(
                     text(prompt)
                 }
             },
-            model = GPT_MODEL,
+            model = CHAT_MODEL,
         ).map { response ->
             when (response) {
                 is StreamFrame.Append -> response.text
@@ -86,7 +86,7 @@ class DiaryAiImpl(
                     text(diaries.joinToString { it.entry })
                 }
             },
-            model = GPT_MODEL,
+            model = CHAT_MODEL,
         ).map { response ->
             when (response) {
                 is StreamFrame.Append -> {
@@ -103,7 +103,7 @@ class DiaryAiImpl(
                             summary = totalSummary,
                         ),
                     )
-                    ""
+                    totalSummary
                 }
 
                 is StreamFrame.ToolCall -> {
@@ -135,7 +135,7 @@ class DiaryAiImpl(
                     text(messages.lastOrNull()?.content.orEmpty())
                 }
             },
-            model = GPT_MODEL,
+            model = CHAT_MODEL,
         ).firstOrNull()?.content.orEmpty()
     } catch (e: Exception) {
         logger.e(TAG, e) { "Error querying diaries" }
@@ -143,7 +143,7 @@ class DiaryAiImpl(
     }
 
     companion object {
-        private val GPT_MODEL = GoogleModels.Gemini2_5Flash
+        private val CHAT_MODEL = OpenAIModels.Chat.GPT5_1
         private const val TAG = "OpenDiaryAI"
     }
 }
