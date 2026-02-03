@@ -502,7 +502,13 @@ private fun WeeklySummaryCard(
     title: String = stringResource(Res.string.label_glance_header_weekly_summary),
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.then(
+            if (summary == "") {
+                Modifier.shimmer()
+            } else {
+                Modifier
+            }
+        ),
         shape = RoundedCornerShape(8.dp),
     ) {
         Column(
