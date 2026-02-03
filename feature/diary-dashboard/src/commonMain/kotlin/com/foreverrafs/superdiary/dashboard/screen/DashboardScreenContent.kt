@@ -507,7 +507,7 @@ private fun WeeklySummaryCard(
                 Modifier.shimmer()
             } else {
                 Modifier
-            }
+            },
         ),
         shape = RoundedCornerShape(8.dp),
     ) {
