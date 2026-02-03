@@ -15,8 +15,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 
 // Converts a date to a long value and vice versa
 val dateAdapter = object : ColumnAdapter<Instant, Long> {
-    override fun decode(databaseValue: Long): Instant =
-        Instant.fromEpochMilliseconds(databaseValue)
+    override fun decode(databaseValue: Long): Instant = Instant.fromEpochMilliseconds(databaseValue)
 
     override fun encode(value: Instant): Long = value.toEpochMilliseconds()
 }
@@ -28,15 +27,13 @@ class Database(
     private val queries = database.databaseQueries
 
     private val diaryMapper =
-        { id: Long, entry: String, date: Instant, favorite: Long, location: LocationDb?, markForDelete: Boolean?, isSynced: Boolean ->
+        { id: Long, entry: String, date: Instant, favorite: Long, location: LocationDb? ->
             DiaryDb(
                 id = id,
                 entry = entry,
                 date = date,
                 isFavorite = favorite.asBoolean(),
                 location = location.toString(),
-                markedForDelete = markForDelete ?: false,
-                isSynced = isSynced,
             )
         }
 
@@ -47,7 +44,6 @@ class Database(
             date = diary.date,
             favorite = diary.isFavorite.asLong(),
             location = LocationDb.fromString(diary.location),
-            isSynced = diary.isSynced,
         )
 
         return queries.lastInsertRowId().executeAsOne()
@@ -59,9 +55,6 @@ class Database(
         update(diary)
     }
 
-    fun getPendingDeletes(): List<DiaryDb> = queries.getPendingDeletes(diaryMapper).executeAsList()
-    fun getPendingSyncs(): List<DiaryDb> = queries.getPendingSyncs(diaryMapper).executeAsList()
-
     fun insert(diaries: List<DiaryDb>): Long {
         val result = queries.transactionWithResult {
             diaries.forEach(::upsert)
@@ -69,17 +62,6 @@ class Database(
         }
 
         return result
-    }
-
-    /**
-     * Syncs up the remote and local data sources by removing all the entries
-     * that have been deleted from the remote server
-     */
-    fun syncDeletedEntries(ids: List<Long>) {
-        // fetch entries
-        queries.transaction {
-            ids.forEach(::deleteDiary)
-        }
     }
 
     private fun deleteDiary(id: Long) = queries.delete(id)
@@ -100,28 +82,20 @@ class Database(
         }
     }
 
-    fun findById(id: Long): DiaryDb? =
-        queries.findById(id, diaryMapper).executeAsOneOrNull()
+    fun findById(id: Long): DiaryDb? = queries.findById(id, diaryMapper).executeAsOneOrNull()
 
     fun getAllDiaries(): Flow<List<DiaryDb>> = queries.selectAll(
         mapper = diaryMapper,
-    )
-        .asFlow()
-        .mapToList(Dispatchers.Main)
+    ).asFlow().mapToList(Dispatchers.Main)
 
     fun findDiaryByEntry(query: String): Flow<List<DiaryDb>> =
-        queries.findByEntry(name = query, mapper = diaryMapper)
-            .asFlow()
-            .mapToList(Dispatchers.Main)
+        queries.findByEntry(name = query, mapper = diaryMapper).asFlow().mapToList(Dispatchers.Main)
 
-    fun findByDateRange(from: Instant, to: Instant): Flow<List<DiaryDb>> =
-        queries.findByDateRange(
-            from,
-            to,
-            diaryMapper,
-        )
-            .asFlow()
-            .mapToList(Dispatchers.Main)
+    fun findByDateRange(from: Instant, to: Instant): Flow<List<DiaryDb>> = queries.findByDateRange(
+        from,
+        to,
+        diaryMapper,
+    ).asFlow().mapToList(Dispatchers.Main)
 
     fun update(diary: DiaryDb): Long {
         queries.update(
@@ -129,18 +103,14 @@ class Database(
             entry = diary.entry,
             date = diary.date,
             favorite = diary.isFavorite.asLong(),
-            markForDelete = diary.markedForDelete,
             location = LocationDb.fromString(diary.location),
-            isSynced = diary.isSynced,
         )
 
         return queries.getAffectedRows().executeAsOne()
     }
 
     fun getFavoriteDiaries(): Flow<List<DiaryDb>> =
-        queries.getFavoriteDiaries(diaryMapper)
-            .asFlow()
-            .mapToList(Dispatchers.Main)
+        queries.getFavoriteDiaries(diaryMapper).asFlow().mapToList(Dispatchers.Main)
 
     fun clearDiaries() {
         queries.deleteAll()
@@ -149,9 +119,7 @@ class Database(
     private fun Boolean.asLong(): Long = if (this) 1 else 0
     private fun Long.asBoolean(): Boolean = this != 0L
     fun getLatestEntries(count: Int): Flow<List<DiaryDb>> =
-        queries.getLatestEntries(count.toLong(), diaryMapper)
-            .asFlow()
-            .mapToList(Dispatchers.Main)
+        queries.getLatestEntries(count.toLong(), diaryMapper).asFlow().mapToList(Dispatchers.Main)
 
     fun countEntries(): Long = queries.countEntries().executeAsOne()
 
@@ -184,15 +152,14 @@ class Database(
         queries.clearChat()
     }
 
-    fun getChatMessages(): Flow<List<DiaryChatMessageDb>> =
-        queries.getChatMessages(
-            mapper = { id: String, timestamp: Instant, content: String, role: DiaryChatRoleDb ->
-                DiaryChatMessageDb(
-                    id = id,
-                    role = role,
-                    content = content,
-                    timestamp = timestamp,
-                )
-            },
-        ).asFlow().mapToList(Dispatchers.Main)
+    fun getChatMessages(): Flow<List<DiaryChatMessageDb>> = queries.getChatMessages(
+        mapper = { id: String, timestamp: Instant, content: String, role: DiaryChatRoleDb ->
+            DiaryChatMessageDb(
+                id = id,
+                role = role,
+                content = content,
+                timestamp = timestamp,
+            )
+        },
+    ).asFlow().mapToList(Dispatchers.Main)
 }

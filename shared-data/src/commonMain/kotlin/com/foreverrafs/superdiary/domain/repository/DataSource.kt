@@ -85,7 +85,4 @@ interface DataSource {
 
     /** Clear all chat messages from the system */
     suspend fun clearChatMessages()
-
-    suspend fun getPendingDeletes(): List<Diary>
-    suspend fun getPendingSyncs(): List<Diary>
 }

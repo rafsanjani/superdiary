@@ -5,12 +5,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.setSingletonImageLoaderFactory
-import com.foreverrafs.superdiary.core.sync.SyncEffect
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
-import com.foreverrafs.superdiary.domain.Synchronizer
 import com.foreverrafs.superdiary.ui.navigation.SuperDiaryNavHost
 import com.foreverrafs.superdiary.ui.navigation.getAsyncImageLoader
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 /**
@@ -22,13 +19,6 @@ import org.koin.compose.viewmodel.koinViewModel
 fun App(modifier: Modifier = Modifier) {
     val appViewModel: AppViewModel = koinViewModel()
     val appViewState by appViewModel.viewState.collectAsStateWithLifecycle()
-    val appSessionStatus by appViewModel.appSessionStatus.collectAsStateWithLifecycle(null)
-    val synchronizer: Synchronizer = koinInject()
-
-    SyncEffect(
-        synchronizer = synchronizer,
-        key1 = appSessionStatus,
-    )
 
     SuperDiaryTheme {
         setSingletonImageLoaderFactory(::getAsyncImageLoader)

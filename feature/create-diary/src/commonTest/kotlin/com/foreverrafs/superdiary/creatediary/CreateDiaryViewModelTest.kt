@@ -16,7 +16,6 @@ import com.foreverrafs.superdiary.core.permission.PermissionState
 import com.foreverrafs.superdiary.creatediary.FakePermissionsControllerWrapper.ActionPerformed
 import com.foreverrafs.superdiary.creatediary.screen.CreateDiaryViewModel
 import com.foreverrafs.superdiary.creatediary.usecase.AddDiaryUseCase
-import com.foreverrafs.superdiary.domain.Synchronizer
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.utils.DiarySettings
@@ -25,7 +24,6 @@ import dev.mokkery.every
 import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
 import dev.mokkery.mock
-import dev.mokkery.verify.VerifyMode
 import dev.mokkery.verifySuspend
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -68,10 +66,6 @@ class CreateDiaryViewModelTest {
     }
 
     private val preference: DiaryPreference = mock()
-
-    private val synchronizer: Synchronizer = mock {
-        everySuspend { sync(any()) } returns true
-    }
 
     private lateinit var createDiaryViewModel: CreateDiaryViewModel
 
@@ -197,39 +191,6 @@ class CreateDiaryViewModelTest {
             expectNoEvents()
 
             assertThat(state.location).isNull()
-        }
-    }
-
-    @Test
-    @Ignore
-    fun `Should perform data sync after successfully saving an entry`() = runTest {
-        val diary = Diary(id = 12L, entry = "test diary")
-        everySuspend { dataSource.save(diary) } returns diary.id!!
-
-        createDiaryViewModel.saveDiary(diary)
-        advanceUntilIdle()
-
-        verifySuspend(
-            mode = VerifyMode.exactly(1),
-        ) {
-            synchronizer.sync(
-                operation = Synchronizer.SyncOperation.Save(diary),
-            )
-        }
-    }
-
-    @Test
-    fun `Should NOT perform data sync WHEN entry is not saved`() = runTest {
-        val diary = Diary(id = 12L, entry = "test diary")
-        everySuspend { dataSource.save(diary) } returns 0
-
-        createDiaryViewModel.saveDiary(diary)
-        advanceUntilIdle()
-
-        verifySuspend(mode = VerifyMode.not) {
-            synchronizer.sync(
-                operation = Synchronizer.SyncOperation.Save(diary),
-            )
         }
     }
 }

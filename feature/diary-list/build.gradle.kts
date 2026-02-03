@@ -37,7 +37,6 @@ kotlin {
             implementation(projects.core.location)
             implementation(libs.jetbrains.compose.navigation3)
             implementation(projects.sharedData)
-            implementation(projects.core.sync)
             implementation(projects.core.database)
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(projects.designSystem)

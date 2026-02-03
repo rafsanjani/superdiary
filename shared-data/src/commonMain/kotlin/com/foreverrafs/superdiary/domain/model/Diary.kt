@@ -32,6 +32,4 @@ fun Diary.toDatabase(): DiaryDb = DiaryDb(
     date = date,
     isFavorite = isFavorite,
     location = location.toString(),
-    markedForDelete = isMarkedForDelete,
-    isSynced = isSynced,
 )

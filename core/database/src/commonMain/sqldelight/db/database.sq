@@ -2,7 +2,7 @@ selectAll:
 SELECT * FROM diary ORDER BY date DESC;
 
 insert:
-INSERT INTO diary(id, entry, date, favorite, location, markForDelete, isSynced) VALUES (?, ?, ?, ?, ?, 0, ?);
+INSERT INTO diary(id, entry, date, favorite, location) VALUES (?, ?, ?, ?, ?);
 
 delete:
 DELETE FROM diary WHERE id=?;
@@ -23,7 +23,7 @@ deleteAll:
 DELETE FROM diary;
 
 update:
-REPLACE INTO diary (id, entry, date, favorite, markForDelete, location, isSynced) VALUES(?, ?,?, ?, ?, ?, ?);
+REPLACE INTO diary (id, entry, date, favorite, location) VALUES(?, ?,?, ?, ?);
 
 getLatestEntries:
 SELECT * FROM diary ORDER BY date DESC LIMIT ?;
@@ -57,9 +57,3 @@ DELETE FROM chat;
 
 getChatMessages:
 SELECT * FROM chat;
-
-getPendingDeletes:
-SELECT * FROM diary WHERE markForDelete = 1;
-
-getPendingSyncs:
-SELECT * FROM diary WHERE isSynced = 0;

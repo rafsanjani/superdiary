@@ -18,7 +18,6 @@ kotlin {
                 implementation(libs.androidx.core.uri)
 
                 // project dependency
-                implementation(projects.core.sync)
                 implementation(projects.core.database)
                 implementation(projects.designSystem)
 
