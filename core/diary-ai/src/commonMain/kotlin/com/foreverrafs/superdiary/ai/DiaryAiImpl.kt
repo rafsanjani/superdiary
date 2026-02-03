@@ -40,7 +40,7 @@ class DiaryAiImpl(
                     text(prompt)
                 }
             },
-            model = GPT_MODEL,
+            model = CHAT_MODEL,
         ).map { response ->
             when (response) {
                 is StreamFrame.Append -> response.text
@@ -86,7 +86,7 @@ class DiaryAiImpl(
                     text(diaries.joinToString { it.entry })
                 }
             },
-            model = GPT_MODEL,
+            model = CHAT_MODEL,
         ).map { response ->
             when (response) {
                 is StreamFrame.Append -> {
@@ -135,7 +135,7 @@ class DiaryAiImpl(
                     text(messages.lastOrNull()?.content.orEmpty())
                 }
             },
-            model = GPT_MODEL,
+            model = CHAT_MODEL,
         ).firstOrNull()?.content.orEmpty()
     } catch (e: Exception) {
         logger.e(TAG, e) { "Error querying diaries" }
@@ -143,7 +143,7 @@ class DiaryAiImpl(
     }
 
     companion object {
-        private val GPT_MODEL = OpenAIModels.Chat.GPT5_1
+        private val CHAT_MODEL = OpenAIModels.Chat.GPT5_1
         private const val TAG = "OpenDiaryAI"
     }
 }
