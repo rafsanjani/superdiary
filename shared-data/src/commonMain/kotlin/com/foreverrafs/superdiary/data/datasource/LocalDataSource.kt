@@ -38,7 +38,7 @@ class LocalDataSource(
 
     override fun fetchAll(): Flow<List<Diary>> = database.getAllDiaries().mapToDiary()
 
-    override fun fetch(): Flow<List<Diary>> = database.getFavoriteDiaries().mapToDiary()
+    override fun fetchFavorites(): Flow<List<Diary>> = database.getFavoriteDiaries().mapToDiary()
 
     override fun find(entry: String): Flow<List<Diary>> =
         database.findDiaryByEntry(entry).mapToDiary()

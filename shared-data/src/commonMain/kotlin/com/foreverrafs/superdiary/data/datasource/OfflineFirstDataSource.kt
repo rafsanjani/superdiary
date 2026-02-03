@@ -21,14 +21,19 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
+interface Syncable {
+    fun isSyncing(): Boolean
+}
+
 class OfflineFirstDataSource(
     private val local: LocalDataSource,
     private val api: DiaryApi,
     private val logger: AggregateLogger,
     private val clock: Clock,
-) : DataSource {
+) : DataSource, Syncable {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val syncMutex = Mutex()
+
     @Volatile
     private var syncStarted = false
 
@@ -37,6 +42,12 @@ class OfflineFirstDataSource(
         scheduleSync()
         return result
     }
+
+    init {
+        ensureSyncStarted()
+    }
+
+    override fun isSyncing(): Boolean = syncStarted
 
     override suspend fun save(diaries: List<Diary>): Long {
         val result = local.save(diaries)
@@ -61,9 +72,9 @@ class OfflineFirstDataSource(
         return local.fetchAll()
     }
 
-    override fun fetch(): Flow<List<Diary>> {
+    override fun fetchFavorites(): Flow<List<Diary>> {
         ensureSyncStarted()
-        return local.fetch()
+        return local.fetchFavorites()
     }
 
     override fun find(entry: String): Flow<List<Diary>> {
@@ -99,8 +110,17 @@ class OfflineFirstDataSource(
     override suspend fun clearChatMessages() = local.clearChatMessages()
 
     private fun ensureSyncStarted() {
-        if (syncStarted) return
+        if (syncStarted) {
+            logger.i(TAG) {
+                "Sync job is already running"
+            }
+            return
+        }
         syncStarted = true
+
+        logger.i(TAG) {
+            "Syncing remote and local entries"
+        }
 
         scope.launch {
             scheduleSync()
@@ -117,12 +137,10 @@ class OfflineFirstDataSource(
         }
     }
 
-    private fun scheduleSync() {
-        scope.launch {
-            syncMutex.withLock {
-                pushPendingDeletes()
-                pushPendingUpserts()
-            }
+    private suspend fun scheduleSync() {
+        syncMutex.withLock {
+            pushPendingDeletes()
+            pushPendingUpserts()
         }
     }
 
@@ -143,7 +161,8 @@ class OfflineFirstDataSource(
     private suspend fun pushPendingUpserts() {
         val pendingSync = local.database.getPendingSyncDiaries()
         pendingSync.forEach { diary ->
-            val payload = diary.toDomainDiary().copy(updatedAt = clock.now(), isSynced = false).toDto()
+            val payload =
+                diary.toDomainDiary().copy(updatedAt = clock.now(), isSynced = false).toDto()
             val result = api.save(payload)
             if (result is Result.Success) {
                 diary.id?.let { id ->
@@ -172,7 +191,9 @@ class OfflineFirstDataSource(
             }
 
             if (shouldApplyRemote(remoteDiary, localDiary)) {
-                local.database.upsert(remoteDiary.copy(isSynced = true, isMarkedForDelete = false).toDatabase())
+                local.database.upsert(
+                    remoteDiary.copy(isSynced = true, isMarkedForDelete = false).toDatabase(),
+                )
             }
         }
     }

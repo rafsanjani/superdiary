@@ -75,26 +75,25 @@ class DashboardViewModel(
             "Loading dashboard content"
         }
 
-        val latestEntriesDeferred: Deferred<Result<List<Diary>>> =
-            async { getRecentEntriesUseCase(count = 5) }
+        val latestEntriesDeferred = getRecentEntriesUseCase(count = 5)
         val countEntriesDeferred: Deferred<Result<Long>> = async { countEntriesUseCase() }
 
         preference.settings.collect { settings ->
-            when (val result = latestEntriesDeferred.await()) {
+            when (latestEntriesDeferred) {
                 is Result.Failure -> {
-                    logger.e(TAG, result.error) {
+                    logger.e(TAG, latestEntriesDeferred.error) {
                         "Error loading dashboard contents"
                     }
 
                     mutableState.update {
                         DashboardScreenState.Error(
-                            message = result.error.message.orEmpty(),
+                            message = latestEntriesDeferred.error.message.orEmpty(),
                         )
                     }
                 }
 
                 is Result.Success -> {
-                    val diaries = result.data
+                    val diaries = latestEntriesDeferred.data
 
                     logger.i(TAG) {
                         "Dashboard content refreshed!"

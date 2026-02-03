@@ -70,7 +70,7 @@ class RemoteDataSource(
             it.map { dto -> dto.toDiary() }
         }
 
-    override fun fetch(): Flow<List<Diary>> {
+    override fun fetchFavorites(): Flow<List<Diary>> {
         TODO("Not yet implemented")
     }
 

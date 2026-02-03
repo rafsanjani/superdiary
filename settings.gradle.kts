@@ -24,6 +24,7 @@ dependencyResolutionManagement {
             from("io.github.rafsanjani:versions:2026.02.01")
             // Because 3.2.4 is making internal calls to android.util.Log which dey borst my mind
             version("supabase", "3.2.3")
+            version("compose-multiplatform", "1.11.0-alpha02")
         }
     }
 }
@@ -122,7 +123,7 @@ rootProject.name = "superdiary"
 include(":androidApp:app")
 include(":design-system")
 // commenting this out because it doesn't work with agp 9.0 and the new android multiplatform plugin
-//include(":androidApp:benchmark")
+// include(":androidApp:benchmark")
 include(":shared-data")
 include(":navigation")
 include(":umbrella")

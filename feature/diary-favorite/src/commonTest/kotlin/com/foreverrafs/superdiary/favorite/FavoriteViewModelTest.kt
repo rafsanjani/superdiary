@@ -42,7 +42,7 @@ class FavoriteViewModelTest {
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
 
-        everySuspend { dataSource.fetch() }.returns(flowOf(emptyList()))
+        everySuspend { dataSource.fetchFavorites() }.returns(flowOf(emptyList()))
 
         favoriteViewModel = FavoriteViewModel(
             getFavoriteDiariesUseCase = GetFavoriteDiariesUseCase(dataSource, TestAppDispatchers),
@@ -73,7 +73,7 @@ class FavoriteViewModelTest {
 
     @Test
     fun `Success state is emitted even when there is no favorite`() = runTest {
-        every { dataSource.fetch() }.returns(flowOf(emptyList()))
+        every { dataSource.fetchFavorites() }.returns(flowOf(emptyList()))
 
         favoriteViewModel.state.test {
             // skip loading state

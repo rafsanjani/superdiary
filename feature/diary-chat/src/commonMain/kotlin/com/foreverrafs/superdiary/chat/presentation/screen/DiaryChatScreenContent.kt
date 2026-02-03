@@ -85,137 +85,153 @@ fun DiaryChatScreenContent(
     onDismissError: () -> Unit = {},
 ) {
     val currentOnDismissError by rememberUpdatedState(onDismissError)
-    when (screenState) {
-        is DiaryChatViewState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        contentAlignment = Alignment.Center,
+    ) {
+        when (screenState) {
+            is DiaryChatViewState.Loading -> {
                 Text("Loading Diaries")
             }
-        }
 
-        is DiaryChatViewState.Initialized -> {
-            val focusRequester = remember { FocusRequester() }
-            val keyboardController = LocalSoftwareKeyboardController.current
+            is DiaryChatViewState.Initialized -> {
+                val focusRequester = remember { FocusRequester() }
+                val keyboardController = LocalSoftwareKeyboardController.current
 
-            LaunchedEffect(screenState.errorText) {
-                screenState.errorText?.let {
-                    snackbarHostState.showSnackbar(message = it, duration = SnackbarDuration.Long)
-                    currentOnDismissError()
-                }
-            }
-
-            Column(
-                modifier = modifier.clickable(
-                    indication = null,
-                    onClick = {
-                        keyboardController?.hide()
-                    },
-                    interactionSource = MutableInteractionSource(),
-                ).fillMaxSize().imePadding().padding(8.dp),
-            ) {
-                val listState = rememberLazyListState()
-
-                LaunchedEffect(screenState.displayMessages) {
-                    listState.animateScrollToItem(screenState.displayMessages.size)
-                }
-
-                LazyColumn(
-                    modifier = Modifier.weight(1f).fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                    state = listState,
-                ) {
-                    items(
-                        items = screenState.displayMessages,
-                        key = { item -> item.id },
-                    ) { item ->
-                        ChatBubble(
-                            chatItem = item,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .animateItem(
-                                    fadeInSpec = tween(durationMillis = 1000, easing = LinearEasing),
-                                    fadeOutSpec = tween(durationMillis = 1000, easing = LinearEasing),
-                                    placementSpec = tween(durationMillis = 1000, easing = LinearEasing),
-                                ),
+                LaunchedEffect(screenState.errorText) {
+                    screenState.errorText?.let {
+                        snackbarHostState.showSnackbar(
+                            message = it,
+                            duration = SnackbarDuration.Long,
                         )
+                        currentOnDismissError()
+                    }
+                }
+
+                Column(
+                    modifier = Modifier.clickable(
+                        indication = null,
+                        onClick = {
+                            keyboardController?.hide()
+                        },
+                        interactionSource = MutableInteractionSource(),
+                    ).fillMaxSize().imePadding().padding(8.dp),
+                ) {
+                    val listState = rememberLazyListState()
+
+                    LaunchedEffect(screenState.displayMessages) {
+                        listState.animateScrollToItem(screenState.displayMessages.size)
                     }
 
-                    if (screenState.isResponding) {
-                        item {
-                            val alphaAnimation = rememberInfiniteTransition("alphaAnimation")
-                            val alpha by alphaAnimation.animateFloat(
-                                initialValue = 0.5f,
-                                targetValue = 1f,
-                                animationSpec = infiniteRepeatable(
-                                    animation = tween(1000),
-                                    repeatMode = RepeatMode.Reverse,
-                                ),
-                            )
+                    LazyColumn(
+                        modifier = Modifier.weight(1f).fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        state = listState,
+                    ) {
+                        items(
+                            items = screenState.displayMessages,
+                            key = { item -> item.id },
+                        ) { item ->
                             ChatBubble(
-                                modifier = Modifier.alpha(alpha),
-                                chatItem = DiaryChatMessage(
-                                    id = Uuid.random().toString(),
-                                    role = DiaryChatRole.DiaryAI,
-                                    timestamp = Clock.System.now(),
-                                    content = "Responding.",
-                                ),
+                                chatItem = item,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .animateItem(
+                                        fadeInSpec = tween(
+                                            durationMillis = 1000,
+                                            easing = LinearEasing,
+                                        ),
+                                        fadeOutSpec = tween(
+                                            durationMillis = 1000,
+                                            easing = LinearEasing,
+                                        ),
+                                        placementSpec = tween(
+                                            durationMillis = 1000,
+                                            easing = LinearEasing,
+                                        ),
+                                    ),
                             )
                         }
+
+                        if (screenState.isResponding) {
+                            item {
+                                val alphaAnimation = rememberInfiniteTransition("alphaAnimation")
+                                val alpha by alphaAnimation.animateFloat(
+                                    initialValue = 0.5f,
+                                    targetValue = 1f,
+                                    animationSpec = infiniteRepeatable(
+                                        animation = tween(1000),
+                                        repeatMode = RepeatMode.Reverse,
+                                    ),
+                                )
+                                ChatBubble(
+                                    modifier = Modifier.alpha(alpha),
+                                    chatItem = DiaryChatMessage(
+                                        id = Uuid.random().toString(),
+                                        role = DiaryChatRole.DiaryAI,
+                                        timestamp = Clock.System.now(),
+                                        content = "Responding.",
+                                    ),
+                                )
+                            }
+                        }
                     }
-                }
 
-                var input by remember { mutableStateOf("") }
+                    var input by remember { mutableStateOf("") }
 
-                Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
-                // Input area and send button
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    LaunchedEffect(Unit) {
-                        focusRequester.requestFocus()
-                    }
+                    // Input area and send button
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        LaunchedEffect(Unit) {
+                            focusRequester.requestFocus()
+                        }
 
-                    // Input area
-                    OutlinedTextField(
-                        modifier = Modifier.focusRequester(focusRequester).weight(1f).heightIn(min = 48.dp),
-                        maxLines = 1,
-                        value = input,
-                        onValueChange = { input = it },
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
-                        keyboardActions = KeyboardActions(
-                            onSend = {
+                        // Input area
+                        OutlinedTextField(
+                            modifier = Modifier.focusRequester(focusRequester).weight(1f)
+                                .heightIn(min = 48.dp),
+                            maxLines = 1,
+                            value = input,
+                            onValueChange = { input = it },
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
+                            keyboardActions = KeyboardActions(
+                                onSend = {
+                                    onQueryDiaries(input)
+                                    input = ""
+                                },
+                            ),
+                        )
+
+                        Spacer(modifier = Modifier.width(4.dp))
+
+                        // Send button
+                        val description = stringResource(Res.string.content_description_button_send)
+                        IconButton(
+                            enabled = input.isNotEmpty() && !screenState.isResponding,
+                            modifier = Modifier.size(48.dp).semantics(true) {
+                                this.contentDescription = description
+                            },
+                            onClick = {
                                 onQueryDiaries(input)
                                 input = ""
                             },
-                        ),
-                    )
-
-                    Spacer(modifier = Modifier.width(4.dp))
-
-                    // Send button
-                    val description = stringResource(Res.string.content_description_button_send)
-                    IconButton(
-                        enabled = input.isNotEmpty() && !screenState.isResponding,
-                        modifier = Modifier.size(48.dp).semantics(true) {
-                            this.contentDescription = description
-                        },
-                        onClick = {
-                            onQueryDiaries(input)
-                            input = ""
-                        },
-                        colors = IconButtonDefaults.filledIconButtonColors(
-                            containerColor = Color(0xFF008080),
-                            contentColor = Color.White,
-                        ),
-                    ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_send),
-                            contentDescription = null,
-                        )
+                            colors = IconButtonDefaults.filledIconButtonColors(
+                                containerColor = Color(0xFF008080),
+                                contentColor = Color.White,
+                            ),
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.ic_send),
+                                contentDescription = null,
+                            )
+                        }
                     }
                 }
             }
