@@ -2,20 +2,18 @@ package com.foreverrafs.superdiary.core.permission
 
 class JvmPermissionsControllerWrapper : PermissionsControllerWrapper {
     override suspend fun providePermission(permission: Permission) {
-        // TODO: Request for permission on macos
+        // No runtime permissions on JVM; treat as granted.
     }
 
     override suspend fun isPermissionGranted(permission: Permission): Boolean {
-        // TODO: Check for permission state on macos
         return true
     }
 
     override suspend fun getPermissionState(permission: Permission): PermissionState {
-        // TODO: Check for permission state on macos
         return PermissionState.Granted
     }
 
     override fun openAppSettings() {
-        // TODO: Open app settings on macos
+        // No-op on JVM; app settings are managed by the OS.
     }
 }
