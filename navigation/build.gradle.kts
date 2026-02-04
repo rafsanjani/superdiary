@@ -14,7 +14,7 @@ kotlin {
             dependencies {
                 implementation(libs.jetbrains.compose.runtime)
                 implementation(libs.jetbrains.compose.foundation)
-                implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3:2.10.0-SNAPSHOT+default")
+                implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3:2.10.0-SNAPSHOT+release-1-10")
                 implementation(libs.jetbrains.lifecycle.runtime.compose)
                 implementation(libs.androidx.core.uri)
 
