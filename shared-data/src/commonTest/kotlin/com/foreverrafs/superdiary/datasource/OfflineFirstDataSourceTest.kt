@@ -42,7 +42,7 @@ class OfflineFirstDataSourceTest {
         override fun now(): Instant = Instant.fromEpochMilliseconds(1_000)
     }
     private lateinit var api: FakeDiaryApi
-    private lateinit var local: LocalDataSource
+    private lateinit var localDataSource: LocalDataSource
     private lateinit var dataSource: OfflineFirstDataSource
 
     @BeforeTest
@@ -50,9 +50,9 @@ class OfflineFirstDataSourceTest {
         Dispatchers.setMain(StandardTestDispatcher())
         database.clearDiaries()
         api = FakeDiaryApi()
-        local = LocalDataSource(database = database, clock = fixedClock)
+        localDataSource = LocalDataSource(database = database, clock = fixedClock)
         dataSource = OfflineFirstDataSource(
-            database = local,
+            database = localDataSource,
             diaryApi = api,
             logger = AggregateLogger(),
             clock = fixedClock,
@@ -216,7 +216,5 @@ class OfflineFirstDataSourceTest {
         }
 
         fun savedDtos(): List<DiaryDto> = saved.value
-
-        fun deletedIds(): List<Long> = deleted.value.mapNotNull { it.id }
     }
 }
