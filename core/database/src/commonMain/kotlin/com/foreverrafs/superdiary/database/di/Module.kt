@@ -28,7 +28,7 @@ fun databaseModule(): Module = module {
             diaryAdapter = Diary.Adapter(
                 dateAdapter = instantAdapter,
                 locationAdapter = locationAdapter,
-                updated_atAdapter = instantAdapter
+                updated_atAdapter = instantAdapter,
             ),
             chatAdapter = Chat.Adapter(
                 dateAdapter = instantAdapter,

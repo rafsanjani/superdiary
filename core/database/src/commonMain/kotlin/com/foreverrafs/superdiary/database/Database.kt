@@ -27,14 +27,16 @@ class Database(
     private val queries = database.databaseQueries
 
     private val diaryMapper =
-        { id: Long,
-          entry: String,
-          date: Instant,
-          favorite: Long,
-          location: LocationDb?,
-          updatedAt: Instant,
-          isSynced: Long,
-          isMarkedForDelete: Long ->
+        {
+                id: Long,
+                entry: String,
+                date: Instant,
+                favorite: Long,
+                location: LocationDb?,
+                updatedAt: Instant,
+                isSynced: Long,
+                isMarkedForDelete: Long,
+            ->
             DiaryDb(
                 id = id,
                 entry = entry,

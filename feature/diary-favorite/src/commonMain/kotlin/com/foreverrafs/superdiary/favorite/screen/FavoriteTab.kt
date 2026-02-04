@@ -16,13 +16,14 @@ import org.koin.compose.viewmodel.koinViewModel
 fun FavoriteTab(
     snackbarHostState: SnackbarHostState,
     onFavoriteClick: (Long) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val screenModel: FavoriteViewModel = koinViewModel()
 
     val screenState by screenModel.state.collectAsState()
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background),
     ) {
