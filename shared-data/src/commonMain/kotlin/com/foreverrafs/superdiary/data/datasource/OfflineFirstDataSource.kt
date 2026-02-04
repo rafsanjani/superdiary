@@ -28,7 +28,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 interface Syncable {
-    fun isSyncing(): Boolean
     val initialSyncState: StateFlow<InitialSyncState>
 }
 
@@ -40,8 +39,8 @@ enum class InitialSyncState {
 }
 
 class OfflineFirstDataSource(
-    private val local: LocalDataSource,
-    private val api: DiaryApi,
+    private val database: LocalDataSource,
+    private val diaryApi: DiaryApi,
     private val logger: AggregateLogger,
     private val clock: Clock,
 ) : DataSource, Syncable {
@@ -57,7 +56,7 @@ class OfflineFirstDataSource(
     private var syncStarted = false
 
     override suspend fun save(diary: Diary): Long {
-        val result = local.save(diary)
+        val result = database.save(diary)
         scheduleSync()
         return result
     }
@@ -67,69 +66,67 @@ class OfflineFirstDataSource(
         ensureSyncStarted()
     }
 
-    override fun isSyncing(): Boolean = _initialSyncState.value == InitialSyncState.Syncing
-
     override val initialSyncState: StateFlow<InitialSyncState> = _initialSyncState.asStateFlow()
 
     override suspend fun save(diaries: List<Diary>): Long {
-        val result = local.save(diaries)
+        val result = database.save(diaries)
         scheduleSync()
         return result
     }
 
     override suspend fun update(diary: Diary): Int {
-        val result = local.update(diary)
+        val result = database.update(diary)
         scheduleSync()
         return result
     }
 
     override suspend fun delete(diaries: List<Diary>): Int {
-        val result = local.delete(diaries)
+        val result = database.delete(diaries)
         scheduleSync()
         return result
     }
 
     override fun fetchAll(): Flow<List<Diary>> {
         ensureSyncStarted()
-        return local.fetchAll()
+        return database.fetchAll()
     }
 
     override fun fetchFavorites(): Flow<List<Diary>> {
         ensureSyncStarted()
-        return local.fetchFavorites()
+        return database.fetchFavorites()
     }
 
     override fun find(entry: String): Flow<List<Diary>> {
         ensureSyncStarted()
-        return local.find(entry)
+        return database.find(entry)
     }
 
     override fun findByDate(date: kotlin.time.Instant): Flow<List<Diary>> {
         ensureSyncStarted()
-        return local.findByDate(date)
+        return database.findByDate(date)
     }
 
     override fun find(from: kotlin.time.Instant, to: kotlin.time.Instant): Flow<List<Diary>> {
         ensureSyncStarted()
-        return local.find(from, to)
+        return database.find(from, to)
     }
 
-    override fun find(id: Long): Diary? = local.find(id)
+    override fun find(id: Long): Diary? = database.find(id)
 
-    override suspend fun deleteAll() = local.deleteAll()
+    override suspend fun deleteAll() = database.deleteAll()
 
     override fun getLatest(count: Int): Flow<List<Diary>> {
         ensureSyncStarted()
-        return local.getLatest(count)
+        return database.getLatest(count)
     }
 
-    override suspend fun count(): Long = local.count()
+    override suspend fun count(): Long = database.count()
 
-    override suspend fun save(summary: WeeklySummary) = local.save(summary)
+    override suspend fun save(summary: WeeklySummary) = database.save(summary)
 
-    override fun getOne(): WeeklySummary? = local.getOne()
+    override fun getOne(): WeeklySummary? = database.getOne()
 
-    override suspend fun clearChatMessages() = local.clearChatMessages()
+    override suspend fun clearChatMessages() = database.clearChatMessages()
 
     private fun ensureSyncStarted() {
         if (syncStarted) {
@@ -153,7 +150,7 @@ class OfflineFirstDataSource(
 
         scope.launch {
             logger.i(TAG) { "Initial sync: subscribing to realtime feed" }
-            api.fetchAll()
+            diaryApi.fetchAll()
                 .catch { e ->
                     logger.e(tag = TAG, throwable = e) { "Realtime sync failed" }
                     markInitialSyncFailed()
@@ -178,14 +175,14 @@ class OfflineFirstDataSource(
     }
 
     private suspend fun pushPendingDeletes() {
-        val pendingDeletes = local.database.getPendingDeleteDiaries()
+        val pendingDeletes = database.database.getPendingDeleteDiaries()
         logger.i(TAG) { "Pending deletes: ${pendingDeletes.size}" }
         pendingDeletes.forEach { diary ->
-            val result = api.delete(diary.toDomainDiary().toDto())
+            val result = diaryApi.delete(diary.toDomainDiary().toDto())
             if (result is Result.Success) {
                 diary.id?.let { id ->
                     logger.i(TAG) { "Delete synced for diaryId=$id; removing locally" }
-                    local.database.deleteDiaries(listOf(id))
+                    database.database.deleteDiaries(listOf(id))
                 }
             } else if (result is Result.Failure) {
                 logger.e(tag = TAG, throwable = result.error) { "Failed to sync deletion" }
@@ -194,16 +191,16 @@ class OfflineFirstDataSource(
     }
 
     private suspend fun pushPendingUpserts() {
-        val pendingSync = local.database.getPendingSyncDiaries()
+        val pendingSync = database.database.getPendingSyncDiaries()
         logger.i(TAG) { "Pending upserts: ${pendingSync.size}" }
         pendingSync.forEach { diary ->
             val payload =
                 diary.toDomainDiary().copy(updatedAt = clock.now(), isSynced = false).toDto()
-            val result = api.save(payload)
+            val result = diaryApi.save(payload)
             if (result is Result.Success) {
                 diary.id?.let { id ->
                     logger.i(TAG) { "Upsert synced for diaryId=$id; marking synced locally" }
-                    local.database.markDiarySynced(id)
+                    database.database.markDiarySynced(id)
                 }
             } else if (result is Result.Failure) {
                 logger.e(tag = TAG, throwable = result.error) { "Failed to sync diary" }
@@ -217,7 +214,7 @@ class OfflineFirstDataSource(
         remoteDiaries.forEach { remoteDto ->
             val remoteDiary = remoteDto.toDomainDiaryFromDto()
             val localDiary = remoteDiary.id?.let { id ->
-                local.database.findByIdIncludingDeleted(id)?.toDomainDiary()
+                database.database.findByIdIncludingDeleted(id)?.toDomainDiary()
             }
 
             if (remoteDto.isDeleted) {
@@ -225,7 +222,7 @@ class OfflineFirstDataSource(
                 if (shouldApplyRemote(remoteDiary, localDiary)) {
                     remoteDiary.id?.let { id ->
                         logger.i(TAG) { "Applying remote delete for diaryId=$id" }
-                        local.database.deleteDiaries(listOf(id))
+                        database.database.deleteDiaries(listOf(id))
                     }
                 }
                 return@forEach
@@ -233,7 +230,7 @@ class OfflineFirstDataSource(
 
             if (shouldApplyRemote(remoteDiary, localDiary)) {
                 logger.i(TAG) { "Applying remote upsert for diaryId=${remoteDiary.id}" }
-                local.database.upsert(
+                database.database.upsert(
                     remoteDiary.copy(isSynced = true, isMarkedForDelete = false).toDatabase(),
                 )
             } else {
@@ -243,11 +240,11 @@ class OfflineFirstDataSource(
 
         // If a row was hard-deleted on the server, it will be missing from the realtime snapshot.
         // Remove locally only if the row is already synced (avoid clobbering local pending edits).
-        val localSyncedIds = local.database.getSyncedDiaryIds()
+        val localSyncedIds = database.database.getSyncedDiaryIds()
         val missingIds = localSyncedIds.filter { it !in remoteIds }
         if (missingIds.isNotEmpty()) {
             logger.i(TAG) { "Applying remote hard deletes for ids=${missingIds.joinToString(",")}" }
-            local.database.deleteDiaries(missingIds)
+            database.database.deleteDiaries(missingIds)
         }
     }
 
