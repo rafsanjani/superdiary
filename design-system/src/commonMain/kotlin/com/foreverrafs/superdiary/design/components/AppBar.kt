@@ -25,6 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation3.ui.LocalNavAnimatedContentScope
+import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -40,45 +42,69 @@ fun AppBar(
     onProfileClick: () -> Unit = {},
     avatarUrl: String? = null,
 ) {
-    TopAppBar(
-        modifier = modifier,
-        title = {
-            Text(
-                text = stringResource(Res.string.app_name),
-                textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .semantics {
-                        heading()
-                    },
-                style = MaterialTheme.typography.displayLarge,
-                fontWeight = FontWeight.Bold,
-            )
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background,
-        ),
-        actions = {
-            Image(
-                modifier = Modifier
-                    .padding(end = 4.dp)
-                    .size(36.dp)
-                    .clip(CircleShape)
-                    .clickable {
-                        onProfileClick()
-                    },
-                url = avatarUrl,
-            )
-        },
-        navigationIcon = {
-            Box(
-                modifier = Modifier
-                    .testTag("navigate_back_button"),
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+    val sharedAnimatedContentScope = LocalNavAnimatedContentScope.current
 
-            ) {
-                navigationIcon?.invoke()
-            }
-        },
-    )
+    with(sharedTransitionScope) {
+        TopAppBar(
+            modifier = modifier,
+            title = {
+                Text(
+                    text = stringResource(Res.string.app_name),
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .sharedElement(
+                            sharedContentState = rememberSharedContentState(
+                                "app_title",
+                            ),
+                            animatedVisibilityScope = sharedAnimatedContentScope,
+                        )
+                        .semantics {
+                            heading()
+                        },
+                    style = MaterialTheme.typography.displayLarge,
+                    fontWeight = FontWeight.Bold,
+                )
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.background,
+            ),
+            actions = {
+                Image(
+                    modifier = Modifier
+                        .sharedElement(
+                            sharedContentState = rememberSharedContentState(
+                                "profile_image",
+                            ),
+                            animatedVisibilityScope = sharedAnimatedContentScope,
+                        )
+                        .padding(end = 4.dp)
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .clickable {
+                            onProfileClick()
+                        },
+                    url = avatarUrl,
+                )
+            },
+            navigationIcon = {
+                navigationIcon?.let {
+                    Box(
+                        modifier = Modifier
+                            .sharedElement(
+                                sharedContentState = rememberSharedContentState(
+                                    "navigate_back_button",
+                                ),
+                                animatedVisibilityScope = sharedAnimatedContentScope,
+                            )
+                            .testTag("navigate_back_button"),
+                    ) {
+                        navigationIcon.invoke()
+                    }
+                }
+            },
+        )
+    }
 }
 
 @Composable
