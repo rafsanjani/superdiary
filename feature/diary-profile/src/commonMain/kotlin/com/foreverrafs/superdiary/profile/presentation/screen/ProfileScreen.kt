@@ -63,6 +63,7 @@ import superdiary.feature.diary_profile.generated.resources.ic_arrow_back
 import superdiary.feature.diary_profile.generated.resources.ic_logout
 import superdiary.feature.diary_profile.generated.resources.profile_screen_section_dashboard_cards
 import superdiary.feature.diary_profile.generated.resources.profile_screen_daily_reminder_email
+import superdiary.feature.diary_profile.generated.resources.profile_screen_daily_reminder_email_description
 import superdiary.feature.diary_profile.generated.resources.profile_screen_section_email_preferences
 import superdiary.feature.diary_profile.generated.resources.unique_email_address_label
 
@@ -246,17 +247,27 @@ fun ProfileScreenContent(
                         ProfileSection(
                             label = stringResource(Res.string.profile_screen_section_email_preferences),
                         ) {
-                            CheckboxProfileItem(
-                                label = stringResource(Res.string.profile_screen_daily_reminder_email),
-                                checked = settings.dailyReminderEmail,
-                                onCheckChange = {
-                                    onUpdateSettings(
-                                        settings.copy(
-                                            dailyReminderEmail = it,
-                                        ),
-                                    )
-                                },
-                            )
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                CheckboxProfileItem(
+                                    label = stringResource(Res.string.profile_screen_daily_reminder_email),
+                                    checked = settings.dailyReminderEmail,
+                                    onCheckChange = {
+                                        onUpdateSettings(
+                                            settings.copy(
+                                                dailyReminderEmail = it,
+                                            ),
+                                        )
+                                    },
+                                )
+                                Text(
+                                    text = stringResource(
+                                        Res.string.profile_screen_daily_reminder_email_description,
+                                    ),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                                    modifier = Modifier.padding(start = 16.dp, bottom = 12.dp),
+                                )
+                            }
 
                             HorizontalDivider(
                                 modifier = Modifier
