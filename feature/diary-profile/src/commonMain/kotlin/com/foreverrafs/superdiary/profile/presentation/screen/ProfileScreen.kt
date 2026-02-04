@@ -287,8 +287,8 @@ fun ProfileScreenContent(
 
 @Composable
 private fun NavigateBackButton(
-    modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     IconButton(
         onClick = onClick,
@@ -304,10 +304,10 @@ private fun NavigateBackButton(
 
 @Composable
 private fun ProfileHeader(
-    modifier: Modifier = Modifier,
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
     viewState: ProfileScreenViewData,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
