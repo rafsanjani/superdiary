@@ -6,7 +6,6 @@ import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
-import com.foreverrafs.superdiary.data.datasource.OfflineFirstDataSource
 import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.model.Diary
@@ -30,10 +29,7 @@ class GetDiaryByIdUseCaseTest {
 
     private val getDiaryByIdUseCase = GetDiaryByIdUseCase(
         repository = DiaryListRepositoryImpl(
-            OfflineFirstDataSource(
-                database = dataSource,
-
-            ),
+            dataSource,
         ),
     )
 

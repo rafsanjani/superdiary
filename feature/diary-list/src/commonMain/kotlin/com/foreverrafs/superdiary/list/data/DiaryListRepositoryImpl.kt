@@ -4,12 +4,13 @@ import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.OfflineFirstDataSource
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.toDatabase
+import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.list.domain.repository.DiaryListRepository
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.Flow
 
 class DiaryListRepositoryImpl(
-    private val dataSource: OfflineFirstDataSource,
+    private val dataSource: DataSource,
 ) : DiaryListRepository {
 
     override fun getDiaryById(id: Long): Diary? = dataSource.find(id)

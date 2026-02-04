@@ -15,6 +15,7 @@ val testSuperDiaryDatabase: SuperDiaryDatabase
             diaryAdapter = Diary.Adapter(
                 dateAdapter = instantAdapter,
                 locationAdapter = locationAdapter,
+                updated_atAdapter = instantAdapter,
             ),
             chatAdapter = Chat.Adapter(
                 dateAdapter = instantAdapter,

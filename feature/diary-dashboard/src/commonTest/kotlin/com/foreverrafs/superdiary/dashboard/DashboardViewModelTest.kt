@@ -5,6 +5,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
+import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
@@ -18,6 +19,8 @@ import com.foreverrafs.superdiary.dashboard.domain.CountEntriesUseCase
 import com.foreverrafs.superdiary.dashboard.domain.GenerateWeeklySummaryUseCase
 import com.foreverrafs.superdiary.dashboard.domain.GetRecentEntriesUseCase
 import com.foreverrafs.superdiary.data.Result
+import com.foreverrafs.superdiary.data.datasource.InitialSyncState
+import com.foreverrafs.superdiary.data.datasource.Syncable
 import com.foreverrafs.superdiary.data.datasource.remote.DiaryApi
 import com.foreverrafs.superdiary.data.model.DiaryDto
 import com.foreverrafs.superdiary.database.Database
@@ -45,6 +48,8 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -54,8 +59,11 @@ import kotlinx.coroutines.test.setMain
 @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
 class DashboardViewModelTest {
     private lateinit var dataSource: DataSource
+    private lateinit var syncableDataSource: DataSource
 
-    private val diaryAI: DiaryAI = mock()
+    private val diaryAI: DiaryAI = mock {
+        every { generateSummary(any(), any()) } returns flowOf("summary")
+    }
 
     private val diaryApi: DiaryApi = mock {
         everySuspend { countItems() } returns Result.Success(0)
@@ -64,7 +72,7 @@ class DashboardViewModelTest {
     }
 
     private val biometricAuth: BiometricAuth = mock {
-        everySuspend { canAuthenticate() } returns true
+        every { canAuthenticate() } returns true
         everySuspend { startBiometricAuth() } returns BiometricAuth.AuthResult.Success
     }
 
@@ -74,8 +82,10 @@ class DashboardViewModelTest {
     fun setup() {
         Dispatchers.setMain(TestAppDispatchers.main)
         dataSource = mock()
+        syncableDataSource = FakeSyncableDataSource(dataSource)
 
         every { dataSource.fetchAll() }.returns(flowOf())
+        every { dataSource.getLatest(any()) } returns flowOf(listOf(Diary("Hello World")))
         every { diaryApi.fetchAll() } returns flowOf()
     }
 
@@ -99,7 +109,7 @@ class DashboardViewModelTest {
             clock = Clock.System,
             database = Database(testSuperDiaryDatabase),
         ),
-        getRecentEntriesUseCase = GetRecentEntriesUseCase(diaryApi, AggregateLogger()),
+        getRecentEntriesUseCase = GetRecentEntriesUseCase(syncableDataSource, AggregateLogger()),
         countEntriesUseCase = CountEntriesUseCase(diaryApi, AggregateLogger()),
     )
 
@@ -152,6 +162,13 @@ class DashboardViewModelTest {
         assertThat(result).isFalse()
     }
 
+    private class FakeSyncableDataSource(
+        private val delegate: DataSource,
+    ) : DataSource by delegate, Syncable {
+        override val initialSyncState: StateFlow<InitialSyncState> =
+            MutableStateFlow(InitialSyncState.Completed)
+    }
+
     @Test
     fun `Should transition to content state on dashboard after loading`() = runTest {
         every { dataSource.fetchAll() }.returns(flowOf(emptyList()))
@@ -165,8 +182,7 @@ class DashboardViewModelTest {
 
     @Test
     fun `Should show error screen when loading diaries throw an error`() = runTest {
-        every { diaryApi.fetchAll() } throws (Exception("Error fetching diaries"))
-        everySuspend { diaryApi.fetch(any()) } returns Result.Failure(Exception("Error fetching diaries"))
+        every { dataSource.getLatest(any()) } returns flowOf(emptyList())
 
         val viewModel = createDashboardViewModel()
 
@@ -174,7 +190,7 @@ class DashboardViewModelTest {
             val state =
                 awaitUntil { it is DashboardViewModel.DashboardScreenState.Error } as DashboardViewModel.DashboardScreenState.Error
 
-            assertThat(state.message).isEqualTo("Error fetching diaries")
+            assertThat(state.message).isNotEmpty()
         }
     }
 

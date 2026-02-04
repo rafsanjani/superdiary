@@ -10,6 +10,7 @@ import assertk.assertions.isNull
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.Result.Success
+import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.database.testSuperDiaryDatabase
 import com.foreverrafs.superdiary.domain.model.Diary
@@ -34,7 +35,7 @@ class DiaryListRepositoryImplTest {
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(TestAppDispatchers.main)
-        repository = DiaryListRepositoryImpl(database)
+        repository = DiaryListRepositoryImpl(LocalDataSource(database))
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

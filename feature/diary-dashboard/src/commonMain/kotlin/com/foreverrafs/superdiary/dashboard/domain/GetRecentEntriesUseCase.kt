@@ -3,17 +3,22 @@ package com.foreverrafs.superdiary.dashboard.domain
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.InitialSyncState
-import com.foreverrafs.superdiary.data.datasource.OfflineFirstDataSource
+import com.foreverrafs.superdiary.data.datasource.Syncable
 import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.repository.DataSource
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withTimeout
 
 class GetRecentEntriesUseCase(
-    private val dataSource: OfflineFirstDataSource,
+    private val dataSource: DataSource,
     private val logger: AggregateLogger,
 ) {
     suspend operator fun invoke(count: Int): Result<List<Diary>> = try {
+        require(dataSource is Syncable) {
+            "Datasource should implement Syncable interface"
+        }
+
         Result.Success(
             data = withTimeout(11_000) {
                 flow {
