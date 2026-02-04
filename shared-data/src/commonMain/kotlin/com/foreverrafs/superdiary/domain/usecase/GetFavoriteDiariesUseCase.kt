@@ -10,5 +10,5 @@ class GetFavoriteDiariesUseCase(
     private val dataSource: DataSource,
     private val dispatchers: AppCoroutineDispatchers,
 ) {
-    operator fun invoke(): Flow<List<Diary>> = dataSource.fetch().flowOn(dispatchers.io)
+    operator fun invoke(): Flow<List<Diary>> = dataSource.fetchFavorites().flowOn(dispatchers.io)
 }

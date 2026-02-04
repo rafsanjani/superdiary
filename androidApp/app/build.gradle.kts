@@ -26,7 +26,6 @@ val properties = Properties().apply {
 android {
     defaultConfig {
         compileSdk = libs.versions.compileSdk.get().toInt()
-        println(getGitCommitCount())
 
         applicationId = "com.foreverrafs.superdiary"
         minSdk = libs.versions.minimumSdk.get().toInt()

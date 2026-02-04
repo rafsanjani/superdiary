@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import androidx.navigation3.runtime.NavEntryDecorator
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -69,8 +69,9 @@ internal fun SuperDiaryNavHost(
             NavDisplay(
                 backStack = backStack,
                 onBack = { backStack.removeAt(backStack.lastIndex) },
-                entryDecorators = listOf<NavEntryDecorator<NavKey>>(
+                entryDecorators = listOf(
                     rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator(),
                 ),
                 entryProvider = entryProvider {
                     entry<AppRoute.TopLevelGraph> { key ->
@@ -199,6 +200,7 @@ fun getStartDestination(viewState: AppSessionState): NavKey = remember(viewState
                     isFromDeepLink = true,
                     showLoginScreen = true,
                 )
+
                 // Session was restored from disk and didn't originate from an email link
                 null -> {
                     // If user has biometrics enabled, show a screen asking them for that, else go straight to bottom navigation screen

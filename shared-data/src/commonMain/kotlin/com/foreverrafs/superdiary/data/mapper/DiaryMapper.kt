@@ -12,6 +12,9 @@ fun DiaryDb.toDiary(): Diary = Diary(
     date = date,
     isFavorite = isFavorite,
     location = Location.fromString(location),
+    updatedAt = updatedAt,
+    isSynced = isSynced,
+    isMarkedForDelete = isMarkedForDelete,
 )
 
 fun WeeklySummaryDb.toWeeklySummary(): WeeklySummary = WeeklySummary(

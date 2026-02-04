@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,12 +64,15 @@ fun DiaryList(
     emptyContent: @Composable (() -> Unit)? = null,
     listState: LazyListState = rememberLazyListState(),
 ) {
-    val groupedDiaries =
-        remember(diaries) {
-            diaries.groupByDate(clock)
-        }
+    val groupedDiaries = remember(diaries) {
+        diaries.groupByDate(clock)
+    }
 
     val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(groupedDiaries) {
+        listState.animateScrollToItem(0)
+    }
 
     Column(
         modifier = modifier.padding(8.dp),

@@ -18,7 +18,6 @@ class ViewController(
     fun mainViewController(): UIViewController = ComposeUIViewController(
         configure = {
             onFocusBehavior = OnFocusBehavior.DoNothing
-            opaque = false
         },
         content = {
             CompositionLocalProvider(LocalNativeViewFactory provides nativeViewFactory) {

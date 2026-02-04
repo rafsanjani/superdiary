@@ -8,5 +8,7 @@ import kotlinx.coroutines.flow.map
 internal class GetAllDiariesUseCase(
     private val repository: DiaryListRepository,
 ) {
-    operator fun invoke(): Flow<DiaryListResult> = repository.getAllDiaries().map { Result.Success(it) }
+    operator fun invoke(): Flow<DiaryListResult> = repository.getAllDiaries().map {
+        Result.Success(it)
+    }
 }

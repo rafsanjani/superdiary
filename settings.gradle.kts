@@ -122,7 +122,7 @@ rootProject.name = "superdiary"
 include(":androidApp:app")
 include(":design-system")
 // commenting this out because it doesn't work with agp 9.0 and the new android multiplatform plugin
-//include(":androidApp:benchmark")
+// include(":androidApp:benchmark")
 include(":shared-data")
 include(":navigation")
 include(":umbrella")

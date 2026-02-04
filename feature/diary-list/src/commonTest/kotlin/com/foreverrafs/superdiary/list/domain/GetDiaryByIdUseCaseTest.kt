@@ -29,7 +29,7 @@ class GetDiaryByIdUseCaseTest {
 
     private val getDiaryByIdUseCase = GetDiaryByIdUseCase(
         repository = DiaryListRepositoryImpl(
-            database,
+            dataSource,
         ),
     )
 
