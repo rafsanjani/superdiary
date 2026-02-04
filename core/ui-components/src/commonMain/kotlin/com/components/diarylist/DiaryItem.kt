@@ -171,7 +171,7 @@ fun DiaryItem(
                 )
 
                 val state = rememberRichTextState()
-                LaunchedEffect(Unit) {
+                LaunchedEffect(diary.entry) {
                     state.setHtml(diary.entry)
                 }
 

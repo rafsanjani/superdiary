@@ -11,11 +11,17 @@ import com.foreverrafs.superdiary.domain.model.toDatabase
 import com.foreverrafs.superdiary.domain.model.toDto
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import kotlin.concurrent.Volatile
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -23,6 +29,14 @@ import kotlinx.coroutines.sync.withLock
 
 interface Syncable {
     fun isSyncing(): Boolean
+    val initialSyncState: StateFlow<InitialSyncState>
+}
+
+enum class InitialSyncState {
+    NotStarted,
+    Syncing,
+    Completed,
+    Failed,
 }
 
 class OfflineFirstDataSource(
@@ -34,6 +48,11 @@ class OfflineFirstDataSource(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val syncMutex = Mutex()
 
+    @OptIn(ExperimentalAtomicApi::class)
+    private val initialSyncCompleted = AtomicBoolean(false)
+    private var initialSyncJob: Job? = null
+    private val _initialSyncState = MutableStateFlow(InitialSyncState.NotStarted)
+
     @Volatile
     private var syncStarted = false
 
@@ -44,10 +63,13 @@ class OfflineFirstDataSource(
     }
 
     init {
+        logger.i(TAG) { "OfflineFirstDataSource init: starting sync bootstrap" }
         ensureSyncStarted()
     }
 
-    override fun isSyncing(): Boolean = syncStarted
+    override fun isSyncing(): Boolean = _initialSyncState.value == InitialSyncState.Syncing
+
+    override val initialSyncState: StateFlow<InitialSyncState> = _initialSyncState.asStateFlow()
 
     override suspend fun save(diaries: List<Diary>): Long {
         val result = local.save(diaries)
@@ -117,39 +139,52 @@ class OfflineFirstDataSource(
             return
         }
         syncStarted = true
+        _initialSyncState.value = InitialSyncState.Syncing
 
         logger.i(TAG) {
             "Syncing remote and local entries"
         }
 
-        scope.launch {
+        initialSyncJob = scope.launch {
+            logger.i(TAG) { "Initial sync: pushing local pending changes" }
             scheduleSync()
+            logger.i(TAG) { "Initial sync: local pending push complete" }
         }
 
         scope.launch {
+            logger.i(TAG) { "Initial sync: subscribing to realtime feed" }
             api.fetchAll()
                 .catch { e ->
                     logger.e(tag = TAG, throwable = e) { "Realtime sync failed" }
+                    markInitialSyncFailed()
                 }
                 .collect { remoteDiaries ->
+                    logger.i(TAG) {
+                        "Realtime update received: ${remoteDiaries.size} remote entries"
+                    }
                     applyRemoteUpdates(remoteDiaries)
+                    markInitialSyncCompleteIfNeeded()
                 }
         }
     }
 
     private suspend fun scheduleSync() {
         syncMutex.withLock {
+            logger.i(TAG) { "Sync cycle started" }
             pushPendingDeletes()
             pushPendingUpserts()
+            logger.i(TAG) { "Sync cycle finished" }
         }
     }
 
     private suspend fun pushPendingDeletes() {
         val pendingDeletes = local.database.getPendingDeleteDiaries()
+        logger.i(TAG) { "Pending deletes: ${pendingDeletes.size}" }
         pendingDeletes.forEach { diary ->
             val result = api.delete(diary.toDomainDiary().toDto())
             if (result is Result.Success) {
                 diary.id?.let { id ->
+                    logger.i(TAG) { "Delete synced for diaryId=$id; removing locally" }
                     local.database.deleteDiaries(listOf(id))
                 }
             } else if (result is Result.Failure) {
@@ -160,12 +195,14 @@ class OfflineFirstDataSource(
 
     private suspend fun pushPendingUpserts() {
         val pendingSync = local.database.getPendingSyncDiaries()
+        logger.i(TAG) { "Pending upserts: ${pendingSync.size}" }
         pendingSync.forEach { diary ->
             val payload =
                 diary.toDomainDiary().copy(updatedAt = clock.now(), isSynced = false).toDto()
             val result = api.save(payload)
             if (result is Result.Success) {
                 diary.id?.let { id ->
+                    logger.i(TAG) { "Upsert synced for diaryId=$id; marking synced locally" }
                     local.database.markDiarySynced(id)
                 }
             } else if (result is Result.Failure) {
@@ -175,6 +212,7 @@ class OfflineFirstDataSource(
     }
 
     private suspend fun applyRemoteUpdates(remoteDiaries: List<com.foreverrafs.superdiary.data.model.DiaryDto>) {
+        logger.i(TAG) { "Applying remote updates: ${remoteDiaries.size} items" }
         remoteDiaries.forEach { remoteDto ->
             val remoteDiary = remoteDto.toDomainDiaryFromDto()
             val localDiary = remoteDiary.id?.let { id ->
@@ -182,8 +220,10 @@ class OfflineFirstDataSource(
             }
 
             if (remoteDto.isDeleted) {
+                logger.i(TAG) { "Remote delete for diaryId=${remoteDiary.id}" }
                 if (shouldApplyRemote(remoteDiary, localDiary)) {
                     remoteDiary.id?.let { id ->
+                        logger.i(TAG) { "Applying remote delete for diaryId=$id" }
                         local.database.deleteDiaries(listOf(id))
                     }
                 }
@@ -191,9 +231,12 @@ class OfflineFirstDataSource(
             }
 
             if (shouldApplyRemote(remoteDiary, localDiary)) {
+                logger.i(TAG) { "Applying remote upsert for diaryId=${remoteDiary.id}" }
                 local.database.upsert(
                     remoteDiary.copy(isSynced = true, isMarkedForDelete = false).toDatabase(),
                 )
+            } else {
+                logger.i(TAG) { "Skipping remote update for diaryId=${remoteDiary.id}" }
             }
         }
     }
@@ -203,6 +246,24 @@ class OfflineFirstDataSource(
         if (remote.updatedAt > local.updatedAt) return true
         if (remote.isMarkedForDelete && remote.updatedAt >= local.updatedAt) return true
         return false
+    }
+
+    @OptIn(ExperimentalAtomicApi::class)
+    private suspend fun markInitialSyncCompleteIfNeeded() {
+        if (initialSyncCompleted.load()) return
+        initialSyncJob?.join()
+        if (initialSyncCompleted.compareAndSet(expectedValue = false, newValue = true)) {
+            _initialSyncState.value = InitialSyncState.Completed
+            logger.i(TAG) { "Initial sync completed" }
+        }
+    }
+
+    @OptIn(ExperimentalAtomicApi::class)
+    private fun markInitialSyncFailed() {
+        if (initialSyncCompleted.compareAndSet(expectedValue = false, newValue = true)) {
+            _initialSyncState.value = InitialSyncState.Failed
+            logger.w(TAG) { "Initial sync failed" }
+        }
     }
 
     companion object {

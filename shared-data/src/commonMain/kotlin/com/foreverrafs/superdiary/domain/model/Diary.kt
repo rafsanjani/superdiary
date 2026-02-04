@@ -25,7 +25,7 @@ fun Diary.toDto(): DiaryDto = DiaryDto(
     date = date,
     isFavorite = isFavorite,
     location = location.toString(),
-    updatedAt = updatedAt,
+    updatedAt = updatedAt.toEpochMilliseconds(),
     isDeleted = isMarkedForDelete,
 )
 

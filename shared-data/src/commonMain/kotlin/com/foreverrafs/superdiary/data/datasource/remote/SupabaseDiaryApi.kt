@@ -8,9 +8,10 @@ import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Count
 import io.github.jan.supabase.postgrest.query.Order
 import io.github.jan.supabase.realtime.selectAsFlow
+import kotlin.time.Clock
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Clock
+import kotlinx.coroutines.flow.take
 
 class SupabaseDiaryApi(
     private val supabase: SupabaseClient,
@@ -22,7 +23,7 @@ class SupabaseDiaryApi(
     override suspend fun delete(diary: DiaryDto): Result<Boolean> = try {
         val deleted = diary.copy(
             isDeleted = true,
-            updatedAt = Clock.System.now(),
+            updatedAt = Clock.System.now().toEpochMilliseconds(),
         )
         supabase.from(TABLE_NAME).update(deleted) {
             filter {

@@ -39,7 +39,7 @@ import org.koin.dsl.module
 @OptIn(InternalCoroutinesApi::class)
 val useCaseModule = module {
     singleOf(::LocalDataSource)
-    factoryOf(::OfflineFirstDataSource) { bind<DataSource>() }
+    singleOf(::OfflineFirstDataSource) { bind<DataSource>() }
 
     factory<Clock> { Clock.System }
 

@@ -2,9 +2,9 @@ package com.foreverrafs.superdiary.dashboard.domain
 
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
+import com.foreverrafs.superdiary.data.datasource.InitialSyncState
 import com.foreverrafs.superdiary.data.datasource.OfflineFirstDataSource
 import com.foreverrafs.superdiary.domain.model.Diary
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withTimeout
@@ -17,9 +17,12 @@ class GetRecentEntriesUseCase(
         Result.Success(
             data = withTimeout(11_000) {
                 flow {
-                    while (dataSource.isSyncing()) {
-                        logger.i(TAG) { "Sync in progress: Waiting for sync to complete!" }
-                        delay(1_000)
+                    val syncState = dataSource.initialSyncState.first {
+                        it == InitialSyncState.Completed || it == InitialSyncState.Failed
+                    }
+
+                    if (syncState == InitialSyncState.Failed) {
+                        logger.w(TAG) { "Initial sync failed; continuing with local data." }
                     }
 
                     logger.i(TAG) { "Sync completed: Fetching latest entries" }
