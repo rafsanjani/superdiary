@@ -154,6 +154,8 @@ class Database(
         mapper = diaryMapper,
     ).executeAsList()
 
+    fun getSyncedDiaryIds(): List<Long> = queries.getSyncedDiaryIds().executeAsList()
+
     fun markDiarySynced(id: Long) {
         queries.markSynced(id)
     }

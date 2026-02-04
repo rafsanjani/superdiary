@@ -74,6 +74,10 @@ pendingDelete:
 SELECT * FROM diary
 WHERE is_marked_for_delete = 1;
 
+getSyncedDiaryIds:
+SELECT id FROM diary
+WHERE is_synced = 1 AND is_marked_for_delete = 0;
+
 markDeleted:
 UPDATE diary
 SET is_marked_for_delete = 1, is_synced = 0, updated_at = ?

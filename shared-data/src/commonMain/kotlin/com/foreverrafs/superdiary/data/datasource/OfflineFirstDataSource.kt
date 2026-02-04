@@ -213,6 +213,7 @@ class OfflineFirstDataSource(
 
     private suspend fun applyRemoteUpdates(remoteDiaries: List<com.foreverrafs.superdiary.data.model.DiaryDto>) {
         logger.i(TAG) { "Applying remote updates: ${remoteDiaries.size} items" }
+        val remoteIds = remoteDiaries.mapNotNull { it.id }.toSet()
         remoteDiaries.forEach { remoteDto ->
             val remoteDiary = remoteDto.toDomainDiaryFromDto()
             val localDiary = remoteDiary.id?.let { id ->
@@ -238,6 +239,15 @@ class OfflineFirstDataSource(
             } else {
                 logger.i(TAG) { "Skipping remote update for diaryId=${remoteDiary.id}" }
             }
+        }
+
+        // If a row was hard-deleted on the server, it will be missing from the realtime snapshot.
+        // Remove locally only if the row is already synced (avoid clobbering local pending edits).
+        val localSyncedIds = local.database.getSyncedDiaryIds()
+        val missingIds = localSyncedIds.filter { it !in remoteIds }
+        if (missingIds.isNotEmpty()) {
+            logger.i(TAG) { "Applying remote hard deletes for ids=${missingIds.joinToString(",")}" }
+            local.database.deleteDiaries(missingIds)
         }
     }
 
