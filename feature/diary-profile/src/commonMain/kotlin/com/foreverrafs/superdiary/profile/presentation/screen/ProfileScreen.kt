@@ -62,6 +62,8 @@ import superdiary.feature.diary_profile.generated.resources.Res
 import superdiary.feature.diary_profile.generated.resources.ic_arrow_back
 import superdiary.feature.diary_profile.generated.resources.ic_logout
 import superdiary.feature.diary_profile.generated.resources.profile_screen_section_dashboard_cards
+import superdiary.feature.diary_profile.generated.resources.profile_screen_daily_reminder_email
+import superdiary.feature.diary_profile.generated.resources.profile_screen_section_email_preferences
 import superdiary.feature.diary_profile.generated.resources.unique_email_address_label
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -230,6 +232,27 @@ fun ProfileScreenContent(
                                     onUpdateSettings(
                                         settings.copy(
                                             showLatestEntries = it,
+                                        ),
+                                    )
+                                },
+                            )
+
+                            HorizontalDivider(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp),
+                            )
+                        }
+
+                        ProfileSection(
+                            label = stringResource(Res.string.profile_screen_section_email_preferences),
+                        ) {
+                            CheckboxProfileItem(
+                                label = stringResource(Res.string.profile_screen_daily_reminder_email),
+                                checked = settings.dailyReminderEmail,
+                                onCheckChange = {
+                                    onUpdateSettings(
+                                        settings.copy(
+                                            dailyReminderEmail = it,
                                         ),
                                     )
                                 },
