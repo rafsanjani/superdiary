@@ -1,4 +1,5 @@
 import javax.xml.parsers.DocumentBuilderFactory
+import org.jlleitschuh.gradle.ktlint.tasks.KtLintFormatTask
 
 plugins {
     alias(libs.plugins.compose.hot.reload) apply false
@@ -60,3 +61,10 @@ tasks.register("printLineCoverage") {
     }
 }
 
+subprojects {
+    tasks.withType<KtLintFormatTask>().configureEach {
+        tasks.findByName("kspCommonMainKotlinMetadata")?.let {
+            dependsOn(it)
+        }
+    }
+}
