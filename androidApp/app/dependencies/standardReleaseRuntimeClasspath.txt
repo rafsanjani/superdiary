@@ -340,7 +340,7 @@ com.google.android.libraries.identity.googleid:googleid:1.2.0
 com.google.android.material:material:1.13.0
 com.google.errorprone:error_prone_annotations:2.15.0
 com.google.guava:listenablefuture:1.0
-com.google.maps.android:maps-compose:8.0.0
+com.google.maps.android:maps-compose:8.0.1
 com.google.maps.android:maps-ktx:6.0.0
 com.google.protobuf:protobuf-javalite:3.25.8
 com.mohamedrejeb.ksoup:ksoup-entities-jvm:0.5.0
@@ -534,10 +534,10 @@ org.jetbrains.compose.ui:ui-util:1.10.0
 org.jetbrains.compose.ui:ui:1.10.0
 org.jetbrains.kotlin:kotlin-bom:2.2.10
 org.jetbrains.kotlin:kotlin-reflect:2.2.20
-org.jetbrains.kotlin:kotlin-stdlib-common:2.3.0
+org.jetbrains.kotlin:kotlin-stdlib-common:2.3.10
 org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.3.0
 org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.2.10
-org.jetbrains.kotlin:kotlin-stdlib:2.3.0
+org.jetbrains.kotlin:kotlin-stdlib:2.3.10
 org.jetbrains.kotlinx:kotlinx-collections-immutable-jvm:0.4.0
 org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0
 org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2
