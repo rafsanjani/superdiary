@@ -67,9 +67,8 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
                             // We replace the default library names with something more unique (the project path).
                             // This allows us to avoid the annoying issue of `duplicate library name: foo_commonMain`
                             // https://youtrack.jetbrains.com/issue/KT-57914
-                            val projectPath = this@with.path.substring(1).replace(":", "_")
                             this as KotlinCompileCommon
-                            moduleName.set("${projectPath}_commonMain")
+                            moduleName.set("${project.group}:${moduleName.get()}")
                         }
                     }
                 }

@@ -51,7 +51,7 @@ interface DataSource {
      *
      * @return a list of diary items that were fetched
      */
-    fun fetch(): Flow<List<Diary>>
+    fun fetchFavorites(): Flow<List<Diary>>
 
     /**
      * Search for matching Diaries with entries matching [entry]. This will
@@ -85,7 +85,4 @@ interface DataSource {
 
     /** Clear all chat messages from the system */
     suspend fun clearChatMessages()
-
-    suspend fun getPendingDeletes(): List<Diary>
-    suspend fun getPendingSyncs(): List<Diary>
 }

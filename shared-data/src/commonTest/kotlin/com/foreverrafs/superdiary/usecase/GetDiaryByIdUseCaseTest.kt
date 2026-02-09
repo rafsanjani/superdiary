@@ -25,7 +25,6 @@ class GetDiaryByIdUseCaseTest {
     private val dataSource: DataSource = LocalDataSource(Database(testSuperDiaryDatabase))
     private val getDiaryByIdUseCase = GetDiaryByIdUseCase(dataSource = dataSource)
 
-
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())

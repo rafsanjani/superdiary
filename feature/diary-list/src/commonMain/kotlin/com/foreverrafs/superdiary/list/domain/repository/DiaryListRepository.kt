@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.Flow
 interface DiaryListRepository {
     fun getAllDiaries(): Flow<List<Diary>>
     fun getDiaryById(id: Long): Diary?
-    suspend fun deleteDiaries(diary: List<Diary>): Result<Int>
+    suspend fun deleteDiaries(diaries: List<Diary>): Result<Int>
     suspend fun updateDiary(diary: Diary): Result<Boolean>
 }

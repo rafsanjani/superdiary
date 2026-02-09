@@ -13,11 +13,12 @@ val testSuperDiaryDatabase: SuperDiaryDatabase
         val db = SuperDiaryDatabase(
             driver = driver,
             diaryAdapter = Diary.Adapter(
-                dateAdapter = dateAdapter,
+                dateAdapter = instantAdapter,
                 locationAdapter = locationAdapter,
+                updated_atAdapter = instantAdapter,
             ),
             chatAdapter = Chat.Adapter(
-                dateAdapter = dateAdapter,
+                dateAdapter = instantAdapter,
                 roleAdapter = EnumColumnAdapter<DiaryChatRoleDb>(),
             ),
         )

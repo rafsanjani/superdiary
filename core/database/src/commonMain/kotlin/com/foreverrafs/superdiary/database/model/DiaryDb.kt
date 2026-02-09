@@ -8,7 +8,8 @@ data class DiaryDb(
     val id: Long? = null,
     val date: Instant = Clock.System.now(),
     val isFavorite: Boolean = false,
+    val updatedAt: Instant = Clock.System.now(),
+    val isSynced: Boolean = false,
+    val isMarkedForDelete: Boolean = false,
     val location: String,
-    val markedForDelete: Boolean,
-    val isSynced: Boolean,
 )

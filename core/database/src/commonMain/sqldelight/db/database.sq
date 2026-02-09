@@ -1,41 +1,92 @@
 selectAll:
-SELECT * FROM diary ORDER BY date DESC;
+SELECT * FROM diary WHERE is_marked_for_delete = 0 ORDER BY date DESC;
 
 insert:
-INSERT INTO diary(id, entry, date, favorite, location, markForDelete, isSynced) VALUES (?, ?, ?, ?, ?, 0, ?);
+INSERT INTO diary(
+  id,
+  entry,
+  date,
+  favorite,
+  location,
+  updated_at,
+  is_synced,
+  is_marked_for_delete
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
 delete:
 DELETE FROM diary WHERE id=?;
 
 findByEntry:
-SELECT * FROM diary WHERE entry LIKE '%' || :name || '%' ORDER BY date ASC;
+SELECT * FROM diary
+WHERE entry LIKE '%' || :name || '%' AND is_marked_for_delete = 0
+ORDER BY date ASC;
 
 findById:
+SELECT * FROM diary WHERE id=? AND is_marked_for_delete = 0 LIMIT 1;
+
+findByIdIncludingDeleted:
 SELECT * FROM diary WHERE id=? LIMIT 1;
 
 findByDate:
-SELECT * FROM diary WHERE date = :date  ORDER BY date ASC;
+SELECT * FROM diary
+WHERE date = :date AND is_marked_for_delete = 0
+ORDER BY date ASC;
 
 findByDateRange:
-SELECT * FROM diary WHERE date BETWEEN ? AND ?;
+SELECT * FROM diary WHERE date BETWEEN ? AND ? AND is_marked_for_delete = 0;
 
 deleteAll:
 DELETE FROM diary;
 
 update:
-REPLACE INTO diary (id, entry, date, favorite, markForDelete, location, isSynced) VALUES(?, ?,?, ?, ?, ?, ?);
+REPLACE INTO diary(
+  id,
+  entry,
+  date,
+  favorite,
+  location,
+  updated_at,
+  is_synced,
+  is_marked_for_delete
+) VALUES(?, ?, ?, ?, ?, ?, ?, ?);
 
 getLatestEntries:
-SELECT * FROM diary ORDER BY date DESC LIMIT ?;
+SELECT * FROM diary
+WHERE is_marked_for_delete = 0
+ORDER BY date DESC
+LIMIT ?;
 
 getFavoriteDiaries:
-SELECT * FROM diary WHERE diary.favorite == 1;
+SELECT * FROM diary
+WHERE diary.favorite == 1 AND is_marked_for_delete = 0;
 
 getAffectedRows:
 SELECT changes();
 
 countEntries:
-SELECT COUNT(*) FROM diary;
+SELECT COUNT(*) FROM diary WHERE is_marked_for_delete = 0;
+
+pendingSync:
+SELECT * FROM diary
+WHERE is_synced = 0 AND is_marked_for_delete = 0;
+
+pendingDelete:
+SELECT * FROM diary
+WHERE is_marked_for_delete = 1;
+
+getSyncedDiaryIds:
+SELECT id FROM diary
+WHERE is_synced = 1 AND is_marked_for_delete = 0;
+
+markDeleted:
+UPDATE diary
+SET is_marked_for_delete = 1, is_synced = 0, updated_at = ?
+WHERE id = ?;
+
+markSynced:
+UPDATE diary
+SET is_synced = 1
+WHERE id = ?;
 
 insertSummary:
 INSERT INTO summary(summary, date) VALUES (?, ?);
@@ -57,9 +108,3 @@ DELETE FROM chat;
 
 getChatMessages:
 SELECT * FROM chat;
-
-getPendingDeletes:
-SELECT * FROM diary WHERE markForDelete = 1;
-
-getPendingSyncs:
-SELECT * FROM diary WHERE isSynced = 0;

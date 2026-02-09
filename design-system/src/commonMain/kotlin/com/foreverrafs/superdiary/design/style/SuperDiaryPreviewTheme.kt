@@ -14,6 +14,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.InternalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.navigationevent.NavigationEventDispatcher
 import androidx.navigationevent.NavigationEventDispatcherOwner
 import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
@@ -45,6 +46,7 @@ fun SuperDiaryPreviewTheme(
                                 override val navigationEventDispatcher: NavigationEventDispatcher =
                                     NavigationEventDispatcher()
                             },
+                            LocalNavAnimatedContentScope provides this,
                         ) {
                             content()
                         }

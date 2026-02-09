@@ -5,7 +5,7 @@ import app.cash.sqldelight.db.SqlDriver
 import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.database.DatabaseDriverFactory
 import com.foreverrafs.superdiary.database.SuperDiaryDatabase
-import com.foreverrafs.superdiary.database.dateAdapter
+import com.foreverrafs.superdiary.database.instantAdapter
 import com.foreverrafs.superdiary.database.model.DiaryChatRoleDb
 import com.foreverrafs.superdiary.database.model.locationAdapter
 import db.Chat
@@ -26,11 +26,12 @@ fun databaseModule(): Module = module {
         SuperDiaryDatabase(
             driver = get(),
             diaryAdapter = Diary.Adapter(
-                dateAdapter = dateAdapter,
+                dateAdapter = instantAdapter,
                 locationAdapter = locationAdapter,
+                updated_atAdapter = instantAdapter,
             ),
             chatAdapter = Chat.Adapter(
-                dateAdapter = dateAdapter,
+                dateAdapter = instantAdapter,
                 roleAdapter = EnumColumnAdapter<DiaryChatRoleDb>(),
             ),
         )

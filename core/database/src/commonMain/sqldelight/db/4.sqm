@@ -1,0 +1,11 @@
+import kotlin.time.Instant;
+
+ALTER TABLE diary ADD COLUMN updated_at INTEGER AS Instant NOT NULL DEFAULT 0;
+ALTER TABLE diary ADD COLUMN is_synced INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE diary ADD COLUMN is_marked_for_delete INTEGER NOT NULL DEFAULT 0;
+
+UPDATE diary
+SET updated_at = date,
+    is_synced = 0,
+    is_marked_for_delete = 0
+WHERE updated_at = 0;
