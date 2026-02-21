@@ -202,8 +202,6 @@ androidx.lifecycle:lifecycle-viewmodel-android:2.10.0
 androidx.lifecycle:lifecycle-viewmodel-compose-android:2.10.0
 androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0
 androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0
-androidx.lifecycle:lifecycle-viewmodel-navigation3-android:2.10.0
-androidx.lifecycle:lifecycle-viewmodel-navigation3:2.10.0
 androidx.lifecycle:lifecycle-viewmodel-savedstate-android:2.10.0
 androidx.lifecycle:lifecycle-viewmodel-savedstate:2.10.0
 androidx.lifecycle:lifecycle-viewmodel:2.10.0
@@ -494,13 +492,12 @@ org.apache.httpcomponents.core5:httpcore5:5.3.4
 org.fusesource.jansi:jansi:2.4.2
 org.jetbrains.androidx.core:core-uri-android:1.0.0-alpha01
 org.jetbrains.androidx.core:core-uri:1.0.0-alpha01
-org.jetbrains.androidx.lifecycle:lifecycle-common:2.10.0-SNAPSHOT+release-1-10
+org.jetbrains.androidx.lifecycle:lifecycle-common:2.10.0-alpha08
 org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.10.0-alpha08
 org.jetbrains.androidx.lifecycle:lifecycle-runtime:2.10.0-alpha08
-org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0-SNAPSHOT+release-1-10
-org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3:2.10.0-SNAPSHOT+release-1-10
-org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate:2.10.0-SNAPSHOT+release-1-10
-org.jetbrains.androidx.lifecycle:lifecycle-viewmodel:2.10.0-SNAPSHOT+release-1-10
+org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0-alpha08
+org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate:2.10.0-alpha08
+org.jetbrains.androidx.lifecycle:lifecycle-viewmodel:2.10.0-alpha08
 org.jetbrains.androidx.navigation3:navigation3-ui:1.0.0-alpha06
 org.jetbrains.androidx.navigation:navigation-common:2.9.2
 org.jetbrains.androidx.navigation:navigation-compose:2.9.2
