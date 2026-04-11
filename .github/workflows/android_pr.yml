@@ -16,7 +16,7 @@ jobs:
                 run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
 
             -   name: Restore LFS cache
-                uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+                uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
                 with:
                     path: .git/lfs
                     key: ${{runner.os}}-lfs-${{hashFiles('.lfs-assets-id')}}
@@ -29,7 +29,7 @@ jobs:
                     java-version: '21'
 
             -   name: Setup Gradle
-                uses: gradle/actions/setup-gradle@v5
+                uses: gradle/actions/setup-gradle@v6
 
             -   name: Danger Checks
                 run: |
@@ -154,14 +154,14 @@ jobs:
 
             -   name: Post changed files coverage violation
                 if: ${{ steps.jacoco.outputs.coverage-changed-files  < 75.0 }}
-                uses: actions/github-script@v8
+                uses: actions/github-script@v9
                 with:
                     script: |
                         core.setFailed('Coverage for changed files ${{steps.jacoco.outputs.coverage-changed-files}}% is less than 75%!')
 
             -   name: Post overall coverage violation
                 if: ${{ steps.jacoco.outputs.coverage-overall  < 90.0 }}
-                uses: actions/github-script@v8
+                uses: actions/github-script@v9
                 with:
                     script: |
                         core.setFailed('Coverage for total project: ${{steps.jacoco.outputs.coverage-overall}}% is less than 90%!')
@@ -187,7 +187,7 @@ jobs:
         steps:
             -   uses: actions/checkout@v6
             -   name: Restore LFS cache
-                uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
+                uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
                 with:
                     path: .git/lfs
                     key: ${{runner.os}}-lfs-${{hashFiles('.lfs-assets-id')}}
@@ -214,7 +214,7 @@ jobs:
                     cat gradle.properties
 
             -   name: Setup Gradle
-                uses: gradle/actions/setup-gradle@v5
+                uses: gradle/actions/setup-gradle@v6
 
             -   name: Build Android App (Release)
                 run: ./gradlew androidApp:app:assembleStandardRelease
