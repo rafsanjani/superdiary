@@ -21,7 +21,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2026.04.12")
+            from("io.github.rafsanjani:versions:2026.04.19")
             // Because 3.2.4 is making internal calls to android.util.Log which dey borst my mind
             version("supabase", "3.2.3")
         }
