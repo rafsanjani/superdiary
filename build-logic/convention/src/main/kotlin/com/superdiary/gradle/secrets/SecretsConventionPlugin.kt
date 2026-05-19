@@ -7,7 +7,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 
-data class Secret(
+private class Secret(
     val name: String,
     val value: String,
     val type: FieldSpec.Type,
@@ -23,7 +23,7 @@ class SecretsConventionPlugin : Plugin<Project> {
             pluginManager.apply("com.codingfeline.buildkonfig")
 
             buildKonfig {
-                packageName = "com.foreverrafs.superdiary.secrets"
+                packageName.set("com.foreverrafs.superdiary.secrets")
 
                 defaultConfigs {
                     loadSecrets().forEach { secret ->
