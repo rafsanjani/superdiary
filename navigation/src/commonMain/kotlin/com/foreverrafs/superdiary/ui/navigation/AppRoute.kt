@@ -18,7 +18,9 @@ sealed interface AppRoute : NavKey {
     data object CreateDiaryGraph : AppRoute
 
     @Serializable
-    data object DiaryListGraph : AppRoute
+    data class DiaryListGraph(
+        val initialDiaryId: Long? = null,
+    ) : AppRoute
 
     @Serializable
     data class AuthenticationGraph(

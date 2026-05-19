@@ -84,7 +84,7 @@ fun EntryProviderScope<NavKey>.AuthNavigation(
     NavDisplay(
         backStack = backStack,
         onBack = {
-            if (backStack.isNotEmpty()) {
+            if (backStack.size > 1) {
                 backStack.removeAt(backStack.lastIndex)
             } else {
                 onBackPress()

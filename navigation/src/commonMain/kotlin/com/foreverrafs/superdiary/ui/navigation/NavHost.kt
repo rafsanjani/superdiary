@@ -68,7 +68,7 @@ internal fun SuperDiaryNavHost(
         CompositionLocalProvider(LocalSharedTransitionScope provides this) {
             NavDisplay(
                 backStack = backStack,
-                onBack = { backStack.removeAt(backStack.lastIndex) },
+                onBack = { backStack.pop() },
                 entryDecorators = listOf(
                     rememberSaveableStateHolderNavEntryDecorator(),
                     rememberViewModelStoreNavEntryDecorator(),
@@ -84,10 +84,10 @@ internal fun SuperDiaryNavHost(
                                 backStack.add(AppRoute.CreateDiaryGraph)
                             },
                             onSeeAll = {
-                                backStack.add(AppRoute.DiaryListGraph)
+                                backStack.add(AppRoute.DiaryListGraph())
                             },
-                            onDiaryClick = {
-                                // deeplink into details section of diary list route with the diary id
+                            onDiaryClick = { diaryId ->
+                                backStack.add(AppRoute.DiaryListGraph(initialDiaryId = diaryId))
                             },
                         )
                     }
@@ -102,13 +102,14 @@ internal fun SuperDiaryNavHost(
                                     ),
                                 )
                             },
-                            onNavigateBack = { backStack.removeAt(backStack.lastIndex) },
+                            onNavigateBack = { backStack.pop() },
                         )
                     }
 
-                    entry<AppRoute.DiaryListGraph> {
+                    entry<AppRoute.DiaryListGraph> { key ->
                         DiaryListNavigation(
-                            onBackPress = { backStack.removeAt(backStack.lastIndex) },
+                            initialDiaryId = key.initialDiaryId,
+                            onBackPress = { backStack.pop() },
                             onAddEntry = {
                                 backStack.add(
                                     AppRoute.CreateDiaryGraph,
@@ -128,13 +129,13 @@ internal fun SuperDiaryNavHost(
                                 backStack.clear()
                                 backStack.add(AppRoute.TopLevelGraph(null))
                             },
-                            onBackPress = { backStack.removeAt(backStack.lastIndex) },
+                            onBackPress = { backStack.pop() },
                             requiresNewPassword = key.requiresNewPassword,
                             isFromDeepLink = key.isFromDeepLink,
                             showLoginScreen = key.showLoginScreen,
                             showBiometricAuth = key.showBiometricAuth,
                             onAuthenticationSuccess = {
-                                backStack.removeAt(backStack.lastIndex)
+                                backStack.pop()
                                 backStack.add(
                                     AppRoute.TopLevelGraph(
                                         userInfo = it,
@@ -146,8 +147,8 @@ internal fun SuperDiaryNavHost(
 
                     entry<AppRoute.CreateDiaryGraph> {
                         CreateDiaryNavigation(
-                            onDiarySaveComplete = backStack::removeLast,
-                            onDiarySaveAbort = backStack::removeLast,
+                            onDiarySaveComplete = { backStack.pop() },
+                            onDiarySaveAbort = { backStack.pop() },
                         )
                     }
                 },
@@ -174,9 +175,20 @@ private val navigationSerializersModule = SerializersModule {
         )
 
         subclass(
+            subclass = AppRoute.ProfileScreen::class,
+            serializer = AppRoute.ProfileScreen.serializer(),
+        )
+
+        subclass(
             subclass = AppRoute.AuthenticationGraph::class,
             serializer = AppRoute.AuthenticationGraph.serializer(),
         )
+    }
+}
+
+private fun MutableList<NavKey>.pop() {
+    if (size > 1) {
+        removeAt(lastIndex)
     }
 }
 

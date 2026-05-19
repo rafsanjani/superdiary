@@ -18,6 +18,7 @@ import kotlinx.serialization.modules.polymorphic
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EntryProviderScope<NavKey>.DiaryListNavigation(
+    initialDiaryId: Long?,
     onBackPress: () -> Unit,
     onAddEntry: () -> Unit,
     onProfileClick: () -> Unit,
@@ -37,12 +38,22 @@ fun EntryProviderScope<NavKey>.DiaryListNavigation(
                 }
             }
         },
-        DiaryListRoute.DiaryListScreen,
+        if (initialDiaryId == null) {
+            DiaryListRoute.DiaryListScreen
+        } else {
+            DiaryListRoute.DetailScreen(initialDiaryId.toString())
+        },
     )
 
     NavDisplay(
         backStack = backStack,
-        onBack = onBackPress,
+        onBack = {
+            if (backStack.size > 1) {
+                backStack.removeAt(backStack.lastIndex)
+            } else {
+                onBackPress()
+            }
+        },
         entryDecorators = listOf<NavEntryDecorator<NavKey>>(
             rememberSaveableStateHolderNavEntryDecorator(),
         ),
@@ -51,7 +62,13 @@ fun EntryProviderScope<NavKey>.DiaryListNavigation(
                 DetailScreen(
                     diaryId = key.diaryId,
                     onProfileClick = onProfileClick,
-                    onBackPress = { backStack.removeAt(backStack.lastIndex) },
+                    onBackPress = {
+                        if (backStack.size > 1) {
+                            backStack.removeAt(backStack.lastIndex)
+                        } else {
+                            onBackPress()
+                        }
+                    },
                 )
             }
             entry<DiaryListRoute.DiaryListScreen> {

@@ -33,7 +33,13 @@ fun EntryProviderScope<NavKey>.CreateDiaryNavigation(
 
     NavDisplay(
         backStack = backStack,
-        onBack = { backStack.removeAt(backStack.lastIndex) },
+        onBack = {
+            if (backStack.size > 1) {
+                backStack.removeAt(backStack.lastIndex)
+            } else {
+                onDiarySaveAbort()
+            }
+        },
         entryDecorators = listOf<NavEntryDecorator<NavKey>>(
             rememberSaveableStateHolderNavEntryDecorator(),
         ),

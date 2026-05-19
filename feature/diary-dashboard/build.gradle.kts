@@ -24,7 +24,6 @@ kotlin {
             implementation(libs.jetbrains.compose.resources)
             implementation(libs.jetbrains.compose.preview)
 
-            implementation(libs.jetbrains.navigation.compose)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.koin.compose)
 
