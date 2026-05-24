@@ -87,7 +87,6 @@ fun DashboardScreenContent(
     onToggleLatestEntries: () -> Unit,
     onToggleWeeklySummaryCard: () -> Unit,
     onToggleGlanceCard: () -> Unit,
-    onSeeAll: () -> Unit,
     onRetry: () -> Unit,
     onEnableBiometric: () -> Unit,
     onDiaryClick: (diaryId: Long) -> Unit,
@@ -107,7 +106,6 @@ fun DashboardScreenContent(
             dashboardItems(
                 state = state,
                 onAddEntry = onAddEntry,
-                onSeeAll = onSeeAll,
                 onDiaryClicked = onDiaryClick,
                 onToggleFavorite = onToggleFavorite,
             )
@@ -181,7 +179,6 @@ fun DashboardScreenContent(
 private fun dashboardItems(
     state: DashboardViewModel.DashboardScreenState.Content,
     onAddEntry: () -> Unit,
-    onSeeAll: () -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
     onDiaryClicked: (diaryId: Long) -> Unit,
 ): SnapshotStateList<DashboardSection> = mutableStateListOf<DashboardSection>().apply {
@@ -228,7 +225,6 @@ private fun dashboardItems(
                         LatestEntries(
                             modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
                             diaries = state.latestEntries.take(itemCount),
-                            onSeeAll = onSeeAll,
                             onDiaryClick = onDiaryClicked,
                             onToggleFavorite = onToggleFavorite,
                             isLoading = false,
@@ -307,7 +303,6 @@ private fun dashboardPlaceholderItems(): SnapshotStateList<DashboardSection> =
                         diaries = (0..2).map {
                             Diary(id = Random.nextLong(), entry = "")
                         },
-                        onSeeAll = {},
                         onDiaryClick = {},
                         onToggleFavorite = {},
                     )
@@ -440,7 +435,6 @@ fun GlanceCard(
 @Composable
 private fun LatestEntries(
     diaries: List<Diary>,
-    onSeeAll: () -> Unit,
     isLoading: Boolean,
     onToggleFavorite: (diary: Diary) -> Unit,
     onDiaryClick: (diaryId: Long) -> Unit,
@@ -593,7 +587,6 @@ private fun DashboardScreenPreview() {
                 ),
             ),
             onAddEntry = {},
-            onSeeAll = {},
             onToggleFavorite = {},
             onDiaryClick = {},
             onDisableBiometricAuth = {},

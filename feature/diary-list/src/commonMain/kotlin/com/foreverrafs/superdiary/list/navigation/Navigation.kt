@@ -10,7 +10,6 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
-import com.foreverrafs.superdiary.list.presentation.detail.screen.DetailScreen
 import com.foreverrafs.superdiary.list.presentation.list.DiaryListTab
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -20,7 +19,7 @@ import kotlinx.serialization.modules.polymorphic
 fun EntryProviderScope<NavKey>.DiaryListNavigation(
     onBackPress: () -> Unit,
     onAddEntry: () -> Unit,
-    onProfileClick: () -> Unit,
+    onDiaryClick: (diaryId: Long) -> Unit,
 ) {
     val backStack = rememberNavBackStack(
         configuration = SavedStateConfiguration {
@@ -30,10 +29,6 @@ fun EntryProviderScope<NavKey>.DiaryListNavigation(
                         subclass = DiaryListRoute.DiaryListScreen::class,
                         serializer = DiaryListRoute.DiaryListScreen.serializer(),
                     )
-                    subclass(
-                        subclass = DiaryListRoute.DetailScreen::class,
-                        serializer = DiaryListRoute.DetailScreen.serializer(),
-                    )
                 }
             }
         },
@@ -41,30 +36,16 @@ fun EntryProviderScope<NavKey>.DiaryListNavigation(
     )
 
     NavDisplay(
-        onBack = {
-            if (backStack.size == 1) {
-                onBackPress()
-            } else {
-                backStack.removeLastOrNull()
-            }
-        },
         backStack = backStack,
+        onBack = onBackPress,
         entryDecorators = listOf<NavEntryDecorator<NavKey>>(
             rememberSaveableStateHolderNavEntryDecorator(),
         ),
         entryProvider = entryProvider {
-            entry<DiaryListRoute.DetailScreen> { key ->
-                DetailScreen(
-                    diaryId = key.diaryId,
-                )
-            }
             entry<DiaryListRoute.DiaryListScreen> {
                 DiaryListTab(
                     onAddEntry = onAddEntry,
-                    onDiaryClick = {
-                        backStack.add(DiaryListRoute.DetailScreen(it.toString()))
-                    },
-                    onProfileClick = onProfileClick,
+                    onDiaryClick = onDiaryClick,
                     onBackPress = onBackPress,
                 )
             }

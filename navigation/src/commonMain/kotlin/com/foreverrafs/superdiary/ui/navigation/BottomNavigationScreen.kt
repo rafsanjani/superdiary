@@ -34,7 +34,6 @@ fun BottomNavigationScreen(
     userInfo: UserInfo?,
     onProfileClick: () -> Unit,
     onAddEntry: () -> Unit,
-    onSeeAll: () -> Unit,
     onDiaryClick: (diaryId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -85,7 +84,6 @@ fun BottomNavigationScreen(
                     DashboardTab(
                         snackbarHostState = snackbarHostState,
                         onAddEntry = onAddEntry,
-                        onSeeAll = onSeeAll,
                         onDiaryClick = onDiaryClick,
                     )
                 }
@@ -101,7 +99,7 @@ fun BottomNavigationScreen(
                     DiaryListNavigation(
                         onBackPress = navigator::goBack,
                         onAddEntry = onAddEntry,
-                        onProfileClick = onProfileClick,
+                        onDiaryClick = onDiaryClick,
                     )
                 }
             }

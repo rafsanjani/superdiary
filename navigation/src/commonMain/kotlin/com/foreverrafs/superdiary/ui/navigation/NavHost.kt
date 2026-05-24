@@ -39,6 +39,7 @@ import com.foreverrafs.superdiary.creatediary.navigation.CreateDiaryNavigation
 import com.foreverrafs.superdiary.design.components.BrandLogo
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
+import com.foreverrafs.superdiary.list.presentation.detail.screen.DiaryDetailScreen
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.AppSessionState
 import kotlinx.serialization.modules.SerializersModule
@@ -83,11 +84,8 @@ internal fun SuperDiaryNavHost(
                             onAddEntry = {
                                 backStack.add(AppRoute.CreateDiaryGraph)
                             },
-                            onSeeAll = {
-                                backStack.add(AppRoute.DiaryListGraph)
-                            },
                             onDiaryClick = {
-                                // deeplink into details section of diary list route with the diary id
+                                backStack.add(AppRoute.DiaryDetailScreen(it.toString()))
                             },
                         )
                     }
@@ -134,6 +132,16 @@ internal fun SuperDiaryNavHost(
                             onDiarySaveAbort = backStack::removeLast,
                         )
                     }
+
+                    entry<AppRoute.DiaryDetailScreen> { key ->
+                        DiaryDetailScreen(
+                            diaryId = key.diaryId,
+                            onProfileClick = {
+                                backStack.add(AppRoute.ProfileScreen)
+                            },
+                            onBackPress = { backStack.removeAt(backStack.lastIndex) },
+                        )
+                    }
                 },
             )
         }
@@ -155,6 +163,11 @@ private val navigationSerializersModule = SerializersModule {
         subclass(
             subclass = AppRoute.DiaryListGraph::class,
             serializer = AppRoute.DiaryListGraph.serializer(),
+        )
+
+        subclass(
+            subclass = AppRoute.DiaryDetailScreen::class,
+            serializer = AppRoute.DiaryDetailScreen.serializer(),
         )
 
         subclass(

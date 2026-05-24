@@ -186,7 +186,8 @@ sentry {
 dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.google.material)
-    implementation(platform("io.sentry:sentry-bom:8.41.0"))
+    // TODO: Replace with sentry-bom from version catalog
+    implementation(platform("io.sentry:sentry-bom:8.42.0"))
     implementation(projects.navigation)
     implementation(projects.sharedData)
     implementation(projects.core.diaryAi)
