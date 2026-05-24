@@ -56,10 +56,6 @@ kotlin {
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
         }
 
-        androidUnitTest {
-            dependencies {}
-        }
-
         jvmMain {
             dependencies {
                 implementation(libs.koin.jvm)

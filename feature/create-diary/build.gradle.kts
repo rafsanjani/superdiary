@@ -11,7 +11,7 @@ plugins {
 
 kotlin {
     sourceSets {
-        androidUnitTest.dependencies {
+        androidHostTest.dependencies {
             implementation(projects.commonTest)
             implementation(libs.google.testparameterinjector)
         }

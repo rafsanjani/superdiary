@@ -12,7 +12,7 @@ plugins {
 
 kotlin {
     sourceSets {
-        androidUnitTest.dependencies {
+        androidHostTest.dependencies {
             implementation(libs.google.testparameterinjector)
             implementation(projects.commonTest)
         }

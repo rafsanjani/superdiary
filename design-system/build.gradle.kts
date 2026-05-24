@@ -34,7 +34,7 @@ kotlin {
             }
         }
 
-        androidUnitTest {
+        androidHostTest {
             dependencies {
                 implementation(libs.koin.android)
                 implementation(libs.kotlinx.coroutines.test)
