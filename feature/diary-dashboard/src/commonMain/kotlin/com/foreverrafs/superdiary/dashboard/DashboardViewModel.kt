@@ -16,8 +16,10 @@ import com.foreverrafs.superdiary.domain.usecase.CalculateBestStreakUseCase
 import com.foreverrafs.superdiary.domain.usecase.CalculateStreakUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.utils.DiarySettings
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -70,6 +72,8 @@ class DashboardViewModel(
         mutableState.update {
             it as? DashboardScreenState.Loading ?: DashboardScreenState.Loading
         }
+
+        delay(2000.milliseconds)
 
         logger.i(TAG) {
             "Loading dashboard content"
