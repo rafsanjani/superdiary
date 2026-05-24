@@ -28,6 +28,8 @@ fun Image(
     val imageUrl = url?.takeUnless { it.isBlank() || it == "null" }
     val model = ImageRequest
         .Builder(LocalPlatformContext.current)
+        .placeholderMemoryCacheKey(url)
+        .memoryCacheKey(url)
         .crossfade(true)
         .data(imageUrl)
         .build()
