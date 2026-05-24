@@ -8,6 +8,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
@@ -41,11 +42,13 @@ fun Modifier.shimmer(
     )
 
     val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
-    val shimmerColors = listOf(
-        surfaceVariant.copy(alpha = 0.35f),
-        Color.White.copy(alpha = 0.55f),
-        surfaceVariant.copy(alpha = 0.35f),
-    )
+    val shimmerColors = remember(surfaceVariant) {
+        listOf(
+            surfaceVariant.copy(alpha = 0.35f),
+            Color.White.copy(alpha = 0.55f),
+            surfaceVariant.copy(alpha = 0.35f),
+        )
+    }
 
     return this
         .graphicsLayer {
