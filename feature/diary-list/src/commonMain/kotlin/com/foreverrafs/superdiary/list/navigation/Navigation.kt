@@ -11,7 +11,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.foreverrafs.superdiary.list.presentation.detail.screen.DetailScreen
-import com.foreverrafs.superdiary.list.presentation.list.DiaryListScreen
+import com.foreverrafs.superdiary.list.presentation.list.DiaryListTab
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
@@ -41,8 +41,14 @@ fun EntryProviderScope<NavKey>.DiaryListNavigation(
     )
 
     NavDisplay(
+        onBack = {
+            if (backStack.size == 1) {
+                onBackPress()
+            } else {
+                backStack.removeLastOrNull()
+            }
+        },
         backStack = backStack,
-        onBack = onBackPress,
         entryDecorators = listOf<NavEntryDecorator<NavKey>>(
             rememberSaveableStateHolderNavEntryDecorator(),
         ),
@@ -50,12 +56,10 @@ fun EntryProviderScope<NavKey>.DiaryListNavigation(
             entry<DiaryListRoute.DetailScreen> { key ->
                 DetailScreen(
                     diaryId = key.diaryId,
-                    onProfileClick = onProfileClick,
-                    onBackPress = { backStack.removeAt(backStack.lastIndex) },
                 )
             }
             entry<DiaryListRoute.DiaryListScreen> {
-                DiaryListScreen(
+                DiaryListTab(
                     onAddEntry = onAddEntry,
                     onDiaryClick = {
                         backStack.add(DiaryListRoute.DetailScreen(it.toString()))

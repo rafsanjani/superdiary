@@ -20,6 +20,7 @@ import com.foreverrafs.superdiary.chat.presentation.screen.DiaryChatTab
 import com.foreverrafs.superdiary.dashboard.screen.DashboardTab
 import com.foreverrafs.superdiary.design.components.AppBar
 import com.foreverrafs.superdiary.favorite.screen.FavoriteTab
+import com.foreverrafs.superdiary.list.navigation.DiaryListNavigation
 import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
 
 /**
@@ -93,6 +94,14 @@ fun BottomNavigationScreen(
                     FavoriteTab(
                         snackbarHostState = snackbarHostState,
                         onFavoriteClick = onDiaryClick,
+                    )
+                }
+
+                entry<TopLevelRoute.DiaryList> {
+                    DiaryListNavigation(
+                        onBackPress = navigator::goBack,
+                        onAddEntry = onAddEntry,
+                        onProfileClick = onProfileClick,
                     )
                 }
             }

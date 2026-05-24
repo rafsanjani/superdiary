@@ -18,8 +18,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DetailScreen(
     diaryId: String,
-    onProfileClick: () -> Unit,
-    onBackPress: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: DetailsViewModel = koinViewModel()
@@ -33,10 +31,7 @@ fun DetailScreen(
         is DetailsViewState.DiarySelected -> {
             DetailScreenContent(
                 modifier = modifier,
-                onBackPress = onBackPress,
-                onDeleteDiary = viewModel::deleteDiary,
                 viewState = state,
-                onProfileClick = onProfileClick,
             )
         }
 

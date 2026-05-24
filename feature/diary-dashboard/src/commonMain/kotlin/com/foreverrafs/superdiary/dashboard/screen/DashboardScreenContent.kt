@@ -4,7 +4,6 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -68,7 +67,6 @@ import superdiary.feature.diary_dashboard.generated.resources.Res
 import superdiary.feature.diary_dashboard.generated.resources.ic_close
 import superdiary.feature.diary_dashboard.generated.resources.label_add_entry
 import superdiary.feature.diary_dashboard.generated.resources.label_button_retry
-import superdiary.feature.diary_dashboard.generated.resources.label_button_show_all
 import superdiary.feature.diary_dashboard.generated.resources.label_entries
 import superdiary.feature.diary_dashboard.generated.resources.label_glance_header_best_streak
 import superdiary.feature.diary_dashboard.generated.resources.label_glance_header_latest_entries
@@ -449,30 +447,12 @@ private fun LatestEntries(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
-        Row(
-            modifier = Modifier
-                .testTag("glance_section_see_all")
-                .clickable(
-                    indication = null,
-                    interactionSource = MutableInteractionSource(),
-                    onClick = onSeeAll,
-                )
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text(
-                text = stringResource(Res.string.label_glance_header_latest_entries),
-                style = MaterialTheme.typography.headlineMedium,
-            )
+        Text(
+            text = stringResource(Res.string.label_glance_header_latest_entries),
+            style = MaterialTheme.typography.headlineMedium,
+        )
 
-            Spacer(modifier = Modifier.weight(1f))
-
-            Text(
-                stringResource(Res.string.label_button_show_all),
-                style = MaterialTheme.typography.labelSmall,
-            )
-        }
+        Spacer(modifier = Modifier.height(8.dp))
 
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),

@@ -39,7 +39,6 @@ import com.foreverrafs.superdiary.creatediary.navigation.CreateDiaryNavigation
 import com.foreverrafs.superdiary.design.components.BrandLogo
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
-import com.foreverrafs.superdiary.list.navigation.DiaryListNavigation
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.AppSessionState
 import kotlinx.serialization.modules.SerializersModule
@@ -104,22 +103,6 @@ internal fun SuperDiaryNavHost(
                                 )
                             },
                             onNavigateBack = { backStack.removeAt(backStack.lastIndex) },
-                        )
-                    }
-
-                    entry<AppRoute.DiaryListGraph> {
-                        DiaryListNavigation(
-                            onBackPress = { backStack.removeAt(backStack.lastIndex) },
-                            onAddEntry = {
-                                backStack.add(
-                                    AppRoute.CreateDiaryGraph,
-                                )
-                            },
-                            onProfileClick = {
-                                backStack.add(
-                                    AppRoute.ProfileScreen,
-                                )
-                            },
                         )
                     }
 
