@@ -72,9 +72,9 @@ fun AppBar(
             actions = {
                 Image(
                     modifier = Modifier
-                        .sharedElement(
-                            sharedContentState = rememberSharedContentState(
-                                "profile_image",
+                        .sharedBounds(
+                            rememberSharedContentState(
+                                key = "profile_image",
                             ),
                             animatedVisibilityScope = sharedAnimatedContentScope,
                         )

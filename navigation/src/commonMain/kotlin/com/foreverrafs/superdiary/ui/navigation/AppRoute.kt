@@ -21,13 +21,16 @@ sealed interface AppRoute : NavKey {
     data object DiaryListGraph : AppRoute
 
     @Serializable
+    data class DiaryDetailScreen(val diaryId: String) : AppRoute
+
+    @Serializable
     data class AuthenticationGraph(
         val requiresNewPassword: Boolean = false,
         val showLoginScreen: Boolean = true,
         val isFromDeepLink: Boolean = false,
         val showBiometricAuth: Boolean = false,
-    ) : AppRoute, NavKey
+    ) : AppRoute
 
     @Serializable
-    data object ProfileScreen : AppRoute
+    data class ProfileScreen(val userInfo: UserInfo? = null) : AppRoute
 }

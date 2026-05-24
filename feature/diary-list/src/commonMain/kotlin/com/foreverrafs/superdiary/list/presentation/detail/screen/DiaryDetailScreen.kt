@@ -16,7 +16,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun DetailScreen(
+fun DiaryDetailScreen(
     diaryId: String,
     onProfileClick: () -> Unit,
     onBackPress: () -> Unit,
@@ -46,7 +46,7 @@ fun DetailScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = "Selected account is null. This shouldn't ever happen.",
+                    text = "Selected diary is null. This shouldn't ever happen.",
                 )
             }
         }

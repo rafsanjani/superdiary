@@ -13,7 +13,7 @@ plugins {
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     sourceSets {
-        androidUnitTest.dependencies {
+        androidHostTest.dependencies {
             implementation(libs.google.testparameterinjector)
             implementation(projects.commonTest)
         }

@@ -14,7 +14,7 @@ kotlin {
             dependencies {
                 implementation(libs.jetbrains.compose.runtime)
                 implementation(libs.jetbrains.compose.foundation)
-                implementation("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3:2.10.0")
+                api("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3:2.10.0")
                 implementation(libs.jetbrains.lifecycle.runtime.compose)
                 implementation(libs.androidx.core.uri)
 
@@ -54,10 +54,6 @@ kotlin {
 
         commonTest {
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
-        }
-
-        androidUnitTest {
-            dependencies {}
         }
 
         jvmMain {

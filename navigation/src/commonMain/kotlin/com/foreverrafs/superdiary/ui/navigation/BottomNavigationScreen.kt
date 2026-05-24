@@ -20,6 +20,7 @@ import com.foreverrafs.superdiary.chat.presentation.screen.DiaryChatTab
 import com.foreverrafs.superdiary.dashboard.screen.DashboardTab
 import com.foreverrafs.superdiary.design.components.AppBar
 import com.foreverrafs.superdiary.favorite.screen.FavoriteTab
+import com.foreverrafs.superdiary.list.navigation.DiaryListNavigation
 import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
 
 /**
@@ -33,7 +34,6 @@ fun BottomNavigationScreen(
     userInfo: UserInfo?,
     onProfileClick: () -> Unit,
     onAddEntry: () -> Unit,
-    onSeeAll: () -> Unit,
     onDiaryClick: (diaryId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -84,7 +84,6 @@ fun BottomNavigationScreen(
                     DashboardTab(
                         snackbarHostState = snackbarHostState,
                         onAddEntry = onAddEntry,
-                        onSeeAll = onSeeAll,
                         onDiaryClick = onDiaryClick,
                     )
                 }
@@ -93,6 +92,14 @@ fun BottomNavigationScreen(
                     FavoriteTab(
                         snackbarHostState = snackbarHostState,
                         onFavoriteClick = onDiaryClick,
+                    )
+                }
+
+                entry<TopLevelRoute.DiaryList> {
+                    DiaryListNavigation(
+                        onBackPress = navigator::goBack,
+                        onAddEntry = onAddEntry,
+                        onDiaryClick = onDiaryClick,
                     )
                 }
             }

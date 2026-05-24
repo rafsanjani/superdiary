@@ -23,7 +23,7 @@ kotlin {
             }
         }
 
-        androidUnitTest {
+        androidHostTest {
             dependencies {
                 implementation(libs.square.sqldelight.driver.sqlite)
             }
@@ -42,4 +42,3 @@ kotlin {
         }
     }
 }
-

@@ -13,7 +13,6 @@ import org.koin.compose.viewmodel.koinViewModel
 fun DashboardTab(
     snackbarHostState: SnackbarHostState,
     onAddEntry: () -> Unit,
-    onSeeAll: () -> Unit,
     onDiaryClick: (diaryId: Long) -> Unit,
 ) {
     val screenModel: DashboardViewModel = koinViewModel()
@@ -23,7 +22,6 @@ fun DashboardTab(
     DashboardScreenContent(
         state = screenState,
         onAddEntry = onAddEntry,
-        onSeeAll = onSeeAll,
         onToggleFavorite = {
             coroutineScope.launch {
                 if (screenModel.toggleFavorite(it)) {
