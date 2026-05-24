@@ -79,7 +79,7 @@ internal fun SuperDiaryNavHost(
                         BottomNavigationScreen(
                             userInfo = key.userInfo,
                             onProfileClick = {
-                                backStack.add(AppRoute.ProfileScreen)
+                                backStack.add(AppRoute.ProfileScreen(key.userInfo))
                             },
                             onAddEntry = {
                                 backStack.add(AppRoute.CreateDiaryGraph)
@@ -90,7 +90,7 @@ internal fun SuperDiaryNavHost(
                         )
                     }
 
-                    entry<AppRoute.ProfileScreen> {
+                    entry<AppRoute.ProfileScreen> { key ->
                         ProfileScreen(
                             onLogoutComplete = {
                                 backStack.clear()
@@ -137,7 +137,7 @@ internal fun SuperDiaryNavHost(
                         DiaryDetailScreen(
                             diaryId = key.diaryId,
                             onProfileClick = {
-                                backStack.add(AppRoute.ProfileScreen)
+                                backStack.add(AppRoute.ProfileScreen())
                             },
                             onBackPress = { backStack.removeAt(backStack.lastIndex) },
                         )
@@ -168,6 +168,11 @@ private val navigationSerializersModule = SerializersModule {
         subclass(
             subclass = AppRoute.DiaryDetailScreen::class,
             serializer = AppRoute.DiaryDetailScreen.serializer(),
+        )
+
+        subclass(
+            subclass = AppRoute.ProfileScreen::class,
+            serializer = AppRoute.ProfileScreen.serializer(),
         )
 
         subclass(

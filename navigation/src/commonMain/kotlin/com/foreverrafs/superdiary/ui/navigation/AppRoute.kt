@@ -29,8 +29,8 @@ sealed interface AppRoute : NavKey {
         val showLoginScreen: Boolean = true,
         val isFromDeepLink: Boolean = false,
         val showBiometricAuth: Boolean = false,
-    ) : AppRoute, NavKey
+    ) : AppRoute
 
     @Serializable
-    data object ProfileScreen : AppRoute
+    data class ProfileScreen(val userInfo: UserInfo? = null) : AppRoute
 }
