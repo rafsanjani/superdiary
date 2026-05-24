@@ -28,7 +28,6 @@ kotlin {
             implementation(projects.core.location)
             implementation(libs.richTextEditor)
             implementation(projects.sharedData)
-            implementation(libs.shimmer)
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(projects.designSystem)
             implementation(libs.kotlinx.serialization.json)

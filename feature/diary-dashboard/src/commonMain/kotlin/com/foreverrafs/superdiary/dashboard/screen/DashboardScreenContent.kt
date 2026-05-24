@@ -52,11 +52,11 @@ import com.foreverrafs.superdiary.common.utils.format
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.design.components.ConfirmBiometricAuthDialog
+import com.foreverrafs.superdiary.design.components.shimmer
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.utils.toDate
-import com.valentinilk.shimmer.shimmer
 import kotlin.random.Random
 import kotlin.time.Clock
 import kotlinx.coroutines.launch
@@ -233,6 +233,7 @@ private fun dashboardItems(
                             onSeeAll = onSeeAll,
                             onDiaryClick = onDiaryClicked,
                             onToggleFavorite = onToggleFavorite,
+                            isLoading = false,
                         )
                     } else {
                         Button(
@@ -302,11 +303,9 @@ private fun dashboardPlaceholderItems(): SnapshotStateList<DashboardSection> =
             DashboardSection(
                 content = {
                     LatestEntries(
+                        isLoading = true,
                         modifier = Modifier.shimmer()
-                            .animateItem(
-                                fadeInSpec = null,
-                                fadeOutSpec = null,
-                            ),
+                            .animateItem(),
                         diaries = (0..2).map {
                             Diary(id = Random.nextLong(), entry = "")
                         },
@@ -444,6 +443,7 @@ fun GlanceCard(
 private fun LatestEntries(
     diaries: List<Diary>,
     onSeeAll: () -> Unit,
+    isLoading: Boolean,
     onToggleFavorite: (diary: Diary) -> Unit,
     onDiaryClick: (diaryId: Long) -> Unit,
     modifier: Modifier = Modifier,
@@ -483,6 +483,7 @@ private fun LatestEntries(
                     selected = false,
                     inSelectionMode = false,
                     modifier = Modifier
+                        .shimmer(enabled = isLoading)
                         .clickable(
                             onClick = { diary.id?.let { onDiaryClick(it) } },
                         )
