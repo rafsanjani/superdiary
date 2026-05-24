@@ -288,8 +288,6 @@ com.squareup.okhttp3:okhttp:5.3.2
 com.squareup.okio:okio-jvm:3.17.0
 com.squareup.okio:okio:3.17.0
 com.typesafe:config:1.4.5
-com.valentinilk.shimmer:compose-shimmer-android:1.4.0
-com.valentinilk.shimmer:compose-shimmer:1.4.0
 dev.icerock.moko:permissions-android:0.20.1
 dev.icerock.moko:permissions-compose-android:0.20.1
 dev.icerock.moko:permissions-compose:0.20.1
