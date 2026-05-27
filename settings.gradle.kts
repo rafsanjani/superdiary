@@ -25,6 +25,9 @@ dependencyResolutionManagement {
             // Because 3.2.4 is making internal calls to android.util.Log which dey borst my mind
             version("supabase", "3.2.3")
         }
+        create("conventionLibs") {
+            from(files("gradle/convention-libs.versions.toml"))
+        }
     }
 }
 
