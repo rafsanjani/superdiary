@@ -16,9 +16,8 @@ plugins {
     alias(libs.plugins.kotlin.parcelize) apply false
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.ktlint) apply false
-    id("com.superdiary.ktlint")
-    id("com.superdiary.githooks")
-    id("com.superdiary.snapshotdiff")
+    alias(conventionLibs.plugins.superdiary.ktlint)
+    alias(conventionLibs.plugins.superdiary.githooks)
 }
 
 buildscript {
@@ -29,6 +28,7 @@ buildscript {
 
 // TODO: Move this into a plugin
 tasks.register("printLineCoverage") {
+    description = "Prints the code test coverage"
     group = "verification"
     doLast {
         val report = file("build/reports/kover/report.xml")
@@ -67,4 +67,13 @@ subprojects {
             dependsOn(it)
         }
     }
+
+    tasks.matching { it.name.startsWith("preparePaparazzi") && it.name.endsWith("Resources") }
+        .configureEach {
+            doLast {
+                val resourcesFile = outputs.files.singleFile
+                if (!resourcesFile.exists()) return@doLast
+                // filter out entries ending with ".anchor" from resourcePackageNames in the JSON
+            }
+        }
 }

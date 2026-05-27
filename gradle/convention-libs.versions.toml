@@ -1,0 +1,8 @@
+[plugins]
+superdiary-android-library = { id = "com.superdiary.android.library" }
+superdiary-githooks = { id = "com.superdiary.githooks" }
+superdiary-kotlin-android = { id = "com.superdiary.kotlin.android" }
+superdiary-ktlint = { id = "com.superdiary.ktlint" }
+superdiary-multiplatform-compose = { id = "com.superdiary.multiplatform.compose" }
+superdiary-multiplatform-kotlin = { id = "com.superdiary.multiplatform.kotlin" }
+superdiary-secrets = { id = "com.superdiary.secrets" }

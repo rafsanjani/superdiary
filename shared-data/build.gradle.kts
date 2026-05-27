@@ -4,8 +4,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 
 plugins {
-    id("com.superdiary.multiplatform.kotlin")
-    id("com.superdiary.android.library")
+    alias(conventionLibs.plugins.superdiary.multiplatform.kotlin)
+    alias(conventionLibs.plugins.superdiary.android.library)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.testLogger)
     alias(libs.plugins.kotlin.serialization)
