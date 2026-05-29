@@ -14,12 +14,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -35,12 +33,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,7 +50,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -63,7 +60,9 @@ import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatMessage
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatRole
 import com.foreverrafs.superdiary.chat.presentation.DiaryChatViewState
+import com.foreverrafs.superdiary.design.components.AppBar
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
+import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlin.time.Clock
@@ -81,17 +80,29 @@ fun DiaryChatScreenContent(
     screenState: DiaryChatViewState,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
+    avatarUrl: String? = null,
+    onProfileClick: () -> Unit = {},
     onQueryDiaries: (query: String) -> Unit = {},
     onDismissError: () -> Unit = {},
 ) {
     val currentOnDismissError by rememberUpdatedState(onDismissError)
 
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-        contentAlignment = Alignment.Center,
+    Scaffold(
+        topBar = {
+            AppBar(
+                avatarUrl = avatarUrl,
+                onProfileClick = onProfileClick,
+                title = "Spartan AI",
+            )
+        },
+        modifier = modifier.fillMaxSize(),
     ) {
+//        Box(
+//            modifier = modifier
+//                .fillMaxSize()
+//                .background(MaterialTheme.colorScheme.background),
+//            contentAlignment = Alignment.Center,
+//        ) {
         when (screenState) {
             is DiaryChatViewState.Loading -> {
                 Text("Loading Diaries")
@@ -137,22 +148,20 @@ fun DiaryChatScreenContent(
                         ) { item ->
                             ChatBubble(
                                 chatItem = item,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .animateItem(
-                                        fadeInSpec = tween(
-                                            durationMillis = 1000,
-                                            easing = LinearEasing,
-                                        ),
-                                        fadeOutSpec = tween(
-                                            durationMillis = 1000,
-                                            easing = LinearEasing,
-                                        ),
-                                        placementSpec = tween(
-                                            durationMillis = 1000,
-                                            easing = LinearEasing,
-                                        ),
+                                modifier = Modifier.fillMaxWidth().animateItem(
+                                    fadeInSpec = tween(
+                                        durationMillis = 1000,
+                                        easing = LinearEasing,
                                     ),
+                                    fadeOutSpec = tween(
+                                        durationMillis = 1000,
+                                        easing = LinearEasing,
+                                    ),
+                                    placementSpec = tween(
+                                        durationMillis = 1000,
+                                        easing = LinearEasing,
+                                    ),
+                                ),
                             )
                         }
 
@@ -237,8 +246,10 @@ fun DiaryChatScreenContent(
             }
         }
     }
+//    }
 }
 
+@OptIn(ExperimentalRichTextApi::class)
 @Composable
 fun ChatBubble(
     chatItem: DiaryChatMessage,
@@ -273,12 +284,6 @@ fun ChatBubble(
             color = Color.White,
         )
     }
-}
-
-@Composable
-fun keyboardVisibilityState(): State<Boolean> {
-    val isImeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
-    return rememberUpdatedState(isImeVisible)
 }
 
 @Preview

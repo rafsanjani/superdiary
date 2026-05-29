@@ -41,6 +41,7 @@ fun AppBar(
     navigationIcon: @Composable (() -> Unit)? = null,
     onProfileClick: () -> Unit = {},
     avatarUrl: String? = null,
+    title: String? = null,
 ) {
     val sharedTransitionScope = LocalSharedTransitionScope.current
     val sharedAnimatedContentScope = LocalNavAnimatedContentScope.current
@@ -50,10 +51,10 @@ fun AppBar(
             modifier = modifier,
             title = {
                 Text(
-                    text = stringResource(Res.string.app_name),
+                    text = title ?: stringResource(Res.string.app_name),
                     textAlign = TextAlign.Start,
                     modifier = Modifier
-                        .sharedElement(
+                        .sharedBounds(
                             sharedContentState = rememberSharedContentState(
                                 "app_title",
                             ),
@@ -72,9 +73,9 @@ fun AppBar(
             actions = {
                 Image(
                     modifier = Modifier
-                        .sharedBounds(
+                        .sharedElement(
                             rememberSharedContentState(
-                                key = "profile_image",
+                                key = PROFILE_IMAGE_SHARED_ELEMENT_KEY,
                             ),
                             animatedVisibilityScope = sharedAnimatedContentScope,
                         )

@@ -20,6 +20,8 @@ import org.jetbrains.compose.resources.painterResource
 import superdiary.design_system.generated.resources.Res
 import superdiary.design_system.generated.resources.default_avatar
 
+const val PROFILE_IMAGE_SHARED_ELEMENT_KEY = "profile.image.shared.element"
+
 @Composable
 fun Image(
     url: String?,

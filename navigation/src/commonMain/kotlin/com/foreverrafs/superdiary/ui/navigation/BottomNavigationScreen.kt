@@ -18,9 +18,8 @@ import androidx.navigation3.ui.NavDisplay
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.chat.presentation.screen.DiaryChatTab
 import com.foreverrafs.superdiary.dashboard.screen.DashboardTab
-import com.foreverrafs.superdiary.design.components.AppBar
 import com.foreverrafs.superdiary.favorite.screen.FavoriteTab
-import com.foreverrafs.superdiary.list.navigation.DiaryListNavigation
+import com.foreverrafs.superdiary.list.presentation.list.DiaryListTab
 import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
 
 /**
@@ -50,12 +49,6 @@ fun BottomNavigationScreen(
 
     Scaffold(
         modifier = modifier,
-        topBar = {
-            AppBar(
-                avatarUrl = userInfo?.avatarUrl,
-                onProfileClick = onProfileClick,
-            )
-        },
         bottomBar = {
             SuperDiaryBottomBar(
                 items = TopLevelRoute.Items.toList(),
@@ -77,6 +70,8 @@ fun BottomNavigationScreen(
                 entry<TopLevelRoute.DiaryChatTab> {
                     DiaryChatTab(
                         snackbarHostState = snackbarHostState,
+                        avatarUrl = userInfo?.avatarUrl,
+                        onProfileClick = onProfileClick,
                     )
                 }
 
@@ -85,6 +80,8 @@ fun BottomNavigationScreen(
                         snackbarHostState = snackbarHostState,
                         onAddEntry = onAddEntry,
                         onDiaryClick = onDiaryClick,
+                        avatarUrl = userInfo?.avatarUrl,
+                        onProfileClick = onProfileClick,
                     )
                 }
 
@@ -92,14 +89,18 @@ fun BottomNavigationScreen(
                     FavoriteTab(
                         snackbarHostState = snackbarHostState,
                         onFavoriteClick = onDiaryClick,
+                        avatarUrl = userInfo?.avatarUrl,
+                        onProfileClick = onProfileClick,
                     )
                 }
 
                 entry<TopLevelRoute.DiaryList> {
-                    DiaryListNavigation(
-                        onBackPress = navigator::goBack,
+                    DiaryListTab(
                         onAddEntry = onAddEntry,
                         onDiaryClick = onDiaryClick,
+                        avatarUrl = userInfo?.avatarUrl,
+                        onBackPress = navigator::goBack,
+                        onProfileClick = onProfileClick,
                     )
                 }
             }

@@ -4,6 +4,7 @@ package com.foreverrafs.superdiary.list.presentation.list
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,13 +24,15 @@ import org.koin.compose.viewmodel.koinViewModel
 fun DiaryListTab(
     onAddEntry: () -> Unit,
     onDiaryClick: (id: Long) -> Unit,
+    avatarUrl: String?,
     onBackPress: () -> Unit,
     modifier: Modifier = Modifier,
+    onProfileClick: () -> Unit,
 ) {
     val screenModel: DiaryListViewModel = koinViewModel()
     val screenState by screenModel.state.collectAsState()
 
-    var diaryFilters by rememberSaveable(stateSaver = DiaryFilters.Companion.Saver) {
+    var diaryFilters by rememberSaveable(stateSaver = DiaryFilters.Saver) {
         mutableStateOf(DiaryFilters())
     }
 
@@ -51,10 +54,13 @@ fun DiaryListTab(
     }
 
     DiaryListScreenContent(
-        modifier = modifier.fillMaxSize(),
         screenModel = screenState,
-        showSearchBar = true,
         diaryFilters = diaryFilters,
+        showSearchBar = true,
         diaryListActions = diaryListActions,
+        modifier = modifier.fillMaxSize(),
+        avatarUrl = avatarUrl,
+        onProfileClick = onProfileClick,
+        listState = rememberLazyListState(),
     )
 }

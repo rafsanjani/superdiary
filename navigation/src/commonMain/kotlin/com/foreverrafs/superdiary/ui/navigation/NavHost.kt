@@ -79,7 +79,7 @@ internal fun SuperDiaryNavHost(
                         BottomNavigationScreen(
                             userInfo = key.userInfo,
                             onProfileClick = {
-                                backStack.add(AppRoute.ProfileScreen(key.userInfo))
+                                backStack.add(AppRoute.ProfileScreen)
                             },
                             onAddEntry = {
                                 backStack.add(AppRoute.CreateDiaryGraph)
@@ -137,7 +137,7 @@ internal fun SuperDiaryNavHost(
                         DiaryDetailScreen(
                             diaryId = key.diaryId,
                             onProfileClick = {
-                                backStack.add(AppRoute.ProfileScreen())
+                                backStack.add(AppRoute.ProfileScreen)
                             },
                             onBackPress = { backStack.removeAt(backStack.lastIndex) },
                         )

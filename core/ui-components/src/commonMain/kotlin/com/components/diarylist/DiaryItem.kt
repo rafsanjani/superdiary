@@ -29,6 +29,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -54,17 +56,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.foreverrafs.superdiary.common.utils.format
+import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.utils.toDate
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 import kotlin.math.roundToInt
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -200,8 +206,9 @@ fun DiaryItem(
         // Selection mode icon
         if (inSelectionMode) {
             val iconModifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(top = 12.dp, start = 4.dp).size(20.dp)
+                .align(Alignment.TopStart)
+                .padding(top = 12.dp, start = 4.dp).size(16.dp)
+                .zIndex(100f)
 
             if (selected) {
                 Icon(
@@ -237,7 +244,7 @@ fun DiaryItem(
                     onToggleFavorite()
                     coroutineScope.launch {
                         // don't reverse the animation straight away
-                        delay(250)
+                        delay(2.5.seconds)
                         state.animateTo(Anchors.Start)
                     }
                 },
@@ -295,3 +302,35 @@ internal fun buildDateAnnotatedString(date: LocalDate): AnnotatedString =
             append(date.year.toString())
         }
     }
+
+@Composable
+@Preview
+private fun Preview() {
+    val items = (0..20).map {
+        Diary(
+            entry = "Entry $it",
+            id = it.toLong(),
+            date = Clock.System.now(),
+            isFavorite = true,
+        )
+    }
+    SuperDiaryPreviewTheme {
+        DiaryList(
+            modifier = Modifier.padding(16.dp),
+            diaries = items,
+            inSelectionMode = true,
+            diaryFilters = DiaryFilters(),
+            selectedIds = setOf(1, 2, 3, 4),
+            diaryListActions = DiaryListActions(
+                onToggleFavorite = { true },
+                onDiaryClicked = {},
+            ),
+            onDeleteDiaries = {},
+            showSearchBar = false,
+            emptyContent = {
+                Text("Empty content")
+            },
+            snackbarHostState = SnackbarHostState(),
+        )
+    }
+}
