@@ -85,9 +85,7 @@ import com.components.diarylist.DiaryFilters
 import com.components.diarylist.DiaryList
 import com.components.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.common.utils.format
-import com.foreverrafs.superdiary.design.components.AppBar
 import com.foreverrafs.superdiary.design.components.ConfirmDeleteDialog
-import com.foreverrafs.superdiary.design.components.SuperdiaryNavigationIcon
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.utils.toDate
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
@@ -106,7 +104,6 @@ fun DiaryListScreenContent(
     diaryFilters: DiaryFilters,
     showSearchBar: Boolean,
     diaryListActions: DiaryListActions,
-    onProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
     clock: Clock = Clock.System,
 ) {
@@ -154,15 +151,6 @@ fun DiaryListScreenContent(
     )
 
     Scaffold(
-        topBar = {
-            AppBar(
-                navigationIcon = {
-                    SuperdiaryNavigationIcon(onClick = ::onBack)
-                },
-                avatarUrl = screenModel.avatarUrl,
-                onProfileClick = onProfileClick,
-            )
-        },
         floatingActionButton = {
             // Only show FAB when there is an entry
             if (screenModel.diaries.isEmpty()) {

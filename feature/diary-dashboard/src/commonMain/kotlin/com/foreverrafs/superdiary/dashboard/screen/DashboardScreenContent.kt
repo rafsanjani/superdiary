@@ -4,7 +4,6 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,11 +51,11 @@ import com.foreverrafs.superdiary.common.utils.format
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.design.components.ConfirmBiometricAuthDialog
+import com.foreverrafs.superdiary.design.components.shimmer
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.Streak
 import com.foreverrafs.superdiary.utils.toDate
-import com.valentinilk.shimmer.shimmer
 import kotlin.random.Random
 import kotlin.time.Clock
 import kotlinx.coroutines.launch
@@ -68,7 +67,6 @@ import superdiary.feature.diary_dashboard.generated.resources.Res
 import superdiary.feature.diary_dashboard.generated.resources.ic_close
 import superdiary.feature.diary_dashboard.generated.resources.label_add_entry
 import superdiary.feature.diary_dashboard.generated.resources.label_button_retry
-import superdiary.feature.diary_dashboard.generated.resources.label_button_show_all
 import superdiary.feature.diary_dashboard.generated.resources.label_entries
 import superdiary.feature.diary_dashboard.generated.resources.label_glance_header_best_streak
 import superdiary.feature.diary_dashboard.generated.resources.label_glance_header_latest_entries
@@ -89,7 +87,6 @@ fun DashboardScreenContent(
     onToggleLatestEntries: () -> Unit,
     onToggleWeeklySummaryCard: () -> Unit,
     onToggleGlanceCard: () -> Unit,
-    onSeeAll: () -> Unit,
     onRetry: () -> Unit,
     onEnableBiometric: () -> Unit,
     onDiaryClick: (diaryId: Long) -> Unit,
@@ -109,7 +106,6 @@ fun DashboardScreenContent(
             dashboardItems(
                 state = state,
                 onAddEntry = onAddEntry,
-                onSeeAll = onSeeAll,
                 onDiaryClicked = onDiaryClick,
                 onToggleFavorite = onToggleFavorite,
             )
@@ -183,7 +179,6 @@ fun DashboardScreenContent(
 private fun dashboardItems(
     state: DashboardViewModel.DashboardScreenState.Content,
     onAddEntry: () -> Unit,
-    onSeeAll: () -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
     onDiaryClicked: (diaryId: Long) -> Unit,
 ): SnapshotStateList<DashboardSection> = mutableStateListOf<DashboardSection>().apply {
@@ -230,9 +225,9 @@ private fun dashboardItems(
                         LatestEntries(
                             modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
                             diaries = state.latestEntries.take(itemCount),
-                            onSeeAll = onSeeAll,
                             onDiaryClick = onDiaryClicked,
                             onToggleFavorite = onToggleFavorite,
+                            isLoading = false,
                         )
                     } else {
                         Button(
@@ -302,15 +297,12 @@ private fun dashboardPlaceholderItems(): SnapshotStateList<DashboardSection> =
             DashboardSection(
                 content = {
                     LatestEntries(
+                        isLoading = true,
                         modifier = Modifier.shimmer()
-                            .animateItem(
-                                fadeInSpec = null,
-                                fadeOutSpec = null,
-                            ),
+                            .animateItem(),
                         diaries = (0..2).map {
                             Diary(id = Random.nextLong(), entry = "")
                         },
-                        onSeeAll = {},
                         onDiaryClick = {},
                         onToggleFavorite = {},
                     )
@@ -443,36 +435,18 @@ fun GlanceCard(
 @Composable
 private fun LatestEntries(
     diaries: List<Diary>,
-    onSeeAll: () -> Unit,
+    isLoading: Boolean,
     onToggleFavorite: (diary: Diary) -> Unit,
     onDiaryClick: (diaryId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
-        Row(
-            modifier = Modifier
-                .testTag("glance_section_see_all")
-                .clickable(
-                    indication = null,
-                    interactionSource = MutableInteractionSource(),
-                    onClick = onSeeAll,
-                )
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text(
-                text = stringResource(Res.string.label_glance_header_latest_entries),
-                style = MaterialTheme.typography.headlineMedium,
-            )
+        Text(
+            text = stringResource(Res.string.label_glance_header_latest_entries),
+            style = MaterialTheme.typography.headlineMedium,
+        )
 
-            Spacer(modifier = Modifier.weight(1f))
-
-            Text(
-                stringResource(Res.string.label_button_show_all),
-                style = MaterialTheme.typography.labelSmall,
-            )
-        }
+        Spacer(modifier = Modifier.height(8.dp))
 
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -483,6 +457,7 @@ private fun LatestEntries(
                     selected = false,
                     inSelectionMode = false,
                     modifier = Modifier
+                        .shimmer(enabled = isLoading)
                         .clickable(
                             onClick = { diary.id?.let { onDiaryClick(it) } },
                         )
@@ -612,7 +587,6 @@ private fun DashboardScreenPreview() {
                 ),
             ),
             onAddEntry = {},
-            onSeeAll = {},
             onToggleFavorite = {},
             onDiaryClick = {},
             onDisableBiometricAuth = {},

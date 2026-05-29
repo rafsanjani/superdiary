@@ -13,7 +13,7 @@ plugins {
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     sourceSets {
-        androidUnitTest.dependencies {
+        androidHostTest.dependencies {
             implementation(libs.google.testparameterinjector)
             implementation(projects.commonTest)
         }
@@ -33,7 +33,6 @@ kotlin {
 
             implementation(libs.richTextEditor)
 
-            implementation("com.valentinilk.shimmer:compose-shimmer:1.4.0")
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(libs.kotlinx.serialization.json)
 

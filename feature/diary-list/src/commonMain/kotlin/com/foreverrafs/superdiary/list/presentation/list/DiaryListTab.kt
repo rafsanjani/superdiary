@@ -20,10 +20,9 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalTime::class)
 @Composable
-fun DiaryListScreen(
+fun DiaryListTab(
     onAddEntry: () -> Unit,
     onDiaryClick: (id: Long) -> Unit,
-    onProfileClick: () -> Unit,
     onBackPress: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -57,6 +56,5 @@ fun DiaryListScreen(
         showSearchBar = true,
         diaryFilters = diaryFilters,
         diaryListActions = diaryListActions,
-        onProfileClick = onProfileClick,
     )
 }

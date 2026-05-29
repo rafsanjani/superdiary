@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.ai
 import ai.koog.prompt.dsl.prompt
 import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import ai.koog.prompt.executor.model.PromptExecutor
+import ai.koog.prompt.message.MessagePart
 import ai.koog.prompt.streaming.StreamFrame
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.ai.domain.model.DiaryChatMessage
@@ -43,7 +44,13 @@ class DiaryAiImpl(
             model = CHAT_MODEL,
         ).map { response ->
             when (response) {
-                is StreamFrame.Append -> response.text
+                is StreamFrame.TextDelta -> response.text
+
+                is StreamFrame.TextComplete -> response.text
+
+                is StreamFrame.ReasoningDelta,
+                is StreamFrame.ReasoningComplete,
+                -> ""
 
                 is StreamFrame.End -> {
                     logger.i(TAG) {
@@ -52,7 +59,14 @@ class DiaryAiImpl(
                     ""
                 }
 
-                is StreamFrame.ToolCall -> {
+                is StreamFrame.ToolCallDelta -> {
+                    logger.i(TAG) {
+                        "Diary generation completed: ${response.content}"
+                    }
+                    ""
+                }
+
+                is StreamFrame.ToolCallComplete -> {
                     logger.i(TAG) {
                         "Diary generation completed: ${response.content}"
                     }
@@ -89,10 +103,19 @@ class DiaryAiImpl(
             model = CHAT_MODEL,
         ).map { response ->
             when (response) {
-                is StreamFrame.Append -> {
+                is StreamFrame.TextDelta -> {
                     totalSummary += response.text
                     totalSummary
                 }
+
+                is StreamFrame.TextComplete -> {
+                    totalSummary = response.text
+                    totalSummary
+                }
+
+                is StreamFrame.ReasoningDelta,
+                is StreamFrame.ReasoningComplete,
+                -> totalSummary
 
                 is StreamFrame.End -> {
                     logger.i(TAG) {
@@ -106,7 +129,14 @@ class DiaryAiImpl(
                     totalSummary
                 }
 
-                is StreamFrame.ToolCall -> {
+                is StreamFrame.ToolCallDelta -> {
+                    logger.i(TAG) {
+                        "Diary generation completed: ${response.content}"
+                    }
+                    ""
+                }
+
+                is StreamFrame.ToolCallComplete -> {
                     logger.i(TAG) {
                         "Diary generation completed: ${response.content}"
                     }
@@ -136,7 +166,7 @@ class DiaryAiImpl(
                 }
             },
             model = CHAT_MODEL,
-        ).firstOrNull()?.content.orEmpty()
+        ).parts.filterIsInstance<MessagePart.Text>().joinToString(separator = "") { it.text }
     } catch (e: Exception) {
         logger.e(TAG, e) { "Error querying diaries" }
         ""

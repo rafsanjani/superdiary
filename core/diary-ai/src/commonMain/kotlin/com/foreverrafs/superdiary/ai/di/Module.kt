@@ -1,7 +1,8 @@
 package com.foreverrafs.superdiary.ai.di
 
-import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
-import ai.koog.prompt.executor.llms.all.simpleOpenAIExecutor
+import ai.koog.http.client.ktor.KtorKoogHttpClient
+import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
+import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
 import ai.koog.prompt.executor.model.PromptExecutor
 import com.foreverrafs.superdiary.ai.DiaryAiImpl
 import com.foreverrafs.superdiary.ai.api.DiaryAI
@@ -13,7 +14,12 @@ import org.koin.dsl.module
 
 val diaryAiModule: Module = module {
     single<PromptExecutor> {
-        simpleOpenAIExecutor(SuperDiarySecret.openAIKey)
+        MultiLLMPromptExecutor(
+            OpenAILLMClient(
+                apiKey = SuperDiarySecret.openAIKey,
+                httpClientFactory = KtorKoogHttpClient.Factory(),
+            ),
+        )
     }
     factoryOf(::DiaryAiImpl) { bind<DiaryAI>() }
 }

@@ -8,6 +8,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation3.runtime.NavKey
@@ -38,22 +39,22 @@ private fun RowScope.BottomNavigationItem(
     onClick: () -> Unit,
 ) {
     NavigationBarItem(
-        modifier = Modifier.testTag(tab.options.title),
+        modifier = Modifier.testTag(tab.title),
         selected = selected,
         onClick = onClick,
         icon = {
             Icon(
                 painter = if (selected) {
-                    tab.selectedIcon
+                    rememberVectorPainter(tab.selectedIcon)
                 } else {
-                    tab.options.icon
+                    rememberVectorPainter(tab.icon)
                 },
-                contentDescription = tab.options.title,
+                contentDescription = tab.title,
             )
         },
         label = {
             Text(
-                text = tab.options.title,
+                text = tab.title,
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
             )
