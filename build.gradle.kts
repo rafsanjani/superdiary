@@ -75,12 +75,4 @@ subprojects {
             }
         }
     }
-    tasks.matching { it.name.startsWith("preparePaparazzi") && it.name.endsWith("Resources") }
-        .configureEach {
-            doLast {
-                val resourcesFile = outputs.files.singleFile
-                if (!resourcesFile.exists()) return@doLast
-                // filter out entries ending with ".anchor" from resourcePackageNames in the JSON
-            }
-        }
 }
