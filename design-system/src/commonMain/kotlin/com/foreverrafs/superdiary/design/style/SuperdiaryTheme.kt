@@ -160,15 +160,13 @@ val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope>
 }
 
 /**
- * The outer [AnimatedContentScope] provided by the top-level [NavDisplay] (screen-level
- * navigation). Tabs (rendered by an inner [NavDisplay]) shadow [LocalNavAnimatedContentScope]
+ * The outer [AnimatedContentScope] provided by the top-level [androidx.navigation3.ui.NavDisplay] (screen-level
+ * navigation). Tabs (rendered by an inner [androidx.navigation3.ui.NavDisplay]) shadow [LocalRootAnimatedContentScope]
  * with their own tab-level scope, breaking shared element transitions that cross the
  * tab → screen boundary (e.g. profile avatar → profile image).
  *
- * Set this in [BottomNavigationScreen] before the inner [NavDisplay] so each tab's
- * [AppBar] can use it for its [sharedElement] registration.
  */
 @OptIn(ExperimentalSharedTransitionApi::class)
-val LocalOuterNavAnimatedContentScope = staticCompositionLocalOf<AnimatedContentScope?> {
+val LocalRootAnimatedContentScope = staticCompositionLocalOf<AnimatedContentScope?> {
     null
 }

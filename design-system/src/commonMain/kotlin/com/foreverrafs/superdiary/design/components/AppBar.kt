@@ -26,7 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
-import com.foreverrafs.superdiary.design.style.LocalOuterNavAnimatedContentScope
+import com.foreverrafs.superdiary.design.style.LocalRootAnimatedContentScope
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import org.jetbrains.compose.resources.painterResource
@@ -45,7 +45,7 @@ fun AppBar(
     title: String? = null,
 ) {
     val sharedTransitionScope = LocalSharedTransitionScope.current
-    val sharedAnimatedContentScope = LocalOuterNavAnimatedContentScope.current
+    val sharedAnimatedContentScope = LocalRootAnimatedContentScope.current
         ?: LocalNavAnimatedContentScope.current
 
     with(sharedTransitionScope) {

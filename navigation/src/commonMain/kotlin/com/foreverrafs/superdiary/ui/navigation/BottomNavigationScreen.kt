@@ -20,7 +20,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.chat.presentation.screen.DiaryChatTab
 import com.foreverrafs.superdiary.dashboard.screen.DashboardTab
-import com.foreverrafs.superdiary.design.style.LocalOuterNavAnimatedContentScope
+import com.foreverrafs.superdiary.design.style.LocalRootAnimatedContentScope
 import com.foreverrafs.superdiary.favorite.screen.FavoriteTab
 import com.foreverrafs.superdiary.list.presentation.list.DiaryListTab
 import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
@@ -43,7 +43,7 @@ fun BottomNavigationScreen(
     // NavDisplay shadows LocalNavAnimatedContentScope with the tab-level scope.
     // The AppBar's shared element source needs this scope to match the destination
     // in ProfileScreen.
-    val outerNavAnimatedContentScope = LocalNavAnimatedContentScope.current
+    val rootAnimatedContentScope = LocalNavAnimatedContentScope.current
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -114,7 +114,7 @@ fun BottomNavigationScreen(
             }
 
             CompositionLocalProvider(
-                LocalOuterNavAnimatedContentScope provides outerNavAnimatedContentScope,
+                LocalRootAnimatedContentScope provides rootAnimatedContentScope,
             ) {
                 NavDisplay(
                     entries = navigationState.toEntries(entryProvider),
