@@ -26,8 +26,8 @@ fun DiaryListTab(
     onDiaryClick: (id: Long) -> Unit,
     avatarUrl: String?,
     onBackPress: () -> Unit,
-    modifier: Modifier = Modifier,
     onProfileClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val screenModel: DiaryListViewModel = koinViewModel()
     val screenState by screenModel.state.collectAsState()

@@ -186,9 +186,9 @@ private fun DiaryListContent(
     diaryFilters: DiaryFilters,
     snackbarHostState: SnackbarHostState,
     onAddEntry: () -> Unit,
+    listState: LazyListState,
     modifier: Modifier = Modifier,
     clock: Clock = Clock.System,
-    listState: LazyListState,
 ) {
     var showConfirmDeleteDialog by remember {
         mutableStateOf(false)

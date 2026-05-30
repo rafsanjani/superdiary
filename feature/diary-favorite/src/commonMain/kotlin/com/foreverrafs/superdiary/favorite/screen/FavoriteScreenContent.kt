@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.favorite.screen
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +29,7 @@ fun FavoriteScreenContent(
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
+        modifier = modifier,
         topBar = {
             AppBar(
                 avatarUrl = avatarUrl,
@@ -36,36 +38,42 @@ fun FavoriteScreenContent(
             )
         },
     ) {
-        if (state is FavoriteScreenState.Content) {
-            DiaryList(
-                modifier = modifier.fillMaxSize(),
-                diaries = state.diaries,
-                inSelectionMode = false,
-                diaryFilters = DiaryFilters(),
-                selectedIds = setOf(),
-                showSearchBar = false,
-                onDeleteDiaries = {},
-                diaryListActions = DiaryListActions(
-                    onDiaryClicked = onFavoriteClick,
-                    onToggleFavorite = {
-                        if (onToggleFavorite(it)) {
-                            snackbarHostState.showSnackbar("Favorite Removed")
-                        }
-                        true
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues = it),
+        ) {
+            if (state is FavoriteScreenState.Content) {
+                DiaryList(
+                    modifier = Modifier.fillMaxSize(),
+                    diaries = state.diaries,
+                    inSelectionMode = false,
+                    diaryFilters = DiaryFilters(),
+                    selectedIds = setOf(),
+                    showSearchBar = false,
+                    onDeleteDiaries = {},
+                    diaryListActions = DiaryListActions(
+                        onDiaryClicked = onFavoriteClick,
+                        onToggleFavorite = {
+                            if (onToggleFavorite(it)) {
+                                snackbarHostState.showSnackbar("Favorite Removed")
+                            }
+                            true
+                        },
+                    ),
+                    snackbarHostState = SnackbarHostState(),
+                    emptyContent = {
+                        Text(
+                            modifier = Modifier
+                                .padding(bottom = 64.dp)
+                                .testTag("empty_favorite_text"),
+                            text = "No favorite diary!",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontSize = 14.sp,
+                        )
                     },
-                ),
-                snackbarHostState = SnackbarHostState(),
-                emptyContent = {
-                    Text(
-                        modifier = Modifier
-                            .padding(bottom = 64.dp)
-                            .testTag("empty_favorite_text"),
-                        text = "No favorite diary!",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontSize = 14.sp,
-                    )
-                },
-            )
+                )
+            }
         }
     }
 }
