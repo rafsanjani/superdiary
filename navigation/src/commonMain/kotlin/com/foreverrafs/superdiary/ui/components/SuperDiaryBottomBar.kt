@@ -19,8 +19,9 @@ fun SuperDiaryBottomBar(
     items: List<SuperDiaryTab>,
     selected: NavKey,
     onItemClick: (SuperDiaryTab) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    NavigationBar {
+    NavigationBar(modifier) {
         items.forEach { tab ->
             BottomNavigationItem(
                 tab = tab,

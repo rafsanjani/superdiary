@@ -24,6 +24,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
@@ -50,6 +51,7 @@ import com.components.diarylist.DiaryItem
 import com.foreverrafs.superdiary.common.utils.format
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.dashboard.DashboardViewModel
+import com.foreverrafs.superdiary.design.components.AppBar
 import com.foreverrafs.superdiary.design.components.ConfirmBiometricAuthDialog
 import com.foreverrafs.superdiary.design.components.shimmer
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
@@ -92,6 +94,8 @@ fun DashboardScreenContent(
     onDiaryClick: (diaryId: Long) -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
     modifier: Modifier = Modifier,
+    avatarUrl: String? = null,
+    onProfileClick: () -> Unit = {},
 ) {
     var showBiometricAuthDialog by remember {
         mutableStateOf(false)
@@ -147,27 +151,39 @@ fun DashboardScreenContent(
         )
     }
 
-    LazyColumn(
-        modifier = modifier
-            .testTag("dashboard_content_list")
-            .fillMaxSize()
-            .padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        topBar = {
+            AppBar(
+                avatarUrl = avatarUrl,
+                onProfileClick = onProfileClick,
+                title = "At a glance",
+            )
+        },
     ) {
-        items(items = dashboardItems, key = { it.id }) { content ->
-            content.content(this) {
-                when (content.id) {
-                    AT_A_GLANCE_ID -> {
-                        onToggleGlanceCard()
-                    }
+        LazyColumn(
+            modifier = Modifier
+                .padding(it)
+                .padding(8.dp)
+                .testTag("dashboard_content_list")
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            items(items = dashboardItems, key = { it.id }) { content ->
+                content.content(this) {
+                    when (content.id) {
+                        AT_A_GLANCE_ID -> {
+                            onToggleGlanceCard()
+                        }
 
-                    WEEKLY_SUMMARY_ID -> {
-                        onToggleWeeklySummaryCard()
-                    }
+                        WEEKLY_SUMMARY_ID -> {
+                            onToggleWeeklySummaryCard()
+                        }
 
-                    LATEST_ENTRIES_ID -> {
-                        onToggleLatestEntries()
+                        LATEST_ENTRIES_ID -> {
+                            onToggleLatestEntries()
+                        }
                     }
                 }
             }
@@ -339,14 +355,6 @@ private fun AtAGlance(
     }
 
     Column(modifier = modifier) {
-        Text(
-            text = "At a glance...",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(horizontal = 4.dp),
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -587,15 +595,15 @@ private fun DashboardScreenPreview() {
                 ),
             ),
             onAddEntry = {},
-            onToggleFavorite = {},
-            onDiaryClick = {},
+            snackbarHostState = remember { SnackbarHostState() },
             onDisableBiometricAuth = {},
-            onEnableBiometric = {},
             onToggleLatestEntries = {},
             onToggleWeeklySummaryCard = {},
             onToggleGlanceCard = {},
             onRetry = {},
-            snackbarHostState = remember { SnackbarHostState() },
+            onEnableBiometric = {},
+            onDiaryClick = {},
+            onToggleFavorite = {},
         )
     }
 }
