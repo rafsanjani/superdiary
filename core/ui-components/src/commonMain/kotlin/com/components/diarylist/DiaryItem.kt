@@ -244,7 +244,7 @@ fun DiaryItem(
                     onToggleFavorite()
                     coroutineScope.launch {
                         // don't reverse the animation straight away
-                        delay(2.5.seconds)
+                        delay(0.5.seconds)
                         state.animateTo(Anchors.Start)
                     }
                 },
