@@ -2,6 +2,7 @@
 
 package com.foreverrafs.superdiary.design.style
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -156,4 +157,18 @@ fun montserratAlternativesFontFamily(): FontFamily = FontFamily(
 @OptIn(ExperimentalSharedTransitionApi::class)
 val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope> {
     error("SharedTransitionScope not present")
+}
+
+/**
+ * The outer [AnimatedContentScope] provided by the top-level [NavDisplay] (screen-level
+ * navigation). Tabs (rendered by an inner [NavDisplay]) shadow [LocalNavAnimatedContentScope]
+ * with their own tab-level scope, breaking shared element transitions that cross the
+ * tab → screen boundary (e.g. profile avatar → profile image).
+ *
+ * Set this in [BottomNavigationScreen] before the inner [NavDisplay] so each tab's
+ * [AppBar] can use it for its [sharedElement] registration.
+ */
+@OptIn(ExperimentalSharedTransitionApi::class)
+val LocalOuterNavAnimatedContentScope = staticCompositionLocalOf<AnimatedContentScope?> {
+    null
 }
