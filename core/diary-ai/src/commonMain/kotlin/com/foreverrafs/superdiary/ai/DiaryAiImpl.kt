@@ -1,8 +1,10 @@
 package com.foreverrafs.superdiary.ai
 
 import ai.koog.prompt.dsl.prompt
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import ai.koog.prompt.executor.model.PromptExecutor
+import ai.koog.prompt.llm.DeepSeekLLMProvider
+import ai.koog.prompt.llm.LLMCapability
+import ai.koog.prompt.llm.LLModel
 import ai.koog.prompt.message.MessagePart
 import ai.koog.prompt.streaming.StreamFrame
 import com.foreverrafs.superdiary.ai.api.DiaryAI
@@ -13,7 +15,7 @@ import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-/** A diary AI implementation using Open AI */
+/** A diary AI implementation using OpenAI */
 class DiaryAiImpl(
     private val logger: AggregateLogger,
     private val promptExecutor: PromptExecutor,
@@ -173,7 +175,16 @@ class DiaryAiImpl(
     }
 
     companion object {
-        private val CHAT_MODEL = OpenAIModels.Chat.GPT5_1
+        private val CHAT_MODEL = LLModel(
+            provider = DeepSeekLLMProvider,
+            id = "deepseek-chat",
+            capabilities = listOf(
+                LLMCapability.Completion,
+                LLMCapability.OpenAIEndpoint.Completions,
+            ),
+            contextLength = 65536,
+            maxOutputTokens = 8192,
+        )
         private const val TAG = "OpenDiaryAI"
     }
 }
