@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class RegisterScreenViewModel(
     private val authApi: AuthApi,
     private val coroutineDispatchers: AppCoroutineDispatchers,
-    private val formValidator: RegistrationFormValidator = RegistrationFormValidator(),
+    private val formValidator: RegistrationFormValidator,
 ) : ViewModel() {
     private val _viewState: MutableStateFlow<RegisterScreenState> =
         MutableStateFlow(RegisterScreenState.Idle)

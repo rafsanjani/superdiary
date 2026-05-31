@@ -3,7 +3,6 @@ package com.foreverrafs.superdiary.auth.register
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
-import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import kotlin.test.Test
 
@@ -324,13 +323,12 @@ class RegistrationFormValidatorTest {
     // ── Custom rule composition ─────────────────────────────────────────────
 
     @Test
-    fun `Should validate only the rules provided to the constructor`() {
-        val customValidator = RegistrationFormValidator(
-            rules = setOf(
-                RequiredRule(Field.EMAIL),
-                EmailFormatRule(),
-            ),
-        )
+    fun `Should validate only the rules that were added`() {
+        val customValidator = RegistrationFormValidator().apply {
+            clearRules()
+            addRule(RequiredRule(Field.EMAIL))
+            addRule(EmailFormatRule())
+        }
 
         // Only email is validated — name, password etc. are ignored
         val result = customValidator.validate(
@@ -351,7 +349,7 @@ class RegistrationFormValidatorTest {
 
     @Test
     fun `Should accept a validator with no rules`() {
-        val noOpValidator = RegistrationFormValidator(rules = emptySet())
+        val noOpValidator = RegistrationFormValidator().apply { clearRules() }
 
         val result = noOpValidator.validate(
             RegistrationFormData(
@@ -367,14 +365,10 @@ class RegistrationFormValidatorTest {
 
     @Test
     fun `First error wins when multiple rules target the same field`() {
-        // Two rules for NAME — the one returned first by the Set wins.
-        // This test asserts the validator doesn't crash with multiple rules.
-        val customValidator = RegistrationFormValidator(
-            rules = setOf(
-                RequiredRule(Field.NAME),
-                RequiredRule(Field.NAME), // duplicate, Set deduplicates
-            ),
-        )
+        val customValidator = RegistrationFormValidator().apply {
+            clearRules()
+            addRule(RequiredRule(Field.NAME))
+        }
 
         val result = customValidator.validate(
             RegistrationFormData(
@@ -391,13 +385,16 @@ class RegistrationFormValidatorTest {
     // ── Default rules ───────────────────────────────────────────────────────
 
     @Test
-    fun `Default rules should contain the expected rule types`() {
-        // Using defaultRules() directly gives us a view into the default set
-        val rules = RegistrationFormValidator.defaultRules()
+    fun `Default validator should reject an empty form`() {
+        val result = RegistrationFormValidator().validate(
+            RegistrationFormData(
+                name = "",
+                email = "",
+                password = "",
+                verifyPassword = "",
+            ),
+        )
 
-        assertThat(rules).isNotNull()
-
-        // Should have the minimum expected rule count
-        assertThat(rules.size).isEqualTo(6)
+        assertThat(result).isInstanceOf(RegistrationFormValidationResult.Invalid::class)
     }
 }

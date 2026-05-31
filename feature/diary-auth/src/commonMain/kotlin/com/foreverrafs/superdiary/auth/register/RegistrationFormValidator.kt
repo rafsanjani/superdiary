@@ -130,8 +130,8 @@ data class PasswordMatchRule(
  * Composes a set of [ValidationRule]s and runs them against a submitted form.
  *
  * Rules are grouped by [Field]; within each group the *first* violation wins.
- * The set of rules is injectable so callers can add, remove, or replace rules
- * without modifying this class.
+ * Rules can be added or removed at any point via [addRule], [removeRule], and
+ * [clearRules].
  *
  * Default usage:
  * ```
@@ -141,18 +141,32 @@ data class PasswordMatchRule(
  *
  * Custom rules:
  * ```
- * val validator = RegistrationFormValidator(
- *     rules = setOf(
- *         RequiredRule(Field.NAME),
- *         EmailFormatRule(),
- *         MinLengthRule(Field.PASSWORD, min = 8),
- *     ),
- * )
+ * val validator = RegistrationFormValidator().apply {
+ *     clearRules()
+ *     addRule(RequiredRule(Field.NAME))
+ *     addRule(EmailFormatRule())
+ *     addRule(MinLengthRule(Field.PASSWORD, min = 8))
+ * }
  * ```
  */
-class RegistrationFormValidator(
-    private val rules: Set<ValidationRule> = defaultRules(),
-) {
+class RegistrationFormValidator {
+    private val rules: MutableSet<ValidationRule> = defaultRules().toMutableSet()
+
+    /** Adds a [rule] to the validation set. Duplicates are silently ignored. */
+    fun addRule(rule: ValidationRule) {
+        rules.add(rule)
+    }
+
+    /** Removes a [rule] from the validation set. */
+    fun removeRule(rule: ValidationRule) {
+        rules.remove(rule)
+    }
+
+    /** Removes all rules, leaving the validator with an empty set. */
+    fun clearRules() {
+        rules.clear()
+    }
+
     fun validate(form: RegistrationFormData): RegistrationFormValidationResult {
         val nameError = firstErrorFor(form, Field.NAME)
         val emailError = firstErrorFor(form, Field.EMAIL)
@@ -179,8 +193,7 @@ class RegistrationFormValidator(
             .firstNotNullOfOrNull { it.validate(form) }
 
     companion object {
-        /** The standard set of rules used across the application. */
-        fun defaultRules(): Set<ValidationRule> = setOf(
+        private fun defaultRules(): Set<ValidationRule> = setOf(
             RequiredRule(Field.NAME),
             RequiredRule(Field.EMAIL),
             RequiredRule(Field.PASSWORD),

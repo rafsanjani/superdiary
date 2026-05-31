@@ -21,7 +21,7 @@ class RegisterScreenViewModelTest {
 
     private val authApi = FakeAuthApi()
     private val appDispatchers: AppCoroutineDispatchers = TestAppDispatchers
-    private val viewModel = RegisterScreenViewModel(authApi, appDispatchers)
+    private val viewModel = RegisterScreenViewModel(authApi, appDispatchers, RegistrationFormValidator())
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @BeforeTest
