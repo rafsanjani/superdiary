@@ -1,6 +1,11 @@
 package com.foreverrafs.superdiary.ui.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -10,7 +15,11 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
@@ -29,7 +38,6 @@ import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
  * Provides a navigation entry point for all the screens that rely on
  * bottom tab for navigation
  */
-
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun BottomNavigationScreen(
@@ -39,10 +47,6 @@ fun BottomNavigationScreen(
     onDiaryClick: (diaryId: Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    // Capture the outer NavDisplay's AnimatedContentScope before the inner
-    // NavDisplay shadows LocalNavAnimatedContentScope with the tab-level scope.
-    // The AppBar's shared element source needs this scope to match the destination
-    // in ProfileScreen.
     val rootAnimatedContentScope = LocalNavAnimatedContentScope.current
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -54,6 +58,16 @@ fun BottomNavigationScreen(
     )
 
     val navigator = remember { Navigator(navigationState) }
+
+    // Tab order determines slide direction.
+    val tabOrder = remember { TopLevelRoute.Items.toList() }
+    var previousTabIndex by remember { mutableIntStateOf(0) }
+    val currentTabIndex = tabOrder.indexOf(navigationState.topLevelRoute)
+    val slideDirection = (currentTabIndex - previousTabIndex).coerceIn(-1, 1)
+
+    LaunchedEffect(navigationState.topLevelRoute) {
+        previousTabIndex = currentTabIndex
+    }
 
     Scaffold(
         modifier = modifier,
@@ -119,8 +133,40 @@ fun BottomNavigationScreen(
                 NavDisplay(
                     entries = navigationState.toEntries(entryProvider),
                     onBack = navigator::goBack,
+                    transitionSpec = {
+                        tabContentTransform(slideDirection)
+                    },
+                    popTransitionSpec = {
+                        tabContentTransform(-slideDirection)
+                    },
                 )
             }
         }
     }
+}
+
+/**
+ * Returns a [ContentTransform] that slides the tab content in the given direction.
+ *
+ * @param direction +1: new content enters from the right, current exits to the left.
+ *                    -1: new content enters from the left, current exits to the right.
+ */
+private fun AnimatedContentTransitionScope<*>.tabContentTransform(
+    direction: Int,
+) = if (direction >= 0) {
+    slideInHorizontally(
+        animationSpec = tween(300),
+        initialOffsetX = { fullWidth -> fullWidth },
+    ) togetherWith slideOutHorizontally(
+        animationSpec = tween(300),
+        targetOffsetX = { fullWidth -> -fullWidth },
+    )
+} else {
+    slideInHorizontally(
+        animationSpec = tween(300),
+        initialOffsetX = { fullWidth -> -fullWidth },
+    ) togetherWith slideOutHorizontally(
+        animationSpec = tween(300),
+        targetOffsetX = { fullWidth -> fullWidth },
+    )
 }
