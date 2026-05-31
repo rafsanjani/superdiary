@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
+import assertk.assertions.isNull
 import com.foreverrafs.superdiary.chat.domain.repository.DiaryChatRepository
 import com.foreverrafs.superdiary.chat.presentation.DiaryChatViewModel
 import com.foreverrafs.superdiary.chat.presentation.DiaryChatViewState
@@ -52,6 +53,7 @@ class DiaryChatViewModelTest {
         )
         every { diaryChatRepository.getChatMessages() }.returns(flowOf(emptyList()))
         everySuspend { diaryChatRepository.saveChatMessage(any()) }.returns(Unit)
+        everySuspend { diaryChatRepository.clearChatMessages() }.returns(Unit)
 
         diaryChatViewModel = DiaryChatViewModel(
             logger = AggregateLogger(emptyList()),
@@ -110,6 +112,38 @@ class DiaryChatViewModelTest {
             val state =
                 awaitUntil { it is DiaryChatViewState.Initialized && it.errorText != null } as DiaryChatViewState.Initialized
             assertThat(state.errorText).isNotNull()
+        }
+    }
+
+    @Test
+    fun `Clearing chat resets messages to system message only`() = runTest {
+        diaryChatViewModel.viewState.test {
+            // Wait for initialization
+            val initState = awaitUntil {
+                it is DiaryChatViewState.Initialized && it.messages.isNotEmpty()
+            } as DiaryChatViewState.Initialized
+            assertThat(initState.messages.size).isEqualTo(2)
+
+            // Add a user message so we have something to clear
+            diaryChatViewModel.queryDiaries("hello")
+            everySuspend { diaryChatRepository.queryDiaries(any()) }.returns("response")
+
+            awaitUntil {
+                it is DiaryChatViewState.Initialized && it.messages.size > 2
+            }
+
+            // Now clear
+            diaryChatViewModel.clearChatMessages()
+
+            val clearedState = awaitUntil {
+                it is DiaryChatViewState.Initialized && it.messages.size == 1
+            } as DiaryChatViewState.Initialized
+
+            assertThat(clearedState.messages.size).isEqualTo(1)
+            assertThat(clearedState.isResponding).isEqualTo(false)
+            assertThat(clearedState.errorText).isNull()
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 }

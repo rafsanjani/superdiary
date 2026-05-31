@@ -28,6 +28,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -37,6 +38,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -85,8 +87,10 @@ fun DiaryChatScreenContent(
     onProfileClick: () -> Unit = {},
     onQueryDiaries: (query: String) -> Unit = {},
     onDismissError: () -> Unit = {},
+    onClearChat: () -> Unit = {},
 ) {
     val currentOnDismissError by rememberUpdatedState(onDismissError)
+    var showClearConfirmation by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -94,6 +98,15 @@ fun DiaryChatScreenContent(
                 avatarUrl = avatarUrl,
                 onProfileClick = onProfileClick,
                 title = "Spartan AI",
+                actions = {
+                    IconButton(onClick = { showClearConfirmation = true }) {
+                        Text(
+                            text = "✕",
+                            color = MaterialTheme.colorScheme.onSurface,
+                            style = MaterialTheme.typography.titleMedium,
+                        )
+                    }
+                },
             )
         },
         modifier = modifier.fillMaxSize(),
@@ -248,6 +261,29 @@ fun DiaryChatScreenContent(
                     }
                 }
             }
+        }
+
+        if (showClearConfirmation) {
+            AlertDialog(
+                onDismissRequest = { showClearConfirmation = false },
+                title = { Text("Clear chat?") },
+                text = { Text("This will delete all saved chat messages. This action cannot be undone.") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showClearConfirmation = false
+                            onClearChat()
+                        },
+                    ) {
+                        Text("Clear")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showClearConfirmation = false }) {
+                        Text("Cancel")
+                    }
+                },
+            )
         }
     }
 }

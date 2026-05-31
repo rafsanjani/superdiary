@@ -29,6 +29,10 @@ class DiaryChatRepositoryImpl(
         database.saveChatMessage(message.toDatabase())
     }
 
+    override suspend fun clearChatMessages() {
+        database.clearChatMessages()
+    }
+
     override fun getChatMessages(): Flow<List<DiaryChatMessage>> = database.getChatMessages().map { chatMessages ->
         chatMessages.map { it.toDiaryChatMessage() }
     }

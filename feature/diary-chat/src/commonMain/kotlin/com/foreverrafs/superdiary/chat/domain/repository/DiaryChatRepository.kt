@@ -12,4 +12,6 @@ interface DiaryChatRepository {
     suspend fun queryDiaries(messages: List<DiaryChatMessage>): String?
 
     suspend fun saveChatMessage(message: DiaryChatMessage)
+
+    suspend fun clearChatMessages()
 }

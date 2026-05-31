@@ -159,6 +159,20 @@ class DiaryChatViewModel(
         ) ?: it
     }
 
+    fun clearChatMessages() = viewModelScope.launch(dispatchers.io) {
+        repository.clearChatMessages()
+
+        _viewState.update {
+            DiaryChatViewState.Initialized(
+                messages = listOf(
+                    DiaryChatMessage.System(
+                        content = DiaryAI.QUERY_PROMPT,
+                    ),
+                ),
+            )
+        }
+    }
+
     private fun updateInitializedState(
         func: (current: DiaryChatViewState.Initialized) -> DiaryChatViewState.Initialized,
     ) {

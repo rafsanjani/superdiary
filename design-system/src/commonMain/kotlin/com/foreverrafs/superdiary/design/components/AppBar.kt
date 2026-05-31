@@ -17,6 +17,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.heading
@@ -43,6 +44,7 @@ fun AppBar(
     onProfileClick: () -> Unit = {},
     avatarUrl: String? = null,
     title: String? = null,
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     val sharedTransitionScope = LocalSharedTransitionScope.current
     val sharedAnimatedContentScope = LocalRootAnimatedContentScope.current
@@ -73,6 +75,7 @@ fun AppBar(
                 containerColor = MaterialTheme.colorScheme.background,
             ),
             actions = {
+                actions()
                 Image(
                     modifier = Modifier
                         .sharedElement(

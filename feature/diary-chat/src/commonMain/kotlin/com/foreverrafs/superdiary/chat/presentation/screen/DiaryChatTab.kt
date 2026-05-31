@@ -23,5 +23,6 @@ fun DiaryChatTab(
         onQueryDiaries = viewModel::queryDiaries,
         onDismissError = viewModel::dismissError,
         onProfileClick = onProfileClick,
+        onClearChat = viewModel::clearChatMessages,
     )
 }
