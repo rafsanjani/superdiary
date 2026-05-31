@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -685,6 +686,7 @@ class OfflineFirstDataSourceTest {
             diaryApi = api,
             logger = AggregateLogger(),
             clock = fixedClock,
+            coroutineContext = UnconfinedTestDispatcher(),
         )
 
     private class FakeDiaryApi(

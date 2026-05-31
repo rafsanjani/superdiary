@@ -14,6 +14,7 @@ import kotlin.concurrent.Volatile
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.Clock
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -43,8 +44,9 @@ class OfflineFirstDataSource(
     private val diaryApi: DiaryApi,
     private val logger: AggregateLogger,
     private val clock: Clock,
+    private val coroutineContext: CoroutineContext = Dispatchers.Default,
 ) : DataSource, Syncable {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private val scope = CoroutineScope(SupervisorJob() + coroutineContext)
     private val syncMutex = Mutex()
 
     @OptIn(ExperimentalAtomicApi::class)
