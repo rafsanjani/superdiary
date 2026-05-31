@@ -48,15 +48,15 @@ import superdiary.feature.diary_auth.generated.resources.Res
 import superdiary.feature.diary_auth.generated.resources.error_email_required
 import superdiary.feature.diary_auth.generated.resources.error_invalid_email
 import superdiary.feature.diary_auth.generated.resources.error_name_required
-import superdiary.feature.diary_auth.generated.resources.error_passwords_do_not_match
 import superdiary.feature.diary_auth.generated.resources.error_password_required
+import superdiary.feature.diary_auth.generated.resources.error_passwords_do_not_match
 import superdiary.feature.diary_auth.generated.resources.error_reenter_password_required
 import superdiary.feature.diary_auth.generated.resources.label_already_have_account
 import superdiary.feature.diary_auth.generated.resources.label_login_link
 import superdiary.feature.diary_auth.generated.resources.label_name
 import superdiary.feature.diary_auth.generated.resources.label_password
-import superdiary.feature.diary_auth.generated.resources.label_register
 import superdiary.feature.diary_auth.generated.resources.label_reenter_password
+import superdiary.feature.diary_auth.generated.resources.label_register
 import superdiary.feature.diary_auth.generated.resources.label_register_title
 
 @Composable
