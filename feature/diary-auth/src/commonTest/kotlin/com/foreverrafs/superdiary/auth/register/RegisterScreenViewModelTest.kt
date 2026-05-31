@@ -108,7 +108,7 @@ class RegisterScreenViewModelTest {
             assertThat(state).isInstanceOf(RegisterScreenState.ValidationError::class)
 
             val errors = (state as RegisterScreenState.ValidationError).errors
-            assertThat(errors.nameError).isEqualTo(FieldValidationError.REQUIRED)
+            assertThat(errors.nameError).isEqualTo(FieldValidationError.Required)
             assertThat(errors.emailError).isNull()
             assertThat(errors.passwordError).isNull()
             assertThat(errors.verifyPasswordError).isNull()
@@ -134,7 +134,7 @@ class RegisterScreenViewModelTest {
             assertThat(state).isInstanceOf(RegisterScreenState.ValidationError::class)
 
             val errors = (state as RegisterScreenState.ValidationError).errors
-            assertThat(errors.emailError).isEqualTo(FieldValidationError.INVALID_EMAIL)
+            assertThat(errors.emailError).isEqualTo(FieldValidationError.InvalidEmail)
 
             // No API call was made — viewModel should not have emitted Processing
             expectNoEvents()
@@ -158,7 +158,7 @@ class RegisterScreenViewModelTest {
             assertThat(state).isInstanceOf(RegisterScreenState.ValidationError::class)
 
             val errors = (state as RegisterScreenState.ValidationError).errors
-            assertThat(errors.verifyPasswordError).isEqualTo(FieldValidationError.PASSWORDS_DO_NOT_MATCH)
+            assertThat(errors.verifyPasswordError).isEqualTo(FieldValidationError.PasswordsDoNotMatch)
 
             expectNoEvents()
         }
@@ -181,10 +181,10 @@ class RegisterScreenViewModelTest {
             assertThat(state).isInstanceOf(RegisterScreenState.ValidationError::class)
 
             val errors = (state as RegisterScreenState.ValidationError).errors
-            assertThat(errors.nameError).isEqualTo(FieldValidationError.REQUIRED)
-            assertThat(errors.emailError).isEqualTo(FieldValidationError.REQUIRED)
-            assertThat(errors.passwordError).isEqualTo(FieldValidationError.REQUIRED)
-            assertThat(errors.verifyPasswordError).isEqualTo(FieldValidationError.REQUIRED)
+            assertThat(errors.nameError).isEqualTo(FieldValidationError.Required)
+            assertThat(errors.emailError).isEqualTo(FieldValidationError.Required)
+            assertThat(errors.passwordError).isEqualTo(FieldValidationError.Required)
+            assertThat(errors.verifyPasswordError).isEqualTo(FieldValidationError.Required)
 
             expectNoEvents()
         }

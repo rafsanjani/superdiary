@@ -24,9 +24,9 @@ data class RegistrationFormData(
  * Error codes produced by validation rules.
  */
 enum class FieldValidationError {
-    REQUIRED,
-    INVALID_EMAIL,
-    PASSWORDS_DO_NOT_MATCH,
+    Required,
+    InvalidEmail,
+    PasswordsDoNotMatch,
 }
 
 /**
@@ -67,7 +67,7 @@ sealed interface RegistrationFormValidationResult {
  *     ) : ValidationRule {
  *         override fun validate(form: RegistrationFormData): FieldValidationError? {
  *             val value = form.value(field)
- *             return if (value.length < min) FieldValidationError.REQUIRED else null
+ *             return if (value.length < min) FieldValidationError.Required else null
  *         }
  *     }
  */
@@ -90,7 +90,7 @@ interface ValidationRule {
 data class RequiredRule(override val field: Field) : ValidationRule {
     override fun validate(form: RegistrationFormData): FieldValidationError? {
         val value = form.value(field)
-        return if (value.isBlank()) FieldValidationError.REQUIRED else null
+        return if (value.isBlank()) FieldValidationError.Required else null
     }
 }
 
@@ -103,7 +103,7 @@ data class EmailFormatRule(
 ) : ValidationRule {
     override fun validate(form: RegistrationFormData): FieldValidationError? =
         if (form.email.isNotBlank() && !form.email.contains("@")) {
-            FieldValidationError.INVALID_EMAIL
+            FieldValidationError.InvalidEmail
         } else {
             null
         }
@@ -118,7 +118,7 @@ data class PasswordMatchRule(
 ) : ValidationRule {
     override fun validate(form: RegistrationFormData): FieldValidationError? =
         if (form.verifyPassword.isNotBlank() && form.password != form.verifyPassword) {
-            FieldValidationError.PASSWORDS_DO_NOT_MATCH
+            FieldValidationError.PasswordsDoNotMatch
         } else {
             null
         }

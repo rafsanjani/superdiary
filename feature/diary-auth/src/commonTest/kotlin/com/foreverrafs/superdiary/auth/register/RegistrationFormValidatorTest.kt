@@ -41,7 +41,7 @@ class RegistrationFormValidatorTest {
         )
 
         val errors = (result as RegistrationFormValidationResult.Invalid).errors
-        assertThat(errors.nameError).isEqualTo(FieldValidationError.REQUIRED)
+        assertThat(errors.nameError).isEqualTo(FieldValidationError.Required)
     }
 
     // ── Email ───────────────────────────────────────────────────────────────
@@ -58,7 +58,7 @@ class RegistrationFormValidatorTest {
         )
 
         val errors = (result as RegistrationFormValidationResult.Invalid).errors
-        assertThat(errors.emailError).isEqualTo(FieldValidationError.REQUIRED)
+        assertThat(errors.emailError).isEqualTo(FieldValidationError.Required)
     }
 
     @Test
@@ -73,7 +73,7 @@ class RegistrationFormValidatorTest {
         )
 
         val errors = (result as RegistrationFormValidationResult.Invalid).errors
-        assertThat(errors.emailError).isEqualTo(FieldValidationError.INVALID_EMAIL)
+        assertThat(errors.emailError).isEqualTo(FieldValidationError.InvalidEmail)
     }
 
     // ── Password ────────────────────────────────────────────────────────────
@@ -90,7 +90,7 @@ class RegistrationFormValidatorTest {
         )
 
         val errors = (result as RegistrationFormValidationResult.Invalid).errors
-        assertThat(errors.passwordError).isEqualTo(FieldValidationError.REQUIRED)
+        assertThat(errors.passwordError).isEqualTo(FieldValidationError.Required)
     }
 
     // ── Verify password ─────────────────────────────────────────────────────
@@ -107,7 +107,7 @@ class RegistrationFormValidatorTest {
         )
 
         val errors = (result as RegistrationFormValidationResult.Invalid).errors
-        assertThat(errors.verifyPasswordError).isEqualTo(FieldValidationError.REQUIRED)
+        assertThat(errors.verifyPasswordError).isEqualTo(FieldValidationError.Required)
     }
 
     @Test
@@ -122,7 +122,7 @@ class RegistrationFormValidatorTest {
         )
 
         val errors = (result as RegistrationFormValidationResult.Invalid).errors
-        assertThat(errors.verifyPasswordError).isEqualTo(FieldValidationError.PASSWORDS_DO_NOT_MATCH)
+        assertThat(errors.verifyPasswordError).isEqualTo(FieldValidationError.PasswordsDoNotMatch)
     }
 
     // ── Compound cases ──────────────────────────────────────────────────────
@@ -139,10 +139,10 @@ class RegistrationFormValidatorTest {
         )
 
         val errors = (result as RegistrationFormValidationResult.Invalid).errors
-        assertThat(errors.nameError).isEqualTo(FieldValidationError.REQUIRED)
-        assertThat(errors.emailError).isEqualTo(FieldValidationError.REQUIRED)
-        assertThat(errors.passwordError).isEqualTo(FieldValidationError.REQUIRED)
-        assertThat(errors.verifyPasswordError).isEqualTo(FieldValidationError.REQUIRED)
+        assertThat(errors.nameError).isEqualTo(FieldValidationError.Required)
+        assertThat(errors.emailError).isEqualTo(FieldValidationError.Required)
+        assertThat(errors.passwordError).isEqualTo(FieldValidationError.Required)
+        assertThat(errors.verifyPasswordError).isEqualTo(FieldValidationError.Required)
     }
 
     @Test
@@ -158,9 +158,9 @@ class RegistrationFormValidatorTest {
 
         val errors = (result as RegistrationFormValidationResult.Invalid).errors
         assertThat(errors.nameError).isNull()
-        assertThat(errors.emailError).isEqualTo(FieldValidationError.INVALID_EMAIL)
+        assertThat(errors.emailError).isEqualTo(FieldValidationError.InvalidEmail)
         assertThat(errors.passwordError).isNull()
-        assertThat(errors.verifyPasswordError).isEqualTo(FieldValidationError.PASSWORDS_DO_NOT_MATCH)
+        assertThat(errors.verifyPasswordError).isEqualTo(FieldValidationError.PasswordsDoNotMatch)
     }
 
     // ── Edge cases ──────────────────────────────────────────────────────────
@@ -222,7 +222,7 @@ class RegistrationFormValidatorTest {
             ),
         )
 
-        assertThat(result).isEqualTo(FieldValidationError.REQUIRED)
+        assertThat(result).isEqualTo(FieldValidationError.Required)
     }
 
     @Test
@@ -254,7 +254,7 @@ class RegistrationFormValidatorTest {
             ),
         )
 
-        assertThat(result).isEqualTo(FieldValidationError.INVALID_EMAIL)
+        assertThat(result).isEqualTo(FieldValidationError.InvalidEmail)
     }
 
     @Test
@@ -286,7 +286,7 @@ class RegistrationFormValidatorTest {
             ),
         )
 
-        assertThat(result).isEqualTo(FieldValidationError.PASSWORDS_DO_NOT_MATCH)
+        assertThat(result).isEqualTo(FieldValidationError.PasswordsDoNotMatch)
     }
 
     @Test
@@ -344,7 +344,7 @@ class RegistrationFormValidatorTest {
 
         val errors = (result as RegistrationFormValidationResult.Invalid).errors
         assertThat(errors.nameError).isNull()
-        assertThat(errors.emailError).isEqualTo(FieldValidationError.INVALID_EMAIL)
+        assertThat(errors.emailError).isEqualTo(FieldValidationError.InvalidEmail)
         assertThat(errors.passwordError).isNull()
         assertThat(errors.verifyPasswordError).isNull()
     }

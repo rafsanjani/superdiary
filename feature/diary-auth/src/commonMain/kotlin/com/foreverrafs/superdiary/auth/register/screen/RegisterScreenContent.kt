@@ -302,9 +302,9 @@ private fun FieldValidationError?.toErrorMessage(
     invalidEmail: String?,
     passwordsDoNotMatch: String?,
 ): String? = when (this) {
-    FieldValidationError.REQUIRED -> required
-    FieldValidationError.INVALID_EMAIL -> invalidEmail
-    FieldValidationError.PASSWORDS_DO_NOT_MATCH -> passwordsDoNotMatch
+    FieldValidationError.Required -> required
+    FieldValidationError.InvalidEmail -> invalidEmail
+    FieldValidationError.PasswordsDoNotMatch -> passwordsDoNotMatch
     null -> null
 }
 
