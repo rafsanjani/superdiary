@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.data.datasource
 
+import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.remote.DiaryApi
@@ -15,7 +16,6 @@ import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.Clock
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
@@ -43,8 +43,9 @@ class OfflineFirstDataSource(
     private val diaryApi: DiaryApi,
     private val logger: AggregateLogger,
     private val clock: Clock,
+    appDispatchers: AppCoroutineDispatchers,
 ) : DataSource, Syncable {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private val scope = CoroutineScope(SupervisorJob() + appDispatchers.io)
     private val syncMutex = Mutex()
 
     @OptIn(ExperimentalAtomicApi::class)

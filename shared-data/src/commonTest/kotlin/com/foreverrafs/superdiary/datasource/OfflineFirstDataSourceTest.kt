@@ -15,6 +15,7 @@ import com.foreverrafs.superdiary.data.datasource.OfflineFirstDataSource
 import com.foreverrafs.superdiary.data.datasource.remote.DiaryApi
 import com.foreverrafs.superdiary.data.mapper.toDiary
 import com.foreverrafs.superdiary.data.model.DiaryDto
+import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.database.model.DiaryChatMessageDb
 import com.foreverrafs.superdiary.database.model.DiaryDb
@@ -38,6 +39,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -685,6 +687,11 @@ class OfflineFirstDataSourceTest {
             diaryApi = api,
             logger = AggregateLogger(),
             clock = fixedClock,
+            appDispatchers = object : AppCoroutineDispatchers {
+                override val io = UnconfinedTestDispatcher()
+                override val computation = UnconfinedTestDispatcher()
+                override val main = UnconfinedTestDispatcher()
+            },
         )
 
     private class FakeDiaryApi(
