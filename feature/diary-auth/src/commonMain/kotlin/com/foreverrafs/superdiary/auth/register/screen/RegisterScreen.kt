@@ -2,12 +2,10 @@ package com.foreverrafs.superdiary.auth.register.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.foreverrafs.superdiary.auth.register.RegisterScreenViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RegisterScreen(
     onLoginClick: () -> Unit,
@@ -23,5 +21,6 @@ fun RegisterScreen(
         onRegisterClick = screenModel::onRegisterClick,
         onRegisterSuccess = onRegisterSuccess,
         onLoginClick = onLoginClick,
+        onFieldChange = screenModel::onFieldChanged,
     )
 }

@@ -38,6 +38,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.foreverrafs.superdiary.auth.register.FieldValidationError
 import com.foreverrafs.superdiary.design.components.BrandLogo
 import com.foreverrafs.superdiary.design.components.PasswordInputField
 import com.foreverrafs.superdiary.design.components.PrimaryButton
@@ -62,9 +63,10 @@ import superdiary.feature.diary_auth.generated.resources.label_register_title
 @Composable
 internal fun RegisterScreenContent(
     viewState: RegisterScreenState,
-    onRegisterClick: (name: String, username: String, password: String) -> Unit,
+    onRegisterClick: (name: String, username: String, password: String, verifyPassword: String) -> Unit,
     onRegisterSuccess: () -> Unit,
     onLoginClick: () -> Unit,
+    onFieldChange: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -75,6 +77,9 @@ internal fun RegisterScreenContent(
     val password = rememberTextFieldState("")
     val verifyPassword = rememberTextFieldState("")
 
+    // Local error state — driven by the ViewModel's ValidationError on submit,
+    // cleared locally via onValueChange to keep the UI responsive without
+    // emitting ViewModel StateFlow events on every keystroke.
     var nameError by remember { mutableStateOf<String?>(null) }
     var emailError by remember { mutableStateOf<String?>(null) }
     var passwordError by remember { mutableStateOf<String?>(null) }
@@ -82,7 +87,7 @@ internal fun RegisterScreenContent(
 
     var enableRegisterButton by remember { mutableStateOf(true) }
 
-    // Resolve string resources once at composition time
+    // Resolve localized error strings once at composition time.
     val strNameRequired = stringResource(Res.string.error_name_required)
     val strEmailRequired = stringResource(Res.string.error_email_required)
     val strInvalidEmail = stringResource(Res.string.error_invalid_email)
@@ -94,14 +99,42 @@ internal fun RegisterScreenContent(
         when (viewState) {
             is RegisterScreenState.Idle -> {
                 enableRegisterButton = true
+            }
+
+            is RegisterScreenState.Processing -> {
+                enableRegisterButton = false
+                // Clear stale inline errors so the fields look clean while loading.
                 nameError = null
                 emailError = null
                 passwordError = null
                 verifyPasswordError = null
             }
 
-            is RegisterScreenState.Processing -> {
-                enableRegisterButton = false
+            is RegisterScreenState.ValidationError -> {
+                enableRegisterButton = true
+                // Map typed error codes to localized strings.
+                viewState.errors.let { errors ->
+                    nameError = errors.nameError.toErrorMessage(
+                        required = strNameRequired,
+                        invalidEmail = null,
+                        passwordsDoNotMatch = null,
+                    )
+                    emailError = errors.emailError.toErrorMessage(
+                        required = strEmailRequired,
+                        invalidEmail = strInvalidEmail,
+                        passwordsDoNotMatch = null,
+                    )
+                    passwordError = errors.passwordError.toErrorMessage(
+                        required = strPasswordRequired,
+                        invalidEmail = null,
+                        passwordsDoNotMatch = null,
+                    )
+                    verifyPasswordError = errors.verifyPasswordError.toErrorMessage(
+                        required = strReenterPasswordRequired,
+                        invalidEmail = null,
+                        passwordsDoNotMatch = strPasswordsDoNotMatch,
+                    )
+                }
             }
 
             is RegisterScreenState.Success -> {
@@ -159,7 +192,10 @@ internal fun RegisterScreenContent(
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
                     ),
-                    onValueChange = { nameError = null },
+                    onValueChange = {
+                        nameError = null
+                        onFieldChange()
+                    },
                     isError = nameError != null,
                     errorLabel = nameError,
                 )
@@ -178,7 +214,10 @@ internal fun RegisterScreenContent(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next,
                     ),
-                    onValueChange = { emailError = null },
+                    onValueChange = {
+                        emailError = null
+                        onFieldChange()
+                    },
                     isError = emailError != null,
                     errorLabel = emailError,
                 )
@@ -196,7 +235,10 @@ internal fun RegisterScreenContent(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Next,
                     ),
-                    onPasswordChange = { passwordError = null },
+                    onPasswordChange = {
+                        passwordError = null
+                        onFieldChange()
+                    },
                     isError = passwordError != null,
                     errorLabel = passwordError,
                 )
@@ -214,7 +256,10 @@ internal fun RegisterScreenContent(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done,
                     ),
-                    onPasswordChange = { verifyPasswordError = null },
+                    onPasswordChange = {
+                        verifyPasswordError = null
+                        onFieldChange()
+                    },
                     isError = verifyPasswordError != null,
                     errorLabel = verifyPasswordError,
                 )
@@ -226,53 +271,12 @@ internal fun RegisterScreenContent(
                         .fillMaxWidth()
                         .testTag("button_register"),
                     onClick = {
-                        var hasError = false
-
-                        // Validate name
-                        if (name.text.isBlank()) {
-                            nameError = strNameRequired
-                            hasError = true
-                        } else {
-                            nameError = null
-                        }
-
-                        // Validate email
-                        if (email.text.isBlank()) {
-                            emailError = strEmailRequired
-                            hasError = true
-                        } else if (!email.text.contains("@")) {
-                            emailError = strInvalidEmail
-                            hasError = true
-                        } else {
-                            emailError = null
-                        }
-
-                        // Validate password
-                        if (password.text.isBlank()) {
-                            passwordError = strPasswordRequired
-                            hasError = true
-                        } else {
-                            passwordError = null
-                        }
-
-                        // Validate verify password
-                        if (verifyPassword.text.isBlank()) {
-                            verifyPasswordError = strReenterPasswordRequired
-                            hasError = true
-                        } else if (verifyPassword.text.toString() != password.text.toString()) {
-                            verifyPasswordError = strPasswordsDoNotMatch
-                            hasError = true
-                        } else {
-                            verifyPasswordError = null
-                        }
-
-                        if (!hasError) {
-                            onRegisterClick(
-                                name.text.toString(),
-                                email.text.toString(),
-                                password.text.toString(),
-                            )
-                        }
+                        onRegisterClick(
+                            name.text.toString(),
+                            email.text.toString(),
+                            password.text.toString(),
+                            verifyPassword.text.toString(),
+                        )
                     },
                     enabled = enableRegisterButton,
                     text = stringResource(Res.string.label_register),
@@ -284,6 +288,24 @@ internal fun RegisterScreenContent(
             }
         }
     }
+}
+
+/**
+ * Maps a [FieldValidationError] to its localized string for display below the input field.
+ *
+ * Each field has different error messages for the same error code
+ * (e.g. "Name is required" vs "Email is required"), so the caller provides
+ * the messages for the specific field via the named parameters.
+ */
+private fun FieldValidationError?.toErrorMessage(
+    required: String?,
+    invalidEmail: String?,
+    passwordsDoNotMatch: String?,
+): String? = when (this) {
+    FieldValidationError.REQUIRED -> required
+    FieldValidationError.INVALID_EMAIL -> invalidEmail
+    FieldValidationError.PASSWORDS_DO_NOT_MATCH -> passwordsDoNotMatch
+    null -> null
 }
 
 @Composable
@@ -330,9 +352,10 @@ private fun Preview() {
     SuperDiaryPreviewTheme {
         RegisterScreenContent(
             viewState = RegisterScreenState.Idle,
-            onRegisterClick = { _, _, _ -> },
+            onRegisterClick = { _, _, _, _ -> },
             onRegisterSuccess = {},
             onLoginClick = {},
+            onFieldChange = {},
         )
     }
 }

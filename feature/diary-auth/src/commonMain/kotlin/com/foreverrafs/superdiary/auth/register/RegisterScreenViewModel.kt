@@ -13,17 +13,39 @@ import kotlinx.coroutines.launch
 class RegisterScreenViewModel(
     private val authApi: AuthApi,
     private val coroutineDispatchers: AppCoroutineDispatchers,
+    private val formValidator: RegistrationFormValidator = RegistrationFormValidator,
 ) : ViewModel() {
     private val _viewState: MutableStateFlow<RegisterScreenState> =
         MutableStateFlow(RegisterScreenState.Idle)
 
     val viewState = _viewState.asStateFlow()
 
+    /** Called when the user modifies any input field — clears stale validation errors. */
+    fun onFieldChanged() {
+        if (_viewState.value is RegisterScreenState.ValidationError) {
+            _viewState.update { RegisterScreenState.Idle }
+        }
+    }
+
     fun onRegisterClick(
         name: String,
         email: String,
         password: String,
+        verifyPassword: String,
     ) = viewModelScope.launch(coroutineDispatchers.main) {
+        // 1. Validate the form
+        when (val result = formValidator.validate(name, email, password, verifyPassword)) {
+            is RegistrationFormValidationResult.Invalid -> {
+                _viewState.update {
+                    RegisterScreenState.ValidationError(errors = result.errors)
+                }
+                return@launch
+            }
+
+            is RegistrationFormValidationResult.Valid -> { /* proceed */ }
+        }
+
+        // 2. Attempt registration
         _viewState.update {
             RegisterScreenState.Processing
         }
