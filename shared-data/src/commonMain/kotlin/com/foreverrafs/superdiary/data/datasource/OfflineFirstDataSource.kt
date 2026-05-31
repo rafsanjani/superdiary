@@ -43,7 +43,7 @@ class OfflineFirstDataSource(
     private val diaryApi: DiaryApi,
     private val logger: AggregateLogger,
     private val clock: Clock,
-    private val appDispatchers: AppCoroutineDispatchers,
+    appDispatchers: AppCoroutineDispatchers,
 ) : DataSource, Syncable {
     private val scope = CoroutineScope(SupervisorJob() + appDispatchers.io)
     private val syncMutex = Mutex()
