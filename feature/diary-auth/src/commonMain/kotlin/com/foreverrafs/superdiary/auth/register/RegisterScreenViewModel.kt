@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class RegisterScreenViewModel(
     private val authApi: AuthApi,
     private val coroutineDispatchers: AppCoroutineDispatchers,
-    private val formValidator: RegistrationFormValidator = RegistrationFormValidator,
+    private val formValidator: RegistrationFormValidator = RegistrationFormValidator(),
 ) : ViewModel() {
     private val _viewState: MutableStateFlow<RegisterScreenState> =
         MutableStateFlow(RegisterScreenState.Idle)
@@ -34,10 +34,19 @@ class RegisterScreenViewModel(
         verifyPassword: String,
     ) = viewModelScope.launch(coroutineDispatchers.main) {
         // 1. Validate the form
-        when (val result = formValidator.validate(name, email, password, verifyPassword)) {
+        val validationResult = formValidator.validate(
+            RegistrationFormData(
+                name = name,
+                email = email,
+                password = password,
+                verifyPassword = verifyPassword,
+            ),
+        )
+
+        when (validationResult) {
             is RegistrationFormValidationResult.Invalid -> {
                 _viewState.update {
-                    RegisterScreenState.ValidationError(errors = result.errors)
+                    RegisterScreenState.ValidationError(errors = validationResult.errors)
                 }
                 return@launch
             }
