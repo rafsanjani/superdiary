@@ -1,7 +1,7 @@
 package com.foreverrafs.superdiary.list.domain
 
 import assertk.assertThat
-import assertk.assertions.isTrue
+import assertk.assertions.isEqualTo
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.data.datasource.LocalDataSource
 import com.foreverrafs.superdiary.database.Database
@@ -42,6 +42,8 @@ class FavoriteDiariesUseCaseTest {
 
         updateDiariesUseCase(diary.copy(isFavorite = true))
 
-        assertThat(diary.isFavorite).isTrue()
+        assertThat(
+            dataSource.find(100L)?.isFavorite,
+        ).isEqualTo(true)
     }
 }
