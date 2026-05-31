@@ -4,9 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigationevent.NavigationEventInfo
-import androidx.navigationevent.compose.NavigationBackHandler
-import androidx.navigationevent.compose.rememberNavigationEventState
 import com.foreverrafs.superdiary.auth.register.RegisterScreenViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -19,16 +16,6 @@ fun RegisterScreen(
     val screenModel: RegisterScreenViewModel = koinViewModel()
     val signInStatus by screenModel.viewState.collectAsStateWithLifecycle(
         initialValue = RegisterScreenState.Idle,
-    )
-
-    NavigationBackHandler(
-        isBackEnabled = true,
-        state = rememberNavigationEventState(
-            currentInfo = NavigationEventInfo.None,
-        ),
-        onBackCompleted = {
-            // Disable back navigation on this screen
-        },
     )
 
     RegisterScreenContent(
