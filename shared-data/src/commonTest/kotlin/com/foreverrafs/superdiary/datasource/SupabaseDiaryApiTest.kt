@@ -1,9 +1,7 @@
 package com.foreverrafs.superdiary.datasource
 
 import assertk.assertThat
-import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
-import assertk.assertions.isNotNull
 import co.touchlab.kermit.Logger
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.data.Result
@@ -11,6 +9,7 @@ import com.foreverrafs.superdiary.data.datasource.remote.SupabaseDiaryApi
 import com.foreverrafs.superdiary.data.model.DiaryDto
 import io.ktor.client.engine.mock.respondBadRequest
 import io.ktor.client.engine.mock.respondOk
+import io.ktor.util.reflect.instanceOf
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -108,7 +107,7 @@ class SupabaseDiaryApiTest {
             ),
         )
 
-        assertThat(supabaseDiaryApi.delete(diaryDto)).isInstanceOf(Result.Success::class)
+        assertThat(supabaseDiaryApi.delete(diaryDto)).instanceOf(Result.Success::class)
     }
 
     @Test
@@ -127,7 +126,7 @@ class SupabaseDiaryApiTest {
             ),
         )
 
-        assertThat(supabaseDiaryApi.delete(diaryDto)).isInstanceOf(Result.Failure::class)
+        assertThat(supabaseDiaryApi.delete(diaryDto)).instanceOf(Result.Failure::class)
     }
 
     @Test
@@ -146,7 +145,7 @@ class SupabaseDiaryApiTest {
             ),
         )
 
-        assertThat(supabaseDiaryApi.save(diaryDto)).isInstanceOf(Result.Success::class)
+        assertThat(supabaseDiaryApi.save(diaryDto)).instanceOf(Result.Success::class)
     }
 
     @Test
@@ -165,7 +164,7 @@ class SupabaseDiaryApiTest {
             ),
         )
 
-        assertThat(supabaseDiaryApi.save(diaryDto)).isInstanceOf(Result.Failure::class)
+        assertThat(supabaseDiaryApi.save(diaryDto)).instanceOf(Result.Failure::class)
     }
 
     private fun List<DiaryDto>.toResponseString(): String = Json.encodeToString(this)
