@@ -77,9 +77,6 @@ internal fun RegisterScreenContent(
     val password = rememberTextFieldState("")
     val verifyPassword = rememberTextFieldState("")
 
-    // Local error state — driven by the ViewModel's ValidationError on submit,
-    // cleared locally via onValueChange to keep the UI responsive without
-    // emitting ViewModel StateFlow events on every keystroke.
     var nameError by remember { mutableStateOf<String?>(null) }
     var emailError by remember { mutableStateOf<String?>(null) }
     var passwordError by remember { mutableStateOf<String?>(null) }
@@ -87,13 +84,13 @@ internal fun RegisterScreenContent(
 
     var enableRegisterButton by remember { mutableStateOf(true) }
 
-    // Resolve localized error strings once at composition time.
-    val strNameRequired = stringResource(Res.string.error_name_required)
-    val strEmailRequired = stringResource(Res.string.error_email_required)
-    val strInvalidEmail = stringResource(Res.string.error_invalid_email)
-    val strPasswordRequired = stringResource(Res.string.error_password_required)
-    val strReenterPasswordRequired = stringResource(Res.string.error_reenter_password_required)
-    val strPasswordsDoNotMatch = stringResource(Res.string.error_passwords_do_not_match)
+    // Resolve error strings inline, just before their use in LaunchedEffect.
+    val errorNameRequired = stringResource(Res.string.error_name_required)
+    val errorEmailRequired = stringResource(Res.string.error_email_required)
+    val errorInvalidEmail = stringResource(Res.string.error_invalid_email)
+    val errorPasswordRequired = stringResource(Res.string.error_password_required)
+    val errorReenterPasswordRequired = stringResource(Res.string.error_reenter_password_required)
+    val errorPasswordsDoNotMatch = stringResource(Res.string.error_passwords_do_not_match)
 
     LaunchedEffect(viewState) {
         when (viewState) {
@@ -103,7 +100,6 @@ internal fun RegisterScreenContent(
 
             is RegisterScreenState.Processing -> {
                 enableRegisterButton = false
-                // Clear stale inline errors so the fields look clean while loading.
                 nameError = null
                 emailError = null
                 passwordError = null
@@ -112,27 +108,26 @@ internal fun RegisterScreenContent(
 
             is RegisterScreenState.ValidationError -> {
                 enableRegisterButton = true
-                // Map typed error codes to localized strings.
                 viewState.errors.let { errors ->
                     nameError = errors.nameError.toErrorMessage(
-                        required = strNameRequired,
+                        required = errorNameRequired,
                         invalidEmail = null,
                         passwordsDoNotMatch = null,
                     )
                     emailError = errors.emailError.toErrorMessage(
-                        required = strEmailRequired,
-                        invalidEmail = strInvalidEmail,
+                        required = errorEmailRequired,
+                        invalidEmail = errorInvalidEmail,
                         passwordsDoNotMatch = null,
                     )
                     passwordError = errors.passwordError.toErrorMessage(
-                        required = strPasswordRequired,
+                        required = errorPasswordRequired,
                         invalidEmail = null,
                         passwordsDoNotMatch = null,
                     )
                     verifyPasswordError = errors.verifyPasswordError.toErrorMessage(
-                        required = strReenterPasswordRequired,
+                        required = errorReenterPasswordRequired,
                         invalidEmail = null,
-                        passwordsDoNotMatch = strPasswordsDoNotMatch,
+                        passwordsDoNotMatch = errorPasswordsDoNotMatch,
                     )
                 }
             }
