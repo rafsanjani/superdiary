@@ -13,11 +13,11 @@ import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
-import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
 import com.foreverrafs.superdiary.list.domain.repository.DiaryListRepository
+import com.foreverrafs.superdiary.list.domain.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.list.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.list.presentation.list.DiaryListViewModel
 import com.foreverrafs.superdiary.utils.toDate
@@ -32,6 +32,7 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -45,7 +46,7 @@ import kotlinx.coroutines.test.setMain
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
 class DiaryListViewModelTest {
 
-    private val dataSource: DataSource = mock<DataSource>()
+    private val dataSource: DataSource = mock()
 
     private lateinit var diaryListViewModel: DiaryListViewModel
 
@@ -133,7 +134,6 @@ class DiaryListViewModelTest {
 
         diaryListViewModel.state.test {
             skipItems(1)
-            delay(100)
 
             val state = awaitItem()
             assertThat(state.error).isNotNull()

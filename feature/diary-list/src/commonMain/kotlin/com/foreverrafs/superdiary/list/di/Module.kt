@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.list.di
 
 import com.foreverrafs.superdiary.list.data.DiaryListRepositoryImpl
 import com.foreverrafs.superdiary.list.domain.repository.DiaryListRepository
+import com.foreverrafs.superdiary.list.domain.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.list.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.list.domain.usecase.GetDiaryByIdUseCase
 import com.foreverrafs.superdiary.list.presentation.detail.DetailsViewModel
@@ -19,4 +20,5 @@ val diaryListModule = module {
     factoryOf(::GetAllDiariesUseCase)
     factoryOf(::GetDiaryByIdUseCase)
     factoryOf(::DetailsViewModel)
+    factoryOf(::DeleteDiaryUseCase)
 }
