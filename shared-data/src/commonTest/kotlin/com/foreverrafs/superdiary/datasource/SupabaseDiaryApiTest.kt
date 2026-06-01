@@ -7,8 +7,13 @@ import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.remote.SupabaseDiaryApi
 import com.foreverrafs.superdiary.data.model.DiaryDto
+import io.ktor.client.engine.mock.respond
 import io.ktor.client.engine.mock.respondBadRequest
 import io.ktor.client.engine.mock.respondOk
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.headersOf
 import io.ktor.util.reflect.instanceOf
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -49,11 +54,17 @@ class SupabaseDiaryApiTest {
             entry = "Hello world",
         )
 
+        val json = listOf(diaryDto).toResponseString()
+
         supabaseDiaryApi = SupabaseDiaryApi(
             supabase = createMockedSupabaseClient(
                 requestHandler = {
-                    respondOk(
-                        listOf(diaryDto).toResponseString(),
+                    respond(
+                        content = json,
+                        status = HttpStatusCode.OK,
+                        headers = headersOf(
+                            HttpHeaders.ContentType, ContentType.Application.Json.toString(),
+                        ),
                     )
                 },
             ),
