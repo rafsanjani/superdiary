@@ -27,6 +27,9 @@ dependencyResolutionManagement {
             // TODO: This was bumped up because koog-agents accidentally set their minimumSdk to a very high value
             version("minimumSdk", "35")
         }
+        create("conventionLibs") {
+            from(files("gradle/convention-libs.versions.toml"))
+        }
     }
 }
 

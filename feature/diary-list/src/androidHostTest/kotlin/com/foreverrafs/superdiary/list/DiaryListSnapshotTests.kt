@@ -78,7 +78,6 @@ class DiaryListSnapshotTests(
                         showSearchBar = true,
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
-                        onProfileClick = {},
                     )
                 }
             }
@@ -112,7 +111,6 @@ class DiaryListSnapshotTests(
                         showSearchBar = true,
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
-                        onProfileClick = {},
                     )
                 }
             }
@@ -133,7 +131,6 @@ class DiaryListSnapshotTests(
                         showSearchBar = true,
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
-                        onProfileClick = {},
                     )
                 }
             }
@@ -154,7 +151,6 @@ class DiaryListSnapshotTests(
                         showSearchBar = true,
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
-                        onProfileClick = {},
                     )
                 }
             }
@@ -174,7 +170,6 @@ class DiaryListSnapshotTests(
                         showSearchBar = true,
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
-                        onProfileClick = {},
                     )
                 }
             }
