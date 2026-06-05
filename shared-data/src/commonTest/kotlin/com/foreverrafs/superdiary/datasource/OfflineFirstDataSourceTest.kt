@@ -3,7 +3,6 @@ package com.foreverrafs.superdiary.datasource
 import androidx.paging.testing.asSnapshot
 import app.cash.turbine.test
 import assertk.assertThat
-import assertk.assertions.first
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
@@ -100,7 +99,7 @@ class OfflineFirstDataSourceTest {
                     entry = "B",
                     id = 2,
                     date = fixedClock.now(),
-                    isFavorite = false,
+                    favorite = false,
                     location = Location.Empty.toString(),
                     updatedAt = 2_000,
                     isDeleted = true,
@@ -412,7 +411,7 @@ class OfflineFirstDataSourceTest {
                     entry = "remote",
                     id = localId,
                     date = fixedClock.now(),
-                    isFavorite = false,
+                    favorite = false,
                     location = Location.Empty.toString(),
                     updatedAt = 2_000,
                     isDeleted = false,
@@ -441,7 +440,7 @@ class OfflineFirstDataSourceTest {
                     entry = "remote",
                     id = localId,
                     date = fixedClock.now(),
-                    isFavorite = false,
+                    favorite = false,
                     location = Location.Empty.toString(),
                     updatedAt = 2_000,
                     isDeleted = false,
@@ -450,7 +449,7 @@ class OfflineFirstDataSourceTest {
                     entry = "new",
                     id = 99,
                     date = fixedClock.now(),
-                    isFavorite = false,
+                    favorite = false,
                     location = Location.Empty.toString(),
                     updatedAt = 4_000,
                     isDeleted = false,
@@ -480,7 +479,7 @@ class OfflineFirstDataSourceTest {
                     entry = "local",
                     id = localId,
                     date = fixedClock.now(),
-                    isFavorite = false,
+                    favorite = false,
                     location = Location.Empty.toString(),
                     updatedAt = 2_000,
                     isDeleted = true,
@@ -506,7 +505,7 @@ class OfflineFirstDataSourceTest {
                     entry = "local",
                     id = localId,
                     date = fixedClock.now(),
-                    isFavorite = false,
+                    favorite = false,
                     location = Location.Empty.toString(),
                     updatedAt = 2_000,
                     isDeleted = true,
@@ -515,7 +514,7 @@ class OfflineFirstDataSourceTest {
                     entry = "remote",
                     id = 100,
                     date = fixedClock.now(),
-                    isFavorite = false,
+                    favorite = false,
                     location = Location.Empty.toString(),
                     updatedAt = 4_000,
                     isDeleted = false,
@@ -658,7 +657,7 @@ class OfflineFirstDataSourceTest {
             if (start.elapsedNow() > timeoutMs.milliseconds) {
                 error("Condition not met within ${timeoutMs}ms")
             }
-            delay(intervalMs)
+            delay(intervalMs.milliseconds)
         }
     }
 
@@ -679,9 +678,11 @@ class OfflineFirstDataSourceTest {
         private val fetchAllFlow: Flow<List<DiaryDto>>? = null,
         private val failSave: Boolean = false,
         private val failDelete: Boolean = false,
+        private val updateMatches: Boolean = false,
     ) : DiaryApi {
         private val updates = MutableSharedFlow<List<DiaryDto>>(replay = 1)
         private val saved = MutableStateFlow<List<DiaryDto>>(emptyList())
+        private val remoteUpdates = MutableStateFlow<List<DiaryDto>>(emptyList())
         private val deleted = MutableStateFlow<List<DiaryDto>>(emptyList())
 
         override fun fetchAll(): Flow<List<DiaryDto>> = fetchAllFlow ?: updates

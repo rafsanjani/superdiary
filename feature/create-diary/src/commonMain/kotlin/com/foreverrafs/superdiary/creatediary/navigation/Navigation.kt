@@ -17,6 +17,7 @@ import kotlinx.serialization.modules.polymorphic
 fun EntryProviderScope<NavKey>.CreateDiaryNavigation(
     onDiarySaveComplete: () -> Unit,
     onDiarySaveAbort: () -> Unit,
+    onProfileClick: () -> Unit,
 ) {
     val savedStateConfiguration = SavedStateConfiguration {
         serializersModule = SerializersModule {
@@ -42,6 +43,7 @@ fun EntryProviderScope<NavKey>.CreateDiaryNavigation(
                 CreateDiaryScreen(
                     onDiarySaveComplete = onDiarySaveComplete,
                     onDiarySaveAbort = onDiarySaveAbort,
+                    onProfileClick = onProfileClick,
                 )
             }
         },

@@ -16,6 +16,7 @@ import kotlin.concurrent.Volatile
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.Clock
+import kotlin.time.Instant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -103,20 +104,23 @@ class OfflineFirstDataSource(
         return database.findPaged(entry)
     }
 
-    override fun findByDatePaged(date: kotlin.time.Instant): Flow<PagingData<Diary>> {
+    override fun findByDatePaged(date: Instant): Flow<PagingData<Diary>> {
         ensureSyncStarted()
         return database.findByDatePaged(date)
     }
 
-    override fun findPaged(from: kotlin.time.Instant, to: kotlin.time.Instant): Flow<PagingData<Diary>> {
+    override fun findPaged(
+        from: Instant,
+        to: Instant,
+    ): Flow<PagingData<Diary>> {
         ensureSyncStarted()
         return database.findPaged(from, to)
     }
 
     override fun findPaged(
         entry: String,
-        from: kotlin.time.Instant,
-        to: kotlin.time.Instant,
+        from: Instant,
+        to: Instant,
     ): Flow<PagingData<Diary>> {
         ensureSyncStarted()
         return database.findPaged(entry, from, to)

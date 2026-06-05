@@ -20,7 +20,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -38,6 +37,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
@@ -49,6 +49,9 @@ import com.components.diarylist.DiaryList
 import com.components.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.design.components.AppBar
 import com.foreverrafs.superdiary.design.components.ConfirmDeleteDialog
+import com.foreverrafs.superdiary.design.style.CREATE_DIARY_SHARED_BOUNDS_KEY
+import com.foreverrafs.superdiary.design.style.LocalRootAnimatedContentScope
+import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.domain.model.Diary
 import kotlin.time.Clock
 import kotlinx.coroutines.launch
@@ -60,13 +63,13 @@ fun DiaryListScreenContent(
     diaryFilters: DiaryFilters,
     showSearchBar: Boolean,
     diaryListActions: DiaryListActions,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     avatarUrl: String? = null,
     onProfileClick: () -> Unit = {},
     clock: Clock = Clock.System,
     listState: LazyListState = rememberLazyListState(),
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
     var selectedIds by rememberSaveable {
         mutableStateOf(setOf<Long>())
     }
@@ -116,19 +119,30 @@ fun DiaryListScreenContent(
             if (diaries.itemCount == 0) {
                 return@Scaffold
             }
-            FloatingActionButton(
-                modifier = Modifier.testTag("button_add_entry"),
-                onClick = diaryListActions.onAddEntry,
-                shape = RoundedCornerShape(4.dp),
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null,
-                )
+
+            val sharedTransitionScope = LocalSharedTransitionScope.current
+            val sharedAnimatedContentScope = LocalRootAnimatedContentScope.current
+                ?: LocalNavAnimatedContentScope.current
+
+            with(sharedTransitionScope) {
+                FloatingActionButton(
+                    modifier = Modifier
+                        .sharedBounds(
+                            sharedContentState = rememberSharedContentState(
+                                key = CREATE_DIARY_SHARED_BOUNDS_KEY,
+                            ),
+                            animatedVisibilityScope = sharedAnimatedContentScope,
+                        )
+                        .testTag("button_add_entry"),
+                    onClick = diaryListActions.onAddEntry,
+                    shape = RoundedCornerShape(4.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null,
+                    )
+                }
             }
-        },
-        snackbarHost = {
-            SnackbarHost(snackbarHostState)
         },
         topBar = {
             AppBar(
@@ -142,13 +156,17 @@ fun DiaryListScreenContent(
         Box(
             modifier = Modifier.padding(it).padding(8.dp),
         ) {
-            if (screenModel.isLoading || diaries.loadState.refresh is LoadState.Loading) {
+            val hasLoadedItems = diaries.itemCount > 0
+            val isInitialLoad = !hasLoadedItems &&
+                (screenModel.isLoading || diaries.loadState.refresh is LoadState.Loading)
+
+            if (isInitialLoad) {
                 LoadingContent(modifier = Modifier.fillMaxSize())
                 return@Box
             }
 
             val pagingError = diaries.loadState.refresh as? LoadState.Error
-            if (screenModel.error != null || pagingError != null) {
+            if (!hasLoadedItems && (screenModel.error != null || pagingError != null)) {
                 ErrorContent(
                     modifier = Modifier.fillMaxSize(),
                 )
@@ -307,6 +325,7 @@ private fun EmptyDiaryList(
         )
 
         TextButton(
+            modifier = Modifier.createDiarySharedBounds(),
             onClick = onAddEntry,
         ) {
             Text("Add Entry")
@@ -331,4 +350,20 @@ private fun ErrorContent(modifier: Modifier = Modifier) {
 private fun Set<Long>.addOrRemove(id: Long?): Set<Long> {
     if (id == null) return this
     return if (this.contains(id)) this.minus(id) else this.plus(id)
+}
+
+@Composable
+private fun Modifier.createDiarySharedBounds(): Modifier {
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+    val sharedAnimatedContentScope = LocalRootAnimatedContentScope.current
+        ?: LocalNavAnimatedContentScope.current
+
+    return with(sharedTransitionScope) {
+        sharedBounds(
+            sharedContentState = rememberSharedContentState(
+                key = CREATE_DIARY_SHARED_BOUNDS_KEY,
+            ),
+            animatedVisibilityScope = sharedAnimatedContentScope,
+        )
+    }
 }

@@ -24,6 +24,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import coil3.ImageLoader
@@ -37,6 +38,7 @@ import com.foreverrafs.superdiary.auth.navigation.AuthNavigation
 import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
 import com.foreverrafs.superdiary.creatediary.navigation.CreateDiaryNavigation
 import com.foreverrafs.superdiary.design.components.BrandLogo
+import com.foreverrafs.superdiary.design.style.LocalRootAnimatedContentScope
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.list.presentation.detail.screen.DiaryDetailScreen
@@ -90,7 +92,7 @@ internal fun SuperDiaryNavHost(
                         )
                     }
 
-                    entry<AppRoute.ProfileScreen> { key ->
+                    entry<AppRoute.ProfileScreen> { _ ->
                         ProfileScreen(
                             onLogoutComplete = {
                                 backStack.clear()
@@ -127,10 +129,19 @@ internal fun SuperDiaryNavHost(
                     }
 
                     entry<AppRoute.CreateDiaryGraph> {
-                        CreateDiaryNavigation(
-                            onDiarySaveComplete = backStack::removeLast,
-                            onDiarySaveAbort = backStack::removeLast,
-                        )
+                        val rootAnimatedContentScope = LocalNavAnimatedContentScope.current
+
+                        CompositionLocalProvider(
+                            LocalRootAnimatedContentScope provides rootAnimatedContentScope,
+                        ) {
+                            CreateDiaryNavigation(
+                                onDiarySaveComplete = backStack::removeLast,
+                                onDiarySaveAbort = backStack::removeLast,
+                                onProfileClick = {
+                                    backStack.add(AppRoute.ProfileScreen)
+                                },
+                            )
+                        }
                     }
 
                     entry<AppRoute.DiaryDetailScreen> { key ->

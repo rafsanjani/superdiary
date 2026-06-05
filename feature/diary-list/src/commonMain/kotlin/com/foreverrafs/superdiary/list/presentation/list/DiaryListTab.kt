@@ -5,6 +5,7 @@ package com.foreverrafs.superdiary.list.presentation.list
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,6 +25,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun DiaryListTab(
     onAddEntry: () -> Unit,
     onDiaryClick: (id: Long) -> Unit,
+    snackbarHostState: SnackbarHostState,
     avatarUrl: String?,
     onBackPress: () -> Unit,
     onProfileClick: () -> Unit,
@@ -58,6 +60,7 @@ fun DiaryListTab(
         diaryFilters = diaryFilters,
         showSearchBar = true,
         diaryListActions = diaryListActions,
+        snackbarHostState = snackbarHostState,
         modifier = modifier.fillMaxSize(),
         avatarUrl = avatarUrl,
         onProfileClick = onProfileClick,

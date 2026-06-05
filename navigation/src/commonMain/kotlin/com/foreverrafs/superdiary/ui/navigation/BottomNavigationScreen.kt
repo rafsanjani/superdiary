@@ -106,6 +106,7 @@ fun BottomNavigationScreen(
                     DiaryListTab(
                         onAddEntry = onAddEntry,
                         onDiaryClick = onDiaryClick,
+                        snackbarHostState = snackbarHostState,
                         avatarUrl = userInfo?.avatarUrl,
                         onBackPress = navigator::goBack,
                         onProfileClick = onProfileClick,

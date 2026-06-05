@@ -1,6 +1,7 @@
 package com.foreverrafs.superdiary.creatediary
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.runtime.Composable
 import app.cash.paparazzi.Paparazzi
 import com.foreverrafs.common.paparazzi.SnapshotDevice
@@ -36,20 +37,22 @@ class CreateDiarySnapshotTests(
         richTextState: RichTextState = rememberRichTextState(),
         showSaveDialog: Boolean = false,
     ) {
-        CreateDiaryScreenContent(
-            isGeneratingFromAi = isGeneratingFromAi,
-            onGenerateAI = { _: String, _: Int -> },
-            richTextState = richTextState,
-            onSaveDiary = {},
-            onDontAskAgain = {},
-            showLocationPermissionRationale = showLocationPermissionRationale,
-            onRequestLocationPermission = {},
-            permissionState = permissionState,
-            avatarUrl = avatarUrl,
-            showSaveDialog = showSaveDialog,
-            onShowSaveDialogChange = {},
-            onNavigateBack = {},
-        )
+        SharedTransitionLayout {
+            CreateDiaryScreenContent(
+                isGeneratingFromAi = isGeneratingFromAi,
+                onGenerateAI = { _: String, _: Int -> },
+                richTextState = richTextState,
+                onSaveDiary = {},
+                onDontAskAgain = {},
+                showLocationPermissionRationale = showLocationPermissionRationale,
+                onRequestLocationPermission = {},
+                permissionState = permissionState,
+                avatarUrl = avatarUrl,
+                showSaveDialog = showSaveDialog,
+                onShowSaveDialogChange = {},
+                onNavigateBack = {},
+            )
+        }
     }
 
     @Test

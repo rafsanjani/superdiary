@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.creatediary.screen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
@@ -42,6 +44,9 @@ import com.foreverrafs.superdiary.design.components.AppBar
 import com.foreverrafs.superdiary.design.components.ConfirmSaveDialog
 import com.foreverrafs.superdiary.design.components.LocationRationaleDialog
 import com.foreverrafs.superdiary.design.components.SuperdiaryNavigationIcon
+import com.foreverrafs.superdiary.design.style.CREATE_DIARY_SHARED_BOUNDS_KEY
+import com.foreverrafs.superdiary.design.style.LocalRootAnimatedContentScope
+import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
@@ -85,6 +90,7 @@ fun CreateDiaryScreenContent(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     richTextState: RichTextState = rememberRichTextState(),
+    onProfileClick: () -> Unit,
 ) {
     NavigationBackHandler(
         isBackEnabled = true,
@@ -115,12 +121,26 @@ fun CreateDiaryScreenContent(
                     )
                 },
                 avatarUrl = avatarUrl,
+                onProfileClick = onProfileClick,
             )
         },
         modifier = modifier,
     ) {
+        val sharedTransitionScope = LocalSharedTransitionScope.current
+        val sharedAnimatedContentScope = LocalRootAnimatedContentScope.current
+            ?: LocalNavAnimatedContentScope.current
+
         Surface(
-            modifier = Modifier.padding(it),
+            modifier = with(sharedTransitionScope) {
+                Modifier
+                    .sharedBounds(
+                        sharedContentState = rememberSharedContentState(
+                            key = CREATE_DIARY_SHARED_BOUNDS_KEY,
+                        ),
+                        animatedVisibilityScope = sharedAnimatedContentScope,
+                    )
+                    .padding(it)
+            },
             color = MaterialTheme.colorScheme.background,
         ) {
             if (showLocationPermissionRationale) {
@@ -252,19 +272,22 @@ private fun DiaryAISuggestionChip(words: Int, enabled: Boolean, onClick: () -> U
 @Composable
 private fun Preview() {
     SuperDiaryPreviewTheme {
-        CreateDiaryScreenContent(
-            isGeneratingFromAi = false,
-            onGenerateAI = { _: String, _: Int -> },
-            richTextState = rememberRichTextState().apply {},
-            onSaveDiary = {},
-            onDontAskAgain = {},
-            showLocationPermissionRationale = false,
-            onRequestLocationPermission = {},
-            permissionState = PermissionState.NotDetermined,
-            avatarUrl = null,
-            showSaveDialog = false,
-            onShowSaveDialogChange = {},
-            onNavigateBack = {},
-        )
+        SharedTransitionLayout {
+            CreateDiaryScreenContent(
+                isGeneratingFromAi = false,
+                showSaveDialog = false,
+                onShowSaveDialogChange = {},
+                onGenerateAI = { _: String, _: Int -> },
+                onSaveDiary = {},
+                showLocationPermissionRationale = false,
+                permissionState = PermissionState.NotDetermined,
+                avatarUrl = null,
+                onRequestLocationPermission = {},
+                onDontAskAgain = {},
+                onNavigateBack = {},
+                richTextState = rememberRichTextState().apply {},
+                onProfileClick = {},
+            )
+        }
     }
 }
