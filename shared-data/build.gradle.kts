@@ -29,6 +29,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.supabase.posgrest)
                 implementation(libs.supabase.realtime)
+                api("androidx.paging:paging-common:${libs.versions.paging.get()}")
 
                 // Project dependencies
                 implementation(projects.commonUtils)
@@ -59,6 +60,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-mock:${libs.versions.ktor.get()}")
                 implementation(projects.commonTest)
                 implementation(libs.assertk.common)
+                implementation("androidx.paging:paging-testing:${libs.versions.paging.get()}")
             }
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
         }

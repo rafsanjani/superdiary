@@ -16,8 +16,10 @@ fun List<Diary>.groupByDate(clock: Clock = Clock.System): Map<PrioritizedDuratio
         .sortedBy { it.first.priority }
         .toMap()
 
+fun Diary.durationLabel(clock: Clock = Clock.System): PrioritizedDuration = getDurationString(this, clock)
+
 /**
- * Durations are weighted from 0 - 4 with 0 being the most prioritized and
+ * Durations are weighted from 0 to 4 with 0 being the most prioritized and
  * 4 being the least. This priority is used to determine how the grouped
  * dates will be sorted
  */
@@ -26,7 +28,6 @@ data class PrioritizedDuration(
     val priority: Int,
 )
 
-@Suppress("ReturnCount", "CyclomaticComplexMethod")
 private fun getDurationString(diary: Diary, clock: Clock = Clock.System): PrioritizedDuration {
     val entryDate = diary.date.toLocalDateTime(TimeZone.UTC).date
 

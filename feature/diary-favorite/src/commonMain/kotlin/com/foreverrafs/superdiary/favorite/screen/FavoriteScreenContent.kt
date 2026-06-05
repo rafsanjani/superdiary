@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.components.diarylist.DiaryFilters
 import com.components.diarylist.DiaryList
 import com.components.diarylist.DiaryListActions
@@ -44,9 +45,10 @@ fun FavoriteScreenContent(
                 .padding(paddingValues = it),
         ) {
             if (state is FavoriteScreenState.Content) {
+                val diaries = state.diaries.collectAsLazyPagingItems()
                 DiaryList(
                     modifier = Modifier.fillMaxSize(),
-                    diaries = state.diaries,
+                    diaries = diaries,
                     inSelectionMode = false,
                     diaryFilters = DiaryFilters(),
                     selectedIds = setOf(),
@@ -61,7 +63,7 @@ fun FavoriteScreenContent(
                             true
                         },
                     ),
-                    snackbarHostState = SnackbarHostState(),
+                    snackbarHostState = snackbarHostState,
                     emptyContent = {
                         Text(
                             modifier = Modifier

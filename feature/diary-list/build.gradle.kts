@@ -41,6 +41,8 @@ kotlin {
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(projects.designSystem)
             implementation(libs.kotlinx.serialization.json)
+            implementation("androidx.paging:paging-common:${libs.versions.paging.get()}")
+            implementation(libs.androidx.paging.compose)
         }
 
         commonTest.dependencies {
@@ -52,6 +54,7 @@ kotlin {
             implementation(libs.turbine)
             implementation(projects.commonTest)
             implementation(libs.assertk.common)
+            implementation("androidx.paging:paging-testing:${libs.versions.paging.get()}")
         }
     }
 }

@@ -1,8 +1,10 @@
 package com.foreverrafs.superdiary.database
 
+import androidx.paging.PagingSource
 import app.cash.sqldelight.ColumnAdapter
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
+import app.cash.sqldelight.paging3.QueryPagingSource
 import com.foreverrafs.superdiary.database.model.DiaryChatMessageDb
 import com.foreverrafs.superdiary.database.model.DiaryChatRoleDb
 import com.foreverrafs.superdiary.database.model.DiaryDb
@@ -102,18 +104,71 @@ class Database(
     fun findByIdIncludingDeleted(id: Long): DiaryDb? =
         queries.findByIdIncludingDeleted(id, diaryMapper).executeAsOneOrNull()
 
-    fun getAllDiaries(): Flow<List<DiaryDb>> = queries.selectAll(
-        mapper = diaryMapper,
-    ).asFlow().mapToList(Dispatchers.Main)
+    fun getAllDiariesPagingSource(): PagingSource<Int, DiaryDb> = QueryPagingSource(
+        countQuery = queries.countEntries(),
+        transacter = queries,
+        context = Dispatchers.Main,
+        queryProvider = { limit, offset ->
+            queries.selectAllPaged(
+                limit = limit,
+                offset = offset,
+                mapper = diaryMapper,
+            )
+        },
+    )
 
-    fun findDiaryByEntry(query: String): Flow<List<DiaryDb>> =
-        queries.findByEntry(name = query, mapper = diaryMapper).asFlow().mapToList(Dispatchers.Main)
+    fun findDiaryByEntryPagingSource(query: String): PagingSource<Int, DiaryDb> = QueryPagingSource(
+        countQuery = queries.countByEntry(name = query),
+        transacter = queries,
+        context = Dispatchers.Main,
+        queryProvider = { limit, offset ->
+            queries.findByEntryPaged(
+                name = query,
+                limit = limit,
+                offset = offset,
+                mapper = diaryMapper,
+            )
+        },
+    )
 
-    fun findByDateRange(from: Instant, to: Instant): Flow<List<DiaryDb>> = queries.findByDateRange(
-        from,
-        to,
-        diaryMapper,
-    ).asFlow().mapToList(Dispatchers.Main)
+    fun findByDateRangePagingSource(from: Instant, to: Instant): PagingSource<Int, DiaryDb> = QueryPagingSource(
+        countQuery = queries.countByDateRange(from, to),
+        transacter = queries,
+        context = Dispatchers.Main,
+        queryProvider = { limit, offset ->
+            queries.findByDateRangePaged(
+                from = from,
+                to = to,
+                limit = limit,
+                offset = offset,
+                mapper = diaryMapper,
+            )
+        },
+    )
+
+    fun findByEntryAndDateRangePagingSource(
+        query: String,
+        from: Instant,
+        to: Instant,
+    ): PagingSource<Int, DiaryDb> = QueryPagingSource(
+        countQuery = queries.countByEntryAndDateRange(
+            name = query,
+            from = from,
+            to = to,
+        ),
+        transacter = queries,
+        context = Dispatchers.Main,
+        queryProvider = { limit, offset ->
+            queries.findByEntryAndDateRangePaged(
+                name = query,
+                from = from,
+                to = to,
+                limit = limit,
+                offset = offset,
+                mapper = diaryMapper,
+            )
+        },
+    )
 
     fun update(diary: DiaryDb): Long {
         try {
@@ -134,8 +189,18 @@ class Database(
         return queries.getAffectedRows().executeAsOne()
     }
 
-    fun getFavoriteDiaries(): Flow<List<DiaryDb>> =
-        queries.getFavoriteDiaries(diaryMapper).asFlow().mapToList(Dispatchers.Main)
+    fun getFavoriteDiariesPagingSource(): PagingSource<Int, DiaryDb> = QueryPagingSource(
+        countQuery = queries.countFavoriteDiaries(),
+        transacter = queries,
+        context = Dispatchers.Main,
+        queryProvider = { limit, offset ->
+            queries.getFavoriteDiariesPaged(
+                limit = limit,
+                offset = offset,
+                mapper = diaryMapper,
+            )
+        },
+    )
 
     fun clearDiaries() {
         queries.deleteAll()

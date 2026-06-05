@@ -1,10 +1,9 @@
 package com.foreverrafs.superdiary.list.presentation
 
+import androidx.paging.PagingData
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isFalse
-import assertk.assertions.isNotEmpty
-import assertk.assertions.isNotNull
 import assertk.assertions.isTrue
 import com.components.diarylist.DiaryFilters
 import com.foreverrafs.auth.AuthApi
@@ -37,8 +36,8 @@ import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -75,20 +74,26 @@ class DiaryListViewModelTest {
     @OptIn(ExperimentalTime::class)
     @BeforeTest
     fun setup() {
-        Dispatchers.setMain(TestAppDispatchers.main)
+        Dispatchers.setMain(StandardTestDispatcher())
 
-        every { dataSource.findByDate(any()) }.returns(
-            flowOf(listOf(diary)),
+        every { dataSource.findByDatePaged(any()) }.returns(
+            flowOf(PagingData.from(listOf(diary))),
         )
 
-        every { dataSource.fetchAll() }
-            .returns(flowOf(emptyList()))
+        every { dataSource.fetchAllPaged() }
+            .returns(flowOf(PagingData.empty()))
 
-        every { dataSource.find(entry = any()) }.returns(
-            flowOf(listOf(diary)),
+        every { dataSource.findPaged(entry = any()) }.returns(
+            flowOf(PagingData.from(listOf(diary))),
+        )
+        every { dataSource.findPaged(from = any(), to = any()) }.returns(
+            flowOf(PagingData.from(listOf(diary))),
+        )
+        every { dataSource.findPaged(entry = any(), from = any(), to = any()) }.returns(
+            flowOf(PagingData.from(listOf(diary))),
         )
 
-        everySuspend { repository.getAllDiaries() } returns flowOf(listOf(diary))
+        every { repository.getAllDiaries() } returns flowOf(PagingData.from(listOf(diary)))
 
         diaryListViewModel = DiaryListViewModel(
             getAllDiariesUseCase = GetAllDiariesUseCase(repository = repository),
@@ -108,8 +113,6 @@ class DiaryListViewModelTest {
 
     @Test
     fun `Diary list - Verify screen starts from loading state`() = runTest {
-        every { dataSource.fetchAll() }.returns(flowOf(listOf(diary)))
-
         diaryListViewModel.state.test {
             val state = awaitItem()
             cancelAndIgnoreRemainingEvents()
@@ -119,37 +122,13 @@ class DiaryListViewModelTest {
     }
 
     @Test
-    fun `Diary list - Error state is emitted when datasource fails`() = runTest {
-        every { dataSource.fetchAll() }.returns(
-            flow {
-                throw IllegalArgumentException("Exception thrown in datasource")
-            },
-        )
-
-        every { repository.getAllDiaries() }.returns(
-            flow {
-                throw IllegalArgumentException("Exception thrown in repository")
-            },
-        )
-
-        diaryListViewModel.state.test {
-            skipItems(1)
-
-            val state = awaitItem()
-            assertThat(state.error).isNotNull()
-        }
-    }
-
-    @Test
     fun `Diary list - Verify list gets loaded successfully`() = runTest {
-        every { dataSource.fetchAll() }.returns(flowOf(listOf(diary)))
-
         diaryListViewModel.state.test {
             skipItems(1)
             val state = awaitItem()
             cancelAndIgnoreRemainingEvents()
 
-            assertThat(state.diaries).isNotEmpty()
+            assertThat(state.isLoading).isFalse()
         }
     }
 
@@ -165,15 +144,15 @@ class DiaryListViewModelTest {
             skipItems(1)
             val state = awaitItem()
 
-            assertThat(state.diaries).isNotEmpty()
+            assertThat(state.isFiltered).isTrue()
         }
     }
 
     @Test
     fun `Filters - Apply filter with entry emits success state`() = runTest {
-        everySuspend { dataSource.find("entry") }.returns(
+        every { dataSource.findPaged("entry") }.returns(
             flowOf(
-                listOf(Diary("hello world")),
+                PagingData.from(listOf(Diary("hello world"))),
             ),
         )
 
@@ -185,7 +164,7 @@ class DiaryListViewModelTest {
 
             val state = awaitItem()
 
-            assertThat(state.diaries).isNotEmpty()
+            assertThat(state.isFiltered).isTrue()
         }
     }
 

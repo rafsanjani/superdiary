@@ -41,6 +41,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.components.diarylist.DiaryFilters
 import com.components.diarylist.DiaryList
 import com.components.diarylist.DiaryListActions
@@ -67,6 +70,7 @@ fun DiaryListScreenContent(
     var selectedIds by rememberSaveable {
         mutableStateOf(setOf<Long>())
     }
+    val diaries = screenModel.diaries.collectAsLazyPagingItems()
 
     @Suppress("NAME_SHADOWING")
     val diaryListActions = remember {
@@ -109,7 +113,7 @@ fun DiaryListScreenContent(
     Scaffold(
         floatingActionButton = {
             // Only show FAB when there is an entry
-            if (screenModel.diaries.isEmpty()) {
+            if (diaries.itemCount == 0) {
                 return@Scaffold
             }
             FloatingActionButton(
@@ -138,12 +142,13 @@ fun DiaryListScreenContent(
         Box(
             modifier = Modifier.padding(it).padding(8.dp),
         ) {
-            if (screenModel.isLoading) {
+            if (screenModel.isLoading || diaries.loadState.refresh is LoadState.Loading) {
                 LoadingContent(modifier = Modifier.fillMaxSize())
                 return@Box
             }
 
-            if (screenModel.error != null) {
+            val pagingError = diaries.loadState.refresh as? LoadState.Error
+            if (screenModel.error != null || pagingError != null) {
                 ErrorContent(
                     modifier = Modifier.fillMaxSize(),
                 )
@@ -151,7 +156,7 @@ fun DiaryListScreenContent(
             }
 
             DiaryListContent(
-                diaries = screenModel.diaries,
+                diaries = diaries,
                 isFiltered = screenModel.isFiltered,
                 showSearchBar = showSearchBar,
                 diaryListActions = diaryListActions,
@@ -178,7 +183,7 @@ fun DiaryListScreenContent(
  */
 @Composable
 private fun DiaryListContent(
-    diaries: List<Diary>,
+    diaries: LazyPagingItems<Diary>,
     isFiltered: Boolean,
     showSearchBar: Boolean,
     diaryListActions: DiaryListActions,
@@ -205,7 +210,7 @@ private fun DiaryListContent(
                 coroutineScope.launch {
                     showConfirmDeleteDialog = false
                     val isSuccess = diaryListActions.onDeleteDiaries(
-                        diaries.filter { selectedIds.contains(it.id) },
+                        diaries.itemSnapshotList.items.filter { selectedIds.contains(it.id) },
                     )
 
                     val message = if (isSuccess) {
@@ -226,13 +231,13 @@ private fun DiaryListContent(
 
     // We want to keep showing the search bar even for an empty list
     // if filters have been applied
-    val filteredEmpty = diaries.isEmpty() && isFiltered
+    val filteredEmpty = diaries.itemCount == 0 && isFiltered
 
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center,
     ) {
-        if (diaries.isNotEmpty() || filteredEmpty) {
+        if (diaries.itemCount > 0 || filteredEmpty) {
             DiaryList(
                 modifier = Modifier.fillMaxSize(),
                 diaries = diaries,

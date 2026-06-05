@@ -61,6 +61,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.foreverrafs.superdiary.common.utils.format
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
@@ -72,6 +74,7 @@ import kotlin.math.roundToInt
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
@@ -314,10 +317,12 @@ private fun Preview() {
             isFavorite = true,
         )
     }
+    val pagedItems = flowOf(PagingData.from(items)).collectAsLazyPagingItems()
+
     SuperDiaryPreviewTheme {
         DiaryList(
             modifier = Modifier.padding(16.dp),
-            diaries = items,
+            diaries = pagedItems,
             inSelectionMode = true,
             diaryFilters = DiaryFilters(),
             selectedIds = setOf(1, 2, 3, 4),

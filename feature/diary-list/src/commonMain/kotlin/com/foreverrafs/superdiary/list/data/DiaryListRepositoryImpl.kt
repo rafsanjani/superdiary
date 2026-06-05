@@ -1,9 +1,8 @@
 package com.foreverrafs.superdiary.list.data
 
+import androidx.paging.PagingData
 import com.foreverrafs.superdiary.data.Result
-import com.foreverrafs.superdiary.data.datasource.OfflineFirstDataSource
 import com.foreverrafs.superdiary.domain.model.Diary
-import com.foreverrafs.superdiary.domain.model.toDatabase
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.list.domain.repository.DiaryListRepository
 import kotlin.coroutines.cancellation.CancellationException
@@ -15,7 +14,7 @@ class DiaryListRepositoryImpl(
 
     override fun getDiaryById(id: Long): Diary? = dataSource.find(id)
 
-    override fun getAllDiaries(): Flow<List<Diary>> = dataSource.fetchAll()
+    override fun getAllDiaries(): Flow<PagingData<Diary>> = dataSource.fetchAllPaged()
 
     override suspend fun deleteDiaries(diaries: List<Diary>): Result<Int> = try {
         val result = dataSource.delete(diaries)

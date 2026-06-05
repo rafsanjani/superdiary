@@ -25,6 +25,7 @@ kotlin {
                 implementation(libs.kotlin.datetime)
                 implementation(libs.koin.core)
                 implementation(libs.square.sqldelight.coroutinesExt)
+                implementation("app.cash.sqldelight:androidx-paging3-extensions:${libs.versions.sqldelight.get()}")
                 implementation(libs.kotlinx.serialization.json)
                 implementation(projects.core.logging)
                 implementation(libs.kotlinx.coroutines.test)
