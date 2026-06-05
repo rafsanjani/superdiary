@@ -24,10 +24,10 @@ fun FavoriteScreenContent(
     state: FavoriteScreenState,
     onToggleFavorite: suspend (Diary) -> Boolean,
     snackbarHostState: SnackbarHostState,
-    avatarUrl: String? = null,
-    onProfileClick: () -> Unit = {},
     onFavoriteClick: (diaryId: Long) -> Unit,
     modifier: Modifier = Modifier,
+    avatarUrl: String? = null,
+    onProfileClick: () -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier,

@@ -203,7 +203,6 @@ dependencies {
     implementation(projects.core.logging)
     implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.kotlinx.coroutines.test)
-    debugImplementation(libs.leakcanary)
 }
 
 dependencyGuard {
