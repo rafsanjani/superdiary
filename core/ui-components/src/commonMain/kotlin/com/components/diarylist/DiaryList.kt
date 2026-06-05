@@ -79,13 +79,14 @@ fun DiaryList(
                 val date = diary.durationLabel(clock)
                 val previousDiary = if (index > 0) diaries.peek(index - 1) else null
                 val showHeader = previousDiary?.durationLabel(clock)?.label != date.label
-                val groupDiaries = loadedDiaries.filter {
-                    it.durationLabel(clock).label == date.label
-                }
-
                 if (showHeader) {
-                    val isGroupSelected by remember(selectedIds, groupDiaries) {
-                        mutableStateOf(selectedIds.containsAll(groupDiaries.mapNotNull { it.id }))
+                    val groupDiaries = remember(loadedDiaries, date.label) {
+                        loadedDiaries.filter {
+                            it.durationLabel(clock).label == date.label
+                        }
+                    }
+                    val isGroupSelected = remember(selectedIds, groupDiaries) {
+                        selectedIds.containsAll(groupDiaries.mapNotNull { it.id })
                     }
 
                     DiaryListHeader(
