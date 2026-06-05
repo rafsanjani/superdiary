@@ -30,6 +30,7 @@ class SearchDiaryByDateUseCase(
             hour = 23,
             minute = 59,
             second = 59,
+            nanosecond = 999_999_999,
         ).toInstant(timeZone)
 
         return dataSource.findPaged(
