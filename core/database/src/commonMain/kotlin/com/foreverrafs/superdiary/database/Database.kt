@@ -107,7 +107,7 @@ class Database(
     fun getAllDiariesPagingSource(): PagingSource<Int, DiaryDb> = QueryPagingSource(
         countQuery = queries.countEntries(),
         transacter = queries,
-        context = Dispatchers.Main,
+        context = Dispatchers.Default,
         queryProvider = { limit, offset ->
             queries.selectAllPaged(
                 limit = limit,
