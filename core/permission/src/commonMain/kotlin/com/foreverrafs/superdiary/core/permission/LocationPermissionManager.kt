@@ -26,9 +26,7 @@ class LocationPermissionManager(
     }
 
     suspend fun provideLocationPermission() {
-        if (_permissionState.value == PermissionState.DeniedAlways ||
-            _permissionState.value == PermissionState.NotGranted
-        ) {
+        if (_permissionState.value == PermissionState.DeniedAlways) {
             logger.i(TAG) {
                 "Location is permanently denied. Opening app settings"
             }
