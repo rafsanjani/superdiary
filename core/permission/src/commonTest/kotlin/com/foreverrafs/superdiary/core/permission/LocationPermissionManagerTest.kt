@@ -19,7 +19,6 @@ class LocationPermissionManagerTest {
             logger = AggregateLogger(),
         )
 
-        manager.permissionState.first()
         manager.provideLocationPermission()
 
         assertThat(permissionsController.actionPerformed)
