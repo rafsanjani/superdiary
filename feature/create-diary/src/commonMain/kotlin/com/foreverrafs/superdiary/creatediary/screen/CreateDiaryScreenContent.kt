@@ -88,9 +88,9 @@ fun CreateDiaryScreenContent(
     onRequestLocationPermission: () -> Unit,
     onDontAskAgain: () -> Unit,
     onNavigateBack: () -> Unit,
+    onProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
     richTextState: RichTextState = rememberRichTextState(),
-    onProfileClick: () -> Unit,
 ) {
     NavigationBackHandler(
         isBackEnabled = true,
