@@ -4,7 +4,6 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import kotlin.test.Test
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 
 class LocationPermissionManagerTest {
