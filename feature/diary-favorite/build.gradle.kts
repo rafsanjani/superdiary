@@ -27,6 +27,8 @@ kotlin {
             implementation(projects.commonUtils)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+            implementation("androidx.paging:paging-common:${libs.versions.paging.get()}")
+            implementation(libs.androidx.paging.compose)
             implementation(projects.sharedData)
 
             implementation(projects.core.location)
@@ -44,6 +46,7 @@ kotlin {
             implementation(projects.core.databaseTest)
             implementation(projects.commonTest)
             implementation(libs.kotlinx.coroutines.test)
+            implementation("androidx.paging:paging-testing:${libs.versions.paging.get()}")
         }
     }
 }

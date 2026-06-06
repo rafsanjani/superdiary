@@ -2,6 +2,8 @@ package com.foreverrafs.superdiary.list.presentation.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.components.diarylist.DiaryFilters
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
@@ -20,13 +22,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.datetime.LocalDate
 
 data class DiaryListScreenModel(
-    val diaries: List<Diary> = emptyList(),
+    val diaries: Flow<PagingData<Diary>> = flowOf(PagingData.empty()),
     val isLoading: Boolean,
     val isFiltered: Boolean = false,
     val avatarUrl: String? = null,
@@ -46,7 +49,7 @@ internal class DiaryListViewModel(
 
     private val filters: MutableStateFlow<DiaryFilters> = MutableStateFlow(DiaryFilters())
 
-    val state: StateFlow<DiaryListScreenModel> = filters
+    private val diaries: Flow<PagingData<Diary>> = filters
         .flatMapLatest { filters ->
             if (filters.entry.isNotEmpty() && filters.date != null) {
                 return@flatMapLatest searchByDateAndEntry(
@@ -66,20 +69,16 @@ internal class DiaryListViewModel(
             // No filter applied, return all the diaries
             getAllDiariesUseCase()
         }
-        .map { result ->
-            when (result) {
-                is Result.Failure -> DiaryListScreenModel(
-                    error = result.error,
-                    isLoading = false,
-                )
+        .cachedIn(viewModelScope)
 
-                is Result.Success -> DiaryListScreenModel(
-                    diaries = result.data,
-                    isFiltered = true,
-                    isLoading = false,
-                    avatarUrl = authApi.currentUserOrNull()?.avatarUrl,
-                )
-            }
+    val state: StateFlow<DiaryListScreenModel> = filters
+        .map { filters ->
+            DiaryListScreenModel(
+                diaries = diaries,
+                isFiltered = filters.entry.isNotEmpty() || filters.date != null,
+                isLoading = false,
+                avatarUrl = authApi.currentUserOrNull()?.avatarUrl,
+            )
         }
         .catch {
             emit(DiaryListScreenModel(error = it, isLoading = false))
@@ -88,7 +87,7 @@ internal class DiaryListViewModel(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = DiaryListScreenModel(
-                diaries = emptyList(),
+                diaries = diaries,
                 isFiltered = false,
                 isLoading = true,
                 avatarUrl = authApi.currentUserOrNull()?.avatarUrl,
@@ -101,25 +100,20 @@ internal class DiaryListViewModel(
         }
     }
 
-    private fun searchByEntry(entry: String): Flow<Result<List<Diary>>> =
+    private fun searchByEntry(entry: String): Flow<PagingData<Diary>> =
         searchDiaryByEntryUseCase.invoke(entry)
-            .map { Result.Success(it) }
 
-    private fun searchByDate(date: LocalDate): Flow<Result<List<Diary>>> =
+    private fun searchByDate(date: LocalDate): Flow<PagingData<Diary>> =
         searchDiaryByDateUseCase.invoke(date.toInstant())
-            .map {
-                Result.Success(it)
-            }
 
-    private fun searchByDateAndEntry(date: LocalDate, entry: String): Flow<Result<List<Diary>>> =
-        searchDiaryByDateUseCase(date = date.toInstant())
-            .map { list ->
-                Result.Success(
-                    list.filter {
-                        it.entry.contains(entry)
-                    },
-                )
-            }
+    private fun searchByDateAndEntry(
+        date: LocalDate,
+        entry: String,
+    ): Flow<PagingData<Diary>> =
+        searchDiaryByDateUseCase(
+            entry = entry,
+            date = date.toInstant(),
+        )
 
     suspend fun deleteDiaries(diaries: List<Diary>): Boolean =
         when (val result = deleteDiaryUseCase(diaries)) {

@@ -1,6 +1,6 @@
 package com.foreverrafs.superdiary.usecase
 
-import app.cash.turbine.test
+import androidx.paging.testing.asSnapshot
 import assertk.assertThat
 import assertk.assertions.isEmpty
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
@@ -42,9 +42,7 @@ class ClearDiariesUseCaseTest {
         // clear all the entries
         clearDiariesUseCase()
 
-        dataSource.fetchAll().test {
-            val items = awaitItem()
-            assertThat(items).isEmpty()
-        }
+        val items = dataSource.fetchAllPaged().asSnapshot()
+        assertThat(items).isEmpty()
     }
 }

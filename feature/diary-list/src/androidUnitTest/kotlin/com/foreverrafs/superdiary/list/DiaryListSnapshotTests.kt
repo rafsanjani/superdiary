@@ -4,6 +4,7 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
@@ -55,6 +56,8 @@ class DiaryListSnapshotTests(
         onDiaryClicked = {},
     )
 
+    private val snackbarHostState = SnackbarHostState()
+
     private val deviceSize: DpSize
         @Composable
         get() {
@@ -78,6 +81,7 @@ class DiaryListSnapshotTests(
                         showSearchBar = true,
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
+                        snackbarHostState = snackbarHostState,
                         onProfileClick = {},
                     )
                 }
@@ -112,6 +116,7 @@ class DiaryListSnapshotTests(
                         showSearchBar = true,
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
+                        snackbarHostState = snackbarHostState,
                         onProfileClick = {},
                     )
                 }
@@ -133,6 +138,7 @@ class DiaryListSnapshotTests(
                         showSearchBar = true,
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
+                        snackbarHostState = snackbarHostState,
                         onProfileClick = {},
                     )
                 }
@@ -154,6 +160,7 @@ class DiaryListSnapshotTests(
                         showSearchBar = true,
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
+                        snackbarHostState = snackbarHostState,
                         onProfileClick = {},
                     )
                 }
@@ -174,6 +181,7 @@ class DiaryListSnapshotTests(
                         showSearchBar = true,
                         diaryFilters = DiaryFilters(),
                         diaryListActions = diaryListActions,
+                        snackbarHostState = snackbarHostState,
                         onProfileClick = {},
                     )
                 }

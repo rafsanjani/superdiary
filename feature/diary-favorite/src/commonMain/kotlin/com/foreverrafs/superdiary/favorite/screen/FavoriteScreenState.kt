@@ -1,6 +1,8 @@
 package com.foreverrafs.superdiary.favorite.screen
 
+import androidx.paging.PagingData
 import com.foreverrafs.superdiary.domain.model.Diary
+import kotlinx.coroutines.flow.Flow
 
 /**
  * We only have two states here because this operation happens on disk.
@@ -9,5 +11,5 @@ import com.foreverrafs.superdiary.domain.model.Diary
  */
 sealed interface FavoriteScreenState {
     data object Loading : FavoriteScreenState
-    data class Content(val diaries: List<Diary>) : FavoriteScreenState
+    data class Content(val diaries: Flow<PagingData<Diary>>) : FavoriteScreenState
 }

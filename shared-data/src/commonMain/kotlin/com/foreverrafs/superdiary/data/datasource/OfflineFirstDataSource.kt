@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.data.datasource
 
+import androidx.paging.PagingData
 import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
@@ -15,6 +16,7 @@ import kotlin.concurrent.Volatile
 import kotlin.concurrent.atomics.AtomicBoolean
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.Clock
+import kotlin.time.Instant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -87,29 +89,41 @@ class OfflineFirstDataSource(
         return result
     }
 
-    override fun fetchAll(): Flow<List<Diary>> {
+    override fun fetchAllPaged(): Flow<PagingData<Diary>> {
         ensureSyncStarted()
-        return database.fetchAll()
+        return database.fetchAllPaged()
     }
 
-    override fun fetchFavorites(): Flow<List<Diary>> {
+    override fun fetchFavoritesPaged(): Flow<PagingData<Diary>> {
         ensureSyncStarted()
-        return database.fetchFavorites()
+        return database.fetchFavoritesPaged()
     }
 
-    override fun find(entry: String): Flow<List<Diary>> {
+    override fun findPaged(entry: String): Flow<PagingData<Diary>> {
         ensureSyncStarted()
-        return database.find(entry)
+        return database.findPaged(entry)
     }
 
-    override fun findByDate(date: kotlin.time.Instant): Flow<List<Diary>> {
+    override fun findByDatePaged(date: Instant): Flow<PagingData<Diary>> {
         ensureSyncStarted()
-        return database.findByDate(date)
+        return database.findByDatePaged(date)
     }
 
-    override fun find(from: kotlin.time.Instant, to: kotlin.time.Instant): Flow<List<Diary>> {
+    override fun findPaged(
+        from: Instant,
+        to: Instant,
+    ): Flow<PagingData<Diary>> {
         ensureSyncStarted()
-        return database.find(from, to)
+        return database.findPaged(from, to)
+    }
+
+    override fun findPaged(
+        entry: String,
+        from: Instant,
+        to: Instant,
+    ): Flow<PagingData<Diary>> {
+        ensureSyncStarted()
+        return database.findPaged(entry, from, to)
     }
 
     override fun find(id: Long): Diary? = database.find(id)

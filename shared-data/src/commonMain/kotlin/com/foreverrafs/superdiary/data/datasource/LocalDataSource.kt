@@ -1,5 +1,10 @@
 package com.foreverrafs.superdiary.data.datasource
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import androidx.paging.map
 import com.foreverrafs.superdiary.data.mapper.toDiary
 import com.foreverrafs.superdiary.data.mapper.toWeeklySummary
 import com.foreverrafs.superdiary.database.Database
@@ -9,6 +14,7 @@ import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import com.foreverrafs.superdiary.domain.model.toDatabase
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import kotlin.time.Clock
+import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
@@ -36,17 +42,34 @@ class LocalDataSource(
             updatedAt = clock.now(),
         )
 
-    override fun fetchAll(): Flow<List<Diary>> = database.getAllDiaries().mapToDiary()
+    override fun fetchAllPaged(): Flow<PagingData<Diary>> = pager {
+        database.getAllDiariesPagingSource()
+    }
 
-    override fun fetchFavorites(): Flow<List<Diary>> = database.getFavoriteDiaries().mapToDiary()
+    override fun fetchFavoritesPaged(): Flow<PagingData<Diary>> = pager {
+        database.getFavoriteDiariesPagingSource()
+    }
 
-    override fun find(entry: String): Flow<List<Diary>> =
-        database.findDiaryByEntry(entry).mapToDiary()
+    override fun findPaged(entry: String): Flow<PagingData<Diary>> = pager {
+        database.findDiaryByEntryPagingSource(entry)
+    }
 
-    override fun find(from: kotlin.time.Instant, to: kotlin.time.Instant): Flow<List<Diary>> =
-        database.findByDateRange(from, to).map { diaryDbList ->
-            diaryDbList.map { it.toDiary() }
+    override fun findPaged(from: Instant, to: Instant): Flow<PagingData<Diary>> =
+        pager {
+            database.findByDateRangePagingSource(from, to)
         }
+
+    override fun findPaged(
+        entry: String,
+        from: Instant,
+        to: Instant,
+    ): Flow<PagingData<Diary>> = pager {
+        database.findByEntryAndDateRangePagingSource(
+            query = entry,
+            from = from,
+            to = to,
+        )
+    }
 
     override fun find(id: Long): Diary? = database.findById(id)?.toDiary()
 
@@ -58,26 +81,12 @@ class LocalDataSource(
      * entries from start of the day 00:00 to midnight 23:59:59
      */
 
-    override fun findByDate(date: kotlin.time.Instant): Flow<List<Diary>> {
-        val timeZone = TimeZone.currentSystemDefault()
+    override fun findByDatePaged(date: Instant): Flow<PagingData<Diary>> {
+        val (startOfDay, endOfDay) = date.dayRange()
 
-        val currentLocalDateTime = date.toLocalDateTime(timeZone)
-        val currentDate = currentLocalDateTime.date
-
-        // Start of day
-        val startOfDay = currentDate.atStartOfDayIn(timeZone)
-
-        // End of day
-        val endOfDay = LocalDateTime(
-            year = currentDate.year,
-            month = currentDate.month.number,
-            day = currentDate.day,
-            hour = 23,
-            minute = 59,
-            second = 59,
-        ).toInstant(timeZone)
-
-        return database.findByDateRange(startOfDay, endOfDay).mapToDiary()
+        return pager {
+            database.findByDateRangePagingSource(startOfDay, endOfDay)
+        }
     }
 
     override suspend fun update(diary: Diary): Int =
@@ -102,9 +111,43 @@ class LocalDataSource(
         this?.map { diaryDtoList -> diaryDtoList.map { it.toDiary() } }
             ?: emptyFlow()
 
+    private fun pager(pagingSourceFactory: () -> PagingSource<Int, DiaryDb>): Flow<PagingData<Diary>> =
+        Pager(
+            config = PagingConfig(
+                pageSize = DIARY_PAGE_SIZE,
+                initialLoadSize = DIARY_PAGE_SIZE,
+                enablePlaceholders = false,
+            ),
+            pagingSourceFactory = pagingSourceFactory,
+        ).flow.map { pagingData ->
+            pagingData.map { it.toDiary() }
+        }
+
+    private fun Instant.dayRange(): Pair<Instant, Instant> {
+        val timeZone = TimeZone.currentSystemDefault()
+        val currentDate = toLocalDateTime(timeZone).date
+
+        val startOfDay = currentDate.atStartOfDayIn(timeZone)
+        val endOfDay = LocalDateTime(
+            year = currentDate.year,
+            month = currentDate.month.number,
+            day = currentDate.day,
+            hour = 23,
+            minute = 59,
+            second = 59,
+            nanosecond = 999_999_999,
+        ).toInstant(timeZone)
+
+        return startOfDay to endOfDay
+    }
+
     private fun Diary.markDirty(clock: Clock): Diary = copy(
         updatedAt = clock.now(),
         isSynced = false,
         isMarkedForDelete = false,
     )
+
+    private companion object {
+        const val DIARY_PAGE_SIZE = 30
+    }
 }

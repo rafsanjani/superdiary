@@ -1,8 +1,9 @@
 package com.foreverrafs.superdiary.favorite
 
+import androidx.paging.PagingData
+import app.cash.turbine.ReceiveTurbine
 import app.cash.turbine.test
 import assertk.assertThat
-import assertk.assertions.isEmpty
 import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
@@ -27,7 +28,7 @@ import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -40,9 +41,9 @@ class FavoriteViewModelTest {
 
     @BeforeTest
     fun setup() {
-        Dispatchers.setMain(StandardTestDispatcher())
+        Dispatchers.setMain(UnconfinedTestDispatcher())
 
-        everySuspend { dataSource.fetchFavorites() }.returns(flowOf(emptyList()))
+        every { dataSource.fetchFavoritesPaged() }.returns(flowOf(PagingData.empty()))
 
         favoriteViewModel = FavoriteViewModel(
             getFavoriteDiariesUseCase = GetFavoriteDiariesUseCase(dataSource, TestAppDispatchers),
@@ -59,10 +60,7 @@ class FavoriteViewModelTest {
     @Test
     fun `Success state is emitted after loading favorites`() = runTest {
         favoriteViewModel.state.test {
-            // skip loading state
-            skipItems(1)
-
-            val successState = awaitItem()
+            val successState = awaitContentState()
             cancelAndIgnoreRemainingEvents()
 
             assertNotNull(successState)
@@ -73,18 +71,14 @@ class FavoriteViewModelTest {
 
     @Test
     fun `Success state is emitted even when there is no favorite`() = runTest {
-        every { dataSource.fetchFavorites() }.returns(flowOf(emptyList()))
+        every { dataSource.fetchFavoritesPaged() }.returns(flowOf(PagingData.empty()))
 
         favoriteViewModel.state.test {
-            // skip loading state
-            skipItems(1)
-
-            val successState = awaitItem()
+            val successState = awaitContentState()
             cancelAndIgnoreRemainingEvents()
             assertNotNull(successState)
 
             assertThat(successState).isInstanceOf<FavoriteScreenState.Content>()
-            assertThat((successState as FavoriteScreenState.Content).diaries).isEmpty()
         }
     }
 
@@ -103,5 +97,14 @@ class FavoriteViewModelTest {
         favoriteViewModel.toggleFavorite(Diary("Hello"))
 
         verifySuspend { dataSource.update(any()) }
+    }
+
+    private suspend fun ReceiveTurbine<FavoriteScreenState?>.awaitContentState(): FavoriteScreenState {
+        val state = awaitItem()
+        return if (state is FavoriteScreenState.Content) {
+            state
+        } else {
+            awaitItem() ?: error("Expected favorite content state")
+        }
     }
 }

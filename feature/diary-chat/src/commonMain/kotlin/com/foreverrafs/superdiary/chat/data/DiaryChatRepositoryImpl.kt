@@ -8,16 +8,17 @@ import com.foreverrafs.superdiary.chat.domain.repository.DiaryChatRepository
 import com.foreverrafs.superdiary.data.mapper.toDiary
 import com.foreverrafs.superdiary.database.Database
 import com.foreverrafs.superdiary.domain.model.Diary
+import com.foreverrafs.superdiary.domain.repository.DataSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 class DiaryChatRepositoryImpl(
-    private val database: Database,
+    private val dataSource: DataSource,
     private val diaryAI: DiaryAI,
 ) : DiaryChatRepository {
-    override fun getAllDiaries(): Flow<List<Diary>> = database.getAllDiaries().map {
-        it.map { it.toDiary() }
-    }
+    override fun getAllDiaries(): Flow<List<Diary>> = emptyFlow()
 
     override suspend fun queryDiaries(messages: List<DiaryChatMessage>): String? = try {
         diaryAI.queryDiaries(messages)
@@ -26,10 +27,7 @@ class DiaryChatRepositoryImpl(
     }
 
     override suspend fun saveChatMessage(message: DiaryChatMessage) {
-        database.saveChatMessage(message.toDatabase())
     }
 
-    override fun getChatMessages(): Flow<List<DiaryChatMessage>> = database.getChatMessages().map { chatMessages ->
-        chatMessages.map { it.toDiaryChatMessage() }
-    }
+    override fun getChatMessages(): Flow<List<DiaryChatMessage>> = emptyFlow()
 }

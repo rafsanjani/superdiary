@@ -170,3 +170,5 @@ val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope>
 val LocalRootAnimatedContentScope = staticCompositionLocalOf<AnimatedContentScope?> {
     null
 }
+
+const val CREATE_DIARY_SHARED_BOUNDS_KEY = "create_diary_shared_bounds"
