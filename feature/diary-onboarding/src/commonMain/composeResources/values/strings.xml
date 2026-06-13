@@ -1,0 +1,24 @@
+<resources>
+    <string name="onboarding_capture_title">Capture your day</string>
+    <string name="onboarding_capture_body">Record thoughts, moments, and memories before they fade.</string>
+
+    <string name="onboarding_patterns_title">Find patterns over time</string>
+    <string name="onboarding_patterns_body">Summaries and streaks help you understand your habits and consistency.</string>
+
+    <string name="onboarding_relive_title">Relive meaningful moments</string>
+    <string name="onboarding_relive_body">Favourites, search, and rich entries make your memories easy to revisit.</string>
+
+    <string name="onboarding_private_title">Private, personal reflection</string>
+    <string name="onboarding_private_body">Your diary is a space for honest reflection, tied securely to your account.</string>
+
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_back">Back</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_get_started">Get started</string>
+    <string name="onboarding_progress">SuperDiary • %1$d of %2$d</string>
+
+    <string name="onboarding_capture_chip">Quick entries • photos • memories</string>
+    <string name="onboarding_patterns_chip">Summaries • streaks • consistency</string>
+    <string name="onboarding_relive_chip">Search • favourites • rich timeline</string>
+    <string name="onboarding_private_chip">Personal space • secure account</string>
+</resources>

@@ -24,6 +24,7 @@ fun App(modifier: Modifier = Modifier) {
         setSingletonImageLoaderFactory(::getAsyncImageLoader)
         SuperDiaryNavHost(
             viewState = appViewState,
+            onOnboardingComplete = appViewModel::onOnboardingComplete,
             modifier = modifier,
         )
     }

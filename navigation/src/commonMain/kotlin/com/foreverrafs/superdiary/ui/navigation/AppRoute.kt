@@ -10,6 +10,9 @@ import kotlinx.serialization.Serializable
 sealed interface AppRoute : NavKey {
 
     @Serializable
+    data object OnboardingScreen : AppRoute
+
+    @Serializable
     data class TopLevelGraph(
         val userInfo: UserInfo?,
     ) : AppRoute

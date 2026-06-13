@@ -42,6 +42,7 @@ import com.foreverrafs.superdiary.design.style.LocalRootAnimatedContentScope
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import com.foreverrafs.superdiary.list.presentation.detail.screen.DiaryDetailScreen
+import com.foreverrafs.superdiary.onboarding.OnboardingScreen
 import com.foreverrafs.superdiary.profile.presentation.screen.ProfileScreen
 import com.foreverrafs.superdiary.ui.AppSessionState
 import kotlinx.serialization.modules.SerializersModule
@@ -52,6 +53,7 @@ import okio.FileSystem
 @Composable
 internal fun SuperDiaryNavHost(
     viewState: AppSessionState,
+    onOnboardingComplete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // App is attempting to load a session from storage. Show a loading screen
@@ -71,12 +73,22 @@ internal fun SuperDiaryNavHost(
         CompositionLocalProvider(LocalSharedTransitionScope provides this) {
             NavDisplay(
                 backStack = backStack,
-                onBack = { backStack.removeAt(backStack.lastIndex) },
+                onBack = {
+                    if (backStack.size > 1) {
+                        backStack.removeAt(backStack.lastIndex)
+                    }
+                },
                 entryDecorators = listOf(
                     rememberSaveableStateHolderNavEntryDecorator(),
                     rememberViewModelStoreNavEntryDecorator(),
                 ),
                 entryProvider = entryProvider {
+                    entry<AppRoute.OnboardingScreen> {
+                        OnboardingScreen(
+                            onComplete = onOnboardingComplete,
+                        )
+                    }
+
                     entry<AppRoute.TopLevelGraph> { key ->
                         BottomNavigationScreen(
                             userInfo = key.userInfo,
@@ -162,6 +174,11 @@ internal fun SuperDiaryNavHost(
 private val navigationSerializersModule = SerializersModule {
     polymorphic(NavKey::class) {
         subclass(
+            subclass = AppRoute.OnboardingScreen::class,
+            serializer = AppRoute.OnboardingScreen.serializer(),
+        )
+
+        subclass(
             subclass = AppRoute.CreateDiaryGraph::class,
             serializer = AppRoute.CreateDiaryGraph.serializer(),
         )
@@ -196,6 +213,8 @@ private val navigationSerializersModule = SerializersModule {
 @Composable
 fun getStartDestination(viewState: AppSessionState): NavKey = remember(viewState) {
     when (viewState) {
+        is AppSessionState.OnboardingRequired -> AppRoute.OnboardingScreen
+
         is AppSessionState.Authenticated -> {
             when (viewState.linkType) {
                 DeeplinkContainer.LinkType.EmailConfirmation,
