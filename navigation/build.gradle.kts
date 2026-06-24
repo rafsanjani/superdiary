@@ -34,6 +34,7 @@ kotlin {
                 implementation(projects.feature.diaryProfile)
                 implementation(projects.feature.diaryAuth)
                 implementation(projects.feature.diaryDashboard)
+                implementation(projects.feature.diaryOnboarding)
                 implementation(projects.feature.diaryList)
 
                 implementation(projects.core.authentication)

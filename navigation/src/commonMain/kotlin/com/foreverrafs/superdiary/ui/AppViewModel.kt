@@ -22,6 +22,9 @@ import kotlinx.coroutines.launch
 
 sealed interface AppSessionState {
     data object Processing : AppSessionState
+
+    data object OnboardingRequired : AppSessionState
+
     data class Authenticated(
         val userInfo: UserInfo?,
         // linkType will be null if the session was just getting restored from disk
@@ -73,6 +76,11 @@ class AppViewModel(
      * the UI accordingly
      */
     private fun restoreSession() = viewModelScope.launch(appCoroutineDispatchers.main) {
+        if (pendingDeeplink == null && preference.getSnapshot().isFirstLaunch) {
+            _viewState.update { AppSessionState.OnboardingRequired }
+            return@launch
+        }
+
         if (pendingDeeplink != null) {
             if (pendingDeeplink.type == DeeplinkContainer.LinkType.Invalid) {
                 logger.d(TAG) {
@@ -145,6 +153,14 @@ class AppViewModel(
                 }
             }
         }
+    }
+
+    fun onOnboardingComplete() = viewModelScope.launch(appCoroutineDispatchers.main) {
+        preference.save { settings ->
+            settings.copy(isFirstLaunch = false)
+        }
+        _viewState.update { AppSessionState.Processing }
+        restoreSession()
     }
 
     /**
