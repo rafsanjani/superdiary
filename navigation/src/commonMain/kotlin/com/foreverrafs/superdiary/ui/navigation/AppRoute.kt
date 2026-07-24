@@ -32,5 +32,8 @@ sealed interface AppRoute : NavKey {
     ) : AppRoute
 
     @Serializable
+    data object OnboardingScreen : AppRoute
+
+    @Serializable
     object ProfileScreen : AppRoute
 }
