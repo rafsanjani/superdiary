@@ -24,6 +24,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
@@ -40,16 +41,15 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.components.diarylist.DiaryItem
-import com.foreverrafs.superdiary.common.utils.format
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.dashboard.DashboardViewModel
+import com.foreverrafs.superdiary.design.components.AppBar
 import com.foreverrafs.superdiary.design.components.ConfirmBiometricAuthDialog
 import com.foreverrafs.superdiary.design.components.shimmer
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
@@ -92,6 +92,8 @@ fun DashboardScreenContent(
     onDiaryClick: (diaryId: Long) -> Unit,
     onToggleFavorite: (diary: Diary) -> Unit,
     modifier: Modifier = Modifier,
+    avatarUrl: String? = null,
+    onProfileClick: () -> Unit = {},
 ) {
     var showBiometricAuthDialog by remember {
         mutableStateOf(false)
@@ -147,27 +149,39 @@ fun DashboardScreenContent(
         )
     }
 
-    LazyColumn(
-        modifier = modifier
-            .testTag("dashboard_content_list")
-            .fillMaxSize()
-            .padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        topBar = {
+            AppBar(
+                avatarUrl = avatarUrl,
+                onProfileClick = onProfileClick,
+                title = "At a glance",
+            )
+        },
     ) {
-        items(items = dashboardItems, key = { it.id }) { content ->
-            content.content(this) {
-                when (content.id) {
-                    AT_A_GLANCE_ID -> {
-                        onToggleGlanceCard()
-                    }
+        LazyColumn(
+            modifier = Modifier
+                .padding(it)
+                .padding(8.dp)
+                .testTag("dashboard_content_list")
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            items(items = dashboardItems, key = { it.id }) { content ->
+                content.content(this) {
+                    when (content.id) {
+                        AT_A_GLANCE_ID -> {
+                            onToggleGlanceCard()
+                        }
 
-                    WEEKLY_SUMMARY_ID -> {
-                        onToggleWeeklySummaryCard()
-                    }
+                        WEEKLY_SUMMARY_ID -> {
+                            onToggleWeeklySummaryCard()
+                        }
 
-                    LATEST_ENTRIES_ID -> {
-                        onToggleLatestEntries()
+                        LATEST_ENTRIES_ID -> {
+                            onToggleLatestEntries()
+                        }
                     }
                 }
             }
@@ -339,32 +353,11 @@ private fun AtAGlance(
     }
 
     Column(modifier = modifier) {
-        Text(
-            text = "At a glance...",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(horizontal = 4.dp),
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             val dashboardCardModifier = Modifier.weight(1f).aspectRatio(1f)
-
-            fun streakCaption(streak: Streak?): String {
-                val dateFormatPattern = "MMM dd"
-                return if (streak?.count != 0) {
-                    "${streak?.startDate?.format(dateFormatPattern)} - ${
-                        streak?.endDate?.format(
-                            dateFormatPattern,
-                        )
-                    }"
-                } else {
-                    "-"
-                }
-            }
 
             GlanceCard(
                 modifier = dashboardCardModifier,
@@ -377,7 +370,6 @@ private fun AtAGlance(
                 title = stringResource(Res.string.label_glance_header_streak),
                 // Because formatted string resources do not cause recomposition
                 content = "$currentStreakCount days",
-                caption = streakCaption(streak = state.currentStreak),
             )
 
             GlanceCard(
@@ -385,7 +377,6 @@ private fun AtAGlance(
                 title = stringResource(Res.string.label_glance_header_best_streak),
                 // Because formatted string resources do not cause recomposition
                 content = "$bestStreakCount days",
-                caption = streakCaption(state.bestStreak),
             )
         }
     }
@@ -396,7 +387,6 @@ fun GlanceCard(
     title: String,
     content: String,
     modifier: Modifier = Modifier,
-    caption: String = "",
 ) {
     Card(
         modifier = modifier,
@@ -414,20 +404,14 @@ fun GlanceCard(
                 style = MaterialTheme.typography.headlineMedium,
             )
 
+            Spacer(modifier = Modifier.height(24.dp))
+
             Text(
                 text = content,
                 style = MaterialTheme.typography.displayMedium,
                 textAlign = TextAlign.Center,
             )
-
-            Text(
-                text = caption,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.labelSmall.copy(
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                ),
-            )
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }
@@ -587,15 +571,15 @@ private fun DashboardScreenPreview() {
                 ),
             ),
             onAddEntry = {},
-            onToggleFavorite = {},
-            onDiaryClick = {},
+            snackbarHostState = remember { SnackbarHostState() },
             onDisableBiometricAuth = {},
-            onEnableBiometric = {},
             onToggleLatestEntries = {},
             onToggleWeeklySummaryCard = {},
             onToggleGlanceCard = {},
             onRetry = {},
-            snackbarHostState = remember { SnackbarHostState() },
+            onEnableBiometric = {},
+            onDiaryClick = {},
+            onToggleFavorite = {},
         )
     }
 }

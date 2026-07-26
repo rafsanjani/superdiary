@@ -14,12 +14,16 @@ fun DashboardTab(
     snackbarHostState: SnackbarHostState,
     onAddEntry: () -> Unit,
     onDiaryClick: (diaryId: Long) -> Unit,
+    avatarUrl: String?,
+    onProfileClick: () -> Unit,
 ) {
     val screenModel: DashboardViewModel = koinViewModel()
     val screenState by screenModel.state.collectAsState()
     val coroutineScope = rememberCoroutineScope()
 
     DashboardScreenContent(
+        avatarUrl = avatarUrl,
+        onProfileClick = onProfileClick,
         state = screenState,
         onAddEntry = onAddEntry,
         onToggleFavorite = {

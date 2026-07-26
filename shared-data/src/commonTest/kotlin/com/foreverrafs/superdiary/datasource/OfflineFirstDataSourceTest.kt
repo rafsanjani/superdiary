@@ -1,11 +1,12 @@
 package com.foreverrafs.superdiary.datasource
 
+import androidx.paging.testing.asSnapshot
 import app.cash.turbine.test
 import assertk.assertThat
-import assertk.assertions.first
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
+import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
@@ -38,6 +39,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -73,46 +75,42 @@ class OfflineFirstDataSourceTest {
     fun `hard deletes on server remove synced local rows`() = runTest {
         insertSyncedDiary(id = 1, entry = "A")
 
-        dataSource.fetchAll().test {
-            val initial = awaitItem()
-            assertThat(initial.size).isEqualTo(1)
+        val initial = dataSource.fetchAllPaged().asSnapshot()
+        assertThat(initial.size).isEqualTo(1)
 
-            api.emitSnapshot(emptyList())
+        api.emitSnapshot(emptyList())
 
-            val afterDelete = awaitItem()
-            assertThat(afterDelete).isEmpty()
+        awaitUntil { database.findById(1) == null }
 
-            cancelAndIgnoreRemainingEvents()
-        }
+        val afterDelete = dataSource.fetchAllPaged().asSnapshot()
+        assertThat(afterDelete).isEmpty()
     }
 
     @Test
     fun `soft delete events from server remove local rows`() = runTest {
         insertSyncedDiary(id = 2, entry = "B")
 
-        dataSource.fetchAll().test {
-            val initial = awaitItem()
-            assertThat(initial.size).isEqualTo(1)
+        val initial = dataSource.fetchAllPaged().asSnapshot()
+        assertThat(initial.size).isEqualTo(1)
 
-            api.emitSnapshot(
-                listOf(
-                    DiaryDto(
-                        entry = "B",
-                        id = 2,
-                        date = fixedClock.now(),
-                        isFavorite = false,
-                        location = Location.Empty.toString(),
-                        updatedAt = 2_000,
-                        isDeleted = true,
-                    ),
+        api.emitSnapshot(
+            listOf(
+                DiaryDto(
+                    entry = "B",
+                    id = 2,
+                    date = fixedClock.now(),
+                    favorite = false,
+                    location = Location.Empty.toString(),
+                    updatedAt = 2_000,
+                    isDeleted = true,
                 ),
-            )
+            ),
+        )
 
-            val afterDelete = awaitItem()
-            assertThat(afterDelete).isEmpty()
+        awaitUntil { database.findById(2) == null }
 
-            cancelAndIgnoreRemainingEvents()
-        }
+        val afterDelete = dataSource.fetchAllPaged().asSnapshot()
+        assertThat(afterDelete).isEmpty()
     }
 
     @Test
@@ -125,23 +123,19 @@ class OfflineFirstDataSourceTest {
             ),
         )
 
-        dataSource.fetchAll().test {
-            val initial = awaitItem()
-            assertThat(initial.size).isEqualTo(1)
+        val initial = dataSource.fetchAllPaged().asSnapshot()
+        assertThat(initial.size).isEqualTo(1)
 
-            val diary = initial.first()
-            assertThat(diary.id).isEqualTo(savedId)
+        val diary = initial.first()
+        assertThat(diary.id).isEqualTo(savedId)
 
-            dataSource.delete(listOf(diary))
+        dataSource.delete(listOf(diary))
 
-            awaitUntil { database.getPendingDeleteDiaries().isEmpty() }
-            awaitUntil { database.findById(savedId) == null }
+        awaitUntil { database.getPendingDeleteDiaries().isEmpty() }
+        awaitUntil { database.findById(savedId) == null }
 
-            val afterDelete = awaitItem()
-            assertThat(afterDelete).isEmpty()
-
-            cancelAndIgnoreRemainingEvents()
-        }
+        val afterDelete = dataSource.fetchAllPaged().asSnapshot()
+        assertThat(afterDelete).isEmpty()
     }
 
     @Test
@@ -217,11 +211,8 @@ class OfflineFirstDataSourceTest {
             isFavorite = false,
         )
 
-        dataSource.fetchFavorites().test {
-            val favorites = awaitItem()
-            assertThat(favorites.size).isEqualTo(1)
-            cancelAndIgnoreRemainingEvents()
-        }
+        val favorites = dataSource.fetchFavoritesPaged().asSnapshot()
+        assertThat(favorites.size).isEqualTo(1)
     }
 
     @Test
@@ -239,12 +230,9 @@ class OfflineFirstDataSourceTest {
             isSynced = true,
         )
 
-        dataSource.find("Hello").test {
-            val results = awaitItem()
-            assertThat(results.size).isEqualTo(1)
-            assertThat(results.first().entry).isEqualTo("Hello World")
-            cancelAndIgnoreRemainingEvents()
-        }
+        val results = dataSource.findPaged("Hello").asSnapshot()
+        assertThat(results.size).isEqualTo(1)
+        assertThat(results.first().entry).isEqualTo("Hello World")
     }
 
     @Test
@@ -268,12 +256,9 @@ class OfflineFirstDataSourceTest {
             date = otherDate,
         )
 
-        dataSource.findByDate(targetDate).test {
-            val results = awaitItem()
-            assertThat(results.size).isEqualTo(1)
-            assertThat(results.first().entry).isEqualTo("Target")
-            cancelAndIgnoreRemainingEvents()
-        }
+        val results = dataSource.findByDatePaged(targetDate).asSnapshot()
+        assertThat(results.size).isEqualTo(1)
+        assertThat(results.first().entry).isEqualTo("Target")
     }
 
     @Test
@@ -305,11 +290,8 @@ class OfflineFirstDataSourceTest {
             date = end,
         )
 
-        dataSource.find(start, end).test {
-            val results = awaitItem()
-            assertThat(results.size).isEqualTo(3)
-            cancelAndIgnoreRemainingEvents()
-        }
+        val results = dataSource.findPaged(start, end).asSnapshot()
+        assertThat(results.size).isEqualTo(3)
     }
 
     @Test
@@ -429,7 +411,7 @@ class OfflineFirstDataSourceTest {
                     entry = "remote",
                     id = localId,
                     date = fixedClock.now(),
-                    isFavorite = false,
+                    favorite = false,
                     location = Location.Empty.toString(),
                     updatedAt = 2_000,
                     isDeleted = false,
@@ -458,7 +440,7 @@ class OfflineFirstDataSourceTest {
                     entry = "remote",
                     id = localId,
                     date = fixedClock.now(),
-                    isFavorite = false,
+                    favorite = false,
                     location = Location.Empty.toString(),
                     updatedAt = 2_000,
                     isDeleted = false,
@@ -467,7 +449,7 @@ class OfflineFirstDataSourceTest {
                     entry = "new",
                     id = 99,
                     date = fixedClock.now(),
-                    isFavorite = false,
+                    favorite = false,
                     location = Location.Empty.toString(),
                     updatedAt = 4_000,
                     isDeleted = false,
@@ -497,7 +479,7 @@ class OfflineFirstDataSourceTest {
                     entry = "local",
                     id = localId,
                     date = fixedClock.now(),
-                    isFavorite = false,
+                    favorite = false,
                     location = Location.Empty.toString(),
                     updatedAt = 2_000,
                     isDeleted = true,
@@ -523,7 +505,7 @@ class OfflineFirstDataSourceTest {
                     entry = "local",
                     id = localId,
                     date = fixedClock.now(),
-                    isFavorite = false,
+                    favorite = false,
                     location = Location.Empty.toString(),
                     updatedAt = 2_000,
                     isDeleted = true,
@@ -532,7 +514,7 @@ class OfflineFirstDataSourceTest {
                     entry = "remote",
                     id = 100,
                     date = fixedClock.now(),
-                    isFavorite = false,
+                    favorite = false,
                     location = Location.Empty.toString(),
                     updatedAt = 4_000,
                     isDeleted = false,
@@ -675,7 +657,7 @@ class OfflineFirstDataSourceTest {
             if (start.elapsedNow() > timeoutMs.milliseconds) {
                 error("Condition not met within ${timeoutMs}ms")
             }
-            delay(intervalMs)
+            delay(intervalMs.milliseconds)
         }
     }
 
@@ -685,15 +667,22 @@ class OfflineFirstDataSourceTest {
             diaryApi = api,
             logger = AggregateLogger(),
             clock = fixedClock,
+            appDispatchers = object : AppCoroutineDispatchers {
+                override val io = UnconfinedTestDispatcher()
+                override val computation = UnconfinedTestDispatcher()
+                override val main = UnconfinedTestDispatcher()
+            },
         )
 
     private class FakeDiaryApi(
         private val fetchAllFlow: Flow<List<DiaryDto>>? = null,
         private val failSave: Boolean = false,
         private val failDelete: Boolean = false,
+        private val updateMatches: Boolean = false,
     ) : DiaryApi {
         private val updates = MutableSharedFlow<List<DiaryDto>>(replay = 1)
         private val saved = MutableStateFlow<List<DiaryDto>>(emptyList())
+        private val remoteUpdates = MutableStateFlow<List<DiaryDto>>(emptyList())
         private val deleted = MutableStateFlow<List<DiaryDto>>(emptyList())
 
         override fun fetchAll(): Flow<List<DiaryDto>> = fetchAllFlow ?: updates

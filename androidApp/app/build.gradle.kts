@@ -65,6 +65,7 @@ android {
             configureReleaseSigning()
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFile("proguard-rules.pro")
 
             manifestPlaceholders["sentryEnvironment"] = "production"
@@ -187,7 +188,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.google.material)
     // TODO: Replace with sentry-bom from version catalog
-    implementation(platform("io.sentry:sentry-bom:8.42.0"))
+    implementation(platform("io.sentry:sentry-bom:8.50.1"))
     implementation(projects.navigation)
     implementation(projects.sharedData)
     implementation(projects.core.diaryAi)

@@ -84,7 +84,6 @@ class DashboardViewModelTest {
         dataSource = mock()
         syncableDataSource = FakeSyncableDataSource(dataSource)
 
-        every { dataSource.fetchAll() }.returns(flowOf())
         every { dataSource.getLatest(any()) } returns flowOf(listOf(Diary("Hello World")))
         every { diaryApi.fetchAll() } returns flowOf()
     }
@@ -138,7 +137,6 @@ class DashboardViewModelTest {
     @Test
     fun `Should toggle favorite when favorite is toggled`() = runTest {
         val diary = Diary("Hello World")
-        every { dataSource.fetchAll() }.returns(flowOf(listOf(diary)))
         everySuspend { dataSource.update(any()) }.returns(1)
 
         val viewModel = createDashboardViewModel()
@@ -151,7 +149,6 @@ class DashboardViewModelTest {
     @Test
     fun `Should fail to toggle favorite when datasource throws an error`() = runTest {
         val diary = Diary("Hello World")
-        every { dataSource.fetchAll() }.returns(flowOf(listOf(diary)))
         everySuspend { dataSource.update(any()) }.throws(Exception("error toggling favorite"))
 
         val viewModel = createDashboardViewModel()
@@ -171,7 +168,6 @@ class DashboardViewModelTest {
 
     @Test
     fun `Should transition to content state on dashboard after loading`() = runTest {
-        every { dataSource.fetchAll() }.returns(flowOf(emptyList()))
         val viewModel = createDashboardViewModel()
 
         viewModel.state.test {
@@ -208,11 +204,6 @@ class DashboardViewModelTest {
 
     @Test
     fun `Should show biometric auth error when biometric auth fails`() = runTest {
-        every { dataSource.fetchAll() }.returns(
-            flowOf(
-                listOf(Diary("Hello World")),
-            ),
-        )
         everySuspend { dataSource.getOne() } returns WeeklySummary("This is your weekly summary")
 
         everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Error(
@@ -239,11 +230,6 @@ class DashboardViewModelTest {
 
     @Test
     fun `Should attempt biometric authentication if option is enabled`() = runTest {
-        every { dataSource.fetchAll() }.returns(
-            flowOf(
-                listOf(Diary("Hello World")),
-            ),
-        )
         everySuspend { dataSource.getOne() } returns WeeklySummary("This is your weekly summary")
         everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Success
         everySuspend { biometricAuth.canAuthenticate() } returns true
@@ -268,11 +254,6 @@ class DashboardViewModelTest {
     @Test
     fun `Should disable biometric authentication dialog when biometric auth is unavailable`() =
         runTest {
-            every { dataSource.fetchAll() }.returns(
-                flowOf(
-                    listOf(Diary("Hello World")),
-                ),
-            )
             everySuspend { dataSource.getOne() } returns WeeklySummary("This is your weekly summary")
 
             everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Failed
@@ -299,11 +280,6 @@ class DashboardViewModelTest {
     @Test
     fun `Should display biometric dialog if biometric auth is available and dialog preference is true`() =
         runTest {
-            every { dataSource.fetchAll() }.returns(
-                flowOf(
-                    listOf(Diary("Hello World")),
-                ),
-            )
             everySuspend { dataSource.getOne() } returns WeeklySummary("This is your weekly summary")
             everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Success
             every { biometricAuth.canAuthenticate() } returns true
@@ -330,11 +306,6 @@ class DashboardViewModelTest {
     @Test
     fun `Should NOT display biometric dialog if biometric auth is available but dialog preference is false`() =
         runTest {
-            every { dataSource.fetchAll() }.returns(
-                flowOf(
-                    listOf(Diary("Hello World")),
-                ),
-            )
             everySuspend { dataSource.getOne() } returns WeeklySummary("This is your weekly summary")
 
             everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Success

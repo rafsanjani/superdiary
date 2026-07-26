@@ -14,7 +14,7 @@ kotlin {
             dependencies {
                 implementation(libs.jetbrains.compose.runtime)
                 implementation(libs.jetbrains.compose.foundation)
-                api("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3:2.10.0")
+                api("org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3:2.11.0")
                 implementation(libs.jetbrains.lifecycle.runtime.compose)
                 implementation(libs.androidx.core.uri)
 
@@ -35,6 +35,7 @@ kotlin {
                 implementation(projects.feature.diaryAuth)
                 implementation(projects.feature.diaryDashboard)
                 implementation(projects.feature.diaryList)
+                implementation(projects.feature.diaryOnboarding)
 
                 implementation(projects.core.authentication)
                 implementation(projects.core.logging)

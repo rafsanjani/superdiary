@@ -17,7 +17,7 @@ data class DiaryDto(
     @SerialName("date")
     val date: Instant = Clock.System.now(),
     @SerialName("favorite")
-    val isFavorite: Boolean = false,
+    val favorite: Boolean = false,
     @SerialName("location")
     val location: String? = Location.Empty.toString(),
     @SerialName("updated_at")
@@ -30,7 +30,7 @@ fun DiaryDto.toDiary(): Diary = Diary(
     entry = entry,
     id = id,
     date = date,
-    isFavorite = isFavorite,
+    isFavorite = favorite,
     location = Location.fromString(location ?: Location.Empty.toString()),
     updatedAt = Instant.fromEpochMilliseconds(updatedAt),
     // a fresh entry from the network should be considered synced
@@ -42,7 +42,7 @@ fun DiaryDto.toDatabase(): DiaryDb = DiaryDb(
     entry = entry,
     id = id,
     date = date,
-    isFavorite = isFavorite,
+    isFavorite = favorite,
     location = Location.toString(),
     updatedAt = Instant.fromEpochMilliseconds(updatedAt),
     isSynced = true,

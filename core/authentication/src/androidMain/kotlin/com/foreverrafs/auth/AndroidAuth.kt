@@ -54,6 +54,7 @@ class AndroidAuth(
 
             getGoogleIdToken(result)
         } catch (e: GetCredentialException) {
+            logger.e(TAG) { "Error Getting credentials: ${e.message}" }
             return AuthApi.SessionStatus.Unauthenticated(resolveCredentialException(e))
         } catch (e: GoogleIdTokenParsingException) {
             logger.e(TAG) { "Error parsing Google ID token: ${e.message}" }

@@ -31,7 +31,7 @@ class FakeDiaryApi : DiaryApi {
                 unit = DateTimeUnit.DAY,
                 timeZone = TimeZone.UTC,
             ),
-            isFavorite = false,
+            favorite = false,
             location = null,
         )
     }.toMutableList()

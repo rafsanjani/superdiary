@@ -25,6 +25,7 @@ kotlin {
             implementation(projects.commonUtils)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.kotlin.datetime)
+            implementation(libs.androidx.paging.compose)
             implementation(projects.core.location)
             implementation(libs.richTextEditor)
             implementation(projects.sharedData)

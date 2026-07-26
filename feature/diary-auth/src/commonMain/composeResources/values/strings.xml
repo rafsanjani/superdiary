@@ -12,15 +12,27 @@
     <string name="label_register_message">Don't have an account yet?\u0020</string>
     <string name="label_register">Register</string>
 
+    <string name="label_name">Full name</string>
+    <string name="label_reenter_password">Re-enter password</string>
+    <string name="label_login_link">Login</string>
+    <string name="label_already_have_account">Already have an account?\u0020</string>
+
+    <string name="error_name_required">Name is required</string>
+    <string name="error_email_required">Email is required</string>
+    <string name="error_invalid_email">Enter a valid email</string>
+    <string name="error_password_required">Password is required</string>
+    <string name="error_reenter_password_required">Please re-enter your password</string>
+    <string name="error_passwords_do_not_match">Passwords do not match</string>
+
     <string name="dialog_biometric_auth_error_title">Authentication failed</string>
     <string name="dialog_biometric_auth_error_message">Would you like to try biometric authentication again?</string>
     <string name="dialog_biometric_auth_error_positive_btn_text">Try again</string>
     <string name="dialog_biometric_auth_error_negative_btn_text">Exit</string>
 
-    <string name="error_invalid_credentials">Invalid credentials</string>"
-    <string name="error_no_credentials">No credentials</string>"
-    <string name="error_user_already_registered">User already registered</string>"
-    <string name="error_generic_error">Sorry something went wrong!</string>"
-    <string name="registration_success_message">Thank you for registering!</string>"
-    <string name="registration_email_confirmation_prompt">Please confirm your email</string>"
+    <string name="error_invalid_credentials">Invalid credentials</string>
+    <string name="error_no_credentials">No credentials</string>
+    <string name="error_user_already_registered">User already registered</string>
+    <string name="error_generic_error">Sorry something went wrong!</string>
+    <string name="registration_success_message">Thank you for registering!</string>
+    <string name="registration_email_confirmation_prompt">Please confirm your email</string>
 </resources>

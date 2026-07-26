@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.data.datasource.remote
 
+import androidx.paging.PagingData
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.model.DiaryDto
 import com.foreverrafs.superdiary.data.model.toDiary
@@ -8,14 +9,9 @@ import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import com.foreverrafs.superdiary.domain.model.toDto
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import io.github.jan.supabase.SupabaseClient
-import io.github.jan.supabase.annotations.SupabaseExperimental
 import io.github.jan.supabase.exceptions.RestException
 import io.github.jan.supabase.postgrest.from
-import io.github.jan.supabase.realtime.selectAsFlow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 
 @Deprecated("Use DiaryApi instead")
 class RemoteDataSource(
@@ -55,36 +51,33 @@ class RemoteDataSource(
         TODO("Not yet implemented")
     }
 
-    @OptIn(SupabaseExperimental::class)
-    override fun fetchAll(): Flow<List<Diary>> = supabase.from(TABLE_NAME)
-        .selectAsFlow(DiaryDto::id)
-        .onStart {
-            dataCache?.let { emit(it) }
-        }
-        .catch { emit(dataCache ?: emptyList()) }
-        .map {
-            // cache it
-            dataCache = it
-
-            // transform and send to chain
-            it.map { dto -> dto.toDiary() }
-        }
-
-    override fun fetchFavorites(): Flow<List<Diary>> {
+    override fun fetchAllPaged(): Flow<PagingData<Diary>> {
         TODO("Not yet implemented")
     }
 
-    override fun find(entry: String): Flow<List<Diary>> {
+    override fun fetchFavoritesPaged(): Flow<PagingData<Diary>> {
         TODO("Not yet implemented")
     }
 
-    override fun find(from: kotlin.time.Instant, to: kotlin.time.Instant): Flow<List<Diary>> {
+    override fun findPaged(entry: String): Flow<PagingData<Diary>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun findPaged(from: kotlin.time.Instant, to: kotlin.time.Instant): Flow<PagingData<Diary>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun findPaged(
+        entry: String,
+        from: kotlin.time.Instant,
+        to: kotlin.time.Instant,
+    ): Flow<PagingData<Diary>> {
         TODO("Not yet implemented")
     }
 
     override fun find(id: Long): Diary? = dataCache?.firstOrNull { it.id == id }?.toDiary()
 
-    override fun findByDate(date: kotlin.time.Instant): Flow<List<Diary>> {
+    override fun findByDatePaged(date: kotlin.time.Instant): Flow<PagingData<Diary>> {
         TODO("Not yet implemented")
     }
 

@@ -26,9 +26,10 @@ class LocationPermissionManager(
     }
 
     suspend fun provideLocationPermission() {
-        if (_permissionState.value == PermissionState.DeniedAlways ||
-            _permissionState.value == PermissionState.NotGranted
-        ) {
+        val currentState = permissionsController.getPermissionState(LocationPermission)
+        _permissionState.update { currentState }
+
+        if (currentState == PermissionState.DeniedAlways) {
             logger.i(TAG) {
                 "Location is permanently denied. Opening app settings"
             }

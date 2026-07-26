@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.foreverrafs.superdiary.design.components.Image
+import com.foreverrafs.superdiary.design.components.PROFILE_IMAGE_SHARED_ELEMENT_KEY
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
@@ -318,7 +319,7 @@ private fun ProfileHeader(
                 modifier = Modifier
                     .sharedElement(
                         sharedContentState = sharedTransitionScope.rememberSharedContentState(
-                            key = "profile_image",
+                            key = PROFILE_IMAGE_SHARED_ELEMENT_KEY,
                         ),
                         animatedVisibilityScope = animatedContentScope,
                     )

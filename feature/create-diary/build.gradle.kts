@@ -46,6 +46,7 @@ kotlin {
             implementation(projects.core.databaseTest)
             implementation(projects.commonTest)
             implementation(libs.kotlinx.coroutines.test)
+            implementation("androidx.paging:paging-testing:${libs.versions.paging.get()}")
         }
     }
 }

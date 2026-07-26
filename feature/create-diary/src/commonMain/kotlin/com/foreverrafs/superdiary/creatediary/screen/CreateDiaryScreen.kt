@@ -26,6 +26,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun CreateDiaryScreen(
     onDiarySaveComplete: () -> Unit,
     onDiarySaveAbort: () -> Unit,
+    onProfileClick: () -> Unit,
 ) {
     val viewModel: CreateDiaryViewModel = koinViewModel()
 
@@ -55,9 +56,11 @@ internal fun CreateDiaryScreen(
     )
 
     CreateDiaryScreenContent(
-        richTextState = richTextState,
         isGeneratingFromAi = isGeneratingFromAI,
-        showLocationPermissionRationale = showLocationPermissionRationale,
+        showSaveDialog = showSaveDialog,
+        onShowSaveDialogChange = {
+            showSaveDialog = it
+        },
         onGenerateAI = { prompt, wordCount ->
             var generatedWords = ""
 
@@ -97,20 +100,19 @@ internal fun CreateDiaryScreen(
 
             onDiarySaveComplete()
         },
+        showLocationPermissionRationale = showLocationPermissionRationale,
+        permissionState = locationPermissionState,
+        avatarUrl = screenState.avatarUrl,
         onRequestLocationPermission = {
             showLocationPermissionRationale = false
             viewModel.onRequestLocationPermission()
         },
-        permissionState = locationPermissionState,
         onDontAskAgain = {
             showLocationPermissionRationale = false
             viewModel.onPermanentlyDismissLocationPermissionDialog()
         },
-        avatarUrl = screenState.avatarUrl,
-        showSaveDialog = showSaveDialog,
-        onShowSaveDialogChange = {
-            showSaveDialog = it
-        },
         onNavigateBack = onDiarySaveAbort,
+        richTextState = richTextState,
+        onProfileClick = onProfileClick,
     )
 }

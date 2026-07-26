@@ -21,7 +21,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("io.github.rafsanjani:versions:2026.05.24")
+            from("io.github.rafsanjani:versions:2026.07.26")
             // Because 3.2.4 is making internal calls to android.util.Log which dey borst my mind
             version("supabase", "3.2.3")
             // TODO: This was bumped up because koog-agents accidentally set their minimumSdk to a very high value
@@ -36,7 +36,7 @@ dependencyResolutionManagement {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 plugins {
-    id("org.jetbrains.kotlinx.kover.aggregation") version "0.9.8"
+    id("org.jetbrains.kotlinx.kover.aggregation") version "0.9.9"
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
@@ -157,6 +157,7 @@ include(":feature:diary-dashboard")
 include(":feature:create-diary")
 include(":feature:diary-favorite")
 include(":feature:diary-chat")
+include(":feature:diary-onboarding")
 
 // annotation processor for datasore preferences
 include(":preferences:annotation")

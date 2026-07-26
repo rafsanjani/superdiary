@@ -9,8 +9,8 @@ import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
-import com.foreverrafs.superdiary.domain.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.domain.usecase.GetDiaryByIdUseCase
+import com.foreverrafs.superdiary.list.domain.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.list.presentation.detail.DeleteDiaryState
 import com.foreverrafs.superdiary.list.presentation.detail.DetailsViewModel
 import com.foreverrafs.superdiary.list.presentation.detail.DetailsViewState

@@ -1,5 +1,6 @@
 package com.foreverrafs.superdiary.list.data
 
+import androidx.paging.testing.asSnapshot
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
@@ -21,6 +22,7 @@ import kotlin.test.Test
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -72,7 +74,7 @@ class DiaryListRepositoryImplTest {
 
         result.test {
             val items = awaitItem()
-            assertThat(items).isNotEmpty()
+            assertThat(flowOf(items).asSnapshot()).isNotEmpty()
         }
     }
 

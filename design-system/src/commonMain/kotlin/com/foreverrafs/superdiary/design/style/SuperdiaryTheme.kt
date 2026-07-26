@@ -2,6 +2,7 @@
 
 package com.foreverrafs.superdiary.design.style
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -75,6 +76,12 @@ fun SuperDiaryTheme(
             fontFamily = montserratAlternativesFontFamily(),
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
+            letterSpacing = (-0.3).sp,
+        ),
+        headlineLarge = TextStyle(
+            fontFamily = montserratAlternativesFontFamily(),
+            fontWeight = FontWeight.Bold,
+            fontSize = 24.sp,
             letterSpacing = (-0.3).sp,
         ),
         bodySmall = TextStyle(
@@ -157,3 +164,17 @@ fun montserratAlternativesFontFamily(): FontFamily = FontFamily(
 val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope> {
     error("SharedTransitionScope not present")
 }
+
+/**
+ * The outer [AnimatedContentScope] provided by the top-level [androidx.navigation3.ui.NavDisplay] (screen-level
+ * navigation). Tabs (rendered by an inner [androidx.navigation3.ui.NavDisplay]) shadow [LocalRootAnimatedContentScope]
+ * with their own tab-level scope, breaking shared element transitions that cross the
+ * tab → screen boundary (e.g. profile avatar → profile image).
+ *
+ */
+@OptIn(ExperimentalSharedTransitionApi::class)
+val LocalRootAnimatedContentScope = staticCompositionLocalOf<AnimatedContentScope?> {
+    null
+}
+
+const val CREATE_DIARY_SHARED_BOUNDS_KEY = "create_diary_shared_bounds"

@@ -32,5 +32,8 @@ sealed interface AppRoute : NavKey {
     ) : AppRoute
 
     @Serializable
-    data class ProfileScreen(val userInfo: UserInfo? = null) : AppRoute
+    data object OnboardingScreen : AppRoute
+
+    @Serializable
+    object ProfileScreen : AppRoute
 }

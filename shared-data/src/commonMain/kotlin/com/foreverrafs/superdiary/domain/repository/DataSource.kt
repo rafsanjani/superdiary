@@ -1,7 +1,9 @@
 package com.foreverrafs.superdiary.domain.repository
 
+import androidx.paging.PagingData
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
+import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -27,43 +29,30 @@ interface DataSource {
     suspend fun save(diaries: List<Diary>): Long
 
     /**
-     * Updates an existing item with the same id with the properties of the new
-     * item
+     * Updates an existing item with the same id with the properties of the new item
      */
     suspend fun update(diary: Diary): Int
 
     /** Delete multiple diaries */
     suspend fun delete(diaries: List<Diary>): Int
 
-    /**
-     * Fetch all the diary items from the datasource, returning a list of all
-     * the items that were successfully fetched. The flow returned from this
-     * function will publish data changes to subscribers
-     *
-     * @return a list of diary items that were fetched
-     */
-    fun fetchAll(): Flow<List<Diary>>
+    /** Fetch diary entries as paged data for long-running entry lists. */
+    fun fetchAllPaged(): Flow<PagingData<Diary>>
 
-    /**
-     * Fetch favorite diary items from the datasource, returning a list of all
-     * the items that were successfully fetched. The flow returned from this
-     * function will publish data changes and updates to subscribers.
-     *
-     * @return a list of diary items that were fetched
-     */
-    fun fetchFavorites(): Flow<List<Diary>>
+    /** Fetch favorite diary entries as paged data for long-running entry lists. */
+    fun fetchFavoritesPaged(): Flow<PagingData<Diary>>
 
-    /**
-     * Search for matching Diaries with entries matching [entry]. This will
-     * perform a FTS of the query and return all matching diaries.
-     */
-    fun find(entry: String): Flow<List<Diary>>
+    /** Search matching diary entries as paged data. */
+    fun findPaged(entry: String): Flow<PagingData<Diary>>
 
-    /** Search for matching diaries for a specific date */
-    fun findByDate(date: kotlin.time.Instant): Flow<List<Diary>>
+    /** Search matching diary entries for a specific date as paged data. */
+    fun findByDatePaged(date: Instant): Flow<PagingData<Diary>>
 
-    /** Search for diaries between two dates inclusive */
-    fun find(from: kotlin.time.Instant, to: kotlin.time.Instant): Flow<List<Diary>>
+    /** Search matching diary entries between two dates inclusive as paged data. */
+    fun findPaged(from: Instant, to: Instant): Flow<PagingData<Diary>>
+
+    /** Search matching diary entries by text within a date range as paged data. */
+    fun findPaged(entry: String, from: Instant, to: Instant): Flow<PagingData<Diary>>
 
     /** Search for a diary by its id */
     fun find(id: Long): Diary?

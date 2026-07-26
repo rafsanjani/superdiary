@@ -1,5 +1,8 @@
-selectAll:
-SELECT * FROM diary WHERE is_marked_for_delete = 0 ORDER BY date DESC;
+selectAllPaged:
+SELECT * FROM diary
+WHERE is_marked_for_delete = 0
+ORDER BY date DESC, id DESC
+LIMIT :limit OFFSET :offset;
 
 insert:
 INSERT INTO diary(
@@ -16,10 +19,15 @@ INSERT INTO diary(
 delete:
 DELETE FROM diary WHERE id=?;
 
-findByEntry:
+findByEntryPaged:
 SELECT * FROM diary
 WHERE entry LIKE '%' || :name || '%' AND is_marked_for_delete = 0
-ORDER BY date ASC;
+ORDER BY date DESC, id DESC
+LIMIT :limit OFFSET :offset;
+
+countByEntry:
+SELECT COUNT(*) FROM diary
+WHERE entry LIKE '%' || :name || '%' AND is_marked_for_delete = 0;
 
 findById:
 SELECT * FROM diary WHERE id=? AND is_marked_for_delete = 0 LIMIT 1;
@@ -27,13 +35,29 @@ SELECT * FROM diary WHERE id=? AND is_marked_for_delete = 0 LIMIT 1;
 findByIdIncludingDeleted:
 SELECT * FROM diary WHERE id=? LIMIT 1;
 
-findByDate:
+findByDateRangePaged:
 SELECT * FROM diary
-WHERE date = :date AND is_marked_for_delete = 0
-ORDER BY date ASC;
+WHERE date BETWEEN :from AND :to AND is_marked_for_delete = 0
+ORDER BY date DESC, id DESC
+LIMIT :limit OFFSET :offset;
 
-findByDateRange:
-SELECT * FROM diary WHERE date BETWEEN ? AND ? AND is_marked_for_delete = 0;
+countByDateRange:
+SELECT COUNT(*) FROM diary
+WHERE date BETWEEN :from AND :to AND is_marked_for_delete = 0;
+
+findByEntryAndDateRangePaged:
+SELECT * FROM diary
+WHERE entry LIKE '%' || :name || '%'
+AND date BETWEEN :from AND :to
+AND is_marked_for_delete = 0
+ORDER BY date DESC, id DESC
+LIMIT :limit OFFSET :offset;
+
+countByEntryAndDateRange:
+SELECT COUNT(*) FROM diary
+WHERE entry LIKE '%' || :name || '%'
+AND date BETWEEN :from AND :to
+AND is_marked_for_delete = 0;
 
 deleteAll:
 DELETE FROM diary;
@@ -56,8 +80,14 @@ WHERE is_marked_for_delete = 0
 ORDER BY date DESC
 LIMIT ?;
 
-getFavoriteDiaries:
+getFavoriteDiariesPaged:
 SELECT * FROM diary
+WHERE diary.favorite == 1 AND is_marked_for_delete = 0
+ORDER BY date DESC, id DESC
+LIMIT :limit OFFSET :offset;
+
+countFavoriteDiaries:
+SELECT COUNT(*) FROM diary
 WHERE diary.favorite == 1 AND is_marked_for_delete = 0;
 
 getAffectedRows:

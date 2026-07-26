@@ -1,6 +1,6 @@
 package com.foreverrafs.superdiary.creatediary
 
-import app.cash.turbine.test
+import androidx.paging.testing.asSnapshot
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
@@ -66,13 +66,9 @@ class AddDiaryUseCaseTest {
         )
         addDiaryUseCase(diary)
 
-        dataSource.fetchAll().test {
-            val items = awaitItem()
-            cancelAndConsumeRemainingEvents()
-
-            val firstItem = (items).first()
-            assertThat(firstItem.id).isEqualTo(1000L)
-        }
+        val items = dataSource.fetchAllPaged().asSnapshot()
+        val firstItem = items.first()
+        assertThat(firstItem.id).isEqualTo(1000L)
     }
 
     @Test
@@ -122,11 +118,7 @@ class AddDiaryUseCaseTest {
 
         relaxedAddDiaryUseCase(diary)
 
-        dataSource.fetchAll().test {
-            val items = awaitItem()
-            cancelAndConsumeRemainingEvents()
-
-            assertThat(items).isNotEmpty()
-        }
+        val items = dataSource.fetchAllPaged().asSnapshot()
+        assertThat(items).isNotEmpty()
     }
 }

@@ -20,7 +20,7 @@ kotlin {
                 implementation(libs.kotlin.datetime)
                 implementation(projects.commonUtils)
                 implementation(projects.sharedData)
-                implementation("ai.koog:koog-agents:1.0.0")
+                implementation("ai.koog:koog-agents:1.1.1")
                 implementation(projects.core.database)
                 implementation(projects.core.secrets)
             }
@@ -40,12 +40,12 @@ kotlin {
 
         androidMain {
             dependencies {
-                implementation("io.ktor:ktor-client-okhttp-jvm:3.5.0")
+                implementation("io.ktor:ktor-client-okhttp-jvm:3.5.1")
             }
         }
 
         jvmMain.dependencies {
-            implementation("io.ktor:ktor-client-okhttp-jvm:3.5.0")
+            implementation("io.ktor:ktor-client-okhttp-jvm:3.5.1")
         }
 
         iosMain.dependencies {

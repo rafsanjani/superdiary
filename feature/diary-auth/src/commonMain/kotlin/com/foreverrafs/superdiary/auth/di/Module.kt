@@ -5,6 +5,7 @@ import com.foreverrafs.superdiary.auth.login.BiometricLoginScreenViewModel
 import com.foreverrafs.superdiary.auth.login.LoginScreenViewModel
 import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
 import com.foreverrafs.superdiary.auth.register.RegisterScreenViewModel
+import com.foreverrafs.superdiary.auth.register.RegistrationFormValidator
 import com.foreverrafs.superdiary.auth.reset.PasswordResetViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -19,4 +20,5 @@ val diaryAuthModule: Module = module {
     viewModelOf(::BiometricLoginScreenViewModel)
 
     singleOf(::DeeplinkContainer)
+    single { RegistrationFormValidator() }
 }

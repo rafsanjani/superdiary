@@ -11,7 +11,6 @@ import io.github.jan.supabase.realtime.selectAsFlow
 import kotlin.time.Clock
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.take
 
 class SupabaseDiaryApi(
     private val supabase: SupabaseClient,

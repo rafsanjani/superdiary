@@ -4,15 +4,17 @@ package com.foreverrafs.superdiary.list.presentation.list
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.components.diarylist.DiaryFilters
 import com.components.diarylist.DiaryListActions
 import kotlin.time.ExperimentalTime
@@ -23,13 +25,16 @@ import org.koin.compose.viewmodel.koinViewModel
 fun DiaryListTab(
     onAddEntry: () -> Unit,
     onDiaryClick: (id: Long) -> Unit,
+    snackbarHostState: SnackbarHostState,
+    avatarUrl: String?,
     onBackPress: () -> Unit,
+    onProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val screenModel: DiaryListViewModel = koinViewModel()
-    val screenState by screenModel.state.collectAsState()
+    val screenState by screenModel.state.collectAsStateWithLifecycle()
 
-    var diaryFilters by rememberSaveable(stateSaver = DiaryFilters.Companion.Saver) {
+    var diaryFilters by rememberSaveable(stateSaver = DiaryFilters.Saver) {
         mutableStateOf(DiaryFilters())
     }
 
@@ -51,10 +56,14 @@ fun DiaryListTab(
     }
 
     DiaryListScreenContent(
-        modifier = modifier.fillMaxSize(),
         screenModel = screenState,
-        showSearchBar = true,
         diaryFilters = diaryFilters,
+        showSearchBar = true,
         diaryListActions = diaryListActions,
+        snackbarHostState = snackbarHostState,
+        modifier = modifier.fillMaxSize(),
+        avatarUrl = avatarUrl,
+        onProfileClick = onProfileClick,
+        listState = rememberLazyListState(),
     )
 }

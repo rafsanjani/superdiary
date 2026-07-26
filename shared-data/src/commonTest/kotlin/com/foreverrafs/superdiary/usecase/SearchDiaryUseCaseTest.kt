@@ -1,5 +1,7 @@
 package com.foreverrafs.superdiary.usecase
 
+import androidx.paging.PagingData
+import androidx.paging.testing.asSnapshot
 import app.cash.turbine.test
 import assertk.assertFailure
 import assertk.assertThat
@@ -68,7 +70,7 @@ class SearchDiaryUseCaseTest {
         // search for the first diary
         searchDiaryByEntryUseCase(entry = "Entry #8").test {
             val result = awaitItem()
-            assertThat(result).isNotEmpty()
+            assertThat(result.snapshot()).isNotEmpty()
         }
     }
 
@@ -79,7 +81,7 @@ class SearchDiaryUseCaseTest {
         // search for the first diary
         searchDiaryByEntryUseCase(entry = "Diary Entry #800").test {
             val result = awaitItem()
-            assertThat(result).isEmpty()
+            assertThat(result.snapshot()).isEmpty()
         }
     }
 
@@ -95,7 +97,7 @@ class SearchDiaryUseCaseTest {
             to = toDate.toInstant(),
         ).test {
             val diaries = awaitItem()
-            assertThat(diaries).isNotEmpty()
+            assertThat(diaries.snapshot()).isNotEmpty()
         }
     }
 
@@ -111,7 +113,7 @@ class SearchDiaryUseCaseTest {
             to = toDate.toInstant(),
         ).test {
             val diaries = awaitItem()
-            assertThat(diaries).isEmpty()
+            assertThat(diaries.snapshot()).isEmpty()
         }
     }
 
@@ -137,11 +139,15 @@ class SearchDiaryUseCaseTest {
 
         searchDiaryByDateUseCase(date = date.toInstant()).test {
             val diaries = awaitItem()
+            val snapshot = diaries.snapshot()
 
-            assertThat(diaries).isNotEmpty()
-            assertThat(diaries.size).isEqualTo(2)
+            assertThat(snapshot).isNotEmpty()
+            assertThat(snapshot.size).isEqualTo(2)
         }
     }
 
     private suspend fun insertEntries() = insertRandomDiaries(dataSource)
+
+    private suspend fun PagingData<Diary>.snapshot(): List<Diary> =
+        kotlinx.coroutines.flow.flowOf(this).asSnapshot()
 }
