@@ -78,6 +78,12 @@ fun SuperDiaryTheme(
             fontSize = 16.sp,
             letterSpacing = (-0.3).sp,
         ),
+        headlineLarge = TextStyle(
+            fontFamily = montserratAlternativesFontFamily(),
+            fontWeight = FontWeight.Bold,
+            fontSize = 24.sp,
+            letterSpacing = (-0.3).sp,
+        ),
         bodySmall = TextStyle(
             fontFamily = montserratAlternativesFontFamily(),
             fontSize = 14.sp,
