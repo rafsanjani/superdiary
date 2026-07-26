@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 
 sealed interface AppSessionState {
     data object Processing : AppSessionState
+    data object OnboardingRequired : AppSessionState
     data class Authenticated(
         val userInfo: UserInfo?,
         // linkType will be null if the session was just getting restored from disk
@@ -117,6 +118,12 @@ class AppViewModel(
             "Unable to restore from registration confirmation token. Attempting to restore session from disk"
         }
 
+        val userSettings = preference.getSnapshot()
+        if (userSettings.isFirstLaunch) {
+            _viewState.update { AppSessionState.OnboardingRequired }
+            return@launch
+        }
+
         val sessionRestoreStatus = authApi.restoreSession()
 
         _viewState.update {
@@ -136,8 +143,6 @@ class AppViewModel(
                     logger.d(TAG) { "Session restored. Token expires on ${sessionRestoreStatus.sessionInfo.expiresAt}" }
                     logger.d(TAG) { "Session user ${sessionRestoreStatus.sessionInfo.userInfo}" }
 
-                    val userSettings = preference.getSnapshot()
-
                     AppSessionState.Authenticated(
                         userInfo = sessionRestoreStatus.sessionInfo.userInfo,
                         isBiometricAuthEnabled = userSettings.isBiometricAuthEnabled,
@@ -145,6 +150,14 @@ class AppViewModel(
                 }
             }
         }
+    }
+
+    fun onOnboardingComplete() = viewModelScope.launch(appCoroutineDispatchers.main) {
+        preference.save {
+            it.copy(isFirstLaunch = false)
+        }
+        _viewState.update { AppSessionState.Processing }
+        restoreSession()
     }
 
     /**

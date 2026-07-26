@@ -154,6 +154,7 @@ include(":feature:diary-dashboard")
 include(":feature:create-diary")
 include(":feature:diary-favorite")
 include(":feature:diary-chat")
+include(":feature:diary-onboarding")
 
 // annotation processor for datasore preferences
 include(":preferences:annotation")
