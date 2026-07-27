@@ -14,6 +14,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,12 +63,15 @@ internal fun SuperDiaryNavHost(
         return
     }
 
-    val backStack = rememberNavBackStack(
-        configuration = SavedStateConfiguration {
-            serializersModule = navigationSerializersModule
-        },
-        getStartDestination(viewState),
-    )
+    val startDestination = getStartDestination(viewState)
+    val backStack = key(startDestination) {
+        rememberNavBackStack(
+            configuration = SavedStateConfiguration {
+                serializersModule = navigationSerializersModule
+            },
+            startDestination,
+        )
+    }
 
     SharedTransitionLayout(modifier = modifier) {
         CompositionLocalProvider(LocalSharedTransitionScope provides this) {

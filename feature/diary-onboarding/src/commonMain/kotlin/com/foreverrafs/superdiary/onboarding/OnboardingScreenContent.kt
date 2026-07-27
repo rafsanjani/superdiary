@@ -72,14 +72,8 @@ import superdiary.feature.diary_onboarding.generated.resources.onboarding_get_st
 import superdiary.feature.diary_onboarding.generated.resources.onboarding_next
 import superdiary.feature.diary_onboarding.generated.resources.onboarding_skip
 
-private val Ink = Color(0xFF17120F)
-private val MutedInk = Color(0xFF6E6965)
-private val Canvas = Color(0xFFFCFCFB)
 private val Peach = Color(0xFFFFE1CF)
-private val SoftPeach = Color(0xFFFFF4ED)
 private val Sage = Color(0xFFB8D4CB)
-private val SoftBlue = Color(0xFFEAF1F4)
-private val Track = Color(0xFFE7E3E0)
 
 @Composable
 fun OnboardingScreenContent(
@@ -94,7 +88,7 @@ fun OnboardingScreenContent(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
-            .background(Canvas)
+            .background(MaterialTheme.colorScheme.background)
             .testTag("onboarding_screen"),
     ) {
         val visualHeight = when {
@@ -168,8 +162,8 @@ fun OnboardingScreenContent(
                     .testTag(if (isFinalPage) "onboarding_get_started" else "onboarding_next"),
                 shape = RoundedCornerShape(100),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Ink,
-                    contentColor = Color.White,
+                    containerColor = MaterialTheme.colorScheme.inverseSurface,
+                    contentColor = MaterialTheme.colorScheme.inverseOnSurface,
                 ),
                 onClick = if (isFinalPage) {
                     onComplete
@@ -206,14 +200,14 @@ private fun StoryNavigation(
             TextButton(
                 modifier = Modifier
                     .size(40.dp)
-                    .background(Color.White, CircleShape)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHigh, CircleShape)
                     .testTag("onboarding_back"),
                 onClick = onBack,
                 contentPadding = PaddingValues(0.dp),
             ) {
                 Text(
                     text = "<",
-                    color = Ink,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Black,
                     fontSize = 20.sp,
                 )
@@ -235,14 +229,14 @@ private fun StoryNavigation(
                         .weight(1f)
                         .height(4.dp)
                         .clip(RoundedCornerShape(100))
-                        .background(Track)
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
                         .testTag("onboarding_indicator_$index"),
                 ) {
                     Box(
                         modifier = Modifier
                             .fillMaxHeight()
                             .fillMaxWidth(progress)
-                            .background(Ink),
+                            .background(MaterialTheme.colorScheme.onSurface),
                     )
                 }
             }
@@ -256,7 +250,11 @@ private fun StoryNavigation(
         ) {
             Text(
                 text = stringResource(Res.string.onboarding_skip),
-                color = if (isFinalPage) Color.Transparent else MutedInk,
+                color = if (isFinalPage) {
+                    Color.Transparent
+                } else {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                },
                 fontWeight = FontWeight.SemiBold,
                 style = MaterialTheme.typography.labelMedium,
             )
@@ -284,19 +282,27 @@ private fun CaptureVisual(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(28.dp))
-            .background(Brush.verticalGradient(listOf(Peach, SoftPeach, Canvas))),
+            .background(
+                Brush.verticalGradient(
+                    listOf(
+                        MaterialTheme.colorScheme.secondaryContainer,
+                        MaterialTheme.colorScheme.surfaceVariant,
+                        MaterialTheme.colorScheme.background,
+                    ),
+                ),
+            ),
     ) {
         Box(
             modifier = Modifier
                 .align(Alignment.Center)
                 .size(245.dp)
-                .border(1.dp, Color.White.copy(alpha = 0.75f), CircleShape),
+                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape),
         )
         Box(
             modifier = Modifier
                 .align(Alignment.Center)
                 .size(190.dp)
-                .border(1.dp, Color.White.copy(alpha = 0.75f), CircleShape),
+                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape),
         )
 
         PhotoBubble(
@@ -332,14 +338,14 @@ private fun CaptureVisual(
             modifier = Modifier
                 .align(Alignment.Center)
                 .widthIn(min = 212.dp),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.surface,
             shape = RoundedCornerShape(100),
             shadowElevation = 10.dp,
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 17.dp),
                 text = "Your day, remembered",
-                color = Ink,
+                color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium,
@@ -369,7 +375,7 @@ private fun InsightVisual(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(28.dp))
-            .background(SoftBlue),
+            .background(MaterialTheme.colorScheme.primaryContainer),
     ) {
         ReflectionCard(
             title = "A calmer morning",
@@ -426,7 +432,7 @@ private fun MemoriesVisual(
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(28.dp))
-            .background(Color(0xFFF5F5F4))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(horizontal = 18.dp, vertical = 18.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -465,7 +471,7 @@ private fun ReflectionCard(
 ) {
     Surface(
         modifier = modifier,
-        color = Color.White.copy(alpha = 0.96f),
+        color = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(18.dp),
         shadowElevation = 5.dp,
     ) {
@@ -486,7 +492,7 @@ private fun ReflectionCard(
             Column(Modifier.weight(1f)) {
                 Text(
                     text = title,
-                    color = Ink,
+                    color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Bold,
@@ -494,7 +500,7 @@ private fun ReflectionCard(
                 )
                 Text(
                     text = subtitle,
-                    color = MutedInk,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.labelSmall,
@@ -513,7 +519,7 @@ private fun MemoryStrip(
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(100))
-            .background(Color.White),
+            .background(MaterialTheme.colorScheme.surface),
     ) {
         Image(
             modifier = Modifier
@@ -544,7 +550,7 @@ private fun PhotoBubble(
     Image(
         modifier = modifier
             .size(size)
-            .border(2.dp, Color.White, CircleShape)
+            .border(2.dp, MaterialTheme.colorScheme.surface, CircleShape)
             .clip(CircleShape),
         painter = painterResource(image),
         contentDescription = null,
@@ -559,14 +565,14 @@ private fun BoxScope.MiniLabel(
 ) {
     Surface(
         modifier = modifier,
-        color = Ink,
+        color = MaterialTheme.colorScheme.inverseSurface,
         shape = RoundedCornerShape(100),
         shadowElevation = 5.dp,
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
             text = text,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.inverseOnSurface,
             fontWeight = FontWeight.Black,
             style = MaterialTheme.typography.labelSmall,
         )
@@ -582,7 +588,7 @@ private fun CopyBlock(page: OnboardingPage) {
         Text(
             modifier = Modifier.widthIn(max = 350.dp),
             text = page.headline,
-            color = Ink,
+            color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Black,
             lineHeight = 36.sp,
@@ -593,7 +599,7 @@ private fun CopyBlock(page: OnboardingPage) {
         Text(
             modifier = Modifier.widthIn(max = 330.dp),
             text = page.body,
-            color = MutedInk,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             lineHeight = 22.sp,
             style = MaterialTheme.typography.bodyMedium,
@@ -643,6 +649,14 @@ private fun AnimatedContentTransitionScope<Int>.copyTransition() = (
 @Composable
 private fun OnboardingScreenContentPreview() {
     SuperDiaryPreviewTheme {
+        OnboardingScreenContent(onComplete = {})
+    }
+}
+
+@Preview
+@Composable
+private fun OnboardingScreenContentDarkPreview() {
+    SuperDiaryPreviewTheme(darkTheme = true) {
         OnboardingScreenContent(onComplete = {})
     }
 }
