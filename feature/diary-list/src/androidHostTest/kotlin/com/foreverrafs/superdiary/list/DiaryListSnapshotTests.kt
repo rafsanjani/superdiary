@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
 import app.cash.paparazzi.Paparazzi
 import com.android.ide.common.rendering.api.SessionParams
 import com.components.diarylist.DiaryFilters
@@ -23,6 +24,7 @@ import com.foreverrafs.superdiary.list.presentation.list.DiaryListScreenModel
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import kotlin.time.Clock
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
@@ -95,19 +97,23 @@ class DiaryListSnapshotTests(
                 SharedTransitionLayout {
                     DiaryListScreenContent(
                         screenModel = DiaryListScreenModel(
-                            diaries = (0..13).map {
-                                Diary(
-                                    id = it.toLong(),
-                                    entry = "Hello Diary $it",
-                                    date = testClock.now().minus(
-                                        value = 1,
-                                        unit = DateTimeUnit.MONTH,
-                                        timeZone = TimeZone.UTC,
-                                    ),
-                                    isFavorite = false,
-                                    location = Location.Empty,
-                                )
-                            },
+                            diaries = flowOf(
+                                PagingData.from(
+                                    data = (0..13).map {
+                                        Diary(
+                                            id = it.toLong(),
+                                            entry = "Hello Diary $it",
+                                            date = testClock.now().minus(
+                                                value = 1,
+                                                unit = DateTimeUnit.MONTH,
+                                                timeZone = TimeZone.UTC,
+                                            ),
+                                            isFavorite = false,
+                                            location = Location.Empty,
+                                        )
+                                    },
+                                ),
+                            ),
                             isFiltered = false,
                             isLoading = false,
                         ),
@@ -130,7 +136,7 @@ class DiaryListSnapshotTests(
                 SharedTransitionLayout {
                     DiaryListScreenContent(
                         screenModel = DiaryListScreenModel(
-                            diaries = emptyList(),
+                            diaries = flowOf(PagingData.empty()),
                             isFiltered = false,
                             isLoading = false,
                         ),
@@ -152,7 +158,7 @@ class DiaryListSnapshotTests(
                 SuperDiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
                     DiaryListScreenContent(
                         screenModel = DiaryListScreenModel(
-                            diaries = emptyList(),
+                            diaries = flowOf(PagingData.empty()),
                             isFiltered = true,
                             isLoading = false,
                         ),
