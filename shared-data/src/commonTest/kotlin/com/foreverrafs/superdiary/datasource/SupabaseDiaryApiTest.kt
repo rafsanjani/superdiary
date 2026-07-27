@@ -63,7 +63,8 @@ class SupabaseDiaryApiTest {
                         content = json,
                         status = HttpStatusCode.OK,
                         headers = headersOf(
-                            HttpHeaders.ContentType, ContentType.Application.Json.toString(),
+                            HttpHeaders.ContentType,
+                            ContentType.Application.Json.toString(),
                         ),
                     )
                 },

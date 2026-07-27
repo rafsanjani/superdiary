@@ -1,13 +1,13 @@
 @file:Suppress("UnusedPrivateProperty")
 
 plugins {
-    id("com.superdiary.multiplatform.compose")
-    id("com.superdiary.multiplatform.kotlin")
-    id("com.superdiary.android.library")
+    alias(conventionLibs.plugins.superdiary.multiplatform.compose)
+    alias(conventionLibs.plugins.superdiary.multiplatform.kotlin)
+    alias(conventionLibs.plugins.superdiary.android.library)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.mokkery)
     alias(libs.plugins.kotlin.parcelize)
-    // alias(libs.plugins.paparazzi) // Disabled due to incompatibility with the new Android multiplatform plugin
+    alias(libs.plugins.paparazzi)
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)

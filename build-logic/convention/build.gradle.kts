@@ -44,11 +44,6 @@ gradlePlugin {
             implementationClass = "$rootPackageName.secrets.SecretsConventionPlugin"
         }
 
-        register("SnapshotsDiffPlugin") {
-            id = "com.superdiary.snapshotdiff"
-            implementationClass = "$rootPackageName.snapshots.SnapshotsDiffPlugin"
-        }
-
         register("AndroidLibraryConventionPlugin") {
             id = "com.superdiary.android.library"
             implementationClass = "$rootPackageName.android.AndroidLibraryConventionPlugin"
