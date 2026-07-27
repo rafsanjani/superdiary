@@ -51,6 +51,7 @@ class CreateDiarySnapshotTests(
                 showSaveDialog = showSaveDialog,
                 onShowSaveDialogChange = {},
                 onNavigateBack = {},
+                onProfileClick = {},
             )
         }
     }
