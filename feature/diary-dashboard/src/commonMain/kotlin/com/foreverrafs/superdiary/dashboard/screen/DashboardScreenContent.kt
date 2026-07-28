@@ -27,7 +27,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,7 +49,12 @@ import com.components.diarylist.DiaryItem
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.dashboard.DashboardViewModel
 import com.foreverrafs.superdiary.design.components.AppBar
+import com.foreverrafs.superdiary.design.components.BodySmallText
 import com.foreverrafs.superdiary.design.components.ConfirmBiometricAuthDialog
+import com.foreverrafs.superdiary.design.components.DisplayMediumText
+import com.foreverrafs.superdiary.design.components.HeadlineMediumText
+import com.foreverrafs.superdiary.design.components.LabelLargeText
+import com.foreverrafs.superdiary.design.components.LabelMediumText
 import com.foreverrafs.superdiary.design.components.shimmer
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
@@ -253,9 +257,8 @@ private fun dashboardItems(
                             onClick = onAddEntry,
                             modifier = Modifier.testTag("button_add_entry"),
                         ) {
-                            Text(
+                            LabelMediumText(
                                 text = stringResource(Res.string.label_add_entry),
-                                style = MaterialTheme.typography.labelMedium,
                             )
                         }
                     }
@@ -402,18 +405,16 @@ fun GlanceCard(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
+            HeadlineMediumText(
                 text = title,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineMedium,
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
+            DisplayMediumText(
                 text = content,
-                style = MaterialTheme.typography.displayMedium,
                 textAlign = TextAlign.Center,
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -430,9 +431,8 @@ private fun LatestEntries(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
-        Text(
+        HeadlineMediumText(
             text = stringResource(Res.string.label_glance_header_latest_entries),
-            style = MaterialTheme.typography.headlineMedium,
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -487,10 +487,9 @@ private fun WeeklySummaryCard(
                     .padding(4.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text(
+                HeadlineMediumText(
                     text = title,
                     textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.headlineMedium,
                 )
 
                 Icon(
@@ -508,7 +507,7 @@ private fun WeeklySummaryCard(
                 style = textStyle,
             )
 
-            Text(
+            BodySmallText(
                 modifier = Modifier
                     .verticalScroll(textScrollState)
                     .fadingEdges(
@@ -520,7 +519,6 @@ private fun WeeklySummaryCard(
                     .padding(horizontal = 4.dp)
                     .padding(bottom = 4.dp),
                 text = summary ?: stringResource(Res.string.label_weekly_summary_error),
-                style = textStyle,
                 textAlign = TextAlign.Justify,
                 lineHeight = 28.sp,
             )
@@ -532,7 +530,7 @@ private fun WeeklySummaryCard(
                         .padding(top = 12.dp),
                     onClick = {},
                 ) {
-                    Text(stringResource(Res.string.label_button_retry))
+                    LabelLargeText(stringResource(Res.string.label_button_retry))
                 }
             }
         }

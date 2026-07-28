@@ -30,7 +30,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -64,6 +63,7 @@ import androidx.compose.ui.zIndex
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.foreverrafs.superdiary.common.utils.format
+import com.foreverrafs.superdiary.design.components.BodyLargeText
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.utils.toDate
@@ -343,7 +343,7 @@ private fun Preview() {
             onDeleteDiaries = {},
             showSearchBar = false,
             emptyContent = {
-                Text(stringResource(Res.string.preview_empty_content))
+                BodyLargeText(stringResource(Res.string.preview_empty_content))
             },
             snackbarHostState = SnackbarHostState(),
         )

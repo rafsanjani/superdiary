@@ -3,7 +3,6 @@ package com.foreverrafs.superdiary.design.components
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -23,10 +22,9 @@ fun PrimaryButton(
         shape = MaterialTheme.shapes.medium,
         enabled = enabled,
     ) {
-        Text(
+        LabelMediumText(
             text = text,
             fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.labelMedium,
         )
     }
 }

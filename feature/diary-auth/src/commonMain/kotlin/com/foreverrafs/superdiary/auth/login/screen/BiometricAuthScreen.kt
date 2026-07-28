@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.foreverrafs.superdiary.auth.login.BiometricLoginScreenState
 import com.foreverrafs.superdiary.auth.login.BiometricLoginScreenViewModel
+import com.foreverrafs.superdiary.design.components.BodyMediumText
+import com.foreverrafs.superdiary.design.components.TitleMediumText
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -85,9 +86,8 @@ fun BiometricLoginScreenContent(
         ) {
             Spacer(modifier = Modifier.height(100.dp))
 
-            Text(
+            TitleMediumText(
                 text = stringResource(Res.string.sign_in_with_biometrics),
-                style = MaterialTheme.typography.titleMedium,
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -100,9 +100,8 @@ fun BiometricLoginScreenContent(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
+            BodyMediumText(
                 text = stringResource(Res.string.biometric_authentication_prompt),
-                style = MaterialTheme.typography.bodyMedium,
             )
         }
     }

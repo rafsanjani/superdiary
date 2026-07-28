@@ -22,7 +22,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.foreverrafs.superdiary.design.components.LabelLargeText
 import org.jetbrains.compose.resources.stringResource
 import superdiary.core.ui_components.generated.resources.Res
 import superdiary.core.ui_components.generated.resources.selected_diaries_count
@@ -84,7 +84,7 @@ internal fun DiarySelectionModifierBar(
                     // Only show selected diaries when we have an item selected to prevent
                     // weird Selected Diaries: 0 from showing
                     if (selectedIds.isNotEmpty()) {
-                        Text(
+                        LabelLargeText(
                             stringResource(
                                 Res.string.selected_diaries_count,
                                 selectedIds.size,

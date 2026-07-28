@@ -15,7 +15,6 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +30,7 @@ import com.foreverrafs.superdiary.common.utils.format
 import com.foreverrafs.superdiary.design.components.AppBar
 import com.foreverrafs.superdiary.design.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.design.components.GoogleMap
+import com.foreverrafs.superdiary.design.components.LabelMediumText
 import com.foreverrafs.superdiary.design.components.SuperdiaryNavigationIcon
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.list.presentation.detail.DetailsViewState
@@ -102,10 +102,9 @@ fun DetailScreenContent(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Text(
+                LabelMediumText(
                     text = diary.date.toLocalDateTime(TimeZone.currentSystemDefault())
                         .format("EEE - MMMM dd, yyyy - hh:mm a").lowercase(),
-                    style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.alpha(0.6f).padding(12.dp),
                 )
 

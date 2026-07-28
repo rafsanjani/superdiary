@@ -9,7 +9,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SecureTextField
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldLabelPosition
 import androidx.compose.runtime.Composable
@@ -59,10 +58,9 @@ fun SuperDiaryInputField(
         isError = isError,
         placeholder = {
             if (placeholder != null) {
-                Text(
+                BodyLargeText(
                     text = placeholder,
                     modifier = Modifier.alpha(0.3f).fillMaxWidth(),
-                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
         },
@@ -72,11 +70,11 @@ fun SuperDiaryInputField(
         readOnly = readOnly,
         supportingText = {
             errorLabel?.let {
-                Text(it)
+                BodySmallText(it)
             }
         },
         label = {
-            Text(
+            BodySmallText(
                 text = label,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -112,7 +110,7 @@ fun PasswordInputField(
         state = state,
         placeholder = {
             placeholder?.let {
-                Text(
+                BodyLargeText(
                     text = placeholder,
                     modifier = Modifier.alpha(0.3f).fillMaxWidth(),
                 )
@@ -121,7 +119,7 @@ fun PasswordInputField(
         isError = isError,
         keyboardOptions = keyboardOptions,
         label = {
-            Text(
+            BodySmallText(
                 text = label,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -129,7 +127,7 @@ fun PasswordInputField(
         labelPosition = TextFieldLabelPosition.Above(alignment = Alignment.Start),
         supportingText = {
             errorLabel?.let {
-                Text(it)
+                BodySmallText(it)
             }
         },
         trailingIcon = {

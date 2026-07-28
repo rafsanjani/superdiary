@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -17,6 +16,7 @@ import com.components.diarylist.DiaryFilters
 import com.components.diarylist.DiaryList
 import com.components.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.design.components.AppBar
+import com.foreverrafs.superdiary.design.components.TitleMediumText
 import com.foreverrafs.superdiary.domain.model.Diary
 import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.diary_favorite.generated.resources.Res
@@ -72,12 +72,11 @@ fun FavoriteScreenContent(
                     ),
                     snackbarHostState = snackbarHostState,
                     emptyContent = {
-                        Text(
+                        TitleMediumText(
                             modifier = Modifier
                                 .padding(bottom = 64.dp)
                                 .testTag("empty_favorite_text"),
                             text = stringResource(Res.string.no_favorite_diary_message),
-                            style = MaterialTheme.typography.titleMedium,
                             fontSize = 14.sp,
                         )
                     },

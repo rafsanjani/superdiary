@@ -15,7 +15,6 @@ import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -38,6 +37,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.foreverrafs.superdiary.design.components.TitleMediumText
 import org.jetbrains.compose.resources.stringResource
 import superdiary.core.ui_components.generated.resources.Res
 import superdiary.core.ui_components.generated.resources.search_diaries_label
@@ -116,12 +116,11 @@ internal fun DiarySearchBar(
             },
             shape = RoundedCornerShape(cornerRadius),
             placeholder = {
-                Text(
+                TitleMediumText(
                     modifier = Modifier
                         .clearAndSetSemantics { }
                         .alpha(0.5f),
                     text = searchDiariesLabel,
-                    style = MaterialTheme.typography.titleMedium,
                 )
             },
             textStyle = MaterialTheme.typography.titleMedium,

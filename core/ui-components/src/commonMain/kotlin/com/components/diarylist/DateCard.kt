@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.common.utils.format
+import com.foreverrafs.superdiary.design.components.LabelMediumText
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 import superdiary.core.ui_components.generated.resources.Res
@@ -45,14 +45,13 @@ internal fun DateCard(
             ),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
+        LabelMediumText(
             modifier = Modifier.semantics {
                 contentDescription = entryContentDescription
             },
             text = buildDateAnnotatedString(date),
             textAlign = TextAlign.Center,
             lineHeight = 20.sp,
-            style = MaterialTheme.typography.labelMedium,
         )
     }
 }

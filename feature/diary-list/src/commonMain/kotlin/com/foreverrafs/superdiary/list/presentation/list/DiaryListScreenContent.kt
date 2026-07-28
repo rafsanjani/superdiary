@@ -21,7 +21,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -48,7 +47,11 @@ import com.components.diarylist.DiaryFilters
 import com.components.diarylist.DiaryList
 import com.components.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.design.components.AppBar
+import com.foreverrafs.superdiary.design.components.BodyLargeText
+import com.foreverrafs.superdiary.design.components.BodySmallText
 import com.foreverrafs.superdiary.design.components.ConfirmDeleteDialog
+import com.foreverrafs.superdiary.design.components.HeadlineMediumText
+import com.foreverrafs.superdiary.design.components.LabelLargeText
 import com.foreverrafs.superdiary.design.style.CREATE_DIARY_SHARED_BOUNDS_KEY
 import com.foreverrafs.superdiary.design.style.LocalRootAnimatedContentScope
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
@@ -309,7 +312,7 @@ private fun LoadingContent(modifier: Modifier = Modifier) {
     ) {
         CircularProgressIndicator()
 
-        Text(
+        BodyLargeText(
             text = stringResource(Res.string.loading_diaries_message),
             textAlign = TextAlign.Center,
         )
@@ -326,18 +329,16 @@ private fun EmptyDiaryList(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Text(
+        HeadlineMediumText(
             textAlign = TextAlign.Center,
             text = stringResource(Res.string.empty_diary_list_title),
-            style = MaterialTheme.typography.headlineMedium,
             fontSize = 20.sp,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text(
+        BodySmallText(
             text = stringResource(Res.string.empty_diary_list_message),
-            style = MaterialTheme.typography.bodySmall,
             fontSize = 14.sp,
         )
 
@@ -345,7 +346,7 @@ private fun EmptyDiaryList(
             modifier = Modifier.createDiarySharedBounds(),
             onClick = onAddEntry,
         ) {
-            Text(stringResource(Res.string.add_entry_button))
+            LabelLargeText(stringResource(Res.string.add_entry_button))
         }
     }
 }
@@ -356,10 +357,9 @@ private fun ErrorContent(modifier: Modifier = Modifier) {
         modifier = modifier.padding(bottom = 64.dp),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
+        HeadlineMediumText(
             text = stringResource(Res.string.load_diaries_error_message),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.headlineMedium,
         )
     }
 }

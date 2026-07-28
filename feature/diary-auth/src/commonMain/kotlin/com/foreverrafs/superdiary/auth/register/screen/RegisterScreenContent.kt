@@ -17,7 +17,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,10 +38,12 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.foreverrafs.superdiary.auth.register.FieldValidationError
+import com.foreverrafs.superdiary.design.components.BodyMediumText
 import com.foreverrafs.superdiary.design.components.BrandLogo
 import com.foreverrafs.superdiary.design.components.PasswordInputField
 import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.components.SuperDiaryInputField
+import com.foreverrafs.superdiary.design.components.TitleLargeText
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.diary_auth.generated.resources.Res
@@ -175,9 +176,8 @@ internal fun RegisterScreenContent(
 
                 Spacer(modifier = Modifier.height(28.dp))
 
-                Text(
+                TitleLargeText(
                     text = stringResource(Res.string.label_register_title),
-                    style = MaterialTheme.typography.titleLarge,
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -341,7 +341,7 @@ private fun LoginText(
         }
     }
 
-    Text(
+    BodyMediumText(
         modifier = modifier,
         text = registerText,
     )

@@ -13,7 +13,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +20,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.foreverrafs.superdiary.auth.MailManager
+import com.foreverrafs.superdiary.design.components.BodyMediumText
+import com.foreverrafs.superdiary.design.components.DisplayMediumText
+import com.foreverrafs.superdiary.design.components.LabelLargeText
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.diary_auth.generated.resources.Res
@@ -47,9 +49,8 @@ fun RegistrationConfirmationScreen(
         ) {
             Spacer(modifier = Modifier.weight(1f))
 
-            Text(
+            DisplayMediumText(
                 text = stringResource(Res.string.registration_success_message),
-                style = MaterialTheme.typography.displayMedium,
                 fontWeight = FontWeight.SemiBold,
             )
 
@@ -63,9 +64,8 @@ fun RegistrationConfirmationScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
+            BodyMediumText(
                 text = stringResource(Res.string.registration_email_confirmation_prompt),
-                style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
             )
 
@@ -78,7 +78,7 @@ fun RegistrationConfirmationScreen(
                     .padding(horizontal = 16.dp),
                 onClick = { MailManager.openMail() },
             ) {
-                Text(text = stringResource(Res.string.label_open_email))
+                LabelLargeText(text = stringResource(Res.string.label_open_email))
             }
         }
     }

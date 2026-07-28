@@ -21,7 +21,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -41,7 +40,9 @@ import androidx.navigationevent.compose.rememberNavigationEventState
 import com.foreverrafs.superdiary.core.permission.PermissionState
 import com.foreverrafs.superdiary.creatediary.components.RichTextStyleRow
 import com.foreverrafs.superdiary.design.components.AppBar
+import com.foreverrafs.superdiary.design.components.BodyMediumText
 import com.foreverrafs.superdiary.design.components.ConfirmSaveDialog
+import com.foreverrafs.superdiary.design.components.LabelSmallText
 import com.foreverrafs.superdiary.design.components.LocationRationaleDialog
 import com.foreverrafs.superdiary.design.components.SuperdiaryNavigationIcon
 import com.foreverrafs.superdiary.design.style.CREATE_DIARY_SHARED_BOUNDS_KEY
@@ -196,9 +197,8 @@ fun CreateDiaryScreenContent(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Text(
+                    BodyMediumText(
                         text = stringResource(Res.string.label_diary_ai),
-                        style = MaterialTheme.typography.bodyMedium,
                     )
 
                     // Only enable AI suggestions when there are at least 50 characters entered
@@ -260,9 +260,8 @@ private fun DiaryAISuggestionChip(words: Int, enabled: Boolean, onClick: () -> U
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
         ),
         label = {
-            Text(
+            LabelSmallText(
                 text = stringResource(Res.string.word_count_suggestion, words),
-                style = MaterialTheme.typography.labelSmall,
             )
         },
         enabled = enabled,

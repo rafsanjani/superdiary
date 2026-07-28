@@ -22,7 +22,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,7 +35,9 @@ import androidx.compose.ui.unit.dp
 import com.foreverrafs.superdiary.auth.changepassword.ChangePasswordViewModel
 import com.foreverrafs.superdiary.auth.changepassword.ChangePasswordViewModel.ChangePasswordScreenAction
 import com.foreverrafs.superdiary.auth.changepassword.PasswordStrength
+import com.foreverrafs.superdiary.design.components.BodyLargeText
 import com.foreverrafs.superdiary.design.components.BrandLogo
+import com.foreverrafs.superdiary.design.components.DisplayMediumText
 import com.foreverrafs.superdiary.design.components.PasswordInputField
 import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
@@ -114,9 +115,8 @@ internal fun ChangePasswordScreenContent(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Text(
+                DisplayMediumText(
                     text = stringResource(Res.string.set_new_password_title),
-                    style = MaterialTheme.typography.displayMedium,
                 )
 
                 Spacer(modifier = Modifier.height(48.dp))
@@ -211,7 +211,7 @@ fun PasswordStrengthMeter(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 strength?.let {
-                    Text(stringResource(Res.string.password_strength_label))
+                    BodyLargeText(stringResource(Res.string.password_strength_label))
 
                     fun getColorForStrength(): Color = when (strength) {
                         PasswordStrength.None -> Color.White
@@ -226,7 +226,7 @@ fun PasswordStrengthMeter(
                         PasswordStrength.Medium -> Res.string.password_strength_medium
                         PasswordStrength.Strong -> Res.string.password_strength_strong
                     }
-                    Text(text = stringResource(strengthLabel), color = getColorForStrength())
+                    BodyLargeText(text = stringResource(strengthLabel), color = getColorForStrength())
                 }
             }
         }
