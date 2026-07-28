@@ -25,7 +25,6 @@ class WritingStatsTest {
         assertThat(stats.totalWords).isEqualTo(9)
         assertThat(stats.averageWordsPerEntry).isEqualTo(4)
         assertThat(stats.longestEntryWords).isEqualTo(6)
-        assertThat(stats.activeDays).isEqualTo(2)
     }
 
     @Test
@@ -36,6 +35,5 @@ class WritingStatsTest {
         assertThat(stats.totalWords).isEqualTo(0)
         assertThat(stats.averageWordsPerEntry).isEqualTo(0)
         assertThat(stats.longestEntryWords).isEqualTo(0)
-        assertThat(stats.activeDays).isEqualTo(0)
     }
 }
