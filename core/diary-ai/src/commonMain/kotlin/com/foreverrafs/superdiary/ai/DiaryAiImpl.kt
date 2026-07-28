@@ -8,7 +8,6 @@ import ai.koog.prompt.llm.LLModel
 import ai.koog.prompt.message.MessagePart
 import ai.koog.prompt.streaming.StreamFrame
 import com.foreverrafs.superdiary.ai.api.DiaryAI
-import com.foreverrafs.superdiary.ai.domain.model.DiaryChatMessage
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
@@ -148,31 +147,61 @@ class DiaryAiImpl(
         }
     }
 
-    override suspend fun queryDiaries(
-        messages: List<DiaryChatMessage>,
-    ): String = try {
-        promptExecutor.execute(
-            prompt = prompt("generate-diary") {
-                // Add the instruction
-                system {
-                    text(
-                        text = messages.take(
-                            (messages.size - 1).coerceAtLeast(0),
-                        ).joinToString(separator = "\n"),
-                    )
-                }
+    override suspend fun generateWritingInsights(diaries: List<Diary>): String = try {
+        if (diaries.isEmpty()) return ""
 
-                // Add the prompt
-                user {
-                    text(messages.lastOrNull()?.content.orEmpty())
-                }
-            },
-            model = CHAT_MODEL,
-        ).parts.filterIsInstance<MessagePart.Text>().joinToString(separator = "") { it.text }
+        val batches = diaries.chunked(MAX_ENTRIES_PER_BATCH)
+        if (batches.size == 1) {
+            executeWritingAnalysis(
+                promptName = "generate-writing-insights",
+                systemMessage = FINAL_INSIGHTS_PROMPT,
+                content = batches.single().toPromptContent(),
+            )
+        } else {
+            val batchObservations = batches.mapIndexed { index, batch ->
+                executeWritingAnalysis(
+                    promptName = "analyse-writing-batch-${index + 1}",
+                    systemMessage = BATCH_ANALYSIS_PROMPT,
+                    content = batch.toPromptContent(),
+                )
+            }
+
+            executeWritingAnalysis(
+                promptName = "synthesise-writing-insights",
+                systemMessage = FINAL_INSIGHTS_PROMPT,
+                content = batchObservations.joinToString(separator = "\n\n") { observation ->
+                    observation.ifBlank { "No reliable pattern found in this batch." }
+                },
+            )
+        }
     } catch (e: Exception) {
-        logger.e(TAG, e) { "Error querying diaries" }
+        logger.e(TAG, e) { "Error generating writing insights" }
         ""
     }
+
+    private suspend fun executeWritingAnalysis(
+        promptName: String,
+        systemMessage: String,
+        content: String,
+    ): String = promptExecutor.execute(
+        prompt = prompt(promptName) {
+            system {
+                text(systemMessage)
+            }
+            user {
+                text(content)
+            }
+        },
+        model = CHAT_MODEL,
+    ).parts.filterIsInstance<MessagePart.Text>().joinToString(separator = "") { it.text }
+
+    private fun List<Diary>.toPromptContent(): String =
+        joinToString(separator = "\n\n") { diary ->
+            """
+            Date: ${diary.date}
+            Entry: ${diary.entry.take(MAX_ENTRY_CHARACTERS)}
+            """.trimIndent()
+        }
 
     companion object {
         private val CHAT_MODEL = LLModel(
@@ -185,6 +214,28 @@ class DiaryAiImpl(
             contextLength = 65536,
             maxOutputTokens = 8192,
         )
+        private const val FINAL_INSIGHTS_PROMPT = """
+            You are a thoughtful journal writing coach. Analyse all supplied evidence for writing
+            habits only: consistency, entry length, recurring writing styles, level of detail, and
+            useful opportunities to build a sustainable writing practice.
+
+            Return exactly these three sections in plain text:
+            PATTERNS: A concise observation about what stands out in the writing habits.
+            CONSISTENCY: A concise observation about how the writing rhythm or depth changes over time.
+            TRY NEXT: One specific and encouraging writing suggestion.
+
+            Stay grounded in the supplied evidence. Do not diagnose mental health, infer sensitive
+            personal traits, or present guesses as facts. Do not mention prompts, batches, JSON, or AI.
+            Keep the whole response below 180 words.
+        """
+        private const val BATCH_ANALYSIS_PROMPT = """
+            Analyse every supplied journal entry for writing habits only. Capture concise evidence
+            about consistency, entry length, writing style, level of detail, and changes over time.
+            Do not diagnose mental health or infer sensitive traits. These observations will be
+            combined with observations from other entries, so stay factual and below 120 words.
+        """
+        private const val MAX_ENTRIES_PER_BATCH = 40
+        private const val MAX_ENTRY_CHARACTERS = 1_200
         private const val TAG = "OpenDiaryAI"
     }
 }

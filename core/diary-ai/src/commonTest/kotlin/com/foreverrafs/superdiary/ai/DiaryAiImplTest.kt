@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.ai
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
+import com.foreverrafs.superdiary.domain.model.Diary
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -42,9 +43,18 @@ class DiaryAiImplTest {
     }
 
     @Test
-    fun `Should execute LLM call when querying diaries`() = runTest {
-        diaryAi.queryDiaries(emptyList())
+    fun `Should execute LLM call when generating writing insights`() = runTest {
+        diaryAi.generateWritingInsights(listOf(Diary(entry = "A journal entry")))
         assertThat(1).isEqualTo(promptExecutor.executeCalls)
+    }
+
+    @Test
+    fun `Should analyse every entry in context safe batches`() = runTest {
+        val diaries = List(81) { index -> Diary(entry = "Journal entry $index") }
+
+        diaryAi.generateWritingInsights(diaries)
+
+        assertThat(promptExecutor.executeCalls).isEqualTo(4)
     }
 
     @Test

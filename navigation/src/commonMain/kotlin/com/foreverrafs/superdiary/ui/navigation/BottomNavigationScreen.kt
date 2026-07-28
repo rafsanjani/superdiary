@@ -18,10 +18,10 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import androidx.navigation3.ui.NavDisplay
 import com.foreverrafs.auth.model.UserInfo
-import com.foreverrafs.superdiary.chat.presentation.screen.DiaryChatTab
 import com.foreverrafs.superdiary.dashboard.screen.DashboardTab
 import com.foreverrafs.superdiary.design.style.LocalRootAnimatedContentScope
 import com.foreverrafs.superdiary.favorite.screen.FavoriteTab
+import com.foreverrafs.superdiary.insights.presentation.screen.WritingInsightsTab
 import com.foreverrafs.superdiary.list.presentation.list.DiaryListTab
 import com.foreverrafs.superdiary.ui.components.SuperDiaryBottomBar
 
@@ -75,8 +75,8 @@ fun BottomNavigationScreen(
             color = MaterialTheme.colorScheme.background,
         ) {
             val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
-                entry<TopLevelRoute.DiaryChatTab> {
-                    DiaryChatTab(
+                entry<TopLevelRoute.WritingInsightsTab> {
+                    WritingInsightsTab(
                         snackbarHostState = snackbarHostState,
                         avatarUrl = userInfo?.avatarUrl,
                         onProfileClick = onProfileClick,
