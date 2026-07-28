@@ -7,6 +7,7 @@ import com.foreverrafs.superdiary.data.datasource.Syncable
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withTimeout
 
 class GetRecentEntriesUseCase(
@@ -29,7 +30,7 @@ class GetRecentEntriesUseCase(
                 }
 
                 logger.i(TAG) { "Sync completed: Fetching latest entries" }
-                dataSource.getLatest(count).first()
+                dataSource.getLatest(count).firstOrNull().orEmpty()
             },
         )
     } catch (e: Exception) {
