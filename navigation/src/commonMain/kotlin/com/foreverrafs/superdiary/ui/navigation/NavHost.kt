@@ -36,7 +36,7 @@ import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.CachePolicy
 import coil3.request.crossfade
 import com.foreverrafs.superdiary.auth.navigation.AuthNavigation
-import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
+import com.foreverrafs.superdiary.auth.register.AuthDeepLink
 import com.foreverrafs.superdiary.creatediary.navigation.CreateDiaryNavigation
 import com.foreverrafs.superdiary.design.components.BrandLogo
 import com.foreverrafs.superdiary.design.style.LocalRootAnimatedContentScope
@@ -215,18 +215,18 @@ fun getStartDestination(viewState: AppSessionState): NavKey = remember(viewState
     when (viewState) {
         is AppSessionState.Authenticated -> {
             when (viewState.linkType) {
-                DeeplinkContainer.LinkType.EmailConfirmation,
-                DeeplinkContainer.LinkType.MagicLink,
-                DeeplinkContainer.LinkType.Registration,
+                AuthDeepLink.LinkType.EmailConfirmation,
+                AuthDeepLink.LinkType.MagicLink,
+                AuthDeepLink.LinkType.Registration,
                 -> AppRoute.TopLevelGraph(
                     viewState.userInfo,
                 )
 
-                DeeplinkContainer.LinkType.PasswordRecovery -> AppRoute.AuthenticationGraph(
+                AuthDeepLink.LinkType.PasswordRecovery -> AppRoute.AuthenticationGraph(
                     requiresNewPassword = true,
                 )
 
-                DeeplinkContainer.LinkType.Invalid -> AppRoute.AuthenticationGraph(
+                AuthDeepLink.LinkType.Invalid -> AppRoute.AuthenticationGraph(
                     isFromDeepLink = true,
                     showLoginScreen = true,
                 )

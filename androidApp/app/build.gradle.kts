@@ -186,6 +186,8 @@ sentry {
 
 dependencies {
     implementation(libs.androidx.activity.compose)
+    implementation("androidx.navigation3:navigation3-runtime:1.2.0-alpha06")
+    implementation("androidx.navigation3:navigation3-ui:1.2.0-alpha06")
     implementation(libs.google.material)
     // TODO: Replace with sentry-bom from version catalog
     implementation(platform("io.sentry:sentry-bom:8.50.1"))
