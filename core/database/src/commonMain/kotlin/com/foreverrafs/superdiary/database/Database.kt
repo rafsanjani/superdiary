@@ -171,20 +171,16 @@ class Database(
     )
 
     fun update(diary: DiaryDb): Long {
-        try {
-            queries.update(
-                id = diary.id,
-                entry = diary.entry,
-                date = diary.date,
-                favorite = diary.isFavorite.asLong(),
-                location = LocationDb.fromString(diary.location),
-                updated_at = diary.updatedAt,
-                is_synced = diary.isSynced.asLong(),
-                is_marked_for_delete = diary.isMarkedForDelete.asLong(),
-            )
-        } catch (e: Exception) {
-            println(e.message)
-        }
+        queries.update(
+            id = diary.id,
+            entry = diary.entry,
+            date = diary.date,
+            favorite = diary.isFavorite.asLong(),
+            location = LocationDb.fromString(diary.location),
+            updated_at = diary.updatedAt,
+            is_synced = diary.isSynced.asLong(),
+            is_marked_for_delete = diary.isMarkedForDelete.asLong(),
+        )
 
         return queries.getAffectedRows().executeAsOne()
     }
