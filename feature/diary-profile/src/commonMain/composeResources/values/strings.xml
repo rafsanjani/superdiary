@@ -8,4 +8,11 @@
     <string name="profile_screen_daily_reminder_email">Daily reminder emails</string>
     <string name="profile_screen_daily_reminder_email_description">Receive a daily email reminder to write.</string>
     <string name="unique_email_address_label">Unique email address</string>
+    <string name="profile_weekly_summary_label">Weekly summary</string>
+    <string name="profile_on_this_day_label">On this day</string>
+    <string name="profile_latest_entries_label">Latest entries</string>
+    <string name="profile_sign_out_button">Sign out</string>
+    <string name="profile_navigate_back_content_description">Navigate back</string>
+    <string name="profile_edit_button">Edit Profile</string>
+    <string name="profile_sign_out_error">Error signing out</string>
 </resources>

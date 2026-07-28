@@ -59,11 +59,15 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.diary_auth.generated.resources.Res
+import superdiary.feature.diary_auth.generated.resources.brand_logo_content_description
+import superdiary.feature.diary_auth.generated.resources.email_placeholder
 import superdiary.feature.diary_auth.generated.resources.error_generic_error
 import superdiary.feature.diary_auth.generated.resources.error_invalid_credentials
 import superdiary.feature.diary_auth.generated.resources.error_no_credentials
 import superdiary.feature.diary_auth.generated.resources.error_user_already_registered
+import superdiary.feature.diary_auth.generated.resources.forgot_password_link
 import superdiary.feature.diary_auth.generated.resources.google_icon
+import superdiary.feature.diary_auth.generated.resources.invalid_or_expired_link_message
 import superdiary.feature.diary_auth.generated.resources.label_google_button
 import superdiary.feature.diary_auth.generated.resources.label_login
 import superdiary.feature.diary_auth.generated.resources.label_login_title
@@ -71,6 +75,7 @@ import superdiary.feature.diary_auth.generated.resources.label_password
 import superdiary.feature.diary_auth.generated.resources.label_register
 import superdiary.feature.diary_auth.generated.resources.label_register_message
 import superdiary.feature.diary_auth.generated.resources.label_username
+import superdiary.feature.diary_auth.generated.resources.login_divider_label
 import superdiary.feature.diary_auth.generated.resources.logo
 
 @Composable
@@ -91,6 +96,7 @@ fun LoginScreenContent(
     }
 
     val scope = rememberCoroutineScope()
+    val invalidLinkMessage = stringResource(Res.string.invalid_or_expired_link_message)
 
     when (viewState) {
         is LoginViewState.Error -> {
@@ -113,7 +119,7 @@ fun LoginScreenContent(
 
     LaunchedEffect(isFromDeeplink) {
         if (isFromDeeplink) {
-            snackbarHostState.showSnackbar("The link is invalid or has expired!")
+            snackbarHostState.showSnackbar(invalidLinkMessage)
         }
     }
 
@@ -136,7 +142,7 @@ fun LoginScreenContent(
 
                 BrandLogo(
                     modifier = Modifier.size(100.dp),
-                    contentDescription = "brand logo",
+                    contentDescription = stringResource(Res.string.brand_logo_content_description),
                 )
 
                 Spacer(modifier = Modifier.height(28.dp))
@@ -153,7 +159,7 @@ fun LoginScreenContent(
                         .fillMaxWidth()
                         .testTag("input_username"),
                     label = stringResource(Res.string.label_username),
-                    placeholder = "john.doe@gmail.com",
+                    placeholder = stringResource(Res.string.email_placeholder),
                     lineLimits = TextFieldLineLimits.SingleLine,
                     state = username,
                 )
@@ -257,7 +263,7 @@ private fun ResetPasswordText(
         textDecoration = TextDecoration.Underline,
         fontWeight = FontWeight.Bold,
         modifier = modifier.clickable { onResetPasswordClick() },
-        text = "Forgot password",
+        text = stringResource(Res.string.forgot_password_link),
     )
 }
 
@@ -311,7 +317,7 @@ private fun LoginDivider(modifier: Modifier = Modifier) {
 
         // Text
         Text(
-            text = "OR",
+            text = stringResource(Res.string.login_divider_label),
             style = MaterialTheme.typography.labelMedium,
         )
 

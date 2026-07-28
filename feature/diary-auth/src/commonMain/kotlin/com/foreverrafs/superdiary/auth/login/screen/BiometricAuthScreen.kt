@@ -23,9 +23,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.foreverrafs.superdiary.auth.login.BiometricLoginScreenState
 import com.foreverrafs.superdiary.auth.login.BiometricLoginScreenViewModel
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import superdiary.feature.diary_auth.generated.resources.Res
+import superdiary.feature.diary_auth.generated.resources.biometric_authentication_prompt
 import superdiary.feature.diary_auth.generated.resources.ic_fingerprint
+import superdiary.feature.diary_auth.generated.resources.sign_in_with_biometrics
 
 @Composable
 fun BiometricAuthScreen(
@@ -83,7 +86,7 @@ fun BiometricLoginScreenContent(
             Spacer(modifier = Modifier.height(100.dp))
 
             Text(
-                text = "Sign in with biometrics",
+                text = stringResource(Res.string.sign_in_with_biometrics),
                 style = MaterialTheme.typography.titleMedium,
             )
 
@@ -98,7 +101,7 @@ fun BiometricLoginScreenContent(
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "Authenticate using your device biometrics",
+                text = stringResource(Res.string.biometric_authentication_prompt),
                 style = MaterialTheme.typography.bodyMedium,
             )
         }

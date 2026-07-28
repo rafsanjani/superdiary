@@ -68,8 +68,17 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.diary_onboarding.generated.resources.Res
+import superdiary.feature.diary_onboarding.generated.resources.onboarding_capture_visual_title
 import superdiary.feature.diary_onboarding.generated.resources.onboarding_get_started
+import superdiary.feature.diary_onboarding.generated.resources.onboarding_memory_label
+import superdiary.feature.diary_onboarding.generated.resources.onboarding_mood_label
 import superdiary.feature.diary_onboarding.generated.resources.onboarding_next
+import superdiary.feature.diary_onboarding.generated.resources.onboarding_reflection_morning_subtitle
+import superdiary.feature.diary_onboarding.generated.resources.onboarding_reflection_morning_title
+import superdiary.feature.diary_onboarding.generated.resources.onboarding_reflection_outdoors_subtitle
+import superdiary.feature.diary_onboarding.generated.resources.onboarding_reflection_outdoors_title
+import superdiary.feature.diary_onboarding.generated.resources.onboarding_reflection_wins_subtitle
+import superdiary.feature.diary_onboarding.generated.resources.onboarding_reflection_wins_title
 import superdiary.feature.diary_onboarding.generated.resources.onboarding_skip
 
 private val Peach = Color(0xFFFFE1CF)
@@ -344,7 +353,7 @@ private fun CaptureVisual(
         ) {
             Text(
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 17.dp),
-                text = "Your day, remembered",
+                text = stringResource(Res.string.onboarding_capture_visual_title),
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
@@ -353,13 +362,13 @@ private fun CaptureVisual(
         }
 
         MiniLabel(
-            text = "MOOD",
+            text = stringResource(Res.string.onboarding_mood_label),
             modifier = Modifier
                 .align(Alignment.CenterStart)
                 .offset(x = 14.dp, y = 48.dp),
         )
         MiniLabel(
-            text = "MEMORY",
+            text = stringResource(Res.string.onboarding_memory_label),
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .offset(y = (-10).dp),
@@ -378,8 +387,8 @@ private fun InsightVisual(
             .background(MaterialTheme.colorScheme.primaryContainer),
     ) {
         ReflectionCard(
-            title = "A calmer morning",
-            subtitle = "Monday  ·  feeling focused",
+            title = stringResource(Res.string.onboarding_reflection_morning_title),
+            subtitle = stringResource(Res.string.onboarding_reflection_morning_subtitle),
             image = page.images[0],
             accent = Peach,
             modifier = Modifier
@@ -388,8 +397,8 @@ private fun InsightVisual(
                 .fillMaxWidth(0.90f),
         )
         ReflectionCard(
-            title = "A week of small wins",
-            subtitle = "Your energy is trending up",
+            title = stringResource(Res.string.onboarding_reflection_wins_title),
+            subtitle = stringResource(Res.string.onboarding_reflection_wins_subtitle),
             image = page.images[1],
             accent = Sage,
             modifier = Modifier
@@ -397,8 +406,8 @@ private fun InsightVisual(
                 .fillMaxWidth(0.82f),
         )
         ReflectionCard(
-            title = "Time outdoors",
-            subtitle = "Your brightest moments",
+            title = stringResource(Res.string.onboarding_reflection_outdoors_title),
+            subtitle = stringResource(Res.string.onboarding_reflection_outdoors_subtitle),
             image = page.images[2],
             accent = Color(0xFFFFCFAD),
             modifier = Modifier
@@ -587,7 +596,7 @@ private fun CopyBlock(page: OnboardingPage) {
     ) {
         Text(
             modifier = Modifier.widthIn(max = 350.dp),
-            text = page.headline,
+            text = stringResource(page.headline),
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Black,
@@ -598,7 +607,7 @@ private fun CopyBlock(page: OnboardingPage) {
         Spacer(Modifier.height(14.dp))
         Text(
             modifier = Modifier.widthIn(max = 330.dp),
-            text = page.body,
+            text = stringResource(page.body),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             lineHeight = 22.sp,

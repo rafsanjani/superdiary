@@ -64,10 +64,17 @@ import org.koin.compose.viewmodel.koinViewModel
 import superdiary.feature.diary_profile.generated.resources.Res
 import superdiary.feature.diary_profile.generated.resources.ic_arrow_back
 import superdiary.feature.diary_profile.generated.resources.ic_logout
+import superdiary.feature.diary_profile.generated.resources.profile_edit_button
+import superdiary.feature.diary_profile.generated.resources.profile_latest_entries_label
+import superdiary.feature.diary_profile.generated.resources.profile_navigate_back_content_description
+import superdiary.feature.diary_profile.generated.resources.profile_on_this_day_label
 import superdiary.feature.diary_profile.generated.resources.profile_screen_daily_reminder_email
 import superdiary.feature.diary_profile.generated.resources.profile_screen_daily_reminder_email_description
 import superdiary.feature.diary_profile.generated.resources.profile_screen_section_dashboard_cards
 import superdiary.feature.diary_profile.generated.resources.profile_screen_section_email_preferences
+import superdiary.feature.diary_profile.generated.resources.profile_sign_out_button
+import superdiary.feature.diary_profile.generated.resources.profile_sign_out_error
+import superdiary.feature.diary_profile.generated.resources.profile_weekly_summary_label
 import superdiary.feature.diary_profile.generated.resources.unique_email_address_label
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -120,9 +127,10 @@ fun ProfileScreenContent(
     val sharedTransitionScope = LocalSharedTransitionScope.current
     val animatedContentScope = LocalNavAnimatedContentScope.current
 
-    LaunchedEffect(viewState.errorMessage) {
-        if (viewState.errorMessage != null) {
-            snackBarkHostState.showSnackbar(viewState.errorMessage)
+    val signOutError = stringResource(Res.string.profile_sign_out_error)
+    LaunchedEffect(viewState.hasError) {
+        if (viewState.hasError) {
+            snackBarkHostState.showSnackbar(signOutError)
             currentOnConsumeErrorMessage()
         }
     }
@@ -180,7 +188,7 @@ fun ProfileScreenContent(
                         label = stringResource(Res.string.profile_screen_section_dashboard_cards),
                     ) {
                         CheckboxProfileItem(
-                            label = "Weekly summary",
+                            label = stringResource(Res.string.profile_weekly_summary_label),
                             checked = settings.showWeeklySummary,
                             onCheckChange = {
                                 onUpdateSettings(
@@ -192,13 +200,13 @@ fun ProfileScreenContent(
                         )
 
                         CheckboxProfileItem(
-                            label = "On this day",
+                            label = stringResource(Res.string.profile_on_this_day_label),
                             checked = true,
                             onCheckChange = {},
                         )
 
                         CheckboxProfileItem(
-                            label = "Latest entries",
+                            label = stringResource(Res.string.profile_latest_entries_label),
                             checked = settings.showLatestEntries,
                             onCheckChange = {
                                 onUpdateSettings(
@@ -274,7 +282,7 @@ fun ProfileScreenContent(
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 modifier = Modifier.padding(vertical = 8.dp),
-                                text = "Sign out",
+                                text = stringResource(Res.string.profile_sign_out_button),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.error,
                             )
@@ -298,7 +306,9 @@ private fun NavigateBackButton(
         Icon(
             modifier = Modifier.clip(CircleShape),
             painter = painterResource(Res.drawable.ic_arrow_back),
-            contentDescription = "Navigate back",
+            contentDescription = stringResource(
+                Res.string.profile_navigate_back_content_description,
+            ),
         )
     }
 }
@@ -343,7 +353,7 @@ private fun ProfileHeader(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {}) {
-            Text("Edit Profile")
+            Text(stringResource(Res.string.profile_edit_button))
         }
     }
 }

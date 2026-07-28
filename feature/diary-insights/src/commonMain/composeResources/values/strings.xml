@@ -1,0 +1,22 @@
+<resources>
+    <string name="writing_insights_title">Writing insights</string>
+    <string name="writing_insights_loading">Looking for patterns in your writing…</string>
+    <string name="writing_insights_empty_title">Your insights will grow with your diary</string>
+    <string name="writing_insights_empty_message">Write your first entry and come back here to see patterns in your writing habits.</string>
+    <string name="try_again_button">Try again</string>
+    <string name="writing_insights_disclaimer">AI insights send your entry text to the configured AI provider and may miss context. Use them as writing prompts, not professional advice.</string>
+    <string name="entries_stat_label">Entries</string>
+    <string name="total_words_stat_label">Total words</string>
+    <string name="average_length_stat_label">Average length</string>
+    <string name="longest_entry_stat_label">Longest entry</string>
+    <string name="word_count_value">%1$d words</string>
+    <string name="ai_writing_coach_title">AI writing coach</string>
+    <string name="reading_entries_message">Reading all your entries…</string>
+    <string name="refreshing_insights_message">Refreshing your insights…</string>
+    <string name="refresh_insights_button">Refresh insights</string>
+    <string name="writing_patterns_heading">Your writing patterns</string>
+    <string name="writing_rhythm_heading">Your writing rhythm</string>
+    <string name="try_next_heading">Try this next</string>
+    <string name="load_writing_history_error">We couldn't load your writing history.</string>
+    <string name="refresh_insight_error">We couldn't refresh your AI insight. Please try again.</string>
+</resources>

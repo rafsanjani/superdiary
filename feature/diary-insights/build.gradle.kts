@@ -22,6 +22,7 @@ kotlin {
             implementation(libs.jetbrains.compose.material3)
             implementation(libs.jetbrains.compose.runtime)
             implementation(libs.jetbrains.compose.preview)
+            implementation(libs.jetbrains.compose.resources)
             implementation(libs.jetbrains.lifecycle.viewmodel)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.compose.viewmodel)

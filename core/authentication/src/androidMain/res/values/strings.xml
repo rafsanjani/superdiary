@@ -1,0 +1,5 @@
+<resources>
+    <string name="biometric_login_title">Biometric login for Super Diary</string>
+    <string name="biometric_login_subtitle">Log in using your biometric credential</string>
+    <string name="biometric_login_cancel">Cancel</string>
+</resources>

@@ -12,7 +12,7 @@ data class PasswordResetViewState(
     val email: String = "",
     val isLoading: Boolean = false,
     val isEmailValid: Boolean = false,
-    val inputErrorMessage: String? = null,
+    val showInputError: Boolean = false,
     val isEmailSent: Boolean? = null,
 )
 
@@ -57,7 +57,7 @@ class PasswordResetViewModel(
             it.copy(
                 email = email,
                 isEmailValid = isEmailValid,
-                inputErrorMessage = if (!isEmailValid) "Please enter a valid email" else null,
+                showInputError = !isEmailValid,
             )
         }
     }

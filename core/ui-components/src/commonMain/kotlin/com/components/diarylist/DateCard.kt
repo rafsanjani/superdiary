@@ -16,12 +16,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.foreverrafs.superdiary.common.utils.format
 import kotlinx.datetime.LocalDate
+import org.jetbrains.compose.resources.stringResource
+import superdiary.core.ui_components.generated.resources.Res
+import superdiary.core.ui_components.generated.resources.diary_entry_content_description
 
 @Composable
 internal fun DateCard(
     date: LocalDate,
     modifier: Modifier = Modifier,
 ) {
+    val formattedDate = date.format("EEE dd MMMM yyyy")
+    val entryContentDescription = stringResource(
+        Res.string.diary_entry_content_description,
+        formattedDate,
+    )
+
     Box(
         modifier = modifier
             .fillMaxHeight()
@@ -38,7 +47,7 @@ internal fun DateCard(
     ) {
         Text(
             modifier = Modifier.semantics {
-                contentDescription = "Entry for ${date.format("EEE dd MMMM yyyy")}"
+                contentDescription = entryContentDescription
             },
             text = buildDateAnnotatedString(date),
             textAlign = TextAlign.Center,

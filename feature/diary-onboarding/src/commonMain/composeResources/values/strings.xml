@@ -3,4 +3,19 @@
     <string name="onboarding_back">Back</string>
     <string name="onboarding_next">Next</string>
     <string name="onboarding_get_started">Get started</string>
+    <string name="onboarding_capture_headline">Every day becomes a story worth keeping</string>
+    <string name="onboarding_capture_body">Capture notes, photos, places, and the little moments that make each day yours.</string>
+    <string name="onboarding_insights_headline">Understand the rhythm behind your days</string>
+    <string name="onboarding_insights_body">Gentle reflections reveal patterns in your moods, habits, and personal growth.</string>
+    <string name="onboarding_memories_headline">Keep every meaningful moment close</string>
+    <string name="onboarding_memories_body">Find old memories in seconds and keep your private story safely within reach.</string>
+    <string name="onboarding_capture_visual_title">Your day, remembered</string>
+    <string name="onboarding_mood_label">MOOD</string>
+    <string name="onboarding_memory_label">MEMORY</string>
+    <string name="onboarding_reflection_morning_title">A calmer morning</string>
+    <string name="onboarding_reflection_morning_subtitle">Monday  ·  feeling focused</string>
+    <string name="onboarding_reflection_wins_title">A week of small wins</string>
+    <string name="onboarding_reflection_wins_subtitle">Your energy is trending up</string>
+    <string name="onboarding_reflection_outdoors_title">Time outdoors</string>
+    <string name="onboarding_reflection_outdoors_subtitle">Your brightest moments</string>
 </resources>

@@ -2,9 +2,11 @@ package com.foreverrafs.superdiary.profile
 
 import app.cash.turbine.test
 import assertk.assertThat
+import assertk.assertions.isFalse
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
+import assertk.assertions.isTrue
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.preferences.DiaryPreference
@@ -85,11 +87,11 @@ class ProfileScreenViewModelTest {
             val state = awaitItem()
 
             // error messages should all be set by now
-            assertThat(state.errorMessage).isNotNull()
+            assertThat(state.hasError).isTrue()
 
             profileScreenViewModel.resetErrors()
             val currentState = awaitItem()
-            assertThat(currentState.errorMessage).isNull()
+            assertThat(currentState.hasError).isFalse()
         }
     }
 

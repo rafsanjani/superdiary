@@ -30,6 +30,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import org.jetbrains.compose.resources.stringResource
+import superdiary.core.ui_components.generated.resources.Res
+import superdiary.core.ui_components.generated.resources.selected_diaries_count
 
 @Composable
 internal fun DiarySelectionModifierBar(
@@ -81,7 +84,12 @@ internal fun DiarySelectionModifierBar(
                     // Only show selected diaries when we have an item selected to prevent
                     // weird Selected Diaries: 0 from showing
                     if (selectedIds.isNotEmpty()) {
-                        Text("Selected Diaries: ${selectedIds.size}")
+                        Text(
+                            stringResource(
+                                Res.string.selected_diaries_count,
+                                selectedIds.size,
+                            ),
+                        )
                     }
                 }
 

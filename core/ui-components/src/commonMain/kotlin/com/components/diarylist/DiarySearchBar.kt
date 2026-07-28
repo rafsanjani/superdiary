@@ -38,6 +38,10 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import superdiary.core.ui_components.generated.resources.Res
+import superdiary.core.ui_components.generated.resources.search_diaries_label
+import superdiary.core.ui_components.generated.resources.sort_diary_entries_content_description
 
 @Composable
 internal fun DiarySearchBar(
@@ -46,6 +50,7 @@ internal fun DiarySearchBar(
     onFilterClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val searchDiariesLabel = stringResource(Res.string.search_diaries_label)
     var query by rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -73,7 +78,7 @@ internal fun DiarySearchBar(
         TextField(
             modifier = modifier
                 .semantics(mergeDescendants = true) {
-                    contentDescription = "Search in diaries"
+                    contentDescription = searchDiariesLabel
                 }
                 .onFocusChanged {
                     isFocused = it.hasFocus
@@ -104,7 +109,9 @@ internal fun DiarySearchBar(
                         .clickable { onFilterClick() }
                         .padding(8.dp),
                     imageVector = Icons.AutoMirrored.Filled.Sort,
-                    contentDescription = "Sort diary entries",
+                    contentDescription = stringResource(
+                        Res.string.sort_diary_entries_content_description,
+                    ),
                 )
             },
             shape = RoundedCornerShape(cornerRadius),
@@ -113,7 +120,7 @@ internal fun DiarySearchBar(
                     modifier = Modifier
                         .clearAndSetSemantics { }
                         .alpha(0.5f),
-                    text = "Search in diaries",
+                    text = searchDiariesLabel,
                     style = MaterialTheme.typography.titleMedium,
                 )
             },

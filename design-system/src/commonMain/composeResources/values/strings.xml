@@ -11,6 +11,17 @@
     <string name="confirm_save_diary_cancel_button">Cancel</string>
     <string name="confirm_save_diary_negative_button">Don't save</string>
 
+    <string name="biometric_auth_dialog_title">Biometric Authentication</string>
+    <string name="biometric_auth_dialog_message">Do you want to enable biometric authentication?</string>
+    <string name="biometric_auth_dialog_negative_button">No</string>
+    <string name="biometric_auth_dialog_positive_button">Yes</string>
+
+    <string name="location_tags_dialog_title">Location Tags</string>
+    <string name="location_tags_dialog_message">Allow location permission to use your location to personalise your entries</string>
+    <string name="location_tags_dialog_settings_message">To use location tags in your entries, you need to enable location permission from your phone's settings menu</string>
+    <string name="location_tags_dialog_dont_ask_again">Don't ask again</string>
+    <string name="location_tags_dialog_proceed">Proceed</string>
+
     <!--  Labels  -->
     <string name="label_diary_ai">Diary AI:</string>
     <string name="label_add_entry">Add entry</string>
@@ -42,6 +53,8 @@
     <string name="content_description_save_entry">Save entry</string>
     <string name="content_description_delete_entry">Delete entry</string>
     <string name="content_description_button_login">Login Button</string>
+    <string name="content_description_show_password">Show password</string>
+    <string name="content_description_hide_password">Hide password</string>
 
     <!--  Formatted Strings  -->
     <string name="formatted_streak_days">%1$s days</string>

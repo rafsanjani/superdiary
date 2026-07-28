@@ -39,7 +39,7 @@ class PasswordResetViewModelTest {
             assertThat(state.email).isEmpty()
             assertThat(state.isLoading).isFalse()
             assertThat(state.isEmailValid).isFalse()
-            assertThat(state.inputErrorMessage).isNull()
+            assertThat(state.showInputError).isFalse()
             assertThat(state.isEmailSent).isNull()
 
             expectNoEvents()
@@ -121,7 +121,7 @@ class PasswordResetViewModelTest {
         viewModel.viewState.test {
             val state = expectMostRecentItem()
             assertThat(state.isEmailValid).isFalse()
-            assertThat(state.inputErrorMessage).isNotNull()
+            assertThat(state.showInputError).isTrue()
         }
     }
 

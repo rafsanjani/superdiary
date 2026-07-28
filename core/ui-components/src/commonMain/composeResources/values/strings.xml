@@ -1,0 +1,24 @@
+<resources>
+    <string name="diary_entry_content_description">Entry for %1$s</string>
+    <string name="favorite_updated_message">Favorite Updated!</string>
+    <string name="no_entry_found_message">No entry found!</string>
+    <string name="sort_and_filter_title">Sort and Filter</string>
+    <string name="sort_label">Sort</string>
+    <string name="date_label">Date</string>
+    <string name="words_label">Words</string>
+    <string name="filter_label">Filter</string>
+    <string name="selected_date_label">Date: %1$s</string>
+    <string name="select_date_label">Select Date</string>
+    <string name="reset_all_button">Reset All</string>
+    <string name="apply_button">Apply</string>
+    <string name="confirm_button">OK</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="search_diaries_label">Search in diaries</string>
+    <string name="sort_diary_entries_content_description">Sort diary entries</string>
+    <string name="selected_diaries_count">Selected Diaries: %1$d</string>
+    <string name="favorite_state_description">Favorite</string>
+    <string name="not_favorite_state_description">Not favorite</string>
+    <string name="toggle_favorite_action">Toggle Favorite</string>
+    <string name="preview_diary_entry">Entry %1$d</string>
+    <string name="preview_empty_content">Empty content</string>
+</resources>

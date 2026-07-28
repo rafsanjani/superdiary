@@ -86,7 +86,7 @@ class ProfileScreenSnapshotTest(
                             name = "Rafsanjani Aziz",
                             email = "foreverrafs@gmail.com",
                             avatarUrl = "",
-                            errorMessage = "Something went wrong",
+                            hasError = true,
                         ),
                         onConsumeErrorMessage = {},
                         isLogoutDialogVisible = false,

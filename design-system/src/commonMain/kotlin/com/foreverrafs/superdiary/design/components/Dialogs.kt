@@ -25,8 +25,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import superdiary.design_system.generated.resources.Res
 import superdiary.design_system.generated.resources.ic_share_location
+import superdiary.design_system.generated.resources.location_tags_dialog_dont_ask_again
+import superdiary.design_system.generated.resources.location_tags_dialog_message
+import superdiary.design_system.generated.resources.location_tags_dialog_proceed
+import superdiary.design_system.generated.resources.location_tags_dialog_settings_message
+import superdiary.design_system.generated.resources.location_tags_dialog_title
 
 @Composable
 expect fun ConfirmDeleteDialog(
@@ -130,7 +136,7 @@ fun LocationRationaleDialog(
                         modifier = Modifier.padding(16.dp),
                     ) {
                         Text(
-                            text = "Location Tags",
+                            text = stringResource(Res.string.location_tags_dialog_title),
                             textAlign = TextAlign.Center,
                             modifier = Modifier
                                 .padding(top = 5.dp)
@@ -141,11 +147,9 @@ fun LocationRationaleDialog(
                         )
 
                         val locationPermissionDialogMessage = if (isPermissionDeniedAlways) {
-                            """
-                                To use location tags in your entries, you need to enable location permission from your phone's settings menu
-                            """.trimIndent()
+                            stringResource(Res.string.location_tags_dialog_settings_message)
                         } else {
-                            "Allow location permission to use your location to personalise your entries"
+                            stringResource(Res.string.location_tags_dialog_message)
                         }
 
                         Text(
@@ -175,7 +179,7 @@ fun LocationRationaleDialog(
                                 onClick = onDontAskAgain,
                             ) {
                                 Text(
-                                    text = "Don't ask again",
+                                    text = stringResource(Res.string.location_tags_dialog_dont_ask_again),
                                     color = Color.Red,
                                     modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
                                 )
@@ -189,7 +193,7 @@ fun LocationRationaleDialog(
                             onClick = onRequestLocationPermission,
                         ) {
                             Text(
-                                text = "Proceed",
+                                text = stringResource(Res.string.location_tags_dialog_proceed),
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
                             )

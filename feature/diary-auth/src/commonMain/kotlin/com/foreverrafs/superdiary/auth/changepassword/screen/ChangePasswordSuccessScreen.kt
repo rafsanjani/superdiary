@@ -23,8 +23,12 @@ import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.components.TitleMediumText
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.diary_auth.generated.resources.Res
+import superdiary.feature.diary_auth.generated.resources.continue_button
 import superdiary.feature.diary_auth.generated.resources.ic_check_circle
+import superdiary.feature.diary_auth.generated.resources.password_changed_message
+import superdiary.feature.diary_auth.generated.resources.password_changed_title
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -55,7 +59,7 @@ fun ChangePasswordSuccessScreen(
                 modifier = Modifier.weight(0.3f),
             )
 
-            TitleMediumText("Password successfully changed")
+            TitleMediumText(stringResource(Res.string.password_changed_title))
 
             Spacer(
                 modifier = Modifier.height(24.dp),
@@ -70,14 +74,14 @@ fun ChangePasswordSuccessScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             BodyMediumText(
-                "You’re all set! Please remember to use your new password when logging back into the app",
+                stringResource(Res.string.password_changed_message),
             )
 
             Spacer(modifier = Modifier.weight(1f))
 
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
-                text = "Continue",
+                text = stringResource(Res.string.continue_button),
                 onClick = onContinueClick,
                 enabled = true,
             )

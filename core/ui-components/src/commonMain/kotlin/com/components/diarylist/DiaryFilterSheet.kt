@@ -44,6 +44,19 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
+import superdiary.core.ui_components.generated.resources.Res
+import superdiary.core.ui_components.generated.resources.apply_button
+import superdiary.core.ui_components.generated.resources.cancel_button
+import superdiary.core.ui_components.generated.resources.confirm_button
+import superdiary.core.ui_components.generated.resources.date_label
+import superdiary.core.ui_components.generated.resources.filter_label
+import superdiary.core.ui_components.generated.resources.reset_all_button
+import superdiary.core.ui_components.generated.resources.select_date_label
+import superdiary.core.ui_components.generated.resources.selected_date_label
+import superdiary.core.ui_components.generated.resources.sort_and_filter_title
+import superdiary.core.ui_components.generated.resources.sort_label
+import superdiary.core.ui_components.generated.resources.words_label
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,7 +100,7 @@ fun DiaryFilterSheet(
                 ),
         ) {
             Text(
-                text = "Sort and Filter",
+                text = stringResource(Res.string.sort_and_filter_title),
                 style = MaterialTheme.typography.headlineMedium,
             )
 
@@ -96,7 +109,7 @@ fun DiaryFilterSheet(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Sort",
+                text = stringResource(Res.string.sort_label),
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
             )
@@ -106,7 +119,7 @@ fun DiaryFilterSheet(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 DiaryFilterChip(
-                    label = "Date",
+                    label = stringResource(Res.string.date_label),
                     onSelectionChange = { selected ->
                         sortByDate = selected
 
@@ -118,7 +131,7 @@ fun DiaryFilterSheet(
                 )
 
                 DiaryFilterChip(
-                    label = "Words",
+                    label = stringResource(Res.string.words_label),
                     onSelectionChange = { selected ->
                         sortByWords = selected
 
@@ -133,7 +146,7 @@ fun DiaryFilterSheet(
             Spacer(modifier = Modifier.height(30.dp))
 
             Text(
-                text = "Filter",
+                text = stringResource(Res.string.filter_label),
                 style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
             )
@@ -161,7 +174,13 @@ fun DiaryFilterSheet(
                         showDatePickerDialog = true
                     },
                 ) {
-                    Text("Date: ${selectedDate ?: "Select Date"}")
+                    Text(
+                        stringResource(
+                            Res.string.selected_date_label,
+                            selectedDate?.toString()
+                                ?: stringResource(Res.string.select_date_label),
+                        ),
+                    )
                 }
             }
 
@@ -189,7 +208,7 @@ fun DiaryFilterSheet(
                         }
                         Spacer(modifier = Modifier.width(4.dp))
                     }
-                    Text("Reset All")
+                    Text(stringResource(Res.string.reset_all_button))
                 }
 
                 Button(
@@ -210,7 +229,7 @@ fun DiaryFilterSheet(
                         onDismissRequest()
                     },
                 ) {
-                    Text("Apply")
+                    Text(stringResource(Res.string.apply_button))
                 }
             }
         }
@@ -269,7 +288,7 @@ fun DiaryDatePicker(
                 },
                 enabled = true,
             ) {
-                Text("OK")
+                Text(stringResource(Res.string.confirm_button))
             }
         },
         dismissButton = {
@@ -277,7 +296,7 @@ fun DiaryDatePicker(
                 onClick = onDismissRequest,
             ) {
                 Text(
-                    text = "Cancel",
+                    text = stringResource(Res.string.cancel_button),
                     color = MaterialTheme.colorScheme.error,
                 )
             }
