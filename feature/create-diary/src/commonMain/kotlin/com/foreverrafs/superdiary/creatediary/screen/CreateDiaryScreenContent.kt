@@ -54,6 +54,7 @@ import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
 import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.create_diary.generated.resources.Res
 import superdiary.feature.create_diary.generated.resources.label_diary_ai
+import superdiary.feature.create_diary.generated.resources.word_count_suggestion
 
 /**
  * The main screen the user sees when they try to create a diary entry. It
@@ -260,7 +261,7 @@ private fun DiaryAISuggestionChip(words: Int, enabled: Boolean, onClick: () -> U
         ),
         label = {
             Text(
-                text = "$words Words",
+                text = stringResource(Res.string.word_count_suggestion, words),
                 style = MaterialTheme.typography.labelSmall,
             )
         },

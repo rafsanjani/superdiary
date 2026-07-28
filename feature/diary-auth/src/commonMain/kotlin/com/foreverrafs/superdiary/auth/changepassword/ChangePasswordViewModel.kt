@@ -18,7 +18,7 @@ internal class ChangePasswordViewModel(
     data class ChangePasswordScreenState(
         val passwordStrength: PasswordStrength? = null,
         val arePasswordsMatching: Boolean? = null,
-        val errorMessage: String? = null,
+        val hasError: Boolean = false,
         val isProcessing: Boolean? = false,
         val isSuccess: Boolean? = null,
     )
@@ -52,7 +52,7 @@ internal class ChangePasswordViewModel(
 
     private fun dismissErrorMessage() {
         _viewState.update {
-            it.copy(errorMessage = null, isSuccess = null)
+            it.copy(hasError = false, isSuccess = null)
         }
     }
 
@@ -147,7 +147,7 @@ internal class ChangePasswordViewModel(
                 // set the error message
                 _viewState.update {
                     it.copy(
-                        errorMessage = "Error submitting password change request.",
+                        hasError = true,
                         isSuccess = false,
                         arePasswordsMatching = null,
                         passwordStrength = null,

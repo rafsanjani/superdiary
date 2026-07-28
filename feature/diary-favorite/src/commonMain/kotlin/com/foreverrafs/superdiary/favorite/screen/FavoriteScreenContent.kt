@@ -18,6 +18,11 @@ import com.components.diarylist.DiaryList
 import com.components.diarylist.DiaryListActions
 import com.foreverrafs.superdiary.design.components.AppBar
 import com.foreverrafs.superdiary.domain.model.Diary
+import org.jetbrains.compose.resources.stringResource
+import superdiary.feature.diary_favorite.generated.resources.Res
+import superdiary.feature.diary_favorite.generated.resources.favorite_removed_message
+import superdiary.feature.diary_favorite.generated.resources.favorites_screen_title
+import superdiary.feature.diary_favorite.generated.resources.no_favorite_diary_message
 
 @Composable
 fun FavoriteScreenContent(
@@ -29,13 +34,15 @@ fun FavoriteScreenContent(
     avatarUrl: String? = null,
     onProfileClick: () -> Unit = {},
 ) {
+    val favoriteRemovedMessage = stringResource(Res.string.favorite_removed_message)
+
     Scaffold(
         modifier = modifier,
         topBar = {
             AppBar(
                 avatarUrl = avatarUrl,
                 onProfileClick = onProfileClick,
-                title = "Favorites",
+                title = stringResource(Res.string.favorites_screen_title),
             )
         },
     ) {
@@ -58,7 +65,7 @@ fun FavoriteScreenContent(
                         onDiaryClicked = onFavoriteClick,
                         onToggleFavorite = {
                             if (onToggleFavorite(it)) {
-                                snackbarHostState.showSnackbar("Favorite Removed")
+                                snackbarHostState.showSnackbar(favoriteRemovedMessage)
                             }
                             true
                         },
@@ -69,7 +76,7 @@ fun FavoriteScreenContent(
                             modifier = Modifier
                                 .padding(bottom = 64.dp)
                                 .testTag("empty_favorite_text"),
-                            text = "No favorite diary!",
+                            text = stringResource(Res.string.no_favorite_diary_message),
                             style = MaterialTheme.typography.titleMedium,
                             fontSize = 14.sp,
                         )

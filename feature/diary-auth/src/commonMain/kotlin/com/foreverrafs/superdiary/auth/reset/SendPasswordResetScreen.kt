@@ -38,12 +38,19 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import superdiary.feature.diary_auth.generated.resources.Res
+import superdiary.feature.diary_auth.generated.resources.brand_logo_content_description
+import superdiary.feature.diary_auth.generated.resources.email_placeholder
 import superdiary.feature.diary_auth.generated.resources.ic_check_circle
+import superdiary.feature.diary_auth.generated.resources.invalid_email_input_message
 import superdiary.feature.diary_auth.generated.resources.label_login_input_username
 import superdiary.feature.diary_auth.generated.resources.label_open_email
 import superdiary.feature.diary_auth.generated.resources.label_reset_password_button
 import superdiary.feature.diary_auth.generated.resources.label_reset_password_header
 import superdiary.feature.diary_auth.generated.resources.logo
+import superdiary.feature.diary_auth.generated.resources.password_reset_error_message
+import superdiary.feature.diary_auth.generated.resources.password_reset_instructions_after_email
+import superdiary.feature.diary_auth.generated.resources.password_reset_instructions_before_email
+import superdiary.feature.diary_auth.generated.resources.success_content_description
 
 @Composable
 fun SendPasswordResetEmailScreen(
@@ -73,10 +80,11 @@ fun SendPasswordResetEmailScreenContent(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val currentConsumeTransientState by rememberUpdatedState(consumeTransientState)
+    val passwordResetErrorMessage = stringResource(Res.string.password_reset_error_message)
 
     LaunchedEffect(viewState.isEmailSent) {
         if (viewState.isEmailSent != null && !viewState.isEmailSent) {
-            snackbarHostState.showSnackbar("Error sending password reset email")
+            snackbarHostState.showSnackbar(passwordResetErrorMessage)
             currentConsumeTransientState()
         }
     }
@@ -102,7 +110,7 @@ fun SendPasswordResetEmailScreenContent(
                 Image(
                     modifier = Modifier.size(100.dp),
                     painter = painterResource(Res.drawable.logo),
-                    contentDescription = "brand logo",
+                    contentDescription = stringResource(Res.string.brand_logo_content_description),
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -142,7 +150,7 @@ private fun SuccessScreen(
     Column {
         Image(
             painter = painterResource(Res.drawable.ic_check_circle),
-            contentDescription = "Success",
+            contentDescription = stringResource(Res.string.success_content_description),
             modifier = Modifier
                 .size(52.dp)
                 .align(
@@ -179,7 +187,7 @@ private fun SuccessScreen(
 @Composable
 fun passwordResetEmailSuccessMessage(email: String) = buildAnnotatedString {
     withStyle(MaterialTheme.typography.bodyMedium.toSpanStyle()) {
-        append("Detailed instructions on how to restore your account will be sent to you at ")
+        append(stringResource(Res.string.password_reset_instructions_before_email))
     }
 
     withStyle(
@@ -191,8 +199,7 @@ fun passwordResetEmailSuccessMessage(email: String) = buildAnnotatedString {
     }
 
     withStyle(MaterialTheme.typography.bodyMedium.toSpanStyle()) {
-        append("\n\n")
-        append("If you did not receive the email, please check your spam/junk folder.")
+        append(stringResource(Res.string.password_reset_instructions_after_email))
     }
 }
 
@@ -214,10 +221,14 @@ private fun InputScreen(
             modifier = Modifier.fillMaxWidth().testTag("input_email"),
             state = email,
             label = stringResource(Res.string.label_login_input_username),
-            placeholder = "john.doe@gmail.com",
+            placeholder = stringResource(Res.string.email_placeholder),
             lineLimits = TextFieldLineLimits.SingleLine,
             readOnly = viewState.isLoading,
-            errorLabel = viewState.inputErrorMessage,
+            errorLabel = if (viewState.showInputError) {
+                stringResource(Res.string.invalid_email_input_message)
+            } else {
+                null
+            },
             isError = !viewState.isEmailValid,
         )
 

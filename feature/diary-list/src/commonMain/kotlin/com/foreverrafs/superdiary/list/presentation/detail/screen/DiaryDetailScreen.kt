@@ -12,7 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.foreverrafs.superdiary.list.presentation.detail.DetailsViewModel
 import com.foreverrafs.superdiary.list.presentation.detail.DetailsViewState
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import superdiary.feature.diary_list.generated.resources.Res
+import superdiary.feature.diary_list.generated.resources.missing_selected_diary_message
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -46,7 +49,7 @@ fun DiaryDetailScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = "Selected diary is null. This shouldn't ever happen.",
+                    text = stringResource(Res.string.missing_selected_diary_message),
                 )
             }
         }

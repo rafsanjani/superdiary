@@ -25,6 +25,10 @@ import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.utils.durationLabel
 import kotlin.time.Clock
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
+import superdiary.core.ui_components.generated.resources.Res
+import superdiary.core.ui_components.generated.resources.favorite_updated_message
+import superdiary.core.ui_components.generated.resources.no_entry_found_message
 
 /**
  * Display a list of diaries from the database. We have different functions
@@ -61,6 +65,7 @@ fun DiaryList(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val loadedDiaries = diaries.itemSnapshotList.items
+    val favoriteUpdatedMessage = stringResource(Res.string.favorite_updated_message)
 
     // When the user inputs a search query, we still want to show them
     // the search bar instead of the original empty screen
@@ -131,7 +136,7 @@ fun DiaryList(
                         coroutineScope.launch {
                             if (diaryListActions.onToggleFavorite(diary)) {
                                 snackbarHostState.showSnackbar(
-                                    message = "Favorite Updated!",
+                                    message = favoriteUpdatedMessage,
                                 )
                             }
                         }
@@ -149,7 +154,7 @@ fun DiaryList(
             } else {
                 Text(
                     modifier = Modifier.padding(bottom = 64.dp),
-                    text = "No entry found!",
+                    text = stringResource(Res.string.no_entry_found_message),
                     style = MaterialTheme.typography.titleMedium,
                     fontSize = 14.sp,
                 )

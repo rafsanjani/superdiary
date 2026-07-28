@@ -10,6 +10,10 @@ import platform.UIKit.UIAlertController
 import platform.UIKit.UIAlertControllerStyleAlert
 import platform.UIKit.UIApplication
 import superdiary.design_system.generated.resources.Res
+import superdiary.design_system.generated.resources.biometric_auth_dialog_message
+import superdiary.design_system.generated.resources.biometric_auth_dialog_negative_button
+import superdiary.design_system.generated.resources.biometric_auth_dialog_positive_button
+import superdiary.design_system.generated.resources.biometric_auth_dialog_title
 import superdiary.design_system.generated.resources.confirm_delete_diary_dialog_message
 import superdiary.design_system.generated.resources.confirm_delete_diary_dialog_title
 import superdiary.design_system.generated.resources.confirm_delete_diary_negative_button
@@ -112,10 +116,10 @@ actual fun ConfirmBiometricAuthDialog(
     BasicCupertinoDialog(
         onNegativeButton = onDismiss,
         onPositiveButton = onEnableBiometric,
-        title = "Biometric Authentication",
-        message = "Do you want to enable biometric authentication?",
-        negativeButtonText = "No",
-        positiveButtonText = "Yes",
+        title = stringResource(Res.string.biometric_auth_dialog_title),
+        message = stringResource(Res.string.biometric_auth_dialog_message),
+        negativeButtonText = stringResource(Res.string.biometric_auth_dialog_negative_button),
+        positiveButtonText = stringResource(Res.string.biometric_auth_dialog_positive_button),
         onDismissRequest = onDismissRequest,
     )
 }

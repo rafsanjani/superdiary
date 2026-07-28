@@ -64,6 +64,9 @@ import kotlinx.datetime.todayIn
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.diary_dashboard.generated.resources.Res
+import superdiary.feature.diary_dashboard.generated.resources.dashboard_load_error_message
+import superdiary.feature.diary_dashboard.generated.resources.dashboard_title
+import superdiary.feature.diary_dashboard.generated.resources.formatted_streak_days
 import superdiary.feature.diary_dashboard.generated.resources.ic_close
 import superdiary.feature.diary_dashboard.generated.resources.label_add_entry
 import superdiary.feature.diary_dashboard.generated.resources.label_button_retry
@@ -100,6 +103,8 @@ fun DashboardScreenContent(
     }
 
     val coroutineScope = rememberCoroutineScope()
+    val dashboardLoadErrorMessage = stringResource(Res.string.dashboard_load_error_message)
+    val retryLabel = stringResource(Res.string.label_button_retry)
 
     val dashboardItems = when (state) {
         is DashboardViewModel.DashboardScreenState.Content -> {
@@ -116,8 +121,8 @@ fun DashboardScreenContent(
         is DashboardViewModel.DashboardScreenState.Error -> {
             coroutineScope.launch {
                 val result = snackbarHostState.showSnackbar(
-                    message = "Error loading dashboard items",
-                    actionLabel = "Retry",
+                    message = dashboardLoadErrorMessage,
+                    actionLabel = retryLabel,
                     withDismissAction = true,
                 )
 
@@ -155,7 +160,7 @@ fun DashboardScreenContent(
             AppBar(
                 avatarUrl = avatarUrl,
                 onProfileClick = onProfileClick,
-                title = "At a glance",
+                title = stringResource(Res.string.dashboard_title),
             )
         },
     ) {
@@ -369,14 +374,14 @@ private fun AtAGlance(
                 modifier = dashboardCardModifier,
                 title = stringResource(Res.string.label_glance_header_streak),
                 // Because formatted string resources do not cause recomposition
-                content = "$currentStreakCount days",
+                content = stringResource(Res.string.formatted_streak_days, currentStreakCount),
             )
 
             GlanceCard(
                 modifier = dashboardCardModifier,
                 title = stringResource(Res.string.label_glance_header_best_streak),
                 // Because formatted string resources do not cause recomposition
-                content = "$bestStreakCount days",
+                content = stringResource(Res.string.formatted_streak_days, bestStreakCount),
             )
         }
     }

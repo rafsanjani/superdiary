@@ -1,7 +1,14 @@
 package com.foreverrafs.superdiary.onboarding
 
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
 import superdiary.feature.diary_onboarding.generated.resources.Res
+import superdiary.feature.diary_onboarding.generated.resources.onboarding_capture_body
+import superdiary.feature.diary_onboarding.generated.resources.onboarding_capture_headline
+import superdiary.feature.diary_onboarding.generated.resources.onboarding_insights_body
+import superdiary.feature.diary_onboarding.generated.resources.onboarding_insights_headline
+import superdiary.feature.diary_onboarding.generated.resources.onboarding_memories_body
+import superdiary.feature.diary_onboarding.generated.resources.onboarding_memories_headline
 import superdiary.feature.diary_onboarding.generated.resources.onboarding_memory_1
 import superdiary.feature.diary_onboarding.generated.resources.onboarding_memory_2
 import superdiary.feature.diary_onboarding.generated.resources.onboarding_memory_3
@@ -17,8 +24,8 @@ enum class OnboardingPageTitle {
 
 data class OnboardingPage(
     val title: OnboardingPageTitle,
-    val headline: String,
-    val body: String,
+    val headline: StringResource,
+    val body: StringResource,
     val images: List<DrawableResource>,
 ) {
     companion object {
@@ -34,20 +41,20 @@ data class OnboardingPage(
         val defaultPages = listOf(
             OnboardingPage(
                 title = OnboardingPageTitle.CaptureYourDay,
-                headline = "Every day becomes a story worth keeping",
-                body = "Capture notes, photos, places, and the little moments that make each day yours.",
+                headline = Res.string.onboarding_capture_headline,
+                body = Res.string.onboarding_capture_body,
                 images = diaryImages,
             ),
             OnboardingPage(
                 title = OnboardingPageTitle.UnderstandYourPatterns,
-                headline = "Understand the rhythm behind your days",
-                body = "Gentle reflections reveal patterns in your moods, habits, and personal growth.",
+                headline = Res.string.onboarding_insights_headline,
+                body = Res.string.onboarding_insights_body,
                 images = diaryImages.drop(2) + diaryImages.take(2),
             ),
             OnboardingPage(
                 title = OnboardingPageTitle.KeepEveryMemoryClose,
-                headline = "Keep every meaningful moment close",
-                body = "Find old memories in seconds and keep your private story safely within reach.",
+                headline = Res.string.onboarding_memories_headline,
+                body = Res.string.onboarding_memories_body,
                 images = diaryImages.drop(4) + diaryImages.take(4),
             ),
         )

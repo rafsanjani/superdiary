@@ -25,7 +25,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import superdiary.design_system.generated.resources.Res
+import superdiary.design_system.generated.resources.content_description_hide_password
+import superdiary.design_system.generated.resources.content_description_show_password
 import superdiary.design_system.generated.resources.ic_visibility
 import superdiary.design_system.generated.resources.ic_visibility_off
 
@@ -134,7 +137,13 @@ fun PasswordInputField(
                 val visibilityIcon =
                     if (isPasswordVisible) Res.drawable.ic_visibility else Res.drawable.ic_visibility_off
 
-                val description = if (isPasswordVisible) "Show password" else "Hide password"
+                val description = stringResource(
+                    if (isPasswordVisible) {
+                        Res.string.content_description_hide_password
+                    } else {
+                        Res.string.content_description_show_password
+                    },
+                )
 
                 Icon(
                     painter = painterResource(visibilityIcon),

@@ -19,7 +19,11 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import superdiary.feature.create_diary.generated.resources.Res
+import superdiary.feature.create_diary.generated.resources.generate_diary_error_message
+import superdiary.feature.create_diary.generated.resources.generating_diary_message
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -36,6 +40,8 @@ internal fun CreateDiaryScreen(
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
     val locationPermissionState by viewModel.permissionState.collectAsStateWithLifecycle()
     val settings by viewModel.diarySettings.collectAsStateWithLifecycle(DiarySettings.Empty)
+    val generatingDiaryMessage = stringResource(Res.string.generating_diary_message)
+    val generateDiaryErrorMessage = stringResource(Res.string.generate_diary_error_message)
 
     var isGeneratingFromAI by remember {
         mutableStateOf(false)
@@ -72,11 +78,11 @@ internal fun CreateDiaryScreen(
                     )
                     .onStart {
                         isGeneratingFromAI = true
-                        richTextState.setHtml("<p>Generating diary...</p>")
+                        richTextState.setHtml("<p>$generatingDiaryMessage</p>")
                     }
                     .catch {
                         isGeneratingFromAI = false
-                        richTextState.setHtml("<p style=\"color:red\">Error generating entry</p>")
+                        richTextState.setHtml("<p style=\"color:red\">$generateDiaryErrorMessage</p>")
                     }
                     .onCompletion {
                         isGeneratingFromAI = false

@@ -41,8 +41,22 @@ import com.foreverrafs.superdiary.design.components.PasswordInputField
 import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.diary_auth.generated.resources.Res
+import superdiary.feature.diary_auth.generated.resources.change_password_error_message
+import superdiary.feature.diary_auth.generated.resources.error_passwords_do_not_match
 import superdiary.feature.diary_auth.generated.resources.logo
+import superdiary.feature.diary_auth.generated.resources.new_password_label
+import superdiary.feature.diary_auth.generated.resources.new_password_placeholder
+import superdiary.feature.diary_auth.generated.resources.password_strength_label
+import superdiary.feature.diary_auth.generated.resources.password_strength_medium
+import superdiary.feature.diary_auth.generated.resources.password_strength_none
+import superdiary.feature.diary_auth.generated.resources.password_strength_strong
+import superdiary.feature.diary_auth.generated.resources.password_strength_weak
+import superdiary.feature.diary_auth.generated.resources.repeat_password_label
+import superdiary.feature.diary_auth.generated.resources.repeat_password_placeholder
+import superdiary.feature.diary_auth.generated.resources.set_new_password_title
+import superdiary.feature.diary_auth.generated.resources.update_password_button
 
 @Composable
 internal fun ChangePasswordScreenContent(
@@ -55,6 +69,7 @@ internal fun ChangePasswordScreenContent(
     val currentOnPasswordChangeSuccess by rememberUpdatedState(onPasswordChangeSuccess)
     val currentOnDismissErrorMessage by rememberUpdatedState(onDismissErrorMessage)
     val snackbarHostState = remember { SnackbarHostState() }
+    val changePasswordErrorMessage = stringResource(Res.string.change_password_error_message)
 
     Scaffold(
         modifier = modifier,
@@ -81,12 +96,12 @@ internal fun ChangePasswordScreenContent(
                     }
                 }
 
-                LaunchedEffect(viewState.errorMessage) {
-                    viewState.errorMessage?.let {
+                LaunchedEffect(viewState.hasError) {
+                    if (viewState.hasError) {
                         passwordTextFieldState.clearText()
                         repeatPasswordTextFieldState.clearText()
 
-                        snackbarHostState.showSnackbar(message = it)
+                        snackbarHostState.showSnackbar(message = changePasswordErrorMessage)
                         currentOnDismissErrorMessage()
                     }
                 }
@@ -100,15 +115,15 @@ internal fun ChangePasswordScreenContent(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    text = "Set a new password",
+                    text = stringResource(Res.string.set_new_password_title),
                     style = MaterialTheme.typography.displayMedium,
                 )
 
                 Spacer(modifier = Modifier.height(48.dp))
 
                 PasswordInputField(
-                    label = "New Password",
-                    placeholder = "Enter your new password",
+                    label = stringResource(Res.string.new_password_label),
+                    placeholder = stringResource(Res.string.new_password_placeholder),
                     onPasswordChange = {
                         onAction(ChangePasswordScreenAction.PasswordValueChange(it))
                     },
@@ -125,13 +140,13 @@ internal fun ChangePasswordScreenContent(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 PasswordInputField(
-                    label = "Repeat password",
-                    placeholder = "Type your password again",
+                    label = stringResource(Res.string.repeat_password_label),
+                    placeholder = stringResource(Res.string.repeat_password_placeholder),
                     onPasswordChange = {
                         onAction(ChangePasswordScreenAction.ConfirmPasswordValueChange(it))
                     },
                     errorLabel = if (viewState.arePasswordsMatching == false) {
-                        "Passwords do not match"
+                        stringResource(Res.string.error_passwords_do_not_match)
                     } else {
                         null
                     },
@@ -150,7 +165,7 @@ internal fun ChangePasswordScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 32.dp),
-                    text = "Update Password",
+                    text = stringResource(Res.string.update_password_button),
                     enabled = isButtonEnabled,
                     onClick = {
                         onAction(ChangePasswordScreenAction.SubmitPasswordChange)
@@ -196,7 +211,7 @@ fun PasswordStrengthMeter(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 strength?.let {
-                    Text("Password strength:")
+                    Text(stringResource(Res.string.password_strength_label))
 
                     fun getColorForStrength(): Color = when (strength) {
                         PasswordStrength.None -> Color.White
@@ -205,7 +220,13 @@ fun PasswordStrengthMeter(
                         PasswordStrength.Strong -> Color(0xff093509) // Dark Green
                     }
 
-                    Text(text = strength.name, color = getColorForStrength())
+                    val strengthLabel = when (strength) {
+                        PasswordStrength.None -> Res.string.password_strength_none
+                        PasswordStrength.Weak -> Res.string.password_strength_weak
+                        PasswordStrength.Medium -> Res.string.password_strength_medium
+                        PasswordStrength.Strong -> Res.string.password_strength_strong
+                    }
+                    Text(text = stringResource(strengthLabel), color = getColorForStrength())
                 }
             }
         }

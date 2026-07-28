@@ -55,6 +55,16 @@ import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.domain.model.Diary
 import kotlin.time.Clock
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
+import superdiary.feature.diary_list.generated.resources.Res
+import superdiary.feature.diary_list.generated.resources.add_entry_button
+import superdiary.feature.diary_list.generated.resources.delete_diaries_error_message
+import superdiary.feature.diary_list.generated.resources.diaries_deleted_message
+import superdiary.feature.diary_list.generated.resources.diary_list_screen_title
+import superdiary.feature.diary_list.generated.resources.empty_diary_list_message
+import superdiary.feature.diary_list.generated.resources.empty_diary_list_title
+import superdiary.feature.diary_list.generated.resources.load_diaries_error_message
+import superdiary.feature.diary_list.generated.resources.loading_diaries_message
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
@@ -148,7 +158,7 @@ fun DiaryListScreenContent(
             AppBar(
                 avatarUrl = avatarUrl,
                 onProfileClick = onProfileClick,
-                title = "Reflections",
+                title = stringResource(Res.string.diary_list_screen_title),
             )
         },
         modifier = modifier,
@@ -218,6 +228,13 @@ private fun DiaryListContent(
     }
 
     val coroutineScope = rememberCoroutineScope()
+    val diariesDeletedMessage = stringResource(
+        Res.string.diaries_deleted_message,
+        selectedIds.size,
+    )
+    val deleteDiariesErrorMessage = stringResource(
+        Res.string.delete_diaries_error_message,
+    )
 
     if (showConfirmDeleteDialog) {
         ConfirmDeleteDialog(
@@ -232,9 +249,9 @@ private fun DiaryListContent(
                     )
 
                     val message = if (isSuccess) {
-                        "${selectedIds.size} item(s) deleted!"
+                        diariesDeletedMessage
                     } else {
-                        "Error deleting diaries"
+                        deleteDiariesErrorMessage
                     }
 
                     diaryListActions.onCancelSelection()
@@ -293,7 +310,7 @@ private fun LoadingContent(modifier: Modifier = Modifier) {
         CircularProgressIndicator()
 
         Text(
-            text = "Loading Diaries",
+            text = stringResource(Res.string.loading_diaries_message),
             textAlign = TextAlign.Center,
         )
     }
@@ -311,7 +328,7 @@ private fun EmptyDiaryList(
     ) {
         Text(
             textAlign = TextAlign.Center,
-            text = "Uh Uhh, it's very lonely here 😔",
+            text = stringResource(Res.string.empty_diary_list_title),
             style = MaterialTheme.typography.headlineMedium,
             fontSize = 20.sp,
         )
@@ -319,7 +336,7 @@ private fun EmptyDiaryList(
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = "Why don't you start writing something...",
+            text = stringResource(Res.string.empty_diary_list_message),
             style = MaterialTheme.typography.bodySmall,
             fontSize = 14.sp,
         )
@@ -328,7 +345,7 @@ private fun EmptyDiaryList(
             modifier = Modifier.createDiarySharedBounds(),
             onClick = onAddEntry,
         ) {
-            Text("Add Entry")
+            Text(stringResource(Res.string.add_entry_button))
         }
     }
 }
@@ -340,7 +357,7 @@ private fun ErrorContent(modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = "Error loading diaries",
+            text = stringResource(Res.string.load_diaries_error_message),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineMedium,
         )

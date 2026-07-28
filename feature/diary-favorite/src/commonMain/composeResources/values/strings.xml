@@ -1,0 +1,5 @@
+<resources>
+    <string name="favorites_screen_title">Favorites</string>
+    <string name="favorite_removed_message">Favorite Removed</string>
+    <string name="no_favorite_diary_message">No favorite diary!</string>
+</resources>

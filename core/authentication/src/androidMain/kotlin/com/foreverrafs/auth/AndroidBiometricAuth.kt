@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricPrompt
+import com.foreverrafs.superdiary.core.authentication.R
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 class AndroidBiometricAuth(
@@ -31,9 +32,9 @@ class AndroidBiometricAuth(
             }
 
             val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Biometric login for superdiary")
-                .setSubtitle("Log in using your biometric credential")
-                .setNegativeButtonText("Cancel")
+                .setTitle(activity.getString(R.string.biometric_login_title))
+                .setSubtitle(activity.getString(R.string.biometric_login_subtitle))
+                .setNegativeButtonText(activity.getString(R.string.biometric_login_cancel))
                 .setAllowedAuthenticators(BIOMETRIC_STRONG)
                 .build()
 

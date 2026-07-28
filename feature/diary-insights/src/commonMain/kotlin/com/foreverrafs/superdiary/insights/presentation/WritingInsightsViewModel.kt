@@ -22,13 +22,18 @@ import kotlinx.coroutines.launch
 sealed interface WritingInsightsViewState {
     data object Loading : WritingInsightsViewState
     data object Empty : WritingInsightsViewState
-    data class Error(val message: String) : WritingInsightsViewState
+    data class Error(val error: WritingInsightsError) : WritingInsightsViewState
     data class Content(
         val stats: WritingStats,
         val insights: List<WritingInsightTheme> = emptyList(),
         val isGenerating: Boolean = false,
-        val errorText: String? = null,
+        val error: WritingInsightsError? = null,
     ) : WritingInsightsViewState
+}
+
+enum class WritingInsightsError {
+    LoadHistory,
+    RefreshInsights,
 }
 
 class WritingInsightsViewModel(
@@ -52,7 +57,7 @@ class WritingInsightsViewModel(
             .catch { error ->
                 logger.e(TAG, error) { "Unable to load entries for writing insights" }
                 mutableViewState.update {
-                    WritingInsightsViewState.Error("We couldn't load your writing history.")
+                    WritingInsightsViewState.Error(WritingInsightsError.LoadHistory)
                 }
             }
             .collectLatest { entries ->
@@ -79,7 +84,7 @@ class WritingInsightsViewModel(
     fun dismissError() {
         mutableViewState.update { state ->
             if (state is WritingInsightsViewState.Content) {
-                state.copy(errorText = null)
+                state.copy(error = null)
             } else {
                 state
             }
@@ -110,8 +115,8 @@ class WritingInsightsViewModel(
             content.copy(
                 insights = insights.ifEmpty { content.insights },
                 isGenerating = false,
-                errorText = if (insights.isEmpty()) {
-                    "We couldn't refresh your AI insight. Please try again."
+                error = if (insights.isEmpty()) {
+                    WritingInsightsError.RefreshInsights
                 } else {
                     null
                 },

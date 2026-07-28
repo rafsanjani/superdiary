@@ -77,6 +77,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import org.jetbrains.compose.resources.stringResource
+import superdiary.core.ui_components.generated.resources.Res
+import superdiary.core.ui_components.generated.resources.favorite_state_description
+import superdiary.core.ui_components.generated.resources.not_favorite_state_description
+import superdiary.core.ui_components.generated.resources.preview_diary_entry
+import superdiary.core.ui_components.generated.resources.preview_empty_content
+import superdiary.core.ui_components.generated.resources.toggle_favorite_action
 
 private enum class Anchors {
     Start,
@@ -92,6 +99,9 @@ fun DiaryItem(
     onToggleFavorite: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val favoriteDescription = stringResource(Res.string.favorite_state_description)
+    val notFavoriteDescription = stringResource(Res.string.not_favorite_state_description)
+    val toggleFavoriteAction = stringResource(Res.string.toggle_favorite_action)
     val transition = updateTransition(selected, label = "selected")
     val padding by transition.animateDp(label = "padding") { _ ->
         if (inSelectionMode) 4.dp else 0.dp
@@ -158,14 +168,14 @@ fun DiaryItem(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.semantics {
                     stateDescription = if (diary.isFavorite) {
-                        "Favorite"
+                        favoriteDescription
                     } else {
-                        "Not favorite"
+                        notFavoriteDescription
                     }
 
                     customActions = listOf(
                         CustomAccessibilityAction(
-                            label = "Toggle Favorite",
+                            label = toggleFavoriteAction,
                             action = {
                                 onToggleFavorite()
                                 true
@@ -311,7 +321,7 @@ internal fun buildDateAnnotatedString(date: LocalDate): AnnotatedString =
 private fun Preview() {
     val items = (0..20).map {
         Diary(
-            entry = "Entry $it",
+            entry = stringResource(Res.string.preview_diary_entry, it),
             id = it.toLong(),
             date = Clock.System.now(),
             isFavorite = true,
@@ -333,7 +343,7 @@ private fun Preview() {
             onDeleteDiaries = {},
             showSearchBar = false,
             emptyContent = {
-                Text("Empty content")
+                Text(stringResource(Res.string.preview_empty_content))
             },
             snackbarHostState = SnackbarHostState(),
         )

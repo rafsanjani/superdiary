@@ -7,7 +7,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import com.foreverrafs.superdiary.dashboard.DashboardViewModel
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import superdiary.feature.diary_dashboard.generated.resources.Res
+import superdiary.feature.diary_dashboard.generated.resources.favorite_updated_message
 
 @Composable
 fun DashboardTab(
@@ -20,6 +23,7 @@ fun DashboardTab(
     val screenModel: DashboardViewModel = koinViewModel()
     val screenState by screenModel.state.collectAsState()
     val coroutineScope = rememberCoroutineScope()
+    val favoriteUpdatedMessage = stringResource(Res.string.favorite_updated_message)
 
     DashboardScreenContent(
         avatarUrl = avatarUrl,
@@ -29,7 +33,7 @@ fun DashboardTab(
         onToggleFavorite = {
             coroutineScope.launch {
                 if (screenModel.toggleFavorite(it)) {
-                    snackbarHostState.showSnackbar("Favorite Updated")
+                    snackbarHostState.showSnackbar(favoriteUpdatedMessage)
                 }
             }
         },

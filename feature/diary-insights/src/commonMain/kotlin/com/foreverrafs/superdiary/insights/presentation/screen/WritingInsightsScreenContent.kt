@@ -35,7 +35,31 @@ import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.insights.domain.model.WritingInsightTheme
 import com.foreverrafs.superdiary.insights.domain.model.WritingInsightThemeType
 import com.foreverrafs.superdiary.insights.domain.model.WritingStats
+import com.foreverrafs.superdiary.insights.presentation.WritingInsightsError
 import com.foreverrafs.superdiary.insights.presentation.WritingInsightsViewState
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
+import superdiary.feature.diary_insights.generated.resources.Res
+import superdiary.feature.diary_insights.generated.resources.ai_writing_coach_title
+import superdiary.feature.diary_insights.generated.resources.average_length_stat_label
+import superdiary.feature.diary_insights.generated.resources.entries_stat_label
+import superdiary.feature.diary_insights.generated.resources.load_writing_history_error
+import superdiary.feature.diary_insights.generated.resources.longest_entry_stat_label
+import superdiary.feature.diary_insights.generated.resources.reading_entries_message
+import superdiary.feature.diary_insights.generated.resources.refresh_insight_error
+import superdiary.feature.diary_insights.generated.resources.refresh_insights_button
+import superdiary.feature.diary_insights.generated.resources.refreshing_insights_message
+import superdiary.feature.diary_insights.generated.resources.total_words_stat_label
+import superdiary.feature.diary_insights.generated.resources.try_again_button
+import superdiary.feature.diary_insights.generated.resources.try_next_heading
+import superdiary.feature.diary_insights.generated.resources.word_count_value
+import superdiary.feature.diary_insights.generated.resources.writing_insights_disclaimer
+import superdiary.feature.diary_insights.generated.resources.writing_insights_empty_message
+import superdiary.feature.diary_insights.generated.resources.writing_insights_empty_title
+import superdiary.feature.diary_insights.generated.resources.writing_insights_loading
+import superdiary.feature.diary_insights.generated.resources.writing_insights_title
+import superdiary.feature.diary_insights.generated.resources.writing_patterns_heading
+import superdiary.feature.diary_insights.generated.resources.writing_rhythm_heading
 
 @Composable
 fun WritingInsightsScreenContent(
@@ -48,7 +72,8 @@ fun WritingInsightsScreenContent(
     onDismissError: () -> Unit = {},
 ) {
     val currentOnDismissError by rememberUpdatedState(onDismissError)
-    val errorText = (screenState as? WritingInsightsViewState.Content)?.errorText
+    val error = (screenState as? WritingInsightsViewState.Content)?.error
+    val errorText = error?.let { stringResource(it.stringResource) }
 
     LaunchedEffect(errorText) {
         errorText?.let { message ->
@@ -66,7 +91,7 @@ fun WritingInsightsScreenContent(
             AppBar(
                 avatarUrl = avatarUrl,
                 onProfileClick = onProfileClick,
-                title = "Writing insights",
+                title = stringResource(Res.string.writing_insights_title),
             )
         },
     ) { contentPadding ->
@@ -82,7 +107,7 @@ fun WritingInsightsScreenContent(
                 WritingInsightsViewState.Empty -> EmptyContent()
 
                 is WritingInsightsViewState.Error -> ErrorContent(
-                    message = screenState.message,
+                    message = stringResource(screenState.error.stringResource),
                     onRetry = onRefresh,
                 )
 
@@ -103,7 +128,7 @@ private fun LoadingContent() {
     ) {
         CircularProgressIndicator()
         Text(
-            text = "Looking for patterns in your writing…",
+            text = stringResource(Res.string.writing_insights_loading),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
@@ -117,12 +142,12 @@ private fun EmptyContent() {
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Text(
-            text = "Your insights will grow with your diary",
+            text = stringResource(Res.string.writing_insights_empty_title),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineLarge,
         )
         Text(
-            text = "Write your first entry and come back here to see patterns in your writing habits.",
+            text = stringResource(Res.string.writing_insights_empty_message),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyMedium,
@@ -146,7 +171,7 @@ private fun ErrorContent(
             style = MaterialTheme.typography.bodyMedium,
         )
         Button(onClick = onRetry) {
-            Text("Try again")
+            Text(stringResource(Res.string.try_again_button))
         }
     }
 }
@@ -177,7 +202,7 @@ private fun InsightsContent(
 
         item {
             Text(
-                text = "AI insights send your entry text to the configured AI provider and may miss context. Use them as writing prompts, not professional advice.",
+                text = stringResource(Res.string.writing_insights_disclaimer),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.labelSmall,
             )
@@ -193,12 +218,12 @@ private fun StatsSection(stats: WritingStats) {
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             StatCard(
-                label = "Entries",
+                label = stringResource(Res.string.entries_stat_label),
                 value = stats.entriesAnalyzed.toString(),
                 modifier = Modifier.weight(1f),
             )
             StatCard(
-                label = "Total words",
+                label = stringResource(Res.string.total_words_stat_label),
                 value = stats.totalWords.toString(),
                 modifier = Modifier.weight(1f),
             )
@@ -208,13 +233,13 @@ private fun StatsSection(stats: WritingStats) {
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             StatCard(
-                label = "Average length",
-                value = "${stats.averageWordsPerEntry} words",
+                label = stringResource(Res.string.average_length_stat_label),
+                value = stringResource(Res.string.word_count_value, stats.averageWordsPerEntry),
                 modifier = Modifier.weight(1f),
             )
             StatCard(
-                label = "Longest entry",
-                value = "${stats.longestEntryWords} words",
+                label = stringResource(Res.string.longest_entry_stat_label),
+                value = stringResource(Res.string.word_count_value, stats.longestEntryWords),
                 modifier = Modifier.weight(1f),
             )
         }
@@ -260,7 +285,7 @@ private fun InsightThemesSection(
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Text(
-            text = "AI writing coach",
+            text = stringResource(Res.string.ai_writing_coach_title),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
         )
@@ -287,9 +312,9 @@ private fun InsightThemesSection(
                     )
                     Text(
                         text = if (insights.isEmpty()) {
-                            "Reading all your entries…"
+                            stringResource(Res.string.reading_entries_message)
                         } else {
-                            "Refreshing your insights…"
+                            stringResource(Res.string.refreshing_insights_message)
                         },
                         style = MaterialTheme.typography.labelSmall,
                     )
@@ -297,7 +322,7 @@ private fun InsightThemesSection(
             }
         } else {
             OutlinedButton(onClick = onRefresh) {
-                Text("Refresh insights")
+                Text(stringResource(Res.string.refresh_insights_button))
             }
         }
     }
@@ -330,7 +355,13 @@ private fun InsightThemeCard(insight: WritingInsightTheme) {
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
-                text = insight.heading,
+                text = stringResource(
+                    when (insight.type) {
+                        WritingInsightThemeType.Patterns -> Res.string.writing_patterns_heading
+                        WritingInsightThemeType.Consistency -> Res.string.writing_rhythm_heading
+                        WritingInsightThemeType.TryNext -> Res.string.try_next_heading
+                    },
+                ),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
             )
@@ -390,10 +421,14 @@ private fun WritingInsightsPreviewLoading() {
 private fun WritingInsightsPreviewError() {
     SuperDiaryPreviewTheme {
         WritingInsightsScreenContent(
-            screenState = WritingInsightsViewState.Error(
-                message = "Error loading insights",
-            ),
+            screenState = WritingInsightsViewState.Error(WritingInsightsError.LoadHistory),
             snackbarHostState = SnackbarHostState(),
         )
     }
 }
+
+private val WritingInsightsError.stringResource: StringResource
+    get() = when (this) {
+        WritingInsightsError.LoadHistory -> Res.string.load_writing_history_error
+        WritingInsightsError.RefreshInsights -> Res.string.refresh_insight_error
+    }

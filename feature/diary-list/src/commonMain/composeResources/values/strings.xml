@@ -1,3 +1,12 @@
 <resources>
     <string name="label_diary_deleted">Diary Deleted!</string>
+    <string name="diary_list_screen_title">Reflections</string>
+    <string name="diaries_deleted_message">%1$d item(s) deleted!</string>
+    <string name="delete_diaries_error_message">Error deleting diaries</string>
+    <string name="loading_diaries_message">Loading Diaries</string>
+    <string name="empty_diary_list_title">Uh Uhh, it's very lonely here 😔</string>
+    <string name="empty_diary_list_message">Why don't you start writing something...</string>
+    <string name="add_entry_button">Add Entry</string>
+    <string name="load_diaries_error_message">Error loading diaries</string>
+    <string name="missing_selected_diary_message">Selected diary is null. This shouldn't ever happen.</string>
 </resources>

@@ -9,14 +9,7 @@ enum class WritingInsightThemeType {
 data class WritingInsightTheme(
     val type: WritingInsightThemeType,
     val content: String,
-) {
-    val heading: String
-        get() = when (type) {
-            WritingInsightThemeType.Patterns -> "Your writing patterns"
-            WritingInsightThemeType.Consistency -> "Your writing rhythm"
-            WritingInsightThemeType.TryNext -> "Try this next"
-        }
-}
+)
 
 fun String.toWritingInsightThemes(): List<WritingInsightTheme> {
     val response = trim()

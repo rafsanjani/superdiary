@@ -4,8 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
+import assertk.assertions.isTrue
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
@@ -226,7 +228,7 @@ class ChangePasswordViewModelTest {
             val state = expectMostRecentItem()
 
             assertThat(state.isSuccess).isNull()
-            assertThat(state.errorMessage).isNull()
+            assertThat(state.hasError).isFalse()
         }
     }
 
@@ -242,7 +244,7 @@ class ChangePasswordViewModelTest {
         viewModel.viewState.test {
             val state = expectMostRecentItem()
 
-            assertThat(state.errorMessage).isNotNull()
+            assertThat(state.hasError).isTrue()
             assertThat(state.isSuccess).isEqualTo(false)
         }
     }

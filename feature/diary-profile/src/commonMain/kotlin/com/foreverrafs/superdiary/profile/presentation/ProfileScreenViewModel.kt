@@ -19,7 +19,7 @@ data class ProfileScreenViewData(
     val email: String = "",
     val avatarUrl: String = "",
     val uniqueEmailAddress: String = "",
-    val errorMessage: String? = null,
+    val hasError: Boolean = false,
     val isLogoutSuccess: Boolean? = null,
 )
 
@@ -67,7 +67,7 @@ class ProfileScreenViewModel(
                 it.copy(isLogoutSuccess = true)
             } else {
                 it.copy(
-                    errorMessage = "Error signing out",
+                    hasError = true,
                 )
             }
         }
@@ -82,7 +82,7 @@ class ProfileScreenViewModel(
     fun resetErrors() {
         _viewState.update {
             it.copy(
-                errorMessage = null,
+                hasError = false,
                 isLogoutSuccess = null,
             )
         }

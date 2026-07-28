@@ -46,19 +46,24 @@ import com.foreverrafs.superdiary.design.components.SuperDiaryInputField
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.diary_auth.generated.resources.Res
+import superdiary.feature.diary_auth.generated.resources.brand_logo_content_description
 import superdiary.feature.diary_auth.generated.resources.error_email_required
+import superdiary.feature.diary_auth.generated.resources.error_fallback
 import superdiary.feature.diary_auth.generated.resources.error_invalid_email
 import superdiary.feature.diary_auth.generated.resources.error_name_required
 import superdiary.feature.diary_auth.generated.resources.error_password_required
 import superdiary.feature.diary_auth.generated.resources.error_passwords_do_not_match
 import superdiary.feature.diary_auth.generated.resources.error_reenter_password_required
 import superdiary.feature.diary_auth.generated.resources.label_already_have_account
+import superdiary.feature.diary_auth.generated.resources.label_login_input_username
 import superdiary.feature.diary_auth.generated.resources.label_login_link
 import superdiary.feature.diary_auth.generated.resources.label_name
 import superdiary.feature.diary_auth.generated.resources.label_password
 import superdiary.feature.diary_auth.generated.resources.label_reenter_password
 import superdiary.feature.diary_auth.generated.resources.label_register
 import superdiary.feature.diary_auth.generated.resources.label_register_title
+import superdiary.feature.diary_auth.generated.resources.name_placeholder
+import superdiary.feature.diary_auth.generated.resources.registration_email_placeholder
 
 @Composable
 internal fun RegisterScreenContent(
@@ -91,6 +96,7 @@ internal fun RegisterScreenContent(
     val errorPasswordRequired = stringResource(Res.string.error_password_required)
     val errorReenterPasswordRequired = stringResource(Res.string.error_reenter_password_required)
     val errorPasswordsDoNotMatch = stringResource(Res.string.error_passwords_do_not_match)
+    val fallbackError = stringResource(Res.string.error_fallback)
 
     LaunchedEffect(viewState) {
         when (viewState) {
@@ -139,7 +145,7 @@ internal fun RegisterScreenContent(
             is RegisterScreenState.Error -> {
                 enableRegisterButton = true
                 snackbarHostState.showSnackbar(
-                    message = viewState.error.message ?: "An error occurred",
+                    message = viewState.error.message ?: fallbackError,
                 )
             }
         }
@@ -164,7 +170,7 @@ internal fun RegisterScreenContent(
 
                 BrandLogo(
                     modifier = Modifier.size(100.dp),
-                    contentDescription = "brand logo",
+                    contentDescription = stringResource(Res.string.brand_logo_content_description),
                 )
 
                 Spacer(modifier = Modifier.height(28.dp))
@@ -183,7 +189,7 @@ internal fun RegisterScreenContent(
                         .testTag("input_name"),
                     label = stringResource(Res.string.label_name),
                     state = name,
-                    placeholder = "John Doe",
+                    placeholder = stringResource(Res.string.name_placeholder),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
                     ),
@@ -202,9 +208,9 @@ internal fun RegisterScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("input_email"),
-                    label = "Email",
+                    label = stringResource(Res.string.label_login_input_username),
                     state = email,
-                    placeholder = "john@doe.com",
+                    placeholder = stringResource(Res.string.registration_email_placeholder),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next,
