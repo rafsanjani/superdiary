@@ -18,7 +18,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,6 +30,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.foreverrafs.superdiary.design.components.AppBar
+import com.foreverrafs.superdiary.design.components.BodyLargeText
+import com.foreverrafs.superdiary.design.components.BodyMediumText
+import com.foreverrafs.superdiary.design.components.HeadlineLargeText
+import com.foreverrafs.superdiary.design.components.LabelLargeText
+import com.foreverrafs.superdiary.design.components.LabelSmallText
+import com.foreverrafs.superdiary.design.components.TitleMediumText
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.insights.domain.model.WritingInsightTheme
 import com.foreverrafs.superdiary.insights.domain.model.WritingInsightThemeType
@@ -127,7 +132,7 @@ private fun LoadingContent() {
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         CircularProgressIndicator()
-        Text(
+        BodyLargeText(
             text = stringResource(Res.string.writing_insights_loading),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -141,16 +146,14 @@ private fun EmptyContent() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text(
+        HeadlineLargeText(
             text = stringResource(Res.string.writing_insights_empty_title),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.headlineLarge,
         )
-        Text(
+        BodyMediumText(
             text = stringResource(Res.string.writing_insights_empty_message),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }
@@ -165,13 +168,12 @@ private fun ErrorContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text(
+        BodyMediumText(
             text = message,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium,
         )
         Button(onClick = onRetry) {
-            Text(stringResource(Res.string.try_again_button))
+            LabelLargeText(stringResource(Res.string.try_again_button))
         }
     }
 }
@@ -201,10 +203,9 @@ private fun InsightsContent(
         }
 
         item {
-            Text(
+            LabelSmallText(
                 text = stringResource(Res.string.writing_insights_disclaimer),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.labelSmall,
             )
         }
     }
@@ -261,15 +262,13 @@ private fun StatCard(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            Text(
+            TitleMediumText(
                 text = value,
-                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
             )
-            Text(
+            LabelSmallText(
                 text = label,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.labelSmall,
             )
         }
     }
@@ -284,9 +283,8 @@ private fun InsightThemesSection(
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text(
+        TitleMediumText(
             text = stringResource(Res.string.ai_writing_coach_title),
-            style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
         )
 
@@ -310,19 +308,18 @@ private fun InsightThemesSection(
                         modifier = Modifier.size(22.dp),
                         strokeWidth = 2.dp,
                     )
-                    Text(
+                    LabelSmallText(
                         text = if (insights.isEmpty()) {
                             stringResource(Res.string.reading_entries_message)
                         } else {
                             stringResource(Res.string.refreshing_insights_message)
                         },
-                        style = MaterialTheme.typography.labelSmall,
                     )
                 }
             }
         } else {
             OutlinedButton(onClick = onRefresh) {
-                Text(stringResource(Res.string.refresh_insights_button))
+                LabelLargeText(stringResource(Res.string.refresh_insights_button))
             }
         }
     }
@@ -354,7 +351,7 @@ private fun InsightThemeCard(insight: WritingInsightTheme) {
             modifier = Modifier.padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Text(
+            TitleMediumText(
                 text = stringResource(
                     when (insight.type) {
                         WritingInsightThemeType.Patterns -> Res.string.writing_patterns_heading
@@ -362,12 +359,10 @@ private fun InsightThemeCard(insight: WritingInsightTheme) {
                         WritingInsightThemeType.TryNext -> Res.string.try_next_heading
                     },
                 ),
-                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
             )
-            Text(
+            BodyMediumText(
                 text = insight.content,
-                style = MaterialTheme.typography.bodyMedium,
             )
         }
     }

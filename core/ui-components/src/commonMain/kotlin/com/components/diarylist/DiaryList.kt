@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.compose.LazyPagingItems
+import com.foreverrafs.superdiary.design.components.TitleMediumText
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.utils.durationLabel
 import kotlin.time.Clock
@@ -152,10 +152,9 @@ fun DiaryList(
             if (emptyContent != null) {
                 emptyContent()
             } else {
-                Text(
+                TitleMediumText(
                     modifier = Modifier.padding(bottom = 64.dp),
                     text = stringResource(Res.string.no_entry_found_message),
-                    style = MaterialTheme.typography.titleMedium,
                     fontSize = 14.sp,
                 )
             }

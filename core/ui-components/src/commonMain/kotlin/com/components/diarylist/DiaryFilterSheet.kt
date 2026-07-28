@@ -28,7 +28,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberStandardBottomSheetState
@@ -40,6 +39,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.foreverrafs.superdiary.design.components.HeadlineMediumText
+import com.foreverrafs.superdiary.design.components.LabelLargeText
+import com.foreverrafs.superdiary.design.components.LabelSmallText
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -99,18 +101,16 @@ fun DiaryFilterSheet(
                         .calculateBottomPadding(),
                 ),
         ) {
-            Text(
+            HeadlineMediumText(
                 text = stringResource(Res.string.sort_and_filter_title),
-                style = MaterialTheme.typography.headlineMedium,
             )
 
             HorizontalDivider()
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
+            LabelSmallText(
                 text = stringResource(Res.string.sort_label),
-                style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
             )
 
@@ -145,9 +145,8 @@ fun DiaryFilterSheet(
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            Text(
+            LabelSmallText(
                 text = stringResource(Res.string.filter_label),
-                style = MaterialTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
             )
 
@@ -174,7 +173,7 @@ fun DiaryFilterSheet(
                         showDatePickerDialog = true
                     },
                 ) {
-                    Text(
+                    LabelLargeText(
                         stringResource(
                             Res.string.selected_date_label,
                             selectedDate?.toString()
@@ -204,11 +203,11 @@ fun DiaryFilterSheet(
                 ) {
                     if (count != 0) {
                         Badge {
-                            Text(count.toString())
+                            LabelSmallText(count.toString())
                         }
                         Spacer(modifier = Modifier.width(4.dp))
                     }
-                    Text(stringResource(Res.string.reset_all_button))
+                    LabelLargeText(stringResource(Res.string.reset_all_button))
                 }
 
                 Button(
@@ -229,7 +228,7 @@ fun DiaryFilterSheet(
                         onDismissRequest()
                     },
                 ) {
-                    Text(stringResource(Res.string.apply_button))
+                    LabelLargeText(stringResource(Res.string.apply_button))
                 }
             }
         }
@@ -246,7 +245,7 @@ private fun DiaryFilterChip(
     FilterChip(
         selected = selected,
         onClick = { onSelectionChange(!selected) },
-        label = { Text(label) },
+        label = { LabelLargeText(label) },
         leadingIcon = {
             if (selected) {
                 Icon(
@@ -288,14 +287,14 @@ fun DiaryDatePicker(
                 },
                 enabled = true,
             ) {
-                Text(stringResource(Res.string.confirm_button))
+                LabelLargeText(stringResource(Res.string.confirm_button))
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismissRequest,
             ) {
-                Text(
+                LabelLargeText(
                     text = stringResource(Res.string.cancel_button),
                     color = MaterialTheme.colorScheme.error,
                 )

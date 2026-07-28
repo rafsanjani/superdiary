@@ -5,13 +5,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation3.runtime.NavKey
+import com.foreverrafs.superdiary.design.components.LabelSmallText
 import com.foreverrafs.superdiary.ui.navigation.SuperDiaryTab
 
 @Composable
@@ -54,9 +54,8 @@ private fun RowScope.BottomNavigationItem(
             )
         },
         label = {
-            Text(
+            LabelSmallText(
                 text = tab.title,
-                style = MaterialTheme.typography.labelSmall,
                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
             )
         },

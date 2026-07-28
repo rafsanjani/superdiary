@@ -29,7 +29,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,8 +49,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
+import com.foreverrafs.superdiary.design.components.BodySmallText
 import com.foreverrafs.superdiary.design.components.Image
+import com.foreverrafs.superdiary.design.components.LabelLargeText
+import com.foreverrafs.superdiary.design.components.LabelSmallText
 import com.foreverrafs.superdiary.design.components.PROFILE_IMAGE_SHARED_ELEMENT_KEY
+import com.foreverrafs.superdiary.design.components.TitleMediumText
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
@@ -234,11 +237,10 @@ fun ProfileScreenContent(
                                 )
                             },
                         )
-                        Text(
+                        LabelSmallText(
                             text = stringResource(
                                 Res.string.profile_screen_daily_reminder_email_description,
                             ),
-                            style = MaterialTheme.typography.labelSmall,
                             modifier = Modifier
                                 .alpha(0.6f)
                                 .padding(start = 16.dp, bottom = 12.dp),
@@ -247,15 +249,13 @@ fun ProfileScreenContent(
 
                     Spacer(modifier = Modifier.weight(1f))
 
-                    Text(
+                    BodySmallText(
                         text = stringResource(Res.string.unique_email_address_label),
-                        style = MaterialTheme.typography.bodySmall,
                     )
 
                     SelectionContainer {
-                        Text(
+                        LabelSmallText(
                             text = viewState.uniqueEmailAddress,
-                            style = MaterialTheme.typography.labelSmall,
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold,
                         )
@@ -280,10 +280,9 @@ fun ProfileScreenContent(
                             )
 
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(
+                            BodySmallText(
                                 modifier = Modifier.padding(vertical = 8.dp),
                                 text = stringResource(Res.string.profile_sign_out_button),
-                                style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.error,
                             )
                         }
@@ -340,20 +339,18 @@ private fun ProfileHeader(
         }
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
+        TitleMediumText(
             text = viewState.name,
-            style = MaterialTheme.typography.titleMedium,
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(
+        BodySmallText(
             text = viewState.email,
-            style = MaterialTheme.typography.bodySmall,
         )
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {}) {
-            Text(stringResource(Res.string.profile_edit_button))
+            LabelLargeText(stringResource(Res.string.profile_edit_button))
         }
     }
 }
@@ -366,10 +363,9 @@ private fun ProfileSection(
     Column(
         modifier = Modifier.fillMaxWidth(),
     ) {
-        Text(
+        LabelSmallText(
             text = label,
             modifier = Modifier.align(Alignment.Start).padding(start = 4.dp),
-            style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.SemiBold,
         )
 
@@ -411,9 +407,8 @@ private fun CheckboxProfileItem(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
             }
-            Text(
+            BodySmallText(
                 text = label,
-                style = MaterialTheme.typography.bodySmall,
                 color = labelColor,
             )
         }

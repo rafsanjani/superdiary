@@ -42,6 +42,7 @@ kover {
         "**/*Preview*",
         // Compose screens
         "**/*Tab*",
+        "*ScreenContent*",
         // Koin modules and all that shit
         "**/di/*",
         // iOS view controller

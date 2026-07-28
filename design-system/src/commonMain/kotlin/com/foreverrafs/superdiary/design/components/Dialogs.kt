@@ -13,7 +13,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -71,30 +70,26 @@ fun BasicMaterialDialog(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
         title = {
-            Text(
+            TitleMediumText(
                 text = title,
-                style = MaterialTheme.typography.titleMedium,
             )
         },
         text = {
-            Text(
+            BodyMediumText(
                 text = message,
-                style = MaterialTheme.typography.bodyMedium,
             )
         },
         confirmButton = {
             TextButton(onClick = onPositiveButton) {
-                Text(
+                LabelMediumText(
                     text = positiveButtonText,
-                    style = MaterialTheme.typography.labelMedium,
                 )
             }
         },
         dismissButton = {
             TextButton(onClick = onNegativeButton) {
-                Text(
+                LabelMediumText(
                     text = negativeButtonText,
-                    style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.error,
                 )
             }
@@ -135,13 +130,12 @@ fun LocationRationaleDialog(
                     Column(
                         modifier = Modifier.padding(16.dp),
                     ) {
-                        Text(
+                        LabelLargeText(
                             text = stringResource(Res.string.location_tags_dialog_title),
                             textAlign = TextAlign.Center,
                             modifier = Modifier
                                 .padding(top = 5.dp)
                                 .fillMaxWidth(),
-                            style = MaterialTheme.typography.labelLarge,
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
                         )
@@ -152,7 +146,7 @@ fun LocationRationaleDialog(
                             stringResource(Res.string.location_tags_dialog_message)
                         }
 
-                        Text(
+                        BodyMediumText(
                             text = locationPermissionDialogMessage,
                             textAlign = TextAlign.Center,
                             modifier = Modifier
@@ -162,7 +156,6 @@ fun LocationRationaleDialog(
                                     end = 25.dp,
                                 )
                                 .fillMaxWidth(),
-                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
 
@@ -178,7 +171,7 @@ fun LocationRationaleDialog(
                                     .testTag("request_location_cancel"),
                                 onClick = onDontAskAgain,
                             ) {
-                                Text(
+                                LabelLargeText(
                                     text = stringResource(Res.string.location_tags_dialog_dont_ask_again),
                                     color = Color.Red,
                                     modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
@@ -192,7 +185,7 @@ fun LocationRationaleDialog(
                                 .testTag("request_location_proceed"),
                             onClick = onRequestLocationPermission,
                         ) {
-                            Text(
+                            LabelLargeText(
                                 text = stringResource(Res.string.location_tags_dialog_proceed),
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),

@@ -40,7 +40,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -63,6 +62,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.foreverrafs.superdiary.design.components.BodyMediumText
+import com.foreverrafs.superdiary.design.components.HeadlineLargeText
+import com.foreverrafs.superdiary.design.components.LabelLargeText
+import com.foreverrafs.superdiary.design.components.LabelMediumText
+import com.foreverrafs.superdiary.design.components.LabelSmallText
+import com.foreverrafs.superdiary.design.components.TitleMediumText
+import com.foreverrafs.superdiary.design.components.TitleSmallText
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
@@ -180,10 +186,9 @@ fun OnboardingScreenContent(
                     { selectedPageIndex = (selectedPageIndex + 1).coerceAtMost(lastPageIndex) }
                 },
             ) {
-                Text(
+                TitleSmallText(
                     text = stringResource(if (isFinalPage) Res.string.onboarding_get_started else Res.string.onboarding_next),
                     fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleSmall,
                 )
             }
         }
@@ -214,7 +219,7 @@ private fun StoryNavigation(
                 onClick = onBack,
                 contentPadding = PaddingValues(0.dp),
             ) {
-                Text(
+                LabelLargeText(
                     text = "<",
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Black,
@@ -257,7 +262,7 @@ private fun StoryNavigation(
             onClick = onSkip,
             contentPadding = PaddingValues(horizontal = 4.dp),
         ) {
-            Text(
+            LabelMediumText(
                 text = stringResource(Res.string.onboarding_skip),
                 color = if (isFinalPage) {
                     Color.Transparent
@@ -265,7 +270,6 @@ private fun StoryNavigation(
                     MaterialTheme.colorScheme.onSurfaceVariant
                 },
                 fontWeight = FontWeight.SemiBold,
-                style = MaterialTheme.typography.labelMedium,
             )
         }
     }
@@ -351,13 +355,12 @@ private fun CaptureVisual(
             shape = RoundedCornerShape(100),
             shadowElevation = 10.dp,
         ) {
-            Text(
+            TitleMediumText(
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 17.dp),
                 text = stringResource(Res.string.onboarding_capture_visual_title),
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium,
             )
         }
 
@@ -499,20 +502,18 @@ private fun ReflectionCard(
             PhotoBubble(image = image, size = 38.dp)
             Spacer(Modifier.width(10.dp))
             Column(Modifier.weight(1f)) {
-                Text(
+                BodyMediumText(
                     text = title,
                     color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.bodyMedium,
                 )
-                Text(
+                LabelSmallText(
                     text = subtitle,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.labelSmall,
                 )
             }
         }
@@ -578,12 +579,11 @@ private fun BoxScope.MiniLabel(
         shape = RoundedCornerShape(100),
         shadowElevation = 5.dp,
     ) {
-        Text(
+        LabelSmallText(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
             text = text,
             color = MaterialTheme.colorScheme.inverseOnSurface,
             fontWeight = FontWeight.Black,
-            style = MaterialTheme.typography.labelSmall,
         )
     }
 }
@@ -594,7 +594,7 @@ private fun CopyBlock(page: OnboardingPage) {
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(
+        HeadlineLargeText(
             modifier = Modifier.widthIn(max = 350.dp),
             text = stringResource(page.headline),
             color = MaterialTheme.colorScheme.onBackground,
@@ -602,16 +602,14 @@ private fun CopyBlock(page: OnboardingPage) {
             fontWeight = FontWeight.Black,
             lineHeight = 36.sp,
             letterSpacing = 0.sp,
-            style = MaterialTheme.typography.headlineLarge,
         )
         Spacer(Modifier.height(14.dp))
-        Text(
+        BodyMediumText(
             modifier = Modifier.widthIn(max = 330.dp),
             text = stringResource(page.body),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             lineHeight = 22.sp,
-            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }

@@ -17,7 +17,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,8 +31,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.foreverrafs.superdiary.design.components.BodyMediumText
 import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.components.SuperDiaryInputField
+import com.foreverrafs.superdiary.design.components.TitleLargeText
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -115,9 +116,8 @@ fun SendPasswordResetEmailScreenContent(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Text(
+                TitleLargeText(
                     text = stringResource(Res.string.label_reset_password_header),
-                    style = MaterialTheme.typography.titleLarge,
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -163,9 +163,8 @@ private fun SuccessScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
+        BodyMediumText(
             text = passwordResetEmailSuccessMessage(email),
-            style = MaterialTheme.typography.bodyMedium,
         )
 
         Spacer(modifier = Modifier.weight(1f))

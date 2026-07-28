@@ -22,7 +22,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,10 +48,13 @@ import com.foreverrafs.auth.InvalidCredentialsException
 import com.foreverrafs.auth.NoCredentialsException
 import com.foreverrafs.auth.UserAlreadyRegisteredException
 import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.superdiary.design.components.BodyMediumText
 import com.foreverrafs.superdiary.design.components.BrandLogo
+import com.foreverrafs.superdiary.design.components.LabelMediumText
 import com.foreverrafs.superdiary.design.components.PasswordInputField
 import com.foreverrafs.superdiary.design.components.PrimaryButton
 import com.foreverrafs.superdiary.design.components.SuperDiaryInputField
+import com.foreverrafs.superdiary.design.components.TitleLargeText
 import com.foreverrafs.superdiary.design.style.SuperDiaryTheme
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -147,9 +149,8 @@ fun LoginScreenContent(
 
                 Spacer(modifier = Modifier.height(28.dp))
 
-                Text(
+                TitleLargeText(
                     text = stringResource(Res.string.label_login_title),
-                    style = MaterialTheme.typography.titleLarge,
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -247,7 +248,7 @@ private fun RegisterText(
         }
     }
 
-    Text(
+    BodyMediumText(
         modifier = modifier,
         text = registerText,
     )
@@ -258,8 +259,7 @@ private fun ResetPasswordText(
     onResetPasswordClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Text(
-        style = MaterialTheme.typography.bodyMedium,
+    BodyMediumText(
         textDecoration = TextDecoration.Underline,
         fontWeight = FontWeight.Bold,
         modifier = modifier.clickable { onResetPasswordClick() },
@@ -292,10 +292,9 @@ private fun GoogleButton(
                 contentDescription = null,
                 modifier = Modifier.size(32.dp),
             )
-            Text(
+            LabelMediumText(
                 text = stringResource(Res.string.label_google_button),
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.labelMedium,
             )
         }
     }
@@ -316,9 +315,8 @@ private fun LoginDivider(modifier: Modifier = Modifier) {
         )
 
         // Text
-        Text(
+        LabelMediumText(
             text = stringResource(Res.string.login_divider_label),
-            style = MaterialTheme.typography.labelMedium,
         )
 
         // Right Divider
