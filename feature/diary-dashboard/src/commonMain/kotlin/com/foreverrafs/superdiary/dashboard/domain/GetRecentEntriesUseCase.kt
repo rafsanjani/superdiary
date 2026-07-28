@@ -7,7 +7,7 @@ import com.foreverrafs.superdiary.data.datasource.Syncable
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withTimeout
 
 class GetRecentEntriesUseCase(
@@ -21,19 +21,16 @@ class GetRecentEntriesUseCase(
 
         Result.Success(
             data = withTimeout(11_000) {
-                flow {
-                    val syncState = dataSource.initialSyncState.first {
-                        it == InitialSyncState.Completed || it == InitialSyncState.Failed
-                    }
+                val syncState = dataSource.initialSyncState.first {
+                    it == InitialSyncState.Completed || it == InitialSyncState.Failed
+                }
 
-                    if (syncState == InitialSyncState.Failed) {
-                        logger.w(TAG) { "Initial sync failed; continuing with local data." }
-                    }
+                if (syncState == InitialSyncState.Failed) {
+                    logger.w(TAG) { "Initial sync failed; continuing with local data." }
+                }
 
-                    logger.i(TAG) { "Sync completed: Fetching latest entries" }
-                    val data = dataSource.getLatest(count).first()
-                    emit(data)
-                }.first { it.isNotEmpty() }
+                logger.i(TAG) { "Sync completed: Fetching latest entries" }
+                dataSource.getLatest(count).firstOrNull().orEmpty()
             },
         )
     } catch (e: Exception) {
