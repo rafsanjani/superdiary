@@ -2,10 +2,10 @@ package com.foreverrafs.superdiary.dashboard
 
 import app.cash.turbine.test
 import assertk.assertThat
+import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
-import assertk.assertions.isNotEmpty
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
@@ -177,16 +177,16 @@ class DashboardViewModelTest {
     }
 
     @Test
-    fun `Should show error screen when loading diaries throw an error`() = runTest {
+    fun `Should show empty content when an account has no diaries`() = runTest {
         every { dataSource.getLatest(any()) } returns flowOf(emptyList())
 
         val viewModel = createDashboardViewModel()
 
         viewModel.state.test {
             val state =
-                awaitUntil { it is DashboardViewModel.DashboardScreenState.Error } as DashboardViewModel.DashboardScreenState.Error
+                awaitUntil { it is DashboardViewModel.DashboardScreenState.Content } as DashboardViewModel.DashboardScreenState.Content
 
-            assertThat(state.message).isNotEmpty()
+            assertThat(state.latestEntries).isEmpty()
         }
     }
 
