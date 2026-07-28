@@ -29,7 +29,7 @@ kotlin {
 
                 // feature modules
                 implementation(projects.feature.diaryFavorite)
-                implementation(projects.feature.diaryChat)
+                implementation(projects.feature.diaryInsights)
                 implementation(projects.feature.createDiary)
                 implementation(projects.feature.diaryProfile)
                 implementation(projects.feature.diaryAuth)

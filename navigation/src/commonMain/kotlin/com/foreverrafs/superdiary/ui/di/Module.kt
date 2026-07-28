@@ -3,7 +3,6 @@ package com.foreverrafs.superdiary.ui.di
 import com.foreverrafs.auth.di.authModule
 import com.foreverrafs.superdiary.ai.di.diaryAiModule
 import com.foreverrafs.superdiary.auth.di.diaryAuthModule
-import com.foreverrafs.superdiary.chat.di.diaryChatModule
 import com.foreverrafs.superdiary.common.utils.di.utilsModule
 import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
@@ -14,6 +13,7 @@ import com.foreverrafs.superdiary.database.di.databaseModule
 import com.foreverrafs.superdiary.di.platformModule
 import com.foreverrafs.superdiary.di.useCaseModule
 import com.foreverrafs.superdiary.favorite.di.favoriteModule
+import com.foreverrafs.superdiary.insights.di.writingInsightsModule
 import com.foreverrafs.superdiary.list.di.diaryListModule
 import com.foreverrafs.superdiary.profile.di.profileModule
 import com.foreverrafs.superdiary.ui.AppViewModel
@@ -47,5 +47,5 @@ fun compositeModule(
     dashboardModule,
     diaryAuthModule,
     favoriteModule,
-    diaryChatModule,
+    writingInsightsModule,
 )

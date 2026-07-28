@@ -1,14 +1,14 @@
 package com.foreverrafs.superdiary.ui.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.StackedBarChart
 import androidx.compose.material.icons.outlined.BarChart
+import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.NavKey
 import androidx.savedstate.serialization.SavedStateConfiguration
@@ -43,21 +43,25 @@ sealed interface TopLevelRoute : SuperDiaryTab {
     }
 
     @Serializable
-    data object DiaryChatTab : TopLevelRoute {
-        override val selectedIcon: ImageVector = Icons.AutoMirrored.Filled.Chat
-        override val icon: ImageVector = Icons.AutoMirrored.Outlined.Chat
-        override val title: String = "Diary AI"
+    data object WritingInsightsTab : TopLevelRoute {
+        override val selectedIcon: ImageVector = Icons.Filled.Lightbulb
+        override val icon: ImageVector = Icons.Outlined.Lightbulb
+        override val title: String = "Insights"
     }
 
     companion object Companion {
-        val Items: Set<TopLevelRoute> = setOf(DashboardTab, DiaryList, FavoriteTab, DiaryChatTab)
+        val Items: Set<TopLevelRoute> =
+            setOf(DashboardTab, DiaryList, FavoriteTab, WritingInsightsTab)
 
         val SavedStateConfiguration = SavedStateConfiguration {
             serializersModule = SerializersModule {
                 polymorphic(baseClass = NavKey::class) {
                     subclass(subclass = DashboardTab::class, DashboardTab.serializer())
                     subclass(subclass = FavoriteTab::class, FavoriteTab.serializer())
-                    subclass(subclass = DiaryChatTab::class, DiaryChatTab.serializer())
+                    subclass(
+                        subclass = WritingInsightsTab::class,
+                        WritingInsightsTab.serializer(),
+                    )
                     subclass(subclass = DiaryList::class, DiaryList.serializer())
                 }
             }

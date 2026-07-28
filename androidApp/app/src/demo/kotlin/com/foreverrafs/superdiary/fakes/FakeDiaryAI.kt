@@ -1,7 +1,6 @@
 package com.foreverrafs.superdiary.fakes
 
 import com.foreverrafs.superdiary.ai.api.DiaryAI
-import com.foreverrafs.superdiary.ai.domain.model.DiaryChatMessage
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.model.WeeklySummary
 import kotlin.time.ExperimentalTime
@@ -43,6 +42,12 @@ class FakeDiaryAI : DiaryAI {
         return flow
     }
 
-    override suspend fun queryDiaries(messages: List<DiaryChatMessage>): String =
-        "This is a sample diary queried by fake AI"
+    override suspend fun generateWritingInsights(diaries: List<Diary>): String =
+        """
+        Patterns — Your recent entries balance quick observations with a few longer reflections.
+
+        Consistency — You write regularly, and your more detailed entries tend to appear later in the week.
+
+        Try next — Add one sensory detail to your next entry to make the memory easier to revisit.
+        """.trimIndent()
 }
