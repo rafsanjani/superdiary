@@ -65,6 +65,21 @@ class SignOutUseCaseTest {
         }
 
     @Test
+    fun `should return failure and preserve local data when signOut returns failure`() =
+        runTest(testDispatcher) {
+            val exception = Exception("Auth API failure")
+            everySuspend { authApi.signOut() } returns Result.failure(exception)
+
+            val result = signOutUseCase.invoke()
+
+            assertThat(result.isFailure).isTrue()
+            assertThat(result.exceptionOrNull()).isEqualTo(exception)
+            verifySuspend(VerifyMode.exactly(0)) { preferences.clear() }
+            verifySuspend(VerifyMode.exactly(0)) { dataSource.deleteAll() }
+            verifySuspend(VerifyMode.exactly(0)) { dataSource.clearChatMessages() }
+        }
+
+    @Test
     fun `should return failure and stop when preferences clearing fails`() =
         runTest(testDispatcher) {
             val exception = Exception("Preferences clear failure")

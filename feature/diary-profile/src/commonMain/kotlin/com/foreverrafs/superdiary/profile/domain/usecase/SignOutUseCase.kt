@@ -11,7 +11,11 @@ class SignOutUseCase(
 ) {
     suspend operator fun invoke(): Result<Unit> {
         return try {
-            authApi.signOut()
+            val signOutResult = authApi.signOut()
+            if (signOutResult.isFailure) {
+                return signOutResult
+            }
+
             preferences.clear()
             dataSource.deleteAll()
             dataSource.clearChatMessages()
