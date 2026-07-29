@@ -1,9 +1,11 @@
 package com.foreverrafs.auth
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricPrompt
+import androidx.fragment.app.FragmentActivity
 import com.foreverrafs.superdiary.core.authentication.R
 import kotlinx.coroutines.suspendCancellableCoroutine
 
@@ -22,6 +24,7 @@ class AndroidBiometricAuth(
     override suspend fun startBiometricAuth(): BiometricAuth.AuthResult =
         suspendCancellableCoroutine { continuation ->
             val activity = contextProvider.getContext() as? AppCompatActivity
+
             if (activity == null) {
                 continuation.resumeWith(
                     Result.failure(
@@ -39,9 +42,7 @@ class AndroidBiometricAuth(
                 .build()
 
             val biometricPrompt = BiometricPrompt(
-                contextProvider.getContext() as? AppCompatActivity
-                    ?: error("Context is not an activity!s"),
-
+                activity,
                 object : BiometricPrompt.AuthenticationCallback() {
                     var isResumed = false
 
