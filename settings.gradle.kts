@@ -66,6 +66,7 @@ kover {
         "*App*",
         "*AndroidPreviews*",
         "*BackPressHandler*",
+        "*AuthDeepLink*",
         "*SnapshotTheme*",
         "*BottomNavigationScreen*",
         "*BottomNavigationRoute*",
