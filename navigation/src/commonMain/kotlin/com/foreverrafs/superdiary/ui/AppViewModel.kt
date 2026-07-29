@@ -6,11 +6,10 @@ import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.preferences.DiaryPreference
-import com.foreverrafs.superdiary.auth.register.DeeplinkContainer
+import com.foreverrafs.superdiary.auth.register.AuthDeepLink
 import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -26,7 +25,7 @@ sealed interface AppSessionState {
     data class Authenticated(
         val userInfo: UserInfo?,
         // linkType will be null if the session was just getting restored from disk
-        val linkType: DeeplinkContainer.LinkType? = null,
+        val linkType: AuthDeepLink.LinkType? = null,
         // Present the user with a biometric auth dialog if they have opted to log in with biometrics
         val isBiometricAuthEnabled: Boolean? = null,
     ) : AppSessionState
@@ -44,15 +43,13 @@ class AppViewModel(
     private val logger: AggregateLogger,
     private val preference: DiaryPreference,
     private val authApi: AuthApi,
-    deeplinkContainer: DeeplinkContainer,
+    launchContext: AppLaunchContext,
 ) : ViewModel() {
 
     private val _viewState: MutableStateFlow<AppSessionState> =
         MutableStateFlow(AppSessionState.Processing)
 
-    val appSessionStatus: Flow<AuthApi.SessionStatus> = authApi.sessionStatus()
-
-    private val pendingDeeplink = deeplinkContainer.pop()
+    private val pendingDeeplink = launchContext.deepLink
 
     val viewState: StateFlow<AppSessionState> = _viewState.onStart {
         restoreSession()
@@ -75,7 +72,7 @@ class AppViewModel(
      */
     private fun restoreSession() = viewModelScope.launch(appCoroutineDispatchers.main) {
         if (pendingDeeplink != null) {
-            if (pendingDeeplink.type == DeeplinkContainer.LinkType.Invalid) {
+            if (pendingDeeplink.type == AuthDeepLink.LinkType.Invalid) {
                 logger.d(TAG) {
                     "Invalid deeplink found. Emitting error state $pendingDeeplink"
                 }
