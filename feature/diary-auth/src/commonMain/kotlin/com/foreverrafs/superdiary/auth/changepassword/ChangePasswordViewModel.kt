@@ -47,6 +47,7 @@ internal class ChangePasswordViewModel(
         }
 
         is ChangePasswordScreenAction.SubmitPasswordChange -> submit()
+
         is ChangePasswordScreenAction.DismissErrorMessage -> dismissErrorMessage()
     }
 
@@ -154,7 +155,7 @@ internal class ChangePasswordViewModel(
                         isProcessing = false,
                     )
                 }
-                logger.e(TAG, it) {
+                logger.e(tag = TAG, throwable = it) {
                     "Error updating password"
                 }
             }

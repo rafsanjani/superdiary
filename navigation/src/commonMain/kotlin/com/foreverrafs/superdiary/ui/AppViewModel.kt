@@ -10,7 +10,6 @@ import com.foreverrafs.superdiary.auth.register.AuthDeepLink
 import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -49,8 +48,6 @@ class AppViewModel(
 
     private val _viewState: MutableStateFlow<AppSessionState> =
         MutableStateFlow(AppSessionState.Processing)
-
-    val appSessionStatus: Flow<AuthApi.SessionStatus> = authApi.sessionStatus()
 
     private val pendingDeeplink = launchContext.deepLink
 
