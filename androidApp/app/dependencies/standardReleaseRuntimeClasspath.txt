@@ -338,8 +338,8 @@ io.ktor:ktor-client-content-negotiation-jvm:3.3.3
 io.ktor:ktor-client-content-negotiation:3.3.3
 io.ktor:ktor-client-core-jvm:3.5.2
 io.ktor:ktor-client-core:3.5.2
-io.ktor:ktor-client-json-jvm:3.5.1
-io.ktor:ktor-client-json:3.5.1
+io.ktor:ktor-client-json-jvm:3.5.2
+io.ktor:ktor-client-json:3.5.2
 io.ktor:ktor-client-logging-jvm:3.3.3
 io.ktor:ktor-client-logging:3.3.3
 io.ktor:ktor-client-okhttp-jvm:3.5.2
