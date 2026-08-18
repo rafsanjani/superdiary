@@ -1,12 +1,10 @@
 package com.foreverrafs.superdiary
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.navigation3.runtime.deeplink.DeepLinkMatcher
 import androidx.navigation3.runtime.deeplink.DeepLinkRequest
 import androidx.navigation3.runtime.deeplink.DeepLinkUri
 import androidx.navigation3.runtime.deeplink.UriDeepLinkMatcher
@@ -69,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-private fun authDeepLinkMatchers(callbackUri: String): List<DeepLinkMatcher<Any>> = listOf(
+private fun authDeepLinkMatchers(callbackUri: String) = listOf(
     UriDeepLinkMatcher(
         uriPattern = DeepLinkUri("$callbackUri#.*type={type}"),
         serializer = serializer<AuthDeepLinkMatch>(),
