@@ -62,7 +62,6 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.diary_auth.generated.resources.Res
 import superdiary.feature.diary_auth.generated.resources.brand_logo_content_description
-import superdiary.feature.diary_auth.generated.resources.email_placeholder
 import superdiary.feature.diary_auth.generated.resources.error_generic_error
 import superdiary.feature.diary_auth.generated.resources.error_invalid_credentials
 import superdiary.feature.diary_auth.generated.resources.error_no_credentials
@@ -78,6 +77,9 @@ import superdiary.feature.diary_auth.generated.resources.label_register
 import superdiary.feature.diary_auth.generated.resources.label_register_message
 import superdiary.feature.diary_auth.generated.resources.label_username
 import superdiary.feature.diary_auth.generated.resources.login_divider_label
+import superdiary.feature.diary_auth.generated.resources.login_email_label
+import superdiary.feature.diary_auth.generated.resources.login_email_placeholder
+import superdiary.feature.diary_auth.generated.resources.login_password_placeholder
 import superdiary.feature.diary_auth.generated.resources.logo
 
 @Composable
@@ -159,23 +161,29 @@ fun LoginScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("input_username"),
-                    label = stringResource(Res.string.label_username),
-                    placeholder = stringResource(Res.string.email_placeholder),
+                    label = stringResource(Res.string.login_email_label),
+                    placeholder = stringResource(Res.string.login_email_placeholder),
                     lineLimits = TextFieldLineLimits.SingleLine,
                     state = username,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                    ),
+                    pill = true,
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 PasswordInputField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("input_password"),
                     label = stringResource(Res.string.label_password),
+                    placeholder = stringResource(Res.string.login_password_placeholder),
                     state = password,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Password,
                     ),
+                    pill = true,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))

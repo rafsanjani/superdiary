@@ -87,6 +87,12 @@ dependencies {
 }
 
 afterEvaluate {
+    tasks.matching {
+        name.startsWith("ksp") && name != "kspCommonMainKotlinMetadata"
+    }.configureEach {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+
     tasks.withType<KotlinCompilationTask<*>> {
         if (name != "kspCommonMainKotlinMetadata") {
             dependsOn("kspCommonMainKotlinMetadata")
