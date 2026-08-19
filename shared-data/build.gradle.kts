@@ -13,7 +13,6 @@ plugins {
     alias(libs.plugins.mokkery)
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     sourceSets {
         commonMain {
@@ -62,6 +61,9 @@ kotlin {
                 implementation(libs.assertk.common)
                 implementation("androidx.paging:paging-testing:${libs.versions.paging.get()}")
             }
+        }
+
+        jvmTest {
             kotlin.srcDir("build/generated/ksp/jvm/jvmTest/kotlin")
         }
 
@@ -86,16 +88,21 @@ dependencies {
     add("kspCommonMainMetadata", projects.preferences.processor)
 }
 
-afterEvaluate {
-    tasks.matching {
-        name.startsWith("ksp") && name != "kspCommonMainKotlinMetadata"
-    }.configureEach {
-        dependsOn("kspCommonMainKotlinMetadata")
-    }
-
-    tasks.withType<KotlinCompilationTask<*>> {
-        if (name != "kspCommonMainKotlinMetadata") {
+tasks.configureEach {
+    when {
+        name.startsWith("ksp") && name != "kspCommonMainKotlinMetadata" ->
             dependsOn("kspCommonMainKotlinMetadata")
-        }
+
+        name.startsWith("runKtlint") && name.contains("CommonMain") ->
+            dependsOn("kspCommonMainKotlinMetadata")
+
+        name.startsWith("runKtlint") && name.contains("JvmTest") ->
+            dependsOn("kspTestKotlinJvm")
+    }
+}
+
+tasks.withType<KotlinCompilationTask<*>>().configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
     }
 }

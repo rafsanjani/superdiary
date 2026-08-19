@@ -23,7 +23,5 @@ val testSuperDiaryDatabase: SuperDiaryDatabase
             ),
         )
 
-        // In JVM tests, we have to manually create the database with the provided driver
-        SuperDiaryDatabase.Schema.create(driver)
         return db
     }

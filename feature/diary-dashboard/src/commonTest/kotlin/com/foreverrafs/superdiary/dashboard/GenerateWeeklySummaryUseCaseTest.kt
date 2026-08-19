@@ -73,7 +73,7 @@ class GenerateWeeklySummaryUseCaseTest {
     }
 
     @Test
-    fun `when previous summary is recent, it returns previous summary and skips AI`() = runTest {
+    fun `when previous summary is recent it returns previous summary and skips AI`() = runTest {
         // Insert a summary into the database today
         database.insertWeeklySummary(
             WeeklySummaryDb(
@@ -111,7 +111,7 @@ class GenerateWeeklySummaryUseCaseTest {
     }
 
     @Test
-    fun `when AI throws error, propagate the error by emitting it`() = runTest {
+    fun `when AI throws error propagate the error by emitting it`() = runTest {
         every { diaryAI.generateSummary(any(), any()) } throws Exception("AI Error")
 
         // Insert a summary into the database 10 days ago, should trigger AI

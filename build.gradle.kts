@@ -67,4 +67,12 @@ subprojects {
             dependsOn(it)
         }
     }
+
+    pluginManager.withPlugin("com.google.devtools.ksp") {
+        tasks.configureEach {
+            if (name.contains("AndroidHostTest") && name.contains("lint", ignoreCase = true)) {
+                dependsOn("kspAndroidHostTest")
+            }
+        }
+    }
 }

@@ -1,3 +1,7 @@
 package com.foreverrafs.superdiary.database
 
-internal expect class TestDatabaseDriverFactory() : DatabaseDriverFactory
+import app.cash.sqldelight.db.SqlDriver
+
+internal expect class TestDatabaseDriverFactory() : DatabaseDriverFactory {
+    override fun createSqlDriver(): SqlDriver
+}
