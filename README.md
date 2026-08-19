@@ -1,7 +1,9 @@
 # Superdiary 
 
 <div align="left">
-    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/android_pr.yml/badge.svg"  alt="Link to CI build status"/>
+    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/post-merge.yml/badge.svg"  alt="Link to CI build status"/>
+    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/app_distribution.yml/badge.svg"  alt="Link to CI build status"/>
+    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/dependency_guard.yml/badge.svg"  alt="Link to CI build status"/>
 </div>
 A simple diary app, mostly focused on quality architectural patterns and improved testing strategies (unit, snapshot and instrumentation).
 
