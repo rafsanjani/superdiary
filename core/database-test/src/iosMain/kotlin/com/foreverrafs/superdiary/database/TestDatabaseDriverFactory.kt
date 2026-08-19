@@ -9,7 +9,7 @@ import kotlin.uuid.Uuid
 
 internal actual class TestDatabaseDriverFactory : DatabaseDriverFactory {
     @OptIn(ExperimentalUuidApi::class)
-    override fun createSqlDriver(): SqlDriver {
+    actual override fun createSqlDriver(): SqlDriver {
         val schema = SuperDiaryDatabase.Schema
         return NativeSqliteDriver(
             DatabaseConfiguration(

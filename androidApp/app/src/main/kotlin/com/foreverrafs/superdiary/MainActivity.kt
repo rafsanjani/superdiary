@@ -37,6 +37,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun resolveLaunchContext(): AppLaunchContext {
+        if (intent.data == null && intent.extras == null) {
+            return AppLaunchContext()
+        }
+
         val request = DeepLinkRequest(intent)
         val callbackUri = with(supabase.auth.config) { "$scheme://$host/" }
         val match = authDeepLinkMatchers(callbackUri)
