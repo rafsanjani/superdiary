@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.flowOf
 class FakeAuthApi(
     clock: Clock = Clock.System,
 ) : AuthApi {
+    var googleSignInException: Exception? = null
+
     var signInResult: AuthApi.SessionStatus = AuthApi.SessionStatus.Authenticated(
         SessionInfo(
             expiresAt = clock.now(),
@@ -47,7 +49,7 @@ class FakeAuthApi(
     }
 
     override suspend fun signInWithGoogle(): AuthApi.SessionStatus =
-        signInResult
+        googleSignInException?.let { throw it } ?: signInResult
 
     override suspend fun signInWithGoogle(googleIdToken: String): AuthApi.SessionStatus =
         signInResult

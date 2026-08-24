@@ -84,6 +84,18 @@ class LoginScreenViewModelTest {
     }
 
     @Test
+    fun `Should emit LoginViewState Error when signInWithGoogle throws`() = runTest {
+        authApi.googleSignInException = Exception("No credentials available")
+
+        loginViewModel.viewState.test {
+            loginViewModel.onLoginWithGoogle()
+            val state = awaitUntil { it is LoginViewState.Error }
+            expectNoEvents()
+            assertThat(state).isInstanceOf<LoginViewState.Error>()
+        }
+    }
+
+    @Test
     fun `Should emit LoginViewState Error when email login fails`() = runTest {
         authApi.signInResult = AuthApi.SessionStatus.Unauthenticated(Exception("Error logging in"))
 
