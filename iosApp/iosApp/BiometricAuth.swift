@@ -26,7 +26,7 @@ class AppleBiometricAuth: BiometricAuth {
     }
 
 
-    func startBiometricAuth() async throws -> any BiometricAuthAuthResult {
+    func startBiometricAuth(uiContext: any AuthUiContext) async throws -> any BiometricAuthAuthResult {
         do {
             try await context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Log in to your account")
             return BiometricAuthAuthResultSuccess()

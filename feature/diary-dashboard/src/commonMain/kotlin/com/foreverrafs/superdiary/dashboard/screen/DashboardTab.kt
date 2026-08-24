@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import com.foreverrafs.auth.rememberAuthUiContext
 import com.foreverrafs.superdiary.dashboard.DashboardViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -21,6 +22,7 @@ fun DashboardTab(
     onProfileClick: () -> Unit,
 ) {
     val screenModel: DashboardViewModel = koinViewModel()
+    val authUiContext = rememberAuthUiContext()
     val screenState by screenModel.state.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     val favoriteUpdatedMessage = stringResource(Res.string.favorite_updated_message)
@@ -45,7 +47,7 @@ fun DashboardTab(
                 )
             }
         },
-        onEnableBiometric = screenModel::onEnableBiometricAuth,
+        onEnableBiometric = { screenModel.onEnableBiometricAuth(authUiContext) },
         onToggleLatestEntries = {
             screenModel.onUpdateSettings {
                 it.copy(

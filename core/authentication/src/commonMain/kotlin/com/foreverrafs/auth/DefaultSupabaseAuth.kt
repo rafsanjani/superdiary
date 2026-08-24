@@ -39,7 +39,7 @@ class DefaultSupabaseAuth(
     private val client: SupabaseClient,
     private val logger: AggregateLogger,
 ) : AuthApi {
-    override suspend fun signInWithGoogle(): AuthApi.SessionStatus =
+    override suspend fun signInWithGoogle(uiContext: AuthUiContext): AuthApi.SessionStatus =
         try {
             client.auth.signInWith(provider = Google)
             getSessionStatus()

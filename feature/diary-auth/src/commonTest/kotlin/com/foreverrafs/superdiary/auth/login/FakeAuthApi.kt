@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.auth.login
 
 import androidx.core.uri.Uri
 import com.foreverrafs.auth.AuthApi
+import com.foreverrafs.auth.AuthUiContext
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
 import kotlin.time.Clock
@@ -48,7 +49,7 @@ class FakeAuthApi(
         TODO("Not yet implemented")
     }
 
-    override suspend fun signInWithGoogle(): AuthApi.SessionStatus =
+    override suspend fun signInWithGoogle(uiContext: AuthUiContext): AuthApi.SessionStatus =
         googleSignInException?.let { throw it } ?: signInResult
 
     override suspend fun signInWithGoogle(googleIdToken: String): AuthApi.SessionStatus =

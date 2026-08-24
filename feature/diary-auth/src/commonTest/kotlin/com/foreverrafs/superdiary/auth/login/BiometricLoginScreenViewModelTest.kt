@@ -3,6 +3,7 @@ package com.foreverrafs.superdiary.auth.login
 import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isInstanceOf
+import com.foreverrafs.auth.AuthUiContext
 import com.foreverrafs.auth.BiometricAuth
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
@@ -23,6 +24,7 @@ import kotlinx.coroutines.test.setMain
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class BiometricLoginScreenViewModelTest {
+    private val authUiContext = object : AuthUiContext {}
     private lateinit var loginViewModel: BiometricLoginScreenViewModel
     private val biometricAuth: BiometricAuth = mock()
 
@@ -45,12 +47,13 @@ class BiometricLoginScreenViewModelTest {
     @Test
     fun `Should attempt biometric auth immediately auth screen is opened`() = runTest {
         every { biometricAuth.canAuthenticate() } returns true
-        everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Success
+        everySuspend { biometricAuth.startBiometricAuth(authUiContext) } returns BiometricAuth.AuthResult.Success
 
         loginViewModel.viewState.test {
+            loginViewModel.onAuthenticateWithBiometrics(authUiContext)
             advanceUntilIdle()
             cancelAndIgnoreRemainingEvents()
-            verifySuspend { biometricAuth.startBiometricAuth() }
+            verifySuspend { biometricAuth.startBiometricAuth(authUiContext) }
         }
     }
 
@@ -58,9 +61,10 @@ class BiometricLoginScreenViewModelTest {
     fun `Should show error screen if biometric authentication is not possible on device`() =
         runTest {
             every { biometricAuth.canAuthenticate() } returns false
-            everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Failed
+            everySuspend { biometricAuth.startBiometricAuth(authUiContext) } returns BiometricAuth.AuthResult.Failed
 
             loginViewModel.viewState.test {
+                loginViewModel.onAuthenticateWithBiometrics(authUiContext)
                 advanceUntilIdle()
                 val state = expectMostRecentItem()
 
@@ -74,9 +78,10 @@ class BiometricLoginScreenViewModelTest {
     @Test
     fun `Should show error screen if biometric authentication fails`() = runTest {
         every { biometricAuth.canAuthenticate() } returns true
-        everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Failed
+        everySuspend { biometricAuth.startBiometricAuth(authUiContext) } returns BiometricAuth.AuthResult.Failed
 
         loginViewModel.viewState.test {
+            loginViewModel.onAuthenticateWithBiometrics(authUiContext)
             advanceUntilIdle()
             val state = expectMostRecentItem()
 
@@ -90,9 +95,10 @@ class BiometricLoginScreenViewModelTest {
     @Test
     fun `Should return success state when biometric authentication succeeds`() = runTest {
         every { biometricAuth.canAuthenticate() } returns true
-        everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Success
+        everySuspend { biometricAuth.startBiometricAuth(authUiContext) } returns BiometricAuth.AuthResult.Success
 
         loginViewModel.viewState.test {
+            loginViewModel.onAuthenticateWithBiometrics(authUiContext)
             advanceUntilIdle()
             val state = expectMostRecentItem()
 

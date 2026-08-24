@@ -9,6 +9,7 @@ import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
+import com.foreverrafs.auth.AuthUiContext
 import com.foreverrafs.auth.BiometricAuth
 import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.ai.api.DiaryAI
@@ -59,6 +60,7 @@ import kotlinx.coroutines.test.setMain
 
 @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
 class DashboardViewModelTest {
+    private val authUiContext = object : AuthUiContext {}
     private lateinit var dataSource: DataSource
     private lateinit var syncableDataSource: DataSource
 
@@ -74,7 +76,7 @@ class DashboardViewModelTest {
 
     private val biometricAuth: BiometricAuth = mock {
         every { canAuthenticate() } returns true
-        everySuspend { startBiometricAuth() } returns BiometricAuth.AuthResult.Success
+        everySuspend { startBiometricAuth(any()) } returns BiometricAuth.AuthResult.Success
     }
 
     private val diaryPreference = FakeDiaryPreference()
@@ -209,7 +211,7 @@ class DashboardViewModelTest {
     fun `Should check if device supports biometric authentication when biometric auth is requested`() =
         runTest {
             val viewModel = createDashboardViewModel()
-            viewModel.onEnableBiometricAuth()
+            viewModel.onEnableBiometricAuth(authUiContext)
 
             advanceUntilIdle()
             verify(mode = VerifyMode.exactly(1)) {
@@ -221,7 +223,7 @@ class DashboardViewModelTest {
     fun `Should show biometric auth error when biometric auth fails`() = runTest {
         everySuspend { dataSource.getOne() } returns WeeklySummary("This is your weekly summary")
 
-        everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Error(
+        everySuspend { biometricAuth.startBiometricAuth(any()) } returns BiometricAuth.AuthResult.Error(
             Exception("failed"),
         )
 
@@ -230,7 +232,7 @@ class DashboardViewModelTest {
         viewModel.state.test {
             skipItems(1)
 
-            viewModel.onEnableBiometricAuth()
+            viewModel.onEnableBiometricAuth(authUiContext)
             val state = awaitItem()
 
             assertThat(state).isInstanceOf<DashboardViewModel.DashboardScreenState.Content>()
@@ -246,7 +248,7 @@ class DashboardViewModelTest {
     @Test
     fun `Should attempt biometric authentication if option is enabled`() = runTest {
         everySuspend { dataSource.getOne() } returns WeeklySummary("This is your weekly summary")
-        everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Success
+        everySuspend { biometricAuth.startBiometricAuth(any()) } returns BiometricAuth.AuthResult.Success
         everySuspend { biometricAuth.canAuthenticate() } returns true
 
         val viewModel = createDashboardViewModel()
@@ -255,7 +257,7 @@ class DashboardViewModelTest {
             // skip loading state
             skipItems(1)
 
-            viewModel.onEnableBiometricAuth()
+            viewModel.onEnableBiometricAuth(authUiContext)
             val state = awaitItem()
 
             assertThat(state).isInstanceOf<DashboardViewModel.DashboardScreenState.Content>()
@@ -271,7 +273,7 @@ class DashboardViewModelTest {
         runTest {
             everySuspend { dataSource.getOne() } returns WeeklySummary("This is your weekly summary")
 
-            everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Failed
+            everySuspend { biometricAuth.startBiometricAuth(any()) } returns BiometricAuth.AuthResult.Failed
             every { biometricAuth.canAuthenticate() } returns false
 
             val viewModel = createDashboardViewModel()
@@ -279,7 +281,7 @@ class DashboardViewModelTest {
             viewModel.state.test {
                 skipItems(1)
 
-                viewModel.onEnableBiometricAuth()
+                viewModel.onEnableBiometricAuth(authUiContext)
                 val state = awaitItem()
 
                 assertThat(state).isInstanceOf<DashboardViewModel.DashboardScreenState.Content>()
@@ -296,7 +298,7 @@ class DashboardViewModelTest {
     fun `Should display biometric dialog if biometric auth is available and dialog preference is true`() =
         runTest {
             everySuspend { dataSource.getOne() } returns WeeklySummary("This is your weekly summary")
-            everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Success
+            everySuspend { biometricAuth.startBiometricAuth(any()) } returns BiometricAuth.AuthResult.Success
             every { biometricAuth.canAuthenticate() } returns true
 
             diaryPreference.settingsResult =
@@ -307,7 +309,7 @@ class DashboardViewModelTest {
             viewModel.state.test {
                 skipItems(1)
 
-                viewModel.onEnableBiometricAuth()
+                viewModel.onEnableBiometricAuth(authUiContext)
                 val state = awaitItem()
                 assertThat(state).isInstanceOf<DashboardViewModel.DashboardScreenState.Content>()
 
@@ -323,7 +325,7 @@ class DashboardViewModelTest {
         runTest {
             everySuspend { dataSource.getOne() } returns WeeklySummary("This is your weekly summary")
 
-            everySuspend { biometricAuth.startBiometricAuth() } returns BiometricAuth.AuthResult.Success
+            everySuspend { biometricAuth.startBiometricAuth(any()) } returns BiometricAuth.AuthResult.Success
             every { biometricAuth.canAuthenticate() } returns true
 
             diaryPreference.settingsResult =
@@ -334,7 +336,7 @@ class DashboardViewModelTest {
             viewModel.state.test {
                 skipItems(1)
 
-                viewModel.onEnableBiometricAuth()
+                viewModel.onEnableBiometricAuth(authUiContext)
                 val state = awaitItem()
 
                 assertThat(state).isInstanceOf<DashboardViewModel.DashboardScreenState.Content>()

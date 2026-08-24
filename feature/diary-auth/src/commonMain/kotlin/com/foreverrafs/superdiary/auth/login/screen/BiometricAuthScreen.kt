@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.foreverrafs.auth.rememberAuthUiContext
 import com.foreverrafs.superdiary.auth.login.BiometricLoginScreenState
 import com.foreverrafs.superdiary.auth.login.BiometricLoginScreenViewModel
 import com.foreverrafs.superdiary.design.components.BodyMediumText
@@ -36,9 +37,14 @@ fun BiometricAuthScreen(
     onBiometricAuthSuccess: () -> Unit,
 ) {
     val viewModel: BiometricLoginScreenViewModel = koinViewModel()
+    val authUiContext = rememberAuthUiContext()
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     val showBiometricAuthErrorDialog by remember(viewState) {
         mutableStateOf(viewState is BiometricLoginScreenState.Error)
+    }
+
+    LaunchedEffect(authUiContext) {
+        viewModel.onAuthenticateWithBiometrics(authUiContext)
     }
 
     BiometricLoginScreenContent(

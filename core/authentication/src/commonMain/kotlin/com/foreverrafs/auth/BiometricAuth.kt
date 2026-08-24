@@ -14,5 +14,5 @@ interface BiometricAuth {
      */
     fun canAuthenticate(): Boolean
 
-    suspend fun startBiometricAuth(): AuthResult
+    suspend fun startBiometricAuth(uiContext: AuthUiContext): AuthResult
 }

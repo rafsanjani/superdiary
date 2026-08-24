@@ -1,6 +1,7 @@
 package com.foreverrafs.superdiary.fakes
 
 import com.foreverrafs.auth.AuthApi
+import com.foreverrafs.auth.AuthUiContext
 import com.foreverrafs.auth.DefaultSupabaseAuth
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
@@ -35,7 +36,9 @@ class FakeAndroidAuth(
             sessionInfo = sessionInfo,
         )
 
-    override suspend fun signInWithGoogle(): AuthApi.SessionStatus = AuthApi.SessionStatus.Authenticated(
+    override suspend fun signInWithGoogle(
+        uiContext: AuthUiContext,
+    ): AuthApi.SessionStatus = AuthApi.SessionStatus.Authenticated(
         sessionInfo = sessionInfo,
     )
 
