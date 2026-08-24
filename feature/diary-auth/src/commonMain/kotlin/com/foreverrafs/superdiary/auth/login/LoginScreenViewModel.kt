@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.AuthException
+import com.foreverrafs.auth.GenericAuthException
 import com.foreverrafs.superdiary.auth.login.screen.LoginViewState
 import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -27,7 +29,17 @@ class LoginScreenViewModel(
                 LoginViewState.Processing
             }
 
-            when (val result = authApi.signInWithGoogle()) {
+            val result = try {
+                authApi.signInWithGoogle()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AuthApi.SessionStatus.Unauthenticated(
+                    GenericAuthException(cause = e, message = e.message),
+                )
+            }
+
+            when (result) {
                 is AuthApi.SessionStatus.Unauthenticated -> _viewState.update {
                     LoginViewState.Error(
                         error = AuthException(cause = result.exception),

@@ -33,7 +33,7 @@
     <string name="dialog_biometric_auth_error_negative_btn_text">Exit</string>
 
     <string name="error_invalid_credentials">Invalid credentials</string>
-    <string name="error_no_credentials">No credentials</string>
+    <string name="error_no_credentials">No Google account is available on this device</string>
     <string name="error_user_already_registered">User already registered</string>
     <string name="error_generic_error">Sorry something went wrong!</string>
     <string name="registration_success_message">Thank you for registering!</string>

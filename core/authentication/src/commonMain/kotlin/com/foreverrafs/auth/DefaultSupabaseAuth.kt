@@ -17,10 +17,12 @@ import io.github.jan.supabase.exceptions.BadRequestRestException
 import io.github.jan.supabase.exceptions.RestException
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 
@@ -102,7 +104,7 @@ class DefaultSupabaseAuth(
             logger.i(Tag) {
                 "Waiting for session to be initialized"
             }
-            delay(100)
+            delay(100.milliseconds)
         }
 
         logger.i(Tag) {
@@ -175,7 +177,11 @@ class DefaultSupabaseAuth(
             return
         }
 
-        val charset = ('A'..'Z') + ('a'..'z') + ('0'..'9')
+        val charset = (
+            ('A'..'Z')
+                .plusElement(('a'..'z'))
+            )
+            .plusElement(('0'..'9'))
         val randomPart = (1..16)
             .map { charset.random() }
             .joinToString("")
@@ -221,7 +227,7 @@ class DefaultSupabaseAuth(
 
     @OptIn(SupabaseInternal::class)
     override suspend fun handleAuthDeeplink(deeplinkUri: Uri?): AuthApi.SessionStatus =
-        suspendCoroutine { continuation ->
+        suspendCancellableCoroutine { continuation ->
             logger.i(Tag) {
                 "Confirming authentication with token $deeplinkUri"
             }
@@ -230,7 +236,7 @@ class DefaultSupabaseAuth(
                 continuation.resume(
                     AuthApi.SessionStatus.Unauthenticated(Exception("Invalid confirmation link")),
                 )
-                return@suspendCoroutine
+                return@suspendCancellableCoroutine
             }
 
             try {

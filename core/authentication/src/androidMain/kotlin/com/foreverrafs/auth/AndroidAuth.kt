@@ -8,6 +8,7 @@ import androidx.credentials.GetCredentialResponse
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.GetCredentialInterruptedException
+import androidx.credentials.exceptions.GetCredentialProviderConfigurationException
 import androidx.credentials.exceptions.GetCredentialUnknownException
 import androidx.credentials.exceptions.NoCredentialException
 import com.foreverrafs.superdiary.core.SuperDiarySecret
@@ -26,7 +27,7 @@ class AndroidAuth(
     logger = logger,
 ) {
     /** Use the credentials manager to sign in with Google on Android */
-    override suspend fun signInWithGoogle(): AuthApi.SessionStatus {
+    override suspend fun signInWithGoogle(): AuthApi.SessionStatus = try {
         logger.d(TAG) { "Starting Google sign-in process with CredentialManager" }
         // This must be an activity context
         val hostActivityContext = contextProvider.getContext()
@@ -45,29 +46,39 @@ class AndroidAuth(
             ).build(),
         ).build()
 
-        val googleIdToken = try {
-            logger.d(TAG) { "Requesting credentials from CredentialManager" }
-            val result = credentialManager.getCredential(
-                request = request,
-                context = hostActivityContext,
-            )
+        logger.d(TAG) { "Requesting credentials from CredentialManager" }
+        val result = credentialManager.getCredential(
+            request = request,
+            context = hostActivityContext,
+        )
 
-            getGoogleIdToken(result)
-        } catch (e: GetCredentialException) {
-            logger.e(TAG) { "Error Getting credentials: ${e.message}" }
-            return AuthApi.SessionStatus.Unauthenticated(resolveCredentialException(e))
-        } catch (e: GoogleIdTokenParsingException) {
-            logger.e(TAG) { "Error parsing Google ID token: ${e.message}" }
-            return AuthApi.SessionStatus.Unauthenticated(e)
-        }
+        val googleIdToken = getGoogleIdToken(result)
 
-        return if (googleIdToken != null) {
+        if (googleIdToken != null) {
             logger.d(TAG) { "Google ID token successfully retrieved. Attempting Supabase sign-in." }
             signInWithGoogle(googleIdToken)
         } else {
             logger.e(TAG) { "Google ID token retrieval failed. No token available for sign-in." }
             AuthApi.SessionStatus.Unauthenticated(Exception("Error logging in with Google"))
         }
+    } catch (e: GetCredentialProviderConfigurationException) {
+        // The dependency can be packaged correctly while the device still has no usable
+        // Credential Manager provider (for example, an AOSP emulator without Play Services).
+        logger.w(TAG, e) {
+            "No Credential Manager provider is available on this device"
+        }
+        AuthApi.SessionStatus.Unauthenticated(
+            NoCredentialsException("Google sign-in is not available on this device"),
+        )
+    } catch (e: GetCredentialException) {
+        // NoCredentialException is the expected result when the device has no Google account.
+        // Keep every Credential Manager operation inside this boundary so it cannot escape to
+        // the ViewModel's coroutine as an uncaught exception.
+        logger.e(TAG) { "Error getting credentials: ${e.message}" }
+        AuthApi.SessionStatus.Unauthenticated(resolveCredentialException(e))
+    } catch (e: GoogleIdTokenParsingException) {
+        logger.e(TAG) { "Error parsing Google ID token: ${e.message}" }
+        AuthApi.SessionStatus.Unauthenticated(e)
     }
 
     private fun resolveCredentialException(e: GetCredentialException): Exception = when (e) {
