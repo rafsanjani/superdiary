@@ -25,6 +25,7 @@ kotlin {
             implementation(libs.jetbrains.compose.resources)
             implementation(libs.jetbrains.compose.preview)
             implementation(projects.core.logging)
+            implementation(projects.core.analytics)
             implementation(projects.core.uiComponents)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.koin.compose)

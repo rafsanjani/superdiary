@@ -25,6 +25,7 @@ kotlin {
             implementation(libs.jetbrains.compose.resources)
             implementation(libs.jetbrains.compose.preview)
             implementation(projects.core.logging)
+            implementation(projects.core.analytics)
             implementation(libs.androidx.core.uri)
             implementation(libs.jetbrains.compose.navigation3)
             implementation(libs.kotlinx.serialization.json)

@@ -26,6 +26,7 @@ kotlin {
             implementation(libs.jetbrains.compose.preview)
             implementation(libs.jetbrains.compose.navigation3)
             implementation(projects.core.logging)
+            implementation(projects.core.analytics)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
