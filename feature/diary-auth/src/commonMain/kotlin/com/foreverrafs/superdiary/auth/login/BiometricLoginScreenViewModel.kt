@@ -2,14 +2,12 @@ package com.foreverrafs.superdiary.auth.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.foreverrafs.auth.AuthUiContext
 import com.foreverrafs.auth.BiometricAuth
 import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -30,22 +28,14 @@ class BiometricLoginScreenViewModel(
     private val _viewState: MutableStateFlow<BiometricLoginScreenState> =
         MutableStateFlow(BiometricLoginScreenState.Idle)
 
-    val viewState = _viewState
-        .asStateFlow()
-        .onStart {
-            onAuthenticateWithBiometrics()
+    val viewState = _viewState.asStateFlow()
+
+    fun onAuthenticateWithBiometrics(uiContext: AuthUiContext) =
+        viewModelScope.launch(coroutineDispatchers.main) {
+            authenticateWithBiometrics(uiContext)
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = BiometricLoginScreenState.Idle,
-        )
 
-    private fun onAuthenticateWithBiometrics() = viewModelScope.launch(coroutineDispatchers.main) {
-        authenticateWithBiometrics()
-    }
-
-    private suspend fun authenticateWithBiometrics() {
+    private suspend fun authenticateWithBiometrics(uiContext: AuthUiContext) {
         if (!biometricAuth.canAuthenticate()) {
             logger.i(Tag) {
                 "Biometric authentication is not available"
@@ -58,7 +48,7 @@ class BiometricLoginScreenViewModel(
             return
         }
 
-        when (val biometricAuthResult = biometricAuth.startBiometricAuth()) {
+        when (val biometricAuthResult = biometricAuth.startBiometricAuth(uiContext)) {
             is BiometricAuth.AuthResult.Error -> {
                 logger.e(
                     tag = Tag,

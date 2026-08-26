@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class TokenExpiredException(message: String?) : Exception(message)
 
 interface AuthApi {
-    suspend fun signInWithGoogle(): SessionStatus
+    suspend fun signInWithGoogle(uiContext: AuthUiContext): SessionStatus
     suspend fun signInWithGoogle(googleIdToken: String): SessionStatus
 
     suspend fun restoreSession(): SessionStatus

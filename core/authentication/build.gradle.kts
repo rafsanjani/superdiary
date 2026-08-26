@@ -35,6 +35,7 @@ kotlin {
         }
         androidMain {
             dependencies {
+                implementation(libs.androidx.activity.compose)
                 implementation(libs.koin.android)
                 implementation(libs.google.playservices.location)
                 implementation(libs.moko.permissions.compose)

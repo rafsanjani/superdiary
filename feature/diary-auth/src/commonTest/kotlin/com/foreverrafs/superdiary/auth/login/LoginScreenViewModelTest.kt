@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import com.foreverrafs.auth.AuthApi
+import com.foreverrafs.auth.AuthUiContext
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.auth.login.screen.LoginViewState
@@ -22,6 +23,7 @@ import kotlinx.coroutines.test.setMain
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LoginScreenViewModelTest {
+    private val authUiContext = object : AuthUiContext {}
     private lateinit var loginViewModel: LoginScreenViewModel
 
     @OptIn(ExperimentalTime::class)
@@ -45,7 +47,7 @@ class LoginScreenViewModelTest {
     @Test
     fun `Should emit LoginViewState Processing when signInWithGoogle flow begins`() = runTest {
         loginViewModel.viewState.test {
-            loginViewModel.onLoginWithGoogle()
+            loginViewModel.onLoginWithGoogle(authUiContext)
             val state = awaitUntil { it is LoginViewState.Processing }
             cancelAndIgnoreRemainingEvents()
             assertThat(state).isInstanceOf<LoginViewState.Processing>()
@@ -76,7 +78,7 @@ class LoginScreenViewModelTest {
         authApi.signInResult = AuthApi.SessionStatus.Unauthenticated(Exception("Error logging in"))
 
         loginViewModel.viewState.test {
-            loginViewModel.onLoginWithGoogle()
+            loginViewModel.onLoginWithGoogle(authUiContext)
             val state = awaitUntil { it is LoginViewState.Error }
             expectNoEvents()
             assertThat(state).isInstanceOf<LoginViewState.Error>()
@@ -88,7 +90,7 @@ class LoginScreenViewModelTest {
         authApi.googleSignInException = Exception("No credentials available")
 
         loginViewModel.viewState.test {
-            loginViewModel.onLoginWithGoogle()
+            loginViewModel.onLoginWithGoogle(authUiContext)
             val state = awaitUntil { it is LoginViewState.Error }
             expectNoEvents()
             assertThat(state).isInstanceOf<LoginViewState.Error>()
@@ -125,7 +127,7 @@ class LoginScreenViewModelTest {
         )
 
         loginViewModel.viewState.test {
-            loginViewModel.onLoginWithGoogle()
+            loginViewModel.onLoginWithGoogle(authUiContext)
             val state = awaitUntil { it is LoginViewState.Success }
             expectNoEvents()
             assertThat(state).isInstanceOf<LoginViewState.Success>()

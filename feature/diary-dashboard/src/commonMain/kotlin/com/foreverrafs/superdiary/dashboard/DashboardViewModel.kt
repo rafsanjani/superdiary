@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.foreverrafs.auth.AuthUiContext
 import com.foreverrafs.auth.BiometricAuth
 import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
@@ -200,11 +201,11 @@ class DashboardViewModel(
         }
     }
 
-    fun onEnableBiometricAuth() = viewModelScope.launch {
-        initializeBiometricAuth()
+    fun onEnableBiometricAuth(uiContext: AuthUiContext) = viewModelScope.launch {
+        initializeBiometricAuth(uiContext)
     }
 
-    private suspend fun initializeBiometricAuth() {
+    private suspend fun initializeBiometricAuth(uiContext: AuthUiContext) {
         if (!biometricAuth.canAuthenticate()) {
             logger.i(TAG) {
                 "Biometric authentication is not available"
@@ -220,7 +221,7 @@ class DashboardViewModel(
             return
         }
 
-        when (val biometricAuthResult = biometricAuth.startBiometricAuth()) {
+        when (val biometricAuthResult = biometricAuth.startBiometricAuth(uiContext)) {
             is BiometricAuth.AuthResult.Error -> {
                 logger.e(
                     tag = TAG,

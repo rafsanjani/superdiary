@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.AuthException
+import com.foreverrafs.auth.AuthUiContext
 import com.foreverrafs.auth.GenericAuthException
 import com.foreverrafs.superdiary.auth.login.screen.LoginViewState
 import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
@@ -23,14 +24,14 @@ class LoginScreenViewModel(
     val viewState = _viewState
         .asStateFlow()
 
-    fun onLoginWithGoogle() =
+    fun onLoginWithGoogle(uiContext: AuthUiContext) =
         viewModelScope.launch(coroutineDispatchers.main) {
             _viewState.update {
                 LoginViewState.Processing
             }
 
             val result = try {
-                authApi.signInWithGoogle()
+                authApi.signInWithGoogle(uiContext)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {

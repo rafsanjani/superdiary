@@ -12,7 +12,7 @@ class AppleAuth(private val supabaseClient: SupabaseClient, private val logger: 
     KoinComponent {
     private val googleTokenProvider: GoogleTokenProvider by inject()
 
-    override suspend fun signInWithGoogle(): AuthApi.SessionStatus =
+    override suspend fun signInWithGoogle(uiContext: AuthUiContext): AuthApi.SessionStatus =
         try {
             logger.d(Tag) {
                 "Retrieving Google token from Apple"

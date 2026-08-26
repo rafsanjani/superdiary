@@ -1,19 +1,16 @@
 package com.foreverrafs.auth
 
-import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricPrompt
-import androidx.fragment.app.FragmentActivity
 import com.foreverrafs.superdiary.core.authentication.R
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 class AndroidBiometricAuth(
-    private val contextProvider: AndroidContextProvider,
+    context: Context,
 ) : BiometricAuth {
-    private val biometricManager =
-        BiometricManager.from(contextProvider.getContext() ?: error("Context is null"))
+    private val biometricManager = BiometricManager.from(context.applicationContext)
 
     override fun canAuthenticate(): Boolean {
         val result = biometricManager.canAuthenticate(BIOMETRIC_STRONG)
@@ -21,14 +18,14 @@ class AndroidBiometricAuth(
         return result == BiometricManager.BIOMETRIC_SUCCESS
     }
 
-    override suspend fun startBiometricAuth(): BiometricAuth.AuthResult =
+    override suspend fun startBiometricAuth(uiContext: AuthUiContext): BiometricAuth.AuthResult =
         suspendCancellableCoroutine { continuation ->
-            val activity = contextProvider.getContext() as? AppCompatActivity
+            val activity = (uiContext as? AndroidAuthUiContext)?.activity
 
             if (activity == null) {
                 continuation.resumeWith(
                     Result.failure(
-                        IllegalStateException("Context is not an AppCompatActivity!"),
+                        IllegalStateException("Biometric authentication requires an AndroidAuthUiContext"),
                     ),
                 )
                 return@suspendCancellableCoroutine

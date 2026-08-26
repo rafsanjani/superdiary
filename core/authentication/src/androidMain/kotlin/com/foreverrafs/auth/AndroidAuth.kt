@@ -1,6 +1,5 @@
 package com.foreverrafs.auth
 
-import android.app.Activity
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -21,23 +20,20 @@ import io.github.jan.supabase.SupabaseClient
 class AndroidAuth(
     private val supabaseClient: SupabaseClient,
     private val logger: AggregateLogger,
-    private val contextProvider: AndroidContextProvider,
 ) : AuthApi by DefaultSupabaseAuth(
     client = supabaseClient,
     logger = logger,
 ) {
     /** Use the credentials manager to sign in with Google on Android */
-    override suspend fun signInWithGoogle(): AuthApi.SessionStatus = try {
+    override suspend fun signInWithGoogle(uiContext: AuthUiContext): AuthApi.SessionStatus = try {
         logger.d(TAG) { "Starting Google sign-in process with CredentialManager" }
-        // This must be an activity context
-        val hostActivityContext = contextProvider.getContext()
-
-        require(hostActivityContext is Activity) {
-            "The host context must be an Activity!"
+        require(uiContext is AndroidAuthUiContext) {
+            "Google sign-in requires an AndroidAuthUiContext"
         }
+        val activity = uiContext.activity
 
         val credentialManager = CredentialManager.create(
-            context = hostActivityContext,
+            context = activity,
         )
 
         val request: GetCredentialRequest = GetCredentialRequest.Builder().addCredentialOption(
@@ -49,7 +45,7 @@ class AndroidAuth(
         logger.d(TAG) { "Requesting credentials from CredentialManager" }
         val result = credentialManager.getCredential(
             request = request,
-            context = hostActivityContext,
+            context = activity,
         )
 
         val googleIdToken = getGoogleIdToken(result)
