@@ -24,9 +24,6 @@ kotlin {
 
                 implementation(libs.koin.compose.viewmodel)
 
-                // TODO: Remove this dependency
-                implementation(compose.materialIconsExtended)
-
                 // feature modules
                 implementation(projects.feature.diaryFavorite)
                 implementation(projects.feature.diaryInsights)

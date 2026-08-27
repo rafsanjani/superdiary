@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Sort
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextField
@@ -38,6 +35,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.foreverrafs.superdiary.design.components.TitleMediumText
+import com.foreverrafs.superdiary.design.icons.SuperDiaryIcon
 import org.jetbrains.compose.resources.stringResource
 import superdiary.core.ui_components.generated.resources.Res
 import superdiary.core.ui_components.generated.resources.search_diaries_label
@@ -99,7 +97,7 @@ internal fun DiarySearchBar(
             ),
             leadingIcon = {
                 Icon(
-                    imageVector = Icons.Default.Search,
+                    painter = SuperDiaryIcon.Search.painter(),
                     contentDescription = null,
                 )
             },
@@ -108,7 +106,7 @@ internal fun DiarySearchBar(
                     modifier = Modifier
                         .clickable { onFilterClick() }
                         .padding(8.dp),
-                    imageVector = Icons.AutoMirrored.Filled.Sort,
+                    painter = SuperDiaryIcon.Sort.painter(),
                     contentDescription = stringResource(
                         Res.string.sort_diary_entries_content_description,
                     ),

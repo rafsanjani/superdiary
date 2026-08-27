@@ -16,9 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -30,6 +27,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.foreverrafs.superdiary.design.components.LabelLargeText
+import com.foreverrafs.superdiary.design.icons.SuperDiaryIcon
 import org.jetbrains.compose.resources.stringResource
 import superdiary.core.ui_components.generated.resources.Res
 import superdiary.core.ui_components.generated.resources.selected_diaries_count
@@ -70,7 +68,7 @@ internal fun DiarySelectionModifierBar(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.Default.Close,
+                        painter = SuperDiaryIcon.Close.painter(),
                         contentDescription = null,
                         modifier = Modifier
                             .clip(CircleShape)
@@ -100,7 +98,7 @@ internal fun DiarySelectionModifierBar(
                             onDelete(selectedIds)
                         }
                         .padding(8.dp),
-                    imageVector = Icons.Default.Delete,
+                    painter = SuperDiaryIcon.Delete.painter(),
                     contentDescription = null,
                 )
             }

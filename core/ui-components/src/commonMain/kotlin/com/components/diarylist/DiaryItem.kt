@@ -18,11 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberOverscrollEffect
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -64,6 +59,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.foreverrafs.superdiary.common.utils.format
 import com.foreverrafs.superdiary.design.components.BodyLargeText
+import com.foreverrafs.superdiary.design.icons.SuperDiaryIcon
 import com.foreverrafs.superdiary.design.style.SuperDiaryPreviewTheme
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.utils.toDate
@@ -225,14 +221,14 @@ fun DiaryItem(
 
             if (selected) {
                 Icon(
-                    imageVector = Icons.Filled.CheckCircle,
+                    painter = SuperDiaryIcon.CheckCircle.painter(),
                     tint = MaterialTheme.colorScheme.primary,
                     contentDescription = null,
                     modifier = iconModifier,
                 )
             } else {
                 Icon(
-                    imageVector = Icons.Filled.RadioButtonUnchecked,
+                    painter = SuperDiaryIcon.RadioButtonUnchecked.painter(),
                     tint = Color.White.copy(alpha = 0.7f),
                     contentDescription = null,
                     modifier = iconModifier,
@@ -263,11 +259,11 @@ fun DiaryItem(
                 },
             ) {
                 Icon(
-                    imageVector = if (diary.isFavorite) {
-                        Icons.Default.Favorite
+                    painter = if (diary.isFavorite) {
+                        SuperDiaryIcon.Favorite
                     } else {
-                        Icons.Default.FavoriteBorder
-                    },
+                        SuperDiaryIcon.FavoriteBorder
+                    }.painter(),
                     contentDescription = null,
                 )
             }

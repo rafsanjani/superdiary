@@ -11,12 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.foreverrafs.superdiary.design.icons.SuperDiaryIcon
 
 @Composable
 fun RichTextStyleButton(
-    icon: ImageVector,
+    icon: SuperDiaryIcon,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     tint: Color? = null,
@@ -47,7 +47,7 @@ fun RichTextStyleButton(
                     },
                     shape = RoundedCornerShape(4.dp),
                 ),
-            imageVector = icon,
+            painter = icon.painter(),
             contentDescription = icon.name,
             tint = tint ?: LocalContentColor.current,
         )

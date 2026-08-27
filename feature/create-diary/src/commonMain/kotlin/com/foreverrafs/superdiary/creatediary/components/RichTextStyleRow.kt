@@ -2,19 +2,13 @@ package com.foreverrafs.superdiary.creatediary.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.FormatListBulleted
-import androidx.compose.material.icons.outlined.FormatBold
-import androidx.compose.material.icons.outlined.FormatItalic
-import androidx.compose.material.icons.outlined.FormatListNumbered
-import androidx.compose.material.icons.outlined.FormatStrikethrough
-import androidx.compose.material.icons.outlined.FormatUnderlined
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import com.foreverrafs.superdiary.design.icons.SuperDiaryIcon
 import com.mohamedrejeb.richeditor.model.RichTextState
 
 @Composable
@@ -35,7 +29,7 @@ fun RichTextStyleRow(
                 )
             },
             isSelected = state.currentSpanStyle.fontWeight == FontWeight.Bold,
-            icon = Icons.Outlined.FormatBold,
+            icon = SuperDiaryIcon.FormatBold,
         )
 
         RichTextStyleButton(
@@ -47,7 +41,7 @@ fun RichTextStyleRow(
                 )
             },
             isSelected = state.currentSpanStyle.fontStyle == FontStyle.Italic,
-            icon = Icons.Outlined.FormatItalic,
+            icon = SuperDiaryIcon.FormatItalic,
         )
 
         RichTextStyleButton(
@@ -59,7 +53,7 @@ fun RichTextStyleRow(
                 )
             },
             isSelected = state.currentSpanStyle.textDecoration?.contains(TextDecoration.Underline) == true,
-            icon = Icons.Outlined.FormatUnderlined,
+            icon = SuperDiaryIcon.FormatUnderlined,
         )
 
         RichTextStyleButton(
@@ -71,7 +65,7 @@ fun RichTextStyleRow(
                 )
             },
             isSelected = state.currentSpanStyle.textDecoration?.contains(TextDecoration.LineThrough) == true,
-            icon = Icons.Outlined.FormatStrikethrough,
+            icon = SuperDiaryIcon.FormatStrikethrough,
         )
 
         RichTextStyleButton(
@@ -79,7 +73,7 @@ fun RichTextStyleRow(
                 state.toggleUnorderedList()
             },
             isSelected = state.isUnorderedList,
-            icon = Icons.AutoMirrored.Outlined.FormatListBulleted,
+            icon = SuperDiaryIcon.FormatListBulleted,
         )
 
         RichTextStyleButton(
@@ -87,7 +81,7 @@ fun RichTextStyleRow(
                 state.toggleOrderedList()
             },
             isSelected = state.isOrderedList,
-            icon = Icons.Outlined.FormatListNumbered,
+            icon = SuperDiaryIcon.FormatListNumbered,
         )
     }
 }
