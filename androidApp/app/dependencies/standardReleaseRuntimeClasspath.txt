@@ -97,10 +97,6 @@ androidx.compose.foundation:foundation:1.11.4
 androidx.compose.material3:material3-android:1.5.0-alpha17
 androidx.compose.material3:material3:1.5.0-alpha17
 androidx.compose.material:material-android:1.11.4
-androidx.compose.material:material-icons-core-android:1.7.8
-androidx.compose.material:material-icons-core:1.7.8
-androidx.compose.material:material-icons-extended-android:1.7.8
-androidx.compose.material:material-icons-extended:1.7.8
 androidx.compose.material:material-ripple-android:1.11.4
 androidx.compose.material:material-ripple:1.11.4
 androidx.compose.material:material:1.11.4
@@ -455,8 +451,6 @@ org.jetbrains.compose.components:components-resources:1.11.1
 org.jetbrains.compose.foundation:foundation-layout:1.11.1
 org.jetbrains.compose.foundation:foundation:1.11.1
 org.jetbrains.compose.material3:material3:1.11.0-alpha07
-org.jetbrains.compose.material:material-icons-core:1.7.3
-org.jetbrains.compose.material:material-icons-extended:1.7.3
 org.jetbrains.compose.material:material-ripple:1.11.1
 org.jetbrains.compose.material:material:1.11.1
 org.jetbrains.compose.runtime:runtime-saveable:1.11.1
@@ -470,7 +464,6 @@ org.jetbrains.compose.ui:ui-util:1.11.1
 org.jetbrains.compose.ui:ui:1.11.1
 org.jetbrains.kotlin:kotlin-bom:2.3.10
 org.jetbrains.kotlin:kotlin-reflect:2.3.10
-org.jetbrains.kotlin:kotlin-stdlib-common:2.4.10
 org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.4.10
 org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.3.10
 org.jetbrains.kotlin:kotlin-stdlib:2.4.10

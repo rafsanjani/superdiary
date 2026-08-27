@@ -1,17 +1,8 @@
 package com.foreverrafs.superdiary.ui.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.automirrored.outlined.List
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Lightbulb
-import androidx.compose.material.icons.filled.StackedBarChart
-import androidx.compose.material.icons.outlined.BarChart
-import androidx.compose.material.icons.outlined.Lightbulb
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.NavKey
 import androidx.savedstate.serialization.SavedStateConfiguration
+import com.foreverrafs.superdiary.design.icons.SuperDiaryIcon
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
@@ -20,32 +11,32 @@ import kotlinx.serialization.modules.polymorphic
 sealed interface TopLevelRoute : SuperDiaryTab {
     @Serializable
     data object DashboardTab : TopLevelRoute {
-        override val selectedIcon: ImageVector = Icons.Filled.StackedBarChart
+        override val selectedIcon: SuperDiaryIcon = SuperDiaryIcon.StackedBarChart
 
         override val title: String = "Dashboard"
-        override val icon: ImageVector = Icons.Outlined.BarChart
+        override val icon: SuperDiaryIcon = SuperDiaryIcon.BarChart
     }
 
     @Serializable
     data object DiaryList : TopLevelRoute {
-        override val selectedIcon: ImageVector = Icons.AutoMirrored.Filled.List
+        override val selectedIcon: SuperDiaryIcon = SuperDiaryIcon.List
 
         override val title: String = "List"
-        override val icon: ImageVector = Icons.AutoMirrored.Outlined.List
+        override val icon: SuperDiaryIcon = SuperDiaryIcon.List
     }
 
     @Serializable
     data object FavoriteTab : TopLevelRoute {
-        override val selectedIcon: ImageVector = Icons.Default.Favorite
-        override val icon: ImageVector = Icons.Default.FavoriteBorder
+        override val selectedIcon: SuperDiaryIcon = SuperDiaryIcon.Favorite
+        override val icon: SuperDiaryIcon = SuperDiaryIcon.FavoriteBorder
 
         override val title: String = "Favorites"
     }
 
     @Serializable
     data object WritingInsightsTab : TopLevelRoute {
-        override val selectedIcon: ImageVector = Icons.Filled.Lightbulb
-        override val icon: ImageVector = Icons.Outlined.Lightbulb
+        override val selectedIcon: SuperDiaryIcon = SuperDiaryIcon.Lightbulb
+        override val icon: SuperDiaryIcon = SuperDiaryIcon.LightbulbOutline
         override val title: String = "Insights"
     }
 

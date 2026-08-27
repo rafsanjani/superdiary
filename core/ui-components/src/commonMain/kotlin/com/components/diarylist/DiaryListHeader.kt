@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -25,6 +22,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.foreverrafs.superdiary.design.components.HeadlineMediumText
+import com.foreverrafs.superdiary.design.icons.SuperDiaryIcon
 
 @Composable
 internal fun DiaryListHeader(
@@ -62,7 +60,7 @@ internal fun DiaryListHeader(
             if (inSelectionMode) {
                 if (selected) {
                     Icon(
-                        imageVector = Icons.Filled.CheckCircle,
+                        painter = SuperDiaryIcon.CheckCircle.painter(),
                         tint = MaterialTheme.colorScheme.primary,
                         contentDescription = null,
                         modifier = Modifier
@@ -80,7 +78,7 @@ internal fun DiaryListHeader(
                     )
                 } else {
                     Icon(
-                        imageVector = Icons.Filled.RadioButtonUnchecked,
+                        painter = SuperDiaryIcon.RadioButtonUnchecked.painter(),
                         tint = MaterialTheme.colorScheme.onSurface,
                         contentDescription = null,
                         modifier = Modifier

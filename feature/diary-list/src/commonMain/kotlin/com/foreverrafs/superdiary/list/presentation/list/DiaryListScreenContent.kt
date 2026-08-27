@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -52,6 +50,7 @@ import com.foreverrafs.superdiary.design.components.BodySmallText
 import com.foreverrafs.superdiary.design.components.ConfirmDeleteDialog
 import com.foreverrafs.superdiary.design.components.HeadlineMediumText
 import com.foreverrafs.superdiary.design.components.LabelLargeText
+import com.foreverrafs.superdiary.design.icons.SuperDiaryIcon
 import com.foreverrafs.superdiary.design.style.CREATE_DIARY_SHARED_BOUNDS_KEY
 import com.foreverrafs.superdiary.design.style.LocalRootAnimatedContentScope
 import com.foreverrafs.superdiary.design.style.LocalSharedTransitionScope
@@ -151,7 +150,7 @@ fun DiaryListScreenContent(
                     shape = RoundedCornerShape(4.dp),
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Add,
+                        painter = SuperDiaryIcon.Add.painter(),
                         contentDescription = null,
                     )
                 }

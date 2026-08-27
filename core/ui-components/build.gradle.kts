@@ -32,8 +32,6 @@ kotlin {
             implementation(libs.jetbrains.lifecycle.runtime.compose)
             implementation(projects.designSystem)
             implementation(libs.kotlinx.serialization.json)
-
-            implementation(compose.materialIconsExtended)
         }
 
         commonTest.dependencies {

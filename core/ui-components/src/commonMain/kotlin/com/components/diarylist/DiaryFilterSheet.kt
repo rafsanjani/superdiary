@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Badge
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
@@ -42,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import com.foreverrafs.superdiary.design.components.HeadlineMediumText
 import com.foreverrafs.superdiary.design.components.LabelLargeText
 import com.foreverrafs.superdiary.design.components.LabelSmallText
+import com.foreverrafs.superdiary.design.icons.SuperDiaryIcon
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
@@ -249,7 +248,7 @@ private fun DiaryFilterChip(
         leadingIcon = {
             if (selected) {
                 Icon(
-                    imageVector = Icons.Filled.Done,
+                    painter = SuperDiaryIcon.Done.painter(),
                     contentDescription = label,
                     modifier = Modifier.size(FilterChipDefaults.IconSize),
                 )

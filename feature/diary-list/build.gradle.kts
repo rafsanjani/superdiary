@@ -21,7 +21,6 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
             implementation(libs.jetbrains.compose.foundation)
-            implementation(compose.materialIconsExtended)
             implementation(libs.jetbrains.compose.resources)
             implementation(libs.jetbrains.compose.preview)
             implementation(projects.core.logging)

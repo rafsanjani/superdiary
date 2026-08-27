@@ -17,7 +17,6 @@ kotlin {
         }
 
         commonMain.dependencies {
-            implementation(compose.materialIconsExtended)
             implementation(projects.core.location)
             implementation(projects.core.diaryAi)
             implementation(libs.jetbrains.compose.foundation)
