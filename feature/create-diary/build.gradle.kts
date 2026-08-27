@@ -36,6 +36,7 @@ kotlin {
             implementation(projects.core.database)
             implementation(projects.core.authentication)
             implementation(projects.core.logging)
+            implementation(projects.core.analytics)
             implementation(projects.core.permission)
         }
 

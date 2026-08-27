@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.preferences.DiaryPreference
+import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
+import com.foreverrafs.superdiary.profile.analytics.Logout
 import com.foreverrafs.superdiary.profile.domain.usecase.SignOutUseCase
 import com.foreverrafs.superdiary.utils.DiarySettings
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +29,7 @@ class ProfileScreenViewModel(
     private val authApi: AuthApi,
     private val preference: DiaryPreference,
     private val signOutUseCase: SignOutUseCase,
+    private val analyticsTracker: AnalyticsTracker = AnalyticsTracker.NoOp,
 ) : ViewModel() {
     private val _viewState: MutableStateFlow<ProfileScreenViewData> = MutableStateFlow(
         ProfileScreenViewData(),
@@ -64,6 +67,7 @@ class ProfileScreenViewModel(
 
         _viewState.update {
             if (result.isSuccess) {
+                analyticsTracker.trackEvent(Logout)
                 it.copy(isLogoutSuccess = true)
             } else {
                 it.copy(

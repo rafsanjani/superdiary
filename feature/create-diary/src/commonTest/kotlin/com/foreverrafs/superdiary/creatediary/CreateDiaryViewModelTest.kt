@@ -2,6 +2,7 @@ package com.foreverrafs.superdiary.creatediary
 
 import app.cash.turbine.test
 import assertk.assertThat
+import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
@@ -9,11 +10,14 @@ import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.ai.api.DiaryAI
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
+import com.foreverrafs.superdiary.core.analytics.AnalyticsEvent
+import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.core.permission.LocationManager
 import com.foreverrafs.superdiary.core.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.permission.PermissionState
 import com.foreverrafs.superdiary.creatediary.FakePermissionsControllerWrapper.ActionPerformed
+import com.foreverrafs.superdiary.creatediary.analytics.CreateDiaryAnalyticsEvent
 import com.foreverrafs.superdiary.creatediary.screen.CreateDiaryViewModel
 import com.foreverrafs.superdiary.creatediary.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.domain.model.Diary
@@ -68,6 +72,7 @@ class CreateDiaryViewModelTest {
     private val preference: DiaryPreference = mock()
 
     private lateinit var createDiaryViewModel: CreateDiaryViewModel
+    private val trackedEvents = mutableListOf<AnalyticsEvent>()
 
     private val permissionsController: FakePermissionsControllerWrapper =
         FakePermissionsControllerWrapper()
@@ -75,6 +80,7 @@ class CreateDiaryViewModelTest {
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(TestAppDispatchers.main)
+        trackedEvents.clear()
 
         every { preference.settings }.returns(emptyFlow())
         everySuspend { preference.getSnapshot() }.returns(DiarySettings.Empty)
@@ -96,6 +102,7 @@ class CreateDiaryViewModelTest {
             ),
             preference = preference,
             authApi = authApi,
+            analyticsTracker = AnalyticsTracker(trackedEvents::add),
         )
     }
 
@@ -127,6 +134,9 @@ class CreateDiaryViewModelTest {
         delay(100)
 
         verifySuspend { dataSource.save(diary) }
+        assertThat(trackedEvents).isEqualTo(
+            listOf(CreateDiaryAnalyticsEvent.DiaryCreated(hasLocation = false)),
+        )
     }
 
     @Test

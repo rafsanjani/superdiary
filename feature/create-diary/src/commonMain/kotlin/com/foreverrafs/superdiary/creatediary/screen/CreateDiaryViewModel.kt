@@ -5,12 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.preferences.DiaryPreference
 import com.foreverrafs.superdiary.ai.api.DiaryAI
+import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.location.Location
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.core.permission.LocationManager
 import com.foreverrafs.superdiary.core.permission.LocationPermissionManager
 import com.foreverrafs.superdiary.core.permission.PermissionState
 import com.foreverrafs.superdiary.core.permission.PermissionsControllerWrapper
+import com.foreverrafs.superdiary.creatediary.analytics.CreateDiaryAnalyticsEvent
 import com.foreverrafs.superdiary.creatediary.usecase.AddDiaryUseCase
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
@@ -33,6 +35,7 @@ class CreateDiaryViewModel(
     private val locationPermissionManager: LocationPermissionManager,
     private val preference: DiaryPreference,
     authApi: AuthApi,
+    private val analyticsTracker: AnalyticsTracker = AnalyticsTracker.NoOp,
 ) : ViewModel() {
 
     val permissionState: StateFlow<PermissionState> = locationPermissionManager
@@ -107,6 +110,11 @@ class CreateDiaryViewModel(
             }
 
             is Result.Success -> {
+                analyticsTracker.trackEvent(
+                    CreateDiaryAnalyticsEvent.DiaryCreated(
+                        hasLocation = diary.location != Location.Empty,
+                    ),
+                )
                 logger.i(Tag) {
                     "Diary entry successfully saved: $diary"
                 }
@@ -114,8 +122,10 @@ class CreateDiaryViewModel(
         }
     }
 
-    fun generateAIDiary(prompt: String, wordCount: Int): Flow<String> =
-        diaryAI.generateDiary(prompt, wordCount)
+    fun generateAIDiary(prompt: String, wordCount: Int): Flow<String> {
+        analyticsTracker.trackEvent(CreateDiaryAnalyticsEvent.AIDiaryRequested(wordCount))
+        return diaryAI.generateDiary(prompt, wordCount)
+    }
 
     fun onRequestLocationPermission() = viewModelScope.launch {
         locationPermissionManager.provideLocationPermission()

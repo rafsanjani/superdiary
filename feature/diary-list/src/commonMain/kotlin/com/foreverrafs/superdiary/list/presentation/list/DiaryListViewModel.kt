@@ -6,12 +6,14 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.components.diarylist.DiaryFilters
 import com.foreverrafs.auth.AuthApi
+import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
+import com.foreverrafs.superdiary.list.analytics.DiaryListAnalyticsEvent
 import com.foreverrafs.superdiary.list.domain.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.list.domain.usecase.GetAllDiariesUseCase
 import com.foreverrafs.superdiary.utils.toInstant
@@ -45,6 +47,7 @@ internal class DiaryListViewModel(
     private val updateDiaryUseCase: UpdateDiaryUseCase,
     private val logger: AggregateLogger,
     private val authApi: AuthApi,
+    private val analyticsTracker: AnalyticsTracker = AnalyticsTracker.NoOp,
 ) : ViewModel() {
 
     private val filters: MutableStateFlow<DiaryFilters> = MutableStateFlow(DiaryFilters())
@@ -117,7 +120,13 @@ internal class DiaryListViewModel(
 
     suspend fun deleteDiaries(diaries: List<Diary>): Boolean =
         when (val result = deleteDiaryUseCase(diaries)) {
-            is Result.Success -> result.data == diaries.size
+            is Result.Success -> (result.data == diaries.size).also { allDeleted ->
+                if (allDeleted) {
+                    analyticsTracker.trackEvent(
+                        DiaryListAnalyticsEvent.DiaryDeleted(result.data),
+                    )
+                }
+            }
             is Result.Failure -> false
         }
 
@@ -140,7 +149,15 @@ internal class DiaryListViewModel(
                 logger.d(Tag) {
                     "Favorite toggled"
                 }
-                result.data
+                result.data.also { updated ->
+                    if (updated) {
+                        analyticsTracker.trackEvent(
+                            DiaryListAnalyticsEvent.FavoriteChanged(
+                                isFavorite = !diary.isFavorite,
+                            ),
+                        )
+                    }
+                }
             }
         }
     }

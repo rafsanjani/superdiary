@@ -3,10 +3,12 @@ package com.foreverrafs.superdiary.list.presentation.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
+import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.usecase.GetDiaryByIdUseCase
+import com.foreverrafs.superdiary.list.analytics.DiaryListAnalyticsEvent
 import com.foreverrafs.superdiary.list.domain.usecase.DeleteDiaryUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,6 +33,7 @@ class DetailsViewModel(
     private val getDiaryByIdUseCase: GetDiaryByIdUseCase,
     private val logger: AggregateLogger,
     private val authApi: AuthApi,
+    private val analyticsTracker: AnalyticsTracker = AnalyticsTracker.NoOp,
 ) : ViewModel() {
 
     private val _deleteDiaryState = MutableStateFlow<DeleteDiaryState?>(null)
@@ -51,6 +54,9 @@ class DetailsViewModel(
                 val deletedItems = result.data
 
                 if (deletedItems != 0) {
+                    analyticsTracker.trackEvent(
+                        DiaryListAnalyticsEvent.DiaryDeleted(deletedItems),
+                    )
                     _deleteDiaryState.update {
                         DeleteDiaryState.Success(deletedItems)
                     }

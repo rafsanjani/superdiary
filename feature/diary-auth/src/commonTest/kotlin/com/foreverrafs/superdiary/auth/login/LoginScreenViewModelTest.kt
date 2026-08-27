@@ -2,19 +2,22 @@ package com.foreverrafs.superdiary.auth.login
 
 import app.cash.turbine.test
 import assertk.assertThat
+import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.AuthUiContext
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
+import com.foreverrafs.superdiary.auth.analytics.AuthAnalyticsEvent
 import com.foreverrafs.superdiary.auth.login.screen.LoginViewState
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
 import com.foreverrafs.superdiary.common.coroutines.awaitUntil
+import com.foreverrafs.superdiary.core.analytics.AnalyticsEvent
+import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
@@ -25,17 +28,19 @@ import kotlinx.coroutines.test.setMain
 class LoginScreenViewModelTest {
     private val authUiContext = object : AuthUiContext {}
     private lateinit var loginViewModel: LoginScreenViewModel
+    private val trackedEvents = mutableListOf<AnalyticsEvent>()
 
-    @OptIn(ExperimentalTime::class)
     private val authApi: FakeAuthApi = FakeAuthApi()
 
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(TestAppDispatchers.main)
+        trackedEvents.clear()
 
         loginViewModel = LoginScreenViewModel(
             authApi = authApi,
             coroutineDispatchers = TestAppDispatchers,
+            analyticsTracker = AnalyticsTracker(trackedEvents::add),
         )
     }
 
@@ -109,7 +114,6 @@ class LoginScreenViewModelTest {
         }
     }
 
-    @OptIn(ExperimentalTime::class)
     @Test
     fun `Should emit LoginViewState Success when signInWithGoogle succeeds`() = runTest {
         authApi.signInResult = AuthApi.SessionStatus.Authenticated(
@@ -132,5 +136,9 @@ class LoginScreenViewModelTest {
             expectNoEvents()
             assertThat(state).isInstanceOf<LoginViewState.Success>()
         }
+
+        assertThat(trackedEvents).isEqualTo(
+            listOf(AuthAnalyticsEvent.Login(method = "google")),
+        )
     }
 }

@@ -6,8 +6,10 @@ import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.AuthException
 import com.foreverrafs.auth.AuthUiContext
 import com.foreverrafs.auth.GenericAuthException
+import com.foreverrafs.superdiary.auth.analytics.AuthAnalyticsEvent
 import com.foreverrafs.superdiary.auth.login.screen.LoginViewState
 import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
+import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,6 +19,7 @@ import kotlinx.coroutines.launch
 class LoginScreenViewModel(
     private val authApi: AuthApi,
     private val coroutineDispatchers: AppCoroutineDispatchers,
+    private val analyticsTracker: AnalyticsTracker = AnalyticsTracker.NoOp,
 ) : ViewModel() {
     private val _viewState: MutableStateFlow<LoginViewState> =
         MutableStateFlow(LoginViewState.Idle)
@@ -47,10 +50,13 @@ class LoginScreenViewModel(
                     )
                 }
 
-                is AuthApi.SessionStatus.Authenticated -> _viewState.update { currentState ->
-                    result.sessionInfo.userInfo?.let {
-                        LoginViewState.Success(it)
-                    } ?: currentState
+                is AuthApi.SessionStatus.Authenticated -> {
+                    analyticsTracker.trackEvent(AuthAnalyticsEvent.Login(method = "google"))
+                    _viewState.update { currentState ->
+                        result.sessionInfo.userInfo?.let {
+                            LoginViewState.Success(it)
+                        } ?: currentState
+                    }
                 }
             }
         }
@@ -68,10 +74,13 @@ class LoginScreenViewModel(
                     )
                 }
 
-                is AuthApi.SessionStatus.Authenticated -> _viewState.update { currentState ->
-                    result.sessionInfo.userInfo?.let {
-                        LoginViewState.Success(it)
-                    } ?: currentState
+                is AuthApi.SessionStatus.Authenticated -> {
+                    analyticsTracker.trackEvent(AuthAnalyticsEvent.Login(method = "email"))
+                    _viewState.update { currentState ->
+                        result.sessionInfo.userInfo?.let {
+                            LoginViewState.Success(it)
+                        } ?: currentState
+                    }
                 }
             }
         }

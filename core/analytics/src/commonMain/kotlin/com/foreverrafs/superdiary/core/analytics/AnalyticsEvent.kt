@@ -5,4 +5,7 @@ import kotlin.native.ObjCName
 
 @OptIn(ExperimentalObjCName::class)
 @ObjCName(swiftName = "AnalyticsEvent")
-interface AnalyticsEvents
+interface AnalyticsEvent {
+    val name: String
+    val parameters: Map<String, String>
+}

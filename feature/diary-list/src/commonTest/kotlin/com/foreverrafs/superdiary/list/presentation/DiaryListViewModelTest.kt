@@ -3,18 +3,22 @@ package com.foreverrafs.superdiary.list.presentation
 import androidx.paging.PagingData
 import app.cash.turbine.test
 import assertk.assertThat
+import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
 import com.components.diarylist.DiaryFilters
 import com.foreverrafs.auth.AuthApi
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.common.coroutines.TestAppDispatchers
+import com.foreverrafs.superdiary.core.analytics.AnalyticsEvent
+import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import com.foreverrafs.superdiary.domain.model.Diary
 import com.foreverrafs.superdiary.domain.repository.DataSource
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByDateUseCase
 import com.foreverrafs.superdiary.domain.usecase.SearchDiaryByEntryUseCase
 import com.foreverrafs.superdiary.domain.usecase.UpdateDiaryUseCase
+import com.foreverrafs.superdiary.list.analytics.DiaryListAnalyticsEvent
 import com.foreverrafs.superdiary.list.domain.repository.DiaryListRepository
 import com.foreverrafs.superdiary.list.domain.usecase.DeleteDiaryUseCase
 import com.foreverrafs.superdiary.list.domain.usecase.GetAllDiariesUseCase
@@ -46,6 +50,7 @@ import kotlinx.coroutines.test.setMain
 class DiaryListViewModelTest {
 
     private val dataSource: DataSource = mock()
+    private val trackedEvents = mutableListOf<AnalyticsEvent>()
 
     private lateinit var diaryListViewModel: DiaryListViewModel
 
@@ -75,6 +80,7 @@ class DiaryListViewModelTest {
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())
+        trackedEvents.clear()
 
         every { dataSource.findByDatePaged(any()) }.returns(
             flowOf(PagingData.from(listOf(diary))),
@@ -103,6 +109,7 @@ class DiaryListViewModelTest {
             deleteDiaryUseCase = DeleteDiaryUseCase(dataSource, TestAppDispatchers),
             logger = AggregateLogger(emptyList()),
             authApi = authApi,
+            analyticsTracker = AnalyticsTracker(trackedEvents::add),
         )
     }
 
@@ -192,9 +199,13 @@ class DiaryListViewModelTest {
             dataSource.delete(diaries = any())
         }.returns(1)
 
-        diaryListViewModel.deleteDiaries(diaries = listOf())
+        val result = diaryListViewModel.deleteDiaries(diaries = listOf(diary))
 
         verifySuspend { dataSource.delete(diaries = any()) }
+        assertThat(result).isTrue()
+        assertThat(trackedEvents).isEqualTo(
+            listOf(DiaryListAnalyticsEvent.DiaryDeleted(count = 1)),
+        )
     }
 
     @Test
@@ -207,6 +218,7 @@ class DiaryListViewModelTest {
 
         verifySuspend { dataSource.delete(diaries = any()) }
         assertThat(result).isFalse()
+        assertThat(trackedEvents).isEqualTo(emptyList())
     }
 
     @Test
@@ -219,6 +231,9 @@ class DiaryListViewModelTest {
 
         verifySuspend { dataSource.update(any()) }
         assertThat(result).isTrue()
+        assertThat(trackedEvents).isEqualTo(
+            listOf(DiaryListAnalyticsEvent.FavoriteChanged(isFavorite = true)),
+        )
     }
 
     @Test
@@ -231,5 +246,6 @@ class DiaryListViewModelTest {
 
         verifySuspend { dataSource.update(any()) }
         assertThat(result).isFalse()
+        assertThat(trackedEvents).isEqualTo(emptyList())
     }
 }
