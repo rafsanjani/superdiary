@@ -6,5 +6,9 @@ import kotlin.native.ObjCName
 @OptIn(ExperimentalObjCName::class)
 @ObjCName(swiftName = "AnalyticsTracker")
 fun interface AnalyticsTracker {
-    fun trackEvent(event: AnalyticsEvents)
+    fun trackEvent(event: AnalyticsEvent)
+
+    companion object {
+        val NoOp: AnalyticsTracker = AnalyticsTracker { }
+    }
 }

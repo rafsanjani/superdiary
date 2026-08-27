@@ -3,8 +3,10 @@ package com.foreverrafs.superdiary.auth.register
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.foreverrafs.auth.AuthApi
+import com.foreverrafs.superdiary.auth.analytics.AuthAnalyticsEvent
 import com.foreverrafs.superdiary.auth.register.screen.RegisterScreenState
 import com.foreverrafs.superdiary.common.utils.AppCoroutineDispatchers
+import com.foreverrafs.superdiary.core.analytics.AnalyticsTracker
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,6 +16,7 @@ class RegisterScreenViewModel(
     private val authApi: AuthApi,
     private val coroutineDispatchers: AppCoroutineDispatchers,
     private val formValidator: RegistrationFormValidator,
+    private val analyticsTracker: AnalyticsTracker = AnalyticsTracker.NoOp,
 ) : ViewModel() {
     private val _viewState: MutableStateFlow<RegisterScreenState> =
         MutableStateFlow(RegisterScreenState.Idle)
@@ -72,8 +75,11 @@ class RegisterScreenViewModel(
                 )
             }
 
-            is AuthApi.RegistrationStatus.Success -> _viewState.update {
-                RegisterScreenState.Success
+            is AuthApi.RegistrationStatus.Success -> {
+                analyticsTracker.trackEvent(AuthAnalyticsEvent.Registration(method = "email"))
+                _viewState.update {
+                    RegisterScreenState.Success
+                }
             }
         }
     }
