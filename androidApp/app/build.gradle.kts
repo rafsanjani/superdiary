@@ -1,5 +1,3 @@
-@file:Suppress("UnusedPrivateProperty")
-
 import com.google.firebase.appdistribution.gradle.firebaseAppDistributionDefault
 import io.sentry.android.gradle.extensions.InstrumentationFeature
 import org.jetbrains.kotlin.konan.properties.Properties

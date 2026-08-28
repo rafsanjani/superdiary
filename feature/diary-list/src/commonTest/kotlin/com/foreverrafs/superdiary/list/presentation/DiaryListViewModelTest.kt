@@ -36,7 +36,6 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -46,7 +45,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 
-@OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 class DiaryListViewModelTest {
 
     private val dataSource: DataSource = mock()
@@ -76,7 +75,6 @@ class DiaryListViewModelTest {
         isFavorite = false,
     )
 
-    @OptIn(ExperimentalTime::class)
     @BeforeTest
     fun setup() {
         Dispatchers.setMain(StandardTestDispatcher())

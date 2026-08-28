@@ -198,7 +198,6 @@ fun DashboardScreenContent(
     }
 }
 
-@Suppress("LongMethod")
 private fun dashboardItems(
     state: DashboardViewModel.DashboardScreenState.Content,
     onAddEntry: () -> Unit,
@@ -269,7 +268,6 @@ private fun dashboardItems(
     }
 }
 
-@Suppress("LongMethod")
 private fun dashboardPlaceholderItems(): SnapshotStateList<DashboardSection> =
     mutableStateListOf<DashboardSection>().apply {
         add(

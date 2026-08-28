@@ -7,10 +7,8 @@ import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
 import com.foreverrafs.superdiary.core.logging.AggregateLogger
 import io.github.jan.supabase.SupabaseClient
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-@OptIn(ExperimentalTime::class)
 class FakeAndroidAuth(
     private val supabaseClient: SupabaseClient,
     private val logger: AggregateLogger,

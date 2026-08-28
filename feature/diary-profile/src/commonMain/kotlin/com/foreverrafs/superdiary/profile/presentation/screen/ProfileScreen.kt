@@ -1,7 +1,6 @@
 package com.foreverrafs.superdiary.profile.presentation.screen
 
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -80,7 +79,6 @@ import superdiary.feature.diary_profile.generated.resources.profile_sign_out_err
 import superdiary.feature.diary_profile.generated.resources.profile_weekly_summary_label
 import superdiary.feature.diary_profile.generated.resources.unique_email_address_label
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ProfileScreen(
     onLogoutComplete: () -> Unit,
@@ -112,7 +110,6 @@ fun ProfileScreen(
     )
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ProfileScreenContent(
     viewState: ProfileScreenViewData,
@@ -420,7 +417,6 @@ private fun CheckboxProfileItem(
     }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Preview
 @Composable
 private fun Preview() {

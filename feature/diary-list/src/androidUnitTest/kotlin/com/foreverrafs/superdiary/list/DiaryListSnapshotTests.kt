@@ -70,7 +70,6 @@ class DiaryListSnapshotTests(
             }
         }
 
-    @OptIn(ExperimentalSharedTransitionApi::class)
     @Test
     fun `Loading diary list`() {
         paparazzi.snapshot {

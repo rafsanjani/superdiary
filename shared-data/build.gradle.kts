@@ -1,5 +1,3 @@
-@file:Suppress("UnusedPrivateProperty")
-
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 

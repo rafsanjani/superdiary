@@ -14,7 +14,6 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 
-@Suppress("UnusedFlow")
 @OptIn(ExperimentalCoroutinesApi::class)
 class DiaryAiImplTest {
 

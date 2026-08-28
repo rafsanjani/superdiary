@@ -6,11 +6,9 @@ import com.foreverrafs.auth.AuthUiContext
 import com.foreverrafs.auth.model.SessionInfo
 import com.foreverrafs.auth.model.UserInfo
 import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-@OptIn(ExperimentalTime::class)
 class FakeAuthApi(
     clock: Clock = Clock.System,
 ) : AuthApi {

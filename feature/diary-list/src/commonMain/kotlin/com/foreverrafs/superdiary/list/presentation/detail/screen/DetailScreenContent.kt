@@ -1,6 +1,5 @@
 package com.foreverrafs.superdiary.list.presentation.detail.screen
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,6 +36,7 @@ import com.foreverrafs.superdiary.list.presentation.detail.DetailsViewState
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.datetime.TimeZone
@@ -45,7 +45,7 @@ import org.jetbrains.compose.resources.stringResource
 import superdiary.feature.diary_list.generated.resources.Res
 import superdiary.feature.diary_list.generated.resources.label_diary_deleted
 
-@OptIn(ExperimentalRichTextApi::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalRichTextApi::class)
 @Composable
 fun DetailScreenContent(
     onDeleteDiary: (diary: Diary) -> Unit,
@@ -127,7 +127,7 @@ fun DetailScreenContent(
 
                         coroutineScope.launch {
                             // Only show snackbar for 600 milliseconds
-                            withTimeoutOrNull(600) {
+                            withTimeoutOrNull(600.milliseconds) {
                                 hostState.showSnackbar(
                                     message = deletedString,
                                     duration = SnackbarDuration.Indefinite,

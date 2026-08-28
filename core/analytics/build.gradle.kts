@@ -1,5 +1,3 @@
-@file:Suppress("UnusedPrivateProperty")
-
 plugins {
     id("com.superdiary.multiplatform.kotlin")
     id("com.superdiary.android.library")
@@ -7,7 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     jvm()
     iosArm64()

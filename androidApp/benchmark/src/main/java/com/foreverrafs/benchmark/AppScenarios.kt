@@ -1,8 +1,6 @@
 // Copyright 2023, Google LLC, Christopher Banes and the Tivi project contributors
 // SPDX-License-Identifier: Apache-2.0
 
-@file:Suppress("TooManyFunctions", "ReturnCount")
-
 package com.foreverrafs.benchmark
 
 import android.os.SystemClock

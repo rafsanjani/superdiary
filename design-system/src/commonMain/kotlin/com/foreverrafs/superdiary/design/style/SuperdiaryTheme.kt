@@ -160,7 +160,6 @@ fun montserratAlternativesFontFamily(): FontFamily = FontFamily(
     ),
 )
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope> {
     error("SharedTransitionScope not present")
 }
@@ -172,7 +171,6 @@ val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope>
  * tab → screen boundary (e.g. profile avatar → profile image).
  *
  */
-@OptIn(ExperimentalSharedTransitionApi::class)
 val LocalRootAnimatedContentScope = staticCompositionLocalOf<AnimatedContentScope?> {
     null
 }

@@ -33,7 +33,6 @@ class ChangePasswordViewModelTest {
         everySuspend { updatePassword(any()) } returns Result.success(Unit)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(TestAppDispatchers.main)

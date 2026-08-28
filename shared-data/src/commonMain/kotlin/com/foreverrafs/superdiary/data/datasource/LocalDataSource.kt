@@ -25,7 +25,6 @@ import kotlinx.datetime.number
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
-@Suppress("TooManyFunctions")
 class LocalDataSource(
     internal val database: Database,
     private val clock: Clock = Clock.System,

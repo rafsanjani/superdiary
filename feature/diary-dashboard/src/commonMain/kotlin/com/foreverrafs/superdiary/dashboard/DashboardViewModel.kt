@@ -27,7 +27,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-@Suppress("LongParameterList")
 class DashboardViewModel(
     private val calculateStreakUseCase: CalculateStreakUseCase,
     private val getRecentEntriesUseCase: GetRecentEntriesUseCase,

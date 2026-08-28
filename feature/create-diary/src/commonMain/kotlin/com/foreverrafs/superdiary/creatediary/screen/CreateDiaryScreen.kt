@@ -25,7 +25,6 @@ import superdiary.feature.create_diary.generated.resources.Res
 import superdiary.feature.create_diary.generated.resources.generate_diary_error_message
 import superdiary.feature.create_diary.generated.resources.generating_diary_message
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun CreateDiaryScreen(
     onDiarySaveComplete: () -> Unit,

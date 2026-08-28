@@ -1,5 +1,3 @@
-@file:Suppress("UnusedPrivateProperty")
-
 plugins {
     id("com.superdiary.multiplatform.compose")
     id("com.superdiary.multiplatform.kotlin")
@@ -10,7 +8,6 @@ plugins {
     // alias(libs.plugins.paparazzi) // Disabled due to incompatibility with the new Android multiplatform plugin
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     sourceSets {
         androidHostTest.dependencies {
