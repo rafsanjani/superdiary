@@ -1,5 +1,3 @@
-@file:Suppress("UnusedPrivateProperty")
-
 plugins {
     id("com.superdiary.android.library")
     id("com.superdiary.multiplatform.kotlin")
@@ -8,7 +6,6 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
 }
 
-@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     sourceSets {
         commonMain {

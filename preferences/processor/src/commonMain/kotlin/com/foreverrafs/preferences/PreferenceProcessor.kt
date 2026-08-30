@@ -1,5 +1,3 @@
-@file:Suppress("UnnecessaryVariable")
-
 package com.foreverrafs.preferences
 
 import com.foreverrafs.preferences.codegen.PreferencesCodeGenerator

@@ -17,7 +17,6 @@ import org.koin.compose.viewmodel.koinViewModel
 import superdiary.feature.diary_list.generated.resources.Res
 import superdiary.feature.diary_list.generated.resources.missing_selected_diary_message
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun DiaryDetailScreen(
     diaryId: String,

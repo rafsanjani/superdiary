@@ -14,7 +14,6 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -44,7 +43,6 @@ class GetLatestEntriesUseCaseTest {
         Dispatchers.resetMain()
     }
 
-    @OptIn(ExperimentalTime::class)
     @Test
     fun `Last inserted item should be at the top`() = runTest {
         val items = listOf(

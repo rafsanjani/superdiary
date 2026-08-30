@@ -1,8 +1,5 @@
-@file:OptIn(ExperimentalSharedTransitionApi::class)
-
 package com.foreverrafs.superdiary.list.presentation.list
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.SnackbarHostState
@@ -17,10 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.components.diarylist.DiaryFilters
 import com.components.diarylist.DiaryListActions
-import kotlin.time.ExperimentalTime
 import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalTime::class)
 @Composable
 fun DiaryListTab(
     onAddEntry: () -> Unit,

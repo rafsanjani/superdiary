@@ -4,7 +4,6 @@ import com.foreverrafs.superdiary.data.Result
 import com.foreverrafs.superdiary.data.datasource.remote.DiaryApi
 import com.foreverrafs.superdiary.data.model.DiaryDto
 import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +13,6 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 
-@OptIn(ExperimentalTime::class)
 class FakeDiaryApi : DiaryApi {
     val clock: Clock = object : Clock {
         override fun now(): Instant = Instant.parse("2025-04-04T01:01:01.049Z")

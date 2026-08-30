@@ -22,7 +22,6 @@ val instantAdapter = object : ColumnAdapter<Instant, Long> {
     override fun encode(value: Instant): Long = value.toEpochMilliseconds()
 }
 
-@Suppress("TooManyFunctions")
 class Database(
     database: SuperDiaryDatabase,
 ) {
