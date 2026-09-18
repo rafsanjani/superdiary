@@ -1,0 +1,61 @@
+package com.foreverrafs.superdiary.ui.components
+
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation3.runtime.NavKey
+import com.foreverrafs.superdiary.design.components.LabelSmallText
+import com.foreverrafs.superdiary.ui.navigation.SuperDiaryTab
+
+@Composable
+actual fun SuperDiaryBottomBar(
+    items: List<SuperDiaryTab>,
+    selected: NavKey,
+    onItemClick: (SuperDiaryTab) -> Unit,
+    modifier: Modifier,
+) {
+    NavigationBar(modifier) {
+        items.forEach { tab ->
+            BottomNavigationItem(
+                tab = tab,
+                selected = selected == tab,
+            ) {
+                onItemClick(tab)
+            }
+        }
+    }
+}
+
+@Composable
+private fun RowScope.BottomNavigationItem(
+    tab: SuperDiaryTab,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    NavigationBarItem(
+        modifier = Modifier.testTag(tab.title),
+        selected = selected,
+        onClick = onClick,
+        icon = {
+            Icon(
+                painter = if (selected) {
+                    tab.selectedIcon.painter()
+                } else {
+                    tab.icon.painter()
+                },
+                contentDescription = tab.title,
+            )
+        },
+        label = {
+            LabelSmallText(
+                text = tab.title,
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+            )
+        },
+    )
+}
