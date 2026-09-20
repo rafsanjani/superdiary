@@ -235,10 +235,10 @@ app.cash.sqldelight:coroutines-extensions-jvm:2.3.2
 app.cash.sqldelight:coroutines-extensions:2.3.2
 app.cash.sqldelight:runtime-jvm:2.3.2
 app.cash.sqldelight:runtime:2.3.2
-co.touchlab:kermit-android:2.1.0
-co.touchlab:kermit-core-android:2.1.0
-co.touchlab:kermit-core:2.1.0
-co.touchlab:kermit:2.1.0
+co.touchlab:kermit-android:2.2.0
+co.touchlab:kermit-core-android:2.2.0
+co.touchlab:kermit-core:2.2.0
+co.touchlab:kermit:2.2.0
 co.touchlab:stately-common-jvm:2.1.0
 co.touchlab:stately-common:2.1.0
 co.touchlab:stately-concurrency-jvm:2.1.0
@@ -482,7 +482,7 @@ org.jetbrains.kotlin:kotlin-bom:2.3.10
 org.jetbrains.kotlin:kotlin-reflect:2.3.10
 org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.4.10
 org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.3.10
-org.jetbrains.kotlin:kotlin-stdlib:2.4.10
+org.jetbrains.kotlin:kotlin-stdlib:2.4.20
 org.jetbrains.kotlinx:kotlinx-collections-immutable-jvm:0.4.0
 org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0
 org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0
