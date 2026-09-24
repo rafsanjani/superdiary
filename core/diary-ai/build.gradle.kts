@@ -17,7 +17,7 @@ kotlin {
                 implementation(libs.kotlin.datetime)
                 implementation(projects.commonUtils)
                 implementation(projects.sharedData)
-                implementation("ai.koog:koog-agents:1.2.0")
+                implementation("ai.koog:koog-agents:1.3.0")
                 implementation(projects.core.database)
                 implementation(projects.core.secrets)
             }
