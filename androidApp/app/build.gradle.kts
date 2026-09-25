@@ -188,7 +188,7 @@ dependencies {
     implementation("androidx.navigation3:navigation3-ui:1.2.0")
     implementation(libs.google.material)
     // TODO: Replace with sentry-bom from version catalog
-    implementation(platform("io.sentry:sentry-bom:8.57.0"))
+    implementation(platform("io.sentry:sentry-bom:8.58.0"))
     implementation(libs.sentry.android)
     implementation(projects.navigation)
     implementation(projects.sharedData)
