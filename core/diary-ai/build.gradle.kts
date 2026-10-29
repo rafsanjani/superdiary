@@ -37,12 +37,12 @@ kotlin {
 
         androidMain {
             dependencies {
-                implementation("io.ktor:ktor-client-okhttp-jvm:3.6.0")
+                implementation("io.ktor:ktor-client-okhttp-jvm:3.6.1")
             }
         }
 
         jvmMain.dependencies {
-            implementation("io.ktor:ktor-client-okhttp-jvm:3.6.0")
+            implementation("io.ktor:ktor-client-okhttp-jvm:3.6.1")
         }
 
         iosMain.dependencies {
