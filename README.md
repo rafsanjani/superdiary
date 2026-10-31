@@ -7,6 +7,22 @@
 </div>
 A simple diary app, mostly focused on quality architectural patterns and improved testing strategies (unit, snapshot and instrumentation).
 
+### Snapshot tests
+
+Use JDK 21 and an installed Android SDK. Paparazzi runs the Android host tests without an emulator:
+
+```sh
+./gradlew verifyPaparazzi
+```
+
+After an intentional UI or renderer change, record new baselines and review the images before committing them:
+
+```sh
+./gradlew recordPaparazzi
+```
+
+Goldens live in each feature's `src/androidHostTest/snapshots/images`. Reports and failure diffs are uploaded by the PR snapshot job.
+
 ### Android - Light
 
 | Dashboard                                                                                                  | Create Diary                                                                                      |

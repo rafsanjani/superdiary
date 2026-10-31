@@ -1,6 +1,6 @@
 plugins {
-    id("com.superdiary.android.library")
-    id("com.superdiary.multiplatform.kotlin")
+    alias(conventionLibs.plugins.superdiary.android.library)
+    alias(conventionLibs.plugins.superdiary.multiplatform.kotlin)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.mokkery)
     alias(libs.plugins.kotlin.parcelize)

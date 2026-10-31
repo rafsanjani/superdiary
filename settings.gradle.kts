@@ -24,6 +24,10 @@ dependencyResolutionManagement {
             from("io.github.rafsanjani:versions:2026.10.11")
             // Because 3.2.4 is making internal calls to android.util.Log which dey borst my mind
             version("supabase", "3.2.3")
+            version("paparazzi", "2.0.0-alpha05.1")
+        }
+        create("conventionLibs") {
+            from(files("gradle/convention-libs.versions.toml"))
         }
     }
 }
