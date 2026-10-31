@@ -1,83 +1,131 @@
-# Superdiary 
+<div align="center">
+  <img src="design-system/src/commonMain/composeResources/drawable/logo.png" width="96" alt="Superdiary notebook logo" />
 
-<div align="left">
-    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/post-merge.yml/badge.svg"  alt="Link to CI build status"/>
-    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/app_distribution.yml/badge.svg"  alt="Link to CI build status"/>
-    <img src = "https://github.com/Rafsanjani/superdiary/actions/workflows/dependency_guard.yml/badge.svg"  alt="Link to CI build status"/>
+  <h1>Superdiary</h1>
+
+  <p><strong>A little space for your everyday.</strong></p>
+  <p>A diary built with Kotlin Multiplatform and Compose Multiplatform.<br />
+  Write, revisit, and find the moments worth keeping.</p>
+
+  <p>
+    <a href="https://github.com/rafsanjani/superdiary/actions/workflows/post-merge.yml"><img src="https://img.shields.io/github/actions/workflow/status/rafsanjani/superdiary/post-merge.yml?branch=main&amp;label=build" alt="Android release build status" /></a>
+    <a href="#under-the-hood"><img src="https://img.shields.io/badge/Kotlin-Multiplatform-7F52FF?style=flat" alt="Kotlin Multiplatform" /></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-6750A4?style=flat" alt="MIT license" /></a>
+  </p>
+
+  <p><a href="#a-look-inside">Preview</a> &nbsp;·&nbsp; <a href="#the-everyday-details">Features</a> &nbsp;·&nbsp; <a href="#get-started">Get started</a> &nbsp;·&nbsp; <a href="#testing">Testing</a></p>
+  <p><sub>Android · iOS · Desktop</sub></p>
 </div>
-A simple diary app, mostly focused on quality architectural patterns and improved testing strategies (unit, snapshot and instrumentation).
 
-### Snapshot tests
+## A look inside
 
-Use JDK 21 and an installed Android SDK. Paparazzi runs the Android host tests without an emulator:
+<table>
+  <tr>
+    <th width="33%">Your day at a glance</th>
+    <th width="33%">Room to write</th>
+    <th width="33%">Your own setup</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="feature/diary-dashboard/src/androidHostTest/snapshots/images/com.foreverrafs.superdiary.dashboard_DashboardScreenSnapshotTest_Dashboard_Screen_-_Latest_Entries%5BPIXEL_6_DARK%5D.png" />
+        <img src="feature/diary-dashboard/src/androidHostTest/snapshots/images/com.foreverrafs.superdiary.dashboard_DashboardScreenSnapshotTest_Dashboard_Screen_-_Latest_Entries%5BPIXEL_6_LIGHT%5D.png" width="240" alt="Dashboard with writing streaks, a weekly summary, and recent diary entries" />
+      </picture>
+    </td>
+    <td align="center">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="feature/create-diary/src/androidHostTest/snapshots/images/com.foreverrafs.superdiary.creatediary_CreateDiarySnapshotTests_Create_Diary_Screen_-_with_content%5BPIXEL_6_DARK%5D.png" />
+        <img src="feature/create-diary/src/androidHostTest/snapshots/images/com.foreverrafs.superdiary.creatediary_CreateDiarySnapshotTests_Create_Diary_Screen_-_with_content%5BPIXEL_6_LIGHT%5D.png" width="240" alt="Diary editor with rich text formatting and AI writing controls" />
+      </picture>
+    </td>
+    <td align="center">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="feature/diary-profile/src/androidHostTest/snapshots/images/com.foreverrafs.superdiary.profile_ProfileScreenSnapshotTest_Profile_Screen_-_Idle%5BPIXEL_6_DARK%5D.png" />
+        <img src="feature/diary-profile/src/androidHostTest/snapshots/images/com.foreverrafs.superdiary.profile_ProfileScreenSnapshotTest_Profile_Screen_-_Idle%5BPIXEL_6_LIGHT%5D.png" width="240" alt="Profile with dashboard preferences and email reminder settings" />
+      </picture>
+    </td>
+  </tr>
+</table>
+
+<p align="center"><sub>Current Android UI, captured with Paparazzi. The gallery follows your light or dark appearance.</sub></p>
+
+## The everyday details
+
+- **Write in your own way.** Rich text formatting, optional location tags, and AI-assisted drafts.
+- **Find a moment again.** Search entries, filter by date, and save favorites.
+- **See the bigger picture.** Weekly summaries, entry counts, and writing streaks.
+- **Make it feel like yours.** Light and dark appearances, with configurable dashboard cards.
+
+> **A work in progress.** Superdiary is a personal playground for multiplatform architecture, shared UI, and testing. Features and platform support continue to evolve.
+
+## Get started
+
+For Android development, use **JDK 21**, **Android SDK 37**, and Android Studio.
+
+**1. Get the source**
+
+```sh
+git clone https://github.com/rafsanjani/superdiary.git
+cd superdiary
+```
+
+**2. Add your local configuration**
+
+```sh
+cp secrets.defaults.properties secrets.properties
+```
+
+Fill in the services you plan to use. Authentication and remote diary data use Supabase; Google sign-in, maps, and AI features need their corresponding credentials. The keys are listed in [the configuration template](secrets.defaults.properties). `secrets.properties` is ignored by Git.
+
+**3. Build the Android app**
+
+Open the project in Android Studio, let it locate your Android SDK, then build the standard debug app:
+
+```sh
+./gradlew :androidApp:app:assembleStandardDebug
+```
+
+<details>
+  <summary><strong>Working on another target?</strong></summary>
+
+  <p>The iOS host is in <a href="iosApp">iosApp</a>; open <a href="iosApp/iosApp.xcodeproj">iosApp.xcodeproj</a> on macOS with Xcode and configure signing and service credentials for your environment.</p>
+  <p>The desktop target lives in <a href="desktopApp">desktopApp</a>. Both hosts use the shared Kotlin modules described below.</p>
+</details>
+
+## Under the hood
+
+Shared Kotlin and Compose code sit behind platform-specific app hosts. Koin wires dependencies, SQLDelight handles local persistence, and Supabase provides authentication and remote data.
+
+| Area | Where to look |
+| --- | --- |
+| App hosts | [Android](androidApp) · [iOS](iosApp) · [Desktop](desktopApp) |
+| User-facing features | [Writing](feature/create-diary) · [Dashboard](feature/diary-dashboard) · [Diary list](feature/diary-list) · [Favorites](feature/diary-favorite) · [Insights](feature/diary-insights) |
+| Shared UI | [Design system](design-system) · [UI components](core/ui-components) · [Navigation](navigation) |
+| Data and services | [Shared data](shared-data) · [Database](core/database) · [Authentication](core/authentication) · [AI](core/diary-ai) |
+| Development tools | [Test utilities](common-test) · [Convention plugins](build-logic) · [Preferences](preferences) |
+
+## Testing
+
+Run Android host tests. Add `-Pkover koverXmlReport` to generate a coverage report.
+
+```sh
+./gradlew testAndroidHostTest
+```
+
+Verify committed screen snapshots with Paparazzi, without an emulator:
 
 ```sh
 ./gradlew verifyPaparazzi
 ```
 
-After an intentional UI or renderer change, record new baselines and review the images before committing them:
+After an intentional UI or renderer change, record updated snapshots:
 
 ```sh
 ./gradlew recordPaparazzi
 ```
 
-Goldens live in each feature's `src/androidHostTest/snapshots/images`. Reports and failure diffs are uploaded by the PR snapshot job.
+Review new goldens in each feature's `src/androidHostTest/snapshots/images` before committing them. The PR snapshot job uploads reports and failure diffs as workflow artifacts.
 
-### Android - Light
+---
 
-| Dashboard                                                                                                  | Create Diary                                                                                      |
-|------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
-|  <img width="250" alt="Screenshot 2023-12-15 at 11 16 22" src="https://github.com/rafsanjani/superdiary/assets/9197459/192494b8-162f-4cc2-a416-aebe5ea11da8"> |<img width="250" alt="Screenshot 2023-12-15 at 11 16 22" src="https://github.com/rafsanjani/superdiary/assets/9197459/a5f608c5-d526-41f4-b382-7abfbaea1b9f"> |
-
-
-
-
-
-
-### Android - Dark
-
-| Dashboard |
-|-----------|
-|<img width="250" src="https://github.com/rafsanjani/superdiary/assets/9197459/f84e64fd-daba-4663-ba8e-55a2a27b7280" /> |
-
-### iOS - Dark
-
-| Dashboard |
-|-----------|
-| <img width="250" alt="Screenshot 2023-12-15 at 11 21 01" src="https://github.com/rafsanjani/superdiary/assets/9197459/98c012b9-3690-4148-a911-9a0ea1ac51fc"> |
-
-### iOS - Light
-
-| Dashboard |
-|-----------|
-| <img width="250" alt="Screenshot 2023-12-15 at 11 24 10" src="https://github.com/rafsanjani/superdiary/assets/9197459/d81df92c-69b8-4a6c-8717-d5959250afe7"> |
-
-### Status: 🚧 In progress
-
-<p>Superdiary is still under heavy development and some screens are yet to be designed. This app is highly experimental and meant to serve as my personal playground for Kotlin multiplatform </p>
-
-### License
-
-```
-MIT License
-
-Copyright (c) 2024 Rafsanjani Aziz
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+<p align="center">Made by <a href="https://github.com/rafsanjani">Rafsanjani Aziz</a> · <a href="LICENSE">MIT licensed</a></p>
