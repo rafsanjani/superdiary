@@ -8,7 +8,7 @@
   Write, revisit, and find the moments worth keeping.</p>
 
   <p>
-    <a href="https://github.com/rafsanjani/superdiary/actions/workflows/post-merge.yml"><img src="https://github.com/rafsanjani/superdiary/actions/workflows/post-merge.yml/badge.svg?branch=main" alt="Android release build status" /></a>
+    <a href="https://github.com/rafsanjani/superdiary/actions/workflows/post-merge.yml"><img src="https://img.shields.io/github/actions/workflow/status/rafsanjani/superdiary/post-merge.yml?branch=main&amp;label=build" alt="Android release build status" /></a>
     <a href="#under-the-hood"><img src="https://img.shields.io/badge/Kotlin-Multiplatform-7F52FF?style=flat" alt="Kotlin Multiplatform" /></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-6750A4?style=flat" alt="MIT license" /></a>
   </p>
@@ -106,14 +106,23 @@ Shared Kotlin and Compose code sit behind platform-specific app hosts. Koin wire
 
 ## Testing
 
-Paparazzi renders Android snapshots on the host JVM, without an emulator.
+Run Android host tests. Add `-Pkover koverXmlReport` to generate a coverage report.
 
-| Command | What it does |
-| --- | --- |
-| `./gradlew testAndroidHostTest` | Run Android host tests. |
-| `./gradlew testAndroidHostTest -Pkover koverXmlReport` | Run host tests and generate the coverage report. |
-| `./gradlew verifyPaparazzi` | Compare rendered screens against committed snapshots. |
-| `./gradlew recordPaparazzi` | Record snapshots after intentional UI or renderer changes. |
+```sh
+./gradlew testAndroidHostTest
+```
+
+Verify committed screen snapshots with Paparazzi, without an emulator:
+
+```sh
+./gradlew verifyPaparazzi
+```
+
+After an intentional UI or renderer change, record updated snapshots:
+
+```sh
+./gradlew recordPaparazzi
+```
 
 Review new goldens in each feature's `src/androidHostTest/snapshots/images` before committing them. The PR snapshot job uploads reports and failure diffs as workflow artifacts.
 
