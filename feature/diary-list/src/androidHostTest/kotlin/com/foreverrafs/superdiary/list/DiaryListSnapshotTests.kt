@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import app.cash.paparazzi.Paparazzi
 import com.android.ide.common.rendering.api.SessionParams
@@ -24,7 +27,7 @@ import com.foreverrafs.superdiary.list.presentation.list.DiaryListScreenModel
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import kotlin.time.Clock
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
@@ -60,8 +63,15 @@ class DiaryListSnapshotTests(
 
     private val snackbarHostState = SnackbarHostState()
 
+    private val loadedStates = LoadStates(
+        refresh = LoadState.NotLoading(endOfPaginationReached = true),
+        prepend = LoadState.NotLoading(endOfPaginationReached = true),
+        append = LoadState.NotLoading(endOfPaginationReached = true),
+    )
+
     private val deviceSize: DpSize
         @Composable
+        @ReadOnlyComposable
         get() {
             with(LocalDensity.current) {
                 val deviceConfig = snapshotDevice.config
@@ -97,8 +107,9 @@ class DiaryListSnapshotTests(
                 SharedTransitionLayout {
                     DiaryListScreenContent(
                         screenModel = DiaryListScreenModel(
-                            diaries = flowOf(
+                            diaries = MutableStateFlow(
                                 PagingData.from(
+                                    sourceLoadStates = loadedStates,
                                     data = (0..13).map {
                                         Diary(
                                             id = it.toLong(),
@@ -136,7 +147,7 @@ class DiaryListSnapshotTests(
                 SharedTransitionLayout {
                     DiaryListScreenContent(
                         screenModel = DiaryListScreenModel(
-                            diaries = flowOf(PagingData.empty()),
+                            diaries = MutableStateFlow(PagingData.empty(sourceLoadStates = loadedStates)),
                             isFiltered = false,
                             isLoading = false,
                         ),
@@ -158,7 +169,7 @@ class DiaryListSnapshotTests(
                 SuperDiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
                     DiaryListScreenContent(
                         screenModel = DiaryListScreenModel(
-                            diaries = flowOf(PagingData.empty()),
+                            diaries = MutableStateFlow(PagingData.empty(sourceLoadStates = loadedStates)),
                             isFiltered = true,
                             isLoading = false,
                         ),
@@ -180,6 +191,7 @@ class DiaryListSnapshotTests(
                 SuperDiaryPreviewTheme(modifier = Modifier.size(deviceSize)) {
                     DiaryListScreenContent(
                         screenModel = DiaryListScreenModel(
+                            diaries = MutableStateFlow(PagingData.empty(sourceLoadStates = loadedStates)),
                             error = Error("Error loading diaries"),
                             isLoading = false,
                         ),

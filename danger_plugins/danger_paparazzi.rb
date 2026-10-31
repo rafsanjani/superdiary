@@ -44,7 +44,7 @@ module Danger
     end
 
     def verify_paparazzi
-      system("./gradlew verifyPaparazziDebug")
+      system("./gradlew verifyPaparazzi")
     end
 
     def setup_git
@@ -61,7 +61,7 @@ module Danger
 
     def copy_delta_files
       puts "Copy delta files from /build/paparazzi/failures to working directory"
-      delta_files = Dir.glob("**/build/paparazzi/failures/delta-*")
+      delta_files = Dir.glob("**/build/paparazzi/failures/**/delta-*")
       delta_files.each do |file|
         FileUtils.cp_r(file, ".")
       end

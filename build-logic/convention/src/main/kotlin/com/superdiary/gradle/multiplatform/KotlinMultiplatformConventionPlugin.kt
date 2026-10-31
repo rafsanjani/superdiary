@@ -1,5 +1,6 @@
 package com.superdiary.gradle.multiplatform
 
+import com.android.build.api.dsl.KotlinMultiplatformAndroidHostTestCompilation
 import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget
 import com.superdiary.gradle.findVersion
 import org.gradle.api.Action
@@ -17,6 +18,16 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
         with(pluginManager) {
             apply("org.jetbrains.kotlin.multiplatform")
             apply("com.android.kotlin.multiplatform.library")
+        }
+
+        pluginManager.withPlugin("app.cash.paparazzi") {
+            extensions.configure<KotlinMultiplatformExtension> {
+                androidLibrary {
+                    compilations.withType<KotlinMultiplatformAndroidHostTestCompilation>().configureEach {
+                        isIncludeAndroidResources = true
+                    }
+                }
+            }
         }
 
         extensions.configure<KotlinMultiplatformExtension> {
